@@ -1,0 +1,18 @@
+<resources>
+    <!-- Actions -->
+    <string name="action_logout">Logout</string>
+    <!-- General -->
+    <string name="app_name">Uganda HPV</string>
+    <!--Temp -->
+    <string name="unauthorized">Please check the credentials</string>
+    <string name="unauthorized_group">Your user group is not allowed to access this device</string>
+    <string name="unknown_response">login failed. Try later</string>
+    <string name="no_internet_connectivity">No internet connection. Please ensure data connectivity</string>
+    <string name="login_text">Log In</string>
+    <string name="show_password_text">Show password</string>
+    <string name="url_separator">/</string>
+
+    <string name="device_timezone_changed">"The device's timezone changed. Please login again."</string>
+    <string name="device_time_changed">"The device's time has changed. Please login again."</string>
+
+</resources>
