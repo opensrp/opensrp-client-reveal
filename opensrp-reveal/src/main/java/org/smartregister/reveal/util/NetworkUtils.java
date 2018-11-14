@@ -7,10 +7,6 @@ import android.util.Log;
 
 import org.smartregister.reveal.application.RevealApplication;
 
-/**
- * Created by ndegwamartin on 15/03/2018.
- */
-
 public class NetworkUtils {
     private static final String TAG = NetworkUtils.class.getName();
 

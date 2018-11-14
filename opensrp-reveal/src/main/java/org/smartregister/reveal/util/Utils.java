@@ -14,10 +14,6 @@ import org.smartregister.reveal.application.RevealApplication;
 import java.util.ArrayList;
 import java.util.Locale;
 
-/**
- * Created by ndegwamartin on 14/03/2018.
- */
-
 public class Utils {
 
     public static final ArrayList<String> ALLOWED_LEVELS;

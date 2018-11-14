@@ -7,32 +7,22 @@ import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
-import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
 import org.smartregister.configurableviews.helper.JsonSpecHelper;
-import org.smartregister.configurableviews.repository.ConfigurableViewsRepository;
-import org.smartregister.configurableviews.service.PullConfigurableViewsIntentService;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
-import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.repository.RevealRepository;
 import org.smartregister.reveal.util.DBConstants;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.DrishtiSyncScheduler;
-import org.smartregister.ug.reveal.BuildConfig;
 import org.smartregister.ug.reveal.R;
 import org.smartregister.view.activity.DrishtiApplication;
 import org.smartregister.view.receiver.TimeChangedBroadcastReceiver;
 
-import java.util.List;
-
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
-/**
- * Created by ndegwamartin on 15/03/2018.
- */
 public class RevealApplication extends DrishtiApplication implements TimeChangedBroadcastReceiver.OnTimeChangedListener {
 
     private static final String TAG = RevealApplication.class.getCanonicalName();

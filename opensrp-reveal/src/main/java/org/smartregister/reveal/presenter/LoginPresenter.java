@@ -23,10 +23,6 @@ import org.smartregister.view.contract.BaseLoginContract;
 
 import java.lang.ref.WeakReference;
 
-
-/**
- * Created by ndegwamartin on 22/06/2018.
- */
 public class LoginPresenter extends BaseLoginPresenter implements BaseLoginContract.Presenter {
 
     private static final String TAG = LoginPresenter.class.getCanonicalName();

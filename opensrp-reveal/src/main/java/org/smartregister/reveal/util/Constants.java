@@ -1,9 +1,5 @@
 package org.smartregister.reveal.util;
 
-/**
- * Created by ndegwamartin on 14/03/2018.
- */
-
 public class Constants {
 
     public static final String VIEW_CONFIGURATION_PREFIX = "ViewConfiguration_";

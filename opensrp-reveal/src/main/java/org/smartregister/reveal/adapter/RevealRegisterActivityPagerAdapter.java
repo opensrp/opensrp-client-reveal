@@ -5,9 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-/**
- * Created by ndegwamartin on 22/03/2018.
- */
+
 public class RevealRegisterActivityPagerAdapter extends FragmentPagerAdapter {
     private static final String ARG_PAGE = "page";
     private final Fragment mBaseFragment;

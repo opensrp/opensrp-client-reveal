@@ -12,9 +12,6 @@ import org.smartregister.view.contract.BaseLoginContract;
 
 import static org.smartregister.util.Log.logInfo;
 
-/**
- * Created by ndegwamartin on 21/06/2018.
- */
 public class LoginActivity extends BaseLoginActivity implements BaseLoginContract.View {
     public static final String TAG = BaseLoginActivity.class.getCanonicalName();
 
@@ -47,7 +44,7 @@ public class LoginActivity extends BaseLoginActivity implements BaseLoginContrac
     }
 
     private void gotToHomeRegister(boolean remote) {
-        Utils.showToast(this,"logged in");
+        Utils.showToast(this, "logged in");
     }
 
 

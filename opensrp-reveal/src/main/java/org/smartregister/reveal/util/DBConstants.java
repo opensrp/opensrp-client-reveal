@@ -1,9 +1,5 @@
 package org.smartregister.reveal.util;
 
-/**
- * Created by ndegwamartin on 14/03/2018.
- */
-
 public class DBConstants {
     public static final String PATIENT_TABLE_NAME = "ec_patient";
 
