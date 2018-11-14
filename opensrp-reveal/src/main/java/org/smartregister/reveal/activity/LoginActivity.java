@@ -4,6 +4,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.smartregister.reveal.event.ViewConfigurationSyncCompleteEvent;
 import org.smartregister.reveal.presenter.LoginPresenter;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.task.SaveTeamLocationsTask;
 import org.smartregister.ug.reveal.R;
 import org.smartregister.view.activity.BaseLoginActivity;
@@ -46,9 +47,7 @@ public class LoginActivity extends BaseLoginActivity implements BaseLoginContrac
     }
 
     private void gotToHomeRegister(boolean remote) {
-////        Intent intent = new Intent(this, HomeRegisterActivity.class);
-//        intent.putExtra(AllConstants.INTENT_KEY.IS_REMOTE_LOGIN, remote);
-//        startActivity(intent);
+        Utils.showToast(this,"logged in");
     }
 
 

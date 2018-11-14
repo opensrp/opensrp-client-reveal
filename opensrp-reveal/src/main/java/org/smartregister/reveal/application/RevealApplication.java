@@ -11,10 +11,6 @@ import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
 import org.smartregister.configurableviews.helper.JsonSpecHelper;
 import org.smartregister.configurableviews.repository.ConfigurableViewsRepository;
 import org.smartregister.configurableviews.service.PullConfigurableViewsIntentService;
-import org.smartregister.immunization.ImmunizationLibrary;
-import org.smartregister.immunization.domain.VaccineSchedule;
-import org.smartregister.immunization.domain.jsonmapping.VaccineGroup;
-import org.smartregister.immunization.util.VaccinatorUtils;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.EventClientRepository;
@@ -42,10 +38,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     private static final String TAG = RevealApplication.class.getCanonicalName();
     private static JsonSpecHelper jsonSpecHelper;
     private static CommonFtsObject commonFtsObject;
-    private ConfigurableViewsRepository configurableViewsRepository;
-    private EventClientRepository eventClientRepository;
-//    private UniqueIdRepository uniqueIdRepository;
-    private ConfigurableViewsHelper configurableViewsHelper;
     private String password;
 
     public static synchronized RevealApplication getInstance() {
@@ -85,23 +77,15 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     public void onCreate() {
 
         super.onCreate();
-
         mInstance = this;
         context = Context.getInstance();
-
         context.updateApplicationContext(getApplicationContext());
         context.updateCommonFtsObject(createCommonFtsObject());
 
         //Initialize Modules
         CoreLibrary.init(context);
         ConfigurableViewsLibrary.init(context, getRepository());
-        ImmunizationLibrary.init(context, getRepository(), createCommonFtsObject(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
-
-        TimeChangedBroadcastReceiver.init(this);
-        TimeChangedBroadcastReceiver.getInstance().addOnTimeChangedListener(this);
         LocationHelper.init(Utils.ALLOWED_LEVELS, Utils.DEFAULT_LOCATION_LEVEL);
-
-        startPullConfigurableViewsIntentService(getApplicationContext());
         try {
             Utils.saveLanguage("en");
         } catch (Exception e) {
@@ -109,7 +93,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         }
 
         this.jsonSpecHelper = new JsonSpecHelper(this);
-        initOfflineSchedules();
     }
 
     @Override
@@ -117,7 +100,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         try {
             if (repository == null) {
                 repository = new RevealRepository(getInstance().getApplicationContext(), context);
-                getConfigurableViewsRepository();
             }
         } catch (UnsatisfiedLinkError e) {
             logError("Error on getRepository: " + e);
@@ -167,40 +149,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         super.onTerminate();
     }
 
-    public void startPullConfigurableViewsIntentService(android.content.Context context) {
-        Intent intent = new Intent(context, PullConfigurableViewsIntentService.class);
-        context.startService(intent);
-    }
-
-    private void initOfflineSchedules() {
-        try {
-            List<VaccineGroup> childVaccines = VaccinatorUtils.getSupportedVaccines(this);
-            VaccineSchedule.init(childVaccines, null, "child");
-        } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
-        }
-    }
-
-    public ConfigurableViewsRepository getConfigurableViewsRepository() {
-        if (configurableViewsRepository == null)
-            configurableViewsRepository = new ConfigurableViewsRepository(getRepository());
-        return configurableViewsRepository;
-    }
-
-    public EventClientRepository getEventClientRepository() {
-        if (eventClientRepository == null) {
-            eventClientRepository = new EventClientRepository(getRepository());
-        }
-        return eventClientRepository;
-    }
-
-    public ConfigurableViewsHelper getConfigurableViewsHelper() {
-        if (configurableViewsHelper == null) {
-            configurableViewsHelper = new ConfigurableViewsHelper(getConfigurableViewsRepository(),
-                    getJsonSpecHelper(), getApplicationContext());
-        }
-        return configurableViewsHelper;
-    }
 
     @Override
     public void onTimeChanged() {

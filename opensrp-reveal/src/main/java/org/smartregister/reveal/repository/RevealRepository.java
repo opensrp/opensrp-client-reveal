@@ -3,14 +3,10 @@ package org.smartregister.reveal.repository;
 import android.content.Context;
 import android.util.Log;
 
-import android.content.Context;
-import android.util.Log;
-
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.AllConstants;
 import org.smartregister.configurableviews.repository.ConfigurableViewsRepository;
-import org.smartregister.immunization.repository.VaccineRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.reveal.application.RevealApplication;
@@ -32,11 +28,7 @@ public class RevealRepository extends Repository {
         ConfigurableViewsRepository.createTable(database);
         EventClientRepository.createTable(database, EventClientRepository.Table.client, EventClientRepository.client_column.values());
         EventClientRepository.createTable(database, EventClientRepository.Table.event, EventClientRepository.event_column.values());
-//        UniqueIdRepository.createTable(database);
-        VaccineRepository.createTable(database);
-
-        updateVaccineRepository(database);
-        //onUpgrade(database, 1, 2);
+//        onUpgrade(database, 1, 2);
     }
 
     @Override
@@ -106,22 +98,6 @@ public class RevealRepository extends Repository {
             writableDatabase.close();
         }
         super.close();
-    }
-
-    private void updateVaccineRepository(SQLiteDatabase database) {
-        database.execSQL(VaccineRepository.UPDATE_TABLE_ADD_EVENT_ID_COL);
-        database.execSQL(VaccineRepository.EVENT_ID_INDEX);
-        database.execSQL(VaccineRepository.UPDATE_TABLE_ADD_FORMSUBMISSION_ID_COL);
-        database.execSQL(VaccineRepository.FORMSUBMISSION_INDEX);
-        database.execSQL(VaccineRepository.UPDATE_TABLE_ADD_OUT_OF_AREA_COL);
-        database.execSQL(VaccineRepository.UPDATE_TABLE_ADD_OUT_OF_AREA_COL_INDEX);
-        database.execSQL(VaccineRepository.UPDATE_TABLE_ADD_HIA2_STATUS_COL);
-        database.execSQL(VaccineRepository.ALTER_ADD_CREATED_AT_COLUMN);
-        database.execSQL(VaccineRepository.UPDATE_TABLE_ADD_CHILD_LOCATION_ID_COL);
-        database.execSQL(VaccineRepository.UPDATE_TABLE_ADD_TEAM_ID_COL);
-        database.execSQL(VaccineRepository.UPDATE_TABLE_ADD_TEAM_COL);
-
-        VaccineRepository.migrateCreatedAt(database);
     }
 }
 
