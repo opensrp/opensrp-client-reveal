@@ -112,17 +112,6 @@ public class Constants {
         public static final String FILTER_TEAM_ID = "teamId";
     }
 
-    public static final class HPV_DOSE {
-
-        public static final String NUMBER_1 = "1";
-        public static final String NUMBER_2 = "2";
-    }
-
-    public static final class HPV_DOSE_NAME {
-
-        public static final String HPV_1 = "HPV 1";
-        public static final String HPV_2 = "HPV 2";
-    }
 
 
 }

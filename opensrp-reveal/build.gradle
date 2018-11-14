@@ -47,7 +47,7 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = [eventBusIndex: 'org.smartregister.ug.reveal.HPVEventBusIndex']
+                arguments = [eventBusIndex: 'org.smartregister.ug.reveal.RevelEventBusIndex']
             }
         }
     }

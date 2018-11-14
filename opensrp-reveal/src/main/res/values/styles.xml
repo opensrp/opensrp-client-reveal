@@ -16,7 +16,7 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="HpvDialog" parent="Theme.AppCompat.Light.Dialog">
+    <style name="RevealDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -28,7 +28,7 @@
         <item name="colorControlActivated">@android:color/black</item>
     </style>
 
-    <style name="HpvAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="RevealAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
