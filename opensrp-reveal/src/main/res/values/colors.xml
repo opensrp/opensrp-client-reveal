@@ -1,56 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#358CB7</color>
+    <color name="colorPrimary">#f4f5f6</color>
     <color name="colorPrimaryDark">#276C91</color>
     <color name="colorAccent">#358CB7</color>
     <color name="colorPrimaryBackground">#ddf0fa</color>
 
-    <color name="customAppThemeBlue">#218CC5</color>
-    <color name="customAppThemeDarkest">#272727</color>
-    <color name="customAppThemeDark">#373737</color>
-    <color name="customAppThemeGray">#EEEEEE</color>
 
-
-    <color name="light_grey">#cccccc</color>
-    <color name="search_edit_bg_grey">#616161</color>
-    <color name="darker_grey_text">#727273</color>
-    <color name="dark_grey_text">#727272</color>
-    <color name="light_grey_text">#7f7f7f</color>
-    <color name="lighter_grey_text">#737373</color>
-
-    <color name="status_bar_bg_dark_grey">#494949</color>
-    <color name="status_bar_bg_grey">#4f4e4e</color>
-
-    <color name="scan_qr_code_bg_st_grey">#585858</color>
-    <color name="scan_qr_code_bg_end_grey">#3e3e3e</color>
-    <color name="scan_qr_code_bg_stk_grey">#212121</color>
-
-    <color name="snackbar_background_yellow">#FFED18</color>
-    <color name="snackbar_action_color">#eeff1c</color>
-
-    <color name="actionbar">#208CC5</color>
-    <color name="text_color_primary">#737373</color>
-
-    <color name="search_hint_white">#dbdbdb</color>
-
-    <color name="register_title_grey">#808080</color>
-    <color name="vaccine_red_bg_stk">#a82525</color>
-    <color name="vaccine_red_bg_st">#cd2c2c</color>
-    <color name="vaccine_red_bg_end">#be2727</color>
-
-    <color name="vaccine_blue_bg_stk">#267ea5</color>
-    <color name="vaccine_blue_bg_st">#389cc8</color>
-    <color name="vaccine_blue_bg_end">#3495bf</color>
-
-    <color name="vaccine_na_bg_stk">#D4D4D4</color>
-    <color name="vaccine_na_bg_st">#EFEFEF</color>
-    <color name="vaccine_na_bg_end">#ECECEC</color>
-
-    <color name="primary">#358CB7</color>
-    <color name="primary_background">#ddf0fa</color>
-    <color name="primary_dark">#276C91</color>
-    <color name="accent">#358CB7</color>
-
-    <color name="top_bar_gray">#eeeeee</color>
 
 </resources>

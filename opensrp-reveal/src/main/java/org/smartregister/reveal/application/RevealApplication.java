@@ -142,7 +142,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     @Override
     public void onTimeChanged() {
-        Utils.showToast(this, this.getString(R.string.device_time_changed));
+//        Utils.showToast(this, this.getString(R.string.device_time_changed));
         context.userService().forceRemoteLogin();
         logoutCurrentUser();
     }
@@ -150,7 +150,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     @Override
     public void onTimeZoneChanged() {
-        Utils.showToast(this, this.getString(R.string.device_timezone_changed));
+//        Utils.showToast(this, this.getString(R.string.device_timezone_changed));
         context.userService().forceRemoteLogin();
         logoutCurrentUser();
     }

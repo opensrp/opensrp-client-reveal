@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/canvasSV"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1.0"
-        android:background="#298DC3"
+        android:background="#f6f6f6"
         android:paddingBottom="@dimen/login_bottom_margin">
 
         <!-- Bottom section -->
@@ -27,16 +28,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:paddingTop="10dp"
-                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
                 android:text="Powered by"
                 android:textAlignment="center"
-                android:textColor="#A6ffffff" />
+                android:textColor="#a4a4a4" />
 
             <ImageView
                 android:id="@+id/opensrp_logo_image_view"
-                android:layout_width="@dimen/login_opensrp_logo_width"
-                android:layout_height="@dimen/login_opensrp_logo_height"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:adjustViewBounds="false"
                 android:cropToPadding="false"
@@ -69,10 +70,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/login_logo"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:gravity="center_horizontal"
                 android:text="build_number"
-                android:textColor="#90c4dc"
+                android:textColor="#a4a4a4"
                 android:textSize="@dimen/login_build_text_view_textSize"
                 android:typeface="sans" />
         </LinearLayout>
@@ -150,7 +152,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@id/login_show_password_checkbox"
                     android:text="@string/show_password_text"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     android:textSize="@dimen/login_edit_text_textSize" />
             </RelativeLayout>
 
