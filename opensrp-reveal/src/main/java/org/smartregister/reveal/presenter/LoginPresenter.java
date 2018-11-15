@@ -14,11 +14,11 @@ import org.smartregister.configurableviews.model.LoginConfiguration;
 import org.smartregister.configurableviews.model.ViewConfiguration;
 import org.smartregister.login.model.BaseLoginModel;
 import org.smartregister.login.presenter.BaseLoginPresenter;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.interactor.LoginInteractor;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.ImageLoaderRequest;
-import org.smartregister.ug.reveal.R;
 import org.smartregister.view.contract.BaseLoginContract;
 
 import java.lang.ref.WeakReference;

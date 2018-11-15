@@ -16,7 +16,6 @@ import org.smartregister.reveal.repository.RevealRepository;
 import org.smartregister.reveal.util.DBConstants;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.DrishtiSyncScheduler;
-import org.smartregister.ug.reveal.R;
 import org.smartregister.view.activity.DrishtiApplication;
 import org.smartregister.view.receiver.TimeChangedBroadcastReceiver;
 

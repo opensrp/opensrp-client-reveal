@@ -2,16 +2,11 @@ package org.smartregister.reveal.activity;
 
 import android.widget.Toast;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.smartregister.reveal.event.ViewConfigurationSyncCompleteEvent;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.presenter.LoginPresenter;
 import org.smartregister.task.SaveTeamLocationsTask;
-import org.smartregister.ug.reveal.R;
 import org.smartregister.view.activity.BaseLoginActivity;
 import org.smartregister.view.contract.BaseLoginContract;
-
-import static org.smartregister.util.Log.logInfo;
 
 public class LoginActivity extends BaseLoginActivity implements BaseLoginContract.View {
 
