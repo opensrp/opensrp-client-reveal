@@ -82,7 +82,6 @@ public class LoginActivityTest extends BaseActivityUnitTest {
     }
 
 
-
     @Test
     public void testOnCreateOptionsMenuShouldAddSettingsItem() {
 

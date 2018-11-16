@@ -16,6 +16,7 @@ public abstract class BaseActivityUnitTest extends BaseUnitTest {
         }
         System.gc();
     }
+
     protected abstract Activity getActivity();
 
     protected abstract ActivityController getActivityController();
