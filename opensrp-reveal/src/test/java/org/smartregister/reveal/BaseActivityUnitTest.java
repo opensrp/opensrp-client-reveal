@@ -20,6 +20,4 @@ public abstract class BaseActivityUnitTest extends BaseUnitTest {
     protected abstract Activity getActivity();
 
     protected abstract ActivityController getActivityController();
-
-
 }
