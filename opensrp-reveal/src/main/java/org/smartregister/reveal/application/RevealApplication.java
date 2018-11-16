@@ -5,7 +5,6 @@ import android.util.Log;
 
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
-import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.JsonSpecHelper;
 import org.smartregister.location.helper.LocationHelper;
@@ -13,7 +12,6 @@ import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.Repository;
 import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.repository.RevealRepository;
-import org.smartregister.reveal.util.DBConstants;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.DrishtiSyncScheduler;
 import org.smartregister.view.activity.DrishtiApplication;
@@ -26,7 +24,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     private static final String TAG = RevealApplication.class.getCanonicalName();
     private static JsonSpecHelper jsonSpecHelper;
-    private static CommonFtsObject commonFtsObject;
     private String password;
 
     public static synchronized RevealApplication getInstance() {
@@ -37,36 +34,13 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         return getInstance().jsonSpecHelper;
     }
 
-    public static CommonFtsObject createCommonFtsObject() {
-        if (commonFtsObject == null) {
-            commonFtsObject = new CommonFtsObject(getFtsTables());
-            for (String ftsTable : commonFtsObject.getTables()) {
-                commonFtsObject.updateSortFields(ftsTable, getFtsSortFields());
-            }
-        }
-        return commonFtsObject;
-    }
-
-    private static String[] getFtsTables() {
-        return new String[]{DBConstants.PATIENT_TABLE_NAME};
-    }
-
-
-    private static String[] getFtsSortFields() {
-        return new String[]{DBConstants.KEY.OPENSRP_ID, DBConstants.KEY.FIRST_NAME, DBConstants.KEY.LAST_NAME
-                , DBConstants.KEY.LAST_INTERACTED_WITH, DBConstants.KEY.DATE_REMOVED};
-    }
-
     @Override
     public void onCreate() {
-
         super.onCreate();
         mInstance = this;
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
-        context.updateCommonFtsObject(createCommonFtsObject());
-
-        //Initialize Modules
+//        Initialize Modules
         CoreLibrary.init(context);
         ConfigurableViewsLibrary.init(context, getRepository());
         LocationHelper.init(Utils.ALLOWED_LEVELS, Utils.DEFAULT_LOCATION_LEVEL);
@@ -133,20 +107,15 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         super.onTerminate();
     }
 
-
     @Override
     public void onTimeChanged() {
-//        Utils.showToast(this, this.getString(R.string.device_time_changed));
         context.userService().forceRemoteLogin();
         logoutCurrentUser();
     }
-
 
     @Override
     public void onTimeZoneChanged() {
-//        Utils.showToast(this, this.getString(R.string.device_timezone_changed));
         context.userService().forceRemoteLogin();
         logoutCurrentUser();
     }
-
 }

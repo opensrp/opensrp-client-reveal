@@ -19,7 +19,7 @@ public class RevealRepository extends Repository {
     protected SQLiteDatabase writableDatabase;
 
     public RevealRepository(Context context, org.smartregister.Context openSRPContext) {
-        super(context, AllConstants.DATABASE_NAME, AllConstants.DATABASE_VERSION, openSRPContext.session(), RevealApplication.createCommonFtsObject(), openSRPContext.sharedRepositoriesArray());
+        super(context, AllConstants.DATABASE_NAME, AllConstants.DATABASE_VERSION, openSRPContext.session(), null, openSRPContext.sharedRepositoriesArray());
     }
 
     @Override
