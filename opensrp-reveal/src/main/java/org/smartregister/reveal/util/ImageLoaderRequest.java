@@ -12,10 +12,6 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
 
-/**
- * Created by samuelgithengi on 1/19/18.
- */
-
 public class ImageLoaderRequest {
 
     private static ImageLoaderRequest imageLoaderRequest;

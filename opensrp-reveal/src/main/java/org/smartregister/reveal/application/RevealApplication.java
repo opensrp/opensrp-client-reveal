@@ -41,7 +41,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         if (commonFtsObject == null) {
             commonFtsObject = new CommonFtsObject(getFtsTables());
             for (String ftsTable : commonFtsObject.getTables()) {
-                commonFtsObject.updateSearchFields(ftsTable, getFtsSearchFields());
                 commonFtsObject.updateSortFields(ftsTable, getFtsSortFields());
             }
         }
@@ -52,10 +51,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         return new String[]{DBConstants.PATIENT_TABLE_NAME};
     }
 
-    private static String[] getFtsSearchFields() {
-        return new String[]{DBConstants.KEY.OPENSRP_ID, DBConstants.KEY.FIRST_NAME, DBConstants.KEY.LAST_NAME, DBConstants.KEY.DATE_REMOVED, DBConstants.KEY.CARETAKER_NAME, DBConstants.KEY.CARETAKER_PHONE, DBConstants.KEY.VHT_NAME, DBConstants.KEY.VHT_PHONE};
-
-    }
 
     private static String[] getFtsSortFields() {
         return new String[]{DBConstants.KEY.OPENSRP_ID, DBConstants.KEY.FIRST_NAME, DBConstants.KEY.LAST_NAME

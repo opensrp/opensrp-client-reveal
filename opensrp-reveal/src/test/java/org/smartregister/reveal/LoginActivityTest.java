@@ -2,14 +2,11 @@ package org.smartregister.reveal;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import junit.framework.Assert;
 
@@ -23,7 +20,6 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
-import org.robolectric.shadows.ShadowApplication;
 import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.view.contract.BaseLoginContract;
 
@@ -43,12 +39,6 @@ public class LoginActivityTest extends BaseActivityUnitTest {
 
     @Mock
     private Button loginButton;
-
-    @Mock
-    private TextView textView;
-
-    @Mock
-    private KeyEvent keyEvent;
 
     @Before
     public void setUp() {
@@ -91,12 +81,7 @@ public class LoginActivityTest extends BaseActivityUnitTest {
         Assert.assertNotNull(progressDialog);
     }
 
-    private void assertActivityStarted(Activity currActivity, Activity nextActivity) {
 
-        Intent expectedIntent = new Intent(currActivity, nextActivity.getClass());
-        Intent actual = ShadowApplication.getInstance().getNextStartedActivity();
-        Assert.assertEquals(expectedIntent.getComponent(), actual.getComponent());
-    }
 
     @Test
     public void testOnCreateOptionsMenuShouldAddSettingsItem() {

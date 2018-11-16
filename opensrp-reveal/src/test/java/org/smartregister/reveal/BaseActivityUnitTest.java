@@ -4,9 +4,6 @@ import android.app.Activity;
 
 import org.robolectric.android.controller.ActivityController;
 
-/**
- * Created by ndegwamartin on 24/07/2018.
- */
 public abstract class BaseActivityUnitTest extends BaseUnitTest {
 
     protected void destroyController() {
@@ -17,10 +14,8 @@ public abstract class BaseActivityUnitTest extends BaseUnitTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         System.gc();
     }
-
     protected abstract Activity getActivity();
 
     protected abstract ActivityController getActivityController();
