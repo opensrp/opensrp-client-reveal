@@ -134,21 +134,21 @@
 
                 <CheckBox
                     android:id="@+id/login_show_password_checkbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="15dp"
+                    style="@android:style/Widget.Holo.Light.CompoundButton.CheckBox"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginLeft="3dp"
                     android:layout_marginRight="5dp"
                     android:button="@drawable/white_checkbox_bg_selector"
-                    android:scaleX="@dimen/checkbox_scale"
-                    android:scaleY="@dimen/checkbox_scale" />
+                    android:scaleX="1.70"
+                    android:scaleY="1.70" />
 
                 <TextView
                     android:id="@+id/login_show_password_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@id/login_show_password_checkbox"
                     android:text="@string/show_password_text"
@@ -163,10 +163,10 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
                 android:layout_weight="8"
-                android:background="@drawable/login_background"
+                android:background="#0092D5"
                 android:ems="10"
                 android:onClick="login"
-                android:shadowColor="#556eec"
+                android:shadowColor="#0092D5"
                 android:shadowDx="0"
                 android:shadowDy="1"
                 android:shadowRadius="0.5"
