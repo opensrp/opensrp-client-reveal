@@ -1,0 +1,13 @@
+<resources>
+    <dimen name="login_font_size">16sp</dimen>
+
+    <dimen name="login_view_component_height">48dp</dimen>
+
+    <dimen name="login_logo_height">120dp</dimen>
+
+    <dimen name="login_logo_top_padding">100dp</dimen>
+
+</resources>
+
+
+
