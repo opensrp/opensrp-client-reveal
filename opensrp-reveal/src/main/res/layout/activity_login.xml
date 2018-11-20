@@ -10,8 +10,7 @@
     <RelativeLayout
         android:id="@+id/login_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1.0"
+        android:layout_height="wrap_content"
         android:background="#f6f6f6"
         android:paddingBottom="@dimen/login_bottom_margin">
 
@@ -22,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:orientation="vertical"
-            android:paddingTop="150dp">
+            android:paddingTop="100dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -32,7 +31,8 @@
                 android:paddingBottom="10dp"
                 android:text="Powered by"
                 android:textAlignment="center"
-                android:textColor="#a4a4a4" />
+                android:textColor="#a4a4a4"
+                android:textSize="@dimen/login_font_size" />
 
             <ImageView
                 android:id="@+id/opensrp_logo_image_view"
@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/login_logo_height"
                 android:layout_alignParentTop="true"
-                android:layout_gravity="center"
+                android:layout_gravity="bottom|center"
                 android:layout_weight="1"
                 android:contentDescription="logo"
                 android:scaleType="centerInside"
@@ -70,13 +70,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/login_logo"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
                 android:gravity="center_horizontal"
                 android:text="build_number"
                 android:textColor="#a4a4a4"
-                android:textSize="@dimen/login_build_text_view_textSize"
-                android:typeface="sans" />
+                android:textSize="@dimen/login_font_size" />
         </LinearLayout>
 
         <!-- Middle section -->
@@ -84,10 +83,11 @@
             android:id="@+id/middle_section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_above="@id/bottom_section"
+            android:layout_centerVertical="true"
             android:orientation="vertical"
             android:paddingLeft="@dimen/login_horizontal_margin"
-            android:paddingTop="35dp"
+            android:paddingTop="160dp"
             android:paddingRight="@dimen/login_horizontal_margin">
 
             <EditText
@@ -95,10 +95,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/login_view_component_height"
                 android:layout_weight="8"
-                android:background="@drawable/rounded_corner_edit_text"
+                android:background="@drawable/login_corner_edit_text"
                 android:cursorVisible="true"
                 android:ems="10"
-                android:hint="Username"
+                android:hint="@string/prompt_username"
                 android:maxLines="1"
                 android:paddingLeft="10dp"
                 android:textColor="#666666"
@@ -114,10 +114,10 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="15dp"
                 android:layout_weight="8"
-                android:background="@drawable/rounded_corner_edit_text"
+                android:background="@drawable/login_corner_edit_text"
                 android:cursorVisible="true"
                 android:ems="10"
-                android:hint="Password"
+                android:hint="@string/prompt_password"
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:paddingLeft="10dp"
@@ -135,15 +135,13 @@
                 <CheckBox
                     android:id="@+id/login_show_password_checkbox"
                     style="@android:style/Widget.Holo.Light.CompoundButton.CheckBox"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="3dp"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="5dp"
-                    android:button="@drawable/white_checkbox_bg_selector"
-                    android:scaleX="1.70"
-                    android:scaleY="1.70" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/login_checkbox_bg"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
+
+                    />
 
                 <TextView
                     android:id="@+id/login_show_password_text_view"
@@ -151,6 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@id/login_show_password_checkbox"
+                    android:gravity="center_vertical"
                     android:text="@string/show_password_text"
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/login_edit_text_textSize" />
@@ -163,15 +162,15 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
                 android:layout_weight="8"
-                android:background="#0092D5"
+                android:background="#0089D5"
                 android:ems="10"
                 android:onClick="login"
-                android:shadowColor="#0092D5"
+                android:shadowColor="#0089D5"
                 android:shadowDx="0"
                 android:shadowDy="1"
                 android:shadowRadius="0.5"
                 android:text="@string/login_text"
-                android:textColor="#666666"
+                android:textColor="@color/white"
                 android:textSize="18sp" />
         </LinearLayout>
     </RelativeLayout>

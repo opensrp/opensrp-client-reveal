@@ -15,4 +15,7 @@
     <string name="device_timezone_changed">"The device's timezone changed. Please login again."</string>
     <string name="device_time_changed">"The device's time has changed. Please login again."</string>
 
+    <string name="prompt_password">Enter Password </string>
+    <string name="prompt_username">Enter Username</string>
+
 </resources>
