@@ -3,9 +3,9 @@
 
     <dimen name="login_view_component_height">48dp</dimen>
 
-    <dimen name="login_logo_height">100dp</dimen>
+    <dimen name="login_logo_height">120dp</dimen>
 
-    <dimen name="login_logo_top_padding">120dp</dimen>
+    <dimen name="login_logo_top_padding">100dp</dimen>
 
 </resources>
 

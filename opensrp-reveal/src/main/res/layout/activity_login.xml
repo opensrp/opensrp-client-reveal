@@ -11,7 +11,7 @@
         android:id="@+id/login_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#f6f6f6"
+        android:background="#F6F6F6"
         android:paddingBottom="@dimen/login_bottom_margin">
 
         <!-- Bottom section -->
