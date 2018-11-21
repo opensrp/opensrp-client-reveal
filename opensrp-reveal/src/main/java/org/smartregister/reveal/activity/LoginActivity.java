@@ -1,7 +1,6 @@
 package org.smartregister.reveal.activity;
 
 import android.content.Intent;
-import android.widget.Toast;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.presenter.LoginPresenter;

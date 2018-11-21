@@ -80,11 +80,11 @@ android {
                         properties.containsKey("mapbox.sdk.token")) {
                     buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", properties["mapbox.sdk.token"]
                 } else {
-                    println("One of the required config variables is not set in your local.properties");
+                    println("One of the required config variables is not set in your local.properties")
                     buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
                 }
             } else {
-                println("local.properties does not exist");
+                println("local.properties does not exist")
                 buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
             }
         }
@@ -100,11 +100,11 @@ android {
                         properties.containsKey("mapbox.sdk.token")) {
                     buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", properties["mapbox.sdk.token"]
                 } else {
-                    println("One of the required config variables is not set in your local.properties");
+                    println("One of the required config variables is not set in your local.properties")
                     buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
                 }
             } else {
-                println("local.properties does not exist");
+                println("local.properties does not exist")
                 buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
             }
         }

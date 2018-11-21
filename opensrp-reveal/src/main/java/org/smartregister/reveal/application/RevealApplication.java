@@ -13,7 +13,6 @@ import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.Repository;
 import org.smartregister.reveal.BuildConfig;
-import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.repository.RevealRepository;
 import org.smartregister.reveal.util.Utils;
