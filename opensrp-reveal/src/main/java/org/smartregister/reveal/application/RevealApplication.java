@@ -3,6 +3,7 @@ package org.smartregister.reveal.application;
 import android.content.Intent;
 import android.util.Log;
 
+import com.evernote.android.job.JobManager;
 import com.mapbox.mapboxsdk.Mapbox;
 
 import org.smartregister.Context;
@@ -14,6 +15,7 @@ import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.Repository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.LoginActivity;
+import org.smartregister.reveal.job.RevealJobCreator;
 import org.smartregister.reveal.repository.RevealRepository;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.DrishtiSyncScheduler;
@@ -58,6 +60,9 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             Log.e(TAG, e.getMessage());
         }
 
+
+        //init Job Manager
+        JobManager.create(this).addJobCreator(new RevealJobCreator());
 
     }
 
