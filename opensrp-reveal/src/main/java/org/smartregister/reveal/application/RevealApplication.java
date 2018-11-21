@@ -3,6 +3,8 @@ package org.smartregister.reveal.application;
 import android.content.Intent;
 import android.util.Log;
 
+import com.mapbox.mapboxsdk.Mapbox;
+
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
@@ -10,6 +12,8 @@ import org.smartregister.configurableviews.helper.JsonSpecHelper;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.Repository;
+import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.repository.RevealRepository;
 import org.smartregister.reveal.util.Utils;
@@ -23,7 +27,7 @@ import static org.smartregister.util.Log.logInfo;
 public class RevealApplication extends DrishtiApplication implements TimeChangedBroadcastReceiver.OnTimeChangedListener {
 
     private static final String TAG = RevealApplication.class.getCanonicalName();
-    private static JsonSpecHelper jsonSpecHelper;
+    private JsonSpecHelper jsonSpecHelper;
     private String password;
 
     public static synchronized RevealApplication getInstance() {
@@ -44,13 +48,18 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         CoreLibrary.init(context);
         ConfigurableViewsLibrary.init(context, getRepository());
         LocationHelper.init(Utils.ALLOWED_LEVELS, Utils.DEFAULT_LOCATION_LEVEL);
+
+        jsonSpecHelper = new JsonSpecHelper(this);
+
+        Mapbox.getInstance(getApplicationContext(), BuildConfig.MAPBOX_SDK_ACCESS_TOKEN);
+
         try {
             Utils.saveLanguage("en");
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
 
-        this.jsonSpecHelper = new JsonSpecHelper(this);
+
     }
 
     @Override
