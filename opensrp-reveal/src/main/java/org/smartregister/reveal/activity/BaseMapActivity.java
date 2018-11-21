@@ -15,42 +15,49 @@ public abstract class BaseMapActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        kujakuMapView.onStart();
+        if (kujakuMapView != null)
+            kujakuMapView.onStart();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        kujakuMapView.onResume();
+        if (kujakuMapView != null)
+            kujakuMapView.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        kujakuMapView.onPause();
+        if (kujakuMapView != null)
+            kujakuMapView.onPause();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        kujakuMapView.onStop();
+        if (kujakuMapView != null)
+            kujakuMapView.onStop();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        kujakuMapView.onSaveInstanceState(outState);
+        if (kujakuMapView != null)
+            kujakuMapView.onSaveInstanceState(outState);
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        kujakuMapView.onLowMemory();
+        if (kujakuMapView != null)
+            kujakuMapView.onLowMemory();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        kujakuMapView.onDestroy();
+        if (kujakuMapView != null)
+            kujakuMapView.onDestroy();
     }
 }
