@@ -15,13 +15,15 @@ import java.util.Locale;
 public class Utils {
 
     public static final ArrayList<String> ALLOWED_LEVELS;
-    public static final String DEFAULT_LOCATION_LEVEL = "Health Facility";
-    public static final String SCHOOL = "School";
+    public static final String DEFAULT_LOCATION_LEVEL = "Rural Health Centre";
+    public static final String OPERATIONAL_AREA = "Operational Area";
+    public static final String REVEAL_PROJECT = "reveal";
 
     static {
         ALLOWED_LEVELS = new ArrayList<>();
         ALLOWED_LEVELS.add(DEFAULT_LOCATION_LEVEL);
-        ALLOWED_LEVELS.add(SCHOOL);
+        ALLOWED_LEVELS.add(OPERATIONAL_AREA);
+        ALLOWED_LEVELS.add(REVEAL_PROJECT);
     }
 
     public static void saveLanguage(String language) {
