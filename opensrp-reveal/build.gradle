@@ -13,6 +13,7 @@ allprojects {
     repositories {
         maven { url 'https://maven.google.com' }
         maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+        maven { url "http://dl.bintray.com/ona/kujaku" }
         mavenLocal()
     }
 }
@@ -29,6 +30,11 @@ jacoco {
 android {
     compileSdkVersion 27
     buildToolsVersion "27.0.3"
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
         applicationId "org.smartregister.reveal"
@@ -66,14 +72,44 @@ android {
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", 'opensrp_url', '""'
-            buildConfigField "int", "DATABASE_VERSION", '10'
+            buildConfigField "int", "DATABASE_VERSION", '1'
+            if (project.rootProject.file("local.properties").exists()) {
+                Properties properties = new Properties()
+                properties.load(project.rootProject.file("local.properties").newDataInputStream())
+                if (properties != null &&
+                        properties.containsKey("mapbox.sdk.token")) {
+                    buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", properties["mapbox.sdk.token"]
+                } else {
+                    println("One of the required config variables is not set in your local.properties")
+                    buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
+                }
+            } else {
+                println("local.properties does not exist")
+                buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
+            }
         }
 
         debug {
             resValue "string", 'opensrp_url', '"https://reveal-stage.smartregister.org/opensrp/"'
-            buildConfigField "int", "DATABASE_VERSION", '10'
+            buildConfigField "int", "DATABASE_VERSION", '1'
             testCoverageEnabled true
+            if (project.rootProject.file("local.properties").exists()) {
+                Properties properties = new Properties()
+                properties.load(project.rootProject.file("local.properties").newDataInputStream())
+                if (properties != null &&
+                        properties.containsKey("mapbox.sdk.token")) {
+                    buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", properties["mapbox.sdk.token"]
+                } else {
+                    println("One of the required config variables is not set in your local.properties")
+                    buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
+                }
+            } else {
+                println("local.properties does not exist")
+                buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
+            }
         }
+
+
     }
 
     packagingOptions {
@@ -110,6 +146,7 @@ android {
             includeAndroidResources = true
         }
     }
+
 }
 
 tasks.withType(Test) {
@@ -118,12 +155,20 @@ tasks.withType(Test) {
 
 dependencies {
 
+    implementation('io.ona.kujaku:library:0.4.1') {
+        transitive = true
+        exclude group: 'com.android.volley'
+    }
+
+    implementation 'io.ona.kujaku:utils:0.4.1'
+
     implementation('org.smartregister:opensrp-client-core:1.4.6-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'net.zetetic', module: 'android-database-sqlcipher'
+        exclude group: 'com.google.android.gms', module: 'play-services-vision'
     }
 
     implementation('org.smartregister:opensrp-client-configurable-views:1.1.2-SNAPSHOT@aar') {
@@ -132,15 +177,15 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 
-
     implementation 'net.zetetic:android-database-sqlcipher:3.5.9@aar'
 
     implementation('com.android.support:design:27.1.1') {
         exclude group: 'com.android.support', module: 'recyclerview-v7'
-
     }
 
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+
+
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.apache.maven:maven-ant-tasks:2.1.3'
