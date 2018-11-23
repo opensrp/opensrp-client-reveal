@@ -1,6 +1,6 @@
 package org.smartregister.reveal.activity;
 
-import android.widget.Toast;
+import android.content.Intent;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.presenter.LoginPresenter;
@@ -25,9 +25,11 @@ public class LoginActivity extends BaseLoginActivity implements BaseLoginContrac
         if (remote) {
             org.smartregister.util.Utils.startAsyncTask(new SaveTeamLocationsTask(), null);
         }
-        Toast.makeText(this, "Successfully logged in need to implement landing page ", Toast.LENGTH_LONG).show();
 
-//        finish();
+        startActivity(new Intent(this, ListTasksActivity.class));
+
+        finish();
+
     }
 
     @Override
