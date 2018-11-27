@@ -17,5 +17,14 @@
 
     <string name="prompt_password">Enter Password </string>
     <string name="prompt_username">Enter Username</string>
+    <string name="reveal">Reveal</string>
+    <string name="sync">Sync</string>
+    <string name="campaign">Campaign</string>
+    <string name="operational_area">Operational Area</string>
+
+    <string name="app_version">Version: %1$s</string>
+    <string name="district">District:</string>
+    <string name="facility">Facility:</string>
+    <string name="operator">Spray Operator:</string>
 
 </resources>

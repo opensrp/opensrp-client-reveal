@@ -10,6 +10,11 @@
     <dimen name="hamburger_padding">4dp</dimen>
     <dimen name="hamburger_margin">16dp</dimen>
 
+    <dimen name="drawer_margin">32dp</dimen>
+    <dimen name="drawer_margin_vertical">16dp</dimen>
+    <dimen name="drawer_drawable_padding">10dp</dimen>
+    <dimen name="drawer_spinner_width">220dp</dimen>
+
 </resources>
 
 

@@ -4,9 +4,17 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
+import android.widget.TextView;
 
 import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 
 import java.util.ArrayList;
@@ -41,6 +49,16 @@ public class Utils {
             configuration.locale = locale;
             resources.updateConfiguration(configuration, displayMetrics);
         }
+    }
+
+
+    public static void setTextViewText(@NonNull TextView textView, @NonNull @StringRes Integer labelResource, String value) {
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        ForegroundColorSpan blackSpan = new ForegroundColorSpan(textView.getResources().getColor(R.color.text_black));
+        builder.append(textView.getResources().getString(labelResource)).append(" ");
+        int start = builder.length();
+        builder.append(value).setSpan(blackSpan, start, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textView.setText(builder);
     }
 
 }
