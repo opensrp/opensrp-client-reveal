@@ -1,6 +1,10 @@
 package org.smartregister.reveal.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -12,6 +16,9 @@ import org.smartregister.reveal.R;
  */
 public class ListTasksActivity extends BaseMapActivity {
 
+
+    private ImageButton floatingActionButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +29,14 @@ public class ListTasksActivity extends BaseMapActivity {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
                 // Customize map with markers, polylines, etc.
+            }
+        });
+
+        floatingActionButton = findViewById(R.id.drawerMenu);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ListTasksActivity.this, "action bar clicked", Toast.LENGTH_LONG).show();
             }
         });
     }

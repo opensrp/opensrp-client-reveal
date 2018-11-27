@@ -1,11 +1,14 @@
 <resources>
     <dimen name="login_font_size">16sp</dimen>
-
     <dimen name="login_view_component_height">48dp</dimen>
-
     <dimen name="login_logo_height">120dp</dimen>
-
     <dimen name="login_logo_top_padding">100dp</dimen>
+    <dimen name="login_horizontal_margin">30dp</dimen>
+    <dimen name="login_bottom_margin">15dp</dimen>
+    <dimen name="login_edit_text_textSize">16sp</dimen>
+
+    <dimen name="hamburger_padding">4dp</dimen>
+    <dimen name="hamburger_margin">16dp</dimen>
 
 </resources>
 
