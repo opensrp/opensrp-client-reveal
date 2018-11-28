@@ -35,7 +35,7 @@
         </activity>
 
         <activity
-            android:name=".activity.ListTasksActivity"
+            android:name=".view.ListTasksActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
 

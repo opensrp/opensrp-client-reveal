@@ -20,5 +20,5 @@ public interface ListTaskView {
 
     void setFacility(String facility);
 
-
+    void setOperator();
 }

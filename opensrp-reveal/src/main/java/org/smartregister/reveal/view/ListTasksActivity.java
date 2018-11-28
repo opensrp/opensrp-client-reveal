@@ -1,9 +1,10 @@
-package org.smartregister.reveal.activity;
+package org.smartregister.reveal.view;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -14,17 +15,24 @@ import android.widget.TextView;
 
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.vijay.jsonwizard.customviews.TreeViewDialog;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.smartregister.AllConstants;
+import org.smartregister.repository.AllSettings;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.activity.BaseMapActivity;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskView;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -33,8 +41,6 @@ import java.util.Locale;
 public class ListTasksActivity extends BaseMapActivity implements ListTaskView {
 
     private static final String TAG = "ListTasksActivity";
-
-    private DrawerLayout mDrawerLayout;
 
     private AllSharedPreferences sharedPreferences;
 
@@ -62,7 +68,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskView {
             }
         });
 
-        mDrawerLayout = findViewById(R.id.drawer_layout);
+        DrawerLayout mDrawerLayout = findViewById(R.id.drawer_layout);
 
         ImageButton mDrawerMenuButton = findViewById(R.id.drawerMenu);
         mDrawerMenuButton.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +110,22 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskView {
         operatorTextView = headerView.findViewById(R.id.operator_label);
 
         listTaskPresenter.onInitializeDrawerLayout();
-        setOperator();
+
+        operationalAreaTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Pair<String, ArrayList<String>> locationHierarchy = listTaskPresenter.processLocationHierarchy();
+                try {
+                    TreeViewDialog treeViewDialog = new TreeViewDialog(ListTasksActivity.this, new JSONArray(locationHierarchy.first), locationHierarchy.second, locationHierarchy.second);
+                    treeViewDialog.show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                listTaskPresenter.onCampaignSelectorClicked();
+
+            }
+        });
+
     }
 
     @Override
@@ -127,13 +148,19 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskView {
         org.smartregister.reveal.util.Utils.setTextViewText(facilityTextView, R.string.facility, facility);
     }
 
+    @Override
     public void setOperator() {
         org.smartregister.reveal.util.Utils.setTextViewText(operatorTextView, R.string.operator, sharedPreferences.fetchRegisteredANM());
     }
 
-
     @Override
     public Context getContext() {
         return this;
+    }
+
+    @Override
+    protected void onDestroy() {
+        listTaskPresenter = null;
+        super.onDestroy();
     }
 }
