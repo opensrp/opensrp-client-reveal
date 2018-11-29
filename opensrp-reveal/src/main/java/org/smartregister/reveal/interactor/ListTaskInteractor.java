@@ -7,8 +7,6 @@ import com.google.gson.GsonBuilder;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.smartregister.domain.Campaign;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.reveal.application.RevealApplication;
@@ -34,7 +32,7 @@ public class ListTaskInteractor {
     }
 
     @VisibleForTesting
-    public ListTaskInteractor(AppExecutors appExecutors) {
+    protected ListTaskInteractor(AppExecutors appExecutors) {
         this.appExecutors = appExecutors;
     }
 

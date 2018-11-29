@@ -42,7 +42,7 @@ import java.util.Locale;
 /**
  * Created by samuelgithengi on 11/20/18.
  */
-public class ListTasksActivity extends BaseMapActivity implements ListTaskContract.ListTaskView {
+public class ListTasksActivity extends BaseMapActivity implements ListTaskContract.ListTaskView, View.OnClickListener {
 
     private static final String TAG = "ListTasksActivity";
 
@@ -137,20 +137,22 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         listTaskPresenter.onInitializeDrawerLayout();
 
-        operationalAreaTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listTaskPresenter.onShowOperationalAreaSelector();
-            }
-        });
+        operationalAreaTextView.setOnClickListener(this);
 
-        campaignTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listTaskPresenter.onShowCampaignSelector();
-            }
-        });
+        campaignTextView.setOnClickListener(this);
 
+        headerView.findViewById(R.id.logout_button).setOnClickListener(this);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.operational_area_selector)
+            listTaskPresenter.onShowOperationalAreaSelector();
+        else if (v.getId() == R.id.campaign_selector)
+            listTaskPresenter.onShowCampaignSelector();
+        else if (v.getId() == R.id.logout_button)
+            RevealApplication.getInstance().logoutCurrentUser();
     }
 
     @Override
