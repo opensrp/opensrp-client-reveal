@@ -4,6 +4,8 @@ public interface Constants {
 
     String VIEW_CONFIGURATION_PREFIX = "ViewConfiguration_";
 
+    String FILTER_TEAM_ID = "teamId";
+
     interface CONFIGURATION {
         String LOGIN = "login";
     }

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -25,6 +26,9 @@ import com.vijay.jsonwizard.customviews.TreeViewDialog;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.smartregister.AllConstants;
+import org.smartregister.domain.FetchStatus;
+import org.smartregister.job.SyncServiceJob;
+import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.BaseMapActivity;
@@ -42,13 +46,15 @@ import java.util.Locale;
 /**
  * Created by samuelgithengi on 11/20/18.
  */
-public class ListTasksActivity extends BaseMapActivity implements ListTaskContract.ListTaskView, View.OnClickListener {
+public class ListTasksActivity extends BaseMapActivity implements ListTaskContract.ListTaskView, View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener {
 
     private static final String TAG = "ListTasksActivity";
 
     private AllSharedPreferences sharedPreferences;
 
     private ListTaskPresenter listTaskPresenter;
+
+    private View rootView;
 
     private TextView campaignTextView;
     private TextView operationalAreaTextView;
@@ -63,6 +69,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         listTaskPresenter = new ListTaskPresenter(this);
 
+        rootView = findViewById(R.id.content_frame);
         kujakuMapView = findViewById(R.id.kujakuMapView);
         kujakuMapView.onCreate(savedInstanceState);
 
@@ -142,6 +149,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         campaignTextView.setOnClickListener(this);
 
         headerView.findViewById(R.id.logout_button).setOnClickListener(this);
+        headerView.findViewById(R.id.sync_button).setOnClickListener(this);
 
     }
 
@@ -153,6 +161,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             listTaskPresenter.onShowCampaignSelector();
         else if (v.getId() == R.id.logout_button)
             RevealApplication.getInstance().logoutCurrentUser();
+        else if (v.getId() == R.id.sync_button) {
+            SyncServiceJob.scheduleJobImmediately(SyncServiceJob.TAG);
+        }
     }
 
     @Override
@@ -230,5 +241,43 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     protected void onDestroy() {
         listTaskPresenter = null;
         super.onDestroy();
+    }
+
+    @Override
+    public void onSyncStart() {
+        if (SyncStatusBroadcastReceiver.getInstance().isSyncing()) {
+            Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onSyncInProgress(FetchStatus fetchStatus) {
+        if (fetchStatus.equals(FetchStatus.fetchedFailed)) {
+            Snackbar.make(rootView, getString(org.smartregister.R.string.sync_failed), Snackbar.LENGTH_SHORT).show();
+
+        } else if (fetchStatus.equals(FetchStatus.fetched)
+                || fetchStatus.equals(FetchStatus.nothingFetched)) {
+            Snackbar.make(rootView, getString(org.smartregister.R.string.sync_complete), Snackbar.LENGTH_SHORT).show();
+        } else if (fetchStatus.equals(FetchStatus.noConnection)) {
+            Snackbar.make(rootView, getString(org.smartregister.R.string.sync_failed_no_internet), Snackbar.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onSyncComplete(FetchStatus fetchStatus) {
+        Snackbar.make(rootView, getString(org.smartregister.R.string.sync_complete), Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        SyncStatusBroadcastReceiver.getInstance().removeSyncStatusListener(this);
+        super.onPause();
     }
 }

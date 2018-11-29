@@ -17,6 +17,7 @@ import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.job.RevealJobCreator;
 import org.smartregister.reveal.repository.RevealRepository;
+import org.smartregister.reveal.util.RevealSyncConfiguration;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.DrishtiSyncScheduler;
 import org.smartregister.view.activity.DrishtiApplication;
@@ -46,9 +47,10 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
 //        Initialize Modules
-        CoreLibrary.init(context);
+        CoreLibrary.init(context, new RevealSyncConfiguration());
         ConfigurableViewsLibrary.init(context, getRepository());
         LocationHelper.init(Utils.ALLOWED_LEVELS, Utils.DEFAULT_LOCATION_LEVEL);
+        SyncStatusBroadcastReceiver.init(this);
 
         jsonSpecHelper = new JsonSpecHelper(this);
 
