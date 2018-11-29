@@ -29,19 +29,20 @@ import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.BaseMapActivity;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.contract.ListTaskView;
+import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
  * Created by samuelgithengi on 11/20/18.
  */
-public class ListTasksActivity extends BaseMapActivity implements ListTaskView {
+public class ListTasksActivity extends BaseMapActivity implements ListTaskContract.ListTaskView {
 
     private static final String TAG = "ListTasksActivity";
 
@@ -139,14 +140,21 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskView {
         operationalAreaTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showOperationalAreaSelector();
+                listTaskPresenter.onShowOperationalAreaSelector();
+            }
+        });
+
+        campaignTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listTaskPresenter.onShowCampaignSelector();
             }
         });
 
     }
 
-    private void showOperationalAreaSelector() {
-        Pair<String, ArrayList<String>> locationHierarchy = listTaskPresenter.processLocationHierarchy();
+    @Override
+    public void showOperationalAreaSelector(Pair<String, ArrayList<String>> locationHierarchy) {
         try {
             TreeViewDialog treeViewDialog = new TreeViewDialog(ListTasksActivity.this,
                     R.style.AppTheme_WideDialog,
@@ -164,8 +172,26 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskView {
             e.printStackTrace();
         }
 
+    }
 
-
+    @Override
+    public void showCampaignSelector(List<String> campaigns, String entireTreeString) {
+        try {
+            TreeViewDialog treeViewDialog = new TreeViewDialog(ListTasksActivity.this,
+                    R.style.AppTheme_WideDialog,
+                    new JSONArray(entireTreeString), new ArrayList<>(campaigns), new ArrayList<>(campaigns));
+            treeViewDialog.show();
+            treeViewDialog.setCanceledOnTouchOutside(true);
+            treeViewDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    listTaskPresenter.onCampaignSelectorClicked(treeViewDialog.getValue(), treeViewDialog.getName());
+                }
+            });
+            treeViewDialog.show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
