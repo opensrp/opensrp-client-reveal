@@ -4,6 +4,7 @@ import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.application.RevealApplication;
 
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_CAMPAIGN;
+import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_CAMPAIGN_ID;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_DISTRICT;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_FACILITY;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_OPERATIONAL_AREA;
@@ -59,5 +60,13 @@ public class PreferencesUtil {
 
     public String getCurrentCampaign() {
         return allSharedPreferences.getPreference(CURRENT_CAMPAIGN);
+    }
+
+    public void setCurrentCampaignId(String campaignId) {
+        allSharedPreferences.savePreference(CURRENT_CAMPAIGN_ID, campaignId);
+    }
+
+    public String getCurrentCampaignId() {
+        return allSharedPreferences.getPreference(CURRENT_CAMPAIGN_ID);
     }
 }

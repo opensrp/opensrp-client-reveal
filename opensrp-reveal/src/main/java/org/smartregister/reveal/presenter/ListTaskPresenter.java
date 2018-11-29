@@ -158,7 +158,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         Log.d(TAG, "Selected Campaign : " + TextUtils.join(",", name));
         Log.d(TAG, "Selected Campaign Ids: " + TextUtils.join(",", value));
 
-        PreferencesUtil.getInstance().setCurrentCampaign(value.get(0));
+        PreferencesUtil.getInstance().setCurrentCampaign(name.get(0));
+        PreferencesUtil.getInstance().setCurrentCampaignId(value.get(0));
         listTaskView.setCampaign(name.get(0));
     }
 }
