@@ -1,10 +1,26 @@
 package org.smartregister.reveal.util;
 
-public class Constants {
+public interface Constants {
 
-    public static final String VIEW_CONFIGURATION_PREFIX = "ViewConfiguration_";
-    public static class CONFIGURATION {
-        public static final String LOGIN = "login";
+    String VIEW_CONFIGURATION_PREFIX = "ViewConfiguration_";
+
+    interface CONFIGURATION {
+        String LOGIN = "login";
+    }
+
+    interface Preferences {
+        String CURRENT_OPERATIONAL_AREA = "CURRENT_OPERATIONAL_AREA";
+        String CURRENT_FACILITY = "CURRENT_FACILITY";
+        String CURRENT_DISTRICT = "CURRENT_DISTRICT";
+        String CURRENT_CAMPAIGN = "CURRENT_CAMPAIGN";
+    }
+
+    interface Tags {
+        String COUNTRY = "Country";
+        String PROVINCE = "Province";
+        String DISTRICT = "District";
+        String HEALTH_CENTER = "Rural Health Centre";
+        String OPERATIONAL_AREA = "Operational Area";
     }
 
 

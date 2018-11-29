@@ -32,5 +32,9 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="AppTheme.WideDialog" parent="Base.Theme.AppCompat.Dialog">
+        <item name="android:windowMinWidthMajor">@dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@dimen/dialog_min_width_major</item>
+    </style>
 
 </resources>

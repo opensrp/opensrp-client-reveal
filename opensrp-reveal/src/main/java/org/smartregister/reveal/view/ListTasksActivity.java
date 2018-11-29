@@ -1,6 +1,7 @@
 package org.smartregister.reveal.view;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -24,7 +25,6 @@ import com.vijay.jsonwizard.customviews.TreeViewDialog;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.smartregister.AllConstants;
-import org.smartregister.repository.AllSettings;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.BaseMapActivity;
@@ -36,7 +36,6 @@ import org.smartregister.util.Utils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -140,17 +139,32 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskView {
         operationalAreaTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Pair<String, ArrayList<String>> locationHierarchy = listTaskPresenter.processLocationHierarchy();
-                try {
-                    TreeViewDialog treeViewDialog = new TreeViewDialog(ListTasksActivity.this, new JSONArray(locationHierarchy.first), locationHierarchy.second, locationHierarchy.second);
-                    treeViewDialog.show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                listTaskPresenter.onCampaignSelectorClicked();
-
+                showOperationalAreaSelector();
             }
         });
+
+    }
+
+    private void showOperationalAreaSelector() {
+        Pair<String, ArrayList<String>> locationHierarchy = listTaskPresenter.processLocationHierarchy();
+        try {
+            TreeViewDialog treeViewDialog = new TreeViewDialog(ListTasksActivity.this,
+                    R.style.AppTheme_WideDialog,
+                    new JSONArray(locationHierarchy.first), locationHierarchy.second, locationHierarchy.second);
+            treeViewDialog.setCancelable(true);
+            treeViewDialog.setCanceledOnTouchOutside(true);
+            treeViewDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    listTaskPresenter.onOperationalAreaSelectorClicked(treeViewDialog.getName());
+                }
+            });
+            treeViewDialog.show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 

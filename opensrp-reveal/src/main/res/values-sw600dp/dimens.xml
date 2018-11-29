@@ -14,4 +14,6 @@
 
     <dimen name="drawer_drawable_padding">40dp</dimen>
     <dimen name="drawer_spinner_width">240dp</dimen>
+
+    <dimen name="dialog_min_width_major">@dimen/abc_dialog_min_width_major</dimen>
 </resources>
