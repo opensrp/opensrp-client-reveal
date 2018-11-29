@@ -16,7 +16,7 @@
             android:id="@+id/kujakuMapView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:mapbox_styleUrl="@string/mapbox_style_mapbox_streets" />
+            app:mapbox_styleUrl="@string/mapbox_style_satellite_streets" />
 
         <ImageButton
             android:id="@+id/drawerMenu"
