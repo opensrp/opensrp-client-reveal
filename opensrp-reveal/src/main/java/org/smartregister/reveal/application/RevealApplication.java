@@ -12,7 +12,11 @@ import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.JsonSpecHelper;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
+import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.Repository;
+import org.smartregister.repository.StructureRepository;
+import org.smartregister.repository.TaskNotesRepository;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.job.RevealJobCreator;
@@ -31,6 +35,11 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     private static final String TAG = RevealApplication.class.getCanonicalName();
     private JsonSpecHelper jsonSpecHelper;
     private String password;
+
+    private CampaignRepository campaignRepository;
+    private TaskRepository taskRepository;
+    private StructureRepository structureRepository;
+
 
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
@@ -132,5 +141,26 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     public void onTimeZoneChanged() {
         context.userService().forceRemoteLogin();
         logoutCurrentUser();
+    }
+
+    public CampaignRepository getCampaignRepository() {
+        if (campaignRepository == null) {
+            campaignRepository = new CampaignRepository(getRepository());
+        }
+        return campaignRepository;
+    }
+
+    public TaskRepository getTaskRepository() {
+        if (taskRepository == null) {
+            taskRepository = new TaskRepository(getRepository(), new TaskNotesRepository(getRepository()));
+        }
+        return taskRepository;
+    }
+
+    public StructureRepository getStructureRepository() {
+        if (structureRepository == null) {
+            structureRepository = new StructureRepository(getRepository());
+        }
+        return structureRepository;
     }
 }

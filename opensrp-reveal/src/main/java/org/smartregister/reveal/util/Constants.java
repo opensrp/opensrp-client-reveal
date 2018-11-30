@@ -26,5 +26,11 @@ public interface Constants {
         String OPERATIONAL_AREA = "Operational Area";
     }
 
+    interface Properties {
+        String TASK_IDENTIFIER = "taskIdentifier";
+        String TASK_BUSINESS_STATUS = "taskBusinessStatus";
+        String TASK_STATUS = "taskStatus";
+    }
+
 
 }

@@ -1,14 +1,17 @@
 package org.smartregister.reveal.view;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -62,14 +65,26 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private TextView facilityTextView;
     private TextView operatorTextView;
 
+    private GeoJsonSource geoJsonSource;
+
+    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_tasks);
 
         listTaskPresenter = new ListTaskPresenter(this);
-
         rootView = findViewById(R.id.content_frame);
+
+        sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
+
+        initializeMapView(savedInstanceState);
+        initializeDrawerLayout();
+        initializeProgressDialog();
+    }
+
+    private void initializeMapView(Bundle savedInstanceState) {
         kujakuMapView = findViewById(R.id.kujakuMapView);
         kujakuMapView.onCreate(savedInstanceState);
 
@@ -80,18 +95,16 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
 
+
                 mapboxMap.setMinZoomPreference(14);
                 mapboxMap.setMaxZoomPreference(21);
 
+
+                geoJsonSource = mapboxMap.getSourceAs("reveal-data-set");
+
                 String geoJson = Utils.readAssetContents(ListTasksActivity.this, "geojson.json");
 
-                FeatureCollection featureCollection = FeatureCollection.fromJson(geoJson);
-
-                GeoJsonSource geoJsonSource = mapboxMap.getSourceAs("reveal-data-set");
-
-                if (geoJsonSource != null) {
-                    geoJsonSource.setGeoJson(featureCollection);
-                }
+                setGeoJsonSource(geoJson);
 
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(new LatLng(-14.1706623, 32.5987837))
@@ -100,6 +113,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 mapboxMap.setCameraPosition(cameraPosition);
             }
         });
+    }
+
+    private void initializeDrawerLayout() {
 
         DrawerLayout mDrawerLayout = findViewById(R.id.drawer_layout);
 
@@ -111,14 +127,25 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             }
         });
 
-        sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
+        mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {//do nothing
+            }
 
-        initializeDrawerLayout();
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {//do nothing
+            }
 
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+                listTaskPresenter.onDrawerClosed();
+            }
 
-    }
+            @Override
+            public void onDrawerStateChanged(int newState) {//do nothing
+            }
+        });
 
-    private void initializeDrawerLayout() {
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         int screenHeightPixels = getResources().getDisplayMetrics().heightPixels
@@ -208,6 +235,19 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
+    public void setGeoJsonSource(String structuresGeoJson) {
+        FeatureCollection featureCollection = FeatureCollection.fromJson(structuresGeoJson);
+        if (geoJsonSource != null) {
+            geoJsonSource.setGeoJson(featureCollection);
+        }
+    }
+
+    @Override
+    public void displayNotification(int message) {
+        new AlertDialog.Builder(this).setMessage(message).setTitle(R.string.fetch_structures_title).setPositiveButton(R.string.ok, null).show();
+    }
+
+    @Override
     public void setCampaign(String campaign) {
         campaignTextView.setText(campaign);
     }
@@ -230,6 +270,23 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void setOperator() {
         org.smartregister.reveal.util.Utils.setTextViewText(operatorTextView, R.string.operator, sharedPreferences.fetchRegisteredANM());
+    }
+
+    private void initializeProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setTitle(R.string.fetching_structures_title);
+        progressDialog.setMessage(getString(R.string.fetching_structures_message));
+    }
+
+    @Override
+    public void showProgressDialog() {
+        progressDialog.show();
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        progressDialog.dismiss();
     }
 
     @Override

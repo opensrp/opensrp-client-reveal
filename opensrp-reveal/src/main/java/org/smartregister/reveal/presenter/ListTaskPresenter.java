@@ -7,9 +7,11 @@ import android.util.Log;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 import org.smartregister.domain.Campaign;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -38,9 +40,13 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     private LocationHelper locationHelper;
 
+    private PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
+
+    private boolean changedCurrentSelection;
+
     public ListTaskPresenter(ListTaskView listTaskView) {
         this.listTaskView = listTaskView;
-        listTaskInteractor = new ListTaskInteractor();
+        listTaskInteractor = new ListTaskInteractor(this);
         locationHelper = LocationHelper.getInstance();
     }
 
@@ -48,7 +54,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
         listTaskView.setOperator();
 
-        if (StringUtils.isBlank(PreferencesUtil.getInstance().getCurrentOperationalArea())) {
+        if (StringUtils.isBlank(prefsUtil.getCurrentOperationalArea())) {
             ArrayList<String> operationalAreaLevels = new ArrayList<>();
             operationalAreaLevels.add(DISTRICT);
             operationalAreaLevels.add(HEALTH_CENTER);
@@ -60,7 +66,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             populateLocationsFromPreferences();
         }
 
-        listTaskView.setCampaign(PreferencesUtil.getInstance().getCurrentCampaign());
+        listTaskView.setCampaign(prefsUtil.getCurrentCampaign());
 
     }
 
@@ -90,17 +96,18 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     }
 
     private void populateLocationsFromPreferences() {
-        listTaskView.setDistrict(PreferencesUtil.getInstance().getCurrentDistrict());
-        listTaskView.setFacility(PreferencesUtil.getInstance().getCurrentFacility());
-        listTaskView.setOperationalArea(PreferencesUtil.getInstance().getCurrentOperationalArea());
+        listTaskView.setDistrict(prefsUtil.getCurrentDistrict());
+        listTaskView.setFacility(prefsUtil.getCurrentFacility());
+        listTaskView.setOperationalArea(prefsUtil.getCurrentOperationalArea());
     }
 
     public void onOperationalAreaSelectorClicked(ArrayList<String> name) {
 
         Log.d(TAG, "Selected Location Hierarchy: " + TextUtils.join(",", name));
-
-        PreferencesUtil.getInstance().setCurrentDistrict(name.get(2));
-        PreferencesUtil.getInstance().setCurrentOperationalArea(name.get(3));
+        if (name.size() != 4)//no operational area was selected, dialog was dismissed
+            return;
+        prefsUtil.setCurrentDistrict(name.get(2));
+        prefsUtil.setCurrentOperationalArea(name.get(3));
 
         ArrayList<String> operationalAreaLevels = new ArrayList<>();
         operationalAreaLevels.add(DISTRICT);
@@ -108,7 +115,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         operationalAreaLevels.add(OPERATIONAL_AREA);
         List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
         String facility = getFacilityFromOperationalArea(name.get(2), name.get(3), entireTree);
-        PreferencesUtil.getInstance().setCurrentFacility(facility);
+        prefsUtil.setCurrentFacility(facility);
+        changedCurrentSelection = true;
 
         populateLocationsFromPreferences();
 
@@ -131,7 +139,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
 
     public void onShowCampaignSelector() {
-        listTaskInteractor.fetchCampaigns(this);
+        listTaskInteractor.fetchCampaigns();
     }
 
     @Override
@@ -158,8 +166,27 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         Log.d(TAG, "Selected Campaign : " + TextUtils.join(",", name));
         Log.d(TAG, "Selected Campaign Ids: " + TextUtils.join(",", value));
 
-        PreferencesUtil.getInstance().setCurrentCampaign(name.get(0));
-        PreferencesUtil.getInstance().setCurrentCampaignId(value.get(0));
+        prefsUtil.setCurrentCampaign(name.get(0));
+        prefsUtil.setCurrentCampaignId(value.get(0));
         listTaskView.setCampaign(name.get(0));
+        changedCurrentSelection = true;
     }
+
+    public void onDrawerClosed() {
+        if (changedCurrentSelection) {
+            listTaskView.showProgressDialog();
+            listTaskInteractor.fetchLocations(prefsUtil.getCurrentCampaign(), prefsUtil.getCurrentOperationalArea());
+        }
+    }
+
+    @Override
+    public void onStructuresFetched(JSONObject structuresGeoJson) {
+        listTaskView.hideProgressDialog();
+        changedCurrentSelection = false;
+        if (structuresGeoJson.has("features")) {
+            listTaskView.setGeoJsonSource(structuresGeoJson.toString());
+        } else
+            listTaskView.displayNotification(R.string.fetch_structures_failed_message);
+    }
+
 }

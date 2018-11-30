@@ -27,4 +27,9 @@
     <string name="facility">Facility:</string>
     <string name="operator">Spray Operator:</string>
 
+    <string name="fetch_structures_failed_message">Failed to load structures for current selected Campaign and Operational Area</string>
+    <string name="fetch_structures_title">Loading failed</string>
+    <string name="fetching_structures_title">Fetching Structures</string>
+    <string name="fetching_structures_message">Fetching Structures for Selected Operational Area and Campaign</string>
+
 </resources>
