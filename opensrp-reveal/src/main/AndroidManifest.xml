@@ -38,6 +38,9 @@
             android:name=".activity.ListTasksActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <service android:name="org.smartregister.sync.intent.CampaignIntentService" />
+        <service android:name="org.smartregister.sync.intent.TaskIntentService" />
+
 
     </application>
 

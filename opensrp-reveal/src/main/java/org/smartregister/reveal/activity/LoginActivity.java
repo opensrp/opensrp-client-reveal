@@ -25,7 +25,6 @@ public class LoginActivity extends BaseLoginActivity implements BaseLoginContrac
         if (remote) {
             org.smartregister.util.Utils.startAsyncTask(new SaveTeamLocationsTask(), null);
         }
-
         startActivity(new Intent(this, ListTasksActivity.class));
 
         finish();
