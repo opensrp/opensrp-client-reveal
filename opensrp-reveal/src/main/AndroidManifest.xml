@@ -40,6 +40,7 @@
 
         <service android:name="org.smartregister.sync.intent.CampaignIntentService" />
         <service android:name="org.smartregister.sync.intent.TaskIntentService" />
+        <service android:name="org.smartregister.sync.intent.LocationStructureIntentService" />
 
 
     </application>
