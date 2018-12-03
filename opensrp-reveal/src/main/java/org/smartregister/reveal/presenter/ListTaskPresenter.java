@@ -123,6 +123,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         changedCurrentSelection = true;
 
         populateLocationsFromPreferences();
+        unlockDrawerLayout();
 
     }
 
@@ -174,6 +175,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         prefsUtil.setCurrentCampaignId(value.get(0));
         listTaskView.setCampaign(name.get(0));
         changedCurrentSelection = true;
+        unlockDrawerLayout();
     }
 
     public void onDrawerClosed() {
@@ -193,6 +195,15 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             listTaskView.displayNotification(R.string.fetch_structures_failed_message);
     }
 
+    private void unlockDrawerLayout() {
+        String campaign = PreferencesUtil.getInstance().getCurrentCampaignId();
+        String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
+        if (StringUtils.isNotBlank(campaign) &&
+                StringUtils.isNotBlank(operationalArea)) {
+            listTaskView.unlockNavigationDrawer();
+        }
+    }
+
     public void onMapReady() {
         String campaign = PreferencesUtil.getInstance().getCurrentCampaignId();
         String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
@@ -201,6 +212,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             listTaskInteractor.fetchLocations(campaign, operationalArea);
         } else {
             listTaskView.displayNotification(R.string.select_campaign_operational_area);
+            listTaskView.lockNavigationDrawerForSelection();
         }
     }
 }

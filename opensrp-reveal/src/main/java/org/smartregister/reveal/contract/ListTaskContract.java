@@ -41,6 +41,10 @@ public interface ListTaskContract {
 
         void setGeoJsonSource(String structuresGeoJson, LatLng coordinates);
 
+        void lockNavigationDrawerForSelection();
+
+        void unlockNavigationDrawer();
+
         void displayNotification(@StringRes int message);
     }
 

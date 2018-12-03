@@ -71,6 +71,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private MapboxMap mMapboxMap;
 
+    private DrawerLayout mDrawerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,7 +119,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private void initializeDrawerLayout() {
 
-        DrawerLayout mDrawerLayout = findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
 
         ImageButton mDrawerMenuButton = findViewById(R.id.drawerMenu);
         mDrawerMenuButton.setOnClickListener(new View.OnClickListener() {
@@ -242,6 +244,21 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             if (!Utils.isEmptyCollection(featureCollection.features())) {
                 mMapboxMap.setCameraPosition(new CameraPosition.Builder().target(coordinates).build());
             }
+        }
+    }
+
+    @Override
+    public void lockNavigationDrawerForSelection() {
+        mDrawerLayout.openDrawer(GravityCompat.START);
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+
+    }
+
+    @Override
+    public void unlockNavigationDrawer() {
+        if (mDrawerLayout.getDrawerLockMode(GravityCompat.START) == DrawerLayout.LOCK_MODE_LOCKED_OPEN) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         }
     }
 
