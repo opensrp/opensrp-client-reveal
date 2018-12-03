@@ -16,7 +16,9 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.util.AssetHandler;
+import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -191,4 +193,14 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             listTaskView.displayNotification(R.string.fetch_structures_failed_message);
     }
 
+    public void onMapReady() {
+        String campaign = PreferencesUtil.getInstance().getCurrentCampaignId();
+        String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
+        if (StringUtils.isNotBlank(campaign) &&
+                StringUtils.isNotBlank(operationalArea)) {
+            listTaskInteractor.fetchLocations(campaign, operationalArea);
+        } else {
+            listTaskView.displayNotification(R.string.select_campaign_operational_area);
+        }
+    }
 }

@@ -98,20 +98,19 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             public void onMapReady(MapboxMap mapboxMap) {
                 mMapboxMap = mapboxMap;
 
-                mapboxMap.setMinZoomPreference(14);
+                mapboxMap.setMinZoomPreference(12);
                 mapboxMap.setMaxZoomPreference(21);
 
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .zoom(16)
+                        .build();
+                mapboxMap.setCameraPosition(cameraPosition);
 
                 geoJsonSource = mapboxMap.getSourceAs("reveal-data-set");
 
-                String geoJson = Utils.readAssetContents(ListTasksActivity.this, "geojson.json");
+                listTaskPresenter.onMapReady();
 
-                setGeoJsonSource(geoJson, new LatLng(-14.1706623, 32.5987837));
 
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .zoom(18)
-                        .build();
-                mapboxMap.setCameraPosition(cameraPosition);
             }
         });
     }

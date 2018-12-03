@@ -31,5 +31,6 @@
     <string name="fetch_structures_title">Loading failed</string>
     <string name="fetching_structures_title">Fetching Structures</string>
     <string name="fetching_structures_message">Fetching Structures for Selected Operational Area and Campaign</string>
+    <string name="select_campaign_operational_area">Select Campaign and Operational area not set. Select from the hamburger menu</string>
 
 </resources>
