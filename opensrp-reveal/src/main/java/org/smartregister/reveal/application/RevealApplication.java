@@ -23,6 +23,7 @@ import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.job.RevealJobCreator;
 import org.smartregister.reveal.repository.RevealRepository;
 import org.smartregister.reveal.util.RevealSyncConfiguration;
+import org.smartregister.reveal.util.TestDataUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.DrishtiSyncScheduler;
 import org.smartregister.view.activity.DrishtiApplication;

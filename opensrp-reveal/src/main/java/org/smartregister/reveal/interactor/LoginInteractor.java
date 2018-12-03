@@ -1,6 +1,7 @@
 package org.smartregister.reveal.interactor;
 
 import org.smartregister.login.interactor.BaseLoginInteractor;
+import org.smartregister.reveal.util.TestDataUtils;
 import org.smartregister.view.contract.BaseLoginContract;
 
 public class LoginInteractor extends BaseLoginInteractor implements BaseLoginContract.Interactor {
@@ -11,6 +12,10 @@ public class LoginInteractor extends BaseLoginInteractor implements BaseLoginCon
 
     @Override
     protected void scheduleJobs() {
+
+        //Populate Test data
+        new TestDataUtils().populateTestData();
+
 //        schedule jobs
     }
 
