@@ -69,6 +69,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private ProgressDialog progressDialog;
 
+    private MapboxMap mMapboxMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +96,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
-
+                mMapboxMap = mapboxMap;
 
                 mapboxMap.setMinZoomPreference(14);
                 mapboxMap.setMaxZoomPreference(21);
@@ -104,10 +106,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
                 String geoJson = Utils.readAssetContents(ListTasksActivity.this, "geojson.json");
 
-                setGeoJsonSource(geoJson);
+                setGeoJsonSource(geoJson, new LatLng(-14.1706623, 32.5987837));
 
                 CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(-14.1706623, 32.5987837))
                         .zoom(18)
                         .build();
                 mapboxMap.setCameraPosition(cameraPosition);
@@ -235,10 +236,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void setGeoJsonSource(String structuresGeoJson) {
+    public void setGeoJsonSource(String structuresGeoJson, LatLng coordinates) {
         FeatureCollection featureCollection = FeatureCollection.fromJson(structuresGeoJson);
         if (geoJsonSource != null) {
             geoJsonSource.setGeoJson(featureCollection);
+            if (!Utils.isEmptyCollection(featureCollection.features())) {
+                mMapboxMap.setCameraPosition(new CameraPosition.Builder().target(coordinates).build());
+            }
         }
     }
 
@@ -281,12 +285,16 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void showProgressDialog() {
-        progressDialog.show();
+        if (progressDialog != null) {
+            progressDialog.show();
+        }
     }
 
     @Override
     public void hideProgressDialog() {
-        progressDialog.dismiss();
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 
     @Override

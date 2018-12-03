@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.annotation.StringRes;
 import android.support.v4.util.Pair;
 
+import com.mapbox.mapboxsdk.geometry.LatLng;
+
 import org.json.JSONObject;
 import org.smartregister.domain.Campaign;
 
@@ -37,7 +39,7 @@ public interface ListTaskContract {
 
         void showCampaignSelector(List<String> campaigns, String entireTreeString);
 
-        void setGeoJsonSource(String structuresGeoJson);
+        void setGeoJsonSource(String structuresGeoJson, LatLng coordinates);
 
         void displayNotification(@StringRes int message);
     }
@@ -46,6 +48,6 @@ public interface ListTaskContract {
 
         void onCampaignsFetched(List<Campaign> campaigns);
 
-        void onStructuresFetched(JSONObject structuresGeoJson);
+        void onStructuresFetched(JSONObject structuresGeoJson, LatLng coordinates);
     }
 }

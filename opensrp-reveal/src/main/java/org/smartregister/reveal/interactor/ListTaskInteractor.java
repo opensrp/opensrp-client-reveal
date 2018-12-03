@@ -5,7 +5,12 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.json.JSONArray;
@@ -25,11 +30,15 @@ import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.DateTypeConverter;
 import org.smartregister.util.PropertiesConverter;
+import org.smartregister.util.Utils;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
+import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURE_COLLECTION;
+import static org.smartregister.reveal.util.Constants.GeoJSON.TYPE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
@@ -74,8 +83,6 @@ public class ListTaskInteractor {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                //TODO remove method call once sync is implemented
-                generateDummyCampaign();
                 List<Campaign> campaigns = campaignRepository.getAllCampaigns();
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
@@ -95,35 +102,39 @@ public class ListTaskInteractor {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final JSONObject featureCollection = new JSONObject();
-                Location operationalAreaLocation = locationRepository.getLocationByName(operationalArea);
-                if (operationalAreaLocation != null) {
-                    Map<String, Task> tasks = taskRepository.getTasksByCampaignAndGroup(campaign, operationalAreaLocation.getId());
-                    List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
-                    for (Location structure : structures) {
-                        Task task = tasks.get(structure.getId());
-                        if (task != null) {
-                            HashMap<String, String> taskProperties = new HashMap<>();
-                            taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
-                            taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
-                            taskProperties.put(TASK_STATUS, task.getStatus().name());
-                            structure.getProperties().setCustomProperties(taskProperties);
+                final JSONObject featureCollection = createFutureCollection();
+                final LatLng latLng = new LatLng();
+                try {
+                    Location operationalAreaLocation = locationRepository.getLocationByName(operationalArea);
+                    if (operationalAreaLocation != null) {
+                        Map<String, Task> tasks = taskRepository.getTasksByCampaignAndGroup(campaign, operationalAreaLocation.getId());
+                        List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
+                        for (Location structure : structures) {
+                            Task task = tasks.get(structure.getId());
+                            if (task != null) {
+                                HashMap<String, String> taskProperties = new HashMap<>();
+                                taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
+                                taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                                taskProperties.put(TASK_STATUS, task.getStatus().name());
+                                structure.getProperties().setCustomProperties(taskProperties);
+                            }
+                        }
+                        if (!Utils.isEmptyCollection(structures)) {
+                            featureCollection.put(FEATURES, new JSONArray(gson.toJson(structures)));
+                            JsonArray coordinate1 = operationalAreaLocation.getGeometry().getCoordinates().get(0).getAsJsonArray().get(0)
+                                    .getAsJsonArray().get(0).getAsJsonArray();
+                            latLng.setLongitude(coordinate1.get(0).getAsDouble());
+                            latLng.setLatitude(coordinate1.get(1).getAsDouble());
+                            Log.d(TAG, "features:" + featureCollection.toString());
                         }
                     }
-
-                    if (!structures.isEmpty()) {
-                        try {
-                            featureCollection.put("type", "FeatureCollection");
-                            featureCollection.put("features", new JSONArray(gson.toJson(structures)));
-                        } catch (JSONException e) {
-                            Log.e(TAG, e.getMessage(), e);
-                        }
-                    }
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage(), e);
                 }
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-                        presenterCallBack.onStructuresFetched(featureCollection);
+                        presenterCallBack.onStructuresFetched(featureCollection, latLng);
                     }
                 });
             }
@@ -132,25 +143,15 @@ public class ListTaskInteractor {
         appExecutors.diskIO().execute(runnable);
     }
 
-
-    /**
-     * TODO remove once sync is implemented
-     */
-    private void generateDummyCampaign() {
+    private JSONObject createFutureCollection() {
+        JSONObject featureCollection = new JSONObject();
         try {
-            Gson gson = new GsonBuilder().registerTypeAdapter(DateTime.class, new DateTimeTypeConverter("yyyy-MM-dd'T'HHmm"))
-                    .registerTypeAdapter(LocalDate.class, new DateTypeConverter())
-                    .create();
-            String campaignJson = "{\"identifier\":\"IRS_2018_S1\",\"title\":\"2019 IRS Season 1\",\"description\":\"This is the 2010 IRS Spray Campaign for Zambia for the first spray season dated 1 Jan 2019 - 31 Mar 2019.\",\"status\":\"In Progress\",\"executionPeriod\":{\"start\":\"2019-01-01\",\"end\":\"2019-03-31\"},\"authoredOn\":\"2018-10-01T0900\",\"lastModified\":\"2018-10-01T0900\",\"owner\":\"jdoe\",\"serverVersion\":0}";
-            String campaign2Json = "{\"identifier\":\"IRS_2018_S2\",\"title\":\"2019 IRS Season 2\",\"description\":\"This is the 2010 IRS Spray Campaign for Zambia for the second spray season dated 1 Jan 2019 - 31 Mar 2019.\",\"status\":\"In Progress\",\"executionPeriod\":{\"start\":\"2019-01-01\",\"end\":\"2019-03-31\"},\"authoredOn\":\"2018-10-01T0900\",\"lastModified\":\"2018-10-01T0900\",\"owner\":\"jdoe\",\"serverVersion\":0}";
-
-            Campaign campaign = gson.fromJson(campaignJson, Campaign.class);
-            campaignRepository.addOrUpdate(campaign);
-
-            Campaign campaign2 = gson.fromJson(campaign2Json, Campaign.class);
-            campaignRepository.addOrUpdate(campaign2);
-        } catch (Exception e) {
-            e.printStackTrace();
+            featureCollection.put(TYPE, FEATURE_COLLECTION);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error creating feature collection");
+            return null;
         }
+        return featureCollection;
     }
+
 }

@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
+import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Tags.COUNTRY;
 import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
@@ -175,16 +177,16 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     public void onDrawerClosed() {
         if (changedCurrentSelection) {
             listTaskView.showProgressDialog();
-            listTaskInteractor.fetchLocations(prefsUtil.getCurrentCampaign(), prefsUtil.getCurrentOperationalArea());
+            listTaskInteractor.fetchLocations(prefsUtil.getCurrentCampaignId(), prefsUtil.getCurrentOperationalArea());
         }
     }
 
     @Override
-    public void onStructuresFetched(JSONObject structuresGeoJson) {
+    public void onStructuresFetched(JSONObject structuresGeoJson, LatLng coordinates) {
         listTaskView.hideProgressDialog();
         changedCurrentSelection = false;
-        if (structuresGeoJson.has("features")) {
-            listTaskView.setGeoJsonSource(structuresGeoJson.toString());
+        if (structuresGeoJson.has(FEATURES)) {
+            listTaskView.setGeoJsonSource(structuresGeoJson.toString(), coordinates);
         } else
             listTaskView.displayNotification(R.string.fetch_structures_failed_message);
     }

@@ -33,4 +33,11 @@ public interface Constants {
     }
 
 
+    interface GeoJSON {
+        String TYPE = "type";
+        String FEATURE_COLLECTION = "FeatureCollection";
+        String FEATURES = "features";
+    }
+
+
 }
