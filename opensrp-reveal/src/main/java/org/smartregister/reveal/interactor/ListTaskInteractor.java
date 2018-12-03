@@ -16,6 +16,7 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.CampaignRepository;
+import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
@@ -51,6 +52,8 @@ public class ListTaskInteractor {
 
     private StructureRepository structureRepository;
 
+    private LocationRepository locationRepository;
+
     private PresenterCallBack presenterCallBack;
 
     public ListTaskInteractor(PresenterCallBack presenterCallBack) {
@@ -59,6 +62,7 @@ public class ListTaskInteractor {
         campaignRepository = RevealApplication.getInstance().getCampaignRepository();
         taskRepository = RevealApplication.getInstance().getTaskRepository();
         structureRepository = RevealApplication.getInstance().getStructureRepository();
+        locationRepository = RevealApplication.getInstance().getLocationRepository();
     }
 
     @VisibleForTesting
@@ -91,25 +95,29 @@ public class ListTaskInteractor {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Map<String, Task> tasks = taskRepository.getTasksByCampaignAndGroup(campaign, operationalArea);
-                List<Location> structures = structureRepository.getLocationsByParentId(operationalArea);
-                for (Location structure : structures) {
-                    Task task = tasks.get(structure.getId());
-                    if (task != null) {
-                        HashMap<String, String> taskProperties = new HashMap<>();
-                        taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
-                        taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
-                        taskProperties.put(TASK_STATUS, task.getStatus().name());
-                        structure.getProperties().setCustomProperties(taskProperties);
-                    }
-                }
                 final JSONObject featureCollection = new JSONObject();
-                if (!structures.isEmpty()) {
-                    try {
-                        featureCollection.put("type", "FeatureCollection");
-                        featureCollection.put("features", new JSONArray(gson.toJson(structures)));
-                    } catch (JSONException e) {
-                        Log.e(TAG, e.getMessage(), e);
+                Location operationalAreaLocation = locationRepository.getLocationByName(operationalArea);
+                if (operationalAreaLocation != null) {
+                    Map<String, Task> tasks = taskRepository.getTasksByCampaignAndGroup(campaign, operationalAreaLocation.getId());
+                    List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
+                    for (Location structure : structures) {
+                        Task task = tasks.get(structure.getId());
+                        if (task != null) {
+                            HashMap<String, String> taskProperties = new HashMap<>();
+                            taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
+                            taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                            taskProperties.put(TASK_STATUS, task.getStatus().name());
+                            structure.getProperties().setCustomProperties(taskProperties);
+                        }
+                    }
+
+                    if (!structures.isEmpty()) {
+                        try {
+                            featureCollection.put("type", "FeatureCollection");
+                            featureCollection.put("features", new JSONArray(gson.toJson(structures)));
+                        } catch (JSONException e) {
+                            Log.e(TAG, e.getMessage(), e);
+                        }
                     }
                 }
                 appExecutors.mainThread().execute(new Runnable() {

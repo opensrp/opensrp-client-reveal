@@ -88,7 +88,6 @@
         android:drawablePadding="@dimen/drawer_drawable_padding"
         android:gravity="center_vertical"
         android:padding="10dp"
-        android:text="@string/campaign"
         android:textColor="@color/text_black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/campaign_label" />
@@ -116,7 +115,6 @@
         android:drawablePadding="@dimen/drawer_drawable_padding"
         android:gravity="center_vertical"
         android:padding="10dp"
-        android:text="@string/operational_area"
         android:textColor="@color/text_black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/operational_area_label" />

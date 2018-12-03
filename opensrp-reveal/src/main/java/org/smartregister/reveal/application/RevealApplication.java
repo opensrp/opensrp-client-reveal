@@ -13,6 +13,7 @@ import org.smartregister.configurableviews.helper.JsonSpecHelper;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.CampaignRepository;
+import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskNotesRepository;
@@ -39,6 +40,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     private CampaignRepository campaignRepository;
     private TaskRepository taskRepository;
     private StructureRepository structureRepository;
+    private LocationRepository locationRepository;
 
 
     public static synchronized RevealApplication getInstance() {
@@ -162,5 +164,12 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             structureRepository = new StructureRepository(getRepository());
         }
         return structureRepository;
+    }
+
+    public LocationRepository getLocationRepository() {
+        if (locationRepository == null) {
+            locationRepository = new LocationRepository(getRepository());
+        }
+        return locationRepository;
     }
 }
