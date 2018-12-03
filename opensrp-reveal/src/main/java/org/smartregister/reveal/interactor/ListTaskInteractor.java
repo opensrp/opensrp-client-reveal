@@ -5,14 +5,9 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.geojson.Geometry;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +23,6 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract.PresenterCallBack;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.util.DateTimeTypeConverter;
-import org.smartregister.util.DateTypeConverter;
 import org.smartregister.util.PropertiesConverter;
 import org.smartregister.util.Utils;
 
@@ -103,9 +97,8 @@ public class ListTaskInteractor {
             @Override
             public void run() {
                 final JSONObject featureCollection = createFutureCollection();
-                final LatLng latLng = new LatLng();
+                Location operationalAreaLocation = locationRepository.getLocationByName(operationalArea);
                 try {
-                    Location operationalAreaLocation = locationRepository.getLocationByName(operationalArea);
                     if (operationalAreaLocation != null) {
                         Map<String, Task> tasks = taskRepository.getTasksByCampaignAndGroup(campaign, operationalAreaLocation.getId());
                         List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
@@ -121,10 +114,7 @@ public class ListTaskInteractor {
                         }
                         if (!Utils.isEmptyCollection(structures)) {
                             featureCollection.put(FEATURES, new JSONArray(gson.toJson(structures)));
-                            JsonArray coordinate1 = operationalAreaLocation.getGeometry().getCoordinates().get(0).getAsJsonArray().get(0)
-                                    .getAsJsonArray().get(0).getAsJsonArray();
-                            latLng.setLongitude(coordinate1.get(0).getAsDouble());
-                            latLng.setLatitude(coordinate1.get(1).getAsDouble());
+                            Geometry.fromJson(gson.toJson(operationalAreaLocation.getGeometry()));
                             Log.d(TAG, "features:" + featureCollection.toString());
                         }
                     }
@@ -134,7 +124,7 @@ public class ListTaskInteractor {
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-                        presenterCallBack.onStructuresFetched(featureCollection, latLng);
+                        presenterCallBack.onStructuresFetched(featureCollection, Geometry.fromJson(gson.toJson(operationalAreaLocation.getGeometry())));
                     }
                 });
             }

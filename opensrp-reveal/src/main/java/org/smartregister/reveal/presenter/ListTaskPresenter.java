@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
+import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.apache.commons.lang3.StringUtils;
@@ -186,11 +187,11 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     }
 
     @Override
-    public void onStructuresFetched(JSONObject structuresGeoJson, LatLng coordinates) {
+    public void onStructuresFetched(JSONObject structuresGeoJson, Geometry operationalAreaGeometry) {
         listTaskView.hideProgressDialog();
         changedCurrentSelection = false;
         if (structuresGeoJson.has(FEATURES)) {
-            listTaskView.setGeoJsonSource(structuresGeoJson.toString(), coordinates);
+            listTaskView.setGeoJsonSource(structuresGeoJson.toString(), operationalAreaGeometry);
         } else
             listTaskView.displayNotification(R.string.fetch_structures_failed_message);
     }
