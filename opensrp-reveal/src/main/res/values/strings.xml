@@ -36,4 +36,10 @@
     <string name="reveal_satellite_style">asset://reveal-streets-satellite.json</string>
     <string name="reveal_streets_style">asset://reveal-streets-satellite.json</string>
     <string name="reveal_datasource_name">reveal-data-set</string>
+    <string name="reveal_layer_polygons">reveal-data-polygons</string>
+    <string name="reveal_layer_points">reveal-data-points</string>
+
+
+    <string name="task_not_found">Could not find task for Structure %1s </string>
+
 </resources>

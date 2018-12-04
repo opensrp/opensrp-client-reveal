@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -17,10 +18,13 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
@@ -43,6 +47,7 @@ import org.smartregister.util.Utils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -95,6 +100,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         kujakuMapView.setStyleUrl(getString(R.string.reveal_satellite_style));
 
         kujakuMapView.showCurrentLocationBtn(true);
+
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
@@ -113,6 +119,20 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 listTaskPresenter.onMapReady();
 
 
+                mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
+                    @Override
+                    public void onMapClick(@NonNull LatLng point) {
+                        final PointF pixel = mapboxMap.getProjection().toScreenLocation(point);
+                        List<Feature> features = mapboxMap.queryRenderedFeatures(pixel,
+                                getString(R.string.reveal_layer_polygons), getString(R.string.reveal_layer_points));
+                        Log.d(TAG, "LEN: " + features.size());
+                        if (!features.isEmpty())
+                            listTaskPresenter.onFeatureClicked(features.get(0));
+                        if (features.size() > 1) {
+                            Log.w(TAG, "Selected more than 1 structure: " + features.size());
+                        }
+                    }
+                });
             }
         });
     }
@@ -265,6 +285,24 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void displayNotification(int message) {
         new AlertDialog.Builder(this).setMessage(message).setTitle(R.string.fetch_structures_title).setPositiveButton(R.string.ok, null).show();
+    }
+
+    @Override
+    public void displayNotification(String message) {
+        new AlertDialog.Builder(this).setMessage(message).setTitle(R.string.fetch_structures_title).setPositiveButton(R.string.ok, null).show();
+    }
+
+    @Override
+    public void openCardView(String structureId, String taskIdentifier, String businessStatus) {
+        Toast.makeText(this, String.format("Opening Card View for Structure %s and task %s",
+                structureId, taskIdentifier), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void startSprayForm(String structureId, String taskIdentifier, String businessStatus) {
+        Toast.makeText(this, String.format("Opening Spray form for Structure %s and task %s status: %s",
+                structureId, taskIdentifier, businessStatus), Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
