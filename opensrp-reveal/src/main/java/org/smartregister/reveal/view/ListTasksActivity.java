@@ -92,7 +92,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         kujakuMapView = findViewById(R.id.kujakuMapView);
         kujakuMapView.onCreate(savedInstanceState);
 
-        kujakuMapView.setStyleUrl("asset://reveal-streets-style.json");
+        kujakuMapView.setStyleUrl(getString(R.string.reveal_satellite_style));
 
         kujakuMapView.showCurrentLocationBtn(true);
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
@@ -100,7 +100,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             public void onMapReady(MapboxMap mapboxMap) {
                 mMapboxMap = mapboxMap;
 
-                mapboxMap.setMinZoomPreference(12);
+                mapboxMap.setMinZoomPreference(14);
                 mapboxMap.setMaxZoomPreference(21);
 
                 CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -108,7 +108,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         .build();
                 mapboxMap.setCameraPosition(cameraPosition);
 
-                geoJsonSource = mapboxMap.getSourceAs("reveal-data-set");
+                geoJsonSource = mapboxMap.getSourceAs(getString(R.string.reveal_datasource_name));
 
                 listTaskPresenter.onMapReady();
 
