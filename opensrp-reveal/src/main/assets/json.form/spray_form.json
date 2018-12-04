@@ -1,0 +1,301 @@
+{
+  "count": "1",
+  "encounter_type": "Spray",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "Record Spray Status",
+    "fields": [
+      {
+        "key": "structureType",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Type of Structure",
+        "options": [
+          {
+            "key": "residential",
+            "text": "Residential Structure"
+          },
+          {
+            "key": "non_residential",
+            "text": "Non-Residential Structure"
+          },
+          {
+            "key": "facility",
+            "text": "Facility"
+          }
+        ]
+      },
+      {
+        "key": "sprayStatus",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Spray Status",
+        "options": [
+          {
+            "key": "sprayed",
+            "text": "Sprayable,Sprayed"
+          },
+          {
+            "key": "not_sprayed",
+            "text": "Sprayable,Not Sprayed"
+          },
+          {
+            "key": "not_eligible",
+            "text": "Not Eligible"
+          }
+        ],
+        "relevance": {
+          "step1:structureType": {
+            "type": "string",
+            "ex": "equalTo(., \"residential\")"
+          }
+        }
+      },
+      {
+        "key": "notSprayedReason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Not Sprayed Reason",
+        "options": [
+          {
+            "key": "no_one_missed",
+            "text": "No one home/Missed"
+          },
+          {
+            "key": "locked",
+            "text": "Locked"
+          },
+          {
+            "key": "sick",
+            "text": "Sick"
+          },
+          {
+            "key": "refused",
+            "text": "Refused"
+          },
+          {
+            "key": "funeral",
+            "text": "Funeral"
+          },
+          {
+            "key": "other",
+            "text": "Other"
+          }
+        ],
+        "relevance": {
+          "step1:sprayStatus": {
+            "type": "string",
+            "ex": "equalTo(., \"not_sprayed\")"
+          }
+        }
+      },
+      {
+        "key": "notSprayedOtherReason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Not Sprayed Other Reason",
+        "edit_type": "name",
+        "v_required": {
+          "value": true,
+          "err": "Please specify reason spray was not done"
+        },
+        "relevance": {
+          "step1:notSprayedReason": {
+            "type": "string",
+            "ex": "equalTo(., \"other\")"
+          }
+        }
+      },
+      {
+        "key": "familyHeadName",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Head of Household name",
+        "edit_type": "name",
+        "v_required": {
+          "value": true,
+          "err": "Please specify Head of Household name"
+        },
+        "relevance": {
+          "step1:sprayStatus": {
+            "type": "string",
+            "ex": "regex(., \"sprayed|not_sprayed\")"
+          }
+        }
+      },
+      {
+        "key": "familyHeadSex",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Sex of Household Head",
+        "options": [
+          {
+            "key": "male",
+            "text": "Male"
+          },
+          {
+            "key": "female",
+            "text": "Female"
+          },
+          {
+            "key": "not_applicable",
+            "text": "Not Applicable"
+          }
+        ],
+        "relevance": {
+          "step1:sprayStatus": {
+            "type": "string",
+            "ex": "regex(., \"sprayed|not_sprayed\")"
+          }
+        }
+      },
+      {
+        "key": "roomsFound",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of Eligible Rooms Found (Type 99 if unable to assess)",
+        "v_required": {
+          "value": true,
+          "err": "Please specify number of eligible rooms (Type 99 if unable to assess)"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "relevance": {
+          "step1:sprayStatus": {
+            "type": "string",
+            "ex": "regex(., \"sprayed|not_sprayed\")"
+          }
+        }
+      },
+      {
+        "key": "sprayedRooms",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of Rooms Sprayed (Type 99 if unable to assess)",
+        "v_required": {
+          "value": true,
+          "err": "Please specify number of rooms sprayed (Type 99 if unable to assess)"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "relevance": {
+          "step1:sprayStatus": {
+            "type": "string",
+            "ex": "regex(., \"sprayed\")"
+          }
+        }
+      },
+      {
+        "key": "netsFound",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Total Number of Nets Hanging and in Use (Type 99 if unable to assess)",
+        "v_required": {
+          "value": true,
+          "err": "Please specify Total Number of Nets (Type 99 if unable to assess)"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "relevance": {
+          "step1:sprayStatus": {
+            "type": "string",
+            "ex": "regex(., \"sprayed|not_sprayed\")"
+          }
+        }
+      },
+      {
+        "key": "mopUp",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is a mop-up activity",
+        "options": [
+          {
+            "key": "yes",
+            "text": "Yes"
+          },
+          {
+            "key": "no",
+            "text": "No"
+          }
+        ],
+        "value": "no",
+        "relevance": {
+          "step1:sprayStatus": {
+            "type": "string",
+            "ex": "regex(., \"sprayed|not_sprayed\")"
+          }
+        }
+      }
+    ]
+  }
+}

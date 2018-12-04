@@ -6,6 +6,10 @@ public interface Constants {
 
     String FILTER_TEAM_ID = "teamId";
 
+    String JSON_FORM_PARAM_JSON = "json";
+
+    int REQUEST_CODE_GET_JSON = 3432;
+
     interface CONFIGURATION {
         String LOGIN = "login";
     }
