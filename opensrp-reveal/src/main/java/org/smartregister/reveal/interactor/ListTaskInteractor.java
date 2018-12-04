@@ -124,7 +124,8 @@ public class ListTaskInteractor {
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-                        presenterCallBack.onStructuresFetched(featureCollection, Geometry.fromJson(gson.toJson(operationalAreaLocation.getGeometry())));
+                        Geometry geometry = operationalAreaLocation == null ? null : Geometry.fromJson(gson.toJson(operationalAreaLocation.getGeometry()));
+                        presenterCallBack.onStructuresFetched(featureCollection, geometry);
                     }
                 });
             }

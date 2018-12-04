@@ -69,4 +69,9 @@ public class PreferencesUtil {
     public String getCurrentCampaignId() {
         return allSharedPreferences.getPreference(CURRENT_CAMPAIGN_ID);
     }
+
+
+    public String getPreferenceValue(String key) {
+        return allSharedPreferences.getPreference(key);
+    }
 }

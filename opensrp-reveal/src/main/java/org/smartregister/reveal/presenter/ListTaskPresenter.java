@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.mapbox.geojson.Geometry;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -17,13 +16,13 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.util.AssetHandler;
-import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static org.smartregister.AllConstants.REVEAL_OPERATIONAL_AREAS;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Tags.COUNTRY;
@@ -91,7 +90,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels);
 
         List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
-
+        List<String> authorizedOperationalAreas = Arrays.asList(StringUtils.split(prefsUtil.getPreferenceValue(REVEAL_OPERATIONAL_AREAS), ','));
+        removeUnauthorizedOperationalAreas(authorizedOperationalAreas, entireTree);
 
         String entireTreeString = AssetHandler.javaToJsonString(entireTree,
                 new TypeToken<List<FormLocation>>() {
@@ -126,6 +126,23 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         populateLocationsFromPreferences();
         unlockDrawerLayout();
 
+    }
+
+
+    private void removeUnauthorizedOperationalAreas(List<String> operationalAreas, List<FormLocation> entireTree) {
+
+        for (FormLocation countryLocation : entireTree) {
+            for (FormLocation provinceLocation : countryLocation.nodes) {
+                for (FormLocation districtLocation : provinceLocation.nodes) {
+                    List<FormLocation> toRemove = new ArrayList<>();
+                    for (FormLocation operationalAreaLocation : districtLocation.nodes) {
+                        if (!operationalAreas.contains(operationalAreaLocation.name))
+                            toRemove.add(operationalAreaLocation);
+                    }
+                    districtLocation.nodes.removeAll(toRemove);
+                }
+            }
+        }
     }
 
     private String getFacilityFromOperationalArea(String district, String operationalArea, List<FormLocation> entireTree) {
