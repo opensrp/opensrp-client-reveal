@@ -192,6 +192,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             RevealApplication.getInstance().logoutCurrentUser();
         else if (v.getId() == R.id.sync_button) {
             SyncServiceJob.scheduleJobImmediately(SyncServiceJob.TAG);
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         }
     }
 
