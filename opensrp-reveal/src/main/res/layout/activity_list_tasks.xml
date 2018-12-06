@@ -1,13 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:mapbox="http://schemas.android.com/apk/res-auto"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <io.ona.kujaku.views.KujakuMapView
-        android:id="@+id/kujakuMapView"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/content_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        mapbox:mapbox_styleUrl="@string/mapbox_style_satellite_streets" />
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <io.ona.kujaku.views.KujakuMapView
+            android:id="@+id/kujakuMapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:mapbox_styleUrl="@string/mapbox_style_satellite_streets" />
+
+        <ImageButton
+            android:id="@+id/drawerMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|top"
+            android:layout_margin="@dimen/hamburger_margin"
+            android:background="@drawable/rounded_square_bg"
+            android:src="@drawable/ic_hamburger_menu"
+            app:elevation="6dp"
+            app:layout_anchorGravity="top|left|start" />
+
+    </FrameLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header" />
+</android.support.v4.widget.DrawerLayout>

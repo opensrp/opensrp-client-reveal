@@ -17,5 +17,28 @@
 
     <string name="prompt_password">Enter Password </string>
     <string name="prompt_username">Enter Username</string>
+    <string name="reveal">Reveal</string>
+    <string name="sync">Sync</string>
+    <string name="campaign">Campaign</string>
+    <string name="operational_area">Operational Area</string>
 
+    <string name="app_version">Version: %1$s</string>
+    <string name="district">District:</string>
+    <string name="facility">Facility:</string>
+    <string name="operator">Spray Operator:</string>
+
+    <string name="fetch_structures_failed_message">Failed to load structures for current selected Campaign and Operational Area</string>
+    <string name="fetch_structures_title">Loading failed</string>
+    <string name="fetching_structures_title">Fetching Structures</string>
+    <string name="fetching_structures_message">Fetching Structures for Selected Operational Area and Campaign</string>
+
+    <string name="select_campaign_operational_area_title">Campaign and Operational area set</string>
+    <string name="select_campaign_operational_area">Campaign and Operational area not set. Select from the hamburger menu</string>
+
+    <string name="reveal_satellite_style">asset://reveal-streets-satellite.json</string>
+    <string name="reveal_streets_style">asset://reveal-streets-satellite.json</string>
+    <string name="reveal_datasource_name">reveal-data-set</string>
+
+    <string name="error_fetching_location_hierarchy_title">Error Processing Locations Hierarchy</string>
+    <string name="error_fetching_location_hierarchy">Error Processing Location Hierarchy. Log off to download location hierarchy again</string>
 </resources>
