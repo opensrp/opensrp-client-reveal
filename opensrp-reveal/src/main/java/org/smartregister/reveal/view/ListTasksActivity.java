@@ -216,6 +216,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             RevealApplication.getInstance().logoutCurrentUser();
         else if (v.getId() == R.id.sync_button) {
             SyncServiceJob.scheduleJobImmediately(SyncServiceJob.TAG);
+            mDrawerLayout.closeDrawer(GravityCompat.START);
         }
     }
 
@@ -287,8 +288,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void displayNotification(int message) {
-        new AlertDialog.Builder(this).setMessage(message).setTitle(R.string.fetch_structures_title).setPositiveButton(R.string.ok, null).show();
+    public void displayNotification(int title, int message) {
+        new AlertDialog.Builder(this).setMessage(message).setTitle(title).setPositiveButton(R.string.ok, null).show();
     }
 
     @Override

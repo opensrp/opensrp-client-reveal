@@ -56,8 +56,8 @@
 
             <ImageView
                 android:id="@+id/login_logo"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/login_logo_height"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="bottom|center"
                 android:layout_weight="1"
@@ -70,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/login_logo"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="15dp"
                 android:gravity="center_horizontal"
                 android:text="build_number"

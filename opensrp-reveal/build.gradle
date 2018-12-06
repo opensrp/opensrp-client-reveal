@@ -169,7 +169,7 @@ dependencies {
 
     implementation 'io.ona.kujaku:utils:0.4.1'
 
-    implementation('org.smartregister:opensrp-client-core:1.5.2-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.5.4-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.guava', module: 'guava'
