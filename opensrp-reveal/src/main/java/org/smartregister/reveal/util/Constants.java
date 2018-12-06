@@ -30,6 +30,7 @@ public interface Constants {
         String TASK_IDENTIFIER = "taskIdentifier";
         String TASK_BUSINESS_STATUS = "taskBusinessStatus";
         String TASK_STATUS = "taskStatus";
+        String TASK_CODE = "taskCode";
     }
 
 
@@ -37,6 +38,19 @@ public interface Constants {
         String TYPE = "type";
         String FEATURE_COLLECTION = "FeatureCollection";
         String FEATURES = "features";
+    }
+
+    interface Intervention {
+        String IRS = "IRS";
+        String ITN = "ITN";
+        String MDA = "MDA";
+    }
+
+    interface BusinessStatus {
+        String NOT_VISITED = "Not Visited";
+        String NOT_SPRAYED = "Not Sprayed";
+        String SRPAYED = "Sprayed";
+        String NOT_SPRAYABLE = "Not Sprayable";
     }
 
 

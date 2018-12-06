@@ -34,6 +34,7 @@ import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURE_COLLECTION;
 import static org.smartregister.reveal.util.Constants.GeoJSON.TYPE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 
@@ -109,6 +110,7 @@ public class ListTaskInteractor {
                                 taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
                                 taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
                                 taskProperties.put(TASK_STATUS, task.getStatus().name());
+                                taskProperties.put(TASK_CODE, task.getCode());
                                 structure.getProperties().setCustomProperties(taskProperties);
                             }
                         }

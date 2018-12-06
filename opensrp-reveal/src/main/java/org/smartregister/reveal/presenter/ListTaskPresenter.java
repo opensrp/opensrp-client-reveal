@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
+import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.Geometry;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +26,15 @@ import java.util.List;
 
 import static org.smartregister.AllConstants.REVEAL_OPERATIONAL_AREAS;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.SRPAYED;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Tags.COUNTRY;
 import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
@@ -248,6 +257,23 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         } else {
             listTaskView.displayNotification(R.string.select_campaign_operational_area_title, R.string.select_campaign_operational_area);
             listTaskView.lockNavigationDrawerForSelection();
+        }
+    }
+
+    public void onFeatureClicked(Feature feature) {
+        if (!feature.hasProperty(TASK_IDENTIFIER)) {
+            listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, feature.id()));
+        } else {
+            String businessStatus = feature.getStringProperty(TASK_BUSINESS_STATUS);
+            String identifier = feature.getStringProperty(TASK_IDENTIFIER);
+            String code = feature.getStringProperty(TASK_CODE);
+            if (IRS.equals(code) && NOT_VISITED.equals(businessStatus)) {
+                listTaskView.startSprayForm(feature.id(), identifier, businessStatus);
+            } else if (IRS.equals(code) &&
+                    (NOT_SPRAYED.equals(businessStatus) || SRPAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
+
+                listTaskView.openCardView(feature.id(), identifier, businessStatus);
+            }
         }
     }
 }

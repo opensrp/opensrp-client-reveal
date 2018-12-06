@@ -46,6 +46,12 @@ public interface ListTaskContract {
         void unlockNavigationDrawer();
 
         void displayNotification(int title, @StringRes int message);
+
+        void displayNotification(String message);
+
+        void openCardView(String structureId, String taskIdentifier, String businessStatus);
+
+        void startSprayForm(String structureId, String taskIdentifier, String businessStatus);
     }
 
     interface PresenterCallBack {
