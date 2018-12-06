@@ -13,6 +13,7 @@ import org.smartregister.domain.Campaign;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -64,8 +65,10 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             operationalAreaLevels.add(HEALTH_CENTER);
             List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels);
 
-            listTaskView.setDistrict(defaultLocation.get(0));
-            listTaskView.setFacility(defaultLocation.get(1));
+            if (defaultLocation != null) {
+                listTaskView.setDistrict(defaultLocation.get(0));
+                listTaskView.setFacility(defaultLocation.get(1));
+            }
         } else {
             populateLocationsFromPreferences();
         }
@@ -75,7 +78,13 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     }
 
     public void onShowOperationalAreaSelector() {
-        listTaskView.showOperationalAreaSelector(extractLocationHierarchy());
+        Pair<String, ArrayList<String>> locationHierarchy = extractLocationHierarchy();
+        if (locationHierarchy != null) {
+            listTaskView.showOperationalAreaSelector(extractLocationHierarchy());
+        } else {
+            listTaskView.displayNotification(R.string.error_fetching_location_hierarchy_title, R.string.error_fetching_location_hierarchy);
+            RevealApplication.getInstance().getContext().userService().forceRemoteLogin();
+        }
 
     }
 
@@ -89,15 +98,19 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
         List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels);
 
-        List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
-        List<String> authorizedOperationalAreas = Arrays.asList(StringUtils.split(prefsUtil.getPreferenceValue(REVEAL_OPERATIONAL_AREAS), ','));
-        removeUnauthorizedOperationalAreas(authorizedOperationalAreas, entireTree);
+        if (defaultLocation != null) {
+            List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
+            List<String> authorizedOperationalAreas = Arrays.asList(StringUtils.split(prefsUtil.getPreferenceValue(REVEAL_OPERATIONAL_AREAS), ','));
+            removeUnauthorizedOperationalAreas(authorizedOperationalAreas, entireTree);
 
-        String entireTreeString = AssetHandler.javaToJsonString(entireTree,
-                new TypeToken<List<FormLocation>>() {
-                }.getType());
+            String entireTreeString = AssetHandler.javaToJsonString(entireTree,
+                    new TypeToken<List<FormLocation>>() {
+                    }.getType());
 
-        return new Pair<>(entireTreeString, new ArrayList<>(defaultLocation));
+            return new Pair<>(entireTreeString, new ArrayList<>(defaultLocation));
+        } else {
+            return null;
+        }
     }
 
     private void populateLocationsFromPreferences() {
@@ -210,7 +223,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         if (structuresGeoJson.has(FEATURES)) {
             listTaskView.setGeoJsonSource(structuresGeoJson.toString(), operationalAreaGeometry);
         } else
-            listTaskView.displayNotification(R.string.fetch_structures_failed_message);
+            listTaskView.displayNotification(R.string.fetching_structures_title, R.string.fetch_structures_failed_message);
     }
 
     private void unlockDrawerLayout() {
@@ -229,7 +242,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
                 StringUtils.isNotBlank(operationalArea)) {
             listTaskInteractor.fetchLocations(campaign, operationalArea);
         } else {
-            listTaskView.displayNotification(R.string.select_campaign_operational_area);
+            listTaskView.displayNotification(R.string.select_campaign_operational_area_title, R.string.select_campaign_operational_area);
             listTaskView.lockNavigationDrawerForSelection();
         }
     }
