@@ -34,6 +34,7 @@ import com.vijay.jsonwizard.customviews.TreeViewDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.smartregister.AllConstants;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.job.SyncServiceJob;
@@ -304,14 +305,24 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void startSprayForm(String structureId, String taskIdentifier, String businessStatus) {
+    public void startSprayForm(JSONObject form) {
         Intent intent = new Intent(getApplicationContext(), JsonFormActivity.class);
         try {
-            String form = Utils.readAssetContents(this, "json.form/spray_form.json");
-            intent.putExtra(JSON_FORM_PARAM_JSON, form);
+            intent.putExtra(JSON_FORM_PARAM_JSON, form.toString());
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK) {
+            if (data.hasExtra(JSON_FORM_PARAM_JSON)) {
+                String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
+                Log.d(TAG, json);
+                listTaskPresenter.saveSprayForm(json);
+            }
         }
     }
 

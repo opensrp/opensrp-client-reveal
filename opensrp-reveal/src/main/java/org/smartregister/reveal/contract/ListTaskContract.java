@@ -51,7 +51,7 @@ public interface ListTaskContract {
 
         void openCardView(String structureId, String taskIdentifier, String businessStatus);
 
-        void startSprayForm(String structureId, String taskIdentifier, String businessStatus);
+        void startSprayForm(JSONObject form);
     }
 
     interface PresenterCallBack {

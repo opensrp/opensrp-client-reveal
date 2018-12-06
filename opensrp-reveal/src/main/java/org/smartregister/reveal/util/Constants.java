@@ -10,6 +10,12 @@ public interface Constants {
 
     int REQUEST_CODE_GET_JSON = 3432;
 
+    String METADATA = "metadata";
+
+    String DATA = "data";
+
+    String ENTITY_ID = "entity_id";
+
     interface CONFIGURATION {
         String LOGIN = "login";
     }
@@ -35,6 +41,8 @@ public interface Constants {
         String TASK_BUSINESS_STATUS = "taskBusinessStatus";
         String TASK_STATUS = "taskStatus";
         String TASK_CODE = "taskCode";
+        String LOCATION_UUID = "locationUUID";
+        String LOCATION_VERSION = "locationVersion";
     }
 
 
@@ -56,6 +64,5 @@ public interface Constants {
         String SRPAYED = "Sprayed";
         String NOT_SPRAYABLE = "Not Sprayable";
     }
-
 
 }

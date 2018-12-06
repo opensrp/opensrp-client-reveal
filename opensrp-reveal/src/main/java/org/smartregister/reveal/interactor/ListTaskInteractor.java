@@ -6,15 +6,19 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mapbox.geojson.Geometry;
+import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Task;
+import org.smartregister.domain.tag.FormTag;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.StructureRepository;
@@ -23,20 +27,29 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract.PresenterCallBack;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.util.DateTimeTypeConverter;
+import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
 import org.smartregister.util.Utils;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static org.smartregister.reveal.util.Constants.DATA;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURE_COLLECTION;
 import static org.smartregister.reveal.util.Constants.GeoJSON.TYPE;
+import static org.smartregister.reveal.util.Constants.METADATA;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
+import static org.smartregister.util.JsonFormUtils.ENTITY_ID;
+import static org.smartregister.util.JsonFormUtils.getJSONObject;
+import static org.smartregister.util.JsonFormUtils.getString;
 
 /**
  * Created by samuelgithengi on 11/27/18.
@@ -111,6 +124,8 @@ public class ListTaskInteractor {
                                 taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
                                 taskProperties.put(TASK_STATUS, task.getStatus().name());
                                 taskProperties.put(TASK_CODE, task.getCode());
+                                taskProperties.put(LOCATION_UUID, structure.getProperties().getUid());
+                                taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
                                 structure.getProperties().setCustomProperties(taskProperties);
                             }
                         }
@@ -147,4 +162,26 @@ public class ListTaskInteractor {
         return featureCollection;
     }
 
+    public void saveSprayForm(String json) {
+        try {
+            JSONObject jsonForm = new JSONObject(json);
+            String entityId = getString(jsonForm, ENTITY_ID);
+            JSONArray fields = JsonFormUtils.fields(jsonForm);
+            JSONObject metadata = getJSONObject(jsonForm, METADATA);
+            FormTag formTag = new FormTag();
+            AllSharedPreferences sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
+            formTag.providerId = sharedPreferences.fetchRegisteredANM();
+            formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
+            formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
+            formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
+            Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, "Spray", "Structure");
+            JSONObject eventJson = new JSONObject(gson.toJson(event));
+            eventJson.put("details", getJSONObject(jsonForm, DATA));
+            RevealApplication.getInstance().getContext().getEventClientRepository().addEvent(entityId, eventJson);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

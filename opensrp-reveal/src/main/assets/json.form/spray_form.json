@@ -59,18 +59,19 @@
         "label": "Type of Structure",
         "options": [
           {
-            "key": "residential",
-            "text": "Residential Structure"
-          },
-          {
             "key": "non_residential",
             "text": "Non-Residential Structure"
+          },
+          {
+            "key": "residential",
+            "text": "Residential Structure"
           },
           {
             "key": "facility",
             "text": "Facility"
           }
-        ]
+        ],
+        "value": "non_residential"
       },
       {
         "key": "sprayStatus",
@@ -93,6 +94,7 @@
             "text": "Not Eligible"
           }
         ],
+        "value": "not_eligible",
         "relevance": {
           "step1:structureType": {
             "type": "string",
@@ -133,6 +135,7 @@
             "text": "Other"
           }
         ],
+        "value": "no_one_missed",
         "relevance": {
           "step1:sprayStatus": {
             "type": "string",
@@ -199,6 +202,7 @@
             "text": "Not Applicable"
           }
         ],
+        "value": "male",
         "relevance": {
           "step1:sprayStatus": {
             "type": "string",

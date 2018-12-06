@@ -4,6 +4,8 @@ import android.support.v4.util.Pair;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.Geometry;
@@ -18,7 +20,9 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.AssetHandler;
+import org.smartregister.util.FormUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,16 +34,23 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYAB
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SRPAYED;
+import static org.smartregister.reveal.util.Constants.DATA;
+import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.METADATA;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.Tags.COUNTRY;
 import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.PROVINCE;
+import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
 /**
  * Created by samuelgithengi on 11/27/18.
@@ -264,16 +275,39 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, feature.id()));
         } else {
-            String businessStatus = feature.getStringProperty(TASK_BUSINESS_STATUS);
-            String identifier = feature.getStringProperty(TASK_IDENTIFIER);
-            String code = feature.getStringProperty(TASK_CODE);
+            String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
+            String identifier = getPropertyValue(feature, TASK_IDENTIFIER);
+            String code = getPropertyValue(feature, TASK_CODE);
+            String status = getPropertyValue(feature, TASK_STATUS);
             if (IRS.equals(code) && NOT_VISITED.equals(businessStatus)) {
-                listTaskView.startSprayForm(feature.id(), identifier, businessStatus);
+                startSprayForm(feature.id(), getPropertyValue(feature, LOCATION_UUID), getPropertyValue(feature, LOCATION_VERSION),
+                        identifier, businessStatus, status);
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SRPAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
-
                 listTaskView.openCardView(feature.id(), identifier, businessStatus);
             }
         }
+    }
+
+    private void startSprayForm(String structureId, String structureUUID, String structureVersion,
+                                String taskIdentifier, String taskBusinessStatus, String taskStatus) {
+        try {
+            JSONObject form = new JSONObject(AssetHandler.readFileFromAssetsFolder("json.form/spray_form.json", listTaskView.getContext()));
+            form.put(ENTITY_ID, structureId);
+            JSONObject formData = new JSONObject();
+            formData.put(TASK_IDENTIFIER, taskIdentifier);
+            formData.put(TASK_BUSINESS_STATUS, taskBusinessStatus);
+            formData.put(TASK_STATUS, taskStatus);
+            formData.put(LOCATION_UUID, structureUUID);
+            formData.put(LOCATION_VERSION, structureVersion);
+            form.put(DATA, formData);
+            listTaskView.startSprayForm(form);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveSprayForm(String json) {
+        listTaskInteractor.saveSprayForm(json);
     }
 }
