@@ -79,6 +79,10 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     public void onShowOperationalAreaSelector() {
         Pair<String, ArrayList<String>> locationHierarchy = extractLocationHierarchy();
+        if (locationHierarchy == null) {//try to evict location hierachy in cache
+            RevealApplication.getInstance().getContext().anmLocationController().evict();
+            locationHierarchy = extractLocationHierarchy();
+        }
         if (locationHierarchy != null) {
             listTaskView.showOperationalAreaSelector(extractLocationHierarchy());
         } else {
