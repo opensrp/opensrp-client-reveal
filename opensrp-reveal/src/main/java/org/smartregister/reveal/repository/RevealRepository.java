@@ -9,7 +9,9 @@ import org.smartregister.AllConstants;
 import org.smartregister.configurableviews.repository.ConfigurableViewsRepository;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.EventClientRepository;
+import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.Repository;
+import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
 
@@ -30,8 +32,11 @@ public class RevealRepository extends Repository {
         ConfigurableViewsRepository.createTable(database);
         EventClientRepository.createTable(database, EventClientRepository.Table.client, EventClientRepository.client_column.values());
         EventClientRepository.createTable(database, EventClientRepository.Table.event, EventClientRepository.event_column.values());
+
         CampaignRepository.createTable(database);
         TaskRepository.createTable(database);
+        LocationRepository.createTable(database);
+        StructureRepository.createTable(database);
 //        onUpgrade(database, 1, 2);
     }
 
@@ -104,4 +109,3 @@ public class RevealRepository extends Repository {
         super.close();
     }
 }
-

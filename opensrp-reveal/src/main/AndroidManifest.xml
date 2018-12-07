@@ -35,13 +35,15 @@
         </activity>
 
         <activity
-            android:name=".activity.ListTasksActivity"
+            android:name=".view.ListTasksActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service android:name="org.smartregister.sync.intent.CampaignIntentService" />
-        <service android:name="org.smartregister.sync.intent.TaskIntentService" />
-        <service android:name="org.smartregister.sync.intent.LocationStructureIntentService" />
+        <service android:name="org.smartregister.sync.intent.LocationIntentService" />
+        <service android:name="org.smartregister.sync.intent.SyncTaskIntentService" />
 
+
+        <service android:name="org.smartregister.sync.intent.SyncIntentService" />
 
     </application>
 
