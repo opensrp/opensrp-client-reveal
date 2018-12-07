@@ -8,6 +8,7 @@
     <dimen name="login_edit_text_textSize">16sp</dimen>
 
     <dimen name="hamburger_padding">4dp</dimen>
+    <dimen name="status_label_padding">8dp</dimen>
     <dimen name="hamburger_margin">16dp</dimen>
 
     <dimen name="drawer_margin">32dp</dimen>

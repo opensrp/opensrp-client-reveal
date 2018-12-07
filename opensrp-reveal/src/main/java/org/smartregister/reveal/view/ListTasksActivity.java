@@ -116,9 +116,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             @Override
             public void onClick(View v) {
                 isCardViewShowing = false;
-                setViewVisibility(structureInfoCardView, false);
+                closeStructureCardView();
             }
         });
+    }
+
+    private void closeStructureCardView() {
+        setViewVisibility(structureInfoCardView, false);
     }
 
     private void setViewVisibility(View view, boolean isVisible) {
