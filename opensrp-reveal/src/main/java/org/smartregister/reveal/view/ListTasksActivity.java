@@ -13,8 +13,10 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
@@ -78,6 +80,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private DrawerLayout mDrawerLayout;
 
+    private boolean isCardViewShowing;
+
+    private CardView structureInfoCardView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +97,32 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         initializeMapView(savedInstanceState);
         initializeDrawerLayout();
         initializeProgressDialog();
+
+        isCardViewShowing = false;
+        structureInfoCardView = findViewById(R.id.structure_info_card_view);
+        ImageButton btnAddStructure = findViewById(R.id.btn_add_structure);
+        btnAddStructure.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isCardViewShowing) {
+                    isCardViewShowing = true;
+                    setViewVisibility(structureInfoCardView, true);
+                }
+            }
+        });
+
+        ImageButton btnCollapseCardView = findViewById(R.id.btn_collapse_structure_card_view);
+        btnCollapseCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isCardViewShowing = false;
+                setViewVisibility(structureInfoCardView, false);
+            }
+        });
+    }
+
+    private void setViewVisibility(View view, boolean isVisible) {
+        view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     private void initializeMapView(Bundle savedInstanceState) {
