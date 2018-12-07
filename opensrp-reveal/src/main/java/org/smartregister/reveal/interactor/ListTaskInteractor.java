@@ -6,7 +6,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mapbox.geojson.Geometry;
-import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.joda.time.DateTime;
 import org.json.JSONArray;
@@ -17,26 +16,29 @@ import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Task;
+import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.tag.FormTag;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.CampaignRepository;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract.PresenterCallBack;
+import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
 import org.smartregister.util.Utils;
 
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static org.smartregister.reveal.util.Constants.DATA;
+import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURE_COLLECTION;
 import static org.smartregister.reveal.util.Constants.GeoJSON.TYPE;
@@ -47,6 +49,8 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_S
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
+import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.util.JsonFormUtils.ENTITY_ID;
 import static org.smartregister.util.JsonFormUtils.getJSONObject;
 import static org.smartregister.util.JsonFormUtils.getString;
@@ -174,11 +178,13 @@ public class ListTaskInteractor {
             formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
             formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
             formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
-            Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, "Spray", "Structure");
+            Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, SPRAY_EVENT, STRUCTURE);
             JSONObject eventJson = new JSONObject(gson.toJson(event));
-            eventJson.put("details", getJSONObject(jsonForm, DATA));
-            RevealApplication.getInstance().getContext().getEventClientRepository().addEvent(entityId, eventJson);
-
+            eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
+            EventClientRepository eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+            eventClientRepository.addEvent(entityId, eventJson);
+            List<EventClient> unprocessedEvents = eventClientRepository.fetchEventClients(new Date(sharedPreferences.fetchLastSyncDate(0)), EventClientRepository.TYPE_Unsynced);
+            RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext()).processClient(unprocessedEvents);
         } catch (JSONException e) {
             e.printStackTrace();
         }

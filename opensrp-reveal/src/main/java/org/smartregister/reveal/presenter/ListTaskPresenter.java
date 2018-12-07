@@ -4,8 +4,6 @@ import android.support.v4.util.Pair;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.Geometry;
@@ -20,9 +18,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.AssetHandler;
-import org.smartregister.util.FormUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,11 +30,10 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYAB
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SRPAYED;
-import static org.smartregister.reveal.util.Constants.DATA;
+import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
-import static org.smartregister.reveal.util.Constants.METADATA;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
@@ -300,7 +295,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             formData.put(TASK_STATUS, taskStatus);
             formData.put(LOCATION_UUID, structureUUID);
             formData.put(LOCATION_VERSION, structureVersion);
-            form.put(DATA, formData);
+            form.put(DETAILS, formData);
             listTaskView.startSprayForm(form);
         } catch (Exception e) {
             e.printStackTrace();

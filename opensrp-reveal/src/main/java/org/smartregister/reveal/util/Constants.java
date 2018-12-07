@@ -12,9 +12,14 @@ public interface Constants {
 
     String METADATA = "metadata";
 
-    String DATA = "data";
+    String DETAILS = "details";
 
     String ENTITY_ID = "entity_id";
+
+    String SPRAY_EVENT = "Spray";
+
+    String STRUCTURE = "Structure";
+
 
     interface CONFIGURATION {
         String LOGIN = "login";
