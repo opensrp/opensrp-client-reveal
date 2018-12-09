@@ -29,7 +29,7 @@ import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.SRPAYED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
@@ -278,7 +278,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
                 startSprayForm(feature.id(), getPropertyValue(feature, LOCATION_UUID), getPropertyValue(feature, LOCATION_VERSION),
                         identifier, businessStatus, status);
             } else if (IRS.equals(code) &&
-                    (NOT_SPRAYED.equals(businessStatus) || SRPAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
+                    (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
                 listTaskView.openCardView(feature.id(), identifier, businessStatus);
             }
         }

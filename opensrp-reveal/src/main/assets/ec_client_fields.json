@@ -1,0 +1,109 @@
+{
+  "bindobjects": [
+    {
+      "name": "sprayed_structures",
+      "columns": [
+        {
+          "column_name": "base_entity_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "baseEntityId"
+          }
+        }, {
+          "column_name": "spray_status",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "sprayStatus"
+          }
+        },
+        {
+          "column_name": "spray_date",
+          "type": "Event",
+          "json_mapping": {
+            "field": "eventDate"
+          }
+        },
+        {
+          "column_name": "spray_operator",
+          "type": "Event",
+          "json_mapping": {
+            "field": "provider_id"
+          }
+        },
+        {
+          "column_name": "property_type",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "structureType"
+          }
+        },
+        {
+          "column_name": "not_sprayed_reason",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "notSprayedReason"
+          }
+        },
+        {
+          "column_name": "not_sprayed_other_reason",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "notSprayedOtherReason"
+          }
+        },
+        {
+          "column_name": "family_head_name",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "familyHeadName"
+          }
+        },
+        {
+          "column_name": "family_head_sex",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "familyHeadSex"
+          }
+        },
+        {
+          "column_name": "rooms_found",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "roomsFound"
+          }
+        },
+        {
+          "column_name": "sprayed_rooms",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "sprayedRooms"
+          }
+        },
+        {
+          "column_name": "nets_found",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "netsFound"
+          }
+        },
+        {
+          "column_name": "mop_up",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "mopUp"
+          }
+        }
+      ]
+    }
+  ]
+}

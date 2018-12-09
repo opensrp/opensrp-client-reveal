@@ -82,15 +82,15 @@
         "label": "Spray Status",
         "options": [
           {
-            "key": "sprayed",
+            "key": "Sprayed",
             "text": "Sprayable,Sprayed"
           },
           {
-            "key": "not_sprayed",
+            "key": "Not Sprayed",
             "text": "Sprayable,Not Sprayed"
           },
           {
-            "key": "not_eligible",
+            "key": "Not Sprayable",
             "text": "Not Eligible"
           }
         ],
@@ -139,7 +139,7 @@
         "relevance": {
           "step1:sprayStatus": {
             "type": "string",
-            "ex": "equalTo(., \"not_sprayed\")"
+            "ex": "equalTo(., \"Not Sprayed\")"
           }
         }
       },
@@ -177,7 +177,7 @@
         "relevance": {
           "step1:sprayStatus": {
             "type": "string",
-            "ex": "regex(., \"sprayed|not_sprayed\")"
+            "ex": "regex(., \"Sprayed|Not Sprayed\")"
           }
         }
       },
@@ -206,7 +206,7 @@
         "relevance": {
           "step1:sprayStatus": {
             "type": "string",
-            "ex": "regex(., \"sprayed|not_sprayed\")"
+            "ex": "regex(., \"Sprayed|Not Sprayed\")"
           }
         }
       },
@@ -228,7 +228,7 @@
         "relevance": {
           "step1:sprayStatus": {
             "type": "string",
-            "ex": "regex(., \"sprayed|not_sprayed\")"
+            "ex": "regex(., \"Sprayed|Not Sprayed\")"
           }
         }
       },
@@ -250,7 +250,7 @@
         "relevance": {
           "step1:sprayStatus": {
             "type": "string",
-            "ex": "regex(., \"sprayed\")"
+            "ex": "regex(., \"Sprayed\")"
           }
         }
       },
@@ -272,7 +272,7 @@
         "relevance": {
           "step1:sprayStatus": {
             "type": "string",
-            "ex": "regex(., \"sprayed|not_sprayed\")"
+            "ex": "regex(., \"Sprayed|Not Sprayed\")"
           }
         }
       },
@@ -297,7 +297,7 @@
         "relevance": {
           "step1:sprayStatus": {
             "type": "string",
-            "ex": "regex(., \"sprayed|not_sprayed\")"
+            "ex": "regex(., \"Sprayed|Not Sprayed\")"
           }
         }
       }

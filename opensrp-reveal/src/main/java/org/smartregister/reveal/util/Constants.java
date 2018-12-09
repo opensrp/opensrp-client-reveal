@@ -20,6 +20,11 @@ public interface Constants {
 
     String STRUCTURE = "Structure";
 
+    String SPRAY_STATUS = "sprayStatus";
+
+    String STRUCTURE_TYPE = "structureType";
+
+    String RESIDENTIAL = "residential";
 
     interface CONFIGURATION {
         String LOGIN = "login";
@@ -66,7 +71,7 @@ public interface Constants {
     interface BusinessStatus {
         String NOT_VISITED = "Not Visited";
         String NOT_SPRAYED = "Not Sprayed";
-        String SRPAYED = "Sprayed";
+        String SPRAYED = "Sprayed";
         String NOT_SPRAYABLE = "Not Sprayable";
     }
 
