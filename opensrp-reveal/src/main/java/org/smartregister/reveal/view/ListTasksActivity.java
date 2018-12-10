@@ -263,11 +263,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void setGeoJsonSource(String structuresGeoJson, Geometry operationalAreaGeometry) {
-        FeatureCollection featureCollection = FeatureCollection.fromJson(structuresGeoJson);
+    public void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Geometry operationalAreaGeometry) {
         if (geoJsonSource != null) {
             geoJsonSource.setGeoJson(featureCollection);
-            if (!Utils.isEmptyCollection(featureCollection.features())) {
+            if (operationalAreaGeometry != null) {
                 mMapboxMap.setCameraPosition(mMapboxMap.getCameraForGeometry(operationalAreaGeometry));
             }
         }

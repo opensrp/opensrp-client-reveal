@@ -1,16 +1,20 @@
 package org.smartregister.reveal.presenter;
 
+import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.domain.Campaign;
+import org.smartregister.domain.Task;
+import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.R;
@@ -63,6 +67,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     private PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
 
     private boolean changedCurrentSelection;
+
+    private FeatureCollection featureCollection;
 
     public ListTaskPresenter(ListTaskView listTaskView) {
         this.listTaskView = listTaskView;
@@ -240,7 +246,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         listTaskView.hideProgressDialog();
         changedCurrentSelection = false;
         if (structuresGeoJson.has(FEATURES)) {
-            listTaskView.setGeoJsonSource(structuresGeoJson.toString(), operationalAreaGeometry);
+            featureCollection = FeatureCollection.fromJson(structuresGeoJson.toString());
+            listTaskView.setGeoJsonSource(featureCollection, operationalAreaGeometry);
         } else
             listTaskView.displayNotification(R.string.fetching_structures_title, R.string.fetch_structures_failed_message);
     }
@@ -303,6 +310,22 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     }
 
     public void saveSprayForm(String json) {
+        listTaskView.showProgressDialog();
         listTaskInteractor.saveSprayForm(json);
+    }
+
+    @Override
+    public void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier,
+                                 @NonNull TaskStatus taskStatus, @NonNull String businessStatus) {
+        listTaskView.hideProgressDialog();
+        for (Feature feature : featureCollection.features()) {
+            if (structureId.equals(feature.id())) {
+                feature.addStringProperty(TASK_BUSINESS_STATUS, businessStatus);
+                feature.addStringProperty(TASK_STATUS, taskStatus.name());
+                break;
+            }
+        }
+        listTaskView.setGeoJsonSource(featureCollection, null);
+        listTaskView.openCardView(structureId, taskIdentifier, businessStatus);
     }
 }

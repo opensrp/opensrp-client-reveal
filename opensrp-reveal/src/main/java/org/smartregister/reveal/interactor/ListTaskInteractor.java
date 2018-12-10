@@ -33,6 +33,7 @@ import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
 import org.smartregister.util.Utils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -77,6 +78,10 @@ public class ListTaskInteractor {
 
     private PresenterCallBack presenterCallBack;
 
+    private EventClientRepository eventClientRepository;
+
+    private RevealClientProcessor clientProcessor;
+
     public ListTaskInteractor(PresenterCallBack presenterCallBack) {
         this(new AppExecutors());
         this.presenterCallBack = presenterCallBack;
@@ -84,6 +89,8 @@ public class ListTaskInteractor {
         taskRepository = RevealApplication.getInstance().getTaskRepository();
         structureRepository = RevealApplication.getInstance().getStructureRepository();
         locationRepository = RevealApplication.getInstance().getLocationRepository();
+        eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+        clientProcessor = RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext());
     }
 
     @VisibleForTesting
@@ -167,27 +174,45 @@ public class ListTaskInteractor {
     }
 
     public void saveSprayForm(String json) {
-        try {
-            JSONObject jsonForm = new JSONObject(json);
-            String entityId = getString(jsonForm, ENTITY_ID);
-            JSONArray fields = JsonFormUtils.fields(jsonForm);
-            JSONObject metadata = getJSONObject(jsonForm, METADATA);
-            FormTag formTag = new FormTag();
-            AllSharedPreferences sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
-            formTag.providerId = sharedPreferences.fetchRegisteredANM();
-            formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
-            formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
-            formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
-            Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, SPRAY_EVENT, STRUCTURE);
-            JSONObject eventJson = new JSONObject(gson.toJson(event));
-            eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
-            EventClientRepository eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
-            eventClientRepository.addEvent(entityId, eventJson);
-            List<EventClient> unprocessedEvents = eventClientRepository.fetchEventClients(new Date(sharedPreferences.fetchLastSyncDate(0)), EventClientRepository.TYPE_Unsynced);
-            RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext()).processClient(unprocessedEvents);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONObject jsonForm = new JSONObject(json);
+                    String entityId = getString(jsonForm, ENTITY_ID);
+                    JSONArray fields = JsonFormUtils.fields(jsonForm);
+                    JSONObject metadata = getJSONObject(jsonForm, METADATA);
+                    FormTag formTag = new FormTag();
+                    AllSharedPreferences sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
+                    formTag.providerId = sharedPreferences.fetchRegisteredANM();
+                    formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
+                    formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
+                    formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
+                    Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, SPRAY_EVENT, STRUCTURE);
+                    JSONObject eventJson = new JSONObject(gson.toJson(event));
+                    eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
+                    org.smartregister.domain.db.Event dbEvent = gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class);
 
+
+                    eventClientRepository.addEvent(entityId, eventJson);
+                    List<EventClient> unprocessedEvents = new ArrayList<>();
+                    unprocessedEvents.add(new EventClient(dbEvent, null));
+                    clientProcessor.processClient(unprocessedEvents);
+
+                    appExecutors.mainThread().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            String businessStatus = clientProcessor.calculateBusinessStatus(dbEvent);
+                            presenterCallBack.onSprayFormSaved(event.getBaseEntityId(), dbEvent.getDetails().get(TASK_IDENTIFIER),
+                                    Task.TaskStatus.COMPLETED, businessStatus);
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        appExecutors.diskIO().execute(runnable);
     }
 }

@@ -94,10 +94,12 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             } catch (Exception e) {
                 Log.e(TAG, "Error processing spray event", e);
             }
+        } else {
+            Log.w(TAG, String.format("Spray Event %s does not have task details", event.getEventId()));
         }
     }
 
-    private String calculateBusinessStatus(Event event) {
+    public String calculateBusinessStatus(Event event) {
         String sprayStatus = event.findObs(null, false, SPRAY_STATUS).getValue().toString();
         String structureType = event.findObs(null, false, STRUCTURE_TYPE).getValue().toString();
         if (!RESIDENTIAL.equals(structureType)) {
