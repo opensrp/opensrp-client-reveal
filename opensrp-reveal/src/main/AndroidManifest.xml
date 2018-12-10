@@ -50,7 +50,7 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
 
-        <service android:name="org.smartregister.sync.intent.SyncIntentService" />
+        <service android:name=".sync.RevealSyncIntentService" />
 
     </application>
 
