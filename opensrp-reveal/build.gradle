@@ -76,6 +76,7 @@ android {
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '1'
+            buildConfigField "int", "SYNC_INTERVAL_IN_MINUTES", '2'
 
             if (project.rootProject.file("local.properties").exists()) {
                 Properties properties = new Properties()
@@ -99,6 +100,7 @@ android {
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
+            buildConfigField "int", "SYNC_INTERVAL_IN_MINUTES", '2'
             testCoverageEnabled true
             if (project.rootProject.file("local.properties").exists()) {
                 Properties properties = new Properties()
