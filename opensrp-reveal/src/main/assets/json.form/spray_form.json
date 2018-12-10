@@ -48,7 +48,7 @@
   },
   "step1": {
     "title": "Record Spray Status",
-    "close_button": "false",
+    "display_back_button": "true",
     "fields": [
       {
         "key": "structureType",
