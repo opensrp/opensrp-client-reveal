@@ -68,8 +68,7 @@
                         android:src="@drawable/ic_keyboard_arrow_down"
                         android:id="@+id/btn_collapse_structure_card_view"
                         android:background="@color/white"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="5dp"/>
+                        android:layout_marginTop="10dp"/>
 
                     <TextView
                         android:id="@+id/spray_status"
@@ -78,56 +77,60 @@
                         android:text="Sprayable, not sprayed"
                         android:textAllCaps="false"
                         android:textColor="#EE0427"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="25dp"
                         android:textSize="18sp"/>
                     <TextView
                         android:id="@+id/reason"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Away for Christmas holiday."
+                        android:text="People were not home. They travelled home for xmas."
                         android:textAllCaps="false"
                         android:textColor="#6C6C6C"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="5dp"
                         android:textSize="18sp"/>
                     <TextView
                         android:id="@+id/property_type"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_black"
-                        android:layout_marginTop="10dp"
                         android:textSize="18sp"
                         android:layout_marginLeft="15dp"
-                        android:text="Single family home"/>
+                        android:layout_marginTop="5dp"
+                        android:text="Single family home"
+                        android:drawableLeft="@drawable/ic_outline_home"
+                        android:gravity="center_vertical"/>
                     <TextView
                         android:id="@+id/date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAllCaps="false"
                         android:textColor="@color/text_black"
-                        android:layout_marginTop="10dp"
                         android:layout_marginLeft="15dp"
                         android:textSize="18sp"
-                        android:text="31 Mar 2018" />
+                        android:text="31 Mar 2018"
+                        android:drawableLeft="@drawable/ic_outline_calendar"
+                        android:gravity="center_vertical"/>
                     <TextView
                         android:id="@+id/user_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_black"
-                        android:layout_marginTop="10dp"
                         android:textSize="18sp"
                         android:layout_marginLeft="15dp"
-                        android:text="C_Appl"/>
+                        android:text="C_Appl"
+                        android:drawableLeft="@drawable/ic_outline_account_circle"
+                        android:gravity="center_vertical"/>
                     <TextView
                         android:id="@+id/family_head"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_black"
-                        android:layout_marginTop="10dp"
                         android:textSize="18sp"
                         android:layout_marginLeft="15dp"
-                        android:text="Craig Appl"/>
+                        android:text="Craig Appl"
+                        android:drawableLeft="@drawable/ic_outline_admin"
+                        android:gravity="center_vertical"/>
                 </LinearLayout>
                 <Button
                     android:layout_width="wrap_content"
