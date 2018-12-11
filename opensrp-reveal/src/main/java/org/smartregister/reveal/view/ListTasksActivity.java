@@ -111,7 +111,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             public void onMapReady(MapboxMap mapboxMap) {
                 mMapboxMap = mapboxMap;
 
-                mapboxMap.setMinZoomPreference(14);
+                mapboxMap.setMinZoomPreference(10);
                 mapboxMap.setMaxZoomPreference(21);
 
                 CameraPosition cameraPosition = new CameraPosition.Builder()
