@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -77,6 +76,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private GeoJsonSource geoJsonSource;
 
+    private GeoJsonSource selectedGeoJsonSource;
+
     private ProgressDialog progressDialog;
 
     private MapboxMap mMapboxMap;
@@ -120,6 +121,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 mapboxMap.setCameraPosition(cameraPosition);
 
                 geoJsonSource = mapboxMap.getSourceAs(getString(R.string.reveal_datasource_name));
+
+                selectedGeoJsonSource = mapboxMap.getSourceAs(getString(R.string.selected_datasource_name));
 
                 listTaskPresenter.onMapReady();
 
@@ -303,6 +306,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
+        }
+    }
+
+    @Override
+    public void displaySelectedFeature(Feature feature) {
+        if (selectedGeoJsonSource != null) {
+            selectedGeoJsonSource.setGeoJson(FeatureCollection.fromFeature(feature));
         }
     }
 

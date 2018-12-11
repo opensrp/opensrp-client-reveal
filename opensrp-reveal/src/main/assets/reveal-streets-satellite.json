@@ -197,7 +197,7 @@
       ],
       "paint": {
         "circle-color": "hsl(26, 84%, 56%)",
-        "circle-radius": 10,
+        "circle-radius": 16,
         "circle-stroke-width": 1
       }
     }

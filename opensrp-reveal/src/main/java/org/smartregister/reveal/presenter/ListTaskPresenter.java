@@ -311,6 +311,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     }
 
     private void onFeatureSelected(Feature feature) {
+        listTaskView.displaySelectedFeature(feature);
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, feature.id()));
         } else {
