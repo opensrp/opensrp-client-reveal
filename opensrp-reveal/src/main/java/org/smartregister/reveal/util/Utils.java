@@ -22,8 +22,6 @@ import org.smartregister.reveal.application.RevealApplication;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
-
 public class Utils {
 
     public static final ArrayList<String> ALLOWED_LEVELS;
