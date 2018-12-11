@@ -75,4 +75,9 @@ public interface Constants {
         String NOT_SPRAYABLE = "Not Sprayable";
     }
 
+    interface Map {
+        int MAX_SELECT_ZOOM_LEVEL = 16;
+        int CLICK_SELECT_RADIUS = 24;
+    }
+
 }

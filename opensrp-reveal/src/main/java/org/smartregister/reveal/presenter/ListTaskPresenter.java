@@ -42,6 +42,8 @@ import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
+import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
@@ -278,13 +280,19 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     }
 
     public void onMapClicked(MapboxMap mapboxMap, LatLng point) {
+        double currentZoom = mapboxMap.getCameraPosition().zoom;
+        if (currentZoom < MAX_SELECT_ZOOM_LEVEL) {
+            Log.w(TAG, "onMapClicked Current Zoom level" + currentZoom);
+            return;
+        }
         final PointF pixel = mapboxMap.getProjection().toScreenLocation(point);
         Context context = listTaskView.getContext();
         List<Feature> features = mapboxMap.queryRenderedFeatures(pixel,
                 context.getString(R.string.reveal_layer_polygons), context.getString(R.string.reveal_layer_points));
-        Log.d(TAG, "LEN: " + features.size());
         if (features.isEmpty()) {//try to increase the click area
-            RectF clickArea = new RectF(pixel.x - 24, pixel.y + 24, pixel.x + 24, pixel.y - 24);
+            RectF clickArea = new RectF(pixel.x - CLICK_SELECT_RADIUS,
+                    pixel.y + CLICK_SELECT_RADIUS, pixel.x + CLICK_SELECT_RADIUS,
+                    pixel.y - CLICK_SELECT_RADIUS);
             features = mapboxMap.queryRenderedFeatures(clickArea,
                     context.getString(R.string.reveal_layer_polygons), context.getString(R.string.reveal_layer_points));
             Log.d(TAG, "Selected structure after increasing click area: " + features.size());
@@ -302,7 +310,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     }
 
-    public void onFeatureSelected(Feature feature) {
+    private void onFeatureSelected(Feature feature) {
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, feature.id()));
         } else {
