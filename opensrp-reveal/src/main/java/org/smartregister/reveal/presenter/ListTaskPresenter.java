@@ -1,5 +1,8 @@
 package org.smartregister.reveal.presenter;
 
+import android.content.Context;
+import android.graphics.PointF;
+import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.text.TextUtils;
@@ -9,6 +12,8 @@ import com.google.gson.reflect.TypeToken;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -272,7 +277,32 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         }
     }
 
-    public void onFeatureClicked(Feature feature) {
+    public void onMapClicked(MapboxMap mapboxMap, LatLng point) {
+        final PointF pixel = mapboxMap.getProjection().toScreenLocation(point);
+        Context context = listTaskView.getContext();
+        List<Feature> features = mapboxMap.queryRenderedFeatures(pixel,
+                context.getString(R.string.reveal_layer_polygons), context.getString(R.string.reveal_layer_points));
+        Log.d(TAG, "LEN: " + features.size());
+        if (features.isEmpty()) {//try to increase the click area
+            RectF clickArea = new RectF(pixel.x - 24, pixel.y + 24, pixel.x + 24, pixel.y - 24);
+            features = mapboxMap.queryRenderedFeatures(clickArea,
+                    context.getString(R.string.reveal_layer_polygons), context.getString(R.string.reveal_layer_points));
+            Log.d(TAG, "Selected structure after increasing click area: " + features.size());
+            if (features.size() == 1) {
+                onFeatureSelected(features.get(0));
+            } else {
+                Log.d(TAG, "Not Selected structure after increasing click area: " + features.size());
+            }
+        } else {
+            onFeatureSelected(features.get(0));
+            if (features.size() > 1) {
+                Log.w(TAG, "Selected more than 1 structure: " + features.size());
+            }
+        }
+
+    }
+
+    public void onFeatureSelected(Feature feature) {
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, feature.id()));
         } else {

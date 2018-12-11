@@ -127,15 +127,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(@NonNull LatLng point) {
-                        final PointF pixel = mapboxMap.getProjection().toScreenLocation(point);
-                        List<Feature> features = mapboxMap.queryRenderedFeatures(pixel,
-                                getString(R.string.reveal_layer_polygons), getString(R.string.reveal_layer_points));
-                        Log.d(TAG, "LEN: " + features.size());
-                        if (!features.isEmpty())
-                            listTaskPresenter.onFeatureClicked(features.get(0));
-                        if (features.size() > 1) {
-                            Log.w(TAG, "Selected more than 1 structure: " + features.size());
-                        }
+                        listTaskPresenter.onMapClicked(mapboxMap, point);
                     }
                 });
             }
