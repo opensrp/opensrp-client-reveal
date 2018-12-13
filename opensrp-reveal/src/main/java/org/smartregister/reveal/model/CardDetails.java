@@ -11,7 +11,7 @@ public class CardDetails {
     String sprayOperator;
     String familyHead;
     String statusMessage;
-    int statusColor;
+    String statusColor;
     String reason;
 
     public CardDetails(String sprayStatus, String propertyType, String sprayDate, String sprayOperator, String familyHead, String reason) {
@@ -63,11 +63,11 @@ public class CardDetails {
         this.familyHead = familyHead;
     }
 
-    public int getStatusColor() {
+    public String getStatusColor() {
         return statusColor;
     }
 
-    public void setStatusColor(int statusColor) {
+    public void setStatusColor(String statusColor) {
         this.statusColor = statusColor;
     }
 

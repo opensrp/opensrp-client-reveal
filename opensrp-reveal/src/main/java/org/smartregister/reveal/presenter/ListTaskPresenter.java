@@ -24,6 +24,7 @@ import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -310,7 +311,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     private void formatCardDetails(CardDetails cardDetails) {
         // format date
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
             Date originalDate = sdf.parse(cardDetails.getSprayDate());
 
             sdf = new SimpleDateFormat("dd MMM yyyy");
@@ -322,13 +323,13 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         // extract status color
         String sprayStatus = cardDetails.getSprayStatus();
         if ("Not Sprayed".equals(sprayStatus)) {
-            cardDetails.setStatusColor(0xEE0427);
+            cardDetails.setStatusColor("#EE0427");
             cardDetails.setStatusMessage("Sprayable, not sprayed");
         } else if ("Sprayed".equals(sprayStatus)) {
-            cardDetails.setStatusColor(0x6CBF0F);
+            cardDetails.setStatusColor("#6CBF0F");
             cardDetails.setStatusMessage("Sprayable, sprayed");
         } else {
-            cardDetails.setStatusColor(0x000000);
+            cardDetails.setStatusColor("#000000");
             cardDetails.setStatusMessage("Not sprayable");
         }
     }

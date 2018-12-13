@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -341,8 +342,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         TextView tvFamilyHead = findViewById(R.id.family_head);
         TextView tvReason = findViewById(R.id.reason);
 
-        tvSprayStatus.setText(cardDetails.getSprayStatus());
-        tvSprayStatus.setTextColor(cardDetails.getStatusColor());
+        tvSprayStatus.setTextColor(Color.parseColor(cardDetails.getStatusColor()));
+        tvSprayStatus.setText(cardDetails.getStatusMessage());
         tvPropertyType.setText(cardDetails.getPropertyType());
         tvSprayDate.setText(cardDetails.getSprayDate());
         tvSprayOperator.setText(cardDetails.getSprayOperator());
