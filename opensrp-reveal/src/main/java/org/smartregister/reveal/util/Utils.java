@@ -12,6 +12,9 @@ import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.widget.TextView;
 
+import com.google.gson.JsonElement;
+import com.mapbox.geojson.Feature;
+
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -60,6 +63,11 @@ public class Utils {
         int start = builder.length();
         builder.append(value).setSpan(blackSpan, start, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         textView.setText(builder);
+    }
+
+    public static String getPropertyValue(Feature feature, String propertyKey) {
+        JsonElement featureProperty = feature.getProperty(propertyKey);
+        return featureProperty == null ? null : featureProperty.getAsString();
     }
 
 }
