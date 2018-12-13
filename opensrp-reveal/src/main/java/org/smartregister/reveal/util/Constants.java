@@ -90,6 +90,8 @@ public interface Constants {
 
         String SPRAY_FORM = "json.form/spray_form.json";
 
+        String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
+
     }
 
 

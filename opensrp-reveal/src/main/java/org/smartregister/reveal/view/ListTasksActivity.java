@@ -97,6 +97,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         initializeMapView(savedInstanceState);
         initializeDrawerLayout();
         initializeProgressDialog();
+
+        findViewById(R.id.btn_add_structure).setOnClickListener(this);
     }
 
     private void initializeMapView(Bundle savedInstanceState) {
@@ -213,6 +215,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         else if (v.getId() == R.id.sync_button) {
             SyncServiceJob.scheduleJobImmediately(SyncServiceJob.TAG);
             mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else if (v.getId() == R.id.btn_add_structure) {
+            listTaskPresenter.onAddSructureClicked();
         }
     }
 
@@ -299,7 +303,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void startSprayForm(JSONObject form) {
+    public void startJsonForm(JSONObject form) {
         Intent intent = new Intent(getApplicationContext(), JsonFormActivity.class);
         try {
             intent.putExtra(JSON_FORM_PARAM_JSON, form.toString());

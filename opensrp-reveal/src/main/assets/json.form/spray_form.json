@@ -59,12 +59,12 @@
         "label": "Type of Structure",
         "options": [
           {
-            "key": "non_residential",
-            "text": "Non-Residential Structure"
-          },
-          {
             "key": "residential",
             "text": "Residential Structure"
+          },
+          {
+            "key": "non_residential",
+            "text": "Non-Residential Structure"
           },
           {
             "key": "facility",
@@ -94,7 +94,7 @@
             "text": "Not Eligible"
           }
         ],
-        "value": "not_eligible",
+        "value": "Not Sprayable",
         "relevance": {
           "step1:structureType": {
             "type": "string",

@@ -43,6 +43,7 @@ import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 
+import static org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FORM;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 
@@ -354,9 +355,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             formData.put(LOCATION_UUID, structureUUID);
             formData.put(LOCATION_VERSION, structureVersion);
             formJson.put(DETAILS, formData);
-            listTaskView.startSprayForm(formJson);
+            listTaskView.startJsonForm(formJson);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "error launching spray form", e);
         }
     }
 
@@ -378,5 +379,16 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         }
         listTaskView.setGeoJsonSource(featureCollection, null);
         listTaskView.openCardView(structureId, taskIdentifier, businessStatus);
+    }
+
+    public void onAddSructureClicked() {
+        String formString = AssetHandler.readFileFromAssetsFolder(ADD_STRUCTURE_FORM, listTaskView.getContext());
+        try {
+            JSONObject formJson = new JSONObject(formString);
+            listTaskView.startJsonForm(formJson);
+        } catch (Exception e) {
+            Log.e(TAG, "error launching add structure form", e);
+        }
+
     }
 }

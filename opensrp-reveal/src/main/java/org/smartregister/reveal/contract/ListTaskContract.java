@@ -55,9 +55,10 @@ public interface ListTaskContract {
 
         void openCardView(String structureId, String taskIdentifier, String businessStatus);
 
-        void startSprayForm(JSONObject form);
+        void startJsonForm(JSONObject form);
 
         void displaySelectedFeature(Feature feature);
+
     }
 
     interface PresenterCallBack {

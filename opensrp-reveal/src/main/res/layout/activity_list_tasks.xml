@@ -26,8 +26,20 @@
             android:layout_margin="@dimen/hamburger_margin"
             android:background="@drawable/rounded_square_bg"
             android:src="@drawable/ic_hamburger_menu"
-            app:elevation="6dp"
-            app:layout_anchorGravity="top|left|start" />
+            app:elevation="6dp" />
+
+
+        <ImageButton
+            android:id="@+id/btn_add_structure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_margin="@dimen/hamburger_margin"
+            android:background="@drawable/circle_button_black_border"
+            android:padding="2dp"
+            android:src="@drawable/ic_add"
+            android:textColor="@color/white"
+            app:elevation="6dp" />
 
     </FrameLayout>
 
