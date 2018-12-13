@@ -3,6 +3,7 @@ package org.smartregister.reveal.view;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PointF;
 import android.os.Bundle;
@@ -30,10 +31,12 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.vijay.jsonwizard.activities.JsonFormActivity;
 import com.vijay.jsonwizard.customviews.TreeViewDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.smartregister.AllConstants;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.job.SyncServiceJob;
@@ -49,9 +52,11 @@ import org.smartregister.util.Utils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
+import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
+import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -268,7 +273,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             });
             treeViewDialog.show();
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
 
     }
@@ -289,16 +294,15 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             });
             treeViewDialog.show();
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage());
         }
     }
 
     @Override
-    public void setGeoJsonSource(String structuresGeoJson, Geometry operationalAreaGeometry) {
-        FeatureCollection featureCollection = FeatureCollection.fromJson(structuresGeoJson);
+    public void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Geometry operationalAreaGeometry) {
         if (geoJsonSource != null) {
             geoJsonSource.setGeoJson(featureCollection);
-            if (!Utils.isEmptyCollection(featureCollection.features())) {
+            if (operationalAreaGeometry != null) {
                 mMapboxMap.setCameraPosition(mMapboxMap.getCameraForGeometry(operationalAreaGeometry));
             }
         }
@@ -336,10 +340,23 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void startSprayForm(String structureId, String taskIdentifier, String businessStatus) {
-        Toast.makeText(this, String.format("Opening Spray form for Structure %s and task %s status: %s",
-                structureId, taskIdentifier, businessStatus), Toast.LENGTH_SHORT).show();
+    public void startSprayForm(JSONObject form) {
+        Intent intent = new Intent(getApplicationContext(), JsonFormActivity.class);
+        try {
+            intent.putExtra(JSON_FORM_PARAM_JSON, form.toString());
+            startActivityForResult(intent, REQUEST_CODE_GET_JSON);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
+            String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
+            Log.d(TAG, json);
+            listTaskPresenter.saveSprayForm(json);
+        }
     }
 
     @Override

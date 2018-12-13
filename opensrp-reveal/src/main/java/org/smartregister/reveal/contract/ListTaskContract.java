@@ -1,13 +1,16 @@
 package org.smartregister.reveal.contract;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.util.Pair;
 
+import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
 
 import org.json.JSONObject;
 import org.smartregister.domain.Campaign;
+import org.smartregister.domain.Task.TaskStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +42,7 @@ public interface ListTaskContract {
 
         void showCampaignSelector(List<String> campaigns, String entireTreeString);
 
-        void setGeoJsonSource(String structuresGeoJson, Geometry operationalAreaGeometry);
+        void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Geometry operationalAreaGeometry);
 
         void lockNavigationDrawerForSelection();
 
@@ -51,7 +54,7 @@ public interface ListTaskContract {
 
         void openCardView(String structureId, String taskIdentifier, String businessStatus);
 
-        void startSprayForm(String structureId, String taskIdentifier, String businessStatus);
+        void startSprayForm(JSONObject form);
     }
 
     interface PresenterCallBack {
@@ -59,5 +62,8 @@ public interface ListTaskContract {
         void onCampaignsFetched(List<Campaign> campaigns);
 
         void onStructuresFetched(JSONObject structuresGeoJson, Geometry operationalAreaGeometry);
+
+        void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier,
+                              @NonNull TaskStatus taskStatus, @NonNull String businessStatus);
     }
 }

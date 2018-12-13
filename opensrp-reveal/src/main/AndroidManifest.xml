@@ -36,10 +36,21 @@
 
         <activity
             android:name=".view.ListTasksActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
 
-        <service android:name="org.smartregister.sync.intent.SyncIntentService" />
+        <activity
+            android:name="com.vijay.jsonwizard.activities.JsonFormActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+
+
+        <service android:name=".sync.RevealSyncIntentService" />
 
     </application>
 

@@ -1,16 +1,19 @@
 package org.smartregister.reveal.presenter;
 
+import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.domain.Campaign;
+import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.R;
@@ -29,17 +32,27 @@ import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.SRPAYED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
+import static org.smartregister.reveal.util.Constants.DETAILS;
+import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.JsonForm.NON_RESIDENTIAL;
+import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
+import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.Tags.COUNTRY;
 import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.PROVINCE;
+import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
 /**
  * Created by samuelgithengi on 11/27/18.
@@ -57,6 +70,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     private PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
 
     private boolean changedCurrentSelection;
+
+    private FeatureCollection featureCollection;
 
     public ListTaskPresenter(ListTaskView listTaskView) {
         this.listTaskView = listTaskView;
@@ -234,7 +249,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         listTaskView.hideProgressDialog();
         changedCurrentSelection = false;
         if (structuresGeoJson.has(FEATURES)) {
-            listTaskView.setGeoJsonSource(structuresGeoJson.toString(), operationalAreaGeometry);
+            featureCollection = FeatureCollection.fromJson(structuresGeoJson.toString());
+            listTaskView.setGeoJsonSource(featureCollection, operationalAreaGeometry);
         } else
             listTaskView.displayNotification(R.string.fetching_structures_title, R.string.fetch_structures_failed_message);
     }
@@ -264,16 +280,61 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, feature.id()));
         } else {
-            String businessStatus = feature.getStringProperty(TASK_BUSINESS_STATUS);
-            String identifier = feature.getStringProperty(TASK_IDENTIFIER);
-            String code = feature.getStringProperty(TASK_CODE);
+            String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
+            String identifier = getPropertyValue(feature, TASK_IDENTIFIER);
+            String code = getPropertyValue(feature, TASK_CODE);
+            String status = getPropertyValue(feature, TASK_STATUS);
             if (IRS.equals(code) && NOT_VISITED.equals(businessStatus)) {
-                listTaskView.startSprayForm(feature.id(), identifier, businessStatus);
+                startSprayForm(feature.id(), getPropertyValue(feature, LOCATION_UUID), getPropertyValue(feature, LOCATION_VERSION),
+                        getPropertyValue(feature, LOCATION_TYPE),
+                        identifier, businessStatus, status);
             } else if (IRS.equals(code) &&
-                    (NOT_SPRAYED.equals(businessStatus) || SRPAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
-
+                    (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
                 listTaskView.openCardView(feature.id(), identifier, businessStatus);
             }
         }
+    }
+
+    private void startSprayForm(String structureId, String structureUUID, String structureVersion, String structureType,
+                                String taskIdentifier, String taskBusinessStatus, String taskStatus) {
+        try {
+            String formString = AssetHandler.readFileFromAssetsFolder(SPRAY_FORM, listTaskView.getContext());
+            if (StringUtils.isBlank(structureType)) {
+                structureType = NON_RESIDENTIAL;
+            }
+            formString = formString.replace(STRUCTURE_PROPERTIES_TYPE, structureType);
+            JSONObject formJson = new JSONObject(formString);
+            formJson.put(ENTITY_ID, structureId);
+            JSONObject formData = new JSONObject();
+            formData.put(TASK_IDENTIFIER, taskIdentifier);
+            formData.put(TASK_BUSINESS_STATUS, taskBusinessStatus);
+            formData.put(TASK_STATUS, taskStatus);
+            formData.put(LOCATION_UUID, structureUUID);
+            formData.put(LOCATION_VERSION, structureVersion);
+            formJson.put(DETAILS, formData);
+            listTaskView.startSprayForm(formJson);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveSprayForm(String json) {
+        listTaskView.showProgressDialog();
+        listTaskInteractor.saveSprayForm(json);
+    }
+
+    @Override
+    public void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier,
+                                 @NonNull TaskStatus taskStatus, @NonNull String businessStatus) {
+        listTaskView.hideProgressDialog();
+        for (Feature feature : featureCollection.features()) {
+            if (structureId.equals(feature.id())) {
+                feature.addStringProperty(TASK_BUSINESS_STATUS, businessStatus);
+                feature.addStringProperty(TASK_STATUS, taskStatus.name());
+                break;
+            }
+        }
+        listTaskView.setGeoJsonSource(featureCollection, null);
+        listTaskView.openCardView(structureId, taskIdentifier, businessStatus);
     }
 }

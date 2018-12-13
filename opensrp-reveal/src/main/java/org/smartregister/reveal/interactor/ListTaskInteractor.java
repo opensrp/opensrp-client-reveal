@@ -11,32 +11,50 @@ import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Task;
+import org.smartregister.domain.db.EventClient;
+import org.smartregister.domain.tag.FormTag;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.CampaignRepository;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract.PresenterCallBack;
+import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.util.DateTimeTypeConverter;
+import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
 import org.smartregister.util.Utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURE_COLLECTION;
 import static org.smartregister.reveal.util.Constants.GeoJSON.TYPE;
+import static org.smartregister.reveal.util.Constants.METADATA;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
+import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.Constants.STRUCTURE;
+import static org.smartregister.util.JsonFormUtils.ENTITY_ID;
+import static org.smartregister.util.JsonFormUtils.getJSONObject;
+import static org.smartregister.util.JsonFormUtils.getString;
 
 /**
  * Created by samuelgithengi on 11/27/18.
@@ -60,6 +78,10 @@ public class ListTaskInteractor {
 
     private PresenterCallBack presenterCallBack;
 
+    private EventClientRepository eventClientRepository;
+
+    private RevealClientProcessor clientProcessor;
+
     public ListTaskInteractor(PresenterCallBack presenterCallBack) {
         this(new AppExecutors());
         this.presenterCallBack = presenterCallBack;
@@ -67,6 +89,8 @@ public class ListTaskInteractor {
         taskRepository = RevealApplication.getInstance().getTaskRepository();
         structureRepository = RevealApplication.getInstance().getStructureRepository();
         locationRepository = RevealApplication.getInstance().getLocationRepository();
+        eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+        clientProcessor = RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext());
     }
 
     @VisibleForTesting
@@ -111,6 +135,9 @@ public class ListTaskInteractor {
                                 taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
                                 taskProperties.put(TASK_STATUS, task.getStatus().name());
                                 taskProperties.put(TASK_CODE, task.getCode());
+                                taskProperties.put(LOCATION_UUID, structure.getProperties().getUid());
+                                taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
+                                taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
                                 structure.getProperties().setCustomProperties(taskProperties);
                             }
                         }
@@ -147,4 +174,45 @@ public class ListTaskInteractor {
         return featureCollection;
     }
 
+    public void saveSprayForm(String json) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONObject jsonForm = new JSONObject(json);
+                    String entityId = getString(jsonForm, ENTITY_ID);
+                    JSONArray fields = JsonFormUtils.fields(jsonForm);
+                    JSONObject metadata = getJSONObject(jsonForm, METADATA);
+                    FormTag formTag = new FormTag();
+                    AllSharedPreferences sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
+                    formTag.providerId = sharedPreferences.fetchRegisteredANM();
+                    formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
+                    formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
+                    formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
+                    Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, SPRAY_EVENT, STRUCTURE);
+                    JSONObject eventJson = new JSONObject(gson.toJson(event));
+                    eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
+                    org.smartregister.domain.db.Event dbEvent = gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class);
+
+                    eventClientRepository.addEvent(entityId, eventJson);
+                    List<EventClient> unprocessedEvents = new ArrayList<>();
+                    unprocessedEvents.add(new EventClient(dbEvent, null));
+                    clientProcessor.processClient(unprocessedEvents);
+
+                    appExecutors.mainThread().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            String businessStatus = clientProcessor.calculateBusinessStatus(dbEvent);
+                            presenterCallBack.onSprayFormSaved(event.getBaseEntityId(), dbEvent.getDetails().get(TASK_IDENTIFIER),
+                                    Task.TaskStatus.COMPLETED, businessStatus);
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        appExecutors.diskIO().execute(runnable);
+    }
 }

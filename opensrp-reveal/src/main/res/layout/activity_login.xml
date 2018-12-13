@@ -99,6 +99,7 @@
                 android:cursorVisible="true"
                 android:ems="10"
                 android:hint="@string/prompt_username"
+                android:inputType="text"
                 android:maxLines="1"
                 android:paddingLeft="10dp"
                 android:textColor="#666666"
