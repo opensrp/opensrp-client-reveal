@@ -37,6 +37,10 @@ import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.JsonForm.NON_RESIDENTIAL;
+import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
+import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
@@ -282,6 +286,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             String status = getPropertyValue(feature, TASK_STATUS);
             if (IRS.equals(code) && NOT_VISITED.equals(businessStatus)) {
                 startSprayForm(feature.id(), getPropertyValue(feature, LOCATION_UUID), getPropertyValue(feature, LOCATION_VERSION),
+                        getPropertyValue(feature, LOCATION_TYPE),
                         identifier, businessStatus, status);
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
@@ -290,19 +295,24 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         }
     }
 
-    private void startSprayForm(String structureId, String structureUUID, String structureVersion,
+    private void startSprayForm(String structureId, String structureUUID, String structureVersion, String structureType,
                                 String taskIdentifier, String taskBusinessStatus, String taskStatus) {
         try {
-            JSONObject form = new JSONObject(AssetHandler.readFileFromAssetsFolder("json.form/spray_form.json", listTaskView.getContext()));
-            form.put(ENTITY_ID, structureId);
+            String formString = AssetHandler.readFileFromAssetsFolder(SPRAY_FORM, listTaskView.getContext());
+            if (StringUtils.isBlank(structureType)) {
+                structureType = NON_RESIDENTIAL;
+            }
+            formString = formString.replace(STRUCTURE_PROPERTIES_TYPE, structureType);
+            JSONObject formJson = new JSONObject(formString);
+            formJson.put(ENTITY_ID, structureId);
             JSONObject formData = new JSONObject();
             formData.put(TASK_IDENTIFIER, taskIdentifier);
             formData.put(TASK_BUSINESS_STATUS, taskBusinessStatus);
             formData.put(TASK_STATUS, taskStatus);
             formData.put(LOCATION_UUID, structureUUID);
             formData.put(LOCATION_VERSION, structureVersion);
-            form.put(DETAILS, formData);
-            listTaskView.startSprayForm(form);
+            formJson.put(DETAILS, formData);
+            listTaskView.startSprayForm(formJson);
         } catch (Exception e) {
             e.printStackTrace();
         }
