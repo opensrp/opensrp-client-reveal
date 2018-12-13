@@ -1,10 +1,12 @@
 package org.smartregister.reveal.widget;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -86,6 +88,19 @@ public class GeoWidgetFactory implements FormWidgetFactory {
         mapView.focusOnUserLocation(true);
         mapView.enableAddPoint(true);
         ((JsonApi) context).onFormFinish();
+        disableParentScroll((Activity) context, mapView);
         return views;
+    }
+
+    private void disableParentScroll(Activity context, View mapView) {
+        ViewGroup mainScroll = context.findViewById(R.id.scroll_view);
+        mapView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mainScroll.requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
     }
 }
