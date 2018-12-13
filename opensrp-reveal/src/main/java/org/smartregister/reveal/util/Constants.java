@@ -20,6 +20,8 @@ public interface Constants {
 
     String STRUCTURE = "Structure";
 
+    double MY_LOCATION_ZOOM_LEVEL = 17.5;
+
     interface CONFIGURATION {
         String LOGIN = "login";
     }
