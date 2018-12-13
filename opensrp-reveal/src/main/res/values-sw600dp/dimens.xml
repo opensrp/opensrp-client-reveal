@@ -16,4 +16,5 @@
     <dimen name="drawer_spinner_width">240dp</dimen>
 
     <dimen name="dialog_min_width_major">@dimen/abc_dialog_min_width_major</dimen>
+    <dimen name="geowidget_height">400dp</dimen>
 </resources>

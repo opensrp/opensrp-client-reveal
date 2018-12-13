@@ -41,6 +41,7 @@ import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.BaseMapActivity;
+import org.smartregister.reveal.activity.RevealJsonForm;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
@@ -304,7 +305,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void startJsonForm(JSONObject form) {
-        Intent intent = new Intent(getApplicationContext(), JsonFormActivity.class);
+        Intent intent = new Intent(getApplicationContext(), RevealJsonForm.class);
         try {
             intent.putExtra(JSON_FORM_PARAM_JSON, form.toString());
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);

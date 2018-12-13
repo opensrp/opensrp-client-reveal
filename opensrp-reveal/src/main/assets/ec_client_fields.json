@@ -28,7 +28,7 @@
           "column_name": "spray_operator",
           "type": "Event",
           "json_mapping": {
-            "field": "provider_id"
+            "field": "providerId"
           }
         },
         {

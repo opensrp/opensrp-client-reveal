@@ -51,6 +51,10 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "geometry",
+        "type": "geowidget"
+      },
+      {
         "key": "structureType",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
