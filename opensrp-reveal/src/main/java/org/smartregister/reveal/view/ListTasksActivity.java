@@ -17,11 +17,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -46,6 +44,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.BaseMapActivity;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
+import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.util.Utils;
 
@@ -334,9 +333,23 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void openCardView(String structureId, String taskIdentifier, String businessStatus) {
-        Toast.makeText(this, String.format("Opening Card View for Structure %s and task %s",
-                structureId, taskIdentifier), Toast.LENGTH_SHORT).show();
+    public void openCardView(CardDetails cardDetails) {
+        TextView tvSprayStatus = findViewById(R.id.spray_status);
+        TextView tvPropertyType = findViewById(R.id.property_type);
+        TextView tvSprayDate = findViewById(R.id.spray_date);
+        TextView tvSprayOperator = findViewById(R.id.user_id);
+        TextView tvFamilyHead = findViewById(R.id.family_head);
+        TextView tvReason = findViewById(R.id.reason);
+
+        tvSprayStatus.setText(cardDetails.getSprayStatus());
+        tvSprayStatus.setTextColor(cardDetails.getStatusColor());
+        tvPropertyType.setText(cardDetails.getPropertyType());
+        tvSprayDate.setText(cardDetails.getSprayDate());
+        tvSprayOperator.setText(cardDetails.getSprayOperator());
+        tvFamilyHead.setText(cardDetails.getFamilyHead());
+        tvReason.setText(cardDetails.getReason());
+
+        findViewById(R.id.structure_info_card_view).setVisibility(View.VISIBLE);
     }
 
     @Override

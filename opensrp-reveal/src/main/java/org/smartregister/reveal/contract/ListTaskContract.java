@@ -11,6 +11,7 @@ import com.mapbox.geojson.Geometry;
 import org.json.JSONObject;
 import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Task.TaskStatus;
+import org.smartregister.reveal.model.CardDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public interface ListTaskContract {
 
         void displayNotification(String message);
 
-        void openCardView(String structureId, String taskIdentifier, String businessStatus);
+        void openCardView(CardDetails cardDetails);
 
         void startSprayForm(JSONObject form);
     }
@@ -65,5 +66,7 @@ public interface ListTaskContract {
 
         void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier,
                               @NonNull TaskStatus taskStatus, @NonNull String businessStatus);
+
+        void onCardDetailsFetched(List<CardDetails> cardDetailsList);
     }
 }

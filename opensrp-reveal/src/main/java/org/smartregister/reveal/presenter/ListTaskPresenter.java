@@ -20,11 +20,14 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
+import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.smartregister.AllConstants.REVEAL_OPERATIONAL_AREAS;
@@ -290,8 +293,43 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
                         identifier, businessStatus, status);
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
-                listTaskView.openCardView(feature.id(), identifier, businessStatus);
+                listTaskInteractor.fetchCardViewDetails(feature.id());
             }
+        }
+    }
+
+    public void onCardDetailsFetched(List<CardDetails> cardDetailsList) {
+        if (cardDetailsList == null || cardDetailsList.size() == 0) {
+            return;
+        }
+        CardDetails cardDetails = cardDetailsList.get(0);
+        formatCardDetails(cardDetails);
+        listTaskView.openCardView(cardDetails);
+    }
+
+    private void formatCardDetails(CardDetails cardDetails) {
+        // format date
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            Date originalDate = sdf.parse(cardDetails.getSprayDate());
+
+            sdf = new SimpleDateFormat("dd MMM yyyy");
+            String formattedDate = sdf.format(originalDate);
+            cardDetails.setSprayDate(formattedDate);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        // extract status color
+        String sprayStatus = cardDetails.getSprayStatus();
+        if ("Not Sprayed".equals(sprayStatus)) {
+            cardDetails.setStatusColor(0xEE0427);
+            cardDetails.setStatusMessage("Sprayable, not sprayed");
+        } else if ("Sprayed".equals(sprayStatus)) {
+            cardDetails.setStatusColor(0x6CBF0F);
+            cardDetails.setStatusMessage("Sprayable, sprayed");
+        } else {
+            cardDetails.setStatusColor(0x000000);
+            cardDetails.setStatusMessage("Not sprayable");
         }
     }
 
@@ -335,6 +373,6 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             }
         }
         listTaskView.setGeoJsonSource(featureCollection, null);
-        listTaskView.openCardView(structureId, taskIdentifier, businessStatus);
+        listTaskInteractor.fetchCardViewDetails(structureId);
     }
 }
