@@ -18,6 +18,7 @@
     <dimen name="drawer_spinner_width">220dp</dimen>
     <dimen name="dialog_min_width_major">90%</dimen>
     <dimen name="structure_info_card_text_size">18sp</dimen>
+    <dimen name="structure_info_card_status_text_size">22sp</dimen>
     <dimen name="structure_info_card_height">335dp</dimen>
     <dimen name="change_spray_status_btn_bottom_margin">15dp</dimen>
     <dimen name="my_location_btn_margin">16dp</dimen>
