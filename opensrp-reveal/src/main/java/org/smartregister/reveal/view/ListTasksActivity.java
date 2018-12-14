@@ -315,12 +315,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK) {
-            if (data.hasExtra(JSON_FORM_PARAM_JSON)) {
-                String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
-                Log.d(TAG, json);
-                listTaskPresenter.saveSprayForm(json);
-            }
+        if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
+            String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
+            Log.d(TAG, json);
+            listTaskPresenter.saveSprayForm(json);
         }
     }
 

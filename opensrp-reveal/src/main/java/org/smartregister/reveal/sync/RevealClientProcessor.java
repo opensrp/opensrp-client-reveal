@@ -3,22 +3,21 @@ package org.smartregister.reveal.sync;
 import android.content.Context;
 import android.util.Log;
 
+import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.Client;
 import org.smartregister.domain.db.Event;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.jsonmapping.ClientClassification;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.sync.ClientProcessorForJava;
 
 import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
-import static org.smartregister.reveal.util.Constants.RESIDENTIAL;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
-import static org.smartregister.reveal.util.Constants.SPRAY_STATUS;
-import static org.smartregister.reveal.util.Constants.STRUCTURE_TYPE;
 
 /**
  * Created by samuelgithengi on 12/7/18.
@@ -88,6 +87,12 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 task.setStatus(Task.TaskStatus.COMPLETED);
                 RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
             }
+            Location structure = RevealApplication.getInstance().getStructureRepository().getLocationById(event.getBaseEntityId());
+            if (structure != null) {
+                String structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE).getValue().toString();
+                structure.getProperties().setType(structureType);
+                RevealApplication.getInstance().getStructureRepository().addOrUpdate(structure);
+            }
             try {
                 Client client = new Client(event.getBaseEntityId());
                 processEvent(event, client, clientClassification);
@@ -100,9 +105,9 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     }
 
     public String calculateBusinessStatus(Event event) {
-        String sprayStatus = event.findObs(null, false, SPRAY_STATUS).getValue().toString();
-        String structureType = event.findObs(null, false, STRUCTURE_TYPE).getValue().toString();
-        if (!RESIDENTIAL.equals(structureType)) {
+        String sprayStatus = event.findObs(null, false, JsonForm.SPRAY_STATUS).getValue().toString();
+        String structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE).getValue().toString();
+        if (!JsonForm.RESIDENTIAL.equals(structureType)) {
             return NOT_SPRAYABLE;
         } else {
             return sprayStatus;

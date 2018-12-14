@@ -71,7 +71,7 @@
             "text": "Facility"
           }
         ],
-        "value": "non_residential"
+        "value": "[structure_type]"
       },
       {
         "key": "sprayStatus",

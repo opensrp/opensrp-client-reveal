@@ -34,7 +34,6 @@ import org.smartregister.util.PropertiesConverter;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +43,7 @@ import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURE_COLLECTION;
 import static org.smartregister.reveal.util.Constants.GeoJSON.TYPE;
 import static org.smartregister.reveal.util.Constants.METADATA;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
@@ -137,6 +137,7 @@ public class ListTaskInteractor {
                                 taskProperties.put(TASK_CODE, task.getCode());
                                 taskProperties.put(LOCATION_UUID, structure.getProperties().getUid());
                                 taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
+                                taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
                                 structure.getProperties().setCustomProperties(taskProperties);
                             }
                         }
@@ -192,7 +193,6 @@ public class ListTaskInteractor {
                     JSONObject eventJson = new JSONObject(gson.toJson(event));
                     eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
                     org.smartregister.domain.db.Event dbEvent = gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class);
-
 
                     eventClientRepository.addEvent(entityId, eventJson);
                     List<EventClient> unprocessedEvents = new ArrayList<>();

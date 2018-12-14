@@ -20,12 +20,6 @@ public interface Constants {
 
     String STRUCTURE = "Structure";
 
-    String SPRAY_STATUS = "sprayStatus";
-
-    String STRUCTURE_TYPE = "structureType";
-
-    String RESIDENTIAL = "residential";
-
     interface CONFIGURATION {
         String LOGIN = "login";
     }
@@ -53,6 +47,7 @@ public interface Constants {
         String TASK_CODE = "taskCode";
         String LOCATION_UUID = "locationUUID";
         String LOCATION_VERSION = "locationVersion";
+        String LOCATION_TYPE = "locationType";
     }
 
 
@@ -74,5 +69,22 @@ public interface Constants {
         String SPRAYED = "Sprayed";
         String NOT_SPRAYABLE = "Not Sprayable";
     }
+
+    interface JsonForm {
+
+        String RESIDENTIAL = "residential";
+
+        String NON_RESIDENTIAL = "non_residential";
+
+        String SPRAY_STATUS = "sprayStatus";
+
+        String STRUCTURE_TYPE = "structureType";
+
+        String STRUCTURE_PROPERTIES_TYPE = "[structure_type]";
+
+        String SPRAY_FORM = "json.form/spray_form.json";
+
+    }
+
 
 }

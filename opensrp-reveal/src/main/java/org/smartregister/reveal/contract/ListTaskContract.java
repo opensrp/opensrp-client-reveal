@@ -10,7 +10,6 @@ import com.mapbox.geojson.Geometry;
 
 import org.json.JSONObject;
 import org.smartregister.domain.Campaign;
-import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
 
 import java.util.ArrayList;
