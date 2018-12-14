@@ -12,9 +12,7 @@ public class LoginInteractor extends BaseLoginInteractor implements BaseLoginCon
 
     @Override
     protected void scheduleJobs() {
-
         Utils.startImmediateSync();
-
     }
 
 }
