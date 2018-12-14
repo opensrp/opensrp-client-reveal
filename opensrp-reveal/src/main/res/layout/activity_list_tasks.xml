@@ -51,11 +51,11 @@
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/structure_info_card_view"
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
+                android:layout_height="335dp"
                 card_view:cardCornerRadius="10dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginBottom="30dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="10dp"
                 android:visibility="gone">
 
                 <LinearLayout
@@ -138,8 +138,8 @@
                     android:text="Change spray status"
                     android:textColor="#1892D4"
                     android:textSize="18sp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="15dp"
                     android:background="@drawable/rounded_blue_outline"
                     android:layout_gravity="center|bottom"
                     android:textAllCaps="false"/>
