@@ -51,7 +51,7 @@
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/structure_info_card_view"
                 android:layout_width="match_parent"
-                android:layout_height="335dp"
+                android:layout_height="@dimen/structure_info_card_height"
                 card_view:cardCornerRadius="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="5dp"
@@ -78,7 +78,7 @@
                         android:textAllCaps="false"
                         android:textColor="#EE0427"
                         android:layout_marginLeft="25dp"
-                        android:textSize="18sp"/>
+                        android:textSize="@dimen/structure_info_card_text_size"/>
                     <TextView
                         android:id="@+id/reason"
                         android:layout_width="wrap_content"
@@ -88,13 +88,14 @@
                         android:textColor="#6C6C6C"
                         android:layout_marginLeft="25dp"
                         android:layout_marginRight="5dp"
-                        android:textSize="18sp"/>
+                        android:textSize="@dimen/structure_info_card_text_size"
+                        android:visibility="gone"/>
                     <TextView
                         android:id="@+id/property_type"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_black"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/structure_info_card_text_size"
                         android:layout_marginLeft="15dp"
                         android:layout_marginTop="5dp"
                         android:text="Single family home"
@@ -107,7 +108,7 @@
                         android:textAllCaps="false"
                         android:textColor="@color/text_black"
                         android:layout_marginLeft="15dp"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/structure_info_card_text_size"
                         android:text="31 Mar 2018"
                         android:drawableLeft="@drawable/ic_outline_calendar"
                         android:gravity="center_vertical"/>
@@ -116,7 +117,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_black"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/structure_info_card_text_size"
                         android:layout_marginLeft="15dp"
                         android:text="C_Appl"
                         android:drawableLeft="@drawable/ic_outline_account_circle"
@@ -126,7 +127,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_black"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/structure_info_card_text_size"
                         android:layout_marginLeft="15dp"
                         android:text="Craig Appl"
                         android:drawableLeft="@drawable/ic_outline_admin"
@@ -137,9 +138,9 @@
                     android:layout_height="wrap_content"
                     android:text="Change spray status"
                     android:textColor="#1892D4"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/structure_info_card_text_size"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="@dimen/change_spray_status_btn_bottom_margin"
                     android:background="@drawable/rounded_blue_outline"
                     android:layout_gravity="center|bottom"
                     android:textAllCaps="false"/>
