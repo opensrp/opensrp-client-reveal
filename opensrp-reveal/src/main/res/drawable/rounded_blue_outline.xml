@@ -2,7 +2,7 @@
 
     <stroke android:color="#1892D4"
         android:width="2dp"/>
-    <corners android:radius="20dp" />
+    <corners android:radius="30dp" />
     <padding
         android:bottom="@dimen/status_label_vertical_padding"
         android:left="@dimen/status_label_horizontal_padding"

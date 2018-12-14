@@ -276,7 +276,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             listTaskInteractor.fetchLocations(campaign, operationalArea);
         } else {
             listTaskView.displayNotification(R.string.select_campaign_operational_area_title, R.string.select_campaign_operational_area);
-            listTaskView.lockNavigationDrawerForSelection();
+//            listTaskView.lockNavigationDrawerForSelection();
         }
     }
 

@@ -16,6 +16,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -111,6 +112,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             public void onClick(View v) {
                 if (!isCardViewShowing) {
                     isCardViewShowing = true;
+                    setViewVisibility(findViewById(R.id.reason), true);
                     setViewVisibility(structureInfoCardView, true);
                 }
             }
@@ -121,6 +123,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             @Override
             public void onClick(View v) {
                 isCardViewShowing = false;
+                setViewVisibility(findViewById(R.id.reason), false);
                 closeStructureCardView();
             }
         });
@@ -348,7 +351,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         tvSprayDate.setText(cardDetails.getSprayDate());
         tvSprayOperator.setText(cardDetails.getSprayOperator());
         tvFamilyHead.setText(cardDetails.getFamilyHead());
-        tvReason.setText(cardDetails.getReason());
+        if (!TextUtils.isEmpty(cardDetails.getReason())) {
+            tvReason.setVisibility(View.VISIBLE);
+            tvReason.setText(cardDetails.getReason());
+        } else {
+            tvReason.setVisibility(View.GONE);
+        }
 
         findViewById(R.id.structure_info_card_view).setVisibility(View.VISIBLE);
     }
