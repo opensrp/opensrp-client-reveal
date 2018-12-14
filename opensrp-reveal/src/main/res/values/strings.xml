@@ -46,4 +46,6 @@
 
     <string name="error_fetching_location_hierarchy_title">Error Processing Locations Hierarchy</string>
     <string name="error_fetching_location_hierarchy">Error Processing Location Hierarchy. Log off to download location hierarchy again</string>
+
+    <string name="selected_datasource_name">select-data</string>
 </resources>

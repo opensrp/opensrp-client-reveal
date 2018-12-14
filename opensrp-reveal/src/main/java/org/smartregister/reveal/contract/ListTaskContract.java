@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.util.Pair;
 
+import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
 
@@ -56,6 +57,8 @@ public interface ListTaskContract {
         void openCardView(CardDetails cardDetails);
 
         void startSprayForm(JSONObject form);
+
+        void displaySelectedFeature(Feature feature);
     }
 
     interface PresenterCallBack {
