@@ -69,5 +69,7 @@ public interface ListTaskContract {
 
         void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier,
                               @NonNull TaskStatus taskStatus, @NonNull String businessStatus);
+
+        void onStructureAdded(Feature feature);
     }
 }

@@ -361,9 +361,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         }
     }
 
-    public void saveSprayForm(String json) {
+    public void saveJsonForm(String json) {
         listTaskView.showProgressDialog();
-        listTaskInteractor.saveSprayForm(json);
+        listTaskInteractor.saveJsonForm(json);
     }
 
     @Override
@@ -381,7 +381,15 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         listTaskView.openCardView(structureId, taskIdentifier, businessStatus);
     }
 
-    public void onAddSructureClicked() {
+    @Override
+    public void onStructureAdded(Feature feature) {
+        featureCollection.features().add(feature);
+        listTaskView.setGeoJsonSource(featureCollection, null);
+        listTaskView.hideProgressDialog();
+    }
+
+
+    public void onAddStructureClicked() {
         String formString = AssetHandler.readFileFromAssetsFolder(ADD_STRUCTURE_FORM, listTaskView.getContext());
         try {
             JSONObject formJson = new JSONObject(formString);

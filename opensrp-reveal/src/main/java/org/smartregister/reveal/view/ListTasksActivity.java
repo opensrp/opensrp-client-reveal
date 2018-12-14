@@ -28,7 +28,6 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.vijay.jsonwizard.activities.JsonFormActivity;
 import com.vijay.jsonwizard.customviews.TreeViewDialog;
 
 import org.json.JSONArray;
@@ -217,7 +216,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             SyncServiceJob.scheduleJobImmediately(SyncServiceJob.TAG);
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else if (v.getId() == R.id.btn_add_structure) {
-            listTaskPresenter.onAddSructureClicked();
+            listTaskPresenter.onAddStructureClicked();
         }
     }
 
@@ -326,7 +325,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
             String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
             Log.d(TAG, json);
-            listTaskPresenter.saveSprayForm(json);
+            listTaskPresenter.saveJsonForm(json);
         }
     }
 
