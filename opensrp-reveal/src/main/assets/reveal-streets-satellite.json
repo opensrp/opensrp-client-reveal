@@ -18,6 +18,11 @@
   "bearing": 0,
   "pitch": 0,
   "sources": {
+    "mapbox://mapbox.satellite": {
+      "url": "mapbox://mapbox.satellite",
+      "type": "raster",
+      "tileSize": 256
+    },
     "mapbox://ona.aami3tqv": {
       "url": "mapbox://ona.aami3tqv",
       "type": "raster",
@@ -57,6 +62,14 @@
       "paint": {
         "background-color": "rgba(0,0,0,0)"
       }
+    },
+    {
+      "id": "mapbox-satellite",
+      "type": "raster",
+      "metadata": {},
+      "source": "mapbox://mapbox.satellite",
+      "layout": {},
+      "paint": {}
     },
     {
       "id": "ona-aami3tqv",
@@ -184,7 +197,7 @@
       ],
       "paint": {
         "circle-color": "hsl(26, 84%, 56%)",
-        "circle-radius": 10,
+        "circle-radius": 16,
         "circle-stroke-width": 1
       }
     }

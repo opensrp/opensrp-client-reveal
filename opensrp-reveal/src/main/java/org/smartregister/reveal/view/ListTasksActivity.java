@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.PointF;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -77,6 +76,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private GeoJsonSource geoJsonSource;
 
+    private GeoJsonSource selectedGeoJsonSource;
+
     private ProgressDialog progressDialog;
 
     private MapboxMap mMapboxMap;
@@ -111,7 +112,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             public void onMapReady(MapboxMap mapboxMap) {
                 mMapboxMap = mapboxMap;
 
-                mapboxMap.setMinZoomPreference(14);
+                mapboxMap.setMinZoomPreference(10);
                 mapboxMap.setMaxZoomPreference(21);
 
                 CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -121,21 +122,15 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
                 geoJsonSource = mapboxMap.getSourceAs(getString(R.string.reveal_datasource_name));
 
+                selectedGeoJsonSource = mapboxMap.getSourceAs(getString(R.string.selected_datasource_name));
+
                 listTaskPresenter.onMapReady();
 
 
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                     @Override
                     public void onMapClick(@NonNull LatLng point) {
-                        final PointF pixel = mapboxMap.getProjection().toScreenLocation(point);
-                        List<Feature> features = mapboxMap.queryRenderedFeatures(pixel,
-                                getString(R.string.reveal_layer_polygons), getString(R.string.reveal_layer_points));
-                        Log.d(TAG, "LEN: " + features.size());
-                        if (!features.isEmpty())
-                            listTaskPresenter.onFeatureClicked(features.get(0));
-                        if (features.size() > 1) {
-                            Log.w(TAG, "Selected more than 1 structure: " + features.size());
-                        }
+                        listTaskPresenter.onMapClicked(mapboxMap, point);
                     }
                 });
             }
@@ -311,6 +306,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
+        }
+    }
+
+    @Override
+    public void displaySelectedFeature(Feature feature) {
+        if (selectedGeoJsonSource != null) {
+            selectedGeoJsonSource.setGeoJson(FeatureCollection.fromFeature(feature));
         }
     }
 
