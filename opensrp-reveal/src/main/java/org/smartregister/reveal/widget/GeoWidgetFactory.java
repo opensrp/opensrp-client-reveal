@@ -2,12 +2,18 @@ package org.smartregister.reveal.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
+import com.cocoahero.android.geojson.Feature;
+import com.cocoahero.android.geojson.Point;
+import com.mapbox.android.gestures.MoveGestureDetector;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.rey.material.util.ViewUtil;
@@ -18,6 +24,7 @@ import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
 import com.vijay.jsonwizard.interfaces.JsonApi;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
 
@@ -45,6 +52,7 @@ public class GeoWidgetFactory implements FormWidgetFactory {
         String openMrsEntity = jsonObject.optString(JsonFormConstants.OPENMRS_ENTITY);
         String openMrsEntityId = jsonObject.optString(JsonFormConstants.OPENMRS_ENTITY_ID);
         String relevance = jsonObject.optString(JsonFormConstants.RELEVANCE);
+        String key = jsonObject.optString(JsonFormConstants.KEY);
 
         List<View> views = new ArrayList<>(1);
 
@@ -59,7 +67,23 @@ public class GeoWidgetFactory implements FormWidgetFactory {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
-                Log.d(TAG, mapboxMap.getCameraPosition().target.toString());
+
+                writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId);
+                mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
+                    @Override
+                    public void onMoveBegin(@NonNull MoveGestureDetector detector) {//do nothing
+                    }
+
+                    @Override
+                    public void onMove(@NonNull MoveGestureDetector detector) {//do nothing
+                    }
+
+                    @Override
+                    public void onMoveEnd(@NonNull MoveGestureDetector detector) {
+                        Log.d(TAG, "onMoveEnd: " + mapboxMap.getCameraPosition().target.toString());
+                        writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId);
+                    }
+                });
             }
         });
 
@@ -79,6 +103,11 @@ public class GeoWidgetFactory implements FormWidgetFactory {
         }
 
         ((JsonApi) context).addFormDataView(mapView);
+
+        int screenHeightPixels = context.getResources().getDisplayMetrics().heightPixels;
+
+        int editTextHeight = context.getResources().getDimensionPixelSize(R.dimen.native_form_edit_text_height);
+        mapView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, screenHeightPixels - editTextHeight));
 
         views.add(rootLayout);
         mapView.onStart();
@@ -102,5 +131,23 @@ public class GeoWidgetFactory implements FormWidgetFactory {
             }
         });
 
+    }
+
+    private void writeValues(JsonApi jsonApi, String stepName, Feature markerPosition, String key, String openMrsEntityParent, String openMrsEntity, String openMrsEntityId) {
+        if (markerPosition == null)
+            return;
+        try {
+            jsonApi.writeValue(stepName, key, markerPosition.toJSON().toString(), openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
+        } catch (JSONException e) {
+            Log.e(TAG, "error writing Geowidget values", e);
+        }
+
+    }
+
+    private Feature getCenterPoint(MapboxMap mapboxMap) {
+        LatLng latLng = mapboxMap.getCameraPosition().target;
+        Feature feature = new Feature();
+        feature.setGeometry(new Point(latLng.getLatitude(), latLng.getLongitude()));
+        return feature;
     }
 }
