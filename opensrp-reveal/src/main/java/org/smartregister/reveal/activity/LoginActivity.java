@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.presenter.LoginPresenter;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.task.SaveTeamLocationsTask;
 import org.smartregister.view.activity.BaseLoginActivity;
@@ -26,7 +27,7 @@ public class LoginActivity extends BaseLoginActivity implements BaseLoginContrac
         if (remote) {
             org.smartregister.util.Utils.startAsyncTask(new SaveTeamLocationsTask(), null);
         }
-
+        Utils.startImmediateSync();
         startActivity(new Intent(this, ListTasksActivity.class));
 
         finish();

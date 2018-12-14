@@ -3,8 +3,6 @@ package org.smartregister.reveal.util;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -17,13 +15,10 @@ import android.widget.TextView;
 import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
 
-import org.smartregister.job.CampaignServiceJob;
-import org.smartregister.job.LocationStructureServiceJob;
-import org.smartregister.job.SyncServiceJob;
-import org.smartregister.job.SyncTaskServiceJob;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.job.RevealCampaignServiceJob;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -77,20 +72,7 @@ public class Utils {
     }
 
     public static void startImmediateSync() {
-        CampaignServiceJob.scheduleJobImmediately(CampaignServiceJob.TAG);
-
-        LocationStructureServiceJob.scheduleJobImmediately(LocationStructureServiceJob.TAG);
-
-        Handler mainThreadHandler = new Handler(Looper.getMainLooper());
-        mainThreadHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                SyncTaskServiceJob.scheduleJobImmediately(SyncTaskServiceJob.TAG);
-
-                SyncServiceJob.scheduleJobImmediately(SyncServiceJob.TAG);
-            }
-        }, 5000);
-
+        RevealCampaignServiceJob.scheduleJobImmediately(RevealCampaignServiceJob.TAG);
     }
 
 }
