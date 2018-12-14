@@ -37,7 +37,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.AllConstants;
 import org.smartregister.domain.FetchStatus;
-import org.smartregister.job.SyncServiceJob;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
@@ -216,7 +215,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         else if (v.getId() == R.id.logout_button)
             RevealApplication.getInstance().logoutCurrentUser();
         else if (v.getId() == R.id.sync_button) {
-            SyncServiceJob.scheduleJobImmediately(SyncServiceJob.TAG);
+            org.smartregister.reveal.util.Utils.startImmediateSync();
             mDrawerLayout.closeDrawer(GravityCompat.START);
         }
     }
