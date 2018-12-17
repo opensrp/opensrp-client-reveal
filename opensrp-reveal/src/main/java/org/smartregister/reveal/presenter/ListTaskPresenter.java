@@ -25,13 +25,18 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
+import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static org.smartregister.AllConstants.REVEAL_OPERATIONAL_AREAS;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
@@ -40,6 +45,8 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.DETAILS;
+import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
+import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT;
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
@@ -85,6 +92,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     private FeatureCollection featureCollection;
 
     private Geometry operationalArea;
+
+    private Feature selectedFeature;
+
 
     public ListTaskPresenter(ListTaskView listTaskView) {
         this.listTaskView = listTaskView;
@@ -325,22 +335,53 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     }
 
     private void onFeatureSelected(Feature feature) {
+        selectedFeature = feature;
         listTaskView.displaySelectedFeature(feature);
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, feature.id()));
         } else {
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
-            String identifier = getPropertyValue(feature, TASK_IDENTIFIER);
             String code = getPropertyValue(feature, TASK_CODE);
-            String status = getPropertyValue(feature, TASK_STATUS);
             if (IRS.equals(code) && NOT_VISITED.equals(businessStatus)) {
-                startSprayForm(feature.id(), getPropertyValue(feature, LOCATION_UUID), getPropertyValue(feature, LOCATION_VERSION),
-                        getPropertyValue(feature, LOCATION_TYPE),
-                        identifier, businessStatus, status);
+                startSprayForm(feature);
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
-                listTaskView.openCardView(feature.id(), identifier, businessStatus);
+                listTaskInteractor.fetchCardViewDetails(feature.id());
             }
+        }
+    }
+
+    public void onCardDetailsFetched(CardDetails cardDetails) {
+        if (cardDetails == null) {
+            return;
+        }
+        formatCardDetails(cardDetails);
+        listTaskView.openCardView(cardDetails);
+    }
+
+    private void formatCardDetails(CardDetails cardDetails) {
+        // format date
+        try {
+            DateFormat sdf = new SimpleDateFormat(EVENT_DATE_FORMAT, Locale.getDefault());
+            Date originalDate = sdf.parse(cardDetails.getSprayDate());
+
+            sdf = new SimpleDateFormat(CARD_VIEW_DATE_FORMAT, Locale.getDefault());
+            String formattedDate = sdf.format(originalDate);
+            cardDetails.setSprayDate(formattedDate);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        // extract status color
+        String sprayStatus = cardDetails.getSprayStatus();
+        if (NOT_SPRAYED.equals(sprayStatus)) {
+            cardDetails.setStatusColor(R.color.unsprayed);
+            cardDetails.setStatusMessage(R.string.details_not_sprayed);
+        } else if (SPRAYED.equals(sprayStatus)) {
+            cardDetails.setStatusColor(R.color.sprayed);
+            cardDetails.setStatusMessage(R.string.details_sprayed);
+        } else {
+            cardDetails.setStatusColor(R.color.unsprayable);
+            cardDetails.setStatusMessage(R.string.details_not_sprayable);
         }
     }
 
@@ -367,6 +408,21 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         }
     }
 
+    private void startSprayForm(Feature feature) {
+        String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
+        String identifier = getPropertyValue(feature, TASK_IDENTIFIER);
+        String status = getPropertyValue(feature, TASK_STATUS);
+        startSprayForm(feature.id(), getPropertyValue(feature, LOCATION_UUID), getPropertyValue(feature, LOCATION_VERSION),
+                getPropertyValue(feature, LOCATION_TYPE),
+                identifier, businessStatus, status);
+
+    }
+
+    public void onChangeSprayStatus() {
+        startSprayForm(selectedFeature);
+
+    }
+
     public void saveJsonForm(String json) {
         listTaskView.showProgressDialog();
         listTaskInteractor.saveJsonForm(json);
@@ -384,8 +440,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             }
         }
         listTaskView.setGeoJsonSource(featureCollection, null);
-        listTaskView.openCardView(structureId, taskIdentifier, businessStatus);
+        listTaskInteractor.fetchCardViewDetails(structureId);
     }
+
 
     @Override
     public void onStructureAdded(Feature feature) {
@@ -413,4 +470,5 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         }
 
     }
+
 }

@@ -14,5 +14,9 @@
     <color name="text_gray">#A4A4A4</color>
     <color name="button_blue">#2D75DE</color>
 
+    <color name="unsprayable">#000000</color>
+    <color name="sprayed">#6CBF0F</color>
+    <color name="unsprayed">#EE0427</color>
+
 
 </resources>

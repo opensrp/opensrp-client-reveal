@@ -165,6 +165,7 @@ dependencies {
     implementation('io.ona.kujaku:library:0.4.1') {
         transitive = true
         exclude group: 'com.android.volley'
+        exclude group: 'kujaku', module: 'utils'
     }
 
     implementation 'io.ona.kujaku:utils:0.4.1'

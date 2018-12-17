@@ -56,4 +56,9 @@
     <string name="add_structure_form_save_failure">Error saving add structure form</string>
     <string name="zoom_in_to_select">Zoom in to select a structure</string>
 
+
+    <string name="details_sprayed">Sprayable, sprayed</string>
+    <string name="details_not_sprayed">Sprayable, not sprayed</string>
+    <string name="details_not_sprayable">Not Sprayable</string>
+
 </resources>
