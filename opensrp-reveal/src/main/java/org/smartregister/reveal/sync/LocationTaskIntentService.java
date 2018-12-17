@@ -7,7 +7,8 @@ import android.support.annotation.Nullable;
 import org.smartregister.job.SyncServiceJob;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.AppExecutors;
-import org.smartregister.sync.helper.LocationTaskServiceHelper;
+import org.smartregister.sync.helper.LocationServiceHelper;
+import org.smartregister.sync.helper.TaskServiceHelper;
 
 public class LocationTaskIntentService extends IntentService {
 
@@ -24,10 +25,12 @@ public class LocationTaskIntentService extends IntentService {
 
     private void doSync() {
 
-        LocationTaskServiceHelper locationTaskServiceHelper = new LocationTaskServiceHelper(RevealApplication.getInstance().getTaskRepository(), RevealApplication.getInstance().getLocationRepository(), RevealApplication.getInstance().getStructureRepository());
+        LocationServiceHelper locationServiceHelper = new LocationServiceHelper(RevealApplication.getInstance().getLocationRepository(), RevealApplication.getInstance().getStructureRepository());
 
-        locationTaskServiceHelper.fetchLocationsStructures();
-        locationTaskServiceHelper.syncTasks();
+        TaskServiceHelper taskServiceHelper = new TaskServiceHelper(RevealApplication.getInstance().getTaskRepository());
+
+        locationServiceHelper.fetchLocationsStructures();
+        taskServiceHelper.syncTasks();
 
         (new AppExecutors()).mainThread().execute(new Runnable() {
             @Override
