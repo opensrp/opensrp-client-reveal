@@ -50,10 +50,8 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
         <service android:name=".sync.RevealSyncIntentService" />
-        <service android:name="org.smartregister.sync.intent.CampaignIntentService" />
-        <service android:name="org.smartregister.sync.intent.LocationIntentService" />
-        <service android:name="org.smartregister.sync.intent.SyncTaskIntentService" />
-
+        <service android:name=".sync.RevealCampaignIntentService" />
+        <service android:name=".sync.LocationTaskIntentService" />
 
     </application>
 
