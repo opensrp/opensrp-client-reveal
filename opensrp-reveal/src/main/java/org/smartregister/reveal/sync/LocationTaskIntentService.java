@@ -17,15 +17,12 @@ public class LocationTaskIntentService extends IntentService {
         super(TAG);
     }
 
-
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         doSync();
-
     }
 
     private void doSync() {
-
 
         LocationTaskServiceHelper locationTaskServiceHelper = new LocationTaskServiceHelper(RevealApplication.getInstance().getTaskRepository(), RevealApplication.getInstance().getLocationRepository(), RevealApplication.getInstance().getStructureRepository());
 
