@@ -94,7 +94,7 @@
             "text": "Not Eligible"
           }
         ],
-        "value": "not_eligible",
+        "value": "Not Eligible",
         "relevance": {
           "step1:structureType": {
             "type": "string",

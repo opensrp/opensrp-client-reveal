@@ -8,6 +8,8 @@
     <dimen name="login_edit_text_textSize">16sp</dimen>
 
     <dimen name="hamburger_padding">4dp</dimen>
+    <dimen name="status_label_vertical_padding">8dp</dimen>
+    <dimen name="status_label_horizontal_padding">16dp</dimen>
     <dimen name="hamburger_margin">16dp</dimen>
 
     <dimen name="drawer_margin">32dp</dimen>
@@ -15,7 +17,12 @@
     <dimen name="drawer_drawable_padding">10dp</dimen>
     <dimen name="drawer_spinner_width">220dp</dimen>
     <dimen name="dialog_min_width_major">90%</dimen>
-
+    <dimen name="structure_info_card_text_size">18sp</dimen>
+    <dimen name="structure_info_card_status_text_size">22sp</dimen>
+    <dimen name="structure_info_card_height">335dp</dimen>
+    <dimen name="change_spray_status_btn_bottom_margin">15dp</dimen>
+    <dimen name="my_location_btn_margin">16dp</dimen>
+    <dimen name="my_location_button_dimen">48dp</dimen>
 </resources>
 
 
