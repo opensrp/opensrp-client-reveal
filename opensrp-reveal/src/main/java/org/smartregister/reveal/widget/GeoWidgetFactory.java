@@ -77,6 +77,8 @@ public class GeoWidgetFactory implements FormWidgetFactory {
 
                 if (operationalArea != null) {
                     mapboxMap.setCameraPosition(mapboxMap.getCameraForGeometry(Geometry.fromJson(operationalArea)));
+                } else {
+                    mapView.focusOnUserLocation(true);
                 }
 
                 writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom);

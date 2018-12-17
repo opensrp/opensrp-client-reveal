@@ -385,9 +385,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     @Override
     public void onStructureAdded(Feature feature) {
+        listTaskView.hideProgressDialog();
         featureCollection.features().add(feature);
         listTaskView.setGeoJsonSource(featureCollection, null);
-        listTaskView.hideProgressDialog();
     }
 
     @Override
