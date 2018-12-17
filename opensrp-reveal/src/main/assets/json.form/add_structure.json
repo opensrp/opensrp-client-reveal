@@ -51,7 +51,7 @@
     "display_back_button": "true",
     "fields": [
       {
-        "key": "geometry",
+        "key": "structure",
         "type": "geowidget"
       },
       {
@@ -62,6 +62,10 @@
         "type": "edit_text",
         "hint": "Does this structure have a name?",
         "edit_type": "name"
+      },
+      {
+        "key": "zoom_level",
+        "type": "hidden"
       }
     ]
   }

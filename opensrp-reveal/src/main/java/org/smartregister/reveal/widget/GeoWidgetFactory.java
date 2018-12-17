@@ -41,6 +41,8 @@ public class GeoWidgetFactory implements FormWidgetFactory {
 
     private static final String TAG = "GeoWidgetFactory";
 
+    private static final String ZOOM_LEVEL = "zoom_level";
+
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener) throws Exception {
         return getViewsFromJson(stepName, context, formFragment, jsonObject, listener, false);
@@ -68,7 +70,7 @@ public class GeoWidgetFactory implements FormWidgetFactory {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
 
-                writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId);
+                writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom);
                 mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
                     @Override
                     public void onMoveBegin(@NonNull MoveGestureDetector detector) {//do nothing
@@ -81,12 +83,12 @@ public class GeoWidgetFactory implements FormWidgetFactory {
                     @Override
                     public void onMoveEnd(@NonNull MoveGestureDetector detector) {
                         Log.d(TAG, "onMoveEnd: " + mapboxMap.getCameraPosition().target.toString());
-                        writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId);
+                        writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key,
+                                openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom);
                     }
                 });
             }
         });
-
 
         JSONArray canvasIdsArray = new JSONArray();
         canvasIdsArray.put(canvasId);
@@ -133,16 +135,19 @@ public class GeoWidgetFactory implements FormWidgetFactory {
 
     }
 
-    private void writeValues(JsonApi jsonApi, String stepName, Feature markerPosition, String key, String openMrsEntityParent, String openMrsEntity, String openMrsEntityId) {
+    private void writeValues(JsonApi jsonApi, String stepName, Feature markerPosition, String key,
+                             String openMrsEntityParent, String openMrsEntity, String openMrsEntityId, double zoomLevel) {
         if (markerPosition == null)
             return;
         try {
             jsonApi.writeValue(stepName, key, markerPosition.toJSON().toString(), openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
+            jsonApi.writeValue(stepName, ZOOM_LEVEL, zoomLevel + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
         } catch (JSONException e) {
             Log.e(TAG, "error writing Geowidget values", e);
         }
 
     }
+
 
     private Feature getCenterPoint(MapboxMap mapboxMap) {
         LatLng latLng = mapboxMap.getCameraPosition().target;

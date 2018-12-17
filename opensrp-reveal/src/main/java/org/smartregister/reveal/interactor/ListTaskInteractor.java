@@ -38,7 +38,7 @@ import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
 import org.smartregister.util.Utils;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -211,34 +211,37 @@ public class ListTaskInteractor {
         }
     }
 
+
+    private org.smartregister.domain.db.Event saveEvent(JSONObject jsonForm) throws JSONException {
+        String entityId = getString(jsonForm, ENTITY_ID);
+        JSONArray fields = JsonFormUtils.fields(jsonForm);
+        JSONObject metadata = getJSONObject(jsonForm, METADATA);
+        FormTag formTag = new FormTag();
+        formTag.providerId = sharedPreferences.fetchRegisteredANM();
+        formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
+        formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
+        formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
+        Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, SPRAY_EVENT, STRUCTURE);
+        JSONObject eventJson = new JSONObject(gson.toJson(event));
+        eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
+        eventClientRepository.addEvent(entityId, eventJson);
+        return gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class);
+
+
+    }
+
     private void saveSprayForm(JSONObject jsonForm) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 try {
-                    String entityId = getString(jsonForm, ENTITY_ID);
-                    JSONArray fields = JsonFormUtils.fields(jsonForm);
-                    JSONObject metadata = getJSONObject(jsonForm, METADATA);
-                    FormTag formTag = new FormTag();
-                    formTag.providerId = sharedPreferences.fetchRegisteredANM();
-                    formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
-                    formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
-                    formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
-                    Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, SPRAY_EVENT, STRUCTURE);
-                    JSONObject eventJson = new JSONObject(gson.toJson(event));
-                    eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
-                    org.smartregister.domain.db.Event dbEvent = gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class);
-
-                    eventClientRepository.addEvent(entityId, eventJson);
-                    List<EventClient> unprocessedEvents = new ArrayList<>();
-                    unprocessedEvents.add(new EventClient(dbEvent, null));
-                    clientProcessor.processClient(unprocessedEvents);
-
+                    org.smartregister.domain.db.Event event = saveEvent(jsonForm);
+                    clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)));
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override
                         public void run() {
-                            String businessStatus = clientProcessor.calculateBusinessStatus(dbEvent);
-                            presenterCallBack.onSprayFormSaved(event.getBaseEntityId(), dbEvent.getDetails().get(TASK_IDENTIFIER),
+                            String businessStatus = clientProcessor.calculateBusinessStatus(event);
+                            presenterCallBack.onSprayFormSaved(event.getBaseEntityId(), event.getDetails().get(TASK_IDENTIFIER),
                                     Task.TaskStatus.COMPLETED, businessStatus);
                         }
                     });
@@ -257,23 +260,9 @@ public class ListTaskInteractor {
             @Override
             public void run() {
                 try {
-                    String entityId = getString(jsonForm, ENTITY_ID);
-                    JSONArray fields = JsonFormUtils.fields(jsonForm);
-                    JSONObject metadata = getJSONObject(jsonForm, METADATA);
-                    FormTag formTag = new FormTag();
-                    formTag.providerId = sharedPreferences.fetchRegisteredANM();
-                    formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
-                    formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
-                    formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
-                    Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, REGISTER_STRUCTURE_EVENT, STRUCTURE);
-                    event.setBaseEntityId(UUID.randomUUID().toString());
-                    JSONObject eventJson = new JSONObject(gson.toJson(event));
-
-                    eventClientRepository.addEvent(entityId, eventJson);
-
-                    org.smartregister.domain.db.Event dbEvent = gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class);
-                    com.cocoahero.android.geojson.Feature feature = new com.cocoahero.android.geojson.Feature(new JSONObject(dbEvent.findObs(null, false, "geometry").getValue().toString()));
-
+                    jsonForm.put(ENTITY_ID, UUID.randomUUID().toString());
+                    org.smartregister.domain.db.Event event = saveEvent(jsonForm);
+                    com.cocoahero.android.geojson.Feature feature = new com.cocoahero.android.geojson.Feature(new JSONObject(event.findObs(null, false, "structure").getValue().toString()));
                     Location structure = new Location();
                     structure.setId(event.getBaseEntityId());
                     structure.setType(feature.getType());
@@ -308,7 +297,7 @@ public class ListTaskInteractor {
                     task.setForEntity(structure.getId());
                     task.setAuthoredOn(new DateTime());
                     task.setLastModified(new DateTime());
-                    task.setOwner(formTag.providerId);
+                    task.setOwner(event.getProviderId());
                     taskRepository.addOrUpdate(task);
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override
