@@ -48,4 +48,8 @@
     <string name="error_fetching_location_hierarchy">Error Processing Location Hierarchy. Log off to download location hierarchy again</string>
 
     <string name="selected_datasource_name">select-data</string>
+
+    <string name="details_sprayed">Sprayable, sprayed</string>
+    <string name="details_not_sprayed">Sprayable, not sprayed</string>
+    <string name="details_not_sprayable">Not Sprayable</string>
 </resources>

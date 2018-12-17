@@ -10,8 +10,8 @@ public class CardDetails {
     String sprayDate;
     String sprayOperator;
     String familyHead;
-    String statusMessage;
-    String statusColor;
+    int statusMessage;
+    int statusColor;
     String reason;
 
     public CardDetails(String sprayStatus, String propertyType, String sprayDate, String sprayOperator, String familyHead, String reason) {
@@ -63,19 +63,19 @@ public class CardDetails {
         this.familyHead = familyHead;
     }
 
-    public String getStatusColor() {
+    public int getStatusColor() {
         return statusColor;
     }
 
-    public void setStatusColor(String statusColor) {
+    public void setStatusColor(int statusColor) {
         this.statusColor = statusColor;
     }
 
-    public String getStatusMessage() {
+    public int getStatusMessage() {
         return statusMessage;
     }
 
-    public void setStatusMessage(String statusMessage) {
+    public void setStatusMessage(int statusMessage) {
         this.statusMessage = statusMessage;
     }
 

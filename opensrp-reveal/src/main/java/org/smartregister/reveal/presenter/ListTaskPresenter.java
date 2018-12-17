@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static org.smartregister.AllConstants.REVEAL_OPERATIONAL_AREAS;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
@@ -43,18 +44,17 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.DETAILS;
+import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
+import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT;
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
-
-import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
-import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
-
 import static org.smartregister.reveal.util.Constants.JsonForm.NON_RESIDENTIAL;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
+import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
+import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
-
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
@@ -286,7 +286,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             listTaskInteractor.fetchLocations(campaign, operationalArea);
         } else {
             listTaskView.displayNotification(R.string.select_campaign_operational_area_title, R.string.select_campaign_operational_area);
-//            listTaskView.lockNavigationDrawerForSelection();
+            listTaskView.lockNavigationDrawerForSelection();
         }
     }
 
@@ -352,10 +352,10 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     private void formatCardDetails(CardDetails cardDetails) {
         // format date
         try {
-            DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+            DateFormat sdf = new SimpleDateFormat(EVENT_DATE_FORMAT, Locale.getDefault());
             Date originalDate = sdf.parse(cardDetails.getSprayDate());
 
-            sdf = new SimpleDateFormat("dd MMM yyyy");
+            sdf = new SimpleDateFormat(CARD_VIEW_DATE_FORMAT, Locale.getDefault());
             String formattedDate = sdf.format(originalDate);
             cardDetails.setSprayDate(formattedDate);
         } catch (Exception e) {
@@ -363,15 +363,15 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         }
         // extract status color
         String sprayStatus = cardDetails.getSprayStatus();
-        if ("Not Sprayed".equals(sprayStatus)) {
-            cardDetails.setStatusColor("#EE0427");
-            cardDetails.setStatusMessage("Sprayable, not sprayed");
-        } else if ("Sprayed".equals(sprayStatus)) {
-            cardDetails.setStatusColor("#6CBF0F");
-            cardDetails.setStatusMessage("Sprayable, sprayed");
+        if (NOT_SPRAYED.equals(sprayStatus)) {
+            cardDetails.setStatusColor(R.color.unsprayed);
+            cardDetails.setStatusMessage(R.string.details_not_sprayed);
+        } else if (SPRAYED.equals(sprayStatus)) {
+            cardDetails.setStatusColor(R.color.sprayed);
+            cardDetails.setStatusMessage(R.string.details_sprayed);
         } else {
-            cardDetails.setStatusColor("#000000");
-            cardDetails.setStatusMessage("Not sprayable");
+            cardDetails.setStatusColor(R.color.unsprayable);
+            cardDetails.setStatusMessage(R.string.details_not_sprayable);
         }
     }
 

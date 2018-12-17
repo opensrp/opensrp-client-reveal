@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -340,7 +339,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         TextView tvFamilyHead = findViewById(R.id.family_head);
         TextView tvReason = findViewById(R.id.reason);
 
-        tvSprayStatus.setTextColor(Color.parseColor(cardDetails.getStatusColor()));
+        tvSprayStatus.setTextColor(getResources().getColor(cardDetails.getStatusColor()));
         tvSprayStatus.setText(cardDetails.getStatusMessage());
         tvPropertyType.setText(cardDetails.getPropertyType());
         tvSprayDate.setText(cardDetails.getSprayDate());
