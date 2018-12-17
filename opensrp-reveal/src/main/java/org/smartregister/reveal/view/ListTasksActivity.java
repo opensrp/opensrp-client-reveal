@@ -352,7 +352,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             tvReason.setVisibility(View.GONE);
         }
 
-        findViewById(R.id.structure_info_card_view).setVisibility(View.VISIBLE);
+        structureInfoCardView.setVisibility(View.VISIBLE);
     }
 
     @Override
