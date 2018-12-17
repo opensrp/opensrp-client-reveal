@@ -113,17 +113,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private void initializeCardView() {
         structureInfoCardView = findViewById(R.id.structure_info_card_view);
-        ImageButton btnAddStructure = findViewById(R.id.btn_add_structure);
-        btnAddStructure.setOnClickListener(this);
+        findViewById(R.id.btn_add_structure).setOnClickListener(this);
 
-        ImageButton btnCollapseCardView = findViewById(R.id.btn_collapse_structure_card_view);
-        btnCollapseCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setViewVisibility(findViewById(R.id.reason), false);
-                closeStructureCardView();
-            }
-        });
+        findViewById(R.id.btn_collapse_structure_card_view).setOnClickListener(this);
 
 
         tvSprayStatus = findViewById(R.id.spray_status);
@@ -132,6 +124,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         tvSprayOperator = findViewById(R.id.user_id);
         tvFamilyHead = findViewById(R.id.family_head);
         tvReason = findViewById(R.id.reason);
+        findViewById(R.id.change_spray_status).setOnClickListener(this);
 
     }
 
@@ -257,6 +250,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         else if (v.getId() == R.id.sync_button) {
             SyncServiceJob.scheduleJobImmediately(SyncServiceJob.TAG);
             mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else if (v.getId() == R.id.change_spray_status) {
+            //startSprayForm();
+        } else if (v.getId() == R.id.btn_collapse_structure_card_view) {
+            setViewVisibility(tvReason, false);
+            closeStructureCardView();
         }
     }
 
