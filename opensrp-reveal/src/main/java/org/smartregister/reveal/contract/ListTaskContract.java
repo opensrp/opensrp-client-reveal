@@ -59,6 +59,7 @@ public interface ListTaskContract {
 
         void displaySelectedFeature(Feature feature);
 
+        void displayToast(int zoom_in_to_select);
     }
 
     interface PresenterCallBack {

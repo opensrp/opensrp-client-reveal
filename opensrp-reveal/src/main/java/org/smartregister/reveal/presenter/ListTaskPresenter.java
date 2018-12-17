@@ -296,6 +296,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         double currentZoom = mapboxMap.getCameraPosition().zoom;
         if (currentZoom < MAX_SELECT_ZOOM_LEVEL) {
             Log.w(TAG, "onMapClicked Current Zoom level" + currentZoom);
+            listTaskView.displayToast(R.string.zoom_in_to_select);
             return;
         }
         final PointF pixel = mapboxMap.getProjection().toScreenLocation(point);

@@ -54,5 +54,6 @@
     <string name="form_save_failure_title">Error Saving Form</string>
     <string name="spray_form_save_failure">Error saving spray form</string>
     <string name="add_structure_form_save_failure">Error saving add structure form</string>
+    <string name="zoom_in_to_select">Zoom in to select a structure</string>
 
 </resources>
