@@ -49,6 +49,7 @@
   "step1": {
     "title": "Register Structure",
     "display_back_button": "true",
+    "no_padding": true,
     "fields": [
       {
         "key": "structure",

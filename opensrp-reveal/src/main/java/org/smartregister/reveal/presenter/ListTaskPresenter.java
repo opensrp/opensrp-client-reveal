@@ -27,6 +27,7 @@ import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
+import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -238,7 +239,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     }
 
     public void onCampaignSelectorClicked(ArrayList<String> value, ArrayList<String> name) {
-
+        if (Utils.isEmptyCollection(name))
+            return;
         Log.d(TAG, "Selected Campaign : " + TextUtils.join(",", name));
         Log.d(TAG, "Selected Campaign Ids: " + TextUtils.join(",", value));
 
@@ -247,6 +249,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         listTaskView.setCampaign(name.get(0));
         changedCurrentSelection = true;
         unlockDrawerLayout();
+
     }
 
     public void onDrawerClosed() {
