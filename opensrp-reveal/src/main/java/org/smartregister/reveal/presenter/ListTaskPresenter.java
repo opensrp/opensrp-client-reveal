@@ -87,6 +87,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     private FeatureCollection featureCollection;
 
+    private Feature selectedFeature;
+
     public ListTaskPresenter(ListTaskView listTaskView) {
         this.listTaskView = listTaskView;
         listTaskInteractor = new ListTaskInteractor(this);
@@ -322,18 +324,15 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     }
 
     private void onFeatureSelected(Feature feature) {
+        selectedFeature = feature;
         listTaskView.displaySelectedFeature(feature);
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, feature.id()));
         } else {
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
-            String identifier = getPropertyValue(feature, TASK_IDENTIFIER);
             String code = getPropertyValue(feature, TASK_CODE);
-            String status = getPropertyValue(feature, TASK_STATUS);
             if (IRS.equals(code) && NOT_VISITED.equals(businessStatus)) {
-                startSprayForm(feature.id(), getPropertyValue(feature, LOCATION_UUID), getPropertyValue(feature, LOCATION_VERSION),
-                        getPropertyValue(feature, LOCATION_TYPE),
-                        identifier, businessStatus, status);
+                startSprayForm(feature);
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
                 listTaskInteractor.fetchCardViewDetails(feature.id());
@@ -398,6 +397,21 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         }
     }
 
+    private void startSprayForm(Feature feature) {
+        String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
+        String identifier = getPropertyValue(feature, TASK_IDENTIFIER);
+        String status = getPropertyValue(feature, TASK_STATUS);
+        startSprayForm(feature.id(), getPropertyValue(feature, LOCATION_UUID), getPropertyValue(feature, LOCATION_VERSION),
+                getPropertyValue(feature, LOCATION_TYPE),
+                identifier, businessStatus, status);
+
+    }
+
+    public void onChangeSprayStatus() {
+        startSprayForm(selectedFeature);
+
+    }
+
     public void saveSprayForm(String json) {
         listTaskView.showProgressDialog();
         listTaskInteractor.saveSprayForm(json);
@@ -417,4 +431,5 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         listTaskView.setGeoJsonSource(featureCollection, null);
         listTaskInteractor.fetchCardViewDetails(structureId);
     }
+
 }

@@ -251,7 +251,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             SyncServiceJob.scheduleJobImmediately(SyncServiceJob.TAG);
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else if (v.getId() == R.id.change_spray_status) {
-            //startSprayForm();
+            listTaskPresenter.onChangeSprayStatus();
         } else if (v.getId() == R.id.btn_collapse_structure_card_view) {
             setViewVisibility(tvReason, false);
             closeStructureCardView();
