@@ -13,6 +13,7 @@ import android.widget.FrameLayout;
 import com.cocoahero.android.geojson.Feature;
 import com.cocoahero.android.geojson.Point;
 import com.mapbox.android.gestures.MoveGestureDetector;
+import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.ona.kujaku.views.KujakuMapView;
+
+import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 
 
 /**
@@ -63,12 +66,18 @@ public class GeoWidgetFactory implements FormWidgetFactory {
                 .inflate(R.layout.item_geowidget, null);
         rootLayout.setId(canvasId);
 
+        String operationalArea = new JSONObject(formFragment.getCurrentJsonState()).optString(OPERATIONAL_AREA_TAG);
+
         KujakuMapView mapView = rootLayout.findViewById(R.id.kujakuMapView);
         mapView.onCreate(null);
 
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
+
+                if (operationalArea != null) {
+                    mapboxMap.setCameraPosition(mapboxMap.getCameraForGeometry(Geometry.fromJson(operationalArea)));
+                }
 
                 writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom);
                 mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
@@ -116,7 +125,6 @@ public class GeoWidgetFactory implements FormWidgetFactory {
         mapView.onResume();
 
         mapView.showCurrentLocationBtn(true);
-        mapView.focusOnUserLocation(true);
         mapView.enableAddPoint(true);
         ((JsonApi) context).onFormFinish();
         disableParentScroll((Activity) context, mapView);

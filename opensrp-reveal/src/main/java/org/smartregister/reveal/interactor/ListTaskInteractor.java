@@ -139,7 +139,7 @@ public class ListTaskInteractor {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final JSONObject featureCollection = createFutureCollection();
+                final JSONObject featureCollection = createFeatureCollection();
                 Location operationalAreaLocation = locationRepository.getLocationByName(operationalArea);
                 try {
                     if (operationalAreaLocation != null) {
@@ -186,7 +186,7 @@ public class ListTaskInteractor {
         appExecutors.diskIO().execute(runnable);
     }
 
-    private JSONObject createFutureCollection() {
+    private JSONObject createFeatureCollection() {
         JSONObject featureCollection = new JSONObject();
         try {
             featureCollection.put(TYPE, FEATURE_COLLECTION);

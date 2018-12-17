@@ -98,7 +98,9 @@ public interface Constants {
 
         String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
 
-        String IRS_VISIT="IRS Visit";
+        String IRS_VISIT = "IRS Visit";
+
+        String OPERATIONAL_AREA_TAG = "operational_area";
 
     }
 

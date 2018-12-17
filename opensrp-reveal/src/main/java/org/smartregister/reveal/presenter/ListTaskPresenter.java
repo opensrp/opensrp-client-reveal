@@ -42,16 +42,14 @@ import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
-
 import static org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FORM;
-import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
-import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
-
 import static org.smartregister.reveal.util.Constants.JsonForm.NON_RESIDENTIAL;
+import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
+import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
+import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
-
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
@@ -84,6 +82,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     private boolean changedCurrentSelection;
 
     private FeatureCollection featureCollection;
+
+    private Geometry operationalArea;
 
     public ListTaskPresenter(ListTaskView listTaskView) {
         this.listTaskView = listTaskView;
@@ -263,6 +263,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         if (structuresGeoJson.has(FEATURES)) {
             featureCollection = FeatureCollection.fromJson(structuresGeoJson.toString());
             listTaskView.setGeoJsonSource(featureCollection, operationalAreaGeometry);
+            operationalArea = operationalAreaGeometry;
         } else
             listTaskView.displayNotification(R.string.fetching_structures_title, R.string.fetch_structures_failed_message);
     }
@@ -401,6 +402,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         String formString = AssetHandler.readFileFromAssetsFolder(ADD_STRUCTURE_FORM, listTaskView.getContext());
         try {
             JSONObject formJson = new JSONObject(formString);
+            formJson.put(OPERATIONAL_AREA_TAG, operationalArea.toJson());
             listTaskView.startJsonForm(formJson);
         } catch (Exception e) {
             Log.e(TAG, "error launching add structure form", e);
