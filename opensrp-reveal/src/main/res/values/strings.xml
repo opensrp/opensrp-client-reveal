@@ -48,4 +48,11 @@
     <string name="error_fetching_location_hierarchy">Error Processing Location Hierarchy. Log off to download location hierarchy again</string>
 
     <string name="selected_datasource_name">select-data</string>
+
+    <string name="irs_task_description"> Visit the structure, assess and perform spray activities.</string>
+
+    <string name="form_save_failure_title">Error Saving Form</string>
+    <string name="spray_form_save_failure">Error saving spray form</string>
+    <string name="add_structure_form_save_failure">Error saving add structure form</string>
+
 </resources>

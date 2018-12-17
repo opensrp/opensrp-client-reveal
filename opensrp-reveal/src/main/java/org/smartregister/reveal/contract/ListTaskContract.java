@@ -71,5 +71,7 @@ public interface ListTaskContract {
                               @NonNull TaskStatus taskStatus, @NonNull String businessStatus);
 
         void onStructureAdded(Feature feature);
+
+        void onFormSaveFailure(String eventType);
     }
 }

@@ -58,6 +58,7 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_S
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
+import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.Tags.COUNTRY;
 import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
@@ -386,6 +387,13 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         featureCollection.features().add(feature);
         listTaskView.setGeoJsonSource(featureCollection, null);
         listTaskView.hideProgressDialog();
+    }
+
+    @Override
+    public void onFormSaveFailure(String eventType) {
+        listTaskView.hideProgressDialog();
+        listTaskView.displayNotification(R.string.form_save_failure_title,
+                eventType.equals(SPRAY_EVENT) ? R.string.spray_form_save_failure : R.string.add_structure_form_save_failure);
     }
 
 

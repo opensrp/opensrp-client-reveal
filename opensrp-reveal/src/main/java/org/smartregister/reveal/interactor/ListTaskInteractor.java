@@ -1,13 +1,12 @@
 package org.smartregister.reveal.interactor;
 
+import android.content.Context;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.Geometry;
 
@@ -28,6 +27,7 @@ import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract.PresenterCallBack;
 import org.smartregister.reveal.sync.RevealClientProcessor;
@@ -44,11 +44,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.mapbox.geojson.Feature.fromJson;
+import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURE_COLLECTION;
 import static org.smartregister.reveal.util.Constants.GeoJSON.TYPE;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
+import static org.smartregister.reveal.util.Constants.JsonForm.IRS_VISIT;
+import static org.smartregister.reveal.util.Constants.JsonForm.RESIDENTIAL;
 import static org.smartregister.reveal.util.Constants.METADATA;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
@@ -57,6 +62,7 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_S
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
+import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.util.JsonFormUtils.ENTITY_ID;
@@ -91,6 +97,8 @@ public class ListTaskInteractor {
 
     private String operationalAreaId;
 
+    private AllSharedPreferences sharedPreferences;
+
     public ListTaskInteractor(PresenterCallBack presenterCallBack) {
         this(new AppExecutors());
         this.presenterCallBack = presenterCallBack;
@@ -100,6 +108,7 @@ public class ListTaskInteractor {
         locationRepository = RevealApplication.getInstance().getLocationRepository();
         eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
         clientProcessor = RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext());
+        sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
     }
 
     @VisibleForTesting
@@ -192,17 +201,17 @@ public class ListTaskInteractor {
     public void saveJsonForm(String json) {
         try {
             JSONObject jsonForm = new JSONObject(json);
-            String encounterType = jsonForm.getString("encounter_type");
-            if ("Spray".equals(encounterType))
+            String encounterType = jsonForm.getString(ENCOUNTER_TYPE);
+            if (SPRAY_EVENT.equals(encounterType))
                 saveSprayForm(jsonForm);
-            else if ("Register_Structure".equals(encounterType))
+            else if (REGISTER_STRUCTURE_EVENT.equals(encounterType))
                 saveRegisterStructureForm(jsonForm);
         } catch (Exception e) {
-
+            Log.e(TAG, "Error saving Json Form data", e);
         }
     }
 
-    public void saveSprayForm(JSONObject jsonForm) {
+    private void saveSprayForm(JSONObject jsonForm) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -211,7 +220,6 @@ public class ListTaskInteractor {
                     JSONArray fields = JsonFormUtils.fields(jsonForm);
                     JSONObject metadata = getJSONObject(jsonForm, METADATA);
                     FormTag formTag = new FormTag();
-                    AllSharedPreferences sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
                     formTag.providerId = sharedPreferences.fetchRegisteredANM();
                     formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
                     formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
@@ -235,7 +243,8 @@ public class ListTaskInteractor {
                         }
                     });
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "Error saving spraye", e);
+                    presenterCallBack.onFormSaveFailure(SPRAY_EVENT);
                 }
             }
         };
@@ -243,7 +252,7 @@ public class ListTaskInteractor {
         appExecutors.diskIO().execute(runnable);
     }
 
-    public void saveRegisterStructureForm(JSONObject jsonForm) {
+    private void saveRegisterStructureForm(JSONObject jsonForm) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -252,12 +261,11 @@ public class ListTaskInteractor {
                     JSONArray fields = JsonFormUtils.fields(jsonForm);
                     JSONObject metadata = getJSONObject(jsonForm, METADATA);
                     FormTag formTag = new FormTag();
-                    AllSharedPreferences sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
                     formTag.providerId = sharedPreferences.fetchRegisteredANM();
                     formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
                     formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
                     formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
-                    Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, "Register_Structure", STRUCTURE);
+                    Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, REGISTER_STRUCTURE_EVENT, STRUCTURE);
                     event.setBaseEntityId(UUID.randomUUID().toString());
                     JSONObject eventJson = new JSONObject(gson.toJson(event));
 
@@ -271,16 +279,14 @@ public class ListTaskInteractor {
                     structure.setType(feature.getType());
                     org.smartregister.domain.Geometry geometry = new org.smartregister.domain.Geometry();
                     geometry.setType(org.smartregister.domain.Geometry.GeometryType.valueOf(feature.getGeometry().getType().toUpperCase()));
-                    JsonArray cordinates = new JsonArray();
-                    Log.d(TAG, feature.getGeometry().toJSON().getJSONArray("coordinates").toString());
-                    cordinates.add(feature.getGeometry().toJSON().getJSONArray("coordinates").get(0).toString());
-                    cordinates.add(feature.getGeometry().toJSON().getJSONArray("coordinates").get(1).toString());
-                    geometry.setCoordinates(
-                            cordinates
-                    );
+                    JsonArray coordinates = new JsonArray();
+                    JSONArray featureCoordinates = feature.getGeometry().toJSON().getJSONArray(JSON_COORDINATES);
+                    coordinates.add(featureCoordinates.get(0).toString());
+                    coordinates.add(featureCoordinates.get(1).toString());
+                    geometry.setCoordinates(coordinates);
                     structure.setGeometry(geometry);
                     LocationProperty properties = new LocationProperty();
-                    properties.setType("residential");
+                    properties.setType(RESIDENTIAL);
                     properties.setEffectiveStartDate(new DateTime());
                     properties.setParentId(operationalAreaId);
                     properties.setStatus(LocationProperty.PropertyStatus.PENDING_REVIEW);
@@ -293,11 +299,12 @@ public class ListTaskInteractor {
                     task.setCampaignIdentifier(PreferencesUtil.getInstance().getCurrentCampaignId());
                     task.setGroupIdentifier(operationalAreaId);
                     task.setStatus(Task.TaskStatus.READY);
-                    task.setBusinessStatus("Not Visited");
+                    task.setBusinessStatus(NOT_VISITED);
                     task.setPriority(3);
-                    task.setCode("IRS");
-                    task.setDescription("Visit the structure, assess and perform spray activities.");
-                    task.setFocus("IRS Visit");
+                    task.setCode(IRS);
+                    Context applicationContext = RevealApplication.getInstance().getApplicationContext();
+                    task.setDescription(applicationContext.getString(R.string.irs_task_description));
+                    task.setFocus(IRS_VISIT);
                     task.setForEntity(structure.getId());
                     task.setAuthoredOn(new DateTime());
                     task.setLastModified(new DateTime());
@@ -319,7 +326,8 @@ public class ListTaskInteractor {
                         }
                     });
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "Error saving new Structure", e);
+                    presenterCallBack.onFormSaveFailure(REGISTER_STRUCTURE_EVENT);
                 }
             }
         };
