@@ -341,11 +341,10 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         }
     }
 
-    public void onCardDetailsFetched(List<CardDetails> cardDetailsList) {
-        if (cardDetailsList == null || cardDetailsList.size() == 0) {
+    public void onCardDetailsFetched(CardDetails cardDetails) {
+        if (cardDetails == null) {
             return;
         }
-        CardDetails cardDetails = cardDetailsList.get(0);
         formatCardDetails(cardDetails);
         listTaskView.openCardView(cardDetails);
     }

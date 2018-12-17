@@ -70,6 +70,6 @@ public interface ListTaskContract {
         void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier,
                               @NonNull TaskStatus taskStatus, @NonNull String businessStatus);
 
-        void onCardDetailsFetched(List<CardDetails> cardDetailsList);
+        void onCardDetailsFetched(CardDetails cardDetails);
     }
 }

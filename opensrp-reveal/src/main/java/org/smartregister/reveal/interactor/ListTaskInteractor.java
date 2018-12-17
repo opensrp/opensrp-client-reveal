@@ -122,17 +122,31 @@ public class ListTaskInteractor {
     }
 
     public void fetchCardViewDetails(String structureId) {
-        final String sql = "SELECT spray_status, not_sprayed_other_reason, property_type, spray_date, spray_operator, family_head_name FROM sprayed_structures WHERE id=?";
+        final String sql = "SELECT spray_status, not_sprayed_other_reason, property_type, spray_date," +
+                " spray_operator, family_head_name FROM sprayed_structures WHERE id=?";
         SQLiteDatabase db = RevealApplication.getInstance().getRepository().getWritableDatabase();
         Cursor cursor = db.rawQuery(sql, new String[]{structureId});
-        List<CardDetails> cardDetails = processCardDetails(cursor);
+        CardDetails cardDetails = null;
+        try {
+            if (cursor.moveToFirst()) {
+                cardDetails = createCardDetails(cursor);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        CardDetails finalCardDetails = cardDetails;
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-                        presenterCallBack.onCardDetailsFetched(cardDetails);
+                        presenterCallBack.onCardDetailsFetched(finalCardDetails);
                     }
                 });
             }
