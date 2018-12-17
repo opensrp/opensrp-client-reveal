@@ -5,14 +5,14 @@ package org.smartregister.reveal.model;
  */
 public class CardDetails {
 
-    String sprayStatus;
-    String propertyType;
-    String sprayDate;
-    String sprayOperator;
-    String familyHead;
-    int statusMessage;
-    int statusColor;
-    String reason;
+    private String sprayStatus;
+    private String propertyType;
+    private String sprayDate;
+    private String sprayOperator;
+    private String familyHead;
+    private int statusMessage;
+    private int statusColor;
+    private String reason;
 
     public CardDetails(String sprayStatus, String propertyType, String sprayDate, String sprayOperator, String familyHead, String reason) {
         this.sprayStatus = sprayStatus;

@@ -86,9 +86,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private DrawerLayout mDrawerLayout;
 
-    private boolean isCardViewShowing;
-
     private CardView structureInfoCardView;
+    private TextView tvSprayStatus;
+    private TextView tvPropertyType;
+    private TextView tvSprayDate;
+    private TextView tvSprayOperator;
+    private TextView tvFamilyHead;
+    private TextView tvReason;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,30 +107,32 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         initializeMapView(savedInstanceState);
         initializeDrawerLayout();
         initializeProgressDialog();
+        initializeCardView();
 
-        isCardViewShowing = false;
+    }
+
+    private void initializeCardView() {
         structureInfoCardView = findViewById(R.id.structure_info_card_view);
         ImageButton btnAddStructure = findViewById(R.id.btn_add_structure);
-        btnAddStructure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isCardViewShowing) {
-                    isCardViewShowing = true;
-                    setViewVisibility(findViewById(R.id.reason), true);
-                    setViewVisibility(structureInfoCardView, true);
-                }
-            }
-        });
+        btnAddStructure.setOnClickListener(this);
 
         ImageButton btnCollapseCardView = findViewById(R.id.btn_collapse_structure_card_view);
         btnCollapseCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isCardViewShowing = false;
                 setViewVisibility(findViewById(R.id.reason), false);
                 closeStructureCardView();
             }
         });
+
+
+        tvSprayStatus = findViewById(R.id.spray_status);
+        tvPropertyType = findViewById(R.id.property_type);
+        tvSprayDate = findViewById(R.id.spray_date);
+        tvSprayOperator = findViewById(R.id.user_id);
+        tvFamilyHead = findViewById(R.id.family_head);
+        tvReason = findViewById(R.id.reason);
+
     }
 
     private void closeStructureCardView() {
@@ -332,12 +338,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void openCardView(CardDetails cardDetails) {
-        TextView tvSprayStatus = findViewById(R.id.spray_status);
-        TextView tvPropertyType = findViewById(R.id.property_type);
-        TextView tvSprayDate = findViewById(R.id.spray_date);
-        TextView tvSprayOperator = findViewById(R.id.user_id);
-        TextView tvFamilyHead = findViewById(R.id.family_head);
-        TextView tvReason = findViewById(R.id.reason);
 
         tvSprayStatus.setTextColor(getResources().getColor(cardDetails.getStatusColor()));
         tvSprayStatus.setText(cardDetails.getStatusMessage());
