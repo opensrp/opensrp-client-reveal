@@ -14,7 +14,7 @@ public class RevealCampaignIntentService extends CampaignIntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (!NetworkUtils.isNetworkAvailable()) {
-            Utils.completeSync(FetchStatus.noConnection);
+            sendBroadcast(Utils.completeSync(FetchStatus.noConnection));
             return;
         }
         sendBroadcast(Utils.completeSync(FetchStatus.fetchStarted));

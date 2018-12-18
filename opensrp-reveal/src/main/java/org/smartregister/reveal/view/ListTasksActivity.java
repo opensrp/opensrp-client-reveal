@@ -447,7 +447,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void onSyncInProgress(FetchStatus fetchStatus) {
         if (fetchStatus.equals(FetchStatus.fetchedFailed)) {
             Snackbar.make(rootView, getString(org.smartregister.R.string.sync_failed), Snackbar.LENGTH_SHORT).show();
-
         } else if (fetchStatus.equals(FetchStatus.fetched)
                 || fetchStatus.equals(FetchStatus.nothingFetched)) {
             Snackbar.make(rootView, getString(org.smartregister.R.string.sync_complete), Snackbar.LENGTH_SHORT).show();
@@ -459,7 +458,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void onSyncComplete(FetchStatus fetchStatus) {
-        Snackbar.make(rootView, getString(org.smartregister.R.string.sync_complete), Snackbar.LENGTH_SHORT).show();
+        onSyncInProgress(fetchStatus);
     }
 
     @Override
