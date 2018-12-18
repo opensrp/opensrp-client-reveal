@@ -333,8 +333,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void displayNotification(int title, int message) {
-        new AlertDialog.Builder(this).setMessage(message).setTitle(title).setPositiveButton(R.string.ok, null).show();
+    public void displayNotification(int title, int message, Object... formatArgs) {
+        if (formatArgs.length == 0)
+            new AlertDialog.Builder(this).setMessage(message).setTitle(title).setPositiveButton(R.string.ok, null).show();
+        else
+            new AlertDialog.Builder(this).setMessage(getString(message, formatArgs)).setTitle(title).setPositiveButton(R.string.ok, null).show();
     }
 
     @Override

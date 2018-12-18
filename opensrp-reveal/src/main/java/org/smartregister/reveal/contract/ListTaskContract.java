@@ -50,7 +50,7 @@ public interface ListTaskContract {
 
         void unlockNavigationDrawer();
 
-        void displayNotification(int title, @StringRes int message);
+        void displayNotification(int title, @StringRes int message,Object... formatArgs);
 
         void displayNotification(String message);
 

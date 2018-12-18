@@ -281,7 +281,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
                 listTaskView.displayNotification(R.string.fetching_structures_title, R.string.no_structures_found);
             }
         } else
-            listTaskView.displayNotification(R.string.fetching_structures_title, R.string.fetch_structures_failed_message);
+            listTaskView.displayNotification(R.string.fetching_structures_title,
+                    R.string.fetch_location_and_structures_failed, prefsUtil.getCurrentOperationalArea());
     }
 
     private void unlockDrawerLayout() {
