@@ -38,7 +38,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.AllConstants;
 import org.smartregister.domain.FetchStatus;
-import org.smartregister.job.SyncServiceJob;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
@@ -253,7 +252,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         else if (v.getId() == R.id.logout_button)
             RevealApplication.getInstance().logoutCurrentUser();
         else if (v.getId() == R.id.sync_button) {
-            SyncServiceJob.scheduleJobImmediately(SyncServiceJob.TAG);
+            org.smartregister.reveal.util.Utils.startImmediateSync();
             mDrawerLayout.closeDrawer(GravityCompat.START);
 
         } else if (v.getId() == R.id.btn_add_structure) {
@@ -462,7 +461,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void onSyncInProgress(FetchStatus fetchStatus) {
         if (fetchStatus.equals(FetchStatus.fetchedFailed)) {
             Snackbar.make(rootView, getString(org.smartregister.R.string.sync_failed), Snackbar.LENGTH_SHORT).show();
-
         } else if (fetchStatus.equals(FetchStatus.fetched)
                 || fetchStatus.equals(FetchStatus.nothingFetched)) {
             Snackbar.make(rootView, getString(org.smartregister.R.string.sync_complete), Snackbar.LENGTH_SHORT).show();
@@ -474,7 +472,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void onSyncComplete(FetchStatus fetchStatus) {
-        Snackbar.make(rootView, getString(org.smartregister.R.string.sync_complete), Snackbar.LENGTH_SHORT).show();
+        onSyncInProgress(fetchStatus);
     }
 
     @Override

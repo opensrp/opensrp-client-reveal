@@ -109,4 +109,3 @@ public class RevealRepository extends Repository {
         super.close();
     }
 }
-

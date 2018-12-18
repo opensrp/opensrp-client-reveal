@@ -18,6 +18,7 @@ import com.mapbox.geojson.Feature;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.job.RevealCampaignServiceJob;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -68,6 +69,10 @@ public class Utils {
     public static String getPropertyValue(Feature feature, String propertyKey) {
         JsonElement featureProperty = feature.getProperty(propertyKey);
         return featureProperty == null ? null : featureProperty.getAsString();
+    }
+
+    public static void startImmediateSync() {
+        RevealCampaignServiceJob.scheduleJobImmediately(RevealCampaignServiceJob.TAG);
     }
 
 }

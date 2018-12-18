@@ -61,6 +61,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         CoreLibrary.init(context, new RevealSyncConfiguration());
         ConfigurableViewsLibrary.init(context, getRepository());
         LocationHelper.init(Utils.ALLOWED_LEVELS, Utils.DEFAULT_LOCATION_LEVEL);
+
         SyncStatusBroadcastReceiver.init(this);
 
         jsonSpecHelper = new JsonSpecHelper(this);
