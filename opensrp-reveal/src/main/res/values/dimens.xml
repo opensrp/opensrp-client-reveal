@@ -28,7 +28,6 @@
     <dimen name="change_spray_status_btn_bottom_margin">15dp</dimen>
     <dimen name="my_location_btn_margin">16dp</dimen>
     <dimen name="my_location_button_dimen">48dp</dimen>
->>>>>>> master
 </resources>
 
 

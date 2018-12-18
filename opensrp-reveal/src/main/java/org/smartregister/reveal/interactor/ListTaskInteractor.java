@@ -172,27 +172,6 @@ public class ListTaskInteractor {
         appExecutors.diskIO().execute(runnable);
     }
 
-    private List<CardDetails> processCardDetails(Cursor cursor) {
-
-        List<CardDetails> cardDetailsList = new ArrayList<>();
-        try {
-            if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
-                while (!cursor.isAfterLast()) {
-                    CardDetails cardDetails = createCardDetails(cursor);
-                    cardDetailsList.add(cardDetails);
-                    cursor.moveToNext();
-                }
-            }
-        } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return cardDetailsList;
-    }
-
     private CardDetails createCardDetails(Cursor cursor) {
         return new CardDetails(
                 cursor.getString(cursor.getColumnIndex("spray_status")),
