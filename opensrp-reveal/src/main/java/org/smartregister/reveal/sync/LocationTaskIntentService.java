@@ -4,11 +4,13 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 
+import org.smartregister.domain.FetchStatus;
 import org.smartregister.job.SyncServiceJob;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.sync.helper.LocationServiceHelper;
 import org.smartregister.sync.helper.TaskServiceHelper;
+import org.smartregister.util.Utils;
 
 public class LocationTaskIntentService extends IntentService {
 
@@ -38,6 +40,7 @@ public class LocationTaskIntentService extends IntentService {
                 SyncServiceJob.scheduleJobImmediately(SyncServiceJob.TAG);
             }
         });
+        sendBroadcast(Utils.completeSync(FetchStatus.fetched));
 
     }
 
