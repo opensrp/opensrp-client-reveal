@@ -277,6 +277,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             featureCollection = FeatureCollection.fromJson(structuresGeoJson.toString());
             listTaskView.setGeoJsonSource(featureCollection, operationalAreaGeometry);
             operationalArea = operationalAreaGeometry;
+            if (Utils.isEmptyCollection(featureCollection.features())) {
+                listTaskView.displayNotification(R.string.fetching_structures_title, R.string.no_structures_found);
+            }
         } else
             listTaskView.displayNotification(R.string.fetching_structures_title, R.string.fetch_structures_failed_message);
     }
