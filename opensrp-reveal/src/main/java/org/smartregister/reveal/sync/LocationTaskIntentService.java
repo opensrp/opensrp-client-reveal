@@ -40,8 +40,6 @@ public class LocationTaskIntentService extends IntentService {
                 SyncServiceJob.scheduleJobImmediately(SyncServiceJob.TAG);
             }
         });
-        sendBroadcast(Utils.completeSync(FetchStatus.fetched));
-
     }
 
 }
