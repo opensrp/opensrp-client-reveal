@@ -16,6 +16,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.Campaign;
@@ -285,8 +286,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             listTaskView.displayNotification(R.string.fetching_structures_title,
                     R.string.fetch_location_and_structures_failed, prefsUtil.getCurrentOperationalArea());
             try {
-                com.cocoahero.android.geojson.FeatureCollection emptyFeatureCollection = new com.cocoahero.android.geojson.FeatureCollection();
-                listTaskView.setGeoJsonSource(FeatureCollection.fromJson(emptyFeatureCollection.toJSON().toString()), operationalAreaGeometry);
+                structuresGeoJson.put(FEATURES, new JSONArray());
+                listTaskView.setGeoJsonSource(FeatureCollection.fromJson(structuresGeoJson.toString()), operationalAreaGeometry);
             } catch (JSONException e) {
                 Log.e(TAG, "error resetting structures");
             }
