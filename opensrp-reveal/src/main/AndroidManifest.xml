@@ -49,8 +49,9 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
-
         <service android:name=".sync.RevealSyncIntentService" />
+        <service android:name=".sync.RevealCampaignIntentService" />
+        <service android:name=".sync.LocationTaskIntentService" />
 
     </application>
 

@@ -37,7 +37,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static org.smartregister.AllConstants.REVEAL_OPERATIONAL_AREAS;
+import static org.smartregister.AllConstants.OPERATIONAL_AREAS;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
@@ -144,7 +144,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
         if (defaultLocation != null) {
             List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
-            List<String> authorizedOperationalAreas = Arrays.asList(StringUtils.split(prefsUtil.getPreferenceValue(REVEAL_OPERATIONAL_AREAS), ','));
+            List<String> authorizedOperationalAreas = Arrays.asList(StringUtils.split(prefsUtil.getPreferenceValue(OPERATIONAL_AREAS), ','));
             removeUnauthorizedOperationalAreas(authorizedOperationalAreas, entireTree);
 
             String entireTreeString = AssetHandler.javaToJsonString(entireTree,
