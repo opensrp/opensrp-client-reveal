@@ -56,9 +56,11 @@ public interface ListTaskContract {
 
         void openCardView(CardDetails cardDetails);
 
-        void startSprayForm(JSONObject form);
+        void startJsonForm(JSONObject form);
 
         void displaySelectedFeature(Feature feature);
+
+        void displayToast(int zoom_in_to_select);
     }
 
     interface PresenterCallBack {
@@ -70,6 +72,12 @@ public interface ListTaskContract {
         void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier,
                               @NonNull TaskStatus taskStatus, @NonNull String businessStatus);
 
+
+        void onStructureAdded(Feature feature);
+
+        void onFormSaveFailure(String eventType);
+
         void onCardDetailsFetched(CardDetails cardDetails);
+
     }
 }

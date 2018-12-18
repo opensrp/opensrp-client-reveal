@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.util.Pair;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -29,7 +31,6 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.vijay.jsonwizard.activities.JsonFormActivity;
 import com.vijay.jsonwizard.customviews.TreeViewDialog;
 
 import org.json.JSONArray;
@@ -41,6 +42,7 @@ import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.BaseMapActivity;
+import org.smartregister.reveal.activity.RevealJsonForm;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.model.CardDetails;
@@ -106,6 +108,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         initializeMapView(savedInstanceState);
         initializeDrawerLayout();
         initializeProgressDialog();
+
+        findViewById(R.id.btn_add_structure).setOnClickListener(this);
+
         initializeCardView();
 
     }
@@ -249,6 +254,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         else if (v.getId() == R.id.sync_button) {
             org.smartregister.reveal.util.Utils.startImmediateSync();
             mDrawerLayout.closeDrawer(GravityCompat.START);
+
+        } else if (v.getId() == R.id.btn_add_structure) {
+            listTaskPresenter.onAddStructureClicked();
+
         } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeSprayStatus();
         } else if (v.getId() == R.id.btn_collapse_structure_card_view) {
@@ -353,8 +362,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void startSprayForm(JSONObject form) {
-        Intent intent = new Intent(getApplicationContext(), JsonFormActivity.class);
+    public void startJsonForm(JSONObject form) {
+        Intent intent = new Intent(getApplicationContext(), RevealJsonForm.class);
         try {
             intent.putExtra(JSON_FORM_PARAM_JSON, form.toString());
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
@@ -371,11 +380,16 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
+    public void displayToast(@StringRes int resourceId) {
+        Toast.makeText(this, resourceId, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
             String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
             Log.d(TAG, json);
-            listTaskPresenter.saveSprayForm(json);
+            listTaskPresenter.saveJsonForm(json);
         }
     }
 

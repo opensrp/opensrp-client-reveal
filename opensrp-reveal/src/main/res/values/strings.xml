@@ -49,7 +49,16 @@
 
     <string name="selected_datasource_name">select-data</string>
 
+    <string name="irs_task_description"> Visit the structure, assess and perform spray activities.</string>
+
+    <string name="form_save_failure_title">Error Saving Form</string>
+    <string name="spray_form_save_failure">Error saving spray form</string>
+    <string name="add_structure_form_save_failure">Error saving add structure form</string>
+    <string name="zoom_in_to_select">Zoom in to select a structure</string>
+
+
     <string name="details_sprayed">Sprayable, sprayed</string>
     <string name="details_not_sprayed">Sprayable, not sprayed</string>
     <string name="details_not_sprayable">Not Sprayable</string>
+
 </resources>

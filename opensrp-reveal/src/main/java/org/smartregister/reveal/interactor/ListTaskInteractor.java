@@ -1,10 +1,13 @@
 package org.smartregister.reveal.interactor;
 
+import android.content.Context;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.Geometry;
 
 import net.sqlcipher.Cursor;
@@ -27,25 +30,35 @@ import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract.PresenterCallBack;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURE_COLLECTION;
 import static org.smartregister.reveal.util.Constants.GeoJSON.TYPE;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
+import static org.smartregister.reveal.util.Constants.JsonForm.IRS_VISIT;
+import static org.smartregister.reveal.util.Constants.JsonForm.RESIDENTIAL;
 import static org.smartregister.reveal.util.Constants.METADATA;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
@@ -54,6 +67,7 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_S
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
+import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.util.JsonFormUtils.ENTITY_ID;
@@ -86,6 +100,10 @@ public class ListTaskInteractor {
 
     private RevealClientProcessor clientProcessor;
 
+    private String operationalAreaId;
+
+    private AllSharedPreferences sharedPreferences;
+
     public ListTaskInteractor(PresenterCallBack presenterCallBack) {
         this(new AppExecutors());
         this.presenterCallBack = presenterCallBack;
@@ -95,6 +113,7 @@ public class ListTaskInteractor {
         locationRepository = RevealApplication.getInstance().getLocationRepository();
         eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
         clientProcessor = RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext());
+        sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
     }
 
     @VisibleForTesting
@@ -153,27 +172,6 @@ public class ListTaskInteractor {
         appExecutors.diskIO().execute(runnable);
     }
 
-    private List<CardDetails> processCardDetails(Cursor cursor) {
-
-        List<CardDetails> cardDetailsList = new ArrayList<>();
-        try {
-            if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
-                while (!cursor.isAfterLast()) {
-                    CardDetails cardDetails = createCardDetails(cursor);
-                    cardDetailsList.add(cardDetails);
-                    cursor.moveToNext();
-                }
-            }
-        } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return cardDetailsList;
-    }
-
     private CardDetails createCardDetails(Cursor cursor) {
         return new CardDetails(
                 cursor.getString(cursor.getColumnIndex("spray_status")),
@@ -189,7 +187,7 @@ public class ListTaskInteractor {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final JSONObject featureCollection = createFutureCollection();
+                final JSONObject featureCollection = createFeatureCollection();
                 Location operationalAreaLocation = locationRepository.getLocationByName(operationalArea);
                 try {
                     if (operationalAreaLocation != null) {
@@ -221,8 +219,13 @@ public class ListTaskInteractor {
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-                        Geometry geometry = operationalAreaLocation == null ? null : Geometry.fromJson(gson.toJson(operationalAreaLocation.getGeometry()));
-                        presenterCallBack.onStructuresFetched(featureCollection, geometry);
+                        if (operationalAreaLocation != null) {
+                            Geometry geometry = Geometry.fromJson(gson.toJson(operationalAreaLocation.getGeometry()));
+                            operationalAreaId = operationalAreaLocation.getId();
+                            presenterCallBack.onStructuresFetched(featureCollection, geometry);
+                        } else {
+                            presenterCallBack.onStructuresFetched(featureCollection, null);
+                        }
                     }
                 });
             }
@@ -231,7 +234,7 @@ public class ListTaskInteractor {
         appExecutors.diskIO().execute(runnable);
     }
 
-    private JSONObject createFutureCollection() {
+    private JSONObject createFeatureCollection() {
         JSONObject featureCollection = new JSONObject();
         try {
             featureCollection.put(TYPE, FEATURE_COLLECTION);
@@ -242,41 +245,126 @@ public class ListTaskInteractor {
         return featureCollection;
     }
 
-    public void saveSprayForm(String json) {
+
+    public void saveJsonForm(String json) {
+        try {
+            JSONObject jsonForm = new JSONObject(json);
+            String encounterType = jsonForm.getString(ENCOUNTER_TYPE);
+            if (SPRAY_EVENT.equals(encounterType))
+                saveSprayForm(jsonForm);
+            else if (REGISTER_STRUCTURE_EVENT.equals(encounterType))
+                saveRegisterStructureForm(jsonForm);
+        } catch (Exception e) {
+            Log.e(TAG, "Error saving Json Form data", e);
+        }
+    }
+
+
+    private org.smartregister.domain.db.Event saveEvent(JSONObject jsonForm) throws JSONException {
+        String entityId = getString(jsonForm, ENTITY_ID);
+        JSONArray fields = JsonFormUtils.fields(jsonForm);
+        JSONObject metadata = getJSONObject(jsonForm, METADATA);
+        FormTag formTag = new FormTag();
+        formTag.providerId = sharedPreferences.fetchRegisteredANM();
+        formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
+        formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
+        formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
+        Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, SPRAY_EVENT, STRUCTURE);
+        JSONObject eventJson = new JSONObject(gson.toJson(event));
+        eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
+        eventClientRepository.addEvent(entityId, eventJson);
+        return gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class);
+
+
+    }
+
+    private void saveSprayForm(JSONObject jsonForm) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 try {
-                    JSONObject jsonForm = new JSONObject(json);
-                    String entityId = getString(jsonForm, ENTITY_ID);
-                    JSONArray fields = JsonFormUtils.fields(jsonForm);
-                    JSONObject metadata = getJSONObject(jsonForm, METADATA);
-                    FormTag formTag = new FormTag();
-                    AllSharedPreferences sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
-                    formTag.providerId = sharedPreferences.fetchRegisteredANM();
-                    formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
-                    formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
-                    formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
-                    Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, SPRAY_EVENT, STRUCTURE);
-                    JSONObject eventJson = new JSONObject(gson.toJson(event));
-                    eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
-                    org.smartregister.domain.db.Event dbEvent = gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class);
-
-                    eventClientRepository.addEvent(entityId, eventJson);
-                    List<EventClient> unprocessedEvents = new ArrayList<>();
-                    unprocessedEvents.add(new EventClient(dbEvent, null));
-                    clientProcessor.processClient(unprocessedEvents);
-
+                    org.smartregister.domain.db.Event event = saveEvent(jsonForm);
+                    clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)));
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override
                         public void run() {
-                            String businessStatus = clientProcessor.calculateBusinessStatus(dbEvent);
-                            presenterCallBack.onSprayFormSaved(event.getBaseEntityId(), dbEvent.getDetails().get(TASK_IDENTIFIER),
+                            String businessStatus = clientProcessor.calculateBusinessStatus(event);
+                            presenterCallBack.onSprayFormSaved(event.getBaseEntityId(), event.getDetails().get(TASK_IDENTIFIER),
                                     Task.TaskStatus.COMPLETED, businessStatus);
                         }
                     });
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "Error saving spraye", e);
+                    presenterCallBack.onFormSaveFailure(SPRAY_EVENT);
+                }
+            }
+        };
+
+        appExecutors.diskIO().execute(runnable);
+    }
+
+    private void saveRegisterStructureForm(JSONObject jsonForm) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    jsonForm.put(ENTITY_ID, UUID.randomUUID().toString());
+                    org.smartregister.domain.db.Event event = saveEvent(jsonForm);
+                    com.cocoahero.android.geojson.Feature feature = new com.cocoahero.android.geojson.Feature(new JSONObject(event.findObs(null, false, "structure").getValue().toString()));
+                    Location structure = new Location();
+                    structure.setId(event.getBaseEntityId());
+                    structure.setType(feature.getType());
+                    org.smartregister.domain.Geometry geometry = new org.smartregister.domain.Geometry();
+                    geometry.setType(org.smartregister.domain.Geometry.GeometryType.valueOf(feature.getGeometry().getType().toUpperCase()));
+                    JsonArray coordinates = new JsonArray();
+                    JSONArray featureCoordinates = feature.getGeometry().toJSON().getJSONArray(JSON_COORDINATES);
+                    coordinates.add(featureCoordinates.get(0).toString());
+                    coordinates.add(featureCoordinates.get(1).toString());
+                    geometry.setCoordinates(coordinates);
+                    structure.setGeometry(geometry);
+                    LocationProperty properties = new LocationProperty();
+                    properties.setType(RESIDENTIAL);
+                    properties.setEffectiveStartDate(new DateTime());
+                    properties.setParentId(operationalAreaId);
+                    properties.setStatus(LocationProperty.PropertyStatus.PENDING_REVIEW);
+                    properties.setUid(UUID.randomUUID().toString());
+                    structure.setProperties(properties);
+                    structureRepository.addOrUpdate(structure);
+
+                    Task task = new Task();
+                    task.setIdentifier(UUID.randomUUID().toString());
+                    task.setCampaignIdentifier(PreferencesUtil.getInstance().getCurrentCampaignId());
+                    task.setGroupIdentifier(operationalAreaId);
+                    task.setStatus(Task.TaskStatus.READY);
+                    task.setBusinessStatus(NOT_VISITED);
+                    task.setPriority(3);
+                    task.setCode(IRS);
+                    Context applicationContext = RevealApplication.getInstance().getApplicationContext();
+                    task.setDescription(applicationContext.getString(R.string.irs_task_description));
+                    task.setFocus(IRS_VISIT);
+                    task.setForEntity(structure.getId());
+                    task.setAuthoredOn(new DateTime());
+                    task.setLastModified(new DateTime());
+                    task.setOwner(event.getProviderId());
+                    taskRepository.addOrUpdate(task);
+                    appExecutors.mainThread().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            Map<String, String> taskProperties = new HashMap<>();
+                            taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
+                            taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                            taskProperties.put(TASK_STATUS, task.getStatus().name());
+                            taskProperties.put(TASK_CODE, task.getCode());
+                            taskProperties.put(LOCATION_UUID, structure.getProperties().getUid());
+                            taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
+                            taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
+                            structure.getProperties().setCustomProperties(taskProperties);
+                            presenterCallBack.onStructureAdded(Feature.fromJson(gson.toJson(structure)));
+                        }
+                    });
+                } catch (JSONException e) {
+                    Log.e(TAG, "Error saving new Structure", e);
+                    presenterCallBack.onFormSaveFailure(REGISTER_STRUCTURE_EVENT);
                 }
             }
         };

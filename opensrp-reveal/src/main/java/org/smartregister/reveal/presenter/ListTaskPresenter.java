@@ -28,6 +28,7 @@ import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
+import org.smartregister.util.Utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -49,7 +50,9 @@ import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORM
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.NON_RESIDENTIAL;
+import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
@@ -61,6 +64,7 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_S
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
+import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.Tags.COUNTRY;
 import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
@@ -87,7 +91,10 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     private FeatureCollection featureCollection;
 
+    private Geometry operationalArea;
+
     private Feature selectedFeature;
+
 
     public ListTaskPresenter(ListTaskView listTaskView) {
         this.listTaskView = listTaskView;
@@ -242,7 +249,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     }
 
     public void onCampaignSelectorClicked(ArrayList<String> value, ArrayList<String> name) {
-
+        if (Utils.isEmptyCollection(name))
+            return;
         Log.d(TAG, "Selected Campaign : " + TextUtils.join(",", name));
         Log.d(TAG, "Selected Campaign Ids: " + TextUtils.join(",", value));
 
@@ -251,6 +259,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         listTaskView.setCampaign(name.get(0));
         changedCurrentSelection = true;
         unlockDrawerLayout();
+
     }
 
     public void onDrawerClosed() {
@@ -267,6 +276,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         if (structuresGeoJson.has(FEATURES)) {
             featureCollection = FeatureCollection.fromJson(structuresGeoJson.toString());
             listTaskView.setGeoJsonSource(featureCollection, operationalAreaGeometry);
+            operationalArea = operationalAreaGeometry;
         } else
             listTaskView.displayNotification(R.string.fetching_structures_title, R.string.fetch_structures_failed_message);
     }
@@ -296,6 +306,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         double currentZoom = mapboxMap.getCameraPosition().zoom;
         if (currentZoom < MAX_SELECT_ZOOM_LEVEL) {
             Log.w(TAG, "onMapClicked Current Zoom level" + currentZoom);
+            listTaskView.displayToast(R.string.zoom_in_to_select);
             return;
         }
         final PointF pixel = mapboxMap.getProjection().toScreenLocation(point);
@@ -391,9 +402,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             formData.put(LOCATION_UUID, structureUUID);
             formData.put(LOCATION_VERSION, structureVersion);
             formJson.put(DETAILS, formData);
-            listTaskView.startSprayForm(formJson);
+            listTaskView.startJsonForm(formJson);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "error launching spray form", e);
         }
     }
 
@@ -412,9 +423,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     }
 
-    public void saveSprayForm(String json) {
+    public void saveJsonForm(String json) {
         listTaskView.showProgressDialog();
-        listTaskInteractor.saveSprayForm(json);
+        listTaskInteractor.saveJsonForm(json);
     }
 
     @Override
@@ -430,6 +441,34 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         }
         listTaskView.setGeoJsonSource(featureCollection, null);
         listTaskInteractor.fetchCardViewDetails(structureId);
+    }
+
+
+    @Override
+    public void onStructureAdded(Feature feature) {
+        listTaskView.hideProgressDialog();
+        featureCollection.features().add(feature);
+        listTaskView.setGeoJsonSource(featureCollection, null);
+    }
+
+    @Override
+    public void onFormSaveFailure(String eventType) {
+        listTaskView.hideProgressDialog();
+        listTaskView.displayNotification(R.string.form_save_failure_title,
+                eventType.equals(SPRAY_EVENT) ? R.string.spray_form_save_failure : R.string.add_structure_form_save_failure);
+    }
+
+
+    public void onAddStructureClicked() {
+        String formString = AssetHandler.readFileFromAssetsFolder(ADD_STRUCTURE_FORM, listTaskView.getContext());
+        try {
+            JSONObject formJson = new JSONObject(formString);
+            formJson.put(OPERATIONAL_AREA_TAG, operationalArea.toJson());
+            listTaskView.startJsonForm(formJson);
+        } catch (Exception e) {
+            Log.e(TAG, "error launching add structure form", e);
+        }
+
     }
 
 }

@@ -43,7 +43,7 @@
 
 
         <activity
-            android:name="com.vijay.jsonwizard.activities.JsonFormActivity"
+            android:name=".activity.RevealJsonForm"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"

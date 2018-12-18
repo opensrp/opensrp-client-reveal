@@ -18,7 +18,11 @@ public interface Constants {
 
     String SPRAY_EVENT = "Spray";
 
+    String REGISTER_STRUCTURE_EVENT = "Register_Structure";
+
     String STRUCTURE = "Structure";
+
+    double MY_LOCATION_ZOOM_LEVEL = 17.5;
 
     interface CONFIGURATION {
         String LOGIN = "login";
@@ -78,6 +82,8 @@ public interface Constants {
 
     interface JsonForm {
 
+        String ENCOUNTER_TYPE = "encounter_type";
+
         String RESIDENTIAL = "residential";
 
         String NON_RESIDENTIAL = "non_residential";
@@ -89,6 +95,14 @@ public interface Constants {
         String STRUCTURE_PROPERTIES_TYPE = "[structure_type]";
 
         String SPRAY_FORM = "json.form/spray_form.json";
+
+        String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
+
+        String IRS_VISIT = "IRS Visit";
+
+        String OPERATIONAL_AREA_TAG = "operational_area";
+
+        String NO_PADDING = "no_padding";
 
     }
 

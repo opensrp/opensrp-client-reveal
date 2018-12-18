@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <io.ona.kujaku.views.KujakuMapView
+        <org.smartregister.reveal.view.RevealMapView
             android:id="@+id/kujakuMapView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -29,8 +29,7 @@
             android:layout_margin="@dimen/hamburger_margin"
             android:background="@drawable/rounded_square_bg"
             android:src="@drawable/ic_hamburger_menu"
-            app:elevation="6dp"
-            app:layout_anchorGravity="top|left|start" />
+            app:elevation="6dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
