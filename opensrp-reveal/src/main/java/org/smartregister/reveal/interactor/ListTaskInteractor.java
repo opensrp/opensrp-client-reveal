@@ -7,6 +7,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mapbox.geojson.Geometry;
 
+import net.sqlcipher.Cursor;
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,6 +29,7 @@ import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract.PresenterCallBack;
+import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.util.DateTimeTypeConverter;
@@ -116,6 +120,70 @@ public class ListTaskInteractor {
         appExecutors.diskIO().execute(runnable);
     }
 
+    public void fetchCardViewDetails(String structureId) {
+        final String sql = "SELECT spray_status, not_sprayed_other_reason, property_type, spray_date," +
+                " spray_operator, family_head_name FROM sprayed_structures WHERE id=?";
+        SQLiteDatabase db = RevealApplication.getInstance().getRepository().getWritableDatabase();
+        Cursor cursor = db.rawQuery(sql, new String[]{structureId});
+        CardDetails cardDetails = null;
+        try {
+            if (cursor.moveToFirst()) {
+                cardDetails = createCardDetails(cursor);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        CardDetails finalCardDetails = cardDetails;
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                appExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        presenterCallBack.onCardDetailsFetched(finalCardDetails);
+                    }
+                });
+            }
+        };
+        appExecutors.diskIO().execute(runnable);
+    }
+
+    private List<CardDetails> processCardDetails(Cursor cursor) {
+
+        List<CardDetails> cardDetailsList = new ArrayList<>();
+        try {
+            if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
+                while (!cursor.isAfterLast()) {
+                    CardDetails cardDetails = createCardDetails(cursor);
+                    cardDetailsList.add(cardDetails);
+                    cursor.moveToNext();
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, Log.getStackTraceString(e));
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return cardDetailsList;
+    }
+
+    private CardDetails createCardDetails(Cursor cursor) {
+        return new CardDetails(
+                cursor.getString(cursor.getColumnIndex("spray_status")),
+                cursor.getString(cursor.getColumnIndex("property_type")),
+                cursor.getString(cursor.getColumnIndex("spray_date")),
+                cursor.getString(cursor.getColumnIndex("spray_operator")),
+                cursor.getString(cursor.getColumnIndex("family_head_name")),
+                cursor.getString(cursor.getColumnIndex("not_sprayed_other_reason"))
+        );
+    }
 
     public void fetchLocations(String campaign, String operationalArea) {
         Runnable runnable = new Runnable() {

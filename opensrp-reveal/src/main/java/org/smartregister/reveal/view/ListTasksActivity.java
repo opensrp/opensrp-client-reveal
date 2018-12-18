@@ -13,12 +13,13 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -42,6 +43,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.BaseMapActivity;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
+import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.util.Utils;
 
@@ -83,6 +85,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private DrawerLayout mDrawerLayout;
 
+    private CardView structureInfoCardView;
+    private TextView tvSprayStatus;
+    private TextView tvPropertyType;
+    private TextView tvSprayDate;
+    private TextView tvSprayOperator;
+    private TextView tvFamilyHead;
+    private TextView tvReason;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +106,33 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         initializeMapView(savedInstanceState);
         initializeDrawerLayout();
         initializeProgressDialog();
+        initializeCardView();
+
+    }
+
+    private void initializeCardView() {
+        structureInfoCardView = findViewById(R.id.structure_info_card_view);
+        findViewById(R.id.btn_add_structure).setOnClickListener(this);
+
+        findViewById(R.id.btn_collapse_structure_card_view).setOnClickListener(this);
+
+
+        tvSprayStatus = findViewById(R.id.spray_status);
+        tvPropertyType = findViewById(R.id.property_type);
+        tvSprayDate = findViewById(R.id.spray_date);
+        tvSprayOperator = findViewById(R.id.user_id);
+        tvFamilyHead = findViewById(R.id.family_head);
+        tvReason = findViewById(R.id.reason);
+        findViewById(R.id.change_spray_status).setOnClickListener(this);
+
+    }
+
+    private void closeStructureCardView() {
+        setViewVisibility(structureInfoCardView, false);
+    }
+
+    private void setViewVisibility(View view, boolean isVisible) {
+        view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     private void initializeMapView(Bundle savedInstanceState) {
@@ -212,6 +249,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         else if (v.getId() == R.id.sync_button) {
             org.smartregister.reveal.util.Utils.startImmediateSync();
             mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else if (v.getId() == R.id.change_spray_status) {
+            listTaskPresenter.onChangeSprayStatus();
+        } else if (v.getId() == R.id.btn_collapse_structure_card_view) {
+            setViewVisibility(tvReason, false);
+            closeStructureCardView();
         }
     }
 
@@ -292,9 +334,22 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void openCardView(String structureId, String taskIdentifier, String businessStatus) {
-        Toast.makeText(this, String.format("Opening Card View for Structure %s and task %s",
-                structureId, taskIdentifier), Toast.LENGTH_SHORT).show();
+    public void openCardView(CardDetails cardDetails) {
+
+        tvSprayStatus.setTextColor(getResources().getColor(cardDetails.getStatusColor()));
+        tvSprayStatus.setText(cardDetails.getStatusMessage());
+        tvPropertyType.setText(cardDetails.getPropertyType());
+        tvSprayDate.setText(cardDetails.getSprayDate());
+        tvSprayOperator.setText(cardDetails.getSprayOperator());
+        tvFamilyHead.setText(cardDetails.getFamilyHead());
+        if (!TextUtils.isEmpty(cardDetails.getReason())) {
+            tvReason.setVisibility(View.VISIBLE);
+            tvReason.setText(cardDetails.getReason());
+        } else {
+            tvReason.setVisibility(View.GONE);
+        }
+
+        structureInfoCardView.setVisibility(View.VISIBLE);
     }
 
     @Override
