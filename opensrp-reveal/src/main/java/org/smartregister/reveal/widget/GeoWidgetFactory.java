@@ -173,6 +173,13 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
     }
 
     @Override
+    public void onCreate(Bundle bundle) {
+        if (mapView != null) {
+            mapView.onCreate(bundle);
+        }
+    }
+
+    @Override
     public void onStart() {
         if (mapView != null)
             mapView.onStart();
