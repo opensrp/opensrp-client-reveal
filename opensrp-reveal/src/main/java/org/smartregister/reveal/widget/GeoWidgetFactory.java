@@ -2,6 +2,7 @@ package org.smartregister.reveal.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,16 +24,16 @@ import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
 import com.vijay.jsonwizard.interfaces.JsonApi;
+import com.vijay.jsonwizard.interfaces.LifeCycleListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.view.RevealMapView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.ona.kujaku.views.KujakuMapView;
 
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 
@@ -40,11 +41,15 @@ import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_
 /**
  * Created by samuelgithengi on 12/13/18.
  */
-public class GeoWidgetFactory implements FormWidgetFactory {
+public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
 
     private static final String TAG = "GeoWidgetFactory";
 
     private static final String ZOOM_LEVEL = "zoom_level";
+
+    private RevealMapView mapView;
+
+    private JsonApi jsonApi;
 
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener) throws Exception {
@@ -53,6 +58,8 @@ public class GeoWidgetFactory implements FormWidgetFactory {
 
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener, boolean popup) throws Exception {
+        jsonApi = ((JsonApi) context);
+        jsonApi.registerLifecycleListener(this);
         String openMrsEntityParent = jsonObject.optString(JsonFormConstants.OPENMRS_ENTITY_PARENT);
         String openMrsEntity = jsonObject.optString(JsonFormConstants.OPENMRS_ENTITY);
         String openMrsEntityId = jsonObject.optString(JsonFormConstants.OPENMRS_ENTITY_ID);
@@ -68,7 +75,7 @@ public class GeoWidgetFactory implements FormWidgetFactory {
 
         String operationalArea = new JSONObject(formFragment.getCurrentJsonState()).optString(OPERATIONAL_AREA_TAG);
 
-        KujakuMapView mapView = rootLayout.findViewById(R.id.kujakuMapView);
+        mapView = rootLayout.findViewById(R.id.geoWidgetMapView);
         mapView.onCreate(null);
 
         mapView.getMapAsync(new OnMapReadyCallback() {
@@ -124,7 +131,6 @@ public class GeoWidgetFactory implements FormWidgetFactory {
 
         views.add(rootLayout);
         mapView.onStart();
-        mapView.onResume();
 
         mapView.showCurrentLocationBtn(true);
         mapView.enableAddPoint(true);
@@ -164,5 +170,46 @@ public class GeoWidgetFactory implements FormWidgetFactory {
         Feature feature = new Feature();
         feature.setGeometry(new Point(latLng.getLatitude(), latLng.getLongitude()));
         return feature;
+    }
+
+    @Override
+    public void onStart() {
+        if (mapView != null)
+            mapView.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        if (mapView != null)
+            mapView.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        if (mapView != null)
+            mapView.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        if (mapView != null)
+            mapView.onStop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle) {
+        if (mapView != null)
+            mapView.onSaveInstanceState(bundle);
+    }
+
+    @Override
+    public void onLowMemory() {
+        if (mapView != null)
+            mapView.onLowMemory();
+    }
+
+    @Override
+    public void onDestroy() {
+        jsonApi.unregisterLifecycleListener(this);
     }
 }
