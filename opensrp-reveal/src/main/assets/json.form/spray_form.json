@@ -59,15 +59,15 @@
         "label": "Type of Structure",
         "options": [
           {
-            "key": "residential",
+            "key": "Residential Structure",
             "text": "Residential Structure"
           },
           {
-            "key": "non_residential",
+            "key": "Non-Residential Structure",
             "text": "Non-Residential Structure"
           },
           {
-            "key": "facility",
+            "key": "Facility",
             "text": "Facility"
           }
         ],
@@ -83,11 +83,11 @@
         "options": [
           {
             "key": "Sprayed",
-            "text": "Sprayable,Sprayed"
+            "text": "Sprayable, Sprayed"
           },
           {
             "key": "Not Sprayed",
-            "text": "Sprayable,Not Sprayed"
+            "text": "Sprayable, Not Sprayed"
           },
           {
             "key": "Not Sprayable",
@@ -98,7 +98,7 @@
         "relevance": {
           "step1:structureType": {
             "type": "string",
-            "ex": "equalTo(., \"residential\")"
+            "ex": "equalTo(., \"Residential Structure\")"
           }
         }
       },
@@ -111,23 +111,23 @@
         "label": "Not Sprayed Reason",
         "options": [
           {
-            "key": "no_one_missed",
+            "key": "No one home/Missed",
             "text": "No one home/Missed"
           },
           {
-            "key": "locked",
+            "key": "Locked",
             "text": "Locked"
           },
           {
-            "key": "sick",
+            "key": "Sick",
             "text": "Sick"
           },
           {
-            "key": "refused",
+            "key": "Refused",
             "text": "Refused"
           },
           {
-            "key": "funeral",
+            "key": "Funeral",
             "text": "Funeral"
           },
           {
@@ -135,11 +135,12 @@
             "text": "Other"
           }
         ],
-        "value": "no_one_missed",
+        "value": "No one home/Missed",
         "relevance": {
-          "step1:sprayStatus": {
-            "type": "string",
-            "ex": "equalTo(., \"Not Sprayed\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -175,9 +176,10 @@
           "err": "Please specify Head of Household name"
         },
         "relevance": {
-          "step1:sprayStatus": {
-            "type": "string",
-            "ex": "regex(., \"Sprayed|Not Sprayed\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -190,23 +192,24 @@
         "label": "Sex of Household Head",
         "options": [
           {
-            "key": "male",
+            "key": "Male",
             "text": "Male"
           },
           {
-            "key": "female",
+            "key": "Female",
             "text": "Female"
           },
           {
-            "key": "not_applicable",
+            "key": "Not Applicable",
             "text": "Not Applicable"
           }
         ],
-        "value": "male",
+        "value": "Male",
         "relevance": {
-          "step1:sprayStatus": {
-            "type": "string",
-            "ex": "regex(., \"Sprayed|Not Sprayed\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -217,6 +220,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Number of Eligible Rooms Found (Type 99 if unable to assess)",
+        "text_size": "8sp",
         "v_required": {
           "value": true,
           "err": "Please specify number of eligible rooms (Type 99 if unable to assess)"
@@ -226,9 +230,10 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "step1:sprayStatus": {
-            "type": "string",
-            "ex": "regex(., \"Sprayed|Not Sprayed\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -239,6 +244,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Number of Rooms Sprayed (Type 99 if unable to assess)",
+        "text_size": "8sp",
         "v_required": {
           "value": true,
           "err": "Please specify number of rooms sprayed (Type 99 if unable to assess)"
@@ -248,9 +254,10 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "step1:sprayStatus": {
-            "type": "string",
-            "ex": "regex(., \"Sprayed\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -261,6 +268,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Total Number of Nets Hanging and in Use (Type 99 if unable to assess)",
+        "text_size": "8sp",
         "v_required": {
           "value": true,
           "err": "Please specify Total Number of Nets (Type 99 if unable to assess)"
@@ -270,9 +278,10 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "step1:sprayStatus": {
-            "type": "string",
-            "ex": "regex(., \"Sprayed|Not Sprayed\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -282,22 +291,23 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Is a mop-up activity",
+        "label": "Is this a mop-up activity?",
         "options": [
           {
-            "key": "yes",
+            "key": "Yes",
             "text": "Yes"
           },
           {
-            "key": "no",
+            "key": "No",
             "text": "No"
           }
         ],
-        "value": "no",
+        "value": "No",
         "relevance": {
-          "step1:sprayStatus": {
-            "type": "string",
-            "ex": "regex(., \"Sprayed|Not Sprayed\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "spray-relevance-rules.yml"
+            }
           }
         }
       }

@@ -8,7 +8,9 @@ import android.support.v4.util.Pair;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Task.TaskStatus;
@@ -60,7 +62,7 @@ public interface ListTaskContract {
 
         void startJsonForm(JSONObject form);
 
-        void displaySelectedFeature(Feature feature);
+        void displaySelectedFeature(Feature feature, LatLng clickedPoint);
 
         void clearSelectedFeature();
 
@@ -77,7 +79,7 @@ public interface ListTaskContract {
                               @NonNull TaskStatus taskStatus, @NonNull String businessStatus);
 
 
-        void onStructureAdded(Feature feature);
+        void onStructureAdded(Feature feature, JSONArray featureCoordinates);
 
         void onFormSaveFailure(String eventType);
 

@@ -24,6 +24,8 @@ public interface Constants {
 
     double MY_LOCATION_ZOOM_LEVEL = 17.5;
 
+    int ANIMATE_TO_LOCATION_DURATION = 1000;
+
     interface CONFIGURATION {
         String LOGIN = "login";
     }
@@ -84,9 +86,9 @@ public interface Constants {
 
         String ENCOUNTER_TYPE = "encounter_type";
 
-        String RESIDENTIAL = "residential";
+        String RESIDENTIAL = "Residential Structure";
 
-        String NON_RESIDENTIAL = "non_residential";
+        String NON_RESIDENTIAL = "Non-Residential Structure";
 
         String SPRAY_STATUS = "sprayStatus";
 
@@ -101,6 +103,8 @@ public interface Constants {
         String IRS_VISIT = "IRS Visit";
 
         String OPERATIONAL_AREA_TAG = "operational_area";
+
+        String STRUCTURES_TAG = "structures";
 
         String NO_PADDING = "no_padding";
 
