@@ -398,9 +398,11 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         } else if (SPRAYED.equals(sprayStatus)) {
             cardDetails.setStatusColor(R.color.sprayed);
             cardDetails.setStatusMessage(R.string.details_sprayed);
+            cardDetails.setReason(null);
         } else {
             cardDetails.setStatusColor(R.color.unsprayable);
             cardDetails.setStatusMessage(R.string.details_not_sprayable);
+            cardDetails.setReason(null);
         }
     }
 
