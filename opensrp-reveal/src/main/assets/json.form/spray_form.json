@@ -217,6 +217,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Number of Eligible Rooms Found (Type 99 if unable to assess)",
+        "text_size":"8sp",
         "v_required": {
           "value": true,
           "err": "Please specify number of eligible rooms (Type 99 if unable to assess)"
@@ -239,6 +240,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Number of Rooms Sprayed (Type 99 if unable to assess)",
+        "text_size":"8sp",
         "v_required": {
           "value": true,
           "err": "Please specify number of rooms sprayed (Type 99 if unable to assess)"
@@ -261,6 +263,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Total Number of Nets Hanging and in Use (Type 99 if unable to assess)",
+        "text_size":"8sp",
         "v_required": {
           "value": true,
           "err": "Please specify Total Number of Nets (Type 99 if unable to assess)"
