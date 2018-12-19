@@ -17,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout.LayoutParams;
@@ -117,6 +118,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private void initializeCardView() {
         structureInfoCardView = findViewById(R.id.structure_info_card_view);
+        structureInfoCardView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                //intercept clicks and interaction of map below card view
+                return true;
+            }
+        });
         findViewById(R.id.btn_add_structure).setOnClickListener(this);
 
         findViewById(R.id.btn_collapse_structure_card_view).setOnClickListener(this);
@@ -255,10 +263,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         else if (v.getId() == R.id.sync_button) {
             org.smartregister.reveal.util.Utils.startImmediateSync();
             mDrawerLayout.closeDrawer(GravityCompat.START);
-
         } else if (v.getId() == R.id.btn_add_structure) {
             listTaskPresenter.onAddStructureClicked();
-
         } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeSprayStatus();
         } else if (v.getId() == R.id.btn_collapse_structure_card_view) {
