@@ -132,7 +132,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     }
 
-    private void closeStructureCardView() {
+    @Override
+    public void closeStructureCardView() {
         setViewVisibility(structureInfoCardView, false);
     }
 
@@ -379,6 +380,17 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void displaySelectedFeature(Feature feature) {
         if (selectedGeoJsonSource != null) {
             selectedGeoJsonSource.setGeoJson(FeatureCollection.fromFeature(feature));
+        }
+    }
+
+    @Override
+    public void clearSelectedFeature() {
+        if (selectedGeoJsonSource != null) {
+            try {
+                selectedGeoJsonSource.setGeoJson(new com.cocoahero.android.geojson.FeatureCollection().toJSON().toString());
+            } catch (JSONException e) {
+                Log.e(TAG, "Error clearing selected feature");
+            }
         }
     }
 

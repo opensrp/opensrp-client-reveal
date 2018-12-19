@@ -30,6 +30,8 @@ public interface ListTaskContract {
 
         Context getContext();
 
+        void closeStructureCardView();
+
         void showOperationalAreaSelector(Pair<String, ArrayList<String>> locationHierarchy);
 
         void setCampaign(String campaign);
@@ -59,6 +61,8 @@ public interface ListTaskContract {
         void startJsonForm(JSONObject form);
 
         void displaySelectedFeature(Feature feature);
+
+        void clearSelectedFeature();
 
         void displayToast(@StringRes int resourceId);
     }

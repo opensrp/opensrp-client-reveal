@@ -288,6 +288,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             try {
                 structuresGeoJson.put(FEATURES, new JSONArray());
                 listTaskView.setGeoJsonSource(FeatureCollection.fromJson(structuresGeoJson.toString()), operationalAreaGeometry);
+                listTaskView.clearSelectedFeature();
+                listTaskView.closeStructureCardView();
             } catch (JSONException e) {
                 Log.e(TAG, "error resetting structures");
             }
