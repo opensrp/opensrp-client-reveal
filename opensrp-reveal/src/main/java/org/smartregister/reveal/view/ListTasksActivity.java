@@ -132,7 +132,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     }
 
-    private void closeStructureCardView() {
+    @Override
+    public void closeStructureCardView() {
         setViewVisibility(structureInfoCardView, false);
     }
 
@@ -212,7 +213,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         int screenHeightPixels = getResources().getDisplayMetrics().heightPixels
-                - getResources().getDimensionPixelSize(R.dimen.drawer_margin_vertical);
+                - getResources().getDimensionPixelSize(R.dimen.drawer_separator_margin);
         headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, screenHeightPixels));
 
         try {
@@ -224,7 +225,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         String buildDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 .format(new Date(AllConstants.BUILD_TIMESTAMP));
-        ((TextView) headerView.findViewById(R.id.application_updated)).setText(buildDate);
+        ((TextView) headerView.findViewById(R.id.application_updated)).setText(getString(R.string.app_updated, buildDate));
 
         campaignTextView = headerView.findViewById(R.id.campaign_selector);
         operationalAreaTextView = headerView.findViewById(R.id.operational_area_selector);
@@ -333,8 +334,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void displayNotification(int title, int message) {
-        new AlertDialog.Builder(this).setMessage(message).setTitle(title).setPositiveButton(R.string.ok, null).show();
+    public void displayNotification(int title, int message, Object... formatArgs) {
+        if (formatArgs.length == 0)
+            new AlertDialog.Builder(this).setMessage(message).setTitle(title).setPositiveButton(R.string.ok, null).show();
+        else
+            new AlertDialog.Builder(this).setMessage(getString(message, formatArgs)).setTitle(title).setPositiveButton(R.string.ok, null).show();
     }
 
     @Override
@@ -376,6 +380,17 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void displaySelectedFeature(Feature feature) {
         if (selectedGeoJsonSource != null) {
             selectedGeoJsonSource.setGeoJson(FeatureCollection.fromFeature(feature));
+        }
+    }
+
+    @Override
+    public void clearSelectedFeature() {
+        if (selectedGeoJsonSource != null) {
+            try {
+                selectedGeoJsonSource.setGeoJson(new com.cocoahero.android.geojson.FeatureCollection().toJSON().toString());
+            } catch (JSONException e) {
+                Log.e(TAG, "Error clearing selected feature");
+            }
         }
     }
 

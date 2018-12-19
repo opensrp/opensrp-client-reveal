@@ -22,12 +22,13 @@
     <string name="campaign">Campaign</string>
     <string name="operational_area">Operational Area</string>
 
-    <string name="app_version">Version: %1$s</string>
+    <string name="app_version">Version %1$s</string>
+    <string name="app_updated">Updated %1$s</string>
     <string name="district">District:</string>
     <string name="facility">Facility:</string>
     <string name="operator">Spray Operator:</string>
 
-    <string name="fetch_structures_failed_message">Failed to load structures for current selected Campaign and Operational Area</string>
+    <string name="fetch_location_and_structures_failed">This operational area has not been defined in the system. Please try to sync your device. Please contact the system administrator if that doesn\'t solve the issue noting the operational area number %1$s.</string>
     <string name="fetch_structures_title">Loading failed</string>
     <string name="fetching_structures_title">Fetching Structures</string>
     <string name="fetching_structures_message">Fetching Structures for Selected Operational Area and Campaign</string>
@@ -60,5 +61,6 @@
     <string name="details_sprayed">Sprayable, sprayed</string>
     <string name="details_not_sprayed">Sprayable, not sprayed</string>
     <string name="details_not_sprayable">Not Sprayable</string>
+    <string name="no_structures_found">There are no structures mapped to this operational area. Please add a point to begin</string>
 
 </resources>

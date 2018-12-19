@@ -16,6 +16,8 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Task.TaskStatus;
@@ -277,8 +279,21 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             featureCollection = FeatureCollection.fromJson(structuresGeoJson.toString());
             listTaskView.setGeoJsonSource(featureCollection, operationalAreaGeometry);
             operationalArea = operationalAreaGeometry;
-        } else
-            listTaskView.displayNotification(R.string.fetching_structures_title, R.string.fetch_structures_failed_message);
+            if (Utils.isEmptyCollection(featureCollection.features())) {
+                listTaskView.displayNotification(R.string.fetching_structures_title, R.string.no_structures_found);
+            }
+        } else {
+            listTaskView.displayNotification(R.string.fetching_structures_title,
+                    R.string.fetch_location_and_structures_failed, prefsUtil.getCurrentOperationalArea());
+            try {
+                structuresGeoJson.put(FEATURES, new JSONArray());
+                listTaskView.setGeoJsonSource(FeatureCollection.fromJson(structuresGeoJson.toString()), operationalAreaGeometry);
+                listTaskView.clearSelectedFeature();
+                listTaskView.closeStructureCardView();
+            } catch (JSONException e) {
+                Log.e(TAG, "error resetting structures");
+            }
+        }
     }
 
     private void unlockDrawerLayout() {

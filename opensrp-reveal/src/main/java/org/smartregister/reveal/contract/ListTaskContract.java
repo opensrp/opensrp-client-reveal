@@ -30,6 +30,8 @@ public interface ListTaskContract {
 
         Context getContext();
 
+        void closeStructureCardView();
+
         void showOperationalAreaSelector(Pair<String, ArrayList<String>> locationHierarchy);
 
         void setCampaign(String campaign);
@@ -50,7 +52,7 @@ public interface ListTaskContract {
 
         void unlockNavigationDrawer();
 
-        void displayNotification(int title, @StringRes int message);
+        void displayNotification(int title, @StringRes int message,Object... formatArgs);
 
         void displayNotification(String message);
 
@@ -60,7 +62,9 @@ public interface ListTaskContract {
 
         void displaySelectedFeature(Feature feature);
 
-        void displayToast(int zoom_in_to_select);
+        void clearSelectedFeature();
+
+        void displayToast(@StringRes int resourceId);
     }
 
     interface PresenterCallBack {

@@ -40,9 +40,7 @@ import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
-import org.smartregister.util.Utils;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -207,11 +205,9 @@ public class ListTaskInteractor {
                                 structure.getProperties().setCustomProperties(taskProperties);
                             }
                         }
-                        if (!Utils.isEmptyCollection(structures)) {
-                            featureCollection.put(FEATURES, new JSONArray(gson.toJson(structures)));
-                            Geometry.fromJson(gson.toJson(operationalAreaLocation.getGeometry()));
-                            Log.d(TAG, "features:" + featureCollection.toString());
-                        }
+                        featureCollection.put(FEATURES, new JSONArray(gson.toJson(structures)));
+                        Log.d(TAG, "features:" + featureCollection.toString());
+
                     }
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage(), e);
