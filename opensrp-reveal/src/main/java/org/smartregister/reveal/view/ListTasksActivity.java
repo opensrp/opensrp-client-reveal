@@ -212,7 +212,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         int screenHeightPixels = getResources().getDisplayMetrics().heightPixels
-                - getResources().getDimensionPixelSize(R.dimen.drawer_margin_vertical);
+                - getResources().getDimensionPixelSize(R.dimen.drawer_separator_margin);
         headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, screenHeightPixels));
 
         try {
@@ -224,7 +224,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         String buildDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 .format(new Date(AllConstants.BUILD_TIMESTAMP));
-        ((TextView) headerView.findViewById(R.id.application_updated)).setText(buildDate);
+        ((TextView) headerView.findViewById(R.id.application_updated)).setText(getString(R.string.app_updated, buildDate));
 
         campaignTextView = headerView.findViewById(R.id.campaign_selector);
         operationalAreaTextView = headerView.findViewById(R.id.operational_area_selector);
