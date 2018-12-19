@@ -135,11 +135,12 @@
             "text": "Other"
           }
         ],
-        "value": "no_one_missed",
+        "value": "No one home/Missed",
         "relevance": {
-          "step1:sprayStatus": {
-            "type": "string",
-            "ex": "equalTo(., \"Not Sprayed\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -175,9 +176,10 @@
           "err": "Please specify Head of Household name"
         },
         "relevance": {
-          "step1:sprayStatus": {
-            "type": "string",
-            "ex": "regex(., \"Sprayed|Not Sprayed\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -190,23 +192,24 @@
         "label": "Sex of Household Head",
         "options": [
           {
-            "key": "male",
+            "key": "Male",
             "text": "Male"
           },
           {
-            "key": "female",
+            "key": "Female",
             "text": "Female"
           },
           {
-            "key": "not_applicable",
+            "key": "Not Applicable",
             "text": "Not Applicable"
           }
         ],
-        "value": "male",
+        "value": "Male",
         "relevance": {
-          "step1:sprayStatus": {
-            "type": "string",
-            "ex": "regex(., \"Sprayed|Not Sprayed\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -227,9 +230,10 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "step1:sprayStatus": {
-            "type": "string",
-            "ex": "regex(., \"Sprayed|Not Sprayed\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -250,9 +254,10 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "step1:sprayStatus": {
-            "type": "string",
-            "ex": "regex(., \"Sprayed\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -273,9 +278,10 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "step1:sprayStatus": {
-            "type": "string",
-            "ex": "regex(., \"Sprayed|Not Sprayed\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -288,19 +294,20 @@
         "label": "Is this a mop-up activity?",
         "options": [
           {
-            "key": "yes",
+            "key": "Yes",
             "text": "Yes"
           },
           {
-            "key": "no",
+            "key": "No",
             "text": "No"
           }
         ],
-        "value": "no",
+        "value": "No",
         "relevance": {
-          "step1:sprayStatus": {
-            "type": "string",
-            "ex": "regex(., \"Sprayed|Not Sprayed\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "spray-relevance-rules.yml"
+            }
           }
         }
       }
