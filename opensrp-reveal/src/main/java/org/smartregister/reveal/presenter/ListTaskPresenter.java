@@ -56,6 +56,7 @@ import static org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FOR
 import static org.smartregister.reveal.util.Constants.JsonForm.NON_RESIDENTIAL;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
+import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
@@ -480,6 +481,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         try {
             JSONObject formJson = new JSONObject(formString);
             formJson.put(OPERATIONAL_AREA_TAG, operationalArea.toJson());
+            formJson.put(STRUCTURES_TAG, featureCollection.toJson());
             listTaskView.startJsonForm(formJson);
         } catch (Exception e) {
             Log.e(TAG, "error launching add structure form", e);

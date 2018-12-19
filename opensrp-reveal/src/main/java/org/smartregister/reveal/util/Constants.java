@@ -102,6 +102,8 @@ public interface Constants {
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 
+        String STRUCTURES_TAG = "structures";
+
         String NO_PADDING = "no_padding";
 
     }
