@@ -83,11 +83,11 @@
         "options": [
           {
             "key": "Sprayed",
-            "text": "Sprayable,Sprayed"
+            "text": "Sprayable, Sprayed"
           },
           {
             "key": "Not Sprayed",
-            "text": "Sprayable,Not Sprayed"
+            "text": "Sprayable, Not Sprayed"
           },
           {
             "key": "Not Sprayable",
@@ -282,7 +282,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Is a mop-up activity",
+        "label": "Is this a mop-up activity?",
         "options": [
           {
             "key": "yes",
