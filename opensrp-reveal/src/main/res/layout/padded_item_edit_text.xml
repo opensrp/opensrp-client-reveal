@@ -15,6 +15,7 @@
         android:layout_marginRight="12dp"
         android:layout_toStartOf="@+id/material_edit_text_edit_button"
         android:layout_toLeftOf="@+id/material_edit_text_edit_button"
+        android:gravity="left"
         android:textSize="@dimen/default_text_size"
         app:met_floatingLabel="highlight"
         app:met_floatingLabelText=""

@@ -18,6 +18,7 @@ import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.rey.material.util.ViewUtil;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
@@ -26,6 +27,7 @@ import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
 import com.vijay.jsonwizard.interfaces.JsonApi;
 import com.vijay.jsonwizard.interfaces.LifeCycleListener;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
+import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 
 
 /**
@@ -72,20 +75,36 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         View rootLayout = LayoutInflater.from(context)
                 .inflate(R.layout.item_geowidget, null);
         rootLayout.setId(canvasId);
+        String operationalArea = null;
+        String featureCollection = null;
 
-        String operationalArea = new JSONObject(formFragment.getCurrentJsonState()).optString(OPERATIONAL_AREA_TAG);
+        try {
+            operationalArea = new JSONObject(formFragment.getCurrentJsonState()).optString(OPERATIONAL_AREA_TAG);
+            featureCollection = new JSONObject(formFragment.getCurrentJsonState()).optString(STRUCTURES_TAG);
+        } catch (JSONException e) {
+            Log.e(TAG, "error extracting geojson form jsonform", e);
+        }
 
         mapView = rootLayout.findViewById(R.id.geoWidgetMapView);
         mapView.onCreate(null);
+        mapView.setStyleUrl(context.getString(R.string.reveal_satellite_style));
 
+        String finalOperationalArea = operationalArea;
+        String finalFeatureCollection = featureCollection;
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
 
-                if (operationalArea != null) {
-                    mapboxMap.setCameraPosition(mapboxMap.getCameraForGeometry(Geometry.fromJson(operationalArea)));
+                if (finalOperationalArea != null) {
+                    mapboxMap.setCameraPosition(mapboxMap.getCameraForGeometry(Geometry.fromJson(finalOperationalArea)));
                 } else {
                     mapView.focusOnUserLocation(true);
+                }
+
+                GeoJsonSource geoJsonSource = mapboxMap.getSourceAs(context.getString(R.string.reveal_datasource_name));
+
+                if (geoJsonSource != null && StringUtils.isNotBlank(finalFeatureCollection)) {
+                    geoJsonSource.setGeoJson(finalFeatureCollection);
                 }
 
                 writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom);

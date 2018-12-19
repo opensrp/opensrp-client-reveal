@@ -58,9 +58,10 @@
     <string name="zoom_in_to_select">Zoom in to select a structure</string>
 
 
-    <string name="details_sprayed">Sprayable, sprayed</string>
-    <string name="details_not_sprayed">Sprayable, not sprayed</string>
+    <string name="details_sprayed">Sprayable, Sprayed</string>
+    <string name="details_not_sprayed">Sprayable, Not Sprayed</string>
     <string name="details_not_sprayable">Not Sprayable</string>
     <string name="no_structures_found">There are no structures mapped to this operational area. Please add a point to begin</string>
+    <string name="change_spray_status">Change Spray Status</string>
 
 </resources>
