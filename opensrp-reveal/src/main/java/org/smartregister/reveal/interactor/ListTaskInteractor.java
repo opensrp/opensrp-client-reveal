@@ -355,7 +355,7 @@ public class ListTaskInteractor {
                             taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
                             taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
                             structure.getProperties().setCustomProperties(taskProperties);
-                            presenterCallBack.onStructureAdded(Feature.fromJson(gson.toJson(structure)));
+                            presenterCallBack.onStructureAdded(Feature.fromJson(gson.toJson(structure)), featureCoordinates);
                         }
                     });
                 } catch (JSONException e) {

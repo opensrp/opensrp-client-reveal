@@ -98,6 +98,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     private Feature selectedFeature;
 
+    private LatLng clickedPoint;
+
 
     public ListTaskPresenter(ListTaskView listTaskView) {
         this.listTaskView = listTaskView;
@@ -325,6 +327,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             listTaskView.displayToast(R.string.zoom_in_to_select);
             return;
         }
+        clickedPoint = point;
         final PointF pixel = mapboxMap.getProjection().toScreenLocation(point);
         Context context = listTaskView.getContext();
         List<Feature> features = mapboxMap.queryRenderedFeatures(pixel,
@@ -352,7 +355,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     private void onFeatureSelected(Feature feature) {
         selectedFeature = feature;
-        listTaskView.displaySelectedFeature(feature);
+        listTaskView.displaySelectedFeature(feature, clickedPoint);
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, feature.id()));
         } else {
@@ -461,11 +464,18 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
 
     @Override
-    public void onStructureAdded(Feature feature) {
+    public void onStructureAdded(Feature feature, JSONArray featureCoordinates) {
         listTaskView.hideProgressDialog();
         featureCollection.features().add(feature);
         listTaskView.setGeoJsonSource(featureCollection, null);
-        listTaskView.displaySelectedFeature(feature);
+        try {
+            clickedPoint = new LatLng(featureCoordinates.getDouble(1), featureCoordinates.getDouble(0));
+            listTaskView.displaySelectedFeature(feature, clickedPoint);
+
+        } catch (JSONException e) {
+            Log.e(TAG, "error extracting coordinates of added structure", e);
+        }
+
     }
 
     @Override

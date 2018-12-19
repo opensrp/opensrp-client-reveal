@@ -24,6 +24,8 @@ public interface Constants {
 
     double MY_LOCATION_ZOOM_LEVEL = 17.5;
 
+    int ANIMATE_TO_LOCATION_DURATION = 1000;
+
     interface CONFIGURATION {
         String LOGIN = "login";
     }
