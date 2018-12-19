@@ -9,6 +9,7 @@ import org.smartregister.domain.db.Client;
 import org.smartregister.domain.db.Event;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.jsonmapping.ClientClassification;
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.sync.ClientProcessorForJava;
@@ -42,7 +43,11 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     }
 
     @Override
-    public void processClient(List<EventClient> eventClients) {
+    public synchronized void processClient(List<EventClient> eventClientList) {
+        processClient(eventClientList, false);
+    }
+
+    public void processClient(List<EventClient> eventClients, boolean localEvents) {
 
         ClientClassification clientClassification = assetJsonToJava("ec_client_classification.json", ClientClassification.class);
 
@@ -60,7 +65,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 if (eventType == null) {
                     continue;
                 } else if (eventType.equals(SPRAY_EVENT)) {
-                    processSprayEvent(event, clientClassification);
+                    processSprayEvent(event, clientClassification, localEvents);
                 }
 
                 Client client = eventClient.getClient();
@@ -78,13 +83,16 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
     }
 
-    private void processSprayEvent(Event event, ClientClassification clientClassification) {
+    private void processSprayEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
             String taskIdentifier = event.getDetails().get(TASK_IDENTIFIER);
             Task task = RevealApplication.getInstance().getTaskRepository().getTaskByIdentifier(taskIdentifier);
             if (task != null) {
                 task.setBusinessStatus(calculateBusinessStatus(event));
                 task.setStatus(Task.TaskStatus.COMPLETED);
+                if (localEvents) {
+                    task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                }
                 RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
             }
             Location structure = RevealApplication.getInstance().getStructureRepository().getLocationById(event.getBaseEntityId());
