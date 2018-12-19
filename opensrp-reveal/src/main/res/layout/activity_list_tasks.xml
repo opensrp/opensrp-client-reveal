@@ -17,9 +17,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:mapbox_styleUrl="@string/mapbox_style_satellite_streets"
+            app:mapbox_uiAttributionGravity="right|end|bottom"
             app:mapbox_uiLogoGravity="right|bottom"
-            app:mapbox_uiLogoMarginRight="30dp"
-            app:mapbox_uiAttributionGravity="right|end|bottom"/>
+            app:mapbox_uiLogoMarginRight="30dp" />
 
         <ImageButton
             android:id="@+id/drawerMenu"
@@ -34,116 +34,116 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="bottom|left">
+            android:layout_gravity="bottom|left"
+            android:orientation="vertical">
 
             <ImageButton
+                android:id="@+id/btn_add_structure"
                 android:layout_width="@dimen/my_location_button_dimen"
                 android:layout_height="@dimen/my_location_button_dimen"
                 android:layout_margin="@dimen/my_location_btn_margin"
-                android:id="@+id/btn_add_structure"
                 android:background="@drawable/circle_button_black_border"
-                android:src="@drawable/ic_add"
                 android:padding="10dp"
+                android:src="@drawable/ic_add"
                 android:textColor="@color/white" />
-            <android.support.v7.widget.CardView
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/structure_info_card_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/structure_info_card_height"
-                card_view:cardCornerRadius="10dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginBottom="5dp"
                 android:layout_marginRight="10dp"
-                android:visibility="gone">
+                android:layout_marginBottom="5dp"
+                android:visibility="gone"
+                card_view:cardCornerRadius="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <ImageButton
+                        android:id="@+id/btn_collapse_structure_card_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_keyboard_arrow_down"
-                        android:id="@+id/btn_collapse_structure_card_view"
                         android:background="@color/white"
-                        android:layout_marginTop="10dp"/>
+                        android:src="@drawable/ic_keyboard_arrow_down" />
 
                     <TextView
                         android:id="@+id/spray_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Sprayable, not sprayed"
+                        android:layout_marginLeft="25dp"
                         android:textAllCaps="false"
                         android:textColor="#EE0427"
-                        android:layout_marginLeft="25dp"
-                        android:textSize="@dimen/structure_info_card_text_size"/>
+                        android:textSize="@dimen/structure_info_card_text_size" />
+
                     <TextView
                         android:id="@+id/reason"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="People were not home. They travelled home for xmas."
-                        android:textAllCaps="false"
-                        android:textColor="#6C6C6C"
                         android:layout_marginLeft="25dp"
                         android:layout_marginRight="5dp"
+                        android:textAllCaps="false"
+                        android:textColor="#6C6C6C"
                         android:textSize="@dimen/structure_info_card_text_size"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
+
                     <TextView
                         android:id="@+id/property_type"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_black"
-                        android:textSize="@dimen/structure_info_card_text_size"
                         android:layout_marginLeft="15dp"
                         android:layout_marginTop="5dp"
-                        android:text="Single family home"
                         android:drawableLeft="@drawable/ic_outline_home"
-                        android:gravity="center_vertical"/>
+                        android:gravity="center_vertical"
+                        android:textColor="@color/text_black"
+                        android:textSize="@dimen/structure_info_card_text_size" />
+
                     <TextView
                         android:id="@+id/spray_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:drawableLeft="@drawable/ic_outline_calendar"
+                        android:gravity="center_vertical"
                         android:textAllCaps="false"
                         android:textColor="@color/text_black"
-                        android:layout_marginLeft="15dp"
-                        android:textSize="@dimen/structure_info_card_text_size"
-                        android:text="31 Mar 2018"
-                        android:drawableLeft="@drawable/ic_outline_calendar"
-                        android:gravity="center_vertical"/>
+                        android:textSize="@dimen/structure_info_card_text_size" />
+
                     <TextView
                         android:id="@+id/user_id"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_black"
-                        android:textSize="@dimen/structure_info_card_text_size"
                         android:layout_marginLeft="15dp"
-                        android:text="C_Appl"
                         android:drawableLeft="@drawable/ic_outline_account_circle"
-                        android:gravity="center_vertical"/>
+                        android:gravity="center_vertical"
+                        android:textColor="@color/text_black"
+                        android:textSize="@dimen/structure_info_card_text_size" />
+
                     <TextView
                         android:id="@+id/family_head"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_black"
-                        android:textSize="@dimen/structure_info_card_text_size"
                         android:layout_marginLeft="15dp"
-                        android:text="Craig Appl"
                         android:drawableLeft="@drawable/ic_outline_admin"
-                        android:gravity="center_vertical"/>
+                        android:gravity="center_vertical"
+                        android:textColor="@color/text_black"
+                        android:textSize="@dimen/structure_info_card_text_size" />
                 </LinearLayout>
+
                 <Button
                     android:id="@+id/change_spray_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/change_spray_status"
-                    android:textColor="#1892D4"
-                    android:textSize="@dimen/structure_info_card_text_size"
+                    android:layout_gravity="center|bottom"
                     android:layout_marginTop="5dp"
                     android:layout_marginBottom="@dimen/change_spray_status_btn_bottom_margin"
                     android:background="@drawable/rounded_blue_outline"
-                    android:layout_gravity="center|bottom"
-                    android:textAllCaps="false"/>
+                    android:text="@string/change_spray_status"
+                    android:textAllCaps="false"
+                    android:textColor="#1892D4"
+                    android:textSize="@dimen/structure_info_card_text_size" />
             </android.support.v7.widget.CardView>
 
         </LinearLayout>
