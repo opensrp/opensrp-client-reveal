@@ -138,7 +138,7 @@ public class ListTaskInteractor {
     }
 
     public void fetchCardViewDetails(String structureId) {
-        final String sql = "SELECT spray_status, not_sprayed_other_reason, property_type, spray_date," +
+        final String sql = "SELECT spray_status, not_sprayed_reason, not_sprayed_other_reason, property_type, spray_date," +
                 " spray_operator, family_head_name FROM sprayed_structures WHERE id=?";
         SQLiteDatabase db = RevealApplication.getInstance().getRepository().getWritableDatabase();
         Cursor cursor = db.rawQuery(sql, new String[]{structureId});
@@ -171,13 +171,17 @@ public class ListTaskInteractor {
     }
 
     private CardDetails createCardDetails(Cursor cursor) {
+        String reason = cursor.getString(cursor.getColumnIndex("not_sprayed_reason"));
+        if ("other".equals(reason)) {
+            reason = cursor.getString(cursor.getColumnIndex("not_sprayed_other_reason"));
+        }
         return new CardDetails(
                 cursor.getString(cursor.getColumnIndex("spray_status")),
                 cursor.getString(cursor.getColumnIndex("property_type")),
                 cursor.getString(cursor.getColumnIndex("spray_date")),
                 cursor.getString(cursor.getColumnIndex("spray_operator")),
                 cursor.getString(cursor.getColumnIndex("family_head_name")),
-                cursor.getString(cursor.getColumnIndex("not_sprayed_other_reason"))
+                reason
         );
     }
 

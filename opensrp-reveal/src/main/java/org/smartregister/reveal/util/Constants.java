@@ -86,9 +86,9 @@ public interface Constants {
 
         String ENCOUNTER_TYPE = "encounter_type";
 
-        String RESIDENTIAL = "residential";
+        String RESIDENTIAL = "Residential Structure";
 
-        String NON_RESIDENTIAL = "non_residential";
+        String NON_RESIDENTIAL = "Non-Residential Structure";
 
         String SPRAY_STATUS = "sprayStatus";
 
