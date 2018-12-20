@@ -25,6 +25,7 @@ import org.smartregister.domain.Task;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.tag.FormTag;
 import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
@@ -284,7 +285,7 @@ public class ListTaskInteractor {
             public void run() {
                 try {
                     org.smartregister.domain.db.Event event = saveEvent(jsonForm);
-                    clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)));
+                    clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override
                         public void run() {
@@ -329,6 +330,7 @@ public class ListTaskInteractor {
                     properties.setStatus(LocationProperty.PropertyStatus.PENDING_REVIEW);
                     properties.setUid(UUID.randomUUID().toString());
                     structure.setProperties(properties);
+                    structure.setSyncStatus(BaseRepository.TYPE_Created);
                     structureRepository.addOrUpdate(structure);
 
                     Task task = new Task();
@@ -346,6 +348,7 @@ public class ListTaskInteractor {
                     task.setAuthoredOn(new DateTime());
                     task.setLastModified(new DateTime());
                     task.setOwner(event.getProviderId());
+                    task.setSyncStatus(BaseRepository.TYPE_Created);
                     taskRepository.addOrUpdate(task);
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override
