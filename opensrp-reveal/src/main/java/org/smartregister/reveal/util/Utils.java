@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
 
+import org.smartregister.domain.Location;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -75,4 +76,9 @@ public class Utils {
         RevealCampaignServiceJob.scheduleJobImmediately(RevealCampaignServiceJob.TAG);
     }
 
+
+    public static String getCurrentOperationalAreaId() {
+        Location operationalAreaLocation = RevealApplication.getInstance().getLocationRepository().getLocationByName(PreferencesUtil.getInstance().getCurrentOperationalArea());
+        return operationalAreaLocation == null ? null : operationalAreaLocation.getId();
+    }
 }

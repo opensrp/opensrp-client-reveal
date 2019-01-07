@@ -1,6 +1,8 @@
 package org.smartregister.reveal.sync;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.smartregister.domain.Location;
@@ -12,10 +14,12 @@ import org.smartregister.domain.jsonmapping.ClientClassification;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants.JsonForm;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.ClientProcessorForJava;
 
 import java.util.List;
 
+import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCHED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
@@ -54,6 +58,8 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         if (clientClassification == null) {
             return;
         }
+        String operationalAreaLocationId = Utils.getCurrentOperationalAreaId();
+        boolean hasSynchedEventsInTarget = false;
 
         if (!eventClients.isEmpty()) {
             for (EventClient eventClient : eventClients) {
@@ -66,8 +72,11 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     continue;
                 } else if (eventType.equals(SPRAY_EVENT)) {
                     processSprayEvent(event, clientClassification, localEvents);
+                    if (event.getDetails() != null && operationalAreaLocationId != null &&
+                            operationalAreaLocationId.equals(event.getDetails().get(TASK_IDENTIFIER))) {
+                        hasSynchedEventsInTarget = true;
+                    }
                 }
-
                 Client client = eventClient.getClient();
                 //iterate through the events
                 if (client != null) {
@@ -79,6 +88,11 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
                 }
             }
+        }
+
+        if (hasSynchedEventsInTarget) {
+            Intent intent = new Intent(STRUCTURE_TASK_SYNCHED);
+            LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
         }
 
     }
