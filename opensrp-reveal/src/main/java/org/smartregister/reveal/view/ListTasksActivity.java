@@ -1,15 +1,18 @@
 package org.smartregister.reveal.view;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -48,6 +51,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
+import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -96,6 +100,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private TextView tvSprayOperator;
     private TextView tvFamilyHead;
     private TextView tvReason;
+
+    private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -502,11 +508,22 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void onResume() {
         super.onResume();
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
+        IntentFilter filter = new IntentFilter(Action.STRUCTURE_TASK_SYNCHED);
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(refreshGeowidgetReceiver, filter);
     }
 
     @Override
     public void onPause() {
         SyncStatusBroadcastReceiver.getInstance().removeSyncStatusListener(this);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(refreshGeowidgetReceiver);
         super.onPause();
+    }
+
+
+    private class RefreshGeowidgetReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            listTaskPresenter.refreshStructures();
+        }
     }
 }

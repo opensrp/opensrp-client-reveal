@@ -116,5 +116,9 @@ public interface Constants {
         String CARD_VIEW_DATE_FORMAT = "dd MMM yyyy";
     }
 
+    interface Action {
+        String STRUCTURE_TASK_SYNCHED = "reveal.STRUCTURE_TASK_SYNCHED";
+    }
+
 
 }
