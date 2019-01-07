@@ -40,10 +40,10 @@ import com.vijay.jsonwizard.customviews.TreeViewDialog;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.AllConstants;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.BaseMapActivity;
 import org.smartregister.reveal.activity.RevealJsonForm;
@@ -239,7 +239,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         }
 
         String buildDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                .format(new Date(AllConstants.BUILD_TIMESTAMP));
+                .format(new Date(BuildConfig.BUILD_TIMESTAMP));
         ((TextView) headerView.findViewById(R.id.application_updated)).setText(getString(R.string.app_updated, buildDate));
 
         campaignTextView = headerView.findViewById(R.id.campaign_selector);
