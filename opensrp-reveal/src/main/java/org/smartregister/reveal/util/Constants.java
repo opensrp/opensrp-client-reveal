@@ -111,10 +111,12 @@ public interface Constants {
     }
 
     interface DateFormat {
-        String EVENT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+
+        String EVENT_DATE_FORMAT_Z = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+
+        String EVENT_DATE_FORMAT_XXX = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
         String CARD_VIEW_DATE_FORMAT = "dd MMM yyyy";
     }
-
 
 }
