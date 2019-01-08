@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -385,9 +386,18 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void displaySelectedFeature(Feature feature, LatLng point) {
+        adjustFocusPoint(point);
         kujakuMapView.centerMap(point, ANIMATE_TO_LOCATION_DURATION, mMapboxMap.getCameraPosition().zoom);
         if (selectedGeoJsonSource != null) {
             selectedGeoJsonSource.setGeoJson(FeatureCollection.fromFeature(feature));
+        }
+    }
+
+    private void adjustFocusPoint(LatLng point) {
+        final double VERTICAL_OFFSET = -0.0003;
+        int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+        if (screenSize == Configuration.SCREENLAYOUT_SIZE_NORMAL || screenSize == Configuration.SCREENLAYOUT_SIZE_SMALL) {
+           point.setLatitude(point.getLatitude() + VERTICAL_OFFSET);
         }
     }
 

@@ -379,8 +379,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     }
 
     private void formatCardDetails(CardDetails cardDetails) {
-        // format date
         try {
+            // format date
             DateFormat sdf = new SimpleDateFormat(EVENT_DATE_FORMAT, Locale.getDefault());
             Date originalDate = sdf.parse(cardDetails.getSprayDate());
 
