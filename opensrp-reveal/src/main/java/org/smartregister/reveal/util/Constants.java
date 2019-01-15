@@ -22,7 +22,9 @@ public interface Constants {
 
     String STRUCTURE = "Structure";
 
-    double MY_LOCATION_ZOOM_LEVEL = 17.5;
+    double MY_LOCATION_ZOOM_LEVEL = 17.5; // modifying this will also necessitate modifying the VERTICAL_OFFSET
+
+    double VERTICAL_OFFSET = -0.0003;
 
     int ANIMATE_TO_LOCATION_DURATION = 1000;
 

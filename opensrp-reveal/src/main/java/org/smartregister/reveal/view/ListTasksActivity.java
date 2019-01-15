@@ -60,6 +60,7 @@ import java.util.Locale;
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
+import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -394,7 +395,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     private void adjustFocusPoint(LatLng point) {
-        final double VERTICAL_OFFSET = -0.0003;
         int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
         if (screenSize == Configuration.SCREENLAYOUT_SIZE_NORMAL || screenSize == Configuration.SCREENLAYOUT_SIZE_SMALL) {
            point.setLatitude(point.getLatitude() + VERTICAL_OFFSET);
