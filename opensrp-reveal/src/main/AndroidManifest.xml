@@ -21,6 +21,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="3f94f9c3caeff331b3a2bd8c2182b663ad6a955a" />
         <activity
             android:name="org.smartregister.reveal.activity.LoginActivity"
             android:screenOrientation="portrait"
