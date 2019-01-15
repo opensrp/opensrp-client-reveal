@@ -65,127 +65,120 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sync_button" />
 
-
-    <TextView
-        android:id="@+id/campaign_label"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/drawer_margin"
-        android:layout_marginTop="@dimen/drawer_separator_margin"
-        android:text="@string/campaign"
-        android:textColor="@color/text_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_weight="1"
-        app:layout_constraintTop_toBottomOf="@id/header_separator" />
-
-
-    <TextView
-        android:id="@+id/campaign_selector"
-        android:layout_width="@dimen/drawer_spinner_width"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/drawer_margin"
-        android:layout_marginTop="@dimen/drawer_margin_vertical"
-        android:background="@drawable/nav_border_bg"
-        android:drawableEnd="@drawable/ic_keyboard_arrow_down_small"
-        android:drawablePadding="@dimen/drawer_drawable_padding"
-        android:gravity="center_vertical"
-        android:padding="10dp"
-        android:textColor="@color/text_black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_weight="1"
-        app:layout_constraintTop_toBottomOf="@id/campaign_label" />
-
-    <TextView
-        android:id="@+id/operational_area_label"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/drawer_margin"
-        android:layout_marginTop="@dimen/drawer_separator_margin"
-        android:text="@string/operational_area"
-        android:textColor="@color/text_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_weight="1"
-        app:layout_constraintTop_toBottomOf="@id/campaign_selector" />
-
-
-    <TextView
-        android:id="@+id/operational_area_selector"
-        android:layout_width="@dimen/drawer_spinner_width"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/drawer_margin"
-        android:layout_marginTop="@dimen/drawer_margin_vertical"
-        android:background="@drawable/nav_border_bg"
-        android:drawableEnd="@drawable/ic_keyboard_arrow_down_small"
-        android:drawablePadding="@dimen/drawer_drawable_padding"
-        android:gravity="center_vertical"
-        android:padding="10dp"
-        android:textColor="@color/text_black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_weight="1"
-        app:layout_constraintTop_toBottomOf="@id/operational_area_label" />
-
-
-    <TextView
-        android:id="@+id/district_label"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/drawer_margin"
-        android:layout_marginTop="@dimen/drawer_separator_margin"
-        android:text="@string/district"
-        android:textColor="@color/text_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_weight="1"
-        app:layout_constraintTop_toBottomOf="@id/operational_area_selector" />
-
-
-    <TextView
-        android:id="@+id/facility_label"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/drawer_margin"
-        android:layout_marginTop="@dimen/drawer_margin_vertical"
-        android:text="@string/facility"
-        android:textColor="@color/text_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/district_label"
-        app:layout_constraintVertical_weight="1" />
-
-
-    <TextView
-        android:id="@+id/operator_label"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginStart="@dimen/drawer_margin"
-        android:layout_marginBottom="@dimen/drawer_margin_vertical"
-        android:text="Operator: "
-        android:textColor="@color/text_gray"
-        app:layout_constraintBottom_toTopOf="@id/logout_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_weight="1"
-        app:layout_constraintStart_toStartOf="parent" />
-
-
-    <TextView
-        android:id="@+id/logout_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginStart="@dimen/drawer_margin"
-        android:layout_marginTop="@dimen/drawer_margin_vertical"
-        android:text="@string/logout_text"
-        android:textColor="@color/button_blue"
-        android:textSize="18sp"
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_weight="1"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_separator"
+        app:layout_constraintVertical_weight="5">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/pnc_circle_red"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/campaign_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/drawer_margin"
+                android:layout_marginTop="@dimen/drawer_separator_margin"
+                android:layout_weight="1"
+                android:text="@string/campaign"
+                android:textColor="@color/text_gray" />
 
 
+            <TextView
+                android:id="@+id/campaign_selector"
+                android:layout_width="@dimen/drawer_spinner_width"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/drawer_margin"
+                android:layout_marginTop="@dimen/drawer_margin_vertical"
+                android:layout_weight="1"
+                android:background="@drawable/nav_border_bg"
+                android:drawableEnd="@drawable/ic_keyboard_arrow_down_small"
+                android:drawablePadding="@dimen/drawer_drawable_padding"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:textColor="@color/text_black" />
+
+            <TextView
+                android:id="@+id/operational_area_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/drawer_margin"
+                android:layout_marginTop="@dimen/drawer_separator_margin"
+                android:layout_weight="1"
+                android:text="@string/operational_area"
+                android:textColor="@color/text_gray" />
+
+
+            <TextView
+                android:id="@+id/operational_area_selector"
+                android:layout_width="@dimen/drawer_spinner_width"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/drawer_margin"
+                android:layout_marginTop="@dimen/drawer_margin_vertical"
+                android:layout_weight="1"
+                android:background="@drawable/nav_border_bg"
+                android:drawableEnd="@drawable/ic_keyboard_arrow_down_small"
+                android:drawablePadding="@dimen/drawer_drawable_padding"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:textColor="@color/text_black" />
+
+
+            <TextView
+                android:id="@+id/district_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/drawer_margin"
+                android:layout_marginTop="@dimen/drawer_separator_margin"
+                android:layout_weight="1"
+                android:text="@string/district"
+                android:textColor="@color/text_gray" />
+
+
+            <TextView
+                android:id="@+id/facility_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/drawer_margin"
+                android:layout_marginTop="@dimen/drawer_margin_vertical"
+                android:layout_weight="1"
+                android:text="@string/facility"
+                android:textColor="@color/text_gray" />
+
+
+            <TextView
+                android:id="@+id/operator_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="@dimen/drawer_margin"
+                android:layout_marginBottom="@dimen/drawer_margin_vertical"
+                android:layout_weight="1"
+                android:text="Operator: "
+                android:textColor="@color/text_gray" />
+
+
+            <TextView
+                android:id="@+id/logout_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="@dimen/drawer_margin"
+                android:layout_marginTop="@dimen/drawer_margin_vertical"
+                android:layout_weight="1"
+                android:text="@string/logout_text"
+                android:textColor="@color/button_blue"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>
