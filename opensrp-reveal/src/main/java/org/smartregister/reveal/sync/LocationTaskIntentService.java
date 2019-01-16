@@ -9,6 +9,8 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.job.SyncServiceJob;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.helper.LocationServiceHelper;
 import org.smartregister.sync.helper.TaskServiceHelper;
 
@@ -30,13 +32,8 @@ public class LocationTaskIntentService extends IntentService {
     }
 
     private void doSync() {
-        String operationalAreaLocationId = org.smartregister.reveal.util.Utils.getCurrentOperationalAreaId();
         LocationServiceHelper locationServiceHelper = LocationServiceHelper.getInstance();
-
-        locationServiceHelper.setTargetParentIdentifier(operationalAreaLocationId);
-
         TaskServiceHelper taskServiceHelper = TaskServiceHelper.getInstance();
-        taskServiceHelper.setTargetGroupIdentifier(operationalAreaLocationId);
 
         List<Location> syncedStructures = locationServiceHelper.fetchLocationsStructures();
         List<Task> synchedTasks = taskServiceHelper.syncTasks();
@@ -47,11 +44,33 @@ public class LocationTaskIntentService extends IntentService {
                 SyncServiceJob.scheduleJobImmediately(SyncServiceJob.TAG);
             }
         });
-        if (!syncedStructures.isEmpty() || !synchedTasks.isEmpty()) {
+
+        if (hasChangesInCurrentOperationalArea(syncedStructures, synchedTasks)) {
             Intent intent = new Intent(STRUCTURE_TASK_SYNCHED);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
         }
 
+    }
+
+    private boolean hasChangesInCurrentOperationalArea(List<Location> syncedStructures, List<Task> synchedTasks) {
+        Location operationalAreaLocation = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+        if (operationalAreaLocation == null)
+            return false;
+        if (syncedStructures != null) {
+            for (Location structure : syncedStructures) {
+                if (operationalAreaLocation.getId().equals(structure.getProperties().getParentId())) {
+                    return true;
+                }
+            }
+        }
+        if (synchedTasks != null) {
+            for (Task task : synchedTasks) {
+                if (operationalAreaLocation.getId().equals(task.getGroupIdentifier())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

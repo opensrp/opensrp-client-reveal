@@ -14,6 +14,7 @@ import org.smartregister.domain.jsonmapping.ClientClassification;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants.JsonForm;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.ClientProcessorForJava;
 
@@ -58,7 +59,8 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         if (clientClassification == null) {
             return;
         }
-        String operationalAreaLocationId = Utils.getCurrentOperationalAreaId();
+        Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+        String operationalAreaLocationId = operationalArea == null ? null : operationalArea.getId();
         boolean hasSynchedEventsInTarget = false;
 
         if (!eventClients.isEmpty()) {

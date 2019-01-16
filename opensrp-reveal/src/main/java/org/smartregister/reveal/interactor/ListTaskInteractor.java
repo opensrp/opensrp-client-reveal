@@ -39,6 +39,7 @@ import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.GeoJsonUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
@@ -192,7 +193,7 @@ public class ListTaskInteractor {
             @Override
             public void run() {
                 final JSONObject featureCollection = createFeatureCollection();
-                Location operationalAreaLocation = locationRepository.getLocationByName(operationalArea);
+                Location operationalAreaLocation = Utils.getOperationalAreaLocation(operationalArea);
                 try {
                     if (operationalAreaLocation != null) {
                         Map<String, Task> tasks = taskRepository.getTasksByCampaignAndGroup(campaign, operationalAreaLocation.getId());

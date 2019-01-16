@@ -20,6 +20,8 @@ import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.job.RevealCampaignServiceJob;
+import org.smartregister.util.Cache;
+import org.smartregister.util.CacheableData;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -30,6 +32,8 @@ public class Utils {
     public static final String DEFAULT_LOCATION_LEVEL = "Rural Health Centre";
     public static final String OPERATIONAL_AREA = "Operational Area";
     public static final String REVEAL_PROJECT = "reveal";
+
+    private static Cache<Location> cache = new Cache<>();
 
     static {
         ALLOWED_LEVELS = new ArrayList<>();
@@ -77,8 +81,12 @@ public class Utils {
     }
 
 
-    public static String getCurrentOperationalAreaId() {
-        Location operationalAreaLocation = RevealApplication.getInstance().getLocationRepository().getLocationByName(PreferencesUtil.getInstance().getCurrentOperationalArea());
-        return operationalAreaLocation == null ? null : operationalAreaLocation.getId();
+    public static Location getOperationalAreaLocation(String operationalArea) {
+        return cache.get(operationalArea, new CacheableData<Location>() {
+            @Override
+            public Location fetch() {
+                return RevealApplication.getInstance().getLocationRepository().getLocationByName(PreferencesUtil.getInstance().getCurrentOperationalArea());
+            }
+        });
     }
 }
