@@ -222,7 +222,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         int screenHeightPixels = getResources().getDisplayMetrics().heightPixels
-                - getResources().getDimensionPixelSize(R.dimen.drawer_separator_margin);
+                - getResources().getDimensionPixelSize(R.dimen.hamburger_margin);
         headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, screenHeightPixels));
 
         try {
