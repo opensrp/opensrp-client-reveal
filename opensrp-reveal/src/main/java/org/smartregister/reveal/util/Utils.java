@@ -23,8 +23,13 @@ import org.smartregister.reveal.job.RevealCampaignServiceJob;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
+
+import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
 
 public class Utils {
 
@@ -88,5 +93,15 @@ public class Utils {
                 return RevealApplication.getInstance().getLocationRepository().getLocationByName(PreferencesUtil.getInstance().getCurrentOperationalArea());
             }
         });
+    }
+
+    public static String formatDate(String date, String dateFormat) throws Exception {
+        DateFormat sdf = new SimpleDateFormat(dateFormat, Locale.getDefault());
+        Date originalDate = sdf.parse(date);
+
+        sdf = new SimpleDateFormat(CARD_VIEW_DATE_FORMAT, Locale.getDefault());
+
+        return sdf.format(originalDate);
+
     }
 }
