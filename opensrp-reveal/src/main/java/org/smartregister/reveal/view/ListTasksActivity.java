@@ -229,18 +229,18 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             @Override
             public void onGlobalLayout() {
                 headerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int availableScreenHeightPixels = getResources().getDisplayMetrics().heightPixels
+                        - getResources().getDimensionPixelSize(R.dimen.hamburger_margin);
                 //if content of hamburger menu is bigger than screen; scroll content
-                if (getResources().getDisplayMetrics().heightPixels
-                        < headerView.getHeight() + getResources().getDimensionPixelSize(R.dimen.hamburger_margin)) {
+                if (availableScreenHeightPixels < headerView.getHeight()) {
                     headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                     View operator = headerView.findViewById(R.id.operator_label);
                     ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) operator.getLayoutParams();
                     params.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
                     operator.setLayoutParams(params);
                 } else {//content of hamburger menu fits on screen; set menu height to screen height
-                    int screenHeightPixels = getResources().getDisplayMetrics().heightPixels
-                            - getResources().getDimensionPixelSize(R.dimen.hamburger_margin);
-                    headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, screenHeightPixels));
+
+                    headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, availableScreenHeightPixels));
                 }
 
             }
