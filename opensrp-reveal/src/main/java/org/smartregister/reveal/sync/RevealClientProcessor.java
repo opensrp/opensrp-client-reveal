@@ -1,5 +1,6 @@
 package org.smartregister.reveal.sync;
 
+import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.util.Log;
 
@@ -10,10 +11,12 @@ import org.smartregister.domain.db.Event;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.jsonmapping.ClientClassification;
 import org.smartregister.repository.BaseRepository;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.sync.ClientProcessorForJava;
 
+import java.security.PrivateKey;
 import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
@@ -81,6 +84,11 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             }
         }
 
+        List<Event>  unprocessedEvents = RevealApplication.getInstance().getContext().getEventClientRepository().getEventsBySyncStatus("task_unprocessed",BuildConfig.UNPROCESSED_EVENTS_SIZE);
+        for(Event event: unprocessedEvents){
+            processSprayEvent(event, clientClassification, localEvents);
+        }
+
     }
 
     private void processSprayEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
@@ -94,6 +102,9 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     task.setSyncStatus(BaseRepository.TYPE_Unsynced);
                 }
                 RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
+                RevealApplication.getInstance().getContext().getEventClientRepository().updateTaskUnprocessedEventStatus(event.getFormSubmissionId(), true);
+            }else {
+                RevealApplication.getInstance().getContext().getEventClientRepository().updateTaskUnprocessedEventStatus(event.getFormSubmissionId(), false);
             }
             Location structure = RevealApplication.getInstance().getStructureRepository().getLocationById(event.getBaseEntityId());
             if (structure != null) {
