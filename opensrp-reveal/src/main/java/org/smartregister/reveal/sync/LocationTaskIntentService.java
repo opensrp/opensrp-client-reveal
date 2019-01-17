@@ -54,18 +54,22 @@ public class LocationTaskIntentService extends IntentService {
 
     private boolean hasChangesInCurrentOperationalArea(List<Location> syncedStructures, List<Task> synchedTasks) {
         Location operationalAreaLocation = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
-        if (operationalAreaLocation == null)
+        String operationalAreaLocationId;
+        if (operationalAreaLocation == null) {
             return false;
+        } else {
+            operationalAreaLocationId = operationalAreaLocation.getId();
+        }
         if (syncedStructures != null) {
             for (Location structure : syncedStructures) {
-                if (operationalAreaLocation.getId().equals(structure.getProperties().getParentId())) {
+                if (operationalAreaLocationId.equals(structure.getProperties().getParentId())) {
                     return true;
                 }
             }
         }
         if (synchedTasks != null) {
             for (Task task : synchedTasks) {
-                if (operationalAreaLocation.getId().equals(task.getGroupIdentifier())) {
+                if (operationalAreaLocationId.equals(task.getGroupIdentifier())) {
                     return true;
                 }
             }
