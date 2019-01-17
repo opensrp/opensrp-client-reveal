@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.util.Pair;
@@ -19,6 +20,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
@@ -221,9 +223,25 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
-        int screenHeightPixels = getResources().getDisplayMetrics().heightPixels
-                - getResources().getDimensionPixelSize(R.dimen.hamburger_margin);
-        headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, screenHeightPixels));
+        headerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                headerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                if (getResources().getDisplayMetrics().heightPixels - headerView.getHeight()
+                        > getResources().getDimensionPixelSize(R.dimen.operator_top_margin)) {
+                    int screenHeightPixels = getResources().getDisplayMetrics().heightPixels
+                            - getResources().getDimensionPixelSize(R.dimen.hamburger_margin);
+                    headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, screenHeightPixels));
+                } else {
+                    headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+                    View operator = headerView.findViewById(R.id.operator_label);
+                    ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) operator.getLayoutParams();
+                    params.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+                    operator.setLayoutParams(params);
+                }
+
+            }
+        });
 
         try {
             ((TextView) headerView.findViewById(R.id.application_version))

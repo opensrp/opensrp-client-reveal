@@ -17,6 +17,7 @@
     <dimen name="drawer_separator_margin">20dp</dimen>
     <dimen name="drawer_drawable_padding">10dp</dimen>
     <dimen name="dialog_min_width_major">90%</dimen>
+    <dimen name="operator_top_margin">50dp</dimen>
 
     <dimen name="drawer_icon_margin">40dp</dimen>
 
