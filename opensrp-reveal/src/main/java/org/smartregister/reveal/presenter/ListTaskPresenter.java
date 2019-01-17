@@ -32,13 +32,9 @@ import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import static org.smartregister.AllConstants.OPERATIONAL_AREAS;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
@@ -47,8 +43,8 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.DETAILS;
-import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
-import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT;
+import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_XXX;
+import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
@@ -73,6 +69,7 @@ import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.PROVINCE;
+import static org.smartregister.reveal.util.Utils.formatDate;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
 /**
@@ -379,17 +376,22 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     }
 
     private void formatCardDetails(CardDetails cardDetails) {
-        // format date
         try {
-            DateFormat sdf = new SimpleDateFormat(EVENT_DATE_FORMAT, Locale.getDefault());
-            Date originalDate = sdf.parse(cardDetails.getSprayDate());
-
-            sdf = new SimpleDateFormat(CARD_VIEW_DATE_FORMAT, Locale.getDefault());
-            String formattedDate = sdf.format(originalDate);
+            // format date
+            String formattedDate = formatDate(cardDetails.getSprayDate(), EVENT_DATE_FORMAT_Z);
             cardDetails.setSprayDate(formattedDate);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
+            Log.i(TAG, "Date parsing failed, trying another date format");
+            try {
+                // try another date format
+                String formattedDate = formatDate(cardDetails.getSprayDate(), EVENT_DATE_FORMAT_XXX);
+                cardDetails.setSprayDate(formattedDate);
+            } catch (Exception exception) {
+                Log.e(TAG, exception.getMessage());
+            }
         }
+
         // extract status color
         String sprayStatus = cardDetails.getSprayStatus();
         if (NOT_SPRAYED.equals(sprayStatus)) {

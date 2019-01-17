@@ -20,8 +20,13 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.job.RevealCampaignServiceJob;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
+
+import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
 
 public class Utils {
 
@@ -75,4 +80,12 @@ public class Utils {
         RevealCampaignServiceJob.scheduleJobImmediately(RevealCampaignServiceJob.TAG);
     }
 
+    public static String formatDate(String date, String dateFormat) throws Exception {
+        DateFormat sdf = new SimpleDateFormat(dateFormat);
+        Date originalDate = sdf.parse(date);
+
+        sdf = new SimpleDateFormat(CARD_VIEW_DATE_FORMAT);
+
+        return  sdf.format(originalDate);
+    }
 }

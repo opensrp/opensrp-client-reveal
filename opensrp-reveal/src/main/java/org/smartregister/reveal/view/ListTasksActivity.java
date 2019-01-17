@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -61,6 +62,7 @@ import java.util.Locale;
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
+import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -403,9 +405,17 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void displaySelectedFeature(Feature feature, LatLng point) {
+        adjustFocusPoint(point);
         kujakuMapView.centerMap(point, ANIMATE_TO_LOCATION_DURATION, mMapboxMap.getCameraPosition().zoom);
         if (selectedGeoJsonSource != null) {
             selectedGeoJsonSource.setGeoJson(FeatureCollection.fromFeature(feature));
+        }
+    }
+
+    private void adjustFocusPoint(LatLng point) {
+        int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+        if (screenSize == Configuration.SCREENLAYOUT_SIZE_NORMAL || screenSize == Configuration.SCREENLAYOUT_SIZE_SMALL) {
+           point.setLatitude(point.getLatitude() + VERTICAL_OFFSET);
         }
     }
 
