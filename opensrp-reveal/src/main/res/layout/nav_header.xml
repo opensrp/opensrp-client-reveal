@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/reveal_icon"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:layout_marginStart="@dimen/drawer_margin"
         android:layout_marginTop="@dimen/drawer_icon_margin"
         android:drawableStart="@drawable/ic_reveal_logo"

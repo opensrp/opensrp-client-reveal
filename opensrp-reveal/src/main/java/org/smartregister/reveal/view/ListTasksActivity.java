@@ -229,17 +229,18 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             @Override
             public void onGlobalLayout() {
                 headerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                if (getResources().getDisplayMetrics().heightPixels - headerView.getHeight()
-                        > getResources().getDimensionPixelSize(R.dimen.operator_top_margin)) {
-                    int screenHeightPixels = getResources().getDisplayMetrics().heightPixels
-                            - getResources().getDimensionPixelSize(R.dimen.hamburger_margin);
-                    headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, screenHeightPixels));
-                } else {
+                //if content of hamburger menu is bigger than screen; scroll content
+                if (getResources().getDisplayMetrics().heightPixels
+                        < headerView.getHeight() + getResources().getDimensionPixelSize(R.dimen.hamburger_margin)) {
                     headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                     View operator = headerView.findViewById(R.id.operator_label);
                     ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) operator.getLayoutParams();
                     params.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
                     operator.setLayoutParams(params);
+                } else {//content of hamburger menu fits on screen; set menu height to screen height
+                    int screenHeightPixels = getResources().getDisplayMetrics().heightPixels
+                            - getResources().getDimensionPixelSize(R.dimen.hamburger_margin);
+                    headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, screenHeightPixels));
                 }
 
             }
@@ -415,7 +416,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private void adjustFocusPoint(LatLng point) {
         int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
         if (screenSize == Configuration.SCREENLAYOUT_SIZE_NORMAL || screenSize == Configuration.SCREENLAYOUT_SIZE_SMALL) {
-           point.setLatitude(point.getLatitude() + VERTICAL_OFFSET);
+            point.setLatitude(point.getLatitude() + VERTICAL_OFFSET);
         }
     }
 
