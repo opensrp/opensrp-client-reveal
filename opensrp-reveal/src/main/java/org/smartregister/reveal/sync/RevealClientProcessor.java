@@ -1,6 +1,5 @@
 package org.smartregister.reveal.sync;
 
-import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.util.Log;
 
@@ -16,7 +15,6 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.sync.ClientProcessorForJava;
 
-import java.security.PrivateKey;
 import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
