@@ -37,7 +37,9 @@ import org.smartregister.reveal.contract.ListTaskContract.PresenterCallBack;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.GeoJsonUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
@@ -77,7 +79,7 @@ import static org.smartregister.util.JsonFormUtils.getString;
  * Created by samuelgithengi on 11/27/18.
  */
 public class ListTaskInteractor {
-    private static final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    public static final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
             .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
             .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
 
@@ -191,26 +193,12 @@ public class ListTaskInteractor {
             @Override
             public void run() {
                 final JSONObject featureCollection = createFeatureCollection();
-                Location operationalAreaLocation = locationRepository.getLocationByName(operationalArea);
+                Location operationalAreaLocation = Utils.getOperationalAreaLocation(operationalArea);
                 try {
                     if (operationalAreaLocation != null) {
                         Map<String, Task> tasks = taskRepository.getTasksByCampaignAndGroup(campaign, operationalAreaLocation.getId());
                         List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
-                        for (Location structure : structures) {
-                            Task task = tasks.get(structure.getId());
-                            if (task != null) {
-                                HashMap<String, String> taskProperties = new HashMap<>();
-                                taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
-                                taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
-                                taskProperties.put(TASK_STATUS, task.getStatus().name());
-                                taskProperties.put(TASK_CODE, task.getCode());
-                                taskProperties.put(LOCATION_UUID, structure.getProperties().getUid());
-                                taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
-                                taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
-                                structure.getProperties().setCustomProperties(taskProperties);
-                            }
-                        }
-                        featureCollection.put(FEATURES, new JSONArray(gson.toJson(structures)));
+                        featureCollection.put(FEATURES, new JSONArray(GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks)));
                         Log.d(TAG, "features:" + featureCollection.toString());
 
                     }

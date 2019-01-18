@@ -157,9 +157,10 @@
           "err": "Please specify reason spray was not done"
         },
         "relevance": {
-          "step1:notSprayedReason": {
-            "type": "string",
-            "ex": "equalTo(., \"other\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "spray-relevance-rules.yml"
+            }
           }
         }
       },

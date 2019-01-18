@@ -3,6 +3,7 @@ package org.smartregister.reveal.application;
 import android.content.Intent;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.JobManager;
 import com.mapbox.mapboxsdk.Mapbox;
 
@@ -27,6 +28,8 @@ import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.DrishtiSyncScheduler;
 import org.smartregister.view.activity.DrishtiApplication;
 import org.smartregister.view.receiver.TimeChangedBroadcastReceiver;
+
+import io.fabric.sdk.android.Fabric;
 
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
@@ -57,7 +60,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         mInstance = this;
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
-//        Initialize Modules
+        // Initialize Modules
+        Fabric.with(this, new Crashlytics());
         CoreLibrary.init(context, new RevealSyncConfiguration());
         ConfigurableViewsLibrary.init(context, getRepository());
         LocationHelper.init(Utils.ALLOWED_LEVELS, Utils.DEFAULT_LOCATION_LEVEL);
@@ -74,10 +78,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             Log.e(TAG, e.getMessage());
         }
 
-
         //init Job Manager
         JobManager.create(this).addJobCreator(new RevealJobCreator());
-
     }
 
     @Override

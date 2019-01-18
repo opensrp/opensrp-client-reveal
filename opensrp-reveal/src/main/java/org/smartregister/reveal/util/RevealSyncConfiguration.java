@@ -43,7 +43,7 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     }
 
     @Override
-    public boolean isSyncSettings(){
+    public boolean isSyncSettings() {
         return false;
     }
 }
