@@ -225,24 +225,24 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
+
         headerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 headerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int availableScreenHeightPixels = getResources().getDisplayMetrics().heightPixels
-                        - getResources().getDimensionPixelSize(R.dimen.hamburger_margin);
+                int minimumOperatorMargin = getResources().getDimensionPixelSize(R.dimen.operator_top_margin);
+                int screenHeightPixels = getResources().getDisplayMetrics().heightPixels;
                 //if content of hamburger menu is bigger than screen; scroll content
-                if (availableScreenHeightPixels < headerView.getHeight()) {
+                if (screenHeightPixels < headerView.getHeight() + minimumOperatorMargin) {
                     headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                     View operator = headerView.findViewById(R.id.operator_label);
                     ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) operator.getLayoutParams();
                     params.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
                     operator.setLayoutParams(params);
                 } else {//content of hamburger menu fits on screen; set menu height to screen height
-
-                    headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, availableScreenHeightPixels));
+                    headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+                            screenHeightPixels - getResources().getDimensionPixelSize(R.dimen.hamburger_margin)));
                 }
-
             }
         });
 

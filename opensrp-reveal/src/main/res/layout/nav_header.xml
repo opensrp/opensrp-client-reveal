@@ -7,17 +7,15 @@
     android:fitsSystemWindows="true"
     android:theme="@style/AppTheme.Nav.ThemeOverlay">
 
-    <TextView
+    <ImageView
         android:id="@+id/reveal_icon"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_height="40dp"
         android:layout_marginStart="@dimen/drawer_margin"
         android:layout_marginTop="@dimen/drawer_icon_margin"
-        android:drawableStart="@drawable/ic_reveal_logo"
-        android:text="@string/reveal"
-        android:textColor="@color/text_black"
-        android:textSize="30sp"
-        android:textStyle="bold"
+        android:contentDescription="@string/reveal_icon"
+        android:scaleType="fitStart"
+        android:src="@drawable/ic_reveal_logo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -166,6 +164,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/facility_label"
+        app:layout_constraintVertical_bias="0.9"
         app:layout_constraintVertical_weight="1" />
 
 
