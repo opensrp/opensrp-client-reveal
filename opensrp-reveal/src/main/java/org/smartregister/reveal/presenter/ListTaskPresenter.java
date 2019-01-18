@@ -271,6 +271,11 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         }
     }
 
+    public void refreshStructures() {
+        listTaskView.showProgressDialog();
+        listTaskInteractor.fetchLocations(prefsUtil.getCurrentCampaignId(), prefsUtil.getCurrentOperationalArea());
+    }
+
     @Override
     public void onStructuresFetched(JSONObject structuresGeoJson, Geometry operationalAreaGeometry) {
         listTaskView.hideProgressDialog();

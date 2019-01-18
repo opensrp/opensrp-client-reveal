@@ -15,10 +15,13 @@ import android.widget.TextView;
 import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
 
+import org.smartregister.domain.Location;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.job.RevealCampaignServiceJob;
+import org.smartregister.util.Cache;
+import org.smartregister.util.CacheableData;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -34,6 +37,8 @@ public class Utils {
     public static final String DEFAULT_LOCATION_LEVEL = "Rural Health Centre";
     public static final String OPERATIONAL_AREA = "Operational Area";
     public static final String REVEAL_PROJECT = "reveal";
+
+    private static Cache<Location> cache = new Cache<>();
 
     static {
         ALLOWED_LEVELS = new ArrayList<>();
@@ -80,12 +85,23 @@ public class Utils {
         RevealCampaignServiceJob.scheduleJobImmediately(RevealCampaignServiceJob.TAG);
     }
 
+
+    public static Location getOperationalAreaLocation(String operationalArea) {
+        return cache.get(operationalArea, new CacheableData<Location>() {
+            @Override
+            public Location fetch() {
+                return RevealApplication.getInstance().getLocationRepository().getLocationByName(PreferencesUtil.getInstance().getCurrentOperationalArea());
+            }
+        });
+    }
+
     public static String formatDate(String date, String dateFormat) throws Exception {
-        DateFormat sdf = new SimpleDateFormat(dateFormat);
+        DateFormat sdf = new SimpleDateFormat(dateFormat, Locale.getDefault());
         Date originalDate = sdf.parse(date);
 
-        sdf = new SimpleDateFormat(CARD_VIEW_DATE_FORMAT);
+        sdf = new SimpleDateFormat(CARD_VIEW_DATE_FORMAT, Locale.getDefault());
 
-        return  sdf.format(originalDate);
+        return sdf.format(originalDate);
+
     }
 }
