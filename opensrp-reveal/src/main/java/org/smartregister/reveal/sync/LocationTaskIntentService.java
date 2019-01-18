@@ -2,8 +2,6 @@ package org.smartregister.reveal.sync;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.Pair;
@@ -15,6 +13,7 @@ import org.smartregister.job.SyncServiceJob;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.helper.LocationServiceHelper;
@@ -48,19 +47,20 @@ public class LocationTaskIntentService extends IntentService {
         List<Task> synchedTasks = taskServiceHelper.syncTasks();
 
         Pair<Boolean, Set<String>> structureIds = checkChangeInOperationalAreaAndExtractStructureIds(syncedStructures, synchedTasks);
-        if (structureIds.first != null && structureIds.first) {
-            Intent intent = new Intent(STRUCTURE_TASK_SYNCHED);
-            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-        }
 
         clientProcessEvents(structureIds.second);
 
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+        new AppExecutors().mainThread().execute(new Runnable() {
             @Override
             public void run() {
                 SyncServiceJob.scheduleJobImmediately(SyncServiceJob.TAG);
             }
-        }, 2000);
+        });
+
+        if (structureIds.first != null && structureIds.first) {
+            Intent intent = new Intent(STRUCTURE_TASK_SYNCHED);
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+        }
     }
 
     private Pair<Boolean, Set<String>> checkChangeInOperationalAreaAndExtractStructureIds(List<Location> syncedStructures, List<Task> synchedTasks) {
@@ -68,7 +68,7 @@ public class LocationTaskIntentService extends IntentService {
         String operationalAreaLocationId = operationalAreaLocation == null ? null : operationalAreaLocation.getId();
         Set<String> structureIds = new HashSet<>();
         boolean hasChangeInOperationalArea = false;
-        if (syncedStructures != null) {
+        if (!org.smartregister.util.Utils.isEmptyCollection(syncedStructures)) {
             for (Location structure : syncedStructures) {
                 if (!hasChangeInOperationalArea && operationalAreaLocationId != null && operationalAreaLocationId.equals(structure.getProperties().getParentId())) {
                     hasChangeInOperationalArea = true;
@@ -76,7 +76,7 @@ public class LocationTaskIntentService extends IntentService {
                 structureIds.add(structure.getId());
             }
         }
-        if (synchedTasks != null) {
+        if (!org.smartregister.util.Utils.isEmptyCollection(synchedTasks)) {
             for (Task task : synchedTasks) {
                 if (!hasChangeInOperationalArea && operationalAreaLocationId != null && operationalAreaLocationId.equals(task.getGroupIdentifier())) {
                     hasChangeInOperationalArea = true;
@@ -88,7 +88,8 @@ public class LocationTaskIntentService extends IntentService {
     }
 
     private void clientProcessEvents(Set<String> syncedStructuresIds) {
-
+        if (org.smartregister.util.Utils.isEmptyCollection(syncedStructuresIds))
+            return;
         EventClientRepository ecRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
         List<EventClient> eventClients = ecRepository.getEventsByBaseEntityIdsAndSyncStatus(BaseRepository.TYPE_Task_Unprocessed, new ArrayList<>(syncedStructuresIds));
         if (!eventClients.isEmpty()) {

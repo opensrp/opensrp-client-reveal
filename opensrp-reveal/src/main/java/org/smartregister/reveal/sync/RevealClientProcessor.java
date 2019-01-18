@@ -73,9 +73,9 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 if (eventType == null) {
                     continue;
                 } else if (eventType.equals(SPRAY_EVENT)) {
-                    processSprayEvent(event, clientClassification, localEvents);
-                    if (event.getDetails() != null && operationalAreaLocationId != null &&
-                            operationalAreaLocationId.equals(event.getDetails().get(TASK_IDENTIFIER))) {
+                    String operationalAreaId = processSprayEvent(event, clientClassification, localEvents);
+                    if (!hasSynchedEventsInTarget && operationalAreaLocationId != null &&
+                            operationalAreaLocationId.equals(operationalAreaId)) {
                         hasSynchedEventsInTarget = true;
                     }
                 }
@@ -100,7 +100,8 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
     }
 
-    private void processSprayEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
+    private String processSprayEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
+        String operationalAreaId = null;
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
             String taskIdentifier = event.getDetails().get(TASK_IDENTIFIER);
             Task task = RevealApplication.getInstance().getTaskRepository().getTaskByIdentifier(taskIdentifier);
@@ -112,6 +113,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 }
                 RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
                 RevealApplication.getInstance().getContext().getEventClientRepository().markEventAsSynced(event.getFormSubmissionId());
+                operationalAreaId = task.getGroupIdentifier();
             } else {
                 RevealApplication.getInstance().getContext().getEventClientRepository().updateTaskUnprocessedEventStatus(event.getFormSubmissionId());
             }
@@ -120,6 +122,9 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 String structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE).getValue().toString();
                 structure.getProperties().setType(structureType);
                 RevealApplication.getInstance().getStructureRepository().addOrUpdate(structure);
+                if (operationalAreaId == null) {
+                    operationalAreaId = structure.getProperties().getParentId();
+                }
             }
             try {
                 Client client = new Client(event.getBaseEntityId());
@@ -130,6 +135,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         } else {
             Log.w(TAG, String.format("Spray Event %s does not have task details", event.getEventId()));
         }
+        return operationalAreaId;
     }
 
     public String calculateBusinessStatus(Event event) {
