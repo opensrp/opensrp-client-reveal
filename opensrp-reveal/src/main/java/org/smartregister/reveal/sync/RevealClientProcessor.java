@@ -111,9 +111,9 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     task.setSyncStatus(BaseRepository.TYPE_Unsynced);
                 }
                 RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
-                RevealApplication.getInstance().getContext().getEventClientRepository().updateTaskUnprocessedEventStatus(event.getFormSubmissionId(), true);
-            }else {
-                RevealApplication.getInstance().getContext().getEventClientRepository().updateTaskUnprocessedEventStatus(event.getFormSubmissionId(), false);
+                RevealApplication.getInstance().getContext().getEventClientRepository().markEventAsSynced(event.getFormSubmissionId());
+            } else {
+                RevealApplication.getInstance().getContext().getEventClientRepository().updateTaskUnprocessedEventStatus(event.getFormSubmissionId());
             }
             Location structure = RevealApplication.getInstance().getStructureRepository().getLocationById(event.getBaseEntityId());
             if (structure != null) {
