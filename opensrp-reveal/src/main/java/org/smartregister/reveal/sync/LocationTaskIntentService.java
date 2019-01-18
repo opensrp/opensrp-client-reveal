@@ -48,6 +48,11 @@ public class LocationTaskIntentService extends IntentService {
 
         Pair<Boolean, Set<String>> structureIds = checkChangeInOperationalAreaAndExtractStructureIds(syncedStructures, synchedTasks);
 
+        if (structureIds.first != null && structureIds.first) {
+            Intent intent = new Intent(STRUCTURE_TASK_SYNCHED);
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+        }
+
         clientProcessEvents(structureIds.second);
 
         new AppExecutors().mainThread().execute(new Runnable() {
@@ -57,10 +62,6 @@ public class LocationTaskIntentService extends IntentService {
             }
         });
 
-        if (structureIds.first != null && structureIds.first) {
-            Intent intent = new Intent(STRUCTURE_TASK_SYNCHED);
-            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-        }
     }
 
     private Pair<Boolean, Set<String>> checkChangeInOperationalAreaAndExtractStructureIds(List<Location> syncedStructures, List<Task> synchedTasks) {

@@ -147,4 +147,9 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             return sprayStatus;
         }
     }
+
+    @Override
+    public void updateClientDetailsTable(Event event, Client client) {
+        //do nothing
+    }
 }
