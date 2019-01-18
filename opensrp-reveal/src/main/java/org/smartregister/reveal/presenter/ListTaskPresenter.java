@@ -451,11 +451,12 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             if (StringUtils.isNotBlank(propertyType) || StringUtils.isNotBlank(sprayStatus) || StringUtils.isNotBlank(familyHead)) {
                 for (int i = 0; i < fields.length(); i++) {
                     JSONObject field = fields.getJSONObject(i);
-                    if (field.getString(KEY).equalsIgnoreCase(STRUCTURE_TYPE))
+                    String key = field.getString(KEY);
+                    if (key.equalsIgnoreCase(STRUCTURE_TYPE))
                         field.put(JsonFormUtils.VALUE, propertyType);
-                    else if (field.getString(KEY).equalsIgnoreCase(SPRAY_STATUS))
+                    else if (key.equalsIgnoreCase(SPRAY_STATUS))
                         field.put(JsonFormUtils.VALUE, sprayStatus);
-                    else if (field.getString(KEY).equalsIgnoreCase(HEAD_OF_HOUSEHOLD))
+                    else if (key.equalsIgnoreCase(HEAD_OF_HOUSEHOLD))
                         field.put(JsonFormUtils.VALUE, familyHead);
 
                 }
