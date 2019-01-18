@@ -110,6 +110,7 @@ public interface Constants {
 
         String NO_PADDING = "no_padding";
 
+        String V_RELATIVE_MAX = "v_relative_max";
     }
 
     interface DateFormat {
