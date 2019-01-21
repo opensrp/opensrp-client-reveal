@@ -54,7 +54,7 @@ public interface ListTaskContract {
 
         void unlockNavigationDrawer();
 
-        void displayNotification(int title, @StringRes int message,Object... formatArgs);
+        void displayNotification(int title, @StringRes int message, Object... formatArgs);
 
         void displayNotification(String message);
 
@@ -85,5 +85,6 @@ public interface ListTaskContract {
 
         void onCardDetailsFetched(CardDetails cardDetails);
 
+        void onSprayFormDetailsFetched(CardDetails finalCardDetails);
     }
 }

@@ -96,6 +96,8 @@ public interface Constants {
 
         String STRUCTURE_TYPE = "structureType";
 
+        String HEAD_OF_HOUSEHOLD = "familyHeadName";
+
         String STRUCTURE_PROPERTIES_TYPE = "[structure_type]";
 
         String SPRAY_FORM = "json.form/spray_form.json";
