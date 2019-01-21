@@ -12,15 +12,16 @@ import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.utils.FormUtils;
-import com.vijay.jsonwizard.validators.edittext.MaxNumericValidator;
 import com.vijay.jsonwizard.widgets.EditTextFactory;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.validator.RelativeMaxNumericValidator;
 
 import java.util.List;
 
+import static org.smartregister.reveal.util.Constants.JsonForm.DEFAULT_RELATIVE_MAX_VALIDATION_ERR;
 import static org.smartregister.reveal.util.Constants.JsonForm.NO_PADDING;
 import static org.smartregister.reveal.util.Constants.JsonForm.V_RELATIVE_MAX;
 
@@ -53,8 +54,7 @@ public class RevealEditTextFactory extends EditTextFactory {
         editText.setGravity(Gravity.START);
         editText.setSingleLine(false);
 
-        JSONObject formJSONObjdct = new JSONObject(formFragment.getJsonApi().currentJsonState());
-        addRelativeNumericIntegerValidator(jsonObject, formJSONObjdct, editText);
+        addRelativeNumericIntegerValidator(jsonObject, formFragment, editText);
     }
 
     @Override
@@ -66,17 +66,22 @@ public class RevealEditTextFactory extends EditTextFactory {
         }
     }
 
-    private void addRelativeNumericIntegerValidator(JSONObject editTextJSONObject, JSONObject formJSONObject, MaterialEditText editText) throws JSONException {
+    private void addRelativeNumericIntegerValidator(JSONObject editTextJSONObject, JsonFormFragment formFragment, MaterialEditText editText) throws JSONException {
         JSONObject numericIntegerObject = editTextJSONObject.optJSONObject(JsonFormConstants.V_NUMERIC_INTEGER);
         if (numericIntegerObject != null) {
             String numericValue = numericIntegerObject.optString(JsonFormConstants.VALUE);
-            if (!TextUtils.isEmpty(numericValue) && Boolean.TRUE.toString().equalsIgnoreCase(numericValue)) {
-                if(editTextJSONObject.has(V_RELATIVE_MAX)) {
-                    String relativeMaxValidationField = editTextJSONObject.getString(V_RELATIVE_MAX);
-                    JSONObject relativeMaxValidationValue =  formJSONObject.getJSONObject(relativeMaxValidationField);
-                    editText.addValidator(new MaxNumericValidator(relativeMaxValidationValue.getString(JsonFormConstants.ERR),
-                            relativeMaxValidationValue.getInt(JsonFormConstants.VALUE)));
-                }
+            if (!TextUtils.isEmpty(numericValue) && Boolean.TRUE.toString().equalsIgnoreCase(numericValue)
+                    && editTextJSONObject.has(V_RELATIVE_MAX)) {
+                    // extract values
+                    JSONObject relativeMaxValidationJSONObject = editTextJSONObject.getJSONObject(V_RELATIVE_MAX);
+                    String relativeMaxValidationKey = relativeMaxValidationJSONObject.optString(JsonFormConstants.VALUE);
+                    String relativeMaxValidationErrorMsg = relativeMaxValidationJSONObject.optString(JsonFormConstants.ERR);
+                    String defaultErrMsg = String.format(DEFAULT_RELATIVE_MAX_VALIDATION_ERR, relativeMaxValidationKey);
+                    // add validator
+                    editText.addValidator(new RelativeMaxNumericValidator(
+                            relativeMaxValidationErrorMsg == null ? defaultErrMsg : relativeMaxValidationErrorMsg,
+                            formFragment,
+                            relativeMaxValidationKey));
             }
         }
     }
