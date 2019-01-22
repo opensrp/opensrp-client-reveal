@@ -109,10 +109,6 @@ public interface Constants {
         String STRUCTURES_TAG = "structures";
 
         String NO_PADDING = "no_padding";
-
-        String V_RELATIVE_MAX = "v_relative_max";
-
-        String DEFAULT_RELATIVE_MAX_VALIDATION_ERR = "Value cannot be higher than %s";
     }
 
     interface DateFormat {
