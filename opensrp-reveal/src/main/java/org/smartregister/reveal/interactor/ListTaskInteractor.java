@@ -140,7 +140,7 @@ public class ListTaskInteractor {
         appExecutors.diskIO().execute(runnable);
     }
 
-    public void fetchCardViewDetails(String structureId) {
+    public void fetchSprayDetails(String structureId, boolean isSprayForm) {
         final String sql = "SELECT spray_status, not_sprayed_reason, not_sprayed_other_reason, property_type, spray_date," +
                 " spray_operator, family_head_name FROM sprayed_structures WHERE id=?";
         SQLiteDatabase db = RevealApplication.getInstance().getRepository().getWritableDatabase();
@@ -165,7 +165,11 @@ public class ListTaskInteractor {
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-                        presenterCallBack.onCardDetailsFetched(finalCardDetails);
+                        if (isSprayForm) {
+                            presenterCallBack.onSprayFormDetailsFetched(finalCardDetails);
+                        } else {
+                            presenterCallBack.onCardDetailsFetched(finalCardDetails);
+                        }
                     }
                 });
             }
