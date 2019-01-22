@@ -12,12 +12,12 @@ import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.utils.FormUtils;
+import com.vijay.jsonwizard.validators.edittext.RelativeMaxNumericValidator;
 import com.vijay.jsonwizard.widgets.EditTextFactory;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.validator.RelativeMaxNumericValidator;
 
 import java.util.List;
 
