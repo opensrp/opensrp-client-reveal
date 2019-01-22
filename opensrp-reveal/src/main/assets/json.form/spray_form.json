@@ -173,10 +173,6 @@
         "type": "edit_text",
         "hint": "Head of Household name",
         "edit_type": "name",
-        "v_required": {
-          "value": true,
-          "err": "Please specify Head of Household name"
-        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
