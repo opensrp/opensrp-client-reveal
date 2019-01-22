@@ -112,6 +112,7 @@ public interface Constants {
 
         String NO_PADDING = "no_padding";
 
+        String IS_MANDATORY = "is_mandatory";
     }
 
     interface DateFormat {
