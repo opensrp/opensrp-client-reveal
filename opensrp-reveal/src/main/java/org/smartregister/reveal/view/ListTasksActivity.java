@@ -1,16 +1,20 @@
 package org.smartregister.reveal.view;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,6 +24,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
@@ -38,10 +43,10 @@ import com.vijay.jsonwizard.customviews.TreeViewDialog;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.AllConstants;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.BaseMapActivity;
 import org.smartregister.reveal.activity.RevealJsonForm;
@@ -49,6 +54,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
+import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -98,6 +104,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private TextView tvSprayOperator;
     private TextView tvFamilyHead;
     private TextView tvReason;
+
+    private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,9 +231,26 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
-        int screenHeightPixels = getResources().getDisplayMetrics().heightPixels
-                - getResources().getDimensionPixelSize(R.dimen.drawer_separator_margin);
-        headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, screenHeightPixels));
+
+        headerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                headerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                int minimumOperatorMargin = getResources().getDimensionPixelSize(R.dimen.operator_top_margin);
+                int screenHeightPixels = getResources().getDisplayMetrics().heightPixels;
+                //if content of hamburger menu is bigger than screen; scroll content
+                if (screenHeightPixels < headerView.getHeight() + minimumOperatorMargin) {
+                    headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+                    View operator = headerView.findViewById(R.id.operator_label);
+                    ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) operator.getLayoutParams();
+                    params.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
+                    operator.setLayoutParams(params);
+                } else {//content of hamburger menu fits on screen; set menu height to screen height
+                    headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+                            screenHeightPixels - getResources().getDimensionPixelSize(R.dimen.hamburger_margin)));
+                }
+            }
+        });
 
         try {
             ((TextView) headerView.findViewById(R.id.application_version))
@@ -235,7 +260,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         }
 
         String buildDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                .format(new Date(AllConstants.BUILD_TIMESTAMP));
+                .format(new Date(BuildConfig.BUILD_TIMESTAMP));
         ((TextView) headerView.findViewById(R.id.application_updated)).setText(getString(R.string.app_updated, buildDate));
 
         campaignTextView = headerView.findViewById(R.id.campaign_selector);
@@ -397,7 +422,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private void adjustFocusPoint(LatLng point) {
         int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
         if (screenSize == Configuration.SCREENLAYOUT_SIZE_NORMAL || screenSize == Configuration.SCREENLAYOUT_SIZE_SMALL) {
-           point.setLatitude(point.getLatitude() + VERTICAL_OFFSET);
+            point.setLatitude(point.getLatitude() + VERTICAL_OFFSET);
         }
     }
 
@@ -512,11 +537,22 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void onResume() {
         super.onResume();
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
+        IntentFilter filter = new IntentFilter(Action.STRUCTURE_TASK_SYNCHED);
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(refreshGeowidgetReceiver, filter);
     }
 
     @Override
     public void onPause() {
         SyncStatusBroadcastReceiver.getInstance().removeSyncStatusListener(this);
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(refreshGeowidgetReceiver);
         super.onPause();
+    }
+
+
+    private class RefreshGeowidgetReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            listTaskPresenter.refreshStructures();
+        }
     }
 }
