@@ -96,6 +96,8 @@ public interface Constants {
 
         String STRUCTURE_TYPE = "structureType";
 
+        String HEAD_OF_HOUSEHOLD = "familyHeadName";
+
         String STRUCTURE_PROPERTIES_TYPE = "[structure_type]";
 
         String SPRAY_FORM = "json.form/spray_form.json";
@@ -109,6 +111,8 @@ public interface Constants {
         String STRUCTURES_TAG = "structures";
 
         String NO_PADDING = "no_padding";
+
+        String IS_MANDATORY = "is_mandatory";
     }
 
     interface DateFormat {
@@ -119,5 +123,10 @@ public interface Constants {
 
         String CARD_VIEW_DATE_FORMAT = "dd MMM yyyy";
     }
+
+    interface Action {
+        String STRUCTURE_TASK_SYNCHED = "reveal.STRUCTURE_TASK_SYNCHED";
+    }
+
 
 }
