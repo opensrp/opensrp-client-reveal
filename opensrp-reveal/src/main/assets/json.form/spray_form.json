@@ -252,6 +252,7 @@
         },
         "v_relative_max": {
           "value": "roomsFound",
+          "exception": 99,
           "err": "Number of rooms sprayed cannot be greater than number of rooms found"
         },
         "v_numeric_integer": {
