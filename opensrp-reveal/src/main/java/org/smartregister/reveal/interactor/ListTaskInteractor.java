@@ -304,6 +304,7 @@ public class ListTaskInteractor {
                     jsonForm.put(ENTITY_ID, UUID.randomUUID().toString());
                     org.smartregister.domain.db.Event event = saveEvent(jsonForm);
                     com.cocoahero.android.geojson.Feature feature = new com.cocoahero.android.geojson.Feature(new JSONObject(event.findObs(null, false, "structure").getValue().toString()));
+                    DateTime now = new DateTime();
                     Location structure = new Location();
                     structure.setId(event.getBaseEntityId());
                     structure.setType(feature.getType());
@@ -317,7 +318,7 @@ public class ListTaskInteractor {
                     structure.setGeometry(geometry);
                     LocationProperty properties = new LocationProperty();
                     properties.setType(RESIDENTIAL);
-                    properties.setEffectiveStartDate(new DateTime());
+                    properties.setEffectiveStartDate(now);
                     properties.setParentId(operationalAreaId);
                     properties.setStatus(LocationProperty.PropertyStatus.PENDING_REVIEW);
                     properties.setUid(UUID.randomUUID().toString());
@@ -337,8 +338,9 @@ public class ListTaskInteractor {
                     task.setDescription(applicationContext.getString(R.string.irs_task_description));
                     task.setFocus(IRS_VISIT);
                     task.setForEntity(structure.getId());
-                    task.setAuthoredOn(new DateTime());
-                    task.setLastModified(new DateTime());
+                    task.setExecutionStartDate(now);
+                    task.setAuthoredOn(now);
+                    task.setLastModified(now);
                     task.setOwner(event.getProviderId());
                     task.setSyncStatus(BaseRepository.TYPE_Created);
                     taskRepository.addOrUpdate(task);
