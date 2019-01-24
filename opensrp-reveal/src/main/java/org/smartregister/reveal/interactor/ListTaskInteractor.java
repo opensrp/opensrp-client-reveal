@@ -140,7 +140,7 @@ public class ListTaskInteractor {
         appExecutors.diskIO().execute(runnable);
     }
 
-    public void fetchCardViewDetails(String structureId) {
+    public void fetchSprayDetails(String structureId, boolean isSprayForm) {
         final String sql = "SELECT spray_status, not_sprayed_reason, not_sprayed_other_reason, property_type, spray_date," +
                 " spray_operator, family_head_name FROM sprayed_structures WHERE id=?";
         SQLiteDatabase db = RevealApplication.getInstance().getRepository().getWritableDatabase();
@@ -165,7 +165,11 @@ public class ListTaskInteractor {
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-                        presenterCallBack.onCardDetailsFetched(finalCardDetails);
+                        if (isSprayForm) {
+                            presenterCallBack.onSprayFormDetailsFetched(finalCardDetails);
+                        } else {
+                            presenterCallBack.onCardDetailsFetched(finalCardDetails);
+                        }
                     }
                 });
             }
@@ -300,6 +304,7 @@ public class ListTaskInteractor {
                     jsonForm.put(ENTITY_ID, UUID.randomUUID().toString());
                     org.smartregister.domain.db.Event event = saveEvent(jsonForm);
                     com.cocoahero.android.geojson.Feature feature = new com.cocoahero.android.geojson.Feature(new JSONObject(event.findObs(null, false, "structure").getValue().toString()));
+                    DateTime now = new DateTime();
                     Location structure = new Location();
                     structure.setId(event.getBaseEntityId());
                     structure.setType(feature.getType());
@@ -313,7 +318,7 @@ public class ListTaskInteractor {
                     structure.setGeometry(geometry);
                     LocationProperty properties = new LocationProperty();
                     properties.setType(RESIDENTIAL);
-                    properties.setEffectiveStartDate(new DateTime());
+                    properties.setEffectiveStartDate(now);
                     properties.setParentId(operationalAreaId);
                     properties.setStatus(LocationProperty.PropertyStatus.PENDING_REVIEW);
                     properties.setUid(UUID.randomUUID().toString());
@@ -333,8 +338,9 @@ public class ListTaskInteractor {
                     task.setDescription(applicationContext.getString(R.string.irs_task_description));
                     task.setFocus(IRS_VISIT);
                     task.setForEntity(structure.getId());
-                    task.setAuthoredOn(new DateTime());
-                    task.setLastModified(new DateTime());
+                    task.setExecutionStartDate(now);
+                    task.setAuthoredOn(now);
+                    task.setLastModified(now);
                     task.setOwner(event.getProviderId());
                     task.setSyncStatus(BaseRepository.TYPE_Created);
                     taskRepository.addOrUpdate(task);

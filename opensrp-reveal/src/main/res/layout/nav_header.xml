@@ -7,17 +7,15 @@
     android:fitsSystemWindows="true"
     android:theme="@style/AppTheme.Nav.ThemeOverlay">
 
-    <TextView
+    <ImageView
         android:id="@+id/reveal_icon"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginStart="@dimen/drawer_margin"
         android:layout_marginTop="@dimen/drawer_icon_margin"
-        android:drawableStart="@drawable/ic_reveal_logo"
-        android:text="@string/reveal"
-        android:textColor="@color/text_black"
-        android:textSize="30sp"
-        android:textStyle="bold"
+        android:contentDescription="@string/reveal_icon"
+        android:scaleType="fitStart"
+        android:src="@drawable/ic_reveal_logo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -61,13 +59,14 @@
         android:layout_marginTop="@dimen/drawer_margin_vertical"
         android:layout_marginBottom="@dimen/drawer_separator_margin"
         android:background="#DEDEDE"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sync_button" />
 
 
     <TextView
         android:id="@+id/campaign_label"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/drawer_margin"
         android:layout_marginTop="@dimen/drawer_separator_margin"
@@ -79,82 +78,94 @@
 
     <TextView
         android:id="@+id/campaign_selector"
-        android:layout_width="@dimen/drawer_spinner_width"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/drawer_margin"
         android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:layout_marginEnd="@dimen/drawer_margin"
         android:background="@drawable/nav_border_bg"
         android:drawableEnd="@drawable/ic_keyboard_arrow_down_small"
         android:drawablePadding="@dimen/drawer_drawable_padding"
         android:gravity="center_vertical"
         android:padding="10dp"
         android:textColor="@color/text_black"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/campaign_label" />
 
     <TextView
         android:id="@+id/operational_area_label"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/drawer_margin"
         android:layout_marginTop="@dimen/drawer_separator_margin"
         android:text="@string/operational_area"
         android:textColor="@color/text_gray"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/campaign_selector" />
 
 
     <TextView
         android:id="@+id/operational_area_selector"
-        android:layout_width="@dimen/drawer_spinner_width"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/drawer_margin"
         android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:layout_marginEnd="@dimen/drawer_margin"
         android:background="@drawable/nav_border_bg"
         android:drawableEnd="@drawable/ic_keyboard_arrow_down_small"
         android:drawablePadding="@dimen/drawer_drawable_padding"
         android:gravity="center_vertical"
         android:padding="10dp"
         android:textColor="@color/text_black"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/operational_area_label" />
 
 
     <TextView
         android:id="@+id/district_label"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/drawer_margin"
         android:layout_marginTop="@dimen/drawer_separator_margin"
         android:text="@string/district"
         android:textColor="@color/text_gray"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/operational_area_selector" />
 
 
     <TextView
         android:id="@+id/facility_label"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/drawer_margin"
         android:layout_marginTop="@dimen/drawer_margin_vertical"
         android:text="@string/facility"
         android:textColor="@color/text_gray"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/district_label" />
 
 
     <TextView
         android:id="@+id/operator_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_gravity="bottom"
         android:layout_marginStart="@dimen/drawer_margin"
-        android:layout_marginBottom="@dimen/drawer_margin_vertical"
+        android:layout_marginTop="@dimen/operator_top_margin"
+        android:gravity="bottom"
         android:text="Operator: "
         android:textColor="@color/text_gray"
         app:layout_constraintBottom_toTopOf="@id/logout_button"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/facility_label"
+        app:layout_constraintVertical_bias="0.9"
+        app:layout_constraintVertical_weight="1" />
 
 
     <TextView
@@ -168,7 +179,9 @@
         android:textColor="@color/button_blue"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@id/divider"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/operator_label"
+        app:layout_constraintVertical_bias="0.9" />
 
     <View
         android:id="@+id/divider"
@@ -186,7 +199,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/text_gray"
-        android:textSize="18sp"
         android:layout_marginStart="@dimen/drawer_margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -30,12 +30,14 @@ import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
+import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static org.smartregister.AllConstants.OPERATIONAL_AREAS;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
@@ -49,11 +51,14 @@ import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FORM;
+import static org.smartregister.reveal.util.Constants.JsonForm.HEAD_OF_HOUSEHOLD;
 import static org.smartregister.reveal.util.Constants.JsonForm.NON_RESIDENTIAL;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
+import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
+import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_TYPE;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
@@ -367,11 +372,23 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
                 startSprayForm(feature);
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
-                listTaskInteractor.fetchCardViewDetails(feature.id());
+                listTaskInteractor.fetchSprayDetails(feature.id(), false);
             }
         }
     }
 
+    @Override
+    public void onSprayFormDetailsFetched(CardDetails cardDetails) {
+        listTaskView.hideProgressDialog();
+        if (cardDetails == null) {
+            startSprayForm(selectedFeature);
+        } else {
+            startSprayForm(selectedFeature, cardDetails.getPropertyType(), cardDetails.getSprayStatus(), cardDetails.getFamilyHead());
+        }
+
+    }
+
+    @Override
     public void onCardDetailsFetched(CardDetails cardDetails) {
         if (cardDetails == null) {
             return;
@@ -414,7 +431,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     }
 
     private void startSprayForm(String structureId, String structureUUID, String structureVersion, String structureType,
-                                String taskIdentifier, String taskBusinessStatus, String taskStatus) {
+                                String taskIdentifier, String taskBusinessStatus, String taskStatus, String propertyType, String sprayStatus, String familyHead) {
         try {
             String formString = AssetHandler.readFileFromAssetsFolder(SPRAY_FORM, listTaskView.getContext());
             if (StringUtils.isBlank(structureType)) {
@@ -430,6 +447,20 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             formData.put(LOCATION_UUID, structureUUID);
             formData.put(LOCATION_VERSION, structureVersion);
             formJson.put(DETAILS, formData);
+            JSONArray fields = JsonFormUtils.fields(formJson);
+            if (StringUtils.isNotBlank(propertyType) || StringUtils.isNotBlank(sprayStatus) || StringUtils.isNotBlank(familyHead)) {
+                for (int i = 0; i < fields.length(); i++) {
+                    JSONObject field = fields.getJSONObject(i);
+                    String key = field.getString(KEY);
+                    if (key.equalsIgnoreCase(STRUCTURE_TYPE))
+                        field.put(JsonFormUtils.VALUE, propertyType);
+                    else if (key.equalsIgnoreCase(SPRAY_STATUS))
+                        field.put(JsonFormUtils.VALUE, sprayStatus);
+                    else if (key.equalsIgnoreCase(HEAD_OF_HOUSEHOLD))
+                        field.put(JsonFormUtils.VALUE, familyHead);
+
+                }
+            }
             listTaskView.startJsonForm(formJson);
         } catch (Exception e) {
             Log.e(TAG, "error launching spray form", e);
@@ -437,18 +468,23 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     }
 
     private void startSprayForm(Feature feature) {
+        startSprayForm(feature, null, null, null);
+
+    }
+
+    private void startSprayForm(Feature feature, String propertyType, String sprayStatus, String familyHead) {
         String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
         String identifier = getPropertyValue(feature, TASK_IDENTIFIER);
         String status = getPropertyValue(feature, TASK_STATUS);
         startSprayForm(feature.id(), getPropertyValue(feature, LOCATION_UUID), getPropertyValue(feature, LOCATION_VERSION),
                 getPropertyValue(feature, LOCATION_TYPE),
-                identifier, businessStatus, status);
-
+                identifier, businessStatus, status, propertyType, sprayStatus, familyHead);
     }
 
-    public void onChangeSprayStatus() {
-        startSprayForm(selectedFeature);
 
+    public void onChangeSprayStatus() {
+        listTaskView.showProgressDialog();
+        listTaskInteractor.fetchSprayDetails(selectedFeature.id(), true);
     }
 
     public void saveJsonForm(String json) {
@@ -468,7 +504,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             }
         }
         listTaskView.setGeoJsonSource(featureCollection, null);
-        listTaskInteractor.fetchCardViewDetails(structureId);
+        listTaskInteractor.fetchSprayDetails(structureId, false);
     }
 
 
