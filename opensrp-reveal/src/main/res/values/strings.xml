@@ -64,4 +64,5 @@
     <string name="no_structures_found">There are no structures mapped to this operational area. Please add a point to begin</string>
     <string name="change_spray_status">Change Spray Status</string>
 
+    <string name="attribution_text">Powered by OpenSRP \nBuilt on mSpray and DiSARM</string>
 </resources>

@@ -13,6 +13,7 @@
     <dimen name="hamburger_margin">16dp</dimen>
 
     <dimen name="drawer_margin">32dp</dimen>
+    <dimen name="divider_margin">27dp</dimen>
     <dimen name="drawer_margin_vertical">10dp</dimen>
     <dimen name="drawer_separator_margin">20dp</dimen>
     <dimen name="drawer_drawable_padding">10dp</dimen>
