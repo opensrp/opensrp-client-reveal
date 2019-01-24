@@ -37,7 +37,7 @@ actions:
 name: step1_sprayedRooms
 description: Sprayed Rooms
 priority: 1
-condition: "step1_structureType.equals('Residential Structure') && step1_sprayStatus.equals('Sprayed')"
+condition: "step1_structureType.equals('Residential Structure') && step1_sprayStatus.equals('Sprayed') && !step1_roomsFound.equals(null) && !step1_roomsFound.equals('')"
 actions:
   - "isRelevant = true"
 ---
