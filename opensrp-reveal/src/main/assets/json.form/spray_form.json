@@ -152,6 +152,7 @@
         "type": "edit_text",
         "hint": "Not Sprayed Other Reason",
         "edit_type": "name",
+        "is_mandatory": true,
         "v_required": {
           "value": true,
           "err": "Please specify reason spray was not done"
@@ -172,10 +173,6 @@
         "type": "edit_text",
         "hint": "Head of Household name",
         "edit_type": "name",
-        "v_required": {
-          "value": true,
-          "err": "Please specify Head of Household name"
-        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -222,6 +219,7 @@
         "type": "edit_text",
         "hint": "Number of Eligible Rooms Found (Type 99 if unable to assess)",
         "text_size": "8sp",
+        "is_mandatory": true,
         "v_required": {
           "value": true,
           "err": "Please specify number of eligible rooms (Type 99 if unable to assess)"
@@ -246,13 +244,19 @@
         "type": "edit_text",
         "hint": "Number of Rooms Sprayed (Type 99 if unable to assess)",
         "text_size": "8sp",
+        "is_mandatory": true,
         "v_required": {
           "value": true,
           "err": "Please specify number of rooms sprayed (Type 99 if unable to assess)"
         },
-        "v_numeric": {
+        "v_relative_max": {
+          "value": "roomsFound",
+          "exception": 99,
+          "err": "Number of rooms sprayed cannot be greater than number of rooms found"
+        },
+        "v_numeric_integer": {
           "value": "true",
-          "err": "Must be a number"
+          "err": "Must be a rounded number"
         },
         "relevance": {
           "rules-engine": {
@@ -270,6 +274,7 @@
         "type": "edit_text",
         "hint": "Total Number of Nets Hanging and in Use (Type 99 if unable to assess)",
         "text_size": "8sp",
+        "is_mandatory": true,
         "v_required": {
           "value": true,
           "err": "Please specify Total Number of Nets (Type 99 if unable to assess)"

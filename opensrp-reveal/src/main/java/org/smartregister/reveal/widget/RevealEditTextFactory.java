@@ -3,6 +3,12 @@ package org.smartregister.reveal.widget;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.Editable;
+
+import android.graphics.Color;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,6 +26,7 @@ import org.smartregister.reveal.R;
 
 import java.util.List;
 
+import static org.smartregister.reveal.util.Constants.JsonForm.IS_MANDATORY;
 import static org.smartregister.reveal.util.Constants.JsonForm.NO_PADDING;
 
 /**
@@ -28,10 +35,12 @@ import static org.smartregister.reveal.util.Constants.JsonForm.NO_PADDING;
 public class RevealEditTextFactory extends EditTextFactory {
 
     private boolean hasNoPadding;
+    private boolean isMandatoryField;
 
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener, boolean popup) throws Exception {
         hasNoPadding = new JSONObject(formFragment.getCurrentJsonState()).getJSONObject(stepName).optBoolean(NO_PADDING);
+        isMandatoryField = jsonObject.optBoolean(IS_MANDATORY);
         return super.getViewsFromJson(stepName, context, formFragment, jsonObject, listener, popup);
     }
 
@@ -51,6 +60,13 @@ public class RevealEditTextFactory extends EditTextFactory {
         editText.setGravity(Gravity.START);
         editText.setSingleLine(false);
 
+        // add red asterisk to mandatory fields
+        if (isMandatoryField) {
+            SpannableString hint = new SpannableString(editText.getHint() + " *");
+            hint.setSpan(new ForegroundColorSpan(Color.RED), hint.length() - 1, hint.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            editText.setHint(hint);
+        }
+      
         // truncate hint when typing
         String shortenedHint = editText.getHint().toString().split("\\(")[0];
         editText.addTextChangedListener(new GenericTextWatcher(stepName, formFragment, editText) {

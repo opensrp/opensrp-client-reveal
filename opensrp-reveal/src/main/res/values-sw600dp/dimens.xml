@@ -10,11 +10,9 @@
     <dimen name="login_edit_text_textSize">18sp</dimen>
 
     <dimen name="hamburger_padding">10dp</dimen>
-    <dimen name="status_label_padding">16dp</dimen>
     <dimen name="hamburger_margin">32dp</dimen>
 
     <dimen name="drawer_drawable_padding">40dp</dimen>
-    <dimen name="drawer_spinner_width">240dp</dimen>
     <dimen name="drawer_margin_vertical">16dp</dimen>
     <dimen name="drawer_separator_margin">32dp</dimen>
     <dimen name="drawer_icon_margin">60dp</dimen>
