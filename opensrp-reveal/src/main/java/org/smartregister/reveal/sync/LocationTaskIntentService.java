@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.util.Pair;
 
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
