@@ -65,4 +65,5 @@
     <string name="change_spray_status">Change Spray Status</string>
     <string name="reveal_icon">Reveal Icon</string>
 
+    <string name="attribution_text">Powered by OpenSRP \nBuilt on mSpray and DiSARM</string>
 </resources>
