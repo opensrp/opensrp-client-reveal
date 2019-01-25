@@ -46,14 +46,13 @@ public class LocationTaskIntentService extends IntentService {
         List<Location> syncedStructures = locationServiceHelper.fetchLocationsStructures();
         List<Task> synchedTasks = taskServiceHelper.syncTasks();
 
-        Pair<Boolean, Set<String>> structureIds = checkChangeInOperationalAreaAndExtractStructureIds(syncedStructures, synchedTasks);
 
-        if (structureIds.first != null && structureIds.first) {
+        if (hasChangesInCurrentOperationalArea(syncedStructures, synchedTasks)) {
             Intent intent = new Intent(STRUCTURE_TASK_SYNCHED);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
         }
 
-        clientProcessEvents(structureIds.second);
+        clientProcessEvents(extractStructureIds(syncedStructures, synchedTasks));
 
         new AppExecutors().mainThread().execute(new Runnable() {
             @Override
@@ -64,30 +63,65 @@ public class LocationTaskIntentService extends IntentService {
 
     }
 
-    private Pair<Boolean, Set<String>> checkChangeInOperationalAreaAndExtractStructureIds(List<Location> syncedStructures, List<Task> synchedTasks) {
+    /**
+     * Checks if there a synched structure or task on the currently opened operational area
+     *
+     * @param syncedStructures the list of synced structures
+     * @param synchedTasks     the list of synced tasks
+     * @return true if there is a synched structure or task on the currently opened operational area; otherwise returns false
+     */
+    private boolean hasChangesInCurrentOperationalArea(List<Location> syncedStructures, List<Task> synchedTasks) {
         Location operationalAreaLocation = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
-        String operationalAreaLocationId = operationalAreaLocation == null ? null : operationalAreaLocation.getId();
+        String operationalAreaLocationId;
+        if (operationalAreaLocation == null) {
+            return false;
+        } else {
+            operationalAreaLocationId = operationalAreaLocation.getId();
+        }
+        if (syncedStructures != null) {
+            for (Location structure : syncedStructures) {
+                if (operationalAreaLocationId.equals(structure.getProperties().getParentId())) {
+                    return true;
+                }
+            }
+        }
+        if (synchedTasks != null) {
+            for (Task task : synchedTasks) {
+                if (operationalAreaLocationId.equals(task.getGroupIdentifier())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Extracts a set of Structures ids from syched structures and tasks
+     *
+     * @param syncedStructures the list of synced structures
+     * @param synchedTasks     the list of synced tasks
+     * @return a set of baseEntityIds
+     */
+    private Set<String> extractStructureIds(List<Location> syncedStructures, List<Task> synchedTasks) {
         Set<String> structureIds = new HashSet<>();
-        boolean hasChangeInOperationalArea = false;
         if (!org.smartregister.util.Utils.isEmptyCollection(syncedStructures)) {
             for (Location structure : syncedStructures) {
-                if (!hasChangeInOperationalArea && operationalAreaLocationId != null && operationalAreaLocationId.equals(structure.getProperties().getParentId())) {
-                    hasChangeInOperationalArea = true;
-                }
                 structureIds.add(structure.getId());
             }
         }
         if (!org.smartregister.util.Utils.isEmptyCollection(synchedTasks)) {
             for (Task task : synchedTasks) {
-                if (!hasChangeInOperationalArea && operationalAreaLocationId != null && operationalAreaLocationId.equals(task.getGroupIdentifier())) {
-                    hasChangeInOperationalArea = true;
-                }
                 structureIds.add(task.getForEntity());
             }
         }
-        return new Pair<>(hasChangeInOperationalArea, structureIds);
+        return structureIds;
     }
 
+    /**
+     * Clients Processes events of a set of structure baseEntityIds that have the task status TYPE_Task_Unprocessed
+     *
+     * @param syncedStructuresIds the set of structure baseEntityIds to client process
+     */
     private void clientProcessEvents(Set<String> syncedStructuresIds) {
         if (org.smartregister.util.Utils.isEmptyCollection(syncedStructuresIds))
             return;
