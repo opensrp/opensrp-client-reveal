@@ -249,9 +249,14 @@
           "value": true,
           "err": "Please specify number of rooms sprayed (Type 99 if unable to assess)"
         },
-        "v_numeric": {
+        "v_relative_max": {
+          "value": "roomsFound",
+          "exception": 99,
+          "err": "Number of rooms sprayed cannot be greater than number of rooms found"
+        },
+        "v_numeric_integer": {
           "value": "true",
-          "err": "Must be a number"
+          "err": "Must be a rounded number"
         },
         "relevance": {
           "rules-engine": {
