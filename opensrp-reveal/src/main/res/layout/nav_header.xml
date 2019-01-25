@@ -202,6 +202,6 @@
         android:layout_marginStart="@dimen/drawer_margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:singleLine="false"
+        app:layout_constraintEnd_toEndOf="parent"
         android:text="@string/attribution_text"/>
 </android.support.constraint.ConstraintLayout>
