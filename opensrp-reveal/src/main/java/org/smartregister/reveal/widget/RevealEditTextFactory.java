@@ -2,16 +2,19 @@ package org.smartregister.reveal.widget;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.text.Editable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.vijay.jsonwizard.customviews.GenericTextWatcher;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.utils.FormUtils;
 import com.vijay.jsonwizard.widgets.EditTextFactory;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
 
@@ -47,6 +50,19 @@ public class RevealEditTextFactory extends EditTextFactory {
         }
         editText.setGravity(Gravity.START);
         editText.setSingleLine(false);
+
+        // truncate hint when typing
+        String shortenedHint = editText.getHint().toString().split("\\(")[0];
+        editText.addTextChangedListener(new GenericTextWatcher(stepName, formFragment, editText) {
+            @Override
+            public synchronized void afterTextChanged(Editable editable) {
+                super.afterTextChanged(editable);
+                String text = editable.toString();
+                if (!StringUtils.isEmpty(text)) {
+                    editText.setFloatingLabelText(shortenedHint);
+                }
+            }
+        });
     }
 
     @Override
