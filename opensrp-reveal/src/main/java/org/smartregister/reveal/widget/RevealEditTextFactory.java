@@ -2,27 +2,34 @@ package org.smartregister.reveal.widget;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.text.Editable;
+
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.vijay.jsonwizard.customviews.GenericTextWatcher;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.utils.FormUtils;
 import com.vijay.jsonwizard.widgets.EditTextFactory;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
 
 import java.util.List;
 
+import static org.smartregister.reveal.util.Constants.JsonForm.HINT;
 import static org.smartregister.reveal.util.Constants.JsonForm.IS_MANDATORY;
 import static org.smartregister.reveal.util.Constants.JsonForm.NO_PADDING;
+import static org.smartregister.reveal.util.Constants.JsonForm.SHORTENED_HINT;
 
 /**
  * Created by samuelgithengi on 12/17/18.
@@ -61,6 +68,20 @@ public class RevealEditTextFactory extends EditTextFactory {
             hint.setSpan(new ForegroundColorSpan(Color.RED), hint.length() - 1, hint.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             editText.setHint(hint);
         }
+      
+        // truncate hint when typing
+        String shortenedHintStr = jsonObject.optString(SHORTENED_HINT);
+        final String shortenedHint = "".equals(shortenedHintStr)? jsonObject.optString(HINT) : shortenedHintStr;
+        editText.addTextChangedListener(new GenericTextWatcher(stepName, formFragment, editText) {
+            @Override
+            public synchronized void afterTextChanged(Editable editable) {
+                super.afterTextChanged(editable);
+                String text = editable.toString();
+                if (!StringUtils.isEmpty(text)) {
+                    editText.setFloatingLabelText(shortenedHint);
+                }
+            }
+        });
     }
 
     @Override
