@@ -26,8 +26,10 @@ import org.smartregister.reveal.R;
 
 import java.util.List;
 
+import static org.smartregister.reveal.util.Constants.JsonForm.HINT;
 import static org.smartregister.reveal.util.Constants.JsonForm.IS_MANDATORY;
 import static org.smartregister.reveal.util.Constants.JsonForm.NO_PADDING;
+import static org.smartregister.reveal.util.Constants.JsonForm.SHORTENED_HINT;
 
 /**
  * Created by samuelgithengi on 12/17/18.
@@ -68,7 +70,8 @@ public class RevealEditTextFactory extends EditTextFactory {
         }
       
         // truncate hint when typing
-        String shortenedHint = editText.getHint().toString().split("\\(")[0];
+        String shortenedHintStr = jsonObject.optString(SHORTENED_HINT);
+        final String shortenedHint = "".equals(shortenedHintStr)? jsonObject.optString(HINT) : shortenedHintStr;
         editText.addTextChangedListener(new GenericTextWatcher(stepName, formFragment, editText) {
             @Override
             public synchronized void afterTextChanged(Editable editable) {

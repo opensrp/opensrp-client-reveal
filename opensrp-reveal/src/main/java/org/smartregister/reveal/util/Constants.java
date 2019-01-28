@@ -113,6 +113,10 @@ public interface Constants {
         String NO_PADDING = "no_padding";
 
         String IS_MANDATORY = "is_mandatory";
+
+        String SHORTENED_HINT = "shortened_hint";
+
+        String HINT = "hint";
     }
 
     interface DateFormat {
