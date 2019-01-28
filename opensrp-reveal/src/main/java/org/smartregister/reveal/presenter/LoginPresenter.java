@@ -4,8 +4,10 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
@@ -76,6 +78,9 @@ public class LoginPresenter extends BaseLoginPresenter implements BaseLoginContr
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
         }
+    }
+    public void canvasGlobalLayoutListenerProcessor(ScrollView canvasSV, ViewTreeObserver.OnGlobalLayoutListener layoutListener) {
+        // do nothing
     }
 
     @Override
