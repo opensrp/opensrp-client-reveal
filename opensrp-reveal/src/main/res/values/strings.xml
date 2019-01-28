@@ -43,7 +43,7 @@
     <string name="reveal_layer_points">reveal-data-points</string>
 
 
-    <string name="task_not_found">Could not find task for Structure %1s </string>
+    <string name="task_not_found">This structure does not have a task assigned to it for the campaign %1s</string>
 
     <string name="error_fetching_location_hierarchy_title">Error Processing Locations Hierarchy</string>
     <string name="error_fetching_location_hierarchy">Error Processing Location Hierarchy. Log off to download location hierarchy again</string>
