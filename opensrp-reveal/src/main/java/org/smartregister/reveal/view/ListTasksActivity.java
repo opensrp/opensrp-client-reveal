@@ -269,8 +269,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         facilityTextView = headerView.findViewById(R.id.facility_label);
         operatorTextView = headerView.findViewById(R.id.operator_label);
 
-        listTaskPresenter.onInitializeDrawerLayout();
-
         operationalAreaTextView.setOnClickListener(this);
 
         campaignTextView.setOnClickListener(this);
@@ -473,7 +471,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void setOperator() {
-        org.smartregister.reveal.util.Utils.setTextViewText(operatorTextView, R.string.operator, sharedPreferences.fetchRegisteredANM());
+       org.smartregister.reveal.util.Utils.setTextViewText(operatorTextView, R.string.operator, sharedPreferences.fetchRegisteredANM());
     }
 
     private void initializeProgressDialog() {
@@ -539,6 +537,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
         IntentFilter filter = new IntentFilter(Action.STRUCTURE_TASK_SYNCHED);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(refreshGeowidgetReceiver, filter);
+        listTaskPresenter.onInitializeDrawerLayout();
     }
 
     @Override
