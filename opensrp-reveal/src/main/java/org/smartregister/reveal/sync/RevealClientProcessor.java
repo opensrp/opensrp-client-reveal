@@ -12,6 +12,7 @@ import org.smartregister.domain.db.Event;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.jsonmapping.ClientClassification;
 import org.smartregister.repository.BaseRepository;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -73,9 +74,9 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 if (eventType == null) {
                     continue;
                 } else if (eventType.equals(SPRAY_EVENT)) {
-                    processSprayEvent(event, clientClassification, localEvents);
-                    if (event.getDetails() != null && operationalAreaLocationId != null &&
-                            operationalAreaLocationId.equals(event.getDetails().get(TASK_IDENTIFIER))) {
+                    String operationalAreaId = processSprayEvent(event, clientClassification, localEvents);
+                    if (!hasSynchedEventsInTarget && operationalAreaLocationId != null &&
+                            operationalAreaLocationId.equals(operationalAreaId)) {
                         hasSynchedEventsInTarget = true;
                     }
                 }
@@ -92,6 +93,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             }
         }
 
+
         if (hasSynchedEventsInTarget) {
             Intent intent = new Intent(STRUCTURE_TASK_SYNCHED);
             LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
@@ -99,10 +101,12 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
     }
 
-    private void processSprayEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
+    private String processSprayEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
+        String operationalAreaId = null;
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
             String taskIdentifier = event.getDetails().get(TASK_IDENTIFIER);
             Task task = RevealApplication.getInstance().getTaskRepository().getTaskByIdentifier(taskIdentifier);
+            EventClientRepository eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
             if (task != null) {
                 task.setBusinessStatus(calculateBusinessStatus(event));
                 task.setStatus(Task.TaskStatus.COMPLETED);
@@ -110,12 +114,19 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     task.setSyncStatus(BaseRepository.TYPE_Unsynced);
                 }
                 RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
+                eventClientRepository.markEventAsSynced(event.getFormSubmissionId());
+                operationalAreaId = task.getGroupIdentifier();
+            } else {
+                eventClientRepository.markEventAsTaskUnprocessed(event.getFormSubmissionId());
             }
             Location structure = RevealApplication.getInstance().getStructureRepository().getLocationById(event.getBaseEntityId());
             if (structure != null) {
                 String structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE).getValue().toString();
                 structure.getProperties().setType(structureType);
                 RevealApplication.getInstance().getStructureRepository().addOrUpdate(structure);
+                if (operationalAreaId == null) {
+                    operationalAreaId = structure.getProperties().getParentId();
+                }
             }
             try {
                 Client client = new Client(event.getBaseEntityId());
@@ -126,6 +137,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         } else {
             Log.w(TAG, String.format("Spray Event %s does not have task details", event.getEventId()));
         }
+        return operationalAreaId;
     }
 
     public String calculateBusinessStatus(Event event) {
@@ -136,5 +148,10 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         } else {
             return sprayStatus;
         }
+    }
+
+    @Override
+    public void updateClientDetailsTable(Event event, Client client) {
+        //do nothing
     }
 }
