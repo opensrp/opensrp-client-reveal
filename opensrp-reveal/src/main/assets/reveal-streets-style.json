@@ -12343,9 +12343,32 @@
             "Not Sprayable"
           ],
           "hsl(0, 0%, 9%)",
-          "hsl(0, 0%, 9%)"
+          "hsl(0, 0%, 78%)"
         ],
-        "fill-opacity": 1,
+        "fill-opacity": [
+          "match",
+          [
+            "get",
+            "taskBusinessStatus"
+          ],
+          [
+            "Not Visited"
+          ],
+          1,
+          [
+            "Not Sprayed"
+          ],
+          1,
+          [
+            "Sprayed"
+          ],
+          1,
+          [
+            "Not Sprayable"
+          ],
+          1,
+          0.75
+        ],
         "fill-outline-color": "rgb(0, 0, 0)"
       }
     },
@@ -12383,7 +12406,7 @@
             "Not Sprayable"
           ],
           "hsl(0, 0%, 9%)",
-          "hsl(0, 0%, 9%)"
+          "hsl(0, 0%, 78%)"
         ],
         "circle-stroke-width": 1
       }
