@@ -364,7 +364,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         selectedFeature = feature;
         listTaskView.displaySelectedFeature(feature, clickedPoint);
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
-            listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, feature.id()));
+            listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
         } else {
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
