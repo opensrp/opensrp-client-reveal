@@ -45,7 +45,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 27
         versionCode 1
-        versionName "1.0"
+        versionName "1.1"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -176,7 +176,7 @@ dependencies {
 
     implementation 'io.ona.kujaku:utils:0.5.5'
 
-    implementation('org.smartregister:opensrp-client-core:1.5.15-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.5.16-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.guava', module: 'guava'

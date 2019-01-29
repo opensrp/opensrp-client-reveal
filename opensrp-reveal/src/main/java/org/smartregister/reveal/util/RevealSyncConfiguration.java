@@ -43,7 +43,7 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     }
 
     @Override
-    public boolean isSyncSettings() {
-        return false;
+    public boolean disableSyncToServerIfUserIsDisabled() {
+        return true;
     }
 }
