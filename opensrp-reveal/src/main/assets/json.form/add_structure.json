@@ -56,7 +56,7 @@
         "type": "geowidget",
         "v_zoom_max": {
           "value": "16.5",
-          "err": "Zoom in to add point"
+          "err": "Please zoom in to add a point"
         }
       },
       {
