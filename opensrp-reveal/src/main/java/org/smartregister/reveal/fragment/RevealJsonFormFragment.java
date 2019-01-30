@@ -10,6 +10,7 @@ import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.interactor.RevealJsonFormInteractor;
+import org.smartregister.reveal.presenter.RevealJsonFormFragmentPresenter;
 import org.smartregister.reveal.util.Constants;
 
 /**
@@ -19,7 +20,7 @@ public class RevealJsonFormFragment extends JsonFormFragment {
 
     @Override
     protected JsonFormFragmentPresenter createPresenter() {
-        return new JsonFormFragmentPresenter(this, new RevealJsonFormInteractor());
+        return new RevealJsonFormFragmentPresenter(this, new RevealJsonFormInteractor());
     }
 
     public static RevealJsonFormFragment getFormFragment(String stepName) {
