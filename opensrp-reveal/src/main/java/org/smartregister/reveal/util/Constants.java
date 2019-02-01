@@ -28,6 +28,8 @@ public interface Constants {
 
     int ANIMATE_TO_LOCATION_DURATION = 1000;
 
+    float MY_LOCATION_BUFFER =75;
+
     interface CONFIGURATION {
         String LOGIN = "login";
     }

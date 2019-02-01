@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.cocoahero.android.geojson.Feature;
 import com.cocoahero.android.geojson.Point;
+import com.google.android.gms.location.LocationServices;
 import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -46,7 +47,6 @@ import java.util.List;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 
-
 /**
  * Created by samuelgithengi on 12/13/18.
  */
@@ -63,6 +63,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
     private JsonApi jsonApi;
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView, RevealMapView mapView) {
+
         if (!Utils.isEmptyCollection(mapView.getValidators())) {
             for (METValidator validator : mapView.getValidators()) {
                 MapboxMap mapboxMap = mapView.getMapboxMap();
@@ -240,8 +241,10 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
 
     @Override
     public void onStart() {
-        if (mapView != null)
+        if (mapView != null) {
             mapView.onStart();
+            mapView.setFusedLocationClient(LocationServices.getFusedLocationProviderClient((Activity) jsonApi));
+        }
     }
 
     @Override
