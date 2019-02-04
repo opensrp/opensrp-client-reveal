@@ -127,138 +127,6 @@
       "paint": {}
     },
     {
-      "id": "reveal-data-polygons",
-      "type": "fill",
-      "layout": {},
-      "source": "reveal-data-set",
-      "filter": [
-        "==",
-        "$type",
-        "Polygon"
-      ],
-      "paint": {
-        "fill-color": [
-          "match",
-          [
-            "get",
-            "taskBusinessStatus"
-          ],
-          [
-            "Not Visited"
-          ],
-          "hsl(46, 88%, 62%)",
-          [
-            "Not Sprayed"
-          ],
-          "hsl(3, 71%, 54%)",
-          [
-            "Sprayed"
-          ],
-          "hsl(89, 52%, 48%)",
-          [
-            "Not Sprayable"
-          ],
-          "hsl(0, 0%, 9%)",
-          "hsl(0, 0%, 78%)"
-        ],
-        "fill-opacity": [
-          "match",
-          [
-            "get",
-            "taskBusinessStatus"
-          ],
-          [
-            "Not Visited"
-          ],
-          1,
-          [
-            "Not Sprayed"
-          ],
-          1,
-          [
-            "Sprayed"
-          ],
-          1,
-          [
-            "Not Sprayable"
-          ],
-         1,
-         0.75
-        ],
-        "fill-outline-color": "rgb(0, 0, 0)"
-      }
-    },
-    {
-      "id": "reveal-data-points",
-      "type": "circle",
-      "source": "reveal-data-set",
-      "filter": [
-        "==",
-        "$type",
-        "Point"
-      ],
-      "layout": {},
-      "paint": {
-        "circle-radius": 10,
-        "circle-color": [
-          "match",
-          [
-            "get",
-            "taskBusinessStatus"
-          ],
-          [
-            "Not Visited"
-          ],
-          "hsl(46, 88%, 62%)",
-          [
-            "Not Sprayed"
-          ],
-          "hsl(3, 71%, 54%)",
-          [
-            "Sprayed"
-          ],
-          "hsl(89, 52%, 48%)",
-          [
-            "Not Sprayable"
-          ],
-          "hsl(0, 0%, 9%)",
-          "hsl(0, 0%, 78%)"
-        ],
-        "circle-stroke-width": 1
-      }
-    },
-    {
-      "id": "select-layer-polygons",
-      "type": "fill",
-      "source": "select-data",
-      "filter": [
-        "==",
-        "$type",
-        "Polygon"
-      ],
-      "layout": {},
-      "paint": {
-        "fill-outline-color": "rgb(0, 0, 0)",
-        "fill-opacity": 1,
-        "fill-color": "hsl(26, 84%, 56%)"
-      }
-    },
-    {
-      "id": "select-layer-circles",
-      "type": "circle",
-      "source": "select-data",
-      "filter": [
-        "==",
-        "$type",
-        "Point"
-      ],
-      "paint": {
-        "circle-color": "hsl(26, 84%, 56%)",
-        "circle-radius": 16,
-        "circle-stroke-width": 1
-      }
-    },
-    {
       "id": "ona-bnsqwty9",
       "type": "raster",
       "source": "mapbox://ona.bnsqwty9",
@@ -352,6 +220,138 @@
         ]
       },
       "paint": {}
+    },
+    {
+      "id": "reveal-data-polygons",
+      "type": "fill",
+      "layout": {},
+      "source": "reveal-data-set",
+      "filter": [
+        "==",
+        "$type",
+        "Polygon"
+      ],
+      "paint": {
+        "fill-color": [
+          "match",
+          [
+            "get",
+            "taskBusinessStatus"
+          ],
+          [
+            "Not Visited"
+          ],
+          "hsl(46, 88%, 62%)",
+          [
+            "Not Sprayed"
+          ],
+          "hsl(3, 71%, 54%)",
+          [
+            "Sprayed"
+          ],
+          "hsl(89, 52%, 48%)",
+          [
+            "Not Sprayable"
+          ],
+          "hsl(0, 0%, 9%)",
+          "hsl(0, 0%, 78%)"
+        ],
+        "fill-opacity": [
+          "match",
+          [
+            "get",
+            "taskBusinessStatus"
+          ],
+          [
+            "Not Visited"
+          ],
+          1,
+          [
+            "Not Sprayed"
+          ],
+          1,
+          [
+            "Sprayed"
+          ],
+          1,
+          [
+            "Not Sprayable"
+          ],
+          1,
+          0.75
+        ],
+        "fill-outline-color": "rgb(0, 0, 0)"
+      }
+    },
+    {
+      "id": "reveal-data-points",
+      "type": "circle",
+      "source": "reveal-data-set",
+      "filter": [
+        "==",
+        "$type",
+        "Point"
+      ],
+      "layout": {},
+      "paint": {
+        "circle-radius": 10,
+        "circle-color": [
+          "match",
+          [
+            "get",
+            "taskBusinessStatus"
+          ],
+          [
+            "Not Visited"
+          ],
+          "hsl(46, 88%, 62%)",
+          [
+            "Not Sprayed"
+          ],
+          "hsl(3, 71%, 54%)",
+          [
+            "Sprayed"
+          ],
+          "hsl(89, 52%, 48%)",
+          [
+            "Not Sprayable"
+          ],
+          "hsl(0, 0%, 9%)",
+          "hsl(0, 0%, 78%)"
+        ],
+        "circle-stroke-width": 1
+      }
+    },
+    {
+      "id": "select-layer-polygons",
+      "type": "fill",
+      "source": "select-data",
+      "filter": [
+        "==",
+        "$type",
+        "Polygon"
+      ],
+      "layout": {},
+      "paint": {
+        "fill-outline-color": "rgb(0, 0, 0)",
+        "fill-opacity": 1,
+        "fill-color": "hsl(26, 84%, 56%)"
+      }
+    },
+    {
+      "id": "select-layer-circles",
+      "type": "circle",
+      "source": "select-data",
+      "filter": [
+        "==",
+        "$type",
+        "Point"
+      ],
+      "paint": {
+        "circle-color": "hsl(26, 84%, 56%)",
+        "circle-radius": 16,
+        "circle-stroke-width": 1
+      }
     }
   ],
   "created": "2018-11-30T15:11:36.899Z",
