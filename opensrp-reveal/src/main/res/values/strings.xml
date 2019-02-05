@@ -66,4 +66,8 @@
     <string name="reveal_icon">Reveal Icon</string>
 
     <string name="attribution_text">Powered by OpenSRP \nBuilt on mSpray and DiSARM</string>
+
+    <string name="request_password_title">You are not near the structure</string>
+    <string name="enter_admin_password"> Input admin password to continue</string>
+    <string name="wrong_admin_password">Wrong admin password</string>
 </resources>

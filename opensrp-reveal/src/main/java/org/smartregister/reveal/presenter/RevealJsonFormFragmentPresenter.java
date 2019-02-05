@@ -2,11 +2,19 @@ package org.smartregister.reveal.presenter;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -18,6 +26,8 @@ import com.vijay.jsonwizard.interactors.JsonFormInteractor;
 import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 import com.vijay.jsonwizard.utils.ValidationStatus;
 
+import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
 
@@ -85,23 +95,64 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter {
             returnIntent.putExtra(JsonFormConstants.SKIP_VALIDATION, Boolean.valueOf(formFragment.getMainView().getTag(com.vijay.jsonwizard.R.id.skip_validation).toString()));
             getView().finishWithResult(returnIntent);
 
-        } else
-
-        {
+        } else {
             requestUserPassword();
         }
-
     }
 
     @Override
     public void onSaveClick(LinearLayout mainView) {
         writeValuesAndValidate(mainView);
-
     }
 
     private void requestUserPassword() {
-        Toast.makeText(formFragment.getContext(), "Requesting password for Add while far", Toast.LENGTH_LONG).show();
-    }
+        Activity activity = formFragment.getActivity();
+        if (activity == null) {
+            return;
+        }
 
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_request_password, null);
+        final EditText adminPassEditText = dialogView.findViewById(R.id.admin_pass);
+        ((CheckBox) dialogView.findViewById(R.id.show_password_checkbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                    adminPassEditText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                else
+                    adminPassEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+        });
+
+
+        AlertDialog dialog = new AlertDialog.Builder(activity)
+                .setTitle(R.string.request_password_title)
+                .setView(dialogView)
+                .setPositiveButton(R.string.ok, null)
+                .setNegativeButton(R.string.cancel, null)
+                .create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (!adminPassEditText.getText().toString().equals(BuildConfig.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES)) {
+                            Toast.makeText(activity, R.string.wrong_admin_password, Toast.LENGTH_LONG).show();
+                            adminPassEditText.setError(activity.getString(R.string.wrong_admin_password));
+                        } else {
+                            adminPassEditText.setError(null);
+                            dialog.dismiss();
+                            onValidateUserLocation(true);
+                        }
+                    }
+                });
+            }
+        });
+        dialog.show();
+
+    }
 
 }
