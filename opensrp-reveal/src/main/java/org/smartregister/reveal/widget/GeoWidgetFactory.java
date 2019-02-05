@@ -30,7 +30,6 @@ import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
 import com.vijay.jsonwizard.interfaces.JsonApi;
 import com.vijay.jsonwizard.interfaces.LifeCycleListener;
 import com.vijay.jsonwizard.utils.ValidationStatus;
-import com.vijay.jsonwizard.validators.edittext.MinNumericValidator;
 import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +37,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.validators.MinZoomValidator;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.Utils;
 
@@ -66,13 +66,13 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
 
         if (!Utils.isEmptyCollection(mapView.getValidators())) {
             for (METValidator validator : mapView.getValidators()) {
-                MapboxMap mapboxMap = mapView.getMapboxMap();
-                double zoom = mapView.getMapboxMap().getCameraPosition().zoom;
-                Log.d(TAG, "Current Zoom level: " + zoom);
-                if (mapboxMap != null && !validator.isValid(String.valueOf(zoom), false)) {
-
-                    Toast.makeText(formFragmentView.getContext(), validator.getErrorMessage(), Toast.LENGTH_LONG).show();
-                    return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
+                if (validator instanceof MinZoomValidator) {
+                    MapboxMap mapboxMap = mapView.getMapboxMap();
+                    double zoom = mapView.getMapboxMap().getCameraPosition().zoom;
+                    if (mapboxMap != null && !validator.isValid(String.valueOf(zoom), false)) {
+                        Toast.makeText(formFragmentView.getContext(), validator.getErrorMessage(), Toast.LENGTH_LONG).show();
+                        return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
+                    }
                 }
             }
         }
@@ -224,7 +224,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         JSONObject minValidation = jsonObject.optJSONObject(MAX_ZOOM_LEVEL);
         if (minValidation != null) {
             try {
-                mapView.addValidator(new MinNumericValidator(minValidation.getString(JsonFormConstants.ERR),
+                mapView.addValidator(new MinZoomValidator(minValidation.getString(JsonFormConstants.ERR),
                         minValidation.getDouble(JsonFormConstants.VALUE)));
             } catch (JSONException e) {
                 Log.e(TAG, "Error extracting max zoom level from" + minValidation);
