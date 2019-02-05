@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.cocoahero.android.geojson.Feature;
 import com.cocoahero.android.geojson.Point;
@@ -19,6 +20,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.rengwuxian.materialedittext.validation.METValidator;
 import com.rey.material.util.ViewUtil;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
@@ -26,13 +28,17 @@ import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.interfaces.FormWidgetFactory;
 import com.vijay.jsonwizard.interfaces.JsonApi;
 import com.vijay.jsonwizard.interfaces.LifeCycleListener;
+import com.vijay.jsonwizard.utils.ValidationStatus;
+import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.validators.MinZoomValidator;
 import org.smartregister.reveal.view.RevealMapView;
+import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +56,27 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
 
     private static final String ZOOM_LEVEL = "zoom_level";
 
+    private static final String MAX_ZOOM_LEVEL = "v_zoom_max";
+
     private RevealMapView mapView;
 
     private JsonApi jsonApi;
+
+    public static ValidationStatus validate(JsonFormFragmentView formFragmentView, RevealMapView mapView) {
+        if (!Utils.isEmptyCollection(mapView.getValidators())) {
+            for (METValidator validator : mapView.getValidators()) {
+                if (validator instanceof MinZoomValidator) {
+                    MapboxMap mapboxMap = mapView.getMapboxMap();
+                    double zoom = mapView.getMapboxMap().getCameraPosition().zoom;
+                    if (mapboxMap != null && !validator.isValid(String.valueOf(zoom), false)) {
+                        Toast.makeText(formFragmentView.getContext(), validator.getErrorMessage(), Toast.LENGTH_LONG).show();
+                        return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
+                    }
+                }
+            }
+        }
+        return new ValidationStatus(true, null, null, null);
+    }
 
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener) throws Exception {
@@ -68,6 +92,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         String openMrsEntityId = jsonObject.optString(JsonFormConstants.OPENMRS_ENTITY_ID);
         String relevance = jsonObject.optString(JsonFormConstants.RELEVANCE);
         String key = jsonObject.optString(JsonFormConstants.KEY);
+
 
         List<View> views = new ArrayList<>(1);
 
@@ -95,6 +120,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
 
+                mapView.setMapboxMap(mapboxMap);
                 if (finalOperationalArea != null) {
                     mapboxMap.setCameraPosition(mapboxMap.getCameraForGeometry(Geometry.fromJson(finalOperationalArea)));
                 } else {
@@ -136,7 +162,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         mapView.setTag(com.vijay.jsonwizard.R.id.openmrs_entity, openMrsEntity);
         mapView.setTag(com.vijay.jsonwizard.R.id.openmrs_entity_id, openMrsEntityId);
         mapView.setTag(com.vijay.jsonwizard.R.id.type, jsonObject.getString(JsonFormConstants.TYPE));
-        if (relevance != null && context instanceof JsonApi) {
+        if (relevance != null) {
             mapView.setTag(com.vijay.jsonwizard.R.id.relevance, relevance);
             ((JsonApi) context).addSkipLogicView(mapView);
         }
@@ -148,6 +174,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         int editTextHeight = context.getResources().getDimensionPixelSize(R.dimen.native_form_edit_text_height);
         mapView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, screenHeightPixels - editTextHeight));
 
+        addMaximumZoomLevel(jsonObject, mapView);
         views.add(rootLayout);
         mapView.onStart();
 
@@ -189,6 +216,19 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         Feature feature = new Feature();
         feature.setGeometry(new Point(latLng.getLatitude(), latLng.getLongitude()));
         return feature;
+    }
+
+    private void addMaximumZoomLevel(JSONObject jsonObject, RevealMapView mapView) {
+
+        JSONObject minValidation = jsonObject.optJSONObject(MAX_ZOOM_LEVEL);
+        if (minValidation != null) {
+            try {
+                mapView.addValidator(new MinZoomValidator(minValidation.getString(JsonFormConstants.ERR),
+                        minValidation.getDouble(JsonFormConstants.VALUE)));
+            } catch (JSONException e) {
+                Log.e(TAG, "Error extracting max zoom level from" + minValidation);
+            }
+        }
     }
 
     @Override
