@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -40,15 +41,17 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter {
 
     private JsonFormFragment formFragment;
 
+    private AlertDialog passwordDialog;
+
     public RevealJsonFormFragmentPresenter(JsonFormFragment formFragment, JsonFormInteractor jsonFormInteractor) {
         super(formFragment, jsonFormInteractor);
         this.formFragment = formFragment;
+        initPasswordDialog(formFragment.getActivity());
     }
 
     @Override
     public ValidationStatus writeValuesAndValidate(LinearLayout mainView) {
         ValidationStatus validationStatus = super.writeValuesAndValidate(mainView);
-
         if (validationStatus.isValid()) {
             for (View childAt : formFragment.getJsonApi().getFormDataViews()) {
                 if (childAt instanceof RevealMapView) {
@@ -106,13 +109,29 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter {
     }
 
     private void requestUserPassword() {
-        Activity activity = formFragment.getActivity();
+        if (passwordDialog != null) {
+            passwordDialog.show();
+        } else {
+            Log.w(RevealJsonFormFragmentPresenter.class.getName(), "password dialog is null");
+        }
+
+    }
+
+    private void initPasswordDialog(Activity activity) {
         if (activity == null) {
             return;
         }
-
         LayoutInflater inflater = activity.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_request_password, null);
+
+        passwordDialog = new AlertDialog.Builder(activity)
+                .setTitle(R.string.request_password_title)
+                .setView(dialogView)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.ok, null)
+                .setCancelable(false)
+                .create();
+
         final EditText adminPassEditText = dialogView.findViewById(R.id.admin_pass);
         ((CheckBox) dialogView.findViewById(R.id.show_password_checkbox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -124,19 +143,11 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter {
             }
         });
 
-
-        AlertDialog dialog = new AlertDialog.Builder(activity)
-                .setTitle(R.string.request_password_title)
-                .setView(dialogView)
-                .setPositiveButton(R.string.ok, null)
-                .setNegativeButton(R.string.cancel, null)
-                .create();
-
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+        passwordDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
 
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                passwordDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (!adminPassEditText.getText().toString().equals(BuildConfig.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES)) {
@@ -144,15 +155,21 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter {
                             adminPassEditText.setError(activity.getString(R.string.wrong_admin_password));
                         } else {
                             adminPassEditText.setError(null);
-                            dialog.dismiss();
+                            passwordDialog.dismiss();
                             onValidateUserLocation(true);
                         }
                     }
                 });
+
+                passwordDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        passwordDialog.dismiss();
+                        passwordDialog.dismiss();
+                    }
+                });
             }
         });
-        dialog.show();
-
     }
 
 }
