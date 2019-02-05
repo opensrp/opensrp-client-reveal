@@ -63,7 +63,6 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
     private JsonApi jsonApi;
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView, RevealMapView mapView) {
-        ValidationStatus firstError = null;
         if (!Utils.isEmptyCollection(mapView.getValidators())) {
             for (METValidator validator : mapView.getValidators()) {
                 if (validator instanceof MinZoomValidator) {
@@ -71,20 +70,12 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
                     double zoom = mapView.getMapboxMap().getCameraPosition().zoom;
                     if (mapboxMap != null && !validator.isValid(String.valueOf(zoom), false)) {
                         Toast.makeText(formFragmentView.getContext(), validator.getErrorMessage(), Toast.LENGTH_LONG).show();
-                        ValidationStatus validationStatus = new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
-                        if (firstError == null) {
-                            firstError = validationStatus;
-                        }
+                        return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
                     }
-
                 }
             }
         }
-        if (firstError == null) {
-            return new ValidationStatus(true, null, null, null);
-        } else {
-            return firstError;
-        }
+        return new ValidationStatus(true, null, null, null);
     }
 
     @Override
