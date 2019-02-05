@@ -30,6 +30,8 @@ public interface ListTaskContract {
 
         void hideProgressDialog();
 
+        void getCurrentLocation();
+
         Context getContext();
 
         void closeStructureCardView();

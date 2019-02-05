@@ -3,10 +3,12 @@ package org.smartregister.reveal.presenter;
 import android.content.Context;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.mapbox.geojson.Feature;
@@ -59,6 +61,7 @@ import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_TYPE;
+import static org.smartregister.reveal.util.Constants.MY_LOCATION_BUFFER;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
@@ -369,7 +372,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             if (IRS.equals(code) && NOT_VISITED.equals(businessStatus)) {
-                startSprayForm(feature);
+                listTaskView.getCurrentLocation();
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
                 listTaskInteractor.fetchSprayDetails(feature.id(), false);
@@ -469,7 +472,6 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     private void startSprayForm(Feature feature) {
         startSprayForm(feature, null, null, null);
-
     }
 
     private void startSprayForm(Feature feature, String propertyType, String sprayStatus, String familyHead) {
@@ -544,4 +546,17 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     }
 
+    public void onGetUserLocationFailed() {
+        listTaskView.displayNotification(R.string.loading_location, R.string.could_not_get_your_location);
+    }
+
+    public void onGetUserLocation(Location location) {
+        double offset = clickedPoint.distanceTo(new LatLng(location.getLatitude(), location.getLongitude()));
+        if (offset > MY_LOCATION_BUFFER) {
+            //ask for User password
+            Toast.makeText(listTaskView.getContext(), "Enter Password", Toast.LENGTH_LONG).show();
+        } else {
+            startSprayForm(selectedFeature);
+        }
+    }
 }

@@ -72,7 +72,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter {
         if (ActivityCompat.checkSelfPermission(activity,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mapView.getFusedLocationClient().getLastLocation()
-                    .addOnSuccessListener(activity, new OnSuccessListener<Location>() {
+                    .addOnSuccessListener(new OnSuccessListener<Location>() {
                         @Override
                         public void onSuccess(Location location) {
                             if (location != null) {
