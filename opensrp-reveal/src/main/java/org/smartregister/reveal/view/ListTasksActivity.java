@@ -1,6 +1,7 @@
 package org.smartregister.reveal.view;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -33,6 +34,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.mapbox.geojson.Feature;
@@ -57,9 +59,11 @@ import org.smartregister.reveal.activity.BaseMapActivity;
 import org.smartregister.reveal.activity.RevealJsonForm;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
+import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.Constants.Action;
+import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -112,6 +116,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
 
+    private AlertDialog passwordDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,6 +135,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         findViewById(R.id.btn_add_structure).setOnClickListener(this);
 
         initializeCardView();
+
 
     }
 
@@ -501,21 +508,21 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void getCurrentLocation() {
+    public void getUserCurrentLocation() {
+        kujakuMapView.focusOnUserLocation(true);
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            kujakuMapView.getFusedLocationClient().getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    listTaskPresenter.onGetUserLocation(location);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.e(TAG, "Failed to get get User location", e);
-                    listTaskPresenter.onGetUserLocationFailed();
-                }
-            });
+            kujakuMapView.getFusedLocationClient().getLastLocation()
+                    .addOnSuccessListener(location -> listTaskPresenter.onGetUserLocation(location))
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Failed to get get User location", e);
+                        listTaskPresenter.onGetUserLocationFailed();
+                    })
+                    .addOnCanceledListener(() -> {
+                        listTaskPresenter.onGetUserLocationFailed();
+                    });
+        } else {
+            listTaskPresenter.onGetUserLocationFailed();
         }
     }
 

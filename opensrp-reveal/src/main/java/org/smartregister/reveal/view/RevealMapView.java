@@ -72,6 +72,8 @@ public class RevealMapView extends KujakuMapView {
 
 
     public FusedLocationProviderClient getFusedLocationClient() {
+
+
         return fusedLocationClient;
     }
 

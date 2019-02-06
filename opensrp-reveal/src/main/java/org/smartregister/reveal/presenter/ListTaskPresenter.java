@@ -6,6 +6,7 @@ import android.graphics.RectF;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -28,8 +29,10 @@ import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
+import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.JsonFormUtils;
@@ -83,7 +86,7 @@ import static org.smartregister.reveal.util.Utils.getPropertyValue;
 /**
  * Created by samuelgithengi on 11/27/18.
  */
-public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
+public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, PasswordRequestCallback {
 
     private static final String TAG = "ListTaskPresenter";
 
@@ -105,11 +108,14 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     private LatLng clickedPoint;
 
+    private AlertDialog passwordDialog;
+
 
     public ListTaskPresenter(ListTaskView listTaskView) {
         this.listTaskView = listTaskView;
         listTaskInteractor = new ListTaskInteractor(this);
         locationHelper = LocationHelper.getInstance();
+        passwordDialog = PasswordDialogUtils.initPasswordDialog(listTaskView.getContext(), this);
     }
 
     public void onInitializeDrawerLayout() {
@@ -372,7 +378,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             if (IRS.equals(code) && NOT_VISITED.equals(businessStatus)) {
-                listTaskView.getCurrentLocation();
+                listTaskView.showProgressDialog();
+                listTaskView.getUserCurrentLocation();
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
                 listTaskInteractor.fetchSprayDetails(feature.id(), false);
@@ -547,16 +554,32 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     }
 
     public void onGetUserLocationFailed() {
+        listTaskView.hideProgressDialog();
         listTaskView.displayNotification(R.string.loading_location, R.string.could_not_get_your_location);
     }
 
     public void onGetUserLocation(Location location) {
+        listTaskView.hideProgressDialog();
         double offset = clickedPoint.distanceTo(new LatLng(location.getLatitude(), location.getLongitude()));
         if (offset > MY_LOCATION_BUFFER) {
-            //ask for User password
+            requestUserPassword();
             Toast.makeText(listTaskView.getContext(), "Enter Password", Toast.LENGTH_LONG).show();
         } else {
             startSprayForm(selectedFeature);
         }
+    }
+
+    private void requestUserPassword() {
+        if (passwordDialog != null) {
+            passwordDialog.show();
+        } else {
+            Log.w(TAG, "password dialog is not initialized");
+        }
+
+    }
+
+    @Override
+    public void onPasswordVerified() {
+        startSprayForm(selectedFeature);
     }
 }

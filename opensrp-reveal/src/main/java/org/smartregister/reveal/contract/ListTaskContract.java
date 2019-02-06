@@ -30,7 +30,7 @@ public interface ListTaskContract {
 
         void hideProgressDialog();
 
-        void getCurrentLocation();
+        void getUserCurrentLocation();
 
         Context getContext();
 
