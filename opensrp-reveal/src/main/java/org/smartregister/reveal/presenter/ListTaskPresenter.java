@@ -26,6 +26,7 @@ import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
@@ -64,7 +65,6 @@ import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_TYPE;
-import static org.smartregister.reveal.util.Constants.MY_LOCATION_BUFFER;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
@@ -561,9 +561,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     public void onGetUserLocation(Location location) {
         listTaskView.hideProgressDialog();
         double offset = clickedPoint.distanceTo(new LatLng(location.getLatitude(), location.getLongitude()));
-        if (offset > MY_LOCATION_BUFFER) {
+        if (offset > BuildConfig.MY_LOCATION_BUFFER) {
             requestUserPassword();
-            Toast.makeText(listTaskView.getContext(), "Enter Password", Toast.LENGTH_LONG).show();
         } else {
             startSprayForm(selectedFeature);
         }

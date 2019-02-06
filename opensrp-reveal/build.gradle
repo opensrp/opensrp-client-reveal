@@ -82,6 +82,7 @@ android {
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '1'
             buildConfigField "int", "SYNC_INTERVAL_IN_MINUTES", '2'
             buildConfigField "String", "ADMIN_PASSWORD_NOT_NEAR_STRUCTURES", '"AdminPass1"'
+            buildConfigField "float", "MY_LOCATION_BUFFER", '100'
 
             if (project.rootProject.file("local.properties").exists()) {
                 Properties properties = new Properties()
@@ -107,6 +108,8 @@ android {
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
             buildConfigField "int", "SYNC_INTERVAL_IN_MINUTES", '2'
             buildConfigField "String", "ADMIN_PASSWORD_NOT_NEAR_STRUCTURES", '"AdminPass1"'
+            buildConfigField "float", "MY_LOCATION_BUFFER", '100'
+
             testCoverageEnabled true
             if (project.rootProject.file("local.properties").exists()) {
                 Properties properties = new Properties()

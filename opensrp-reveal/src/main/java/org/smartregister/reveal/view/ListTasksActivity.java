@@ -509,7 +509,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void getUserCurrentLocation() {
-        kujakuMapView.focusOnUserLocation(true);
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             kujakuMapView.getFusedLocationClient().getLastLocation()
