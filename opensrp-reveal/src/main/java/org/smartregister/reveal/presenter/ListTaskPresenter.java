@@ -378,8 +378,12 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             if (IRS.equals(code) && NOT_VISITED.equals(businessStatus)) {
-                listTaskView.showProgressDialog();
-                listTaskView.getUserCurrentLocation();
+                if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
+                    listTaskView.showProgressDialog();
+                    listTaskView.getUserCurrentLocation();
+                } else {
+                    startSprayForm(feature);
+                }
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
                 listTaskInteractor.fetchSprayDetails(feature.id(), false);

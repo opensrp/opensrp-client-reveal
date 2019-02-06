@@ -47,7 +47,11 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                     RevealMapView mapView = (RevealMapView) childAt;
                     validationStatus = GeoWidgetFactory.validate(formFragment, mapView);
                     if (validationStatus.isValid()) {
-                        validateUserLocation(formFragment.getActivity(), mapView);
+                        if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
+                            validateUserLocation(formFragment.getActivity(), mapView);
+                        } else {
+                            onValidateUserLocation(true);
+                        }
                     }
                 }
             }
