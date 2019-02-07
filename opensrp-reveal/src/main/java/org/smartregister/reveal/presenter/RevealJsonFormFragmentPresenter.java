@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -110,10 +109,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
     private void requestUserPassword() {
         if (passwordDialog != null) {
             passwordDialog.show();
-        } else {
-            Log.w(RevealJsonFormFragmentPresenter.class.getName(), "password dialog is null");
         }
-
     }
 
     @Override

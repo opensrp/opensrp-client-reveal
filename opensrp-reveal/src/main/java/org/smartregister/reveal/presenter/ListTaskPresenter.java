@@ -9,7 +9,6 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.mapbox.geojson.Feature;
@@ -575,10 +574,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     private void requestUserPassword() {
         if (passwordDialog != null) {
             passwordDialog.show();
-        } else {
-            Log.w(TAG, "password dialog is not initialized");
         }
-
     }
 
     @Override
