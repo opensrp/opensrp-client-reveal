@@ -1,7 +1,6 @@
 package org.smartregister.reveal.view;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -34,9 +32,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCanceledListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
@@ -59,11 +54,9 @@ import org.smartregister.reveal.activity.BaseMapActivity;
 import org.smartregister.reveal.activity.RevealJsonForm;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
-import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.Constants.Action;
-import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -115,8 +108,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private TextView tvReason;
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
-
-    private AlertDialog passwordDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
