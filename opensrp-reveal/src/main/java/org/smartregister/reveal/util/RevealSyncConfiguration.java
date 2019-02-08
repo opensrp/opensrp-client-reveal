@@ -1,6 +1,7 @@
 package org.smartregister.reveal.util;
 
 import org.smartregister.SyncConfiguration;
+import org.smartregister.SyncFilter;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
@@ -17,8 +18,8 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     }
 
     @Override
-    public String getSyncFilterParam() {
-        return FILTER_TEAM_ID;
+    public SyncFilter getSyncFilterParam() {
+        return SyncFilter.TEAM_ID;
     }
 
     @Override
@@ -45,5 +46,15 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     @Override
     public boolean disableSyncToServerIfUserIsDisabled() {
         return true;
+    }
+
+    @Override
+    public SyncFilter getEncryptionParam() {
+        return SyncFilter.TEAM_ID;
+    }
+
+    @Override
+    public boolean updateClientDetailsTable() {
+        return false;
     }
 }
