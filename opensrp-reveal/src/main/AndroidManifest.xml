@@ -51,6 +51,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+        <activity android:name=".view.FamilyRegisterActivity" />
+        <activity android:name=".view.FamilyProfileActivity" />
 
         <service android:name=".sync.RevealSyncIntentService" />
         <service android:name=".sync.RevealCampaignIntentService" />

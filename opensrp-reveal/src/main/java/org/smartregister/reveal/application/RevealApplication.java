@@ -6,11 +6,15 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.JobManager;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.vijay.jsonwizard.activities.JsonWizardFormActivity;
 
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.JsonSpecHelper;
+import org.smartregister.family.FamilyLibrary;
+import org.smartregister.family.activity.FamilyWizardFormActivity;
+import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.CampaignRepository;
@@ -23,8 +27,11 @@ import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.job.RevealJobCreator;
 import org.smartregister.reveal.repository.RevealRepository;
+import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.RevealSyncConfiguration;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.reveal.view.FamilyProfileActivity;
 import org.smartregister.sync.DrishtiSyncScheduler;
 import org.smartregister.view.activity.DrishtiApplication;
 import org.smartregister.view.receiver.TimeChangedBroadcastReceiver;
@@ -64,6 +71,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         Fabric.with(this, new Crashlytics());
         CoreLibrary.init(context, new RevealSyncConfiguration());
         ConfigurableViewsLibrary.init(context, getRepository());
+        FamilyLibrary.init(context, getRepository(), getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
+
         LocationHelper.init(Utils.ALLOWED_LEVELS, Utils.DEFAULT_LOCATION_LEVEL);
 
         SyncStatusBroadcastReceiver.init(this);
@@ -80,6 +89,16 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
         //init Job Manager
         JobManager.create(this).addJobCreator(new RevealJobCreator());
+    }
+
+    private FamilyMetadata getMetadata() {
+        FamilyMetadata metadata = new FamilyMetadata(FamilyWizardFormActivity.class, JsonWizardFormActivity.class, FamilyProfileActivity.class);
+        metadata.updateFamilyRegister(FamilyConstants.JSON_FORM.FAMILY_REGISTER, FamilyConstants.TABLE_NAME.FAMILY, FamilyConstants.EventType.FAMILY_REGISTRATION, FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION, FamilyConstants.CONFIGURATION.FAMILY_REGISTER, FamilyConstants.RELATIONSHIP.FAMILY_HEAD, FamilyConstants.RELATIONSHIP.PRIMARY_CAREGIVER);
+        metadata.updateFamilyMemberRegister(FamilyConstants.JSON_FORM.FAMILY_MEMBER_REGISTER, FamilyConstants.TABLE_NAME.FAMILY_MEMBER, FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION, FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION, FamilyConstants.CONFIGURATION.FAMILY_MEMBER_REGISTER, FamilyConstants.RELATIONSHIP.FAMILY);
+        metadata.updateFamilyDueRegister(FamilyConstants.TABLE_NAME.FAMILY_MEMBER, 20, true);
+        metadata.updateFamilyActivityRegister(FamilyConstants.TABLE_NAME.FAMILY_MEMBER, Integer.MAX_VALUE, false);
+        metadata.updateFamilyOtherMemberRegister(FamilyConstants.TABLE_NAME.FAMILY_MEMBER, Integer.MAX_VALUE, false);
+        return metadata;
     }
 
     @Override

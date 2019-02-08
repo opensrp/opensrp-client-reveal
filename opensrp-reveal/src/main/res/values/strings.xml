@@ -70,4 +70,5 @@
     <string name="request_password_title">You are not near the structure</string>
     <string name="enter_admin_password"> Input admin password to continue</string>
     <string name="wrong_admin_password">Wrong admin password</string>
+    <string name="register_family">Register Family</string>
 </resources>
