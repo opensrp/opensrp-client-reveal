@@ -112,9 +112,10 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 task.setStatus(Task.TaskStatus.COMPLETED);
                 if (localEvents) {
                     task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                } else {
+                    eventClientRepository.markEventAsSynced(event.getFormSubmissionId());
                 }
                 RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
-                eventClientRepository.markEventAsSynced(event.getFormSubmissionId());
                 operationalAreaId = task.getGroupIdentifier();
             } else {
                 eventClientRepository.markEventAsTaskUnprocessed(event.getFormSubmissionId());
