@@ -42,9 +42,9 @@ public class LocationTaskIntentService extends IntentService {
         LocationServiceHelper locationServiceHelper = LocationServiceHelper.getInstance();
         TaskServiceHelper taskServiceHelper = TaskServiceHelper.getInstance();
 
+
         List<Location> syncedStructures = locationServiceHelper.fetchLocationsStructures();
         List<Task> synchedTasks = taskServiceHelper.syncTasks();
-
 
         if (hasChangesInCurrentOperationalArea(syncedStructures, synchedTasks)) {
             Intent intent = new Intent(STRUCTURE_TASK_SYNCHED);
@@ -52,6 +52,11 @@ public class LocationTaskIntentService extends IntentService {
         }
 
         clientProcessEvents(extractStructureIds(syncedStructures, synchedTasks));
+
+        if (!org.smartregister.util.Utils.isEmptyCollection(syncedStructures)
+                || !org.smartregister.util.Utils.isEmptyCollection(syncedStructures)) {
+            doSync();
+        }
 
         new AppExecutors().mainThread().execute(new Runnable() {
             @Override
