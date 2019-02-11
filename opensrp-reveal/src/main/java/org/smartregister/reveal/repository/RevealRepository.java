@@ -13,6 +13,7 @@ import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
+import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.application.RevealApplication;
 
 
@@ -23,7 +24,7 @@ public class RevealRepository extends Repository {
     protected SQLiteDatabase writableDatabase;
 
     public RevealRepository(Context context, org.smartregister.Context openSRPContext) {
-        super(context, AllConstants.DATABASE_NAME, AllConstants.DATABASE_VERSION, openSRPContext.session(), null, openSRPContext.sharedRepositoriesArray());
+        super(context, AllConstants.DATABASE_NAME, AllConstants.DATABASE_VERSION, openSRPContext.session(), RevealApplication.createCommonFtsObject(), openSRPContext.sharedRepositoriesArray());
     }
 
     @Override
@@ -37,6 +38,7 @@ public class RevealRepository extends Repository {
         TaskRepository.createTable(database);
         LocationRepository.createTable(database);
         StructureRepository.createTable(database);
+        UniqueIdRepository.createTable(database);
 //        onUpgrade(database, 1, 2);
     }
 
@@ -50,13 +52,17 @@ public class RevealRepository extends Repository {
         while (upgradeTo <= newVersion) {
             switch (upgradeTo) {
                 case 2:
-                    // upgradeToVersion2(db);
+                    upgradeToVersion2(db);
                     break;
                 default:
                     break;
             }
             upgradeTo++;
         }
+    }
+
+    private void upgradeToVersion2(SQLiteDatabase database) {
+        UniqueIdRepository.createTable(database);
     }
 
     @Override

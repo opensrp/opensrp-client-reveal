@@ -76,11 +76,12 @@ android {
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", 'opensrp_url', '""'
-            buildConfigField "int", "DATABASE_VERSION", '1'
+            buildConfigField "int", "DATABASE_VERSION", '2'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '1'
             buildConfigField "int", "SYNC_INTERVAL_IN_MINUTES", '2'
+            buildConfigField "int", "PULL_UNIQUE_IDS_MINUTES", '10'
             buildConfigField "String", "ADMIN_PASSWORD_NOT_NEAR_STRUCTURES", '"AdminPass1"'
             buildConfigField "float", "MY_LOCATION_BUFFER", '100'
             buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
@@ -103,11 +104,12 @@ android {
 
         debug {
             resValue "string", 'opensrp_url', '"https://reveal-stage.smartregister.org/opensrp/"'
-            buildConfigField "int", "DATABASE_VERSION", '1'
+            buildConfigField "int", "DATABASE_VERSION", '2'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
-            buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
+            buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '1'
             buildConfigField "int", "SYNC_INTERVAL_IN_MINUTES", '2'
+            buildConfigField "int", "PULL_UNIQUE_IDS_MINUTES", '10'
             buildConfigField "String", "ADMIN_PASSWORD_NOT_NEAR_STRUCTURES", '"AdminPass1"'
             buildConfigField "float", "MY_LOCATION_BUFFER", '100'
             buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
@@ -209,7 +211,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'design'
     }
 
-    implementation('org.smartregister:opensrp-client-family:1.0.8-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-family:1.2.1-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'org.smartregister', module: 'opensrp-client-core'
         exclude group: 'org.smartregister', module: 'opensrp-client-native-form'

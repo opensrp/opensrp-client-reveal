@@ -126,35 +126,6 @@
         "openmrs_entity_id": "landmark",
         "type": "edit_text",
         "hint": "Landmark"
-      },
-      {
-        "key": "gps",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "concept",
-        "openmrs_entity_id": "163277AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        "openmrs_data_type": "text",
-        "type": "gps"
-      },
-      {
-        "key": "fam_source_income",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person_attribute",
-        "openmrs_entity_id": "fam_source_income",
-        "openmrs_data_type": "",
-        "type": "spinner",
-        "hint": "Family source of income",
-        "values": [
-          "Agriculture, hunting and fishing",
-          "Exploitation of mines and quarries",
-          "Manufacturing industry",
-          "Construction",
-          "Electricity, gas and water",
-          "Commercial, hotels and restaurants",
-          "Transport, storage and communications",
-          "Financial institutions",
-          "Communication, social and personal services",
-          "Other"
-        ]
       }
     ]
   },
@@ -162,25 +133,12 @@
     "title": "Family head",
     "fields": [
       {
-        "key": "profile",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "choose_image",
-        "uploadButtonText": "Take a photo of the child"
-      },
-      {
         "key": "unique_id",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_identifier",
         "openmrs_entity_id": "opensrp_id",
         "type": "edit_text",
         "hint": "ID *",
-        "value": "0",
-        "v_numeric": {
-          "value": "true",
-          "err": "Please enter a valid ID"
-        },
         "v_required": {
           "value": "true",
           "err": "Please enter the ID"

@@ -11,6 +11,20 @@
             "creates_case": [
               "sprayed_structures"
             ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "Family Registration",
+            "creates_case": [
+              "ec_family"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "Family Member Registration",
+            "creates_case": [
+              "ec_family_member"
+            ]
           }
         ]
       }

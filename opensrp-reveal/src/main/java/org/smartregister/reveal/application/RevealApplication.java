@@ -10,11 +10,13 @@ import com.vijay.jsonwizard.activities.JsonWizardFormActivity;
 
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
+import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.JsonSpecHelper;
 import org.smartregister.family.FamilyLibrary;
 import org.smartregister.family.activity.FamilyWizardFormActivity;
 import org.smartregister.family.domain.FamilyMetadata;
+import org.smartregister.family.util.DBConstants;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.CampaignRepository;
@@ -53,6 +55,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     private LocationRepository locationRepository;
 
 
+    private static CommonFtsObject commonFtsObject;
+
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
     }
@@ -67,6 +71,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         mInstance = this;
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
+        context.updateCommonFtsObject(createCommonFtsObject());
         // Initialize Modules
         Fabric.with(this, new Crashlytics());
         CoreLibrary.init(context, new RevealSyncConfiguration());
@@ -89,16 +94,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
         //init Job Manager
         JobManager.create(this).addJobCreator(new RevealJobCreator());
-    }
-
-    private FamilyMetadata getMetadata() {
-        FamilyMetadata metadata = new FamilyMetadata(FamilyWizardFormActivity.class, JsonWizardFormActivity.class, FamilyProfileActivity.class);
-        metadata.updateFamilyRegister(FamilyConstants.JSON_FORM.FAMILY_REGISTER, FamilyConstants.TABLE_NAME.FAMILY, FamilyConstants.EventType.FAMILY_REGISTRATION, FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION, FamilyConstants.CONFIGURATION.FAMILY_REGISTER, FamilyConstants.RELATIONSHIP.FAMILY_HEAD, FamilyConstants.RELATIONSHIP.PRIMARY_CAREGIVER);
-        metadata.updateFamilyMemberRegister(FamilyConstants.JSON_FORM.FAMILY_MEMBER_REGISTER, FamilyConstants.TABLE_NAME.FAMILY_MEMBER, FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION, FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION, FamilyConstants.CONFIGURATION.FAMILY_MEMBER_REGISTER, FamilyConstants.RELATIONSHIP.FAMILY);
-        metadata.updateFamilyDueRegister(FamilyConstants.TABLE_NAME.FAMILY_MEMBER, 20, true);
-        metadata.updateFamilyActivityRegister(FamilyConstants.TABLE_NAME.FAMILY_MEMBER, Integer.MAX_VALUE, false);
-        metadata.updateFamilyOtherMemberRegister(FamilyConstants.TABLE_NAME.FAMILY_MEMBER, Integer.MAX_VALUE, false);
-        return metadata;
     }
 
     @Override
@@ -193,5 +188,54 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             locationRepository = new LocationRepository(getRepository());
         }
         return locationRepository;
+    }
+
+
+    private FamilyMetadata getMetadata() {
+        FamilyMetadata metadata = new FamilyMetadata(FamilyWizardFormActivity.class, JsonWizardFormActivity.class, FamilyProfileActivity.class);
+        metadata.updateFamilyRegister(FamilyConstants.JSON_FORM.FAMILY_REGISTER, FamilyConstants.TABLE_NAME.FAMILY, FamilyConstants.EventType.FAMILY_REGISTRATION, FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION, FamilyConstants.CONFIGURATION.FAMILY_REGISTER, FamilyConstants.RELATIONSHIP.FAMILY_HEAD, FamilyConstants.RELATIONSHIP.PRIMARY_CAREGIVER);
+        metadata.updateFamilyMemberRegister(FamilyConstants.JSON_FORM.FAMILY_MEMBER_REGISTER, FamilyConstants.TABLE_NAME.FAMILY_MEMBER, FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION, FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION, FamilyConstants.CONFIGURATION.FAMILY_MEMBER_REGISTER, FamilyConstants.RELATIONSHIP.FAMILY);
+        metadata.updateFamilyDueRegister(FamilyConstants.TABLE_NAME.FAMILY_MEMBER, 20, true);
+        metadata.updateFamilyActivityRegister(FamilyConstants.TABLE_NAME.FAMILY_MEMBER, Integer.MAX_VALUE, false);
+        metadata.updateFamilyOtherMemberRegister(FamilyConstants.TABLE_NAME.FAMILY_MEMBER, Integer.MAX_VALUE, false);
+        return metadata;
+    }
+
+
+
+    public static CommonFtsObject createCommonFtsObject() {
+        if (commonFtsObject == null) {
+            commonFtsObject = new CommonFtsObject(getFtsTables());
+            for (String ftsTable : commonFtsObject.getTables()) {
+                commonFtsObject.updateSearchFields(ftsTable, getFtsSearchFields(ftsTable));
+                commonFtsObject.updateSortFields(ftsTable, getFtsSortFields(ftsTable));
+            }
+        }
+        return commonFtsObject;
+    }
+
+    private static String[] getFtsTables() {
+        return new String[]{FamilyConstants.TABLE_NAME.FAMILY, FamilyConstants.TABLE_NAME.FAMILY_MEMBER};
+    }
+
+    private static String[] getFtsSearchFields(String tableName) {
+        if (tableName.equals(FamilyConstants.TABLE_NAME.FAMILY)) {
+            return new String[]{DBConstants.KEY.BASE_ENTITY_ID, DBConstants.KEY.VILLAGE_TOWN, DBConstants.KEY.FIRST_NAME,
+                    DBConstants.KEY.LAST_NAME, DBConstants.KEY.UNIQUE_ID};
+        } else if (tableName.equals(FamilyConstants.TABLE_NAME.FAMILY_MEMBER)) {
+            return new String[]{DBConstants.KEY.BASE_ENTITY_ID, DBConstants.KEY.FIRST_NAME, DBConstants.KEY.MIDDLE_NAME,
+                    DBConstants.KEY.LAST_NAME, DBConstants.KEY.UNIQUE_ID};
+        }
+        return null;
+    }
+
+    private static String[] getFtsSortFields(String tableName) {
+        if (tableName.equals(FamilyConstants.TABLE_NAME.FAMILY)) {
+            return new String[]{DBConstants.KEY.LAST_INTERACTED_WITH, DBConstants.KEY.DATE_REMOVED};
+        } else if (tableName.equals(FamilyConstants.TABLE_NAME.FAMILY_MEMBER)) {
+            return new String[]{DBConstants.KEY.DOB, DBConstants.KEY.DOD, DBConstants.KEY
+                    .LAST_INTERACTED_WITH, DBConstants.KEY.DATE_REMOVED};
+        }
+        return null;
     }
 }

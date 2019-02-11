@@ -46,6 +46,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.FetchStatus;
+import org.smartregister.family.activity.BaseFamilyRegisterActivity;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BuildConfig;
@@ -151,6 +152,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         tvFamilyHead = findViewById(R.id.family_head);
         tvReason = findViewById(R.id.reason);
         findViewById(R.id.change_spray_status).setOnClickListener(this);
+
+        findViewById(R.id.register_family).setOnClickListener(this);
 
     }
 
@@ -299,7 +302,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (v.getId() == R.id.btn_collapse_structure_card_view) {
             setViewVisibility(tvReason, false);
             closeStructureCardView();
+        } else if (v.getId() == R.id.register_family) {
+            registerFamily();
         }
+    }
+
+    private void registerFamily() {
+        Intent intent = new Intent(this, FamilyRegisterActivity.class);
+        startActivity(intent);
     }
 
     @Override

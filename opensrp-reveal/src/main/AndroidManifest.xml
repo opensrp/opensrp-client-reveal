@@ -24,6 +24,7 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="3f94f9c3caeff331b3a2bd8c2182b663ad6a955a" />
+
         <activity
             android:name="org.smartregister.reveal.activity.LoginActivity"
             android:screenOrientation="portrait"
@@ -53,10 +54,15 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity android:name=".view.FamilyRegisterActivity" />
         <activity android:name=".view.FamilyProfileActivity" />
+        <activity android:name="org.smartregister.family.activity.FamilyWizardFormActivity" />
+        <activity android:name="com.vijay.jsonwizard.activities.JsonWizardFormActivity" />
 
         <service android:name=".sync.RevealSyncIntentService" />
         <service android:name=".sync.RevealCampaignIntentService" />
         <service android:name=".sync.LocationTaskIntentService" />
+        <service android:name="org.smartregister.sync.intent.PullUniqueIdsIntentService" />
+        <service android:name="org.smartregister.sync.intent.ValidateIntentService" />
+        <service android:name="org.smartregister.sync.intent.ExtendedSyncIntentService" />
 
     </application>
 
