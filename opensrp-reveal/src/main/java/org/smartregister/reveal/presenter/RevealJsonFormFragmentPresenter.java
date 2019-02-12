@@ -1,8 +1,13 @@
 package org.smartregister.reveal.presenter;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -14,6 +19,8 @@ import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 import com.vijay.jsonwizard.utils.ValidationStatus;
 
 import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.R;
+import org.smartregister.reveal.activity.RevealJsonForm;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.view.RevealMapView;
@@ -28,10 +35,20 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
 
     private AlertDialog passwordDialog;
 
+    private RevealJsonForm revealJsonForm;
+
+    private RevealMapView mapView;
+
+    private ProgressDialog progressDialog;
+
     public RevealJsonFormFragmentPresenter(JsonFormFragment formFragment, JsonFormInteractor jsonFormInteractor) {
         super(formFragment, jsonFormInteractor);
         this.formFragment = formFragment;
         passwordDialog = PasswordDialogUtils.initPasswordDialog(formFragment.getActivity(), this);
+        revealJsonForm = (RevealJsonForm) formFragment.getActivity();
+        progressDialog = new ProgressDialog(revealJsonForm);
+        progressDialog.setCancelable(false);
+
     }
 
     @Override
@@ -58,21 +75,34 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
 
 
     private void validateUserLocation(RevealMapView mapView) {
-        Location location = mapView.getLocationClient().getLastLocation();
+        this.mapView = mapView;
+        Location location = mapView.getLocationClient() == null ? null : mapView.getLocationClient().getLastLocation();
         if (location != null) {
-            LatLng mapPosition = mapView.getMapboxMap().getCameraPosition().target;
-            double offset = mapPosition.distanceTo(new LatLng(location.getLatitude(), location.getLongitude()));
-            if (offset > BuildConfig.MY_LOCATION_BUFFER) {
-                onValidateUserLocation(false);
-            } else {
-                onValidateUserLocation(true);
-            }
+            onGetUserLocation(location);
         } else {
-            onValidateUserLocation(false);
+            requestUserLocation();
         }
+
+    }
+
+    private void requestUserLocation() {
+        mapView.setWarmGps(true, revealJsonForm.getString(R.string.location_service_disabled), revealJsonForm.getString(R.string.enable_location_services_rejected));
+        revealJsonForm.setRequestedLocation(true);
+    }
+
+    private void onGetUserLocation(Location location) {
+        LatLng structureToAdd = mapView.getMapboxMap().getCameraPosition().target;
+        double offset = structureToAdd.distanceTo(new LatLng(location.getLatitude(), location.getLongitude()));
+        if (offset > BuildConfig.MY_LOCATION_BUFFER) {
+            onValidateUserLocation(false);
+        } else {
+            onValidateUserLocation(true);
+        }
+
     }
 
     private void onValidateUserLocation(boolean isValid) {
+        hideProgressDialog();
         if (isValid) {
             Intent returnIntent = new Intent();
             getView().onFormFinish();
@@ -96,8 +126,46 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         }
     }
 
+    public void onGetUserLocationFailed() {
+        onValidateUserLocation(false);
+    }
+
     @Override
     public void onPasswordVerified() {
         onValidateUserLocation(true);
     }
+
+
+    public void showProgressDialog(@StringRes int title, @StringRes int message) {
+        if (progressDialog != null) {
+            progressDialog.setTitle(title);
+            progressDialog.setMessage(revealJsonForm.getString(message));
+            progressDialog.show();
+        }
+    }
+
+
+    public void hideProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
+
+    public void waitForUserLocation() {
+        Location location = mapView.getLocationClient() == null ? null : mapView.getLocationClient().getLastLocation();
+        Log.d(RevealJsonFormFragmentPresenter.class.getName(), "user location: " + location);
+        if (location == null) {
+            showProgressDialog(R.string.narrowing_location_title, R.string.narrowing_location_message);
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    waitForUserLocation();
+                }
+            }, 2000);
+        } else {
+            onGetUserLocation(location);
+        }
+    }
+
 }
