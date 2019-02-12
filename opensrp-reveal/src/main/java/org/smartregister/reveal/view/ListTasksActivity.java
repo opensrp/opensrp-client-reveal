@@ -519,7 +519,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void requestUserLocation() {
-        kujakuMapView.setWarmGps(true, "Location disabled", "We shall not able to get your current location. You shall have to enter admin password to continue");
+        kujakuMapView.setWarmGps(true, getString(R.string.location_service_disabled), getString(R.string.enable_location_services_rejected));
         hasRequestedLocation = true;
     }
 

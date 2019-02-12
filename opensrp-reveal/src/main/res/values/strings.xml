@@ -79,4 +79,7 @@
 
     <string name="narrowing_location_title">Calculating your location</string>
     <string name="narrowing_location_message">Calculating your location. Please wait</string>
+
+    <string name="location_services_disabled">Location Services disabled</string>
+    <string name="enable_location_services_rejected">Unable get your current location. You shall have to enter admin password to continue</string>
 </resources>
