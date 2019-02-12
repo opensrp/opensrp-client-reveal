@@ -107,7 +107,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
 
-    private Snackbar syncSnackbar;
+    private Snackbar syncProgressSnackbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +127,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         initializeCardView();
 
-        syncSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
+        syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
 
     }
 
@@ -513,22 +513,21 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void onSyncStart() {
         if (SyncStatusBroadcastReceiver.getInstance().isSyncing()) {
-            syncSnackbar.setText(org.smartregister.R.string.syncing).setDuration(Snackbar.LENGTH_INDEFINITE).show();
+            syncProgressSnackbar.show();
         }
     }
 
     @Override
     public void onSyncInProgress(FetchStatus fetchStatus) {
-        syncSnackbar.dismiss();
+        syncProgressSnackbar.dismiss();
         if (fetchStatus.equals(FetchStatus.fetchedFailed)) {
-            syncSnackbar.setText(org.smartregister.R.string.sync_failed).setDuration(Snackbar.LENGTH_LONG).show();
+            Snackbar.make(rootView, org.smartregister.R.string.sync_failed, Snackbar.LENGTH_LONG).show();
         } else if (fetchStatus.equals(FetchStatus.fetched)
                 || fetchStatus.equals(FetchStatus.nothingFetched)) {
-            syncSnackbar.setText(org.smartregister.R.string.sync_complete).setDuration(Snackbar.LENGTH_LONG).show();
+            Snackbar.make(rootView, org.smartregister.R.string.sync_complete, Snackbar.LENGTH_LONG).show();
         } else if (fetchStatus.equals(FetchStatus.noConnection)) {
-            syncSnackbar.setText(org.smartregister.R.string.sync_failed_no_internet).setDuration(Snackbar.LENGTH_LONG).show();
+            Snackbar.make(rootView, org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_LONG).show();
         }
-
     }
 
     @Override
