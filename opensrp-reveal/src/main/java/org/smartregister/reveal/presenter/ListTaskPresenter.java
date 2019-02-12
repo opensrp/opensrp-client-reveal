@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
@@ -279,13 +281,13 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     public void onDrawerClosed() {
         if (changedCurrentSelection) {
-            listTaskView.showProgressDialog();
+            listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
             listTaskInteractor.fetchLocations(prefsUtil.getCurrentCampaignId(), prefsUtil.getCurrentOperationalArea());
         }
     }
 
     public void refreshStructures() {
-        listTaskView.showProgressDialog();
+        listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
         listTaskInteractor.fetchLocations(prefsUtil.getCurrentCampaignId(), prefsUtil.getCurrentOperationalArea());
     }
 
@@ -378,8 +380,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             String code = getPropertyValue(feature, TASK_CODE);
             if (IRS.equals(code) && NOT_VISITED.equals(businessStatus)) {
                 if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
-                    listTaskView.showProgressDialog();
-                    listTaskView.getUserCurrentLocation();
+                    validateUserLocation();
                 } else {
                     startSprayForm(feature);
                 }
@@ -387,6 +388,15 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
                 listTaskInteractor.fetchSprayDetails(feature.id(), false);
             }
+        }
+    }
+
+    private void validateUserLocation() {
+        Location location = listTaskView.getUserCurrentLocation();
+        if (location == null) {
+            listTaskView.requestUserLocation();
+        } else {
+            onGetUserLocation(location);
         }
     }
 
@@ -495,12 +505,12 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
 
     public void onChangeSprayStatus() {
-        listTaskView.showProgressDialog();
+        listTaskView.showProgressDialog(R.string.fetching_structure_title, R.string.fetching_structure_message);
         listTaskInteractor.fetchSprayDetails(selectedFeature.id(), true);
     }
 
     public void saveJsonForm(String json) {
-        listTaskView.showProgressDialog();
+        listTaskView.showProgressDialog(R.string.saving_title, R.string.saving_message);
         listTaskInteractor.saveJsonForm(json);
     }
 
@@ -558,10 +568,10 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     public void onGetUserLocationFailed() {
         listTaskView.hideProgressDialog();
-        listTaskView.displayNotification(R.string.loading_location, R.string.could_not_get_your_location);
+        requestUserPassword();
     }
 
-    public void onGetUserLocation(Location location) {
+    private void onGetUserLocation(Location location) {
         listTaskView.hideProgressDialog();
         double offset = clickedPoint.distanceTo(new LatLng(location.getLatitude(), location.getLongitude()));
         if (offset > BuildConfig.MY_LOCATION_BUFFER) {
@@ -581,4 +591,23 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     public void onPasswordVerified() {
         startSprayForm(selectedFeature);
     }
+
+    @Override
+    public void waitForUserLocation() {
+        Location location = listTaskView.getUserCurrentLocation();
+        Log.d(TAG, "user location: " + location);
+        if (location == null) {
+            listTaskView.showProgressDialog(R.string.narrowing_location_title, R.string.narrowing_location_message);
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    waitForUserLocation();
+                }
+            }, 2000);
+        } else {
+            onGetUserLocation(location);
+        }
+    }
+
+
 }

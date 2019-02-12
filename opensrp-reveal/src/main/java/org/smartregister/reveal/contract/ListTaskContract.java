@@ -1,6 +1,7 @@
 package org.smartregister.reveal.contract;
 
 import android.content.Context;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.util.Pair;
@@ -26,11 +27,11 @@ public interface ListTaskContract {
 
     interface ListTaskView {
 
-        void showProgressDialog();
+        void showProgressDialog(@StringRes int title, @StringRes int message);
 
         void hideProgressDialog();
 
-        void getUserCurrentLocation();
+        Location getUserCurrentLocation();
 
         Context getContext();
 
@@ -69,6 +70,8 @@ public interface ListTaskContract {
         void clearSelectedFeature();
 
         void displayToast(@StringRes int resourceId);
+
+        void requestUserLocation();
     }
 
     interface PresenterCallBack {
@@ -80,7 +83,6 @@ public interface ListTaskContract {
         void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier,
                               @NonNull TaskStatus taskStatus, @NonNull String businessStatus);
 
-
         void onStructureAdded(Feature feature, JSONArray featureCoordinates);
 
         void onFormSaveFailure(String eventType);
@@ -88,5 +90,8 @@ public interface ListTaskContract {
         void onCardDetailsFetched(CardDetails cardDetails);
 
         void onSprayFormDetailsFetched(CardDetails finalCardDetails);
+
+        void waitForUserLocation();
     }
+
 }

@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.MapboxMapOptions;
@@ -26,8 +25,6 @@ public class RevealMapView extends KujakuMapView {
     private List<METValidator> validators;
 
     private MapboxMap mapboxMap;
-
-    private FusedLocationProviderClient fusedLocationClient;
 
     public RevealMapView(@NonNull Context context) {
         super(context);
@@ -70,14 +67,4 @@ public class RevealMapView extends KujakuMapView {
         this.mapboxMap = mapboxMap;
     }
 
-
-    public FusedLocationProviderClient getFusedLocationClient() {
-
-
-        return fusedLocationClient;
-    }
-
-    public void setFusedLocationClient(FusedLocationProviderClient fusedLocationClient) {
-        this.fusedLocationClient = fusedLocationClient;
-    }
 }

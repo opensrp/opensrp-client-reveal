@@ -243,7 +243,6 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
     public void onStart() {
         if (mapView != null) {
             mapView.onStart();
-            mapView.setFusedLocationClient(LocationServices.getFusedLocationProviderClient((Activity) jsonApi));
         }
     }
 

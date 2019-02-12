@@ -1,10 +1,7 @@
 package org.smartregister.reveal.presenter;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
+import android.location.Location;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -47,7 +44,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                     validationStatus = GeoWidgetFactory.validate(formFragment, mapView);
                     if (validationStatus.isValid()) {
                         if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
-                            validateUserLocation(formFragment.getActivity(), mapView);
+                            validateUserLocation(mapView);
                         } else {
                             onValidateUserLocation(true);
                         }
@@ -60,29 +57,16 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
     }
 
 
-    private void validateUserLocation(Activity activity, RevealMapView mapView) {
-        if (ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mapView.getFusedLocationClient().getLastLocation()
-                    .addOnSuccessListener(location -> {
-                        if (location != null) {
-                            LatLng mapPosition = mapView.getMapboxMap().getCameraPosition().target;
-                            double offset = mapPosition.distanceTo(new LatLng(location.getLatitude(), location.getLongitude()));
-                            if (offset > BuildConfig.MY_LOCATION_BUFFER) {
-                                onValidateUserLocation(false);
-                            } else {
-                                onValidateUserLocation(true);
-                            }
-                        } else {
-                            onValidateUserLocation(false);
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        onValidateUserLocation(false);
-                    })
-                    .addOnCanceledListener(() -> {
-                        onValidateUserLocation(false);
-                    });
+    private void validateUserLocation(RevealMapView mapView) {
+        Location location = mapView.getLocationClient().getLastLocation();
+        if (location != null) {
+            LatLng mapPosition = mapView.getMapboxMap().getCameraPosition().target;
+            double offset = mapPosition.distanceTo(new LatLng(location.getLatitude(), location.getLongitude()));
+            if (offset > BuildConfig.MY_LOCATION_BUFFER) {
+                onValidateUserLocation(false);
+            } else {
+                onValidateUserLocation(true);
+            }
         } else {
             onValidateUserLocation(false);
         }

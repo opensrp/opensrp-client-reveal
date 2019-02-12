@@ -70,4 +70,13 @@
     <string name="request_password_title">You are not near the structure. Input admin password to continue</string>
     <string name="enter_admin_password"> Input admin password</string>
     <string name="wrong_admin_password">Wrong admin password</string>
+
+    <string name="saving_title">Saving</string>
+    <string name="saving_message">Saving form on Progress. Please wait</string>
+
+    <string name="fetching_structure_title">Fetching Structure Details</string>
+    <string name="fetching_structure_message">Fetching Structure Details. Please wait</string>
+
+    <string name="narrowing_location_title">Calculating your location</string>
+    <string name="narrowing_location_message">Calculating your location. Please wait</string>
 </resources>

@@ -3,8 +3,6 @@ package org.smartregister.reveal.activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.google.android.gms.location.LocationServices;
-
 import org.smartregister.reveal.view.RevealMapView;
 
 /**
@@ -19,7 +17,6 @@ public abstract class BaseMapActivity extends AppCompatActivity {
         super.onStart();
         if (kujakuMapView != null) {
             kujakuMapView.onStart();
-            kujakuMapView.setFusedLocationClient(LocationServices.getFusedLocationProviderClient(this));
         }
     }
 

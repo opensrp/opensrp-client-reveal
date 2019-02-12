@@ -1,6 +1,6 @@
 package org.smartregister.reveal.view;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,13 +9,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
@@ -65,6 +65,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import io.ona.kujaku.utils.Constants;
+
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
@@ -108,6 +110,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private TextView tvReason;
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
+
+    private boolean hasRequestedLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -443,12 +447,20 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         Toast.makeText(this, resourceId, Toast.LENGTH_SHORT).show();
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
             String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
             Log.d(TAG, json);
             listTaskPresenter.saveJsonForm(json);
+        } else if (requestCode == Constants.RequestCode.LOCATION_SETTINGS && hasRequestedLocation) {
+            if (resultCode == RESULT_OK) {
+                listTaskPresenter.waitForUserLocation();
+            } else if (resultCode == RESULT_CANCELED) {
+                listTaskPresenter.onGetUserLocationFailed();
+            }
+            hasRequestedLocation = false;
         }
     }
 
@@ -485,8 +497,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void showProgressDialog() {
+    public void showProgressDialog(@StringRes int title, @StringRes int message) {
         if (progressDialog != null) {
+            progressDialog.setTitle(title);
+            progressDialog.setMessage(getString(message));
             progressDialog.show();
         }
     }
@@ -499,21 +513,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void getUserCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            kujakuMapView.getFusedLocationClient().getLastLocation()
-                    .addOnSuccessListener(location -> listTaskPresenter.onGetUserLocation(location))
-                    .addOnFailureListener(e -> {
-                        Log.e(TAG, "Failed to get get User location", e);
-                        listTaskPresenter.onGetUserLocationFailed();
-                    })
-                    .addOnCanceledListener(() -> {
-                        listTaskPresenter.onGetUserLocationFailed();
-                    });
-        } else {
-            listTaskPresenter.onGetUserLocationFailed();
-        }
+    public Location getUserCurrentLocation() {
+        return kujakuMapView.getLocationClient() == null ? null : kujakuMapView.getLocationClient().getLastLocation();
+    }
+
+    @Override
+    public void requestUserLocation() {
+        kujakuMapView.setWarmGps(true, "Location disabled", "We shall not able to get your current location. You shall have to enter admin password to continue");
+        hasRequestedLocation = true;
     }
 
     @Override
@@ -567,7 +574,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(refreshGeowidgetReceiver);
         super.onPause();
     }
-
 
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {
         @Override
