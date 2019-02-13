@@ -54,7 +54,7 @@ public class LocationTaskIntentService extends IntentService {
         clientProcessEvents(extractStructureIds(syncedStructures, synchedTasks));
 
         if (!org.smartregister.util.Utils.isEmptyCollection(syncedStructures)
-                || !org.smartregister.util.Utils.isEmptyCollection(syncedStructures)) {
+                || !org.smartregister.util.Utils.isEmptyCollection(synchedTasks)) {
             doSync();
         }
 
