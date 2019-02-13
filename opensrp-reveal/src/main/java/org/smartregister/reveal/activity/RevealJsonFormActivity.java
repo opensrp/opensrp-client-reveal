@@ -88,7 +88,7 @@ public class RevealJsonFormActivity extends JsonFormActivity implements UserLoca
     @Override
     public void requestUserLocation() {
         formFragment.getPresenter().getMapView().setWarmGps(true,
-                getString(R.string.location_service_disabled), getString(R.string.enable_location_services_rejected));
+                getString(R.string.location_service_disabled), getString(R.string.location_services_disabled_add));
         requestedLocation = true;
 
     }

@@ -385,7 +385,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
                 if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
                     validateUserLocation();
                 } else {
-                    startSprayForm(feature);
+                    onLocationValidated();
                 }
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {

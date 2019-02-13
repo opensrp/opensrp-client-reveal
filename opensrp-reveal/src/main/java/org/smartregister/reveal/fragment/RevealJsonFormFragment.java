@@ -42,20 +42,6 @@ public class RevealJsonFormFragment extends JsonFormFragment {
         setupMargins(view);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == io.ona.kujaku.utils.Constants.RequestCode.LOCATION_SETTINGS) {
-            Log.d(RevealJsonFormFragment.class.getName(), "on onActivityResult LOCATION_SETTINGS");
-          /*  if (resultCode == RESULT_OK) {
-                listTaskPresenter.waitForUserLocation();
-            } else if (resultCode == RESULT_CANCELED) {
-                listTaskPresenter.onGetUserLocationFailed();
-            }
-            hasRequestedLocation = false;*/
-        }
-    }
-
     private void setupMargins(View view) {
         if (getArguments() != null) {
             String stepName = getArguments().getString(JsonFormConstants.STEPNAME);

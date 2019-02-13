@@ -80,6 +80,8 @@
     <string name="narrowing_location_title">Calculating your location</string>
     <string name="narrowing_location_message">Calculating your location. Please wait</string>
 
-    <string name="location_services_disabled">Location Services disabled</string>
-    <string name="enable_location_services_rejected">Unable get your current location. You shall have to enter admin password to continue</string>
+    <string name="location_services_disabled">Location Services Disabled</string>
+    <string name="location_services_disabled_spray">You have declined enabling location services to get your current location. You shall have to enter admin password to spray the structure</string>
+    <string name="location_services_disabled_add">You have declined enabling location services to get your current location. You shall have to enter admin password to add the structure</string>
+
 </resources>

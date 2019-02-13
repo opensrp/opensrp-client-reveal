@@ -1,6 +1,5 @@
 package org.smartregister.reveal.view;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -449,7 +448,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         Toast.makeText(this, resourceId, Toast.LENGTH_SHORT).show();
     }
 
-    @SuppressLint("MissingPermission")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
@@ -521,7 +519,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void requestUserLocation() {
-        kujakuMapView.setWarmGps(true, getString(R.string.location_service_disabled), getString(R.string.enable_location_services_rejected));
+        kujakuMapView.setWarmGps(true, getString(R.string.location_service_disabled), getString(R.string.location_services_disabled_spray));
         hasRequestedLocation = true;
     }
 
