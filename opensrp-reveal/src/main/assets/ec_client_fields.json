@@ -256,19 +256,19 @@
           }
         },
         {
-          "column_name": "other_phone_number",
+          "column_name": "occupation",
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "5622AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "concept": "occupation"
           }
         },
         {
-          "column_name": "highest_edu_level",
+          "column_name": "citizenship",
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "1712AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+            "concept": "citizenship"
           }
         },
         {

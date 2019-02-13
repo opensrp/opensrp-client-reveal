@@ -1,6 +1,6 @@
 {
-  "count": "2",
-  "encounter_type": "Family Registration",
+  "count": "1",
+  "encounter_type": "Family Member Registration",
   "entity_id": "",
   "relational_id": "",
   "metadata": {
@@ -52,92 +52,26 @@
     }
   },
   "step1": {
-    "title": "Family details",
-    "next": "step2",
-    "fields": [
-      {
-        "key": "fam_name",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "first_name",
-        "type": "edit_text",
-        "hint": "Family name *",
-        "edit_type": "name",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the family name"
-        },
-        "v_regex": {
-          "value": "[A-Za-z\\s\.\-]*",
-          "err": "Please enter a valid name"
-        }
-      },
-      {
-        "key": "village_town",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person_address",
-        "openmrs_entity_id": "cityVillage",
-        "type": "edit_text",
-        "hint": "Village/Town *",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the village or town"
-        }
-      },
-      {
-        "key": "quarter_clan",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person_address",
-        "openmrs_entity_id": "commune",
-        "type": "edit_text",
-        "hint": "Quarter/Clan *",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the quarter or clan"
-        }
-      },
-      {
-        "key": "street",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person_address",
-        "openmrs_entity_id": "street",
-        "type": "edit_text",
-        "hint": "Street"
-      },
-      {
-        "key": "landmark",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person_address",
-        "openmrs_entity_id": "landmark",
-        "type": "edit_text",
-        "hint": "Landmark"
-      }
-    ]
-  },
-  "step2": {
-    "title": "Family head",
+    "title": "Add Family Member",
     "fields": [
       {
         "key": "unique_id",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_identifier",
         "openmrs_entity_id": "opensrp_id",
-        "type": "edit_text",
-        "hint": "ID *",
+        "type": "barcode",
+        "barcode_type": "qrcode",
+        "hint": "UNIQUE ID *",
+        "value": "0",
+        "scanButtonText": "Scan QR Code",
+        "v_numeric": {
+          "value": "true",
+          "err": "Please enter a valid UNIQUE ID"
+        },
         "v_required": {
           "value": "true",
-          "err": "Please enter the ID"
+          "err": "Please enter the UNIQUE ID"
         }
-      },
-      {
-        "key": "national_id",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "concept",
-        "openmrs_entity_id": "163084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        "label_info_text": "What is their national identity number or their voter registration number?",
-        "label_info_title": "National ID number",
-        "type": "edit_text",
-        "hint": "National ID number"
       },
       {
         "key": "surname",
@@ -145,12 +79,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Surname *",
+        "hint": "Surname",
         "edit_type": "name",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the surname"
-        },
         "v_regex": {
           "value": "[A-Za-z\\s\.\-]*",
           "err": "Please enter a valid name"
@@ -158,7 +88,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "family-register-relevance.yml"
+              "rules-file": "family-member-relevance.yml"
             }
           }
         }
@@ -168,8 +98,12 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
+        "openmrs_data_type": "text",
         "type": "check_box",
-        "label": "",
+        "label": " ",
+        "exclusive": [
+          "none"
+        ],
         "options": [
           {
             "key": "same_as_fam_name",
@@ -180,17 +114,24 @@
         ]
       },
       {
+        "key": "fam_name",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "label",
+        "hidden": "true"
+      },
+      {
         "key": "surname_calculation",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
         "openmrs_entity_id": "last_name",
-        "type": "edit_text",
-        "hidden": true,
+        "type": "hidden",
         "hint": "Surname as Family name",
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "family-register-calculation.yml"
+              "rules-file": "family-member-calculation.yml"
             }
           }
         }
@@ -205,7 +146,7 @@
         "edit_type": "name",
         "v_required": {
           "value": "true",
-          "err": "Please enter the middle name"
+          "err": "Please enter the first name"
         },
         "v_regex": {
           "value": "[A-Za-z\\s\.\-]*",
@@ -240,8 +181,8 @@
         "duration": {
           "label": "Age"
         },
-        "min_date": "today-120y",
-        "max_date": "today-5y",
+        "min_date": "today-49y",
+        "max_date": "today-15y",
         "v_required": {
           "value": "true",
           "err": "Please enter the date of birth"
@@ -249,7 +190,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "family-register-relevance.yml"
+              "rules-file": "family-member-relevance.yml"
             }
           }
         }
@@ -274,7 +215,7 @@
         "key": "age",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_attribute",
-        "openmrs_entity_id": "age_entered",
+        "openmrs_entity_id": "age",
         "type": "edit_text",
         "hint": "Age *",
         "v_numeric": {
@@ -282,17 +223,17 @@
           "err": "Number must begin with 0 and must be a total of 10 digits in length"
         },
         "v_min": {
-          "value": "5",
-          "err": "Age must be equal or greater than 5"
+          "value": "15",
+          "err": "Age must be equal or greater than 15"
         },
         "v_max": {
-          "value": "120",
-          "err": "Age must be equal or less than 120"
+          "value": "49",
+          "err": "Age must be equal or less than 49"
         },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "family-register-relevance.yml"
+              "rules-file": "family-member-relevance.yml"
             }
           }
         },
@@ -305,7 +246,7 @@
         "key": "sex",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
-        "openmrs_entity_id": "sex",
+        "openmrs_entity_id": "gender",
         "type": "spinner",
         "hint": "Sex *",
         "values": [
@@ -315,7 +256,7 @@
         ],
         "v_required": {
           "value": "true",
-          "err": "Please select the sex"
+          "err": "Please enter the sex"
         }
       },
       {
@@ -348,7 +289,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "family-register-relevance.yml"
+              "rules-file": "family-member-relevance.yml"
             }
           }
         }
