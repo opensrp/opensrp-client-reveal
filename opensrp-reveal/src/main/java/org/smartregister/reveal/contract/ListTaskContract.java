@@ -1,7 +1,6 @@
 package org.smartregister.reveal.contract;
 
 import android.content.Context;
-import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.util.Pair;
@@ -15,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Task.TaskStatus;
+import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 
 import java.util.ArrayList;
@@ -25,13 +25,11 @@ import java.util.List;
  */
 public interface ListTaskContract {
 
-    interface ListTaskView {
+    interface ListTaskView extends UserLocationView {
 
         void showProgressDialog(@StringRes int title, @StringRes int message);
 
         void hideProgressDialog();
-
-        Location getUserCurrentLocation();
 
         Context getContext();
 
@@ -70,8 +68,6 @@ public interface ListTaskContract {
         void clearSelectedFeature();
 
         void displayToast(@StringRes int resourceId);
-
-        void requestUserLocation();
     }
 
     interface PresenterCallBack {
@@ -90,8 +86,6 @@ public interface ListTaskContract {
         void onCardDetailsFetched(CardDetails cardDetails);
 
         void onSprayFormDetailsFetched(CardDetails finalCardDetails);
-
-        void waitForUserLocation();
     }
 
 }

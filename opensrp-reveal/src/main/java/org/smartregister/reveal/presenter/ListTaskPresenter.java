@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
@@ -32,6 +30,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
+import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.util.PasswordDialogUtils;
@@ -87,7 +86,8 @@ import static org.smartregister.reveal.util.Utils.getPropertyValue;
 /**
  * Created by samuelgithengi on 11/27/18.
  */
-public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, PasswordRequestCallback {
+public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, PasswordRequestCallback,
+        UserLocationCallback {
 
     private static final String TAG = "ListTaskPresenter";
 
@@ -111,12 +111,15 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     private AlertDialog passwordDialog;
 
+    private ValidateUserLocationPresenter locationPresenter;
+
 
     public ListTaskPresenter(ListTaskView listTaskView) {
         this.listTaskView = listTaskView;
         listTaskInteractor = new ListTaskInteractor(this);
         locationHelper = LocationHelper.getInstance();
         passwordDialog = PasswordDialogUtils.initPasswordDialog(listTaskView.getContext(), this);
+        locationPresenter = new ValidateUserLocationPresenter(listTaskView, this);
     }
 
     public void onInitializeDrawerLayout() {
@@ -394,11 +397,12 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     private void validateUserLocation() {
         Location location = listTaskView.getUserCurrentLocation();
         if (location == null) {
-            listTaskView.requestUserLocation();
+            locationPresenter.requestUserLocation();
         } else {
-            onGetUserLocation(location);
+            locationPresenter.onGetUserLocation(location);
         }
     }
+
 
     @Override
     public void onSprayFormDetailsFetched(CardDetails cardDetails) {
@@ -566,48 +570,30 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     }
 
-    public void onGetUserLocationFailed() {
-        listTaskView.hideProgressDialog();
-        requestUserPassword();
+    @Override
+    public void onLocationValidated() {
+        startSprayForm(selectedFeature);
     }
 
-    private void onGetUserLocation(Location location) {
-        listTaskView.hideProgressDialog();
-        double offset = clickedPoint.distanceTo(new LatLng(location.getLatitude(), location.getLongitude()));
-        if (offset > BuildConfig.MY_LOCATION_BUFFER) {
-            requestUserPassword();
-        } else {
-            startSprayForm(selectedFeature);
-        }
+    @Override
+    public void onPasswordVerified() {
+        onLocationValidated();
     }
 
-    private void requestUserPassword() {
+    @Override
+    public LatLng getTargetCoordinates() {
+        return clickedPoint;
+    }
+
+    @Override
+    public void requestUserPassword() {
         if (passwordDialog != null) {
             passwordDialog.show();
         }
     }
 
     @Override
-    public void onPasswordVerified() {
-        startSprayForm(selectedFeature);
+    public ValidateUserLocationPresenter getLocationPresenter() {
+        return locationPresenter;
     }
-
-    @Override
-    public void waitForUserLocation() {
-        Location location = listTaskView.getUserCurrentLocation();
-        Log.d(TAG, "user location: " + location);
-        if (location == null) {
-            listTaskView.showProgressDialog(R.string.narrowing_location_title, R.string.narrowing_location_message);
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    waitForUserLocation();
-                }
-            }, 2000);
-        } else {
-            onGetUserLocation(location);
-        }
-    }
-
-
 }

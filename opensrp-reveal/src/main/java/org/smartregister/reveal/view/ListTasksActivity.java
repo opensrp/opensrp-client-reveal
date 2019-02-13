@@ -51,9 +51,10 @@ import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.BaseMapActivity;
-import org.smartregister.reveal.activity.RevealJsonForm;
+import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
+import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.Constants.Action;
@@ -75,7 +76,8 @@ import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 /**
  * Created by samuelgithengi on 11/20/18.
  */
-public class ListTasksActivity extends BaseMapActivity implements ListTaskContract.ListTaskView, View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener {
+public class ListTasksActivity extends BaseMapActivity implements ListTaskContract.ListTaskView,
+        View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener, UserLocationView {
 
     private static final String TAG = "ListTasksActivity";
 
@@ -406,7 +408,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void startJsonForm(JSONObject form) {
-        Intent intent = new Intent(getApplicationContext(), RevealJsonForm.class);
+        Intent intent = new Intent(getApplicationContext(), RevealJsonFormActivity.class);
         try {
             intent.putExtra(JSON_FORM_PARAM_JSON, form.toString());
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
@@ -456,9 +458,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             listTaskPresenter.saveJsonForm(json);
         } else if (requestCode == Constants.RequestCode.LOCATION_SETTINGS && hasRequestedLocation) {
             if (resultCode == RESULT_OK) {
-                listTaskPresenter.waitForUserLocation();
+                listTaskPresenter.getLocationPresenter().waitForUserLocation();
             } else if (resultCode == RESULT_CANCELED) {
-                listTaskPresenter.onGetUserLocationFailed();
+                listTaskPresenter.getLocationPresenter().onGetUserLocationFailed();
             }
             hasRequestedLocation = false;
         }
