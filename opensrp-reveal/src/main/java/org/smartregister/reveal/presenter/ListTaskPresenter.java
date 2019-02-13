@@ -113,6 +113,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     private ValidateUserLocationPresenter locationPresenter;
 
+    private CardDetails cardDetails;
+
+    private boolean changeSprayStatus;
 
     public ListTaskPresenter(ListTaskView listTaskView) {
         this.listTaskView = listTaskView;
@@ -375,6 +378,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     private void onFeatureSelected(Feature feature) {
         selectedFeature = feature;
+        changeSprayStatus = false;
+        listTaskView.closeStructureCardView();
         listTaskView.displaySelectedFeature(feature, clickedPoint);
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
@@ -406,13 +411,10 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     @Override
     public void onSprayFormDetailsFetched(CardDetails cardDetails) {
+        this.cardDetails = cardDetails;
+        changeSprayStatus = true;
         listTaskView.hideProgressDialog();
-        if (cardDetails == null) {
-            startSprayForm(selectedFeature);
-        } else {
-            startSprayForm(selectedFeature, cardDetails.getPropertyType(), cardDetails.getSprayStatus(), cardDetails.getFamilyHead());
-        }
-
+        validateUserLocation();
     }
 
     @Override
@@ -572,7 +574,11 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     @Override
     public void onLocationValidated() {
-        startSprayForm(selectedFeature);
+        if (cardDetails == null || !changeSprayStatus) {
+            startSprayForm(selectedFeature);
+        } else {
+            startSprayForm(selectedFeature, cardDetails.getPropertyType(), cardDetails.getSprayStatus(), cardDetails.getFamilyHead());
+        }
     }
 
     @Override
