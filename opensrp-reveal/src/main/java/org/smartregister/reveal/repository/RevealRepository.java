@@ -11,8 +11,10 @@ import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.Repository;
+import org.smartregister.repository.SettingsRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 
 
@@ -37,7 +39,7 @@ public class RevealRepository extends Repository {
         TaskRepository.createTable(database);
         LocationRepository.createTable(database);
         StructureRepository.createTable(database);
-//        onUpgrade(database, 1, 2);
+        onUpgrade(database, 1, BuildConfig.DATABASE_VERSION);
     }
 
     @Override
@@ -50,13 +52,17 @@ public class RevealRepository extends Repository {
         while (upgradeTo <= newVersion) {
             switch (upgradeTo) {
                 case 2:
-                    // upgradeToVersion2(db);
+                     upgradeToVersion2(db);
                     break;
                 default:
                     break;
             }
             upgradeTo++;
         }
+    }
+
+    private void upgradeToVersion2(SQLiteDatabase db) {
+        SettingsRepository.onUpgrade(db);
     }
 
     @Override
