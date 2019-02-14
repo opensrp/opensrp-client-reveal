@@ -69,6 +69,7 @@ import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATI
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
+import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -308,6 +309,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private void registerFamily() {
         Intent intent = new Intent(this, FamilyRegisterActivity.class);
+        intent.putExtra(START_REGISTRATION, true);
         startActivity(intent);
     }
 

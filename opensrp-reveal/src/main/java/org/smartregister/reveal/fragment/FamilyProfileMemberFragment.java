@@ -1,5 +1,6 @@
 package org.smartregister.reveal.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -9,6 +10,7 @@ import org.smartregister.family.model.BaseFamilyProfileMemberModel;
 import org.smartregister.family.presenter.BaseFamilyProfileMemberPresenter;
 import org.smartregister.family.util.Constants;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.view.FamilyOtherMemberProfileActivity;
 
 public class FamilyProfileMemberFragment extends BaseFamilyProfileMemberFragment {
 
@@ -45,10 +47,10 @@ public class FamilyProfileMemberFragment extends BaseFamilyProfileMemberFragment
     }
 
     public void goToOtherMemberProfileActivity(CommonPersonObjectClient patient) {
-       /* Intent intent = new Intent(getActivity(), FamilyOtherMemberProfileActivity.class);
+        Intent intent = new Intent(getActivity(), FamilyOtherMemberProfileActivity.class);
         intent.putExtras(getArguments());
         intent.putExtra(Constants.INTENT_KEY.BASE_ENTITY_ID, patient.getCaseId());
-        startActivity(intent);*/
+        startActivity(intent);
     }
 
 

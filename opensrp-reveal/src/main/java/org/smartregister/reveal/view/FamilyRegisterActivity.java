@@ -1,5 +1,6 @@
 package org.smartregister.reveal.view;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
@@ -15,6 +16,14 @@ import org.smartregister.view.fragment.BaseRegisterFragment;
  * Created by samuelgithengi on 2/8/19.
  */
 public class FamilyRegisterActivity extends BaseFamilyRegisterActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getIntent().getBooleanExtra("START_REGISTRATION", false)) {
+            startRegistration();
+        }
+    }
 
     @Override
     protected void initializePresenter() {

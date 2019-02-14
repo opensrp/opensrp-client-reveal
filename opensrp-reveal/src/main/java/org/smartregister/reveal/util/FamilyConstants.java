@@ -36,5 +36,10 @@ public interface FamilyConstants {
         String FAMILY_MEMBER = "ec_family_member";
     }
 
+    interface Intent
+    {
+        String START_REGISTRATION="START_REGISTRATION";
+    }
+
 
 }

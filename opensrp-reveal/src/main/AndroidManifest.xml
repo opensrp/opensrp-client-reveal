@@ -70,6 +70,14 @@
         </activity>
         <activity android:name="org.smartregister.family.activity.FamilyWizardFormActivity" />
         <activity android:name="com.vijay.jsonwizard.activities.JsonWizardFormActivity" />
+        <activity
+            android:name=".view.FamilyOtherMemberProfileActivity"
+            android:parentActivityName=".view.FamilyProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.FamilyProfileActivity" />
+        </activity>
 
         <service android:name=".sync.RevealSyncIntentService" />
         <service android:name=".sync.RevealCampaignIntentService" />
