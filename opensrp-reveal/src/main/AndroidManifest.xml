@@ -52,8 +52,22 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-        <activity android:name=".view.FamilyRegisterActivity" />
-        <activity android:name=".view.FamilyProfileActivity" />
+        <activity
+            android:name=".view.FamilyRegisterActivity"
+            android:parentActivityName=".view.ListTasksActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.ListTasksActivity" />
+        </activity>
+        <activity
+            android:name=".view.FamilyProfileActivity"
+            android:parentActivityName=".view.FamilyRegisterActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.FamilyRegisterActivity" />
+        </activity>
         <activity android:name="org.smartregister.family.activity.FamilyWizardFormActivity" />
         <activity android:name="com.vijay.jsonwizard.activities.JsonWizardFormActivity" />
 

@@ -1,11 +1,13 @@
 package org.smartregister.reveal.view;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 import org.smartregister.family.activity.BaseFamilyRegisterActivity;
 import org.smartregister.family.model.BaseFamilyRegisterModel;
 import org.smartregister.family.presenter.BaseFamilyRegisterPresenter;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.fragment.FamilyRegisterFragment;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
@@ -33,14 +35,22 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity {
     protected void registerBottomNavigation() {
         super.registerBottomNavigation();
 
-        MenuItem clients = bottomNavigationView.getMenu().findItem(org.smartregister.R.id.action_clients);
+        MenuItem clients = bottomNavigationView.getMenu().findItem(R.id.action_clients);
         if (clients != null) {
-            clients.setTitle(getString(org.smartregister.family.R.string.families));
+            clients.setTitle(getString(R.string.families));
         }
 
-        bottomNavigationView.getMenu().removeItem(org.smartregister.R.id.action_search);
-        bottomNavigationView.getMenu().removeItem(org.smartregister.R.id.action_library);
+        bottomNavigationView.getMenu().removeItem(R.id.action_search);
+        bottomNavigationView.getMenu().removeItem(R.id.action_library);
+        bottomNavigationView.getMenu().removeItem(R.id.action_job_aids);
     }
 
-
+    @Override
+    public void switchToFragment(int position) {
+        if (position == 0) {
+            NavUtils.navigateUpFromSameTask(this);
+            return;
+        }
+        super.switchToFragment(position);
+    }
 }
