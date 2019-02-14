@@ -176,6 +176,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
                 mMapboxMap = mapboxMap;
+                mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
 
                 mapboxMap.setMinZoomPreference(10);
                 mapboxMap.setMaxZoomPreference(21);
