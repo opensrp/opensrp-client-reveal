@@ -121,6 +121,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
 
+                mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
+
                 mapView.setMapboxMap(mapboxMap);
                 if (finalOperationalArea != null) {
                     mapboxMap.setCameraPosition(mapboxMap.getCameraForGeometry(Geometry.fromJson(finalOperationalArea)));

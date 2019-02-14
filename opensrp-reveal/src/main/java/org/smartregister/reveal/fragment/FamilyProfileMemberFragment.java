@@ -12,6 +12,8 @@ import org.smartregister.family.util.Constants;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.view.FamilyOtherMemberProfileActivity;
 
+import java.util.HashMap;
+
 public class FamilyProfileMemberFragment extends BaseFamilyProfileMemberFragment {
 
     public static BaseFamilyProfileMemberFragment newInstance(Bundle bundle) {
@@ -30,6 +32,10 @@ public class FamilyProfileMemberFragment extends BaseFamilyProfileMemberFragment
         String familyHead = getArguments().getString(Constants.INTENT_KEY.FAMILY_HEAD);
         String primaryCareGiver = getArguments().getString(Constants.INTENT_KEY.PRIMARY_CAREGIVER);
         presenter = new BaseFamilyProfileMemberPresenter(this, new BaseFamilyProfileMemberModel(), null, familyBaseEntityId, familyHead, primaryCareGiver);
+    }
+
+    @Override
+    public void setAdvancedSearchFormData(HashMap<String, String> hashMap) {//do nothing
     }
 
     @Override
@@ -52,6 +58,7 @@ public class FamilyProfileMemberFragment extends BaseFamilyProfileMemberFragment
         intent.putExtra(Constants.INTENT_KEY.BASE_ENTITY_ID, patient.getCaseId());
         startActivity(intent);
     }
+
 
 
 }
