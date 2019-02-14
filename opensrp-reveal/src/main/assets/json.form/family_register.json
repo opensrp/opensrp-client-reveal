@@ -68,7 +68,7 @@
           "err": "Please enter the family name"
         },
         "v_regex": {
-          "value": "[A-Za-z\\s\.\-]*",
+          "value": "[A-Za-z\\s.-]*",
           "err": "Please enter a valid name"
         }
       },
@@ -152,7 +152,7 @@
           "err": "Please enter the surname"
         },
         "v_regex": {
-          "value": "[A-Za-z\\s\.\-]*",
+          "value": "[A-Za-z\\s.-]*",
           "err": "Please enter a valid name"
         },
         "relevance": {
@@ -208,7 +208,7 @@
           "err": "Please enter the middle name"
         },
         "v_regex": {
-          "value": "[A-Za-z\\s\.\-]*",
+          "value": "[A-Za-z\\s.-]*",
           "err": "Please enter a valid name"
         }
       },
@@ -225,7 +225,7 @@
           "err": "Please enter the middle name"
         },
         "v_regex": {
-          "value": "[A-Za-z\\s\.\-]*",
+          "value": "[A-Za-z\\s.-]*",
           "err": "Please enter a valid name"
         }
       },
@@ -330,7 +330,7 @@
           "err": "Number must be a total of 10 digits in length"
         },
         "v_regex": {
-          "value": "(0[0-9]{9})|\s*",
+          "value": "0\\d{9}",
           "err": "Number must be 10 digits and must start with 0."
         },
         "v_required": {
