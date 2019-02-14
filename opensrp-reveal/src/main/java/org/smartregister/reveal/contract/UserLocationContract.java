@@ -22,7 +22,6 @@ public interface UserLocationContract {
         void onGetUserLocationFailed();
 
         void waitForUserLocation();
-
     }
 
     interface UserLocationView {
