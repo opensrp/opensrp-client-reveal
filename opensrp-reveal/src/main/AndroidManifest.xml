@@ -47,7 +47,7 @@
 
 
         <activity
-            android:name=".activity.RevealJsonForm"
+            android:name=".activity.RevealJsonFormActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"

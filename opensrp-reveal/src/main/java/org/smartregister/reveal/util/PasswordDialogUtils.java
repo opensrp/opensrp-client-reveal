@@ -59,6 +59,7 @@ public class PasswordDialogUtils {
                             adminPassEditText.setError(context.getString(R.string.wrong_admin_password));
                         } else {
                             adminPassEditText.setError(null);
+                            adminPassEditText.setText(null);
                             passwordDialog.dismiss();
                             callback.onPasswordVerified();
                         }
@@ -68,7 +69,6 @@ public class PasswordDialogUtils {
                 passwordDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        passwordDialog.dismiss();
                         passwordDialog.dismiss();
                     }
                 });

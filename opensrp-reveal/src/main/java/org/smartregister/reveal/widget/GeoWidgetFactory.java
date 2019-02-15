@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.cocoahero.android.geojson.Feature;
 import com.cocoahero.android.geojson.Point;
-import com.google.android.gms.location.LocationServices;
 import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -245,7 +244,6 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
     public void onStart() {
         if (mapView != null) {
             mapView.onStart();
-            mapView.setFusedLocationClient(LocationServices.getFusedLocationProviderClient((Activity) jsonApi));
         }
     }
 

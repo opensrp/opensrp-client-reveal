@@ -1,10 +1,7 @@
 package org.smartregister.reveal.presenter;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
+import android.location.Location;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -17,7 +14,9 @@ import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 import com.vijay.jsonwizard.utils.ValidationStatus;
 
 import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
+import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
@@ -25,16 +24,26 @@ import org.smartregister.reveal.widget.GeoWidgetFactory;
 /**
  * Created by samuelgithengi on 1/30/19.
  */
-public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter implements PasswordRequestCallback {
+public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter implements PasswordRequestCallback, UserLocationCallback {
 
     private JsonFormFragment formFragment;
 
     private AlertDialog passwordDialog;
 
+    private RevealJsonFormActivity jsonFormView;
+
+    private RevealMapView mapView;
+
+    private ValidateUserLocationPresenter locationPresenter;
+
+
     public RevealJsonFormFragmentPresenter(JsonFormFragment formFragment, JsonFormInteractor jsonFormInteractor) {
         super(formFragment, jsonFormInteractor);
         this.formFragment = formFragment;
         passwordDialog = PasswordDialogUtils.initPasswordDialog(formFragment.getActivity(), this);
+        jsonFormView = (RevealJsonFormActivity) formFragment.getActivity();
+        locationPresenter = new ValidateUserLocationPresenter(jsonFormView, this);
+
     }
 
     @Override
@@ -47,57 +56,24 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                     validationStatus = GeoWidgetFactory.validate(formFragment, mapView);
                     if (validationStatus.isValid()) {
                         if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
-                            validateUserLocation(formFragment.getActivity(), mapView);
+                            validateUserLocation(mapView);
                         } else {
-                            onValidateUserLocation(true);
+                            onLocationValidated();
                         }
                     }
                 }
             }
-
         }
         return validationStatus;
     }
 
-
-    private void validateUserLocation(Activity activity, RevealMapView mapView) {
-        if (ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            mapView.getFusedLocationClient().getLastLocation()
-                    .addOnSuccessListener(location -> {
-                        if (location != null) {
-                            LatLng mapPosition = mapView.getMapboxMap().getCameraPosition().target;
-                            double offset = mapPosition.distanceTo(new LatLng(location.getLatitude(), location.getLongitude()));
-                            if (offset > BuildConfig.MY_LOCATION_BUFFER) {
-                                onValidateUserLocation(false);
-                            } else {
-                                onValidateUserLocation(true);
-                            }
-                        } else {
-                            onValidateUserLocation(false);
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        onValidateUserLocation(false);
-                    })
-                    .addOnCanceledListener(() -> {
-                        onValidateUserLocation(false);
-                    });
+    private void validateUserLocation(RevealMapView mapView) {
+        this.mapView = mapView;
+        Location location = jsonFormView.getUserCurrentLocation();
+        if (location != null) {
+            locationPresenter.onGetUserLocation(location);
         } else {
-            onValidateUserLocation(false);
-        }
-    }
-
-    private void onValidateUserLocation(boolean isValid) {
-        if (isValid) {
-            Intent returnIntent = new Intent();
-            getView().onFormFinish();
-            returnIntent.putExtra("json", getView().getCurrentJsonState());
-            returnIntent.putExtra(JsonFormConstants.SKIP_VALIDATION, Boolean.valueOf(formFragment.getMainView().getTag(com.vijay.jsonwizard.R.id.skip_validation).toString()));
-            getView().finishWithResult(returnIntent);
-
-        } else {
-            requestUserPassword();
+            locationPresenter.requestUserLocation();
         }
     }
 
@@ -106,7 +82,24 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         writeValuesAndValidate(mainView);
     }
 
-    private void requestUserPassword() {
+    @Override
+    public void onLocationValidated() {
+        jsonFormView.hideProgressDialog();
+        Intent returnIntent = new Intent();
+        getView().onFormFinish();
+        returnIntent.putExtra("json", getView().getCurrentJsonState());
+        returnIntent.putExtra(JsonFormConstants.SKIP_VALIDATION, Boolean.valueOf(formFragment.getMainView().getTag(com.vijay.jsonwizard.R.id.skip_validation).toString()));
+        getView().finishWithResult(returnIntent);
+
+    }
+
+    @Override
+    public LatLng getTargetCoordinates() {
+        return mapView.getMapboxMap().getCameraPosition().target;
+    }
+
+    @Override
+    public void requestUserPassword() {
         if (passwordDialog != null) {
             passwordDialog.show();
         }
@@ -114,6 +107,16 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
 
     @Override
     public void onPasswordVerified() {
-        onValidateUserLocation(true);
+        onLocationValidated();
+    }
+
+
+    public RevealMapView getMapView() {
+        return mapView;
+    }
+
+    @Override
+    public ValidateUserLocationPresenter getLocationPresenter() {
+        return locationPresenter;
     }
 }

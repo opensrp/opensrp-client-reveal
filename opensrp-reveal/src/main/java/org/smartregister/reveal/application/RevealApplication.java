@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.job.JobManager;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.vijay.jsonwizard.activities.JsonWizardFormActivity;
@@ -72,7 +73,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         context.updateApplicationContext(getApplicationContext());
         context.updateCommonFtsObject(createCommonFtsObject());
         // Initialize Modules
-        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
         CoreLibrary.init(context, new RevealSyncConfiguration());
         ConfigurableViewsLibrary.init(context, getRepository());
         FamilyLibrary.init(context, getRepository(), getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
