@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Task.TaskStatus;
+import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 
 import java.util.ArrayList;
@@ -24,9 +25,9 @@ import java.util.List;
  */
 public interface ListTaskContract {
 
-    interface ListTaskView {
+    interface ListTaskView extends UserLocationView {
 
-        void showProgressDialog();
+        void showProgressDialog(@StringRes int title, @StringRes int message);
 
         void hideProgressDialog();
 
@@ -78,7 +79,6 @@ public interface ListTaskContract {
         void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier,
                               @NonNull TaskStatus taskStatus, @NonNull String businessStatus);
 
-
         void onStructureAdded(Feature feature, JSONArray featureCoordinates);
 
         void onFormSaveFailure(String eventType);
@@ -87,4 +87,5 @@ public interface ListTaskContract {
 
         void onSprayFormDetailsFetched(CardDetails finalCardDetails);
     }
+
 }

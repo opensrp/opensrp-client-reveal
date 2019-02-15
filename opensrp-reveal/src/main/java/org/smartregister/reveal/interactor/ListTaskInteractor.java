@@ -28,7 +28,6 @@ import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.EventClientRepository;
-import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.R;
@@ -93,8 +92,6 @@ public class ListTaskInteractor {
 
     private StructureRepository structureRepository;
 
-    private LocationRepository locationRepository;
-
     private PresenterCallBack presenterCallBack;
 
     private EventClientRepository eventClientRepository;
@@ -111,7 +108,6 @@ public class ListTaskInteractor {
         campaignRepository = RevealApplication.getInstance().getCampaignRepository();
         taskRepository = RevealApplication.getInstance().getTaskRepository();
         structureRepository = RevealApplication.getInstance().getStructureRepository();
-        locationRepository = RevealApplication.getInstance().getLocationRepository();
         eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
         clientProcessor = RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext());
         sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();

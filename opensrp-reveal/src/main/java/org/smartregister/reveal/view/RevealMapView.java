@@ -66,4 +66,5 @@ public class RevealMapView extends KujakuMapView {
     public void setMapboxMap(MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
     }
+
 }
