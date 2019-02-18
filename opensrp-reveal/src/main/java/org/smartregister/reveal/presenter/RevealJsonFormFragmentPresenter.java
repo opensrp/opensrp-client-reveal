@@ -5,6 +5,7 @@ import android.location.Location;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
@@ -49,9 +50,11 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
     @Override
     public ValidationStatus writeValuesAndValidate(LinearLayout mainView) {
         ValidationStatus validationStatus = super.writeValuesAndValidate(mainView);
+        boolean hasMapView = false;
         if (validationStatus.isValid()) {
             for (View childAt : formFragment.getJsonApi().getFormDataViews()) {
                 if (childAt instanceof RevealMapView) {
+                    hasMapView = true;
                     RevealMapView mapView = (RevealMapView) childAt;
                     validationStatus = GeoWidgetFactory.validate(formFragment, mapView);
                     if (validationStatus.isValid()) {
@@ -61,8 +64,15 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                             onLocationValidated();
                         }
                     }
+                    break;
                 }
             }
+        }
+        if (!hasMapView && validationStatus.isValid()) {
+            onLocationValidated();
+        } else {
+            Toast.makeText(getView().getContext(), validationStatus.getErrorMessage(), Toast.LENGTH_LONG).show();
+            validationStatus.requestAttention();
         }
         return validationStatus;
     }
