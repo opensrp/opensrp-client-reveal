@@ -175,15 +175,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         kujakuMapView = findViewById(R.id.kujakuMapView);
         kujakuMapView.onCreate(savedInstanceState);
 
-        kujakuMapView.setStyleUrl(getString(R.string.reveal_satellite_style));
-
         kujakuMapView.showCurrentLocationBtn(true);
 
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
                 mMapboxMap = mapboxMap;
-                mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
 
                 mapboxMap.setMinZoomPreference(10);
                 mapboxMap.setMaxZoomPreference(21);
