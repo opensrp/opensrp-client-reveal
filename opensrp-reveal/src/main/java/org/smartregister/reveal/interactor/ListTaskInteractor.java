@@ -249,7 +249,7 @@ public class ListTaskInteractor {
     }
 
 
-    private org.smartregister.domain.db.Event saveEvent(JSONObject jsonForm) throws JSONException {
+    private org.smartregister.domain.db.Event saveEvent(JSONObject jsonForm, String encounterType, String bindType) throws JSONException {
         String entityId = getString(jsonForm, ENTITY_ID);
         JSONArray fields = JsonFormUtils.fields(jsonForm);
         JSONObject metadata = getJSONObject(jsonForm, METADATA);
@@ -258,7 +258,7 @@ public class ListTaskInteractor {
         formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
         formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
         formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
-        Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, SPRAY_EVENT, STRUCTURE);
+        Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, encounterType, bindType);
         JSONObject eventJson = new JSONObject(gson.toJson(event));
         eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
         eventClientRepository.addEvent(entityId, eventJson);
@@ -272,7 +272,7 @@ public class ListTaskInteractor {
             @Override
             public void run() {
                 try {
-                    org.smartregister.domain.db.Event event = saveEvent(jsonForm);
+                    org.smartregister.domain.db.Event event = saveEvent(jsonForm, SPRAY_EVENT, STRUCTURE);
                     clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override
@@ -298,7 +298,7 @@ public class ListTaskInteractor {
             public void run() {
                 try {
                     jsonForm.put(ENTITY_ID, UUID.randomUUID().toString());
-                    org.smartregister.domain.db.Event event = saveEvent(jsonForm);
+                    org.smartregister.domain.db.Event event = saveEvent(jsonForm, REGISTER_STRUCTURE_EVENT, STRUCTURE);
                     com.cocoahero.android.geojson.Feature feature = new com.cocoahero.android.geojson.Feature(new JSONObject(event.findObs(null, false, "structure").getValue().toString()));
                     DateTime now = new DateTime();
                     Location structure = new Location();
