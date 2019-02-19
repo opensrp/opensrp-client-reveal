@@ -3,8 +3,10 @@ package org.smartregister.reveal.presenter;
 import android.content.Context;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -23,11 +25,15 @@ import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
+import org.smartregister.reveal.contract.PasswordRequestCallback;
+import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.JsonFormUtils;
@@ -80,7 +86,8 @@ import static org.smartregister.reveal.util.Utils.getPropertyValue;
 /**
  * Created by samuelgithengi on 11/27/18.
  */
-public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
+public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, PasswordRequestCallback,
+        UserLocationCallback {
 
     private static final String TAG = "ListTaskPresenter";
 
@@ -102,11 +109,20 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     private LatLng clickedPoint;
 
+    private AlertDialog passwordDialog;
+
+    private ValidateUserLocationPresenter locationPresenter;
+
+    private CardDetails cardDetails;
+
+    private boolean changeSprayStatus;
 
     public ListTaskPresenter(ListTaskView listTaskView) {
         this.listTaskView = listTaskView;
         listTaskInteractor = new ListTaskInteractor(this);
         locationHelper = LocationHelper.getInstance();
+        passwordDialog = PasswordDialogUtils.initPasswordDialog(listTaskView.getContext(), this);
+        locationPresenter = new ValidateUserLocationPresenter(listTaskView, this);
     }
 
     public void onInitializeDrawerLayout() {
@@ -271,13 +287,13 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     public void onDrawerClosed() {
         if (changedCurrentSelection) {
-            listTaskView.showProgressDialog();
+            listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
             listTaskInteractor.fetchLocations(prefsUtil.getCurrentCampaignId(), prefsUtil.getCurrentOperationalArea());
         }
     }
 
     public void refreshStructures() {
-        listTaskView.showProgressDialog();
+        listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
         listTaskInteractor.fetchLocations(prefsUtil.getCurrentCampaignId(), prefsUtil.getCurrentOperationalArea());
     }
 
@@ -362,6 +378,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     private void onFeatureSelected(Feature feature) {
         selectedFeature = feature;
+        changeSprayStatus = false;
+        listTaskView.closeStructureCardView();
         listTaskView.displaySelectedFeature(feature, clickedPoint);
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
@@ -369,7 +387,11 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             if (IRS.equals(code) && NOT_VISITED.equals(businessStatus)) {
-                startSprayForm(feature);
+                if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
+                    validateUserLocation();
+                } else {
+                    onLocationValidated();
+                }
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
                 listTaskInteractor.fetchSprayDetails(feature.id(), false);
@@ -377,15 +399,22 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         }
     }
 
+    private void validateUserLocation() {
+        Location location = listTaskView.getUserCurrentLocation();
+        if (location == null) {
+            locationPresenter.requestUserLocation();
+        } else {
+            locationPresenter.onGetUserLocation(location);
+        }
+    }
+
+
     @Override
     public void onSprayFormDetailsFetched(CardDetails cardDetails) {
+        this.cardDetails = cardDetails;
+        changeSprayStatus = true;
         listTaskView.hideProgressDialog();
-        if (cardDetails == null) {
-            startSprayForm(selectedFeature);
-        } else {
-            startSprayForm(selectedFeature, cardDetails.getPropertyType(), cardDetails.getSprayStatus(), cardDetails.getFamilyHead());
-        }
-
+        validateUserLocation();
     }
 
     @Override
@@ -469,7 +498,6 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     private void startSprayForm(Feature feature) {
         startSprayForm(feature, null, null, null);
-
     }
 
     private void startSprayForm(Feature feature, String propertyType, String sprayStatus, String familyHead) {
@@ -483,12 +511,12 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
 
     public void onChangeSprayStatus() {
-        listTaskView.showProgressDialog();
+        listTaskView.showProgressDialog(R.string.fetching_structure_title, R.string.fetching_structure_message);
         listTaskInteractor.fetchSprayDetails(selectedFeature.id(), true);
     }
 
     public void saveJsonForm(String json) {
-        listTaskView.showProgressDialog();
+        listTaskView.showProgressDialog(R.string.saving_title, R.string.saving_message);
         listTaskInteractor.saveJsonForm(json);
     }
 
@@ -544,4 +572,34 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
 
     }
 
+    @Override
+    public void onLocationValidated() {
+        if (cardDetails == null || !changeSprayStatus) {
+            startSprayForm(selectedFeature);
+        } else {
+            startSprayForm(selectedFeature, cardDetails.getPropertyType(), cardDetails.getSprayStatus(), cardDetails.getFamilyHead());
+        }
+    }
+
+    @Override
+    public void onPasswordVerified() {
+        onLocationValidated();
+    }
+
+    @Override
+    public LatLng getTargetCoordinates() {
+        return clickedPoint;
+    }
+
+    @Override
+    public void requestUserPassword() {
+        if (passwordDialog != null) {
+            passwordDialog.show();
+        }
+    }
+
+    @Override
+    public ValidateUserLocationPresenter getLocationPresenter() {
+        return locationPresenter;
+    }
 }

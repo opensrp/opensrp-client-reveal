@@ -81,6 +81,10 @@ android {
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '1'
             buildConfigField "int", "SYNC_INTERVAL_IN_MINUTES", '2'
+            buildConfigField "String", "ADMIN_PASSWORD_NOT_NEAR_STRUCTURES", '"AdminPass1"'
+            buildConfigField "float", "MY_LOCATION_BUFFER", '100'
+            buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
+            buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '90'
 
             if (project.rootProject.file("local.properties").exists()) {
                 Properties properties = new Properties()
@@ -105,6 +109,11 @@ android {
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
             buildConfigField "int", "SYNC_INTERVAL_IN_MINUTES", '2'
+            buildConfigField "String", "ADMIN_PASSWORD_NOT_NEAR_STRUCTURES", '"AdminPass1"'
+            buildConfigField "float", "MY_LOCATION_BUFFER", '100'
+            buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
+            buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '60'
+
             testCoverageEnabled true
             if (project.rootProject.file("local.properties").exists()) {
                 Properties properties = new Properties()
@@ -174,7 +183,7 @@ dependencies {
         exclude group: 'kujaku', module: 'utils'
     }
 
-    implementation 'io.ona.kujaku:utils:0.5.5'
+    implementation 'io.ona.kujaku:utils:0.6.1'
 
     implementation('org.smartregister:opensrp-client-core:1.6.6-SNAPSHOT@aar') {
         transitive = true

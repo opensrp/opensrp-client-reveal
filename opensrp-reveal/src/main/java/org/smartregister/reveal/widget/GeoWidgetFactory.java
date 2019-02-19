@@ -48,7 +48,6 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUF
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 
-
 /**
  * Created by samuelgithengi on 12/13/18.
  */
@@ -65,6 +64,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
     private JsonApi jsonApi;
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView, RevealMapView mapView) {
+
         if (!Utils.isEmptyCollection(mapView.getValidators())) {
             for (METValidator validator : mapView.getValidators()) {
                 if (validator instanceof MinZoomValidator) {
@@ -121,6 +121,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
+
+                mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
 
                 mapView.setMapboxMap(mapboxMap);
                 if (finalOperationalArea != null) {
@@ -245,8 +247,9 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
 
     @Override
     public void onStart() {
-        if (mapView != null)
+        if (mapView != null) {
             mapView.onStart();
+        }
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.job.JobManager;
 import com.mapbox.mapboxsdk.Mapbox;
 
@@ -74,7 +75,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
         // Initialize Modules
-        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
         CoreLibrary.init(context, new RevealSyncConfiguration());
         ConfigurableViewsLibrary.init(context, getRepository());
         LocationHelper.init(Utils.ALLOWED_LEVELS, Utils.DEFAULT_LOCATION_LEVEL);
