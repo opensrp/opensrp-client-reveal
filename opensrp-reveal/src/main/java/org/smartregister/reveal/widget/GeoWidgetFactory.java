@@ -36,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.validators.MinZoomValidator;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.Utils;
@@ -43,6 +44,7 @@ import org.smartregister.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 
@@ -124,7 +126,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
                 if (finalOperationalArea != null) {
                     mapboxMap.setCameraPosition(mapboxMap.getCameraForGeometry(Geometry.fromJson(finalOperationalArea)));
                 } else {
-                    mapView.focusOnUserLocation(true);
+                    Float bufferRadius = Float.valueOf(RevealApplication.getInstance().getGlobalConfigs().get(LOCATION_BUFFER_RADIUS_IN_METRES));
+                    mapView.focusOnUserLocation(true, bufferRadius);
                 }
 
                 GeoJsonSource geoJsonSource = mapboxMap.getSourceAs(context.getString(R.string.reveal_datasource_name));
@@ -178,6 +181,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         views.add(rootLayout);
         mapView.onStart();
 
+        Float bufferRadius = Float.valueOf(RevealApplication.getInstance().getGlobalConfigs().get(LOCATION_BUFFER_RADIUS_IN_METRES));
+        mapView.setLocationBufferRadius(bufferRadius);
         mapView.showCurrentLocationBtn(true);
         mapView.enableAddPoint(true);
         ((JsonApi) context).onFormFinish();
