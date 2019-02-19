@@ -34,6 +34,7 @@ public interface Constants {
         String KEY = "key";
         String VALUE = "value";
         String LOCATION_BUFFER_RADIUS_IN_METRES = "location_buffer_radius_in_metres";
+        Float DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES = 75f;
     }
 
     interface Preferences {

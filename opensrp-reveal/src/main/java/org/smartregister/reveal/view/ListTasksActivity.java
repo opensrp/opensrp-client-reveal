@@ -68,6 +68,7 @@ import java.util.Locale;
 import io.ona.kujaku.utils.Constants;
 
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
@@ -179,7 +180,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         kujakuMapView.setStyleUrl(getString(R.string.reveal_satellite_style));
 
-        Float bufferRadius = Float.valueOf(RevealApplication.getInstance().getGlobalConfigs().get(LOCATION_BUFFER_RADIUS_IN_METRES));
+        String bufferRadiusStr = RevealApplication.getInstance().getGlobalConfigs().get(LOCATION_BUFFER_RADIUS_IN_METRES);
+        Float bufferRadius = bufferRadiusStr == null ? DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES : Float.valueOf(bufferRadiusStr);
         kujakuMapView.setLocationBufferRadius(bufferRadius);
 
         kujakuMapView.showCurrentLocationBtn(true);

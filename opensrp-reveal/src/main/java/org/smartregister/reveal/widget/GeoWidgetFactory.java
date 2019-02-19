@@ -44,6 +44,7 @@ import org.smartregister.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
@@ -128,7 +129,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
                 if (finalOperationalArea != null) {
                     mapboxMap.setCameraPosition(mapboxMap.getCameraForGeometry(Geometry.fromJson(finalOperationalArea)));
                 } else {
-                    Float bufferRadius = Float.valueOf(RevealApplication.getInstance().getGlobalConfigs().get(LOCATION_BUFFER_RADIUS_IN_METRES));
+                    String bufferRadiusStr = RevealApplication.getInstance().getGlobalConfigs().get(LOCATION_BUFFER_RADIUS_IN_METRES);
+                    Float bufferRadius = bufferRadiusStr == null ? DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES : Float.valueOf(bufferRadiusStr);
                     mapView.focusOnUserLocation(true, bufferRadius);
                 }
 
@@ -183,7 +185,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         views.add(rootLayout);
         mapView.onStart();
 
-        Float bufferRadius = Float.valueOf(RevealApplication.getInstance().getGlobalConfigs().get(LOCATION_BUFFER_RADIUS_IN_METRES));
+        String bufferRadiusStr = RevealApplication.getInstance().getGlobalConfigs().get(LOCATION_BUFFER_RADIUS_IN_METRES);
+        Float bufferRadius = bufferRadiusStr == null ? DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES : Float.valueOf(bufferRadiusStr);
         mapView.setLocationBufferRadius(bufferRadius);
         mapView.showCurrentLocationBtn(true);
         mapView.enableAddPoint(true);
