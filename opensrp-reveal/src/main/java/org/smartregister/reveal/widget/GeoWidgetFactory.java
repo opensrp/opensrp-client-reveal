@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.cocoahero.android.geojson.Feature;
@@ -97,9 +97,9 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         List<View> views = new ArrayList<>(1);
 
         final int canvasId = ViewUtil.generateViewId();
-        View rootLayout = LayoutInflater.from(context)
+        mapView = (RevealMapView) LayoutInflater.from(context)
                 .inflate(R.layout.item_geowidget, null);
-        rootLayout.setId(canvasId);
+
         String operationalArea = null;
         String featureCollection = null;
 
@@ -110,7 +110,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
             Log.e(TAG, "error extracting geojson form jsonform", e);
         }
 
-        mapView = rootLayout.findViewById(R.id.geoWidgetMapView);
+        mapView.setId(canvasId);
         mapView.onCreate(null);
         mapView.setStyleUrl(context.getString(R.string.reveal_satellite_style));
 
@@ -119,8 +119,6 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
-
-                mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
 
                 mapView.setMapboxMap(mapboxMap);
                 if (finalOperationalArea != null) {
@@ -171,18 +169,14 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
 
         ((JsonApi) context).addFormDataView(mapView);
 
-        int screenHeightPixels = context.getResources().getDisplayMetrics().heightPixels;
-
-        int editTextHeight = context.getResources().getDimensionPixelSize(R.dimen.native_form_edit_text_height);
-        mapView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, screenHeightPixels - editTextHeight));
+        mapView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1));
 
         addMaximumZoomLevel(jsonObject, mapView);
-        views.add(rootLayout);
+        views.add(mapView);
         mapView.onStart();
 
         mapView.showCurrentLocationBtn(true);
         mapView.enableAddPoint(true);
-        ((JsonApi) context).onFormFinish();
         disableParentScroll((Activity) context, mapView);
         return views;
     }
