@@ -201,6 +201,9 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     }
 
     private void populateGlobalConfigs(@NonNull Setting setting) {
+        if (setting == null) {
+            return;
+        }
         try {
             JSONArray settingsArray = new JSONArray(setting.getValue());
             for (int i = 0; i < settingsArray.length(); i++) {
