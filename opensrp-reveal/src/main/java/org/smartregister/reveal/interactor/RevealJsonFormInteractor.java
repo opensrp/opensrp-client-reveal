@@ -4,8 +4,10 @@ import com.vijay.jsonwizard.interactors.JsonFormInteractor;
 
 import org.smartregister.reveal.widget.GeoWidgetFactory;
 import org.smartregister.reveal.widget.RevealEditTextFactory;
+import org.smartregister.reveal.widget.RevealRadioButtonFactory;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.EDIT_TEXT;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.NATIVE_RADIO_BUTTON;
 
 /**
  * Created by samuelgithengi on 12/13/18.
@@ -26,6 +28,7 @@ public class RevealJsonFormInteractor extends JsonFormInteractor {
         super.registerWidgets();
         map.put(GEOWIDGET, new GeoWidgetFactory());
         map.put(EDIT_TEXT, new RevealEditTextFactory());
+        map.put(NATIVE_RADIO_BUTTON, new RevealRadioButtonFactory());
 
     }
 
