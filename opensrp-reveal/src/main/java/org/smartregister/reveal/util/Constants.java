@@ -30,6 +30,9 @@ public interface Constants {
 
     interface CONFIGURATION {
         String LOGIN = "login";
+        String GLOBAL_CONFIGS = "global_configs";
+        String KEY = "key";
+        String VALUE = "value";
     }
 
     interface Preferences {

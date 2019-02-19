@@ -1,18 +1,24 @@
 package org.smartregister.reveal.application;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.evernote.android.job.JobManager;
 import com.mapbox.mapboxsdk.Mapbox;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.JsonSpecHelper;
+import org.smartregister.domain.Setting;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
+import org.smartregister.repository.AllSettings;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.Repository;
@@ -29,8 +35,14 @@ import org.smartregister.sync.DrishtiSyncScheduler;
 import org.smartregister.view.activity.DrishtiApplication;
 import org.smartregister.view.receiver.TimeChangedBroadcastReceiver;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.fabric.sdk.android.Fabric;
 
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.GLOBAL_CONFIGS;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.KEY;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.VALUE;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
@@ -45,6 +57,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     private StructureRepository structureRepository;
     private LocationRepository locationRepository;
 
+    private Map<String, String> globalConfigs;
 
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
@@ -69,6 +82,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         SyncStatusBroadcastReceiver.init(this);
 
         jsonSpecHelper = new JsonSpecHelper(this);
+        globalConfigs = new HashMap<>();
 
         Mapbox.getInstance(getApplicationContext(), BuildConfig.MAPBOX_SDK_ACCESS_TOKEN);
 
@@ -174,5 +188,33 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             locationRepository = new LocationRepository(getRepository());
         }
         return locationRepository;
+    }
+
+    public AllSettings getSettingsRepository() {
+        return getInstance().getContext().allSettings();
+    }
+
+    public void processGlobalConfigs() {
+        Setting globalSettings =  getSettingsRepository().getSetting(GLOBAL_CONFIGS);
+        populateGlobalConfigs(globalSettings);
+    }
+
+    private void populateGlobalConfigs(@NonNull Setting setting) {
+        try {
+            JSONArray settingsArray = new JSONArray(setting.getValue());
+            for (int i = 0; i < settingsArray.length(); i++) {
+                JSONObject jsonObject = settingsArray.getJSONObject(i);
+                String value = jsonObject.optString(VALUE, null);
+                if (value != null) {
+                    globalConfigs.put(jsonObject.optString(KEY), value);
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    public Map<String, String> getGlobalConfigs() {
+        return globalConfigs;
     }
 }
