@@ -168,7 +168,7 @@ tasks.withType(Test) {
 
 dependencies {
 
-    implementation('io.ona.kujaku:library:0.5.5') {
+    implementation('io.ona.kujaku:library:0.6.2') {
         transitive = true
         exclude group: 'com.android.volley'
         exclude group: 'kujaku', module: 'utils'
