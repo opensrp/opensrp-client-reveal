@@ -181,13 +181,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         Float bufferRadius = Float.valueOf(RevealApplication.getInstance().getGlobalConfigs().get(LOCATION_BUFFER_RADIUS_IN_METRES));
         kujakuMapView.setLocationBufferRadius(bufferRadius);
+
         kujakuMapView.showCurrentLocationBtn(true);
 
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
                 mMapboxMap = mapboxMap;
-                mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
 
                 mapboxMap.setMinZoomPreference(10);
                 mapboxMap.setMaxZoomPreference(21);
