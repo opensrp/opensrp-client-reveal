@@ -14,7 +14,11 @@ import org.smartregister.repository.Repository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.repository.UniqueIdRepository;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.util.DatabaseMigrationUtils;
+
+import java.util.Arrays;
 
 
 public class RevealRepository extends Repository {
@@ -22,6 +26,7 @@ public class RevealRepository extends Repository {
     private static final String TAG = RevealRepository.class.getCanonicalName();
     protected SQLiteDatabase readableDatabase;
     protected SQLiteDatabase writableDatabase;
+
 
     public RevealRepository(Context context, org.smartregister.Context openSRPContext) {
         super(context, AllConstants.DATABASE_NAME, AllConstants.DATABASE_VERSION, openSRPContext.session(), RevealApplication.createCommonFtsObject(), openSRPContext.sharedRepositoriesArray());
@@ -38,8 +43,9 @@ public class RevealRepository extends Repository {
         TaskRepository.createTable(database);
         LocationRepository.createTable(database);
         StructureRepository.createTable(database);
-        UniqueIdRepository.createTable(database);
-//        onUpgrade(database, 1, 2);
+
+        onUpgrade(database, 1, BuildConfig.DATABASE_VERSION);
+
     }
 
     @Override
@@ -63,6 +69,8 @@ public class RevealRepository extends Repository {
 
     private void upgradeToVersion2(SQLiteDatabase database) {
         UniqueIdRepository.createTable(database);
+
+        DatabaseMigrationUtils.createAddedECTables(database, Arrays.asList("ec_family", "ec_family_member"), RevealApplication.createCommonFtsObject());
     }
 
     @Override
