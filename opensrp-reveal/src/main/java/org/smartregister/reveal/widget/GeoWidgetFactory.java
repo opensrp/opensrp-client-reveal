@@ -38,7 +38,6 @@ import org.json.JSONObject;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.reveal.validators.MinZoomValidator;
-import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.Utils;
 

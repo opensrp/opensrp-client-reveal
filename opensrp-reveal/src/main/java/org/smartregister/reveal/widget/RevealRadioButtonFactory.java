@@ -20,11 +20,9 @@ import static org.smartregister.reveal.util.Constants.JsonForm.NO_PADDING;
  */
 public class RevealRadioButtonFactory extends NativeRadioButtonFactory {
 
-    private boolean hasNoPadding;
-
     @Override
     protected List<View> attachJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener, boolean popup) throws JSONException {
-        hasNoPadding = new JSONObject(formFragment.getCurrentJsonState()).getJSONObject(stepName).optBoolean(NO_PADDING);
+        boolean hasNoPadding = new JSONObject(formFragment.getCurrentJsonState()).getJSONObject(stepName).optBoolean(NO_PADDING);
         List<View> views = super.attachJson(stepName, context, formFragment, jsonObject, listener, popup);
         if (hasNoPadding) {
             views.get(0).setPaddingRelative(context.getResources().getDimensionPixelSize(R.dimen.default_left_margin),
