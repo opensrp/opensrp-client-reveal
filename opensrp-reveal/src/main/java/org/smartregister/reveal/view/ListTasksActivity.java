@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,6 +40,9 @@ import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.vijay.jsonwizard.customviews.TreeViewDialog;
 
@@ -57,6 +62,8 @@ import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.Constants.Action;
+import org.smartregister.reveal.util.Constants.StructureType;
+import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -67,6 +74,8 @@ import java.util.Locale;
 
 import io.ona.kujaku.utils.Constants;
 
+import static com.mapbox.mapboxsdk.style.expressions.Expression.*;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.*;
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
@@ -181,7 +190,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
                 mMapboxMap = mapboxMap;
-
+                RevealMapHelper.addSymbolLayers(mapboxMap, ListTasksActivity.this);
                 mapboxMap.setMinZoomPreference(10);
                 mapboxMap.setMaxZoomPreference(21);
 

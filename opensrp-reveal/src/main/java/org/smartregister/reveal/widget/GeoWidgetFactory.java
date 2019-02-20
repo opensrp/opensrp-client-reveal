@@ -36,7 +36,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.reveal.validators.MinZoomValidator;
+import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.Utils;
 
@@ -119,7 +121,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
-
+                RevealMapHelper.addSymbolLayers(mapboxMap, context);
                 mapView.setMapboxMap(mapboxMap);
                 if (finalOperationalArea != null) {
                     mapboxMap.setCameraPosition(mapboxMap.getCameraForGeometry(Geometry.fromJson(finalOperationalArea)));
