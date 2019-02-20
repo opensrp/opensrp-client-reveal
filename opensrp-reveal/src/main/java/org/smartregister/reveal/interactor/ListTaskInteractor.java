@@ -37,8 +37,10 @@ import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants.GeoJSON;
+import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
+import org.smartregister.reveal.util.Constants.StructureType;
 import org.smartregister.reveal.util.GeoJsonUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
@@ -55,7 +57,6 @@ import java.util.UUID;
 import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.DETAILS;
-import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.METADATA;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
@@ -303,7 +304,8 @@ public class ListTaskInteractor {
                     geometry.setCoordinates(coordinates);
                     structure.setGeometry(geometry);
                     LocationProperty properties = new LocationProperty();
-                    properties.setType(event.findObs(null, false, JsonForm.STRUCTURE_TYPE).getValue().toString());
+                    String structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE).getValue().toString();
+                    properties.setType(structureType);
                     properties.setEffectiveStartDate(now);
                     properties.setParentId(operationalAreaId);
                     properties.setStatus(LocationProperty.PropertyStatus.PENDING_REVIEW);
@@ -319,10 +321,20 @@ public class ListTaskInteractor {
                     task.setStatus(Task.TaskStatus.READY);
                     task.setBusinessStatus(NOT_VISITED);
                     task.setPriority(3);
-                    task.setCode(IRS);
                     Context applicationContext = RevealApplication.getInstance().getApplicationContext();
-                    task.setDescription(applicationContext.getString(R.string.irs_task_description));
-                    task.setFocus(JsonForm.IRS_VISIT);
+                    if (StructureType.RESIDENTIAL.equals(structureType)) {
+                        task.setCode(Intervention.IRS);
+                        task.setDescription(applicationContext.getString(R.string.irs_task_description));
+                        task.setFocus(Intervention.MOSQUITO_COLLECTION);
+                    } else if (StructureType.MOSQUITO_COLLECTION_POINT.equals(structureType)) {
+                        task.setCode(Intervention.MOSQUITO_COLLECTION);
+                        task.setDescription(applicationContext.getString(R.string.mosquito_collection_task_description));
+                        task.setFocus(Intervention.MOSQUITO_COLLECTION);
+                    } else if (StructureType.LARVAL_BREEDING_SITE.equals(structureType)) {
+                        task.setCode(Intervention.LARVAL_DIPPING);
+                        task.setDescription(applicationContext.getString(R.string.larval_dipping_task_description));
+                        task.setFocus(Intervention.LARVAL_DIPPING);
+                    }
                     task.setForEntity(structure.getId());
                     task.setExecutionStartDate(now);
                     task.setAuthoredOn(now);

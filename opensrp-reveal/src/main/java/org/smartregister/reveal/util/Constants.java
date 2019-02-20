@@ -1,5 +1,7 @@
 package org.smartregister.reveal.util;
 
+import java.util.Collection;
+
 public interface Constants {
 
     String VIEW_CONFIGURATION_PREFIX = "ViewConfiguration_";
@@ -69,6 +71,10 @@ public interface Constants {
         String IRS = "IRS";
         String ITN = "ITN";
         String MDA = "MDA";
+
+        String MOSQUITO_COLLECTION = "Mosquito Collection";
+
+        String LARVAL_DIPPING = "Larval Dipping";
     }
 
     interface BusinessStatus {
@@ -87,10 +93,6 @@ public interface Constants {
     interface JsonForm {
 
         String ENCOUNTER_TYPE = "encounter_type";
-
-        String RESIDENTIAL = "Residential Structure";
-
-        String NON_RESIDENTIAL = "Non-Residential Structure";
 
         String SPRAY_STATUS = "sprayStatus";
 
@@ -130,6 +132,16 @@ public interface Constants {
 
     interface Action {
         String STRUCTURE_TASK_SYNCHED = "reveal.STRUCTURE_TASK_SYNCHED";
+    }
+
+    interface StructureType {
+        String RESIDENTIAL = "Residential Structure";
+
+        String NON_RESIDENTIAL = "Non-Residential Structure";
+
+        String MOSQUITO_COLLECTION_POINT = "Mosquito Collection Point";
+
+        String LARVAL_BREEDING_SITE = "Larval Breeding Site";
     }
 
 
