@@ -7,7 +7,6 @@ import android.view.MenuItem;
 
 import org.smartregister.family.activity.BaseFamilyOtherMemberProfileActivity;
 import org.smartregister.family.adapter.ViewPagerAdapter;
-import org.smartregister.family.fragment.BaseFamilyOtherMemberProfileFragment;
 import org.smartregister.family.model.BaseFamilyOtherMemberProfileActivityModel;
 import org.smartregister.family.presenter.BaseFamilyOtherMemberProfileActivityPresenter;
 import org.smartregister.family.util.Constants;
@@ -27,7 +26,7 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
     @Override
     protected ViewPager setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        BaseFamilyOtherMemberProfileFragment profileOtherMemberFragment = FamilyOtherMemberProfileFragment.newInstance(this.getIntent().getExtras());
+        FamilyOtherMemberProfileFragment profileOtherMemberFragment = FamilyOtherMemberProfileFragment.newInstance(this.getIntent().getExtras());
         adapter.addFragment(profileOtherMemberFragment, "");
 
         viewPager.setAdapter(adapter);
