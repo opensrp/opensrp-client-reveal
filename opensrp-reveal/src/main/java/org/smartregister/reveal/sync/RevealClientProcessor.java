@@ -110,9 +110,11 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             if (task != null) {
                 task.setBusinessStatus(calculateBusinessStatus(event));
                 task.setStatus(Task.TaskStatus.COMPLETED);
-                if (localEvents) {
+                //update task status to unsynced if it was synced, ignore if task status is created so that it will be created on server
+                if (localEvents && BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
                     task.setSyncStatus(BaseRepository.TYPE_Unsynced);
-                } else {
+                } else if (!localEvents) {
+                    //for events synced from server and task exists mark events as being fully synced
                     eventClientRepository.markEventAsSynced(event.getFormSubmissionId());
                 }
                 RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
