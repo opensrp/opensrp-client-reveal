@@ -184,10 +184,6 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         addMaximumZoomLevel(jsonObject, mapView);
         views.add(rootLayout);
         mapView.onStart();
-
-        String bufferRadiusStr = RevealApplication.getInstance().getGlobalConfigs().get(LOCATION_BUFFER_RADIUS_IN_METRES);
-        Float bufferRadius = bufferRadiusStr == null ? DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES : Float.valueOf(bufferRadiusStr);
-        mapView.setLocationBufferRadius(bufferRadius);
         mapView.showCurrentLocationBtn(true);
         mapView.enableAddPoint(true);
         ((JsonApi) context).onFormFinish();

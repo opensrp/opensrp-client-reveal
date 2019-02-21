@@ -55,6 +55,7 @@
         <service android:name=".sync.RevealSyncIntentService" />
         <service android:name=".sync.RevealCampaignIntentService" />
         <service android:name=".sync.LocationTaskIntentService" />
+        <service android:name=".sync.RevealSettingsSyncIntentService" />
 
     </application>
 

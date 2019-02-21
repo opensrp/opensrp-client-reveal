@@ -24,6 +24,8 @@ public class RevealJobCreator implements JobCreator {
                 return new RevealCampaignServiceJob();
             case LocationTaskServiceJob.TAG:
                 return new LocationTaskServiceJob();
+            case RevealSyncSettingsServiceJob.TAG:
+                return new RevealSyncSettingsServiceJob();
             default:
                 Log.w(RevealJobCreator.class.getCanonicalName(), tag + " is not declared in RevealJobCreator Job Creator");
                 return null;

@@ -70,6 +70,7 @@ import io.ona.kujaku.utils.Constants;
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
@@ -128,8 +129,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
 
-        RevealApplication.getInstance().processGlobalConfigs();
-
         initializeMapView(savedInstanceState);
         initializeDrawerLayout();
         initializeProgressDialog();
@@ -178,12 +177,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         kujakuMapView = findViewById(R.id.kujakuMapView);
         kujakuMapView.onCreate(savedInstanceState);
 
-        kujakuMapView.setStyleUrl(getString(R.string.reveal_satellite_style));
-
-        String bufferRadiusStr = RevealApplication.getInstance().getGlobalConfigs().get(LOCATION_BUFFER_RADIUS_IN_METRES);
-        Float bufferRadius = bufferRadiusStr == null ? DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES : Float.valueOf(bufferRadiusStr);
-        kujakuMapView.setLocationBufferRadius(bufferRadius);
-
         kujakuMapView.showCurrentLocationBtn(true);
 
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
@@ -204,7 +197,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 selectedGeoJsonSource = mapboxMap.getSourceAs(getString(R.string.selected_datasource_name));
 
                 listTaskPresenter.onMapReady();
-
 
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                     @Override
@@ -588,7 +580,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            listTaskPresenter.refreshStructures();
+            Bundle extras = intent.getExtras();
+            if (extras != null && extras.getBoolean(UPDATE_LOCATION_BUFFER_RADIUS)) {
+                String bufferRadiusStr = RevealApplication.getInstance().getGlobalConfigs().get(LOCATION_BUFFER_RADIUS_IN_METRES);
+                Float bufferRadius = bufferRadiusStr == null ? DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES : Float.valueOf(bufferRadiusStr);
+                kujakuMapView.setLocationBufferRadius(bufferRadius);
+            } else {
+                listTaskPresenter.refreshStructures();
+            }
         }
     }
 }
