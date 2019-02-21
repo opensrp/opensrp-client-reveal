@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class FamilyOtherMemberProfileFragment extends BaseFamilyOtherMemberProfileFragment {
     public static BaseFamilyOtherMemberProfileFragment newInstance(Bundle bundle) {
         Bundle args = bundle;
-        BaseFamilyOtherMemberProfileFragment fragment = new FamilyOtherMemberProfileFragment();
+        FamilyOtherMemberProfileFragment fragment = new FamilyOtherMemberProfileFragment();
         if (args == null) {
             args = new Bundle();
         }
