@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 
 import org.smartregister.reveal.R;
@@ -18,39 +19,48 @@ import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
+import static org.smartregister.reveal.util.Constants.GeoJSON.TYPE;
 
 /**
  * Created by samuelgithengi on 2/20/19.
  */
 public class RevealMapHelper {
 
+
+    private static final String LARVAL_BREEDING_ICON = "larval-breeding-icon";
+
+    private static final String MOSQUITO_COLLECTION_ICON = "mosquito-collection-icon";
+
+
+    private static final String LARVAL_BREEDING_LAYER = "larval-breeding-layer";
+
+    private static final String MOSQUITO_COLLECTION_LAYER = "mosquito-collection-layer";
+
+
     public static void addSymbolLayers(MapboxMap mMapboxMap, Context context) {
+        Expression dynamicIconSize = interpolate(linear(), zoom(),
+                literal(13.98f), literal(0),
+                literal(17.79f), literal(1.5f),
+                literal(18.8f), literal(2));
+
         Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_mosquito);
-        mMapboxMap.addImage("mosquito-collection-image", icon);
-        SymbolLayer symbolLayer = new SymbolLayer("mosquito-collection-layer", context.getString(R.string.reveal_datasource_name));
+        mMapboxMap.addImage(MOSQUITO_COLLECTION_ICON, icon);
+        SymbolLayer symbolLayer = new SymbolLayer(MOSQUITO_COLLECTION_LAYER, context.getString(R.string.reveal_datasource_name));
         symbolLayer.setProperties(
-                iconImage("mosquito-collection-image"),
-                iconSize(interpolate(linear(), zoom(),
-                        literal(13.98), literal(0),
-                        literal(16), literal(1),
-                        literal(18), literal(2)))
-        );
-        symbolLayer.setFilter(eq(get("type"), StructureType.MOSQUITO_COLLECTION_POINT));
+                iconImage(MOSQUITO_COLLECTION_ICON),
+                iconSize(dynamicIconSize));
+        symbolLayer.setFilter(eq(get(TYPE), StructureType.MOSQUITO_COLLECTION_POINT));
         mMapboxMap.addLayer(symbolLayer);
 
 
-        icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_larval);
-        mMapboxMap.addImage("larval-breeding-image", icon);
-        symbolLayer = new SymbolLayer("larval-breeding-layer", context.getString(R.string.reveal_datasource_name));
+        icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_bleeding);
+        mMapboxMap.addImage(LARVAL_BREEDING_ICON, icon);
+        symbolLayer = new SymbolLayer(LARVAL_BREEDING_LAYER, context.getString(R.string.reveal_datasource_name));
         symbolLayer.setProperties(
-                iconImage("larval-breeding-image"),
-                iconSize(interpolate(linear(), zoom(),
-                        literal(13.98), literal(0),
-                        literal(16), literal(1),
-                        literal(18), literal(2)))
-        );
+                iconImage(LARVAL_BREEDING_ICON),
+                iconSize(dynamicIconSize));
 
-        symbolLayer.setFilter(eq(get("type"), StructureType.LARVAL_BREEDING_SITE));
+        symbolLayer.setFilter(eq(get(TYPE), StructureType.LARVAL_BREEDING_SITE));
 
         mMapboxMap.addLayer(symbolLayer);
     }

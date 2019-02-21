@@ -1,7 +1,5 @@
 package org.smartregister.reveal.util;
 
-import java.util.Collection;
-
 public interface Constants {
 
     String VIEW_CONFIGURATION_PREFIX = "ViewConfiguration_";
