@@ -16,9 +16,11 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import org.smartregister.util.DatabaseMigrationUtils;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 
 public class RevealRepository extends Repository {
@@ -70,7 +72,9 @@ public class RevealRepository extends Repository {
     private void upgradeToVersion2(SQLiteDatabase database) {
         UniqueIdRepository.createTable(database);
 
-        DatabaseMigrationUtils.createAddedECTables(database, Arrays.asList("ec_family", "ec_family_member"), RevealApplication.createCommonFtsObject());
+        DatabaseMigrationUtils.createAddedECTables(database,
+                new HashSet<>(Arrays.asList(TABLE_NAME.FAMILY, TABLE_NAME.FAMILY_MEMBER)),
+                RevealApplication.createCommonFtsObject());
     }
 
     @Override
