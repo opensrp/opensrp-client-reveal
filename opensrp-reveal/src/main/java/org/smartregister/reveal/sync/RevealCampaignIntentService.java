@@ -3,8 +3,6 @@ package org.smartregister.reveal.sync;
 import android.content.Intent;
 
 import org.smartregister.domain.FetchStatus;
-import org.smartregister.job.SyncSettingsServiceJob;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.job.LocationTaskServiceJob;
 import org.smartregister.reveal.job.RevealSyncSettingsServiceJob;
 import org.smartregister.reveal.util.AppExecutors;
