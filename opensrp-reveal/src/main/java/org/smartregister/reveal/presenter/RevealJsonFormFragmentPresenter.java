@@ -50,11 +50,9 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
     @Override
     public ValidationStatus writeValuesAndValidate(LinearLayout mainView) {
         ValidationStatus validationStatus = super.writeValuesAndValidate(mainView);
-        boolean hasMapView = false;
         if (validationStatus.isValid()) {
             for (View childAt : formFragment.getJsonApi().getFormDataViews()) {
                 if (childAt instanceof RevealMapView) {
-                    hasMapView = true;
                     RevealMapView mapView = (RevealMapView) childAt;
                     validationStatus = GeoWidgetFactory.validate(formFragment, mapView);
                     if (validationStatus.isValid()) {
@@ -63,14 +61,15 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                         } else {
                             onLocationValidated();
                         }
+                        return validationStatus;
                     }
-                    break;
+                    break;//exit loop, assumption; there will be only 1 map per form.
                 }
             }
         }
-        if (!hasMapView && validationStatus.isValid()) {
+        if (validationStatus.isValid()) {// if form is valid and did not have a map, if it had a map view it will be handled above
             onLocationValidated();
-        } else {
+        } else {//if form is invalid whether having a map or not
             Toast.makeText(getView().getContext(), validationStatus.getErrorMessage(), Toast.LENGTH_LONG).show();
             validationStatus.requestAttention();
         }
