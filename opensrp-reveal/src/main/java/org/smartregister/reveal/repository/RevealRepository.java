@@ -7,6 +7,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.AllConstants;
 import org.smartregister.configurableviews.repository.ConfigurableViewsRepository;
+import org.smartregister.domain.db.EventClient;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
@@ -16,11 +17,16 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.sync.RevealClientProcessor;
+import org.smartregister.reveal.util.FamilyConstants.EventType;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import org.smartregister.util.DatabaseMigrationUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class RevealRepository extends Repository {
@@ -75,6 +81,18 @@ public class RevealRepository extends Repository {
         DatabaseMigrationUtils.createAddedECTables(database,
                 new HashSet<>(Arrays.asList(TABLE_NAME.FAMILY, TABLE_NAME.FAMILY_MEMBER)),
                 RevealApplication.createCommonFtsObject());
+
+        //client process family and family member events
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                EventClientRepository ecRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+                List<EventClient> eventClientList = ecRepository.fetchEventClientsByEventTypes(
+                        Arrays.asList(EventType.FAMILY_REGISTRATION, EventType.FAMILY_MEMBER_REGISTRATION,
+                                EventType.UPDATE_FAMILY_REGISTRATION, EventType.UPDATE_FAMILY_MEMBER_REGISTRATION));
+                RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext()).processClient(eventClientList);
+            }
+        }, 5000);
     }
 
     @Override
