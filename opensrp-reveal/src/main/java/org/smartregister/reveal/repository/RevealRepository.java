@@ -8,6 +8,8 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.smartregister.AllConstants;
 import org.smartregister.configurableviews.repository.ConfigurableViewsRepository;
 import org.smartregister.domain.db.EventClient;
+import org.smartregister.job.PullUniqueIdsServiceJob;
+import org.smartregister.job.SyncServiceJob;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
@@ -27,6 +29,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 
 public class RevealRepository extends Repository {
@@ -82,7 +85,8 @@ public class RevealRepository extends Repository {
                 new HashSet<>(Arrays.asList(TABLE_NAME.FAMILY, TABLE_NAME.FAMILY_MEMBER)),
                 RevealApplication.createCommonFtsObject());
 
-        //client process family and family member events
+
+        //client process family events after 5 seconds so that get calls to getDatabase return
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -93,6 +97,8 @@ public class RevealRepository extends Repository {
                 RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext()).processClient(eventClientList);
             }
         }, 5000);
+
+        PullUniqueIdsServiceJob.scheduleJobImmediately(PullUniqueIdsServiceJob.TAG);
     }
 
     @Override
