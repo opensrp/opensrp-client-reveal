@@ -74,6 +74,7 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCAT
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
+import static org.smartregister.reveal.util.Utils.getGlobalConfig;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -582,9 +583,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         public void onReceive(Context context, Intent intent) {
             Bundle extras = intent.getExtras();
             if (extras != null && extras.getBoolean(UPDATE_LOCATION_BUFFER_RADIUS)) {
-                String bufferRadiusStr = RevealApplication.getInstance().getGlobalConfigs().get(LOCATION_BUFFER_RADIUS_IN_METRES);
-                Float bufferRadius = bufferRadiusStr == null ? DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES : Float.valueOf(bufferRadiusStr);
-                kujakuMapView.setLocationBufferRadius(bufferRadius);
+                String bufferRadius = getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString());
+                kujakuMapView.setLocationBufferRadius(Float.valueOf(bufferRadius));
             } else {
                 listTaskPresenter.refreshStructures();
             }

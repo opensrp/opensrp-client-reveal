@@ -209,8 +209,9 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             for (int i = 0; i < settingsArray.length(); i++) {
                 JSONObject jsonObject = settingsArray.getJSONObject(i);
                 String value = jsonObject.optString(VALUE, null);
-                if (value != null) {
-                    globalConfigs.put(jsonObject.optString(KEY), value);
+                String key = jsonObject.optString(KEY, null);
+                if (value != null && key != null) {
+                    globalConfigs.put(key, value);
                 }
             }
         } catch (JSONException e) {

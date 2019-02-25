@@ -104,4 +104,9 @@ public class Utils {
         return sdf.format(originalDate);
 
     }
+
+    public static String getGlobalConfig(String key, String defaultValue) {
+        String val = RevealApplication.getInstance().getGlobalConfigs().get(key);
+        return val == null ? defaultValue : val;
+    }
 }
