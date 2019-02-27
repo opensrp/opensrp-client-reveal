@@ -51,7 +51,7 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                onBackPressed();
                 return true;
             default:
                 break;
