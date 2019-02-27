@@ -5,9 +5,11 @@ package org.smartregister.reveal.util;
  */
 public interface FamilyConstants {
 
+
     interface CONFIGURATION {
         String FAMILY_REGISTER = "family_register";
         String FAMILY_MEMBER_REGISTER = "family_member_register";
+        String UNIQUE_ID_KEY = "opensrp_id";
 
     }
 
@@ -36,9 +38,8 @@ public interface FamilyConstants {
         String FAMILY_MEMBER = "ec_family_member";
     }
 
-    interface Intent
-    {
-        String START_REGISTRATION="START_REGISTRATION";
+    interface Intent {
+        String START_REGISTRATION = "START_REGISTRATION";
     }
 
 

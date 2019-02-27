@@ -30,7 +30,6 @@ import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.job.RevealJobCreator;
 import org.smartregister.reveal.repository.RevealRepository;
-import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.RevealSyncConfiguration;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.FamilyProfileActivity;
@@ -40,7 +39,11 @@ import org.smartregister.view.receiver.TimeChangedBroadcastReceiver;
 
 import io.fabric.sdk.android.Fabric;
 
-import static org.smartregister.reveal.util.FamilyConstants.*;
+import static org.smartregister.reveal.util.FamilyConstants.CONFIGURATION;
+import static org.smartregister.reveal.util.FamilyConstants.EventType;
+import static org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
+import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP;
+import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
@@ -193,7 +196,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
 
     private FamilyMetadata getMetadata() {
-        FamilyMetadata metadata = new FamilyMetadata(FamilyWizardFormActivity.class, JsonWizardFormActivity.class, FamilyProfileActivity.class);
+        FamilyMetadata metadata = new FamilyMetadata(FamilyWizardFormActivity.class, JsonWizardFormActivity.class, FamilyProfileActivity.class, CONFIGURATION.UNIQUE_ID_KEY, true);
         metadata.updateFamilyRegister(JSON_FORM.FAMILY_REGISTER, TABLE_NAME.FAMILY, EventType.FAMILY_REGISTRATION, EventType.UPDATE_FAMILY_REGISTRATION, CONFIGURATION.FAMILY_REGISTER, RELATIONSHIP.FAMILY_HEAD, RELATIONSHIP.PRIMARY_CAREGIVER);
         metadata.updateFamilyMemberRegister(JSON_FORM.FAMILY_MEMBER_REGISTER, TABLE_NAME.FAMILY_MEMBER, EventType.FAMILY_MEMBER_REGISTRATION, EventType.UPDATE_FAMILY_MEMBER_REGISTRATION, CONFIGURATION.FAMILY_MEMBER_REGISTER, RELATIONSHIP.FAMILY);
         metadata.updateFamilyDueRegister(TABLE_NAME.FAMILY_MEMBER, 20, true);
