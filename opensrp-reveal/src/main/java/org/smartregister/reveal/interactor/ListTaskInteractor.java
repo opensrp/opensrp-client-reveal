@@ -308,8 +308,8 @@ public class ListTaskInteractor {
                     geometry.setType(org.smartregister.domain.Geometry.GeometryType.valueOf(feature.getGeometry().getType().toUpperCase()));
                     JsonArray coordinates = new JsonArray();
                     JSONArray featureCoordinates = feature.getGeometry().toJSON().getJSONArray(JSON_COORDINATES);
-                    coordinates.add(featureCoordinates.get(0).toString());
-                    coordinates.add(featureCoordinates.get(1).toString());
+                    coordinates.add(Double.parseDouble(featureCoordinates.get(0).toString()));
+                    coordinates.add(Double.parseDouble(featureCoordinates.get(1).toString()));
                     geometry.setCoordinates(coordinates);
                     structure.setGeometry(geometry);
                     LocationProperty properties = new LocationProperty();
