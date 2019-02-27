@@ -40,6 +40,7 @@ import org.smartregister.view.receiver.TimeChangedBroadcastReceiver;
 
 import io.fabric.sdk.android.Fabric;
 
+import static org.smartregister.reveal.util.FamilyConstants.*;
 import static org.smartregister.util.Log.logError;
 import static org.smartregister.util.Log.logInfo;
 
@@ -193,15 +194,13 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     private FamilyMetadata getMetadata() {
         FamilyMetadata metadata = new FamilyMetadata(FamilyWizardFormActivity.class, JsonWizardFormActivity.class, FamilyProfileActivity.class);
-        metadata.updateFamilyRegister(FamilyConstants.JSON_FORM.FAMILY_REGISTER, FamilyConstants.TABLE_NAME.FAMILY, FamilyConstants.EventType.FAMILY_REGISTRATION, FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION, FamilyConstants.CONFIGURATION.FAMILY_REGISTER, FamilyConstants.RELATIONSHIP.FAMILY_HEAD, FamilyConstants.RELATIONSHIP.PRIMARY_CAREGIVER);
-        metadata.updateFamilyMemberRegister(FamilyConstants.JSON_FORM.FAMILY_MEMBER_REGISTER, FamilyConstants.TABLE_NAME.FAMILY_MEMBER, FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION, FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION, FamilyConstants.CONFIGURATION.FAMILY_MEMBER_REGISTER, FamilyConstants.RELATIONSHIP.FAMILY);
-        metadata.updateFamilyDueRegister(FamilyConstants.TABLE_NAME.FAMILY_MEMBER, 20, true);
-        metadata.updateFamilyActivityRegister(FamilyConstants.TABLE_NAME.FAMILY_MEMBER, Integer.MAX_VALUE, false);
-        metadata.updateFamilyOtherMemberRegister(FamilyConstants.TABLE_NAME.FAMILY_MEMBER, Integer.MAX_VALUE, false);
+        metadata.updateFamilyRegister(JSON_FORM.FAMILY_REGISTER, TABLE_NAME.FAMILY, EventType.FAMILY_REGISTRATION, EventType.UPDATE_FAMILY_REGISTRATION, CONFIGURATION.FAMILY_REGISTER, RELATIONSHIP.FAMILY_HEAD, RELATIONSHIP.PRIMARY_CAREGIVER);
+        metadata.updateFamilyMemberRegister(JSON_FORM.FAMILY_MEMBER_REGISTER, TABLE_NAME.FAMILY_MEMBER, EventType.FAMILY_MEMBER_REGISTRATION, EventType.UPDATE_FAMILY_MEMBER_REGISTRATION, CONFIGURATION.FAMILY_MEMBER_REGISTER, RELATIONSHIP.FAMILY);
+        metadata.updateFamilyDueRegister(TABLE_NAME.FAMILY_MEMBER, 20, true);
+        metadata.updateFamilyActivityRegister(TABLE_NAME.FAMILY_MEMBER, Integer.MAX_VALUE, false);
+        metadata.updateFamilyOtherMemberRegister(TABLE_NAME.FAMILY_MEMBER, Integer.MAX_VALUE, false);
         return metadata;
     }
-
-
 
     public static CommonFtsObject createCommonFtsObject() {
         if (commonFtsObject == null) {
@@ -215,14 +214,14 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     }
 
     private static String[] getFtsTables() {
-        return new String[]{FamilyConstants.TABLE_NAME.FAMILY, FamilyConstants.TABLE_NAME.FAMILY_MEMBER};
+        return new String[]{TABLE_NAME.FAMILY, TABLE_NAME.FAMILY_MEMBER};
     }
 
     private static String[] getFtsSearchFields(String tableName) {
-        if (tableName.equals(FamilyConstants.TABLE_NAME.FAMILY)) {
+        if (tableName.equals(TABLE_NAME.FAMILY)) {
             return new String[]{DBConstants.KEY.BASE_ENTITY_ID, DBConstants.KEY.VILLAGE_TOWN, DBConstants.KEY.FIRST_NAME,
                     DBConstants.KEY.LAST_NAME, DBConstants.KEY.UNIQUE_ID};
-        } else if (tableName.equals(FamilyConstants.TABLE_NAME.FAMILY_MEMBER)) {
+        } else if (tableName.equals(TABLE_NAME.FAMILY_MEMBER)) {
             return new String[]{DBConstants.KEY.BASE_ENTITY_ID, DBConstants.KEY.FIRST_NAME, DBConstants.KEY.MIDDLE_NAME,
                     DBConstants.KEY.LAST_NAME, DBConstants.KEY.UNIQUE_ID};
         }
@@ -230,9 +229,9 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     }
 
     private static String[] getFtsSortFields(String tableName) {
-        if (tableName.equals(FamilyConstants.TABLE_NAME.FAMILY)) {
+        if (tableName.equals(TABLE_NAME.FAMILY)) {
             return new String[]{DBConstants.KEY.LAST_INTERACTED_WITH, DBConstants.KEY.DATE_REMOVED};
-        } else if (tableName.equals(FamilyConstants.TABLE_NAME.FAMILY_MEMBER)) {
+        } else if (tableName.equals(TABLE_NAME.FAMILY_MEMBER)) {
             return new String[]{DBConstants.KEY.DOB, DBConstants.KEY.DOD, DBConstants.KEY
                     .LAST_INTERACTED_WITH, DBConstants.KEY.DATE_REMOVED};
         }
