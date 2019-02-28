@@ -37,4 +37,8 @@
         <item name="android:windowMinWidthMinor">@dimen/dialog_min_width_major</item>
     </style>
 
+    <style name="LocationComponentStyling" parent="mapbox_LocationComponent">
+        <item name="mapbox_accuracyColor">#81c2ee</item>
+        <item name="mapbox_accuracyAlpha">0.8</item>
+    </style>
 </resources>

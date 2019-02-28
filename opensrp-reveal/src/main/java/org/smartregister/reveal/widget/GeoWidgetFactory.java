@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.cocoahero.android.geojson.Feature;
 import com.cocoahero.android.geojson.Point;
+import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -43,6 +44,8 @@ import org.smartregister.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
+
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
@@ -52,7 +55,7 @@ import static org.smartregister.reveal.util.Utils.getGlobalConfig;
 /**
  * Created by samuelgithengi on 12/13/18.
  */
-public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
+public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, OnLocationComponentInitializedCallback {
 
     private static final String TAG = "GeoWidgetFactory";
 
@@ -116,6 +119,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         mapView = rootLayout.findViewById(R.id.geoWidgetMapView);
         mapView.onCreate(null);
         mapView.setStyleUrl(context.getString(R.string.reveal_satellite_style));
+        mapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
 
         String finalOperationalArea = operationalArea;
         String finalFeatureCollection = featureCollection;
@@ -233,6 +237,15 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
             } catch (JSONException e) {
                 Log.e(TAG, "Error extracting max zoom level from" + minValidation);
             }
+        }
+    }
+
+    @Override
+    public void onLocationComponentInitialized() {
+        if (PermissionsManager.areLocationPermissionsGranted(mapView.getContext())) {
+            mapView.getMapboxLocationComponentWrapper()
+                    .getLocationComponent()
+                    .applyStyle(mapView.getContext(), R.style.LocationComponentStyling);
         }
     }
 

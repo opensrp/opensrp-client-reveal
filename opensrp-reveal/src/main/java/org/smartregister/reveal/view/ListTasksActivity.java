@@ -31,6 +31,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
@@ -65,6 +66,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.utils.Constants;
 
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
@@ -80,7 +82,7 @@ import static org.smartregister.reveal.util.Utils.getGlobalConfig;
  * Created by samuelgithengi on 11/20/18.
  */
 public class ListTasksActivity extends BaseMapActivity implements ListTaskContract.ListTaskView,
-        View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener, UserLocationView {
+        View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener, UserLocationView, OnLocationComponentInitializedCallback {
 
     private static final String TAG = "ListTasksActivity";
 
@@ -176,6 +178,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private void initializeMapView(Bundle savedInstanceState) {
         kujakuMapView = findViewById(R.id.kujakuMapView);
+
+        kujakuMapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
+
         kujakuMapView.onCreate(savedInstanceState);
 
         kujakuMapView.showCurrentLocationBtn(true);
@@ -307,6 +312,15 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (v.getId() == R.id.btn_collapse_structure_card_view) {
             setViewVisibility(tvReason, false);
             closeStructureCardView();
+        }
+    }
+
+    @Override
+    public void onLocationComponentInitialized() {
+        if (PermissionsManager.areLocationPermissionsGranted(this)) {
+            kujakuMapView.getMapboxLocationComponentWrapper()
+                    .getLocationComponent()
+                    .applyStyle(getApplicationContext(), R.style.LocationComponentStyling);
         }
     }
 
