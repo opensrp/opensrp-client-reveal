@@ -130,10 +130,12 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
 
                 mapView.setMapboxMap(mapboxMap);
+
+                String bufferRadius = getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString());
                 if (finalOperationalArea != null) {
                     mapboxMap.setCameraPosition(mapboxMap.getCameraForGeometry(Geometry.fromJson(finalOperationalArea)));
+                    mapView.setLocationBufferRadius(Float.valueOf(bufferRadius));
                 } else {
-                    String bufferRadius = getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString());
                     mapView.focusOnUserLocation(true, Float.valueOf(bufferRadius));
                 }
 
