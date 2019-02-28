@@ -1,6 +1,5 @@
 package org.smartregister.reveal.view;
 
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
