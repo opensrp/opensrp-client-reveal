@@ -325,7 +325,7 @@ public class ListTaskInteractor {
                     if (StructureType.RESIDENTIAL.equals(structureType)) {
                         task.setCode(Intervention.IRS);
                         task.setDescription(applicationContext.getString(R.string.irs_task_description));
-                        task.setFocus(Intervention.MOSQUITO_COLLECTION);
+                        task.setFocus(Intervention.IRS_VISIT);
                     } else if (StructureType.MOSQUITO_COLLECTION_POINT.equals(structureType)) {
                         task.setCode(Intervention.MOSQUITO_COLLECTION);
                         task.setDescription(applicationContext.getString(R.string.mosquito_collection_task_description));

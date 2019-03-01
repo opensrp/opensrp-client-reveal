@@ -73,6 +73,8 @@ public interface Constants {
         String MOSQUITO_COLLECTION = "Mosquito Collection";
 
         String LARVAL_DIPPING = "Larval Dipping";
+
+        String IRS_VISIT = "IRS Visit";
     }
 
     interface BusinessStatus {
@@ -103,8 +105,6 @@ public interface Constants {
         String SPRAY_FORM = "json.form/spray_form.json";
 
         String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
-
-        String IRS_VISIT = "IRS Visit";
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 
