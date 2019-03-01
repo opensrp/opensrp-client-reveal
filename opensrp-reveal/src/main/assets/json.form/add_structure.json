@@ -48,7 +48,7 @@
   },
   "step1": {
     "title": "Register Structure",
-    "display_back_button": "true",
+    "display_back_button": true,
     "no_padding": true,
     "fields": [
       {
@@ -60,13 +60,46 @@
         }
       },
       {
+        "key": "structureType",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Type of Structure",
+        "options": [
+          {
+            "key": "Residential Structure",
+            "text": "Residential Structure"
+          },
+          {
+            "key": "Mosquito Collection Point",
+            "text": "Mosquito Collection Point"
+          },
+          {
+            "key": "Larval Breeding Site",
+            "text": "Larval Breeding Site"
+          }
+        ],
+        "value": "Residential Structure",
+        "v_required": {
+          "value": true,
+          "err": "Please specify Type of structure"
+        }
+      },
+      {
         "key": "structureName",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Name of structure",
-        "edit_type": "name"
+        "edit_type": "name",
+        "relevance": {
+          "step1:structureType": {
+            "type": "string",
+            "ex": "equalTo(., \"Residential Structure\")"
+          }
+        }
       },
       {
         "key": "zoom_level",

@@ -57,6 +57,7 @@ import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.Constants.Action;
+import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -178,16 +179,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         kujakuMapView = findViewById(R.id.kujakuMapView);
         kujakuMapView.onCreate(savedInstanceState);
 
-        kujakuMapView.setStyleUrl(getString(R.string.reveal_satellite_style));
-
         kujakuMapView.showCurrentLocationBtn(true);
 
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
                 mMapboxMap = mapboxMap;
-                mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
-
+                RevealMapHelper.addSymbolLayers(mapboxMap, ListTasksActivity.this);
                 mapboxMap.setMinZoomPreference(10);
                 mapboxMap.setMaxZoomPreference(21);
 

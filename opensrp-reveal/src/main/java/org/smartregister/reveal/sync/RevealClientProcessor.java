@@ -15,6 +15,7 @@ import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants.JsonForm;
+import org.smartregister.reveal.util.Constants.StructureType;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.ClientProcessorForJava;
@@ -146,7 +147,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     public String calculateBusinessStatus(Event event) {
         String sprayStatus = event.findObs(null, false, JsonForm.SPRAY_STATUS).getValue().toString();
         String structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE).getValue().toString();
-        if (!JsonForm.RESIDENTIAL.equals(structureType)) {
+        if (!StructureType.RESIDENTIAL.equals(structureType)) {
             return NOT_SPRAYABLE;
         } else {
             return sprayStatus;

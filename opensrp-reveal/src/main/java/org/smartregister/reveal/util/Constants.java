@@ -69,6 +69,12 @@ public interface Constants {
         String IRS = "IRS";
         String ITN = "ITN";
         String MDA = "MDA";
+
+        String MOSQUITO_COLLECTION = "Mosquito Collection";
+
+        String LARVAL_DIPPING = "Larval Dipping";
+
+        String IRS_VISIT = "IRS Visit";
     }
 
     interface BusinessStatus {
@@ -88,10 +94,6 @@ public interface Constants {
 
         String ENCOUNTER_TYPE = "encounter_type";
 
-        String RESIDENTIAL = "Residential Structure";
-
-        String NON_RESIDENTIAL = "Non-Residential Structure";
-
         String SPRAY_STATUS = "sprayStatus";
 
         String STRUCTURE_TYPE = "structureType";
@@ -103,8 +105,6 @@ public interface Constants {
         String SPRAY_FORM = "json.form/spray_form.json";
 
         String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
-
-        String IRS_VISIT = "IRS Visit";
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 
@@ -131,5 +131,17 @@ public interface Constants {
     interface Action {
         String STRUCTURE_TASK_SYNCHED = "reveal.STRUCTURE_TASK_SYNCHED";
     }
+
+
+    interface StructureType {
+        String RESIDENTIAL = "Residential Structure";
+
+        String NON_RESIDENTIAL = "Non-Residential Structure";
+
+        String MOSQUITO_COLLECTION_POINT = "Mosquito Collection Point";
+
+        String LARVAL_BREEDING_SITE = "Larval Breeding Site";
+    }
+
 
 }
