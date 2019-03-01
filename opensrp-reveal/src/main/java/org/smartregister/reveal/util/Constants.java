@@ -138,5 +138,4 @@ public interface Constants {
         String STRUCTURE_TASK_SYNCHED = "reveal.STRUCTURE_TASK_SYNCHED";
     }
 
-
 }

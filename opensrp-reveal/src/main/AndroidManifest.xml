@@ -24,6 +24,7 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="3f94f9c3caeff331b3a2bd8c2182b663ad6a955a" />
+
         <activity
             android:name="org.smartregister.reveal.activity.LoginActivity"
             android:screenOrientation="portrait"
@@ -51,11 +52,40 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+        <activity
+            android:name=".view.FamilyRegisterActivity"
+            android:parentActivityName=".view.ListTasksActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.ListTasksActivity" />
+        </activity>
+        <activity
+            android:name=".view.FamilyProfileActivity"
+            android:parentActivityName=".view.FamilyRegisterActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.FamilyRegisterActivity" />
+        </activity>
+        <activity android:name="org.smartregister.family.activity.FamilyWizardFormActivity" />
+        <activity android:name="com.vijay.jsonwizard.activities.JsonWizardFormActivity" />
+        <activity
+            android:name=".view.FamilyOtherMemberProfileActivity"
+            android:parentActivityName=".view.FamilyProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".view.FamilyProfileActivity" />
+        </activity>
 
         <service android:name=".sync.RevealSyncIntentService" />
         <service android:name=".sync.RevealCampaignIntentService" />
         <service android:name=".sync.LocationTaskIntentService" />
         <service android:name=".sync.RevealSettingsSyncIntentService" />
+        <service android:name="org.smartregister.sync.intent.PullUniqueIdsIntentService" />
+        <service android:name="org.smartregister.sync.intent.ValidateIntentService" />
+        <service android:name="org.smartregister.sync.intent.ExtendedSyncIntentService" />
 
     </application>
 

@@ -5,6 +5,7 @@ import android.location.Location;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
@@ -60,9 +61,17 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                         } else {
                             onLocationValidated();
                         }
+                        return validationStatus;
                     }
+                    break;//exit loop, assumption; there will be only 1 map per form.
                 }
             }
+        }
+        if (validationStatus.isValid()) {// if form is valid and did not have a map, if it had a map view it will be handled above
+            onLocationValidated();
+        } else {//if form is invalid whether having a map or not
+            Toast.makeText(getView().getContext(), validationStatus.getErrorMessage(), Toast.LENGTH_LONG).show();
+            validationStatus.requestAttention();
         }
         return validationStatus;
     }

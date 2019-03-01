@@ -84,4 +84,5 @@
     <string name="location_services_disabled_spray">You have declined enabling location services to get your current location. You shall have to enter admin password to spray the structure</string>
     <string name="location_services_disabled_add">You have declined enabling location services to get your current location. You shall have to enter admin password to add the structure</string>
 
+    <string name="register_family">Register Family</string>
 </resources>

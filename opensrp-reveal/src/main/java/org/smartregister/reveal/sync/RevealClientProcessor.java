@@ -67,28 +67,27 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         if (!eventClients.isEmpty()) {
             for (EventClient eventClient : eventClients) {
                 Event event = eventClient.getEvent();
-                if (event == null) {
-                    return;
+                if (event == null || event.getEventType() == null) {
+                    continue;
                 }
                 String eventType = event.getEventType();
-                if (eventType == null) {
-                    continue;
-                } else if (eventType.equals(SPRAY_EVENT)) {
+                if (eventType.equals(SPRAY_EVENT)) {
                     String operationalAreaId = processSprayEvent(event, clientClassification, localEvents);
                     if (!hasSynchedEventsInTarget && operationalAreaLocationId != null &&
                             operationalAreaLocationId.equals(operationalAreaId)) {
                         hasSynchedEventsInTarget = true;
                     }
-                }
-                Client client = eventClient.getClient();
-                //iterate through the events
-                if (client != null) {
-                    try {
-                        processEvent(event, client, clientClassification);
-                    } catch (Exception e) {
-                        Log.d(TAG, e.getMessage());
-                    }
+                } else {
+                    Client client = eventClient.getClient();
+                    //iterate through the events
+                    if (client != null) {
+                        try {
+                            processEvent(event, client, clientClassification);
+                        } catch (Exception e) {
+                            Log.d(TAG, e.getMessage());
+                        }
 
+                    }
                 }
             }
         }
@@ -110,9 +109,12 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             if (task != null) {
                 task.setBusinessStatus(calculateBusinessStatus(event));
                 task.setStatus(Task.TaskStatus.COMPLETED);
-                if (localEvents) {
+                //update task sync status to unsynced if it was already synced, ignore if task status is created so that it will be created on server
+                if (localEvents && BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
+                    //update sync status so that updated task status can be pushed to server
                     task.setSyncStatus(BaseRepository.TYPE_Unsynced);
-                } else {
+                } else if (!localEvents) {
+                    //for events synced from server and task exists mark events as being fully synced
                     eventClientRepository.markEventAsSynced(event.getFormSubmissionId());
                 }
                 RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
