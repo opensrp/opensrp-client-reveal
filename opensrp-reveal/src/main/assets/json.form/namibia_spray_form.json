@@ -107,9 +107,10 @@
         ],
         "value": "Open",
         "relevance": {
-          "step1:visit_number": {
-            "type": "string",
-            "ex": "equalTo(., \"Mop-up\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -119,11 +120,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Number of sprayable structures",
+        "hint": "# sprayable structures",
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Enter Number of sprayable structures"
+          "err": "Enter # sprayable structures"
         },
         "v_numeric": {
           "value": "true",
@@ -143,11 +144,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Number of unsprayable structures",
+        "hint": "# unsprayable structures",
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Enter Number of unsprayable structures"
+          "err": "Enter # unsprayable structures"
         },
         "v_numeric": {
           "value": "true",
@@ -167,22 +168,20 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Number of structures sprayed with DDT",
-        "shortened_hint": "# structures sprayed with DDT",
+        "hint": "# structures sprayed with DDT",
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Enter Number of structures sprayed with DDT"
+          "err": "Enter # structures sprayed with DDT"
         },
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },
@@ -192,22 +191,20 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Number of structures sprayed with Delta",
-        "shortened_hint": "# structures sprayed with Delta",
+        "hint": "# structures sprayed with Delta",
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Enter Number of structures sprayed with Delta"
+          "err": "Enter # structures sprayed with Delta"
         },
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },
@@ -217,22 +214,20 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Number of structures sprayed with Actellic",
-        "shortened_hint": "# structures sprayed with Actellic",
+        "hint": "# structures sprayed with Actellic",
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Enter Number of structures sprayed with Actellic"
+          "err": "Enter # structures sprayed with Actellic"
         },
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },
@@ -242,11 +237,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Number of unsprayed structures",
+        "hint": "# unsprayed structures",
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Enter Number of unsprayed structures"
+          "err": "Enter # unsprayed structures"
         },
         "v_numeric": {
           "value": "true",
@@ -266,12 +261,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Number of structures not sprayed (mop-up)",
-        "shortened_hint": "# structures not sprayed (mop-up)",
+        "hint": "# structures not sprayed (mop-up)",
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Number of structures not sprayed (mop-up)"
+          "err": "Enter # structures not sprayed (mop-up)"
         },
         "v_numeric": {
           "value": "true",
@@ -307,9 +301,16 @@
           },
           {
             "key": "Unsprayable",
-            "value": "Unsprayable"
+            "text": "Unsprayable"
           }
-        ]
+        ],
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
       },
       {
         "key": "refusal_reasons_for_not_spraying",
@@ -333,9 +334,20 @@
           },
           {
             "key": "Other",
-            "value": "Other"
+            "text": "Other"
           }
-        ]
+        ],
+        "relevance": {
+          "step1:reasons_for_not_spraying": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "Refused"
+                ]
+              }
+            ]
+          }
+        }
       },
       {
         "key": "refusal_reasons_for_not_spraying_comment",
@@ -350,10 +362,14 @@
           "err": "Please explain reason for refusal "
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
+          "step1:refusal_reasons_for_not_spraying": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "Other"
+                ]
+              }
+            ]
           }
         }
       },
@@ -367,7 +383,7 @@
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Enter Number of House Population"
+          "err": "Enter # House Population"
         },
         "v_numeric": {
           "value": "true",
@@ -388,10 +404,11 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Population in the visited household sleeping in sprayed rooms",
+        "shortened_hint": "Population sleeping in sprayed rooms",
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Population in the visited household sleeping in sprayed rooms"
+          "err": "Enter Population in the visited household sleeping in sprayed rooms"
         },
         "v_numeric": {
           "value": "true",
@@ -415,7 +432,27 @@
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Population in the visited household sleeping in sprayed rooms"
+          "err": "Enter name of household"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "health_number",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Household health number",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Enter household health number"
         },
         "v_numeric": {
           "value": "true",
@@ -426,6 +463,123 @@
             "ex-rules": {
               "rules-file": "namibia-spray-relevance-rules.yml"
             }
+          }
+        }
+      },
+      {
+        "key": "confirm",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Confirm household health number",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Confirm household health number"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "reasons_for_not_spraying_household",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "Reason those STRUCTURES were not sprayed",
+        "options": [
+          {
+            "key": "Refused",
+            "text": "Refused"
+          },
+          {
+            "key": "Locked/no one home",
+            "text": "Locked/no one home"
+          },
+          {
+            "key": "No adult home",
+            "text": "No adult home"
+          },
+          {
+            "key": "Unsprayable",
+            "text": "Unsprayable"
+          }
+        ],
+        "relevance": {
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"No\")"
+          }
+        }
+      },
+      {
+        "key": "refusal_reason_for_not_spraying_household",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "Reason for refusal",
+        "options": [
+          {
+            "key": "Pregnant/Newborn",
+            "text": "Pregnant/Newborn"
+          },
+          {
+            "key": "Sick",
+            "text": "Sick"
+          },
+          {
+            "key": "Does not understand",
+            "text": "Does not understand"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
+          }
+        ],
+        "relevance": {
+          "step1:reasons_for_not_spraying_household": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "Refused"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "refusal_reason_for_not_spraying_household_comment",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Please explain",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please explain"
+        },
+        "relevance": {
+          "step1:refusal_reason_for_not_spraying_household": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "Other"
+                ]
+              }
+            ]
           }
         }
       }
