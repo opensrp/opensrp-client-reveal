@@ -13,6 +13,7 @@ import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.Repository;
+import org.smartregister.repository.SettingsRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.repository.UniqueIdRepository;
@@ -54,7 +55,6 @@ public class RevealRepository extends Repository {
         StructureRepository.createTable(database);
 
         onUpgrade(database, 1, BuildConfig.DATABASE_VERSION);
-
     }
 
     @Override
@@ -76,10 +76,12 @@ public class RevealRepository extends Repository {
         }
     }
 
-    private void upgradeToVersion2(SQLiteDatabase database) {
-        UniqueIdRepository.createTable(database);
+    private void upgradeToVersion2(SQLiteDatabase db) {
+        SettingsRepository.onUpgrade(db);
 
-        DatabaseMigrationUtils.createAddedECTables(database,
+        UniqueIdRepository.createTable(db);
+
+        DatabaseMigrationUtils.createAddedECTables(db,
                 new HashSet<>(Arrays.asList(TABLE_NAME.FAMILY, TABLE_NAME.FAMILY_MEMBER)),
                 RevealApplication.createCommonFtsObject());
 

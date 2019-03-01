@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.cocoahero.android.geojson.Feature;
 import com.cocoahero.android.geojson.Point;
+import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -44,13 +45,18 @@ import org.smartregister.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
+
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
+import static org.smartregister.reveal.util.Utils.getGlobalConfig;
 
 /**
  * Created by samuelgithengi on 12/13/18.
  */
-public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
+public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, OnLocationComponentInitializedCallback {
 
     private static final String TAG = "GeoWidgetFactory";
 
@@ -114,6 +120,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         mapView.setId(canvasId);
         mapView.onCreate(null);
         mapView.setStyleUrl(context.getString(R.string.reveal_satellite_style));
+        mapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
 
         String finalOperationalArea = operationalArea;
         String finalFeatureCollection = featureCollection;
@@ -122,10 +129,13 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
             public void onMapReady(MapboxMap mapboxMap) {
                 RevealMapHelper.addSymbolLayers(mapboxMap, context);
                 mapView.setMapboxMap(mapboxMap);
+
+                String bufferRadius = getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString());
                 if (finalOperationalArea != null) {
                     mapboxMap.setCameraPosition(mapboxMap.getCameraForGeometry(Geometry.fromJson(finalOperationalArea)));
+                    mapView.setLocationBufferRadius(Float.valueOf(bufferRadius));
                 } else {
-                    mapView.focusOnUserLocation(true);
+                    mapView.focusOnUserLocation(true, Float.valueOf(bufferRadius));
                 }
 
                 GeoJsonSource geoJsonSource = mapboxMap.getSourceAs(context.getString(R.string.reveal_datasource_name));
@@ -175,7 +185,6 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         addMaximumZoomLevel(jsonObject, mapView);
         views.add(mapView);
         mapView.onStart();
-
         mapView.showCurrentLocationBtn(true);
         mapView.enableAddPoint(true);
         disableParentScroll((Activity) context, mapView);
@@ -225,6 +234,15 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
             } catch (JSONException e) {
                 Log.e(TAG, "Error extracting max zoom level from" + minValidation);
             }
+        }
+    }
+
+    @Override
+    public void onLocationComponentInitialized() {
+        if (PermissionsManager.areLocationPermissionsGranted(mapView.getContext())) {
+            mapView.getMapboxLocationComponentWrapper()
+                    .getLocationComponent()
+                    .applyStyle(mapView.getContext(), R.style.LocationComponentStyling);
         }
     }
 

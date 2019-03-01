@@ -1,6 +1,7 @@
 package org.smartregister.reveal.application;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -9,17 +10,22 @@ import com.evernote.android.job.JobManager;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.vijay.jsonwizard.activities.JsonWizardFormActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.JsonSpecHelper;
+import org.smartregister.domain.Setting;
 import org.smartregister.family.FamilyLibrary;
 import org.smartregister.family.activity.FamilyWizardFormActivity;
 import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
+import org.smartregister.repository.AllSettings;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.Repository;
@@ -37,8 +43,14 @@ import org.smartregister.sync.DrishtiSyncScheduler;
 import org.smartregister.view.activity.DrishtiApplication;
 import org.smartregister.view.receiver.TimeChangedBroadcastReceiver;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.fabric.sdk.android.Fabric;
 
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.GLOBAL_CONFIGS;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.KEY;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.VALUE;
 import static org.smartregister.reveal.util.FamilyConstants.CONFIGURATION;
 import static org.smartregister.reveal.util.FamilyConstants.EventType;
 import static org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
@@ -58,6 +70,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     private StructureRepository structureRepository;
     private LocationRepository locationRepository;
 
+    private Map<String, String> globalConfigs;
 
     private static CommonFtsObject commonFtsObject;
 
@@ -87,6 +100,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         SyncStatusBroadcastReceiver.init(this);
 
         jsonSpecHelper = new JsonSpecHelper(this);
+        globalConfigs = new HashMap<>();
 
         Mapbox.getInstance(getApplicationContext(), BuildConfig.MAPBOX_SDK_ACCESS_TOKEN);
 
@@ -98,6 +112,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
         //init Job Manager
         JobManager.create(this).addJobCreator(new RevealJobCreator());
+
+        processGlobalConfigs();
     }
 
     @Override
@@ -194,6 +210,37 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         return locationRepository;
     }
 
+    public AllSettings getSettingsRepository() {
+        return getInstance().getContext().allSettings();
+    }
+
+    public void processGlobalConfigs() {
+        Setting globalSettings =  getSettingsRepository().getSetting(GLOBAL_CONFIGS);
+        populateGlobalConfigs(globalSettings);
+    }
+
+    private void populateGlobalConfigs(@NonNull Setting setting) {
+        if (setting == null) {
+            return;
+        }
+        try {
+            JSONArray settingsArray = new JSONArray(setting.getValue());
+            for (int i = 0; i < settingsArray.length(); i++) {
+                JSONObject jsonObject = settingsArray.getJSONObject(i);
+                String value = jsonObject.optString(VALUE, null);
+                String key = jsonObject.optString(KEY, null);
+                if (value != null && key != null) {
+                    globalConfigs.put(key, value);
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    public Map<String, String> getGlobalConfigs() {
+        return globalConfigs;
+    }
 
     private FamilyMetadata getMetadata() {
         FamilyMetadata metadata = new FamilyMetadata(FamilyWizardFormActivity.class, JsonWizardFormActivity.class, FamilyProfileActivity.class, CONFIGURATION.UNIQUE_ID_KEY, true);

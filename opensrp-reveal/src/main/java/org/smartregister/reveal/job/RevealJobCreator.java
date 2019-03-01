@@ -27,6 +27,8 @@ public class RevealJobCreator implements JobCreator {
                 return new RevealCampaignServiceJob();
             case LocationTaskServiceJob.TAG:
                 return new LocationTaskServiceJob();
+            case RevealSyncSettingsServiceJob.TAG:
+                return new RevealSyncSettingsServiceJob();
             case ExtendedSyncServiceJob.TAG:
                 return new ExtendedSyncServiceJob();
             case PullUniqueIdsServiceJob.TAG:

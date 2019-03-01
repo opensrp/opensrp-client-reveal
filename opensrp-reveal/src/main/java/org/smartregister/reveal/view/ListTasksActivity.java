@@ -31,6 +31,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
@@ -66,19 +67,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.utils.Constants;
 
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
+import static org.smartregister.reveal.util.Utils.getGlobalConfig;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
+
 
 /**
  * Created by samuelgithengi on 11/20/18.
  */
 public class ListTasksActivity extends BaseMapActivity implements ListTaskContract.ListTaskView,
-        View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener, UserLocationView {
+        View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener, UserLocationView, OnLocationComponentInitializedCallback {
 
     private static final String TAG = "ListTasksActivity";
 
@@ -137,7 +144,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         initializeCardView();
 
         syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
-
     }
 
     private void initializeCardView() {
@@ -177,15 +183,23 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private void initializeMapView(Bundle savedInstanceState) {
         kujakuMapView = findViewById(R.id.kujakuMapView);
+
+        kujakuMapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
+
         kujakuMapView.onCreate(savedInstanceState);
 
         kujakuMapView.showCurrentLocationBtn(true);
+
+        Float locationBufferRadius = Float.valueOf(getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString()));
+        kujakuMapView.setLocationBufferRadius(locationBufferRadius);
 
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
                 mMapboxMap = mapboxMap;
+
                 RevealMapHelper.addSymbolLayers(mapboxMap, ListTasksActivity.this);
+
                 mapboxMap.setMinZoomPreference(10);
                 mapboxMap.setMaxZoomPreference(21);
 
@@ -199,7 +213,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 selectedGeoJsonSource = mapboxMap.getSourceAs(getString(R.string.selected_datasource_name));
 
                 listTaskPresenter.onMapReady();
-
 
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                     @Override
@@ -318,6 +331,15 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         Intent intent = new Intent(this, FamilyRegisterActivity.class);
         intent.putExtra(START_REGISTRATION, true);
         startActivity(intent);
+    }
+
+    @Override
+    public void onLocationComponentInitialized() {
+        if (PermissionsManager.areLocationPermissionsGranted(this)) {
+            kujakuMapView.getMapboxLocationComponentWrapper()
+                    .getLocationComponent()
+                    .applyStyle(getApplicationContext(), R.style.LocationComponentStyling);
+        }
     }
 
     @Override
@@ -591,7 +613,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            listTaskPresenter.refreshStructures();
+            Bundle extras = intent.getExtras();
+            if (extras != null && extras.getBoolean(UPDATE_LOCATION_BUFFER_RADIUS)) {
+                String bufferRadius = getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString());
+                kujakuMapView.setLocationBufferRadius(Float.valueOf(bufferRadius));
+            } else {
+                listTaskPresenter.refreshStructures();
+            }
         }
     }
 }

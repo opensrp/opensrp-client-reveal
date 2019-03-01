@@ -57,4 +57,9 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     public boolean updateClientDetailsTable() {
         return false;
     }
+
+    @Override
+    public boolean isSyncSettings() {
+        return true;
+    }
 }

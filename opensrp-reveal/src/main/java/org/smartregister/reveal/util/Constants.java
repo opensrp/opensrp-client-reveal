@@ -30,6 +30,12 @@ public interface Constants {
 
     interface CONFIGURATION {
         String LOGIN = "login";
+        String GLOBAL_CONFIGS = "global_configs";
+        String KEY = "key";
+        String VALUE = "value";
+        String LOCATION_BUFFER_RADIUS_IN_METRES = "location_buffer_radius_in_metres";
+        Float DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES = 25f;
+        String UPDATE_LOCATION_BUFFER_RADIUS = "update_location_buffer_radius";
     }
 
     interface Preferences {
