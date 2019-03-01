@@ -132,6 +132,7 @@ public interface Constants {
         String STRUCTURE_TASK_SYNCHED = "reveal.STRUCTURE_TASK_SYNCHED";
     }
 
+
     interface StructureType {
         String RESIDENTIAL = "Residential Structure";
 

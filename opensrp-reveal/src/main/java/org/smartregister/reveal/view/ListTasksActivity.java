@@ -72,6 +72,7 @@ import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATI
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
+import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -160,6 +161,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         tvFamilyHead = findViewById(R.id.family_head);
         tvReason = findViewById(R.id.reason);
         findViewById(R.id.change_spray_status).setOnClickListener(this);
+
+        findViewById(R.id.register_family).setOnClickListener(this);
 
     }
 
@@ -306,7 +309,15 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (v.getId() == R.id.btn_collapse_structure_card_view) {
             setViewVisibility(tvReason, false);
             closeStructureCardView();
+        } else if (v.getId() == R.id.register_family) {
+            registerFamily();
         }
+    }
+
+    private void registerFamily() {
+        Intent intent = new Intent(this, FamilyRegisterActivity.class);
+        intent.putExtra(START_REGISTRATION, true);
+        startActivity(intent);
     }
 
     @Override
