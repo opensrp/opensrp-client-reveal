@@ -115,7 +115,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     public String getPassword() {
         if (password == null) {
-            String username = getContext().userService().getAllSharedPreferences().fetchRegisteredANM();
+            String username = getContext().allSharedPreferences().fetchRegisteredANM();
             password = getContext().userService().getGroupId(username);
         }
         return password;

@@ -5,6 +5,7 @@ import android.util.Log;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.AllConstants;
 import org.smartregister.configurableviews.repository.ConfigurableViewsRepository;
 import org.smartregister.domain.db.EventClient;
@@ -111,6 +112,9 @@ public class RevealRepository extends Repository {
 
     @Override
     public synchronized SQLiteDatabase getReadableDatabase(String password) {
+        if (StringUtils.isBlank(password)) {
+            throw new IllegalStateException("Password is blank");
+        }
         try {
             if (readableDatabase == null || !readableDatabase.isOpen()) {
                 if (readableDatabase != null) {
@@ -128,7 +132,9 @@ public class RevealRepository extends Repository {
 
     @Override
     public synchronized SQLiteDatabase getWritableDatabase(String password) {
-        if (writableDatabase == null || !writableDatabase.isOpen()) {
+        if (StringUtils.isBlank(password)) {
+            throw new IllegalStateException("Password is blank");
+        } else if (writableDatabase == null || !writableDatabase.isOpen()) {
             if (writableDatabase != null) {
                 writableDatabase.close();
             }
