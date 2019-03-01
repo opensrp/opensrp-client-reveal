@@ -33,6 +33,7 @@ import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.util.Constants.StructureType;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
@@ -58,7 +59,6 @@ import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.HEAD_OF_HOUSEHOLD;
-import static org.smartregister.reveal.util.Constants.JsonForm.NON_RESIDENTIAL;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_STATUS;
@@ -464,7 +464,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         try {
             String formString = AssetHandler.readFileFromAssetsFolder(SPRAY_FORM, listTaskView.getContext());
             if (StringUtils.isBlank(structureType)) {
-                structureType = NON_RESIDENTIAL;
+                structureType = StructureType.NON_RESIDENTIAL;
             }
             formString = formString.replace(STRUCTURE_PROPERTIES_TYPE, structureType);
             JSONObject formJson = new JSONObject(formString);

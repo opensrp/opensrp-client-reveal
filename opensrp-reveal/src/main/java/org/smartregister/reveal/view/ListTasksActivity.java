@@ -58,6 +58,7 @@ import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.Constants.Action;
+import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -193,6 +194,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
                 mMapboxMap = mapboxMap;
+
+                RevealMapHelper.addSymbolLayers(mapboxMap, ListTasksActivity.this);
 
                 mapboxMap.setMinZoomPreference(10);
                 mapboxMap.setMaxZoomPreference(21);

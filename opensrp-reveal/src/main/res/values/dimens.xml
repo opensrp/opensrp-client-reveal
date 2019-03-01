@@ -22,8 +22,6 @@
 
     <dimen name="drawer_icon_margin">40dp</dimen>
 
-    <dimen name="native_form_edit_text_height">180dp</dimen>
-
     <dimen name="structure_info_card_text_size">18sp</dimen>
     <dimen name="structure_info_card_status_text_size">22sp</dimen>
     <dimen name="structure_info_card_scroll_layout_height">200dp</dimen>
