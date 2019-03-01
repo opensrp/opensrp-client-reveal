@@ -472,6 +472,13 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -489,6 +496,13 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -506,6 +520,13 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -523,6 +544,13 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -540,6 +568,13 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -557,6 +592,13 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -574,6 +616,13 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -591,6 +640,13 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -608,6 +664,13 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -625,6 +688,13 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       }
     ]
