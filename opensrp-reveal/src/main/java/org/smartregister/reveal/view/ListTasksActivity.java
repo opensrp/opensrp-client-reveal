@@ -190,6 +190,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         kujakuMapView.showCurrentLocationBtn(true);
 
+        Float locationBufferRadius = Float.valueOf(getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString()));
+        kujakuMapView.setLocationBufferRadius(locationBufferRadius);
+
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
