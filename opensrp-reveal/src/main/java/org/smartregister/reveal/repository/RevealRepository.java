@@ -117,9 +117,6 @@ public class RevealRepository extends Repository {
         }
         try {
             if (readableDatabase == null || !readableDatabase.isOpen()) {
-                if (readableDatabase != null) {
-                    readableDatabase.close();
-                }
                 readableDatabase = super.getReadableDatabase(password);
             }
             return readableDatabase;
@@ -135,9 +132,6 @@ public class RevealRepository extends Repository {
         if (StringUtils.isBlank(password)) {
             throw new IllegalStateException("Password is blank");
         } else if (writableDatabase == null || !writableDatabase.isOpen()) {
-            if (writableDatabase != null) {
-                writableDatabase.close();
-            }
             writableDatabase = super.getWritableDatabase(password);
         }
         return writableDatabase;
