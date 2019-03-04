@@ -66,8 +66,7 @@
             "key": "Mop-up",
             "text": "Mop-up"
           }
-        ],
-        "value": "First Visit"
+        ]
       },
       {
         "key": "cattle_post_place_name",
@@ -94,8 +93,7 @@
             "key": "No",
             "text": "No"
           }
-        ],
-        "value": "Yes"
+        ]
       },
       {
         "key": "nonresidentialtype",
@@ -410,7 +408,6 @@
             "text": "No"
           }
         ],
-        "value": "No",
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -436,10 +433,9 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "botswana-spray-relevance-rules.yml"
-            }
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },
