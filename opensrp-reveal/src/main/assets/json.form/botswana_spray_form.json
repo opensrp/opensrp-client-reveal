@@ -228,7 +228,7 @@
         },
         "v_relative_max": {
           "value": "n_people_homestead",
-          "err": "Number people UNDER  5 cannot be greater Total number of people"
+          "err": "Number people UNDER  5 cannot be greater than Total number of people"
         },
         "relevance": {
           "rules-engine": {
@@ -251,7 +251,14 @@
         },
         "v_relative_max": {
           "value": "n_people_homestead",
-          "err": "Number people age 5 and ABOVE cannot be greater Total number of people"
+          "err": "Number people age 5 and ABOVE cannot be greater than Total number of people"
+        },
+        "v_cumulative_total": {
+          "value": "n_people_homestead",
+          "related_fields": [
+            "n_people_homestead_underage5"
+          ],
+          "err": "Number people below age 5 and those age 5 and ABOVE cannot be greater than Total number of people"
         },
         "relevance": {
           "rules-engine": {
@@ -592,6 +599,14 @@
         "v_relative_max": {
           "value": "number_sprayed",
           "err": "Number of sprayed rooms with Actellic cannot be greater than Total number of sprayed rooms"
+        },
+        "v_cumulative_total": {
+          "value": "number_sprayed",
+          "related_fields": [
+            "number_sprayed_ddt",
+            "number_sprayed_lambdacyhalothrin"
+          ],
+          "err": "Number of rooms sprayed with ddt + actellic + lamba should be equal to total number of rooms sprayed"
         },
         "relevance": {
           "step1:any_sprayed": {
