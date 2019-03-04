@@ -256,7 +256,7 @@
           "related_fields": [
             "n_people_homestead_underage5"
           ],
-          "err": "Number people below age 5 and those age 5 and ABOVE cannot be greater than Total number of people"
+          "err": "Number people below age 5 and those age 5 and ABOVE should be equal to Total number of people"
         },
         "relevance": {
           "rules-engine": {
