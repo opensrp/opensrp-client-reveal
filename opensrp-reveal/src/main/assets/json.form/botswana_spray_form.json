@@ -59,15 +59,15 @@
         "label": "First visit or mop-up",
         "options": [
           {
-            "key": "First",
-            "text": "First"
+            "key": "First Visit",
+            "text": "First Visit"
           },
           {
             "key": "Mop-up",
             "text": "Mop-up"
           }
         ],
-        "value": "First"
+        "value": "First Visit"
       },
       {
         "key": "cattle_post_place_name",
@@ -76,14 +76,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Record cattle post or other place name (if applicable)",
-        "edit_type": "name",
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "spray-relevance-rules.yml"
-            }
-          }
-        }
+        "edit_type": "name"
       },
       {
         "key": "residentialtype",
@@ -94,14 +87,15 @@
         "label": "Is a residential structure?",
         "options": [
           {
-            "key": "Inhabited",
-            "text": "Inhabited"
+            "key": "Yes",
+            "text": "Yes"
           },
           {
-            "key": "Not Inhabited",
-            "text": "Not Inhabited"
+            "key": "No",
+            "text": "No"
           }
-        ]
+        ],
+        "value": "Yes"
       },
       {
         "key": "nonresidentialtype",
@@ -163,7 +157,13 @@
             "key": "Other",
             "text": "Other"
           }
-        ]
+        ],
+        "relevance": {
+          "step1:residentialtype": {
+            "type": "string",
+            "ex": "equalTo(., \"No\")"
+          }
+        }
       },
       {
         "key": "household_name",
@@ -172,7 +172,18 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Head of Household name",
-        "edit_type": "name"
+        "edit_type": "name",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify household name"
+        },
+        "relevance": {
+          "step1:visit_number": {
+            "type": "string",
+            "ex": "equalTo(., \"First Visit\")"
+          }
+        }
       },
       {
         "key": "number_of_buildings_in_homesteads",
@@ -181,14 +192,15 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "How many buildings are in this home?",
-        "is_mandatory": true,
-        "v_required": {
-          "value": true,
-          "err": "Please specify how many buildings are in this home"
-        },
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "step1:visit_number": {
+            "type": "string",
+            "ex": "equalTo(., \"First Visit\")"
+          }
         }
       },
       {
@@ -198,7 +210,6 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Total number of people in this home?",
-        "is_mandatory": true,
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
@@ -211,10 +222,43 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Number of people in the home UNDER the age of 5",
-        "is_mandatory": true,
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "n_people_homestead",
+          "err": "Number people UNDER  5 cannot be greater Total number of people"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "n_people_homestead_overage5",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of people in the home at the age of 5 or ABOVE",
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "n_people_homestead",
+          "err": "Number people age 5 and ABOVE cannot be greater Total number of people"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -227,11 +271,17 @@
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Please specify how many SPRAYABLE rooms are in this home? (Count all rooms in all buildings)"
+          "err": "How many SPRAYABLE rooms are in this home? (Count all rooms in all buildings)"
         },
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "step1:visit_number": {
+            "type": "string",
+            "ex": "equalTo(., \"First Visit\")"
+          }
         }
       },
       {
@@ -249,6 +299,17 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_of_rooms",
+          "err": "Number MODERN rooms cannot be greater than Total number of rooms"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -266,6 +327,17 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_of_rooms",
+          "err": "Number TRADITIONAL rooms cannot be greater than Total number of rooms"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -283,6 +355,12 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "step1:visit_number": {
+            "type": "string",
+            "ex": "equalTo(., \"First Visit\")"
+          }
         }
       },
       {
@@ -300,6 +378,12 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "step1:visit_number": {
+            "type": "string",
+            "ex": "equalTo(., \"First Visit\")"
+          }
         }
       },
       {
@@ -319,7 +403,14 @@
             "text": "No"
           }
         ],
-        "value": "No"
+        "value": "No",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
       },
       {
         "key": "number_sprayed",
@@ -336,6 +427,13 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -353,6 +451,17 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_sprayed",
+          "err": "Number of sprayed MODERN rooms cannot be greater than Total number of sprayed rooms"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -370,6 +479,16 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_sprayed",
+          "err": "Number of sprayed TRADITIONAL rooms cannot be greater than Total number of sprayed rooms"
+        },
+        "relevance": {
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -387,6 +506,17 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_other_structures",
+          "err": "Number of other structures sprayed cannot be greater than Total number of other structures"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -404,6 +534,16 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_sprayed",
+          "err": "Number of sprayed rooms with DDT cannot be greater than Total number of sprayed rooms"
+        },
+        "relevance": {
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -421,6 +561,16 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_sprayed",
+          "err": "Number of sprayed rooms with Lambdacyhalothrin cannot be greater than Total number of sprayed rooms"
+        },
+        "relevance": {
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -438,6 +588,16 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_sprayed",
+          "err": "Number of sprayed rooms with Actellic cannot be greater than Total number of sprayed rooms"
+        },
+        "relevance": {
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -455,6 +615,13 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
