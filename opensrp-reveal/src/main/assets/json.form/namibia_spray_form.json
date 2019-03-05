@@ -582,6 +582,20 @@
             ]
           }
         }
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-calculation-rules.yml"
+            }
+          }
+        }
       }
     ]
   }

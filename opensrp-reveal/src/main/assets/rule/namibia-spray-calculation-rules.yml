@@ -1,0 +1,7 @@
+---
+name: step1_business_status
+description: Task business status
+priority: 1
+condition: "true"
+actions:
+- "calculation = (step_1_number_sprayable != '' && step_1_number_sprayable == 0) ? 'Not Sprayable' : ((step1_numbersprayed_ddt != '' && step1_numbersprayed_delta != '' && step1_numbersprayed_actellic != '')  && (step1_numbersprayed_ddt + step1_numbersprayed_delta + step1_numbersprayed_actellic ) > 0 ) ? 'Sprayed': 'Not Sprayed' "
