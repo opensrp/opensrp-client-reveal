@@ -94,6 +94,8 @@ public interface Constants {
 
         String SPRAY_STATUS = "sprayStatus";
 
+        String TASK_BUSINESS_STATUS = "business_status";
+
         String STRUCTURE_TYPE = "structureType";
 
         String HEAD_OF_HOUSEHOLD = "familyHeadName";
