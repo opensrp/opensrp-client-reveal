@@ -126,9 +126,11 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             }
             Location structure = RevealApplication.getInstance().getStructureRepository().getLocationById(event.getBaseEntityId());
             if (structure != null) {
-                String structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE).getValue().toString();
-                structure.getProperties().setType(structureType);
-                RevealApplication.getInstance().getStructureRepository().addOrUpdate(structure);
+                Obs structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE);
+                if (structureType != null) {
+                    structure.getProperties().setType(structureType.getValue().toString());
+                    RevealApplication.getInstance().getStructureRepository().addOrUpdate(structure);
+                }
                 if (operationalAreaId == null) {
                     operationalAreaId = structure.getProperties().getParentId();
                 }
