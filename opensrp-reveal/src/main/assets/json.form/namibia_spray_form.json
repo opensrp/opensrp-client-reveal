@@ -2,6 +2,7 @@
   "count": "1",
   "encounter_type": "Spray",
   "entity_id": "",
+  "show_errors_on_submit": true,
   "metadata": {
     "start": {
       "openmrs_entity_parent": "",
@@ -51,6 +52,28 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "structureType",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Type of Structure",
+        "options": [
+          {
+            "key": "Residential Structure",
+            "text": "Residential Structure"
+          },
+          {
+            "key": "Non-Residential Structure",
+            "text": "Non-Residential Structure"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Specify type of Structure"
+        }
+      },
+      {
         "key": "visit_number",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -67,7 +90,10 @@
             "text": "Mop-up"
           }
         ],
-        "value": "First"
+        "v_required": {
+          "value": "true",
+          "err": "First visit or mop-up"
+        }
       },
       {
         "key": "any_sprayed",
@@ -86,7 +112,10 @@
             "text": "No"
           }
         ],
-        "value": "No"
+        "v_required": {
+          "value": "true",
+          "err": "Were any structures sprayed?"
+        }
       },
       {
         "key": "prev_closed_open",
@@ -105,7 +134,10 @@
             "text": "Closed"
           }
         ],
-        "value": "Open",
+        "v_required": {
+          "value": "true",
+          "err": "Was this household previously open or closed?"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -121,9 +153,9 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# sprayable structures",
-        "is_mandatory": true,
+        "is_mandatory": "true",
         "v_required": {
-          "value": true,
+          "value": "true",
           "err": "Enter # sprayable structures"
         },
         "v_numeric": {
@@ -145,9 +177,9 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# unsprayable structures",
-        "is_mandatory": true,
+        "is_mandatory": "true",
         "v_required": {
-          "value": true,
+          "value": "true",
           "err": "Enter # unsprayable structures"
         },
         "v_numeric": {
@@ -169,9 +201,9 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# structures sprayed with DDT",
-        "is_mandatory": true,
+        "is_mandatory": "true",
         "v_required": {
-          "value": true,
+          "value": "true",
           "err": "Enter # structures sprayed with DDT"
         },
         "v_numeric": {
@@ -192,9 +224,9 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# structures sprayed with Delta",
-        "is_mandatory": true,
+        "is_mandatory": "true",
         "v_required": {
-          "value": true,
+          "value": "true",
           "err": "Enter # structures sprayed with Delta"
         },
         "v_numeric": {
@@ -215,9 +247,9 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# structures sprayed with Actellic",
-        "is_mandatory": true,
+        "is_mandatory": "true",
         "v_required": {
-          "value": true,
+          "value": "true",
           "err": "Enter # structures sprayed with Actellic"
         },
         "v_numeric": {
@@ -238,9 +270,9 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# unsprayed structures",
-        "is_mandatory": true,
+        "is_mandatory": "true",
         "v_required": {
-          "value": true,
+          "value": "true",
           "err": "Enter # unsprayed structures"
         },
         "v_numeric": {
@@ -262,9 +294,9 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# structures not sprayed (mop-up)",
-        "is_mandatory": true,
+        "is_mandatory": "true",
         "v_required": {
-          "value": true,
+          "value": "true",
           "err": "Enter # structures not sprayed (mop-up)"
         },
         "v_numeric": {
@@ -304,6 +336,10 @@
             "text": "Unsprayable"
           }
         ],
+        "v_required": {
+          "value": "true",
+          "err": "Reason those STRUCTURES were not sprayed"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -337,6 +373,10 @@
             "text": "Other"
           }
         ],
+        "v_required": {
+          "value": "true",
+          "err": "Specify reason for refusal"
+        },
         "relevance": {
           "step1:reasons_for_not_spraying": {
             "ex-checkbox": [
@@ -356,9 +396,9 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Please Explain",
-        "is_mandatory": true,
+        "is_mandatory": "true",
         "v_required": {
-          "value": true,
+          "value": "true",
           "err": "Please explain reason for refusal "
         },
         "relevance": {
@@ -380,9 +420,9 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "House Population",
-        "is_mandatory": true,
+        "is_mandatory": "true",
         "v_required": {
-          "value": true,
+          "value": "true",
           "err": "Enter # House Population"
         },
         "v_numeric": {
@@ -405,9 +445,9 @@
         "type": "edit_text",
         "hint": "Population in the visited household sleeping in sprayed rooms",
         "shortened_hint": "Population sleeping in sprayed rooms",
-        "is_mandatory": true,
+        "is_mandatory": "true",
         "v_required": {
-          "value": true,
+          "value": "true",
           "err": "Enter Population in the visited household sleeping in sprayed rooms"
         },
         "v_numeric": {
@@ -429,9 +469,9 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Name of household",
-        "is_mandatory": true,
+        "is_mandatory": "true",
         "v_required": {
-          "value": true,
+          "value": "true",
           "err": "Enter name of household"
         },
         "relevance": {
@@ -449,9 +489,9 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Household health number",
-        "is_mandatory": true,
+        "is_mandatory": "true",
         "v_required": {
-          "value": true,
+          "value": "true",
           "err": "Enter household health number"
         },
         "v_numeric": {
@@ -473,9 +513,9 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Confirm household health number",
-        "is_mandatory": true,
+        "is_mandatory": "true",
         "v_required": {
-          "value": true,
+          "value": "true",
           "err": "Confirm household health number"
         },
         "v_numeric": {
@@ -515,6 +555,10 @@
             "text": "Unsprayable"
           }
         ],
+        "v_required": {
+          "value": "true",
+          "err": "Specify reason those STRUCTURES were not sprayed"
+        },
         "relevance": {
           "step1:any_sprayed": {
             "type": "string",
@@ -547,6 +591,10 @@
             "text": "Other"
           }
         ],
+        "v_required": {
+          "value": "true",
+          "err": "Specify reason for refusal"
+        },
         "relevance": {
           "step1:reasons_for_not_spraying_household": {
             "ex-checkbox": [
@@ -566,9 +614,9 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Please explain",
-        "is_mandatory": true,
+        "is_mandatory": "true",
         "v_required": {
-          "value": true,
+          "value": "true",
           "err": "Please explain"
         },
         "relevance": {
