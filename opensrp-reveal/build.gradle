@@ -81,7 +81,7 @@ android {
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '1'
             buildConfigField "int", "SYNC_INTERVAL_IN_MINUTES", '2'
-
+            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.NAMIBIA"
             if (project.rootProject.file("local.properties").exists()) {
                 Properties properties = new Properties()
                 properties.load(project.rootProject.file("local.properties").newDataInputStream())
@@ -105,6 +105,7 @@ android {
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
             buildConfigField "int", "SYNC_INTERVAL_IN_MINUTES", '2'
+            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.NAMIBIA"
             testCoverageEnabled true
             if (project.rootProject.file("local.properties").exists()) {
                 Properties properties = new Properties()
@@ -176,7 +177,7 @@ dependencies {
 
     implementation 'io.ona.kujaku:utils:0.5.5'
 
-    implementation('org.smartregister:opensrp-client-core:1.6.5-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.6.9-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.guava', module: 'guava'
@@ -193,7 +194,6 @@ dependencies {
 
     implementation('org.smartregister:opensrp-client-native-form:1.4.10-SNAPSHOT@aar') {
         transitive = true
-        exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'cardview-v7'
         exclude group: 'com.android.support', module: 'support-media-compat'
