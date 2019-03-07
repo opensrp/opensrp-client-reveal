@@ -438,6 +438,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
             String sprayForm = JsonForm.SPRAY_FORM;
             if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
                 sprayForm = JsonForm.SPRAY_FORM_NAMIBIA;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.BOTSWANA) {
+                sprayForm = JsonForm.SPRAY_FORM_BOTSWANA;
             }
             String formString = AssetHandler.readFileFromAssetsFolder(sprayForm, listTaskView.getContext());
             if (StringUtils.isBlank(structureType)) {

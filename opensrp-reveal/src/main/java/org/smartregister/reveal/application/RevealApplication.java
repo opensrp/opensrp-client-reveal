@@ -67,6 +67,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         CoreLibrary.init(context, new RevealSyncConfiguration());
         if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
             CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.NAMIBIA_EC_CLIENT_FIELDS);
+        } else if (BuildConfig.BUILD_COUNTRY == Country.BOTSWANA) {
+            CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.BOTSWANA_EC_CLIENT_FIELDS);
         }
         ConfigurableViewsLibrary.init(context, getRepository());
         LocationHelper.init(Utils.ALLOWED_LEVELS, Utils.DEFAULT_LOCATION_LEVEL);

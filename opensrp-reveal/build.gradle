@@ -81,7 +81,7 @@ android {
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '1'
             buildConfigField "int", "SYNC_INTERVAL_IN_MINUTES", '2'
-            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.NAMIBIA"
+            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.BOTSWANA"
             if (project.rootProject.file("local.properties").exists()) {
                 Properties properties = new Properties()
                 properties.load(project.rootProject.file("local.properties").newDataInputStream())
@@ -105,7 +105,7 @@ android {
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
             buildConfigField "int", "SYNC_INTERVAL_IN_MINUTES", '2'
-            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.NAMIBIA"
+            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.BOTSWANA"
             testCoverageEnabled true
             if (project.rootProject.file("local.properties").exists()) {
                 Properties properties = new Properties()

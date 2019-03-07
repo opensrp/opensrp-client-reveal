@@ -106,6 +106,8 @@ public interface Constants {
 
         String SPRAY_FORM_NAMIBIA = "json.form/namibia_spray_form.json";
 
+        String SPRAY_FORM_BOTSWANA = "json.form/botswana_spray_form.json";
+
         String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
 
         String IRS_VISIT = "IRS Visit";
@@ -138,6 +140,7 @@ public interface Constants {
 
     interface ECClientConfig {
         String NAMIBIA_EC_CLIENT_FIELDS = "ec_client_fields_namibia.json";
+        String BOTSWANA_EC_CLIENT_FIELDS = "ec_client_fields_botswana.json";
     }
 
 

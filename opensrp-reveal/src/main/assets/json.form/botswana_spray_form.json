@@ -51,6 +51,28 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "structureType",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Type of Structure",
+        "options": [
+          {
+            "key": "Residential Structure",
+            "text": "Residential Structure"
+          },
+          {
+            "key": "Non-Residential Structure",
+            "text": "Non-Residential Structure"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Specify type of Structure"
+        }
+      },
+      {
         "key": "visit_number",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -66,7 +88,11 @@
             "key": "Mop-up",
             "text": "Mop-up"
           }
-        ]
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Specify if its First visit or mop-up"
+        }
       },
       {
         "key": "cattle_post_place_name",
@@ -76,24 +102,6 @@
         "type": "edit_text",
         "hint": "Record cattle post or other place name (if applicable)",
         "edit_type": "name"
-      },
-      {
-        "key": "residentialtype",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Is a residential structure?",
-        "options": [
-          {
-            "key": "Yes",
-            "text": "Yes"
-          },
-          {
-            "key": "No",
-            "text": "No"
-          }
-        ]
       },
       {
         "key": "nonresidentialtype",
@@ -156,10 +164,14 @@
             "text": "Other"
           }
         ],
+        "v_required": {
+          "value": "true",
+          "err": "Specify type of non-residential structure?"
+        },
         "relevance": {
-          "step1:residentialtype": {
+          "step1:structureType": {
             "type": "string",
-            "ex": "equalTo(., \"No\")"
+            "ex": "equalTo(., \"Non-Residential Structure\")"
           }
         }
       },
@@ -408,6 +420,10 @@
             "text": "No"
           }
         ],
+        "v_required": {
+          "value": "true",
+          "err": "Were there any rooms SPRAYED in this home during this visit?"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -640,16 +656,45 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Reasons for not spraying rooms",
-        "is_mandatory": true,
+        "type": "check_box",
+        "label": "Reasons for not spraying rooms",
+        "options": [
+          {
+            "key": "Locked",
+            "text": "Locked"
+          },
+          {
+            "key": "No one home",
+            "text": "No one home"
+          },
+          {
+            "key": "Head of household refused",
+            "text": "Head of household refused"
+          },
+          {
+            "key": "There is a newborn",
+            "text": "There is a newborn"
+          },
+          {
+            "key": "There is a funeral",
+            "text": "There is a funeral"
+          },
+          {
+            "key": "Room is a kitchen",
+            "text": "Room is a kitchen"
+          },
+          {
+            "key": "Room is a food store",
+            "text": "Room is a food store"
+          },
+          {
+            "key": "There is a patient in the home",
+            "text": "There is a patient in the home"
+          }
+        ],
         "v_required": {
           "value": true,
           "err": "Please specify reasons for not spraying rooms"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Must be a number"
         },
         "relevance": {
           "rules-engine": {
@@ -871,6 +916,20 @@
           "rules-engine": {
             "ex-rules": {
               "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-calculation-rules.yml"
             }
           }
         }
