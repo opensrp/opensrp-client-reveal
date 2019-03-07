@@ -15,7 +15,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "any_sprayed"
+            "concept": "business_status"
           }
         },
         {
