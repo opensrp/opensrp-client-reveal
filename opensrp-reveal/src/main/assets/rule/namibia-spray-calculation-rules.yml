@@ -4,4 +4,4 @@ description: Task business status
 priority: 1
 condition: "true"
 actions:
-- "calculation = (step_1_number_sprayable != '' && step_1_number_sprayable == 0) ? 'Not Sprayable' : (step1_numbersprayed_ddt != '' && step1_numbersprayed_delta != '' && step1_numbersprayed_actellic != ''  && (step1_numbersprayed_ddt + step1_numbersprayed_delta + step1_numbersprayed_actellic ) > 0 )  ? 'Sprayed': 'Not Sprayed' "
+- "calculation = (step1_structureType != '' && step1_structureType == 'Non-Residential Structure') ? 'Not Sprayable' :  (helper.ifNull(step1_numbersprayed_ddt,0) + helper.ifNull(step1_numbersprayed_delta,0) + helper.ifNull(step1_numbersprayed_actellic,0)  > 0 ) ? 'Sprayed': 'Not Sprayed' "
