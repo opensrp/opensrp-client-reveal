@@ -448,6 +448,10 @@
           "value": "true",
           "err": "Must be a number"
         },
+        "v_relative_max": {
+          "value": "number_of_rooms",
+          "err": "Number of sprayed rooms cannot be greater than total number rooms"
+        },
         "relevance": {
           "step1:any_sprayed": {
             "type": "string",
