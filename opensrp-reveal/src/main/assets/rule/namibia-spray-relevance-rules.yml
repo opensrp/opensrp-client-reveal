@@ -9,14 +9,14 @@ actions:
 name: step1_number_sprayable
 description: number_sprayable
 priority: 1
-condition: "step1_any_sprayed.equals('Yes') && step1_prev_closed_open.equals('Closed')"
+condition: "step1_any_sprayed.equals('Yes') || step1_prev_closed_open.equals('Closed')"
 actions:
   - "isRelevant = true"
 ---
 name: step1_number_unsprayable
 description: number_unsprayable
 priority: 1
-condition: "step1_any_sprayed.equals('Yes') && step1_prev_closed_open.equals('Closed')"
+condition: "step1_any_sprayed.equals('Yes') || step1_prev_closed_open.equals('Closed')"
 actions:
   - "isRelevant = true"
 ---
@@ -34,7 +34,7 @@ condition: "step1_any_sprayed.equals('Yes') && step1_visit_number.equals('Mop-up
 actions:
   - "isRelevant = true"
 ---
-name: step1_reasons_for_not_spraying
+name: step1_reasons_for_not_sprayinghouse_population
 description: reasons_for_not_spraying
 priority: 1
 condition: "step1_number_unsprayed > 0 || step1_number_unsprayed_mopup > 0 "

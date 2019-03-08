@@ -430,10 +430,9 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },
@@ -455,10 +454,9 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },
@@ -475,10 +473,9 @@
           "err": "Enter name of household"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },
@@ -499,10 +496,9 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },
@@ -523,10 +519,9 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },
