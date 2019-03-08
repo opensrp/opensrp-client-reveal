@@ -44,8 +44,16 @@ actions:
 name: step1_refusal_reason_for_not_spraying_household
 description: refusal_reason_for_not_spraying_household
 priority: 1
-condition: "step1_any_sprayed.equals('No') && step1_form_data_reason_for_not_spraying_household.equals('Refused')"
+condition: "step1_any_sprayed.equals('No') && step1_reasons_for_not_spraying_household.contains('Refused')"
 actions:
   - "isRelevant = true"
+---
+name: step1_refusal_reason_for_not_spraying_household_comment
+description: refusal_reason_for_not_spraying_household_comment
+priority: 1
+condition: "step1_any_sprayed.equals('No') && step1_refusal_reason_for_not_spraying_household.contains('Other')"
+actions:
+  - "isRelevant = true"
+
 
 
