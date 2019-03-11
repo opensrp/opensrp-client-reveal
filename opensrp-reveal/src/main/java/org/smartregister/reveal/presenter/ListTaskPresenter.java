@@ -65,6 +65,7 @@ import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_TYPE;
+import static org.smartregister.reveal.util.Constants.JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
@@ -462,7 +463,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     private void startSprayForm(String structureId, String structureUUID, String structureVersion, String structureType,
                                 String taskIdentifier, String taskBusinessStatus, String taskStatus, String propertyType, String sprayStatus, String familyHead) {
         try {
-            String formString = AssetHandler.readFileFromAssetsFolder(SPRAY_FORM, listTaskView.getContext());
+            String formString = AssetHandler.readFileFromAssetsFolder(THAILAND_MOSQUITO_COLLECTION_FORM , listTaskView.getContext());  // TODO UNDO THIS!!!!!!!!!!!!!!!!!!!
             if (StringUtils.isBlank(structureType)) {
                 structureType = StructureType.NON_RESIDENTIAL;
             }

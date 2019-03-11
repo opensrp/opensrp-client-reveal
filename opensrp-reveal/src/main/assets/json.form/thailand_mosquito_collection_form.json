@@ -1,0 +1,198 @@
+{
+  "count": "1",
+  "encounter_type": "mosquito_collection",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "Mosquito Collection Details",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "trap_type",
+        "label": "Type of trap",
+        "type": "check_box",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "options": [
+          {
+            "key": "CDC",
+            "text": "CDC",
+            "value": false
+          },
+          {
+            "key": "HLC",
+            "text": "HLC",
+            "value": false
+          },
+          {
+            "key": "Trap/net",
+            "text": "Trap/net",
+            "value": false
+          },
+          {
+            "key": "Backpack",
+            "text": "Backpack",
+            "value": false
+          },
+          {
+            "key": "Swingnet",
+            "text": "Swingnet",
+            "value": false
+          }
+        ]
+      },
+      {
+        "key": "trap_num",
+        "text": "How many traps were set at this house?",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "# of traps set at this house"
+      },
+      {
+        "key": "trap_location",
+        "label": "Trap location",
+        "type": "native_radio",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "options": [
+          {
+            "key": "Indoor",
+            "text": "Indoor"
+          },
+          {
+            "key": "Outdoor",
+            "text": "Outdoor"
+          }
+        ]
+      },
+      {
+        "key": "trap_start",
+        "text": "When was trap set",
+        "type": "date_picker",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "Date trap was set"
+      },
+      {
+        "key": "trap_end",
+        "text": "When was trap collected",
+        "type": "date_picker",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "Date trap was collected"
+      },
+      {
+        "key": "trap_temp",
+        "text": "Temperature recorded at the trap site",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "Temperature recorded at trap site"
+      },
+      {
+        "key": "trap_RH",
+        "text": "Relative humidity recorded at the trap site",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "Relative humidity recorded at trap site"
+      },
+      {
+        "key": "moz_type",
+        "label": "Mosquito species found",
+        "type": "check_box",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "options": [
+          {
+            "key": "An. gambiae",
+            "text": "An. gambiae",
+            "value": false
+          },
+          {
+            "key": "An. funestus",
+            "text": "An. funestus",
+            "value": false
+          },
+          {
+            "key": "An. minimus",
+            "text": "An. minimus",
+            "value": false
+          },
+          {
+            "key": "An. dirus",
+            "text": "An. dirus",
+            "value": false
+          },
+          {
+            "key": "An maximus",
+            "text": "An maximus",
+            "value": false
+          },
+          {
+            "key": "An. other",
+            "text": "An maximus",
+            "value": false
+          },
+          {
+            "key": "Culex",
+            "text": "Culex",
+            "value": false
+          }
+        ]
+      }
+    ]
+  }
+}

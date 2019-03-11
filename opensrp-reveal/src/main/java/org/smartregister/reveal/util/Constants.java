@@ -20,6 +20,8 @@ public interface Constants {
 
     String REGISTER_STRUCTURE_EVENT = "Register_Structure";
 
+    String MOSQUITO_COLLECTION_EVENT = "mosquito_collection";
+
     String STRUCTURE = "Structure";
 
     double MY_LOCATION_ZOOM_LEVEL = 17.5; // modifying this will also necessitate modifying the VERTICAL_OFFSET
@@ -109,6 +111,8 @@ public interface Constants {
         String STRUCTURE_PROPERTIES_TYPE = "[structure_type]";
 
         String SPRAY_FORM = "json.form/spray_form.json";
+
+        String THAILAND_MOSQUITO_COLLECTION_FORM = "json.form/thailand_mosquito_collection_form.json";
 
         String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
 
