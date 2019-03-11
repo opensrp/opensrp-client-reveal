@@ -2,7 +2,6 @@
   "count": "1",
   "encounter_type": "Spray",
   "entity_id": "",
-  "show_errors_on_submit": true,
   "metadata": {
     "start": {
       "openmrs_entity_parent": "",
@@ -101,7 +100,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Were any structures sprayed?",
+        "label": "Were any structures sprayed",
         "options": [
           {
             "key": "Yes",
@@ -378,14 +377,10 @@
           "err": "Specify reason for refusal"
         },
         "relevance": {
-          "step1:reasons_for_not_spraying": {
-            "ex-checkbox": [
-              {
-                "or": [
-                  "Refused"
-                ]
-              }
-            ]
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -402,14 +397,10 @@
           "err": "Please explain reason for refusal "
         },
         "relevance": {
-          "step1:refusal_reasons_for_not_spraying": {
-            "ex-checkbox": [
-              {
-                "or": [
-                  "Other"
-                ]
-              }
-            ]
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -430,10 +421,9 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },
@@ -455,10 +445,9 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },
@@ -475,10 +464,9 @@
           "err": "Enter name of household"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },
@@ -499,10 +487,9 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },
@@ -523,10 +510,9 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },
@@ -596,14 +582,10 @@
           "err": "Specify reason for refusal"
         },
         "relevance": {
-          "step1:reasons_for_not_spraying_household": {
-            "ex-checkbox": [
-              {
-                "or": [
-                  "Refused"
-                ]
-              }
-            ]
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -620,14 +602,10 @@
           "err": "Please explain"
         },
         "relevance": {
-          "step1:refusal_reason_for_not_spraying_household": {
-            "ex-checkbox": [
-              {
-                "or": [
-                  "Other"
-                ]
-              }
-            ]
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
           }
         }
       },
