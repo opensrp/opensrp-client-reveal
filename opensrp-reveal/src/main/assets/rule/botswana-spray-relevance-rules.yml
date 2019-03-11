@@ -2,146 +2,146 @@
 name: step1_n_people_homestead_underage5
 description: n_people_homestead_underage5
 priority: 1
-condition: "step1_n_people_homestead > 0"
+condition: "step1_n_people_homestead > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_n_people_homestead_overage5
 description: n_people_homestead_overage5
 priority: 1
-condition: "step1_n_people_homestead > 0"
+condition: "step1_n_people_homestead > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_number_rooms_modern
 description: number_rooms_modern
 priority: 1
-condition: "step1_number_of_rooms > 0"
+condition: "step1_number_of_rooms > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_number_rooms_traditional
 description: number_rooms_traditional
 priority: 1
-condition: "step1_number_of_rooms > 0"
+condition: "step1_number_of_rooms > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_number_rooms_traditional
 description: number_rooms_traditional
 priority: 1
-condition: "step1_number_of_rooms > 0"
+condition: "step1_number_of_rooms > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_any_sprayed
 description: any_sprayed
 priority: 1
-condition: "step1_number_of_rooms > 0"
+condition: "step1_number_of_rooms > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_number_sprayed_modern_partial_spray
 description: number_sprayed_modern_partial_spray
 priority: 1
-condition: "step1_any_sprayed.equals('Yes') && step1_number_rooms_modern > 0"
+condition: "step1_any_sprayed.equals('Yes') && step1_number_rooms_modern > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_number_sprayed_traditional_partial_spray
 description: number_sprayed_traditional_partial_spray
 priority: 1
-condition: "step1_any_sprayed.equals('Yes') && step1_number_rooms_traditional > 0"
+condition: "step1_any_sprayed.equals('Yes') && step1_number_rooms_traditional > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_number_sprayed_other_partial_spray
 description: number_sprayed_other_partial_spray
 priority: 1
-condition: "step1_any_sprayed.equals('Yes') && step1_number_other_structures > 0"
+condition: "step1_any_sprayed.equals('Yes') && step1_number_other_structures > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_number_of_rooms_not_sprayed
 description: number_of_rooms_not_sprayed
 priority: 1
-condition: "step1_number_of_rooms > 0"
+condition: "step1_number_of_rooms > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_unsprayed_reason
 description: unsprayed_reason
 priority: 1
-condition: "step1_number_of_rooms_not_sprayed > 0"
+condition: "step1_number_of_rooms_not_sprayed > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_rooms_locked
 description: rooms_locked
 priority: 1
-condition: "step1_number_of_rooms_not_sprayed > 0"
+condition: "step1_number_of_rooms_not_sprayed > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_n_rooms_nobody
 description: n_rooms_nobody
 priority: 1
-condition: "step1_number_of_rooms_not_sprayed > 0"
+condition: "step1_number_of_rooms_not_sprayed > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_n_rooms_nobody
 description: n_rooms_nobody
 priority: 1
-condition: "step1_number_of_rooms_not_sprayed > 0"
+condition: "step1_number_of_rooms_not_sprayed > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_n_rooms_refused
 description: n_rooms_refused
 priority: 1
-condition: "step1_number_of_rooms_not_sprayed > 0"
+condition: "step1_number_of_rooms_not_sprayed > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_n_rooms_baby
 description: n_rooms_baby
 priority: 1
-condition: "step1_number_of_rooms_not_sprayed > 0"
+condition: "step1_number_of_rooms_not_sprayed > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_n_rooms_funeral
 description: n_rooms_funeral
 priority: 1
-condition: "step1_number_of_rooms_not_sprayed > 0"
+condition: "step1_number_of_rooms_not_sprayed > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_n_rooms_kitchen
 description: n_rooms_kitchen
 priority: 1
-condition: "step1_number_of_rooms_not_sprayed > 0"
+condition: "step1_number_of_rooms_not_sprayed > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_n_rooms_food
 description: n_rooms_food
 priority: 1
-condition: "step1_number_of_rooms_not_sprayed > 0"
+condition: "step1_number_of_rooms_not_sprayed > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_n_rooms_patient
 description: n_rooms_patient
 priority: 1
-condition: "step1_number_of_rooms_not_sprayed > 0"
+condition: "step1_number_of_rooms_not_sprayed > 0 "
 actions:
   - "isRelevant = true"
 ---
 name: step1_n_rooms_other
 description: n_rooms_other
 priority: 1
-condition: "step1_number_of_rooms_not_sprayed > 0"
+condition: "step1_number_of_rooms_not_sprayed > 0 "
 actions:
   - "isRelevant = true"

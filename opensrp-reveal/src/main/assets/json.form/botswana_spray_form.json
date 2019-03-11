@@ -508,9 +508,10 @@
           "err": "Number of sprayed TRADITIONAL rooms cannot be greater than Total number of sprayed rooms"
         },
         "relevance": {
-          "step1:any_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
           }
         }
       },
