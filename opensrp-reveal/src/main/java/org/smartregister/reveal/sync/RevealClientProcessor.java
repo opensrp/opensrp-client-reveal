@@ -10,6 +10,7 @@ import org.smartregister.domain.Task;
 import org.smartregister.domain.db.Client;
 import org.smartregister.domain.db.Event;
 import org.smartregister.domain.db.EventClient;
+import org.smartregister.domain.db.Obs;
 import org.smartregister.domain.jsonmapping.ClientClassification;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
@@ -124,9 +125,11 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             }
             Location structure = RevealApplication.getInstance().getStructureRepository().getLocationById(event.getBaseEntityId());
             if (structure != null) {
-                String structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE).getValue().toString();
-                structure.getProperties().setType(structureType);
-                RevealApplication.getInstance().getStructureRepository().addOrUpdate(structure);
+                Obs structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE);
+                if (structureType != null) {
+                    structure.getProperties().setType(structureType.getValue().toString());
+                    RevealApplication.getInstance().getStructureRepository().addOrUpdate(structure);
+                }
                 if (operationalAreaId == null) {
                     operationalAreaId = structure.getProperties().getParentId();
                 }
@@ -144,12 +147,18 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     }
 
     public String calculateBusinessStatus(Event event) {
-        String sprayStatus = event.findObs(null, false, JsonForm.SPRAY_STATUS).getValue().toString();
-        String structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE).getValue().toString();
-        if (!JsonForm.RESIDENTIAL.equals(structureType)) {
-            return NOT_SPRAYABLE;
+        Obs businessStatusObs = event.findObs(null, false, JsonForm.TASK_BUSINESS_STATUS);
+        if (businessStatusObs != null) {
+            return businessStatusObs.getValue().toString();
         } else {
-            return sprayStatus;
+            //supported only for backward compatibility, business status now being calculated on form
+            String sprayStatus = event.findObs(null, false, JsonForm.SPRAY_STATUS).getValue().toString();
+            String structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE).getValue().toString();
+            if (!JsonForm.RESIDENTIAL.equals(structureType)) {
+                return NOT_SPRAYABLE;
+            } else {
+                return sprayStatus;
+            }
         }
     }
 

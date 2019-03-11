@@ -1,7 +1,6 @@
 package org.smartregister.reveal.presenter;
 
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interactors.JsonFormInteractor;
@@ -24,18 +23,23 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter {
     }
 
     @Override
-    public ValidationStatus writeValuesAndValidate(LinearLayout mainView) {
-        ValidationStatus validationStatus = super.writeValuesAndValidate(mainView);
-        if (validationStatus.isValid()) {
+    public void validateAndWriteValues() {
+        super.validateAndWriteValues();
+        if (isFormValid()) {
             for (View childAt : formFragment.getJsonApi().getFormDataViews()) {
                 if (childAt instanceof RevealMapView) {
                     RevealMapView mapView = (RevealMapView) childAt;
-                    validationStatus = GeoWidgetFactory.validate(formFragment, mapView);
+                    ValidationStatus validationStatus = GeoWidgetFactory.validate(formFragment, mapView);
+                    if (!validationStatus.isValid()) {
+                        String key = (String) childAt.getTag(com.vijay.jsonwizard.R.id.key);
+                        String mStepName = this.getView().getArguments().getString("stepName");
+                        String fieldKey = mStepName + " (" + mStepDetails.optString("title") + ") :" + key;
+                        getInvalidFields().put(fieldKey, validationStatus);
+                    }
                 }
             }
 
         }
-        return validationStatus;
     }
 
 }

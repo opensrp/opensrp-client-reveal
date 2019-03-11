@@ -79,12 +79,14 @@ public class LoginPresenter extends BaseLoginPresenter implements BaseLoginContr
             Log.d(TAG, e.getMessage());
         }
     }
+
+    @Override
+    public boolean isServerSettingsSet() {
+        return false;
+    }
+
     public void canvasGlobalLayoutListenerProcessor(ScrollView canvasSV, ViewTreeObserver.OnGlobalLayoutListener layoutListener) {
         // do nothing
     }
 
-    @Override
-    public boolean isSiteCharacteristicsSet() {
-        return false;
-    }
 }

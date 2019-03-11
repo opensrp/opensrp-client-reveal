@@ -23,11 +23,14 @@ import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.util.Constants.JsonForm;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.JsonFormUtils;
@@ -54,7 +57,6 @@ import static org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FOR
 import static org.smartregister.reveal.util.Constants.JsonForm.HEAD_OF_HOUSEHOLD;
 import static org.smartregister.reveal.util.Constants.JsonForm.NON_RESIDENTIAL;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
-import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
@@ -433,7 +435,11 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
     private void startSprayForm(String structureId, String structureUUID, String structureVersion, String structureType,
                                 String taskIdentifier, String taskBusinessStatus, String taskStatus, String propertyType, String sprayStatus, String familyHead) {
         try {
-            String formString = AssetHandler.readFileFromAssetsFolder(SPRAY_FORM, listTaskView.getContext());
+            String sprayForm = JsonForm.SPRAY_FORM;
+            if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
+                sprayForm = JsonForm.SPRAY_FORM_NAMIBIA;
+            }
+            String formString = AssetHandler.readFileFromAssetsFolder(sprayForm, listTaskView.getContext());
             if (StringUtils.isBlank(structureType)) {
                 structureType = NON_RESIDENTIAL;
             }
