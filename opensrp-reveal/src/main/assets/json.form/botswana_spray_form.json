@@ -358,16 +358,16 @@
         }
       },
       {
-        "key": "unsprayable",
+        "key": "number_other_structures",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many UNsprayable rooms are in this home?",
+        "hint": "How many other structures are in this home? (Other structures such as toilets and corridors)",
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Please specify how many UNsprayable rooms are in this home?"
+          "err": "Please specify how many other structures are in this home? (Other structures such as toilets and corridors)"
         },
         "v_numeric": {
           "value": "true",
@@ -381,16 +381,16 @@
         }
       },
       {
-        "key": "number_other_structures",
+        "key": "unsprayable",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many other structures are in this home? (Other structures such as toilets and corridors)",
+        "hint": "How many UNsprayable rooms are in this home?",
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Please specify how many other structures are in this home? (Other structures such as toilets and corridors)"
+          "err": "Please specify how many UNsprayable rooms are in this home?"
         },
         "v_numeric": {
           "value": "true",
