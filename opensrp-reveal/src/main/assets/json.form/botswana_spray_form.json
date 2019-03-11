@@ -647,6 +647,10 @@
           "value": "true",
           "err": "Must be a number"
         },
+        "v_relative_max": {
+          "value": "number_of_rooms",
+          "err": "Number of rooms not sprayed cannot be greater than Total number of rooms"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {

@@ -44,21 +44,21 @@ actions:
 name: step1_number_sprayed_modern_partial_spray
 description: number_sprayed_modern_partial_spray
 priority: 1
-condition: "step1_any_sprayed.equals('Yes') > 0 && step1_number_rooms_modern > 0"
+condition: "step1_any_sprayed.equals('Yes') && step1_number_rooms_modern > 0"
 actions:
   - "isRelevant = true"
 ---
 name: step1_number_sprayed_traditional_partial_spray
 description: number_sprayed_traditional_partial_spray
 priority: 1
-condition: "step1_any_sprayed.equals('Yes') > 0 && step1_number_rooms_traditional > 0"
+condition: "step1_any_sprayed.equals('Yes') && step1_number_rooms_traditional > 0"
 actions:
   - "isRelevant = true"
 ---
 name: step1_number_sprayed_other_partial_spray
 description: number_sprayed_other_partial_spray
 priority: 1
-condition: "step1_any_sprayed.equals('Yes') > 0 && step1_number_other_structures > 0"
+condition: "step1_any_sprayed.equals('Yes') && step1_number_other_structures > 0"
 actions:
   - "isRelevant = true"
 ---
