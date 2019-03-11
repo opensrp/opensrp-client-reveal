@@ -2,7 +2,6 @@
   "count": "1",
   "encounter_type": "Spray",
   "entity_id": "",
-  "show_errors_on_submit": true,
   "metadata": {
     "start": {
       "openmrs_entity_parent": "",
