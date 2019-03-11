@@ -100,7 +100,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Were any structures sprayed?",
+        "label": "Were any structures sprayed",
         "options": [
           {
             "key": "Yes",
