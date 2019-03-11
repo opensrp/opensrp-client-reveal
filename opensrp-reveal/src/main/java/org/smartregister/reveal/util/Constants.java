@@ -149,5 +149,9 @@ public interface Constants {
         String LARVAL_BREEDING_SITE = "Larval Breeding Site";
     }
 
+    interface TaskRegister {
+        String VIEW_IDENTIFIER = "task_register";
+    }
+
 
 }
