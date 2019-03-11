@@ -34,10 +34,24 @@ condition: "step1_any_sprayed.equals('Yes') && step1_visit_number.equals('Mop-up
 actions:
   - "isRelevant = true"
 ---
-name: step1_reasons_for_not_sprayinghouse_population
+name: step1_reasons_for_not_spraying
 description: reasons_for_not_spraying
 priority: 1
 condition: "step1_number_unsprayed > 0 || step1_number_unsprayed_mopup > 0 "
+actions:
+  - "isRelevant = true"
+---
+name: step1_refusal_reasons_for_not_spraying
+description: refusal_reasons_for_not_spraying
+priority: 1
+condition: "(step1_number_unsprayed > 0 || step1_number_unsprayed_mopup > 0) && step1_reasons_for_not_spraying.contains('Refused')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_refusal_reasons_for_not_spraying_comment
+description: refusal_reasons_for_not_spraying_comment
+priority: 1
+condition: "(step1_number_unsprayed > 0 || step1_number_unsprayed_mopup > 0) && step1_refusal_reasons_for_not_spraying.contains('Other')"
 actions:
   - "isRelevant = true"
 ---

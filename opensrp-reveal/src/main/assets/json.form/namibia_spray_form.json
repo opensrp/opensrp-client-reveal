@@ -378,14 +378,10 @@
           "err": "Specify reason for refusal"
         },
         "relevance": {
-          "step1:reasons_for_not_spraying": {
-            "ex-checkbox": [
-              {
-                "or": [
-                  "Refused"
-                ]
-              }
-            ]
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -402,14 +398,10 @@
           "err": "Please explain reason for refusal "
         },
         "relevance": {
-          "step1:refusal_reasons_for_not_spraying": {
-            "ex-checkbox": [
-              {
-                "or": [
-                  "Other"
-                ]
-              }
-            ]
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
           }
         }
       },
