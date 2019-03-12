@@ -15,6 +15,7 @@ import org.smartregister.domain.jsonmapping.ClientClassification;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.StructureType;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -24,8 +25,6 @@ import org.smartregister.sync.ClientProcessorForJava;
 import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCHED;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 
@@ -154,9 +153,9 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             return businessStatusObs.getValue().toString();
         } else {
             //supported only for backward compatibility, business status now being calculated on form
-            String structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE).getValue().toString();
-            if (!StructureType.RESIDENTIAL.equals(structureType)) {
-                return NOT_SPRAYABLE;
+            Obs structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE);
+            if (structureType != null && !StructureType.RESIDENTIAL.equals(structureType.getValue().toString())) {
+                return BusinessStatus.NOT_SPRAYABLE;
             } else {
                 Obs sprayStatus = event.findObs(null, false, JsonForm.SPRAY_STATUS);
                 return sprayStatus == null ? null : sprayStatus.getValue().toString();
