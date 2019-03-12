@@ -17,8 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:mapbox_styleUrl="@string/reveal_satellite_style"
-            app:mapbox_uiAttributionGravity="right|end|bottom"
-            app:mapbox_uiLogoGravity="right|bottom"
+            app:mapbox_uiAttributionGravity="center_horizontal|bottom"
+            app:mapbox_uiLogoGravity="center_horizontal|bottom"
             app:mapbox_uiLogoMarginRight="30dp"
             app:mapbox_uiRotateGestures="false" />
 
@@ -30,6 +30,25 @@
             android:layout_margin="@dimen/hamburger_margin"
             android:background="@drawable/rounded_square_bg"
             android:src="@drawable/ic_hamburger_menu"
+            app:elevation="6dp" />
+
+
+        <TextView
+            android:id="@+id/taskRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|top"
+            android:layout_margin="@dimen/hamburger_margin"
+            android:background="@drawable/rounded_square_bg"
+            android:paddingStart="@dimen/task_register_launcher_horizontal_padding"
+            android:paddingTop="@dimen/task_register_launcher_vertical_padding"
+            android:paddingEnd="@dimen/task_register_launcher_horizontal_padding"
+            android:paddingBottom="@dimen/task_register_launcher_vertical_padding"
+            android:text="@string/list"
+            android:textAllCaps="true"
+            android:textColor="#AAAAAA"
+            android:textSize="@dimen/task_register_launcher_text_size"
+            android:textStyle="bold"
             app:elevation="6dp" />
 
         <LinearLayout

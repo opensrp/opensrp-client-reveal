@@ -88,5 +88,6 @@
     <string name="larval_dipping_task_description">Perform Larval Dipping, Classify and Intervene</string>
 
     <string name="register_family">Register Family</string>
+    <string name="list">List</string>
 
 </resources>

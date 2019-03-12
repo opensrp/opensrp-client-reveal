@@ -23,9 +23,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
@@ -77,8 +79,8 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCAT
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
-import static org.smartregister.reveal.util.Utils.getGlobalConfig;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
+import static org.smartregister.reveal.util.Utils.getGlobalConfig;
 
 
 /**
@@ -220,8 +222,21 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         listTaskPresenter.onMapClicked(mapboxMap, point);
                     }
                 });
+
+                displayMyLocationAtButtom();
             }
         });
+    }
+
+    private void displayMyLocationAtButtom() {
+        ImageButton myLocationIcon = findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
+        if (myLocationIcon != null) {
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) myLocationIcon.getLayoutParams();
+            params.gravity = Gravity.BOTTOM | Gravity.END;
+            params.bottomMargin = params.topMargin;
+            params.topMargin = 0;
+            myLocationIcon.setLayoutParams(params);
+        }
     }
 
     private void initializeDrawerLayout() {
