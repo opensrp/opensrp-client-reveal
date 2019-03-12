@@ -2,23 +2,33 @@ package org.smartregister.reveal.fragment;
 
 import android.view.View;
 
+import org.smartregister.cursoradapter.RecyclerViewPaginatedAdapter;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
+import org.smartregister.reveal.provider.TaskRegisterProvider;
 import org.smartregister.view.activity.BaseRegisterActivity;
+import org.smartregister.view.contract.BaseRegisterFragmentContract;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Created by samuelgithengi on 3/11/19.
  */
-public class TaskRegisterFragment extends BaseRegisterFragment {
+public class TaskRegisterFragment extends BaseRegisterFragment implements BaseRegisterFragmentContract.View {
 
-    private TaskRegisterFragmentPresenter presenter;
+    public void initializeAdapter(Set<org.smartregister.configurableviews.model.View> visibleColumns) {
+        TaskRegisterProvider taskRegisterProvider = new TaskRegisterProvider(getActivity(), commonRepository(), visibleColumns, registerActionHandler, paginationViewHandler);
+        clientAdapter = new RecyclerViewPaginatedAdapter(null, taskRegisterProvider, context().commonrepository(this.tablename));
+        clientAdapter.setCurrentlimit(20);
+        clientsView.setAdapter(clientAdapter);
+    }
 
     @Override
     protected void initializePresenter() {
-        presenter = new TaskRegisterFragmentPresenter();
+        presenter = new TaskRegisterFragmentPresenter(this);
     }
 
     @Override
@@ -34,12 +44,12 @@ public class TaskRegisterFragment extends BaseRegisterFragment {
 
     @Override
     protected String getMainCondition() {
-        return presenter.getMainCondition();
+        return getPresenter().getMainCondition();
     }
 
     @Override
     protected String getDefaultSortQuery() {
-        return presenter.getDefaultSortQuery();
+        return getPresenter().getDefaultSortQuery();
     }
 
     @Override
@@ -56,5 +66,9 @@ public class TaskRegisterFragment extends BaseRegisterFragment {
         if (this.getActivity() != null) {
             NoMatchDialogFragment.launchDialog((BaseRegisterActivity) this.getActivity(), "dialog", opensrpId);
         }
+    }
+
+    private TaskRegisterFragmentPresenter getPresenter() {
+        return (TaskRegisterFragmentPresenter) presenter;
     }
 }

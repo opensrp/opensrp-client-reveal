@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 
 import org.json.JSONObject;
+import org.smartregister.helper.BottomNavigationHelper;
 import org.smartregister.reveal.fragment.TaskRegisterFragment;
 import org.smartregister.reveal.presenter.TaskRegisterPresenter;
 import org.smartregister.view.activity.BaseRegisterActivity;
@@ -21,7 +22,7 @@ public class TaskRegisterActivity extends BaseRegisterActivity {
 
     @Override
     protected void initializePresenter() {
-        TaskRegisterPresenter presenter = new TaskRegisterPresenter();
+        presenter = new TaskRegisterPresenter();
     }
 
     @Override
@@ -56,5 +57,12 @@ public class TaskRegisterActivity extends BaseRegisterActivity {
 
     @Override
     public void startRegistration() {//not used on reveal/ adding points done on map
+    }
+
+    @Override
+    protected void registerBottomNavigation() {
+        //do nothing. bottom navigation not being used on reveal task register
+        bottomNavigationHelper = new BottomNavigationHelper();
+        bottomNavigationView = findViewById(org.smartregister.R.id.bottom_navigation);
     }
 }
