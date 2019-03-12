@@ -224,13 +224,13 @@
             "value": false
           },
           {
-            "key": "An maximus",
-            "text": "An maximus",
+            "key": "An. maximus",
+            "text": "An. maximus",
             "value": false
           },
           {
             "key": "An. other",
-            "text": "An maximus",
+            "text": "An. other",
             "value": false
           },
           {
@@ -242,6 +242,181 @@
         "v_required": {
           "value": true,
           "err": "Please select all mosquito species found"
+        }
+      },
+      {
+        "key": "An. gambiae",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "# of An. gambiae mosquitoes collected",
+        "relevance": {
+          "step1:moz_type": {
+            "ex-checkbox": [
+              {
+                "or": ["An. gambiae"]
+              }
+            ]
+          }
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please specify the number of mosquitoes of this species collected"
+        }
+      },
+      {
+        "key": "An. funestus",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "# of An. funestus mosquitoes collected",
+        "relevance": {
+          "step1:moz_type": {
+            "ex-checkbox": [
+              {
+                "or": ["An. funestus"]
+              }
+            ]
+          }
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please specify the number of mosquitoes of this species collected"
+        }
+      },
+      {
+        "key": "An. minimus",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "# of An. minimus mosquitoes collected",
+        "relevance": {
+          "step1:moz_type": {
+            "ex-checkbox": [
+              {
+                "or": ["An. minimus"]
+              }
+            ]
+          }
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please specify the number of mosquitoes of this species collected"
+        }
+      },
+      {
+        "key": "An. dirus",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "# of An. dirus mosquitoes collected",
+        "relevance": {
+          "step1:moz_type": {
+            "ex-checkbox": [
+              {
+                "or": ["An. dirus"]
+              }
+            ]
+          }
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please specify the number of mosquitoes of this species collected"
+        }
+      },
+      {
+        "key": "An. maximus",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "# of An. maximus mosquitoes collected",
+        "relevance": {
+          "step1:moz_type": {
+            "ex-checkbox": [
+              {
+                "or": ["An. maximus"]
+              }
+            ]
+          }
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please specify the number of mosquitoes of this species collected"
+        }
+      },
+      {
+        "key": "An. other",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "# of An. other mosquitoes collected",
+        "relevance": {
+          "step1:moz_type": {
+            "ex-checkbox": [
+              {
+                "or": ["An. other"]
+              }
+            ]
+          }
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please specify the number of mosquitoes of this species collected"
+        }
+      },
+      {
+        "key": "Culex",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "# of Culex mosquitoes collected",
+        "relevance": {
+          "step1:moz_type": {
+            "ex-checkbox": [
+              {
+                "or": ["Culex"]
+              }
+            ]
+          }
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please specify the number of mosquitoes of this species collected"
         }
       }
     ]
