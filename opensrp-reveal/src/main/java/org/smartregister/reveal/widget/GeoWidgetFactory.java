@@ -119,7 +119,6 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
         mapView.setId(canvasId);
         mapView.onCreate(null);
-        mapView.setStyleUrl(context.getString(R.string.reveal_satellite_style));
         mapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
 
         String finalOperationalArea = operationalArea;
