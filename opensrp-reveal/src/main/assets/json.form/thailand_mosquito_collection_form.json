@@ -51,6 +51,29 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "structure_type",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Type of Structure",
+        "options": [
+          {
+            "key": "Residential Structure",
+            "text": "Residential Structure"
+          },
+          {
+            "key": "Non-Residential Structure",
+            "text": "Non-Residential Structure"
+          },
+          {
+            "key": "Facility",
+            "text": "Facility"
+          }
+        ],
+        "value": "[structure_type]"
+      },
+      {
         "key": "trap_type",
         "label": "Type of trap",
         "type": "check_box",
@@ -87,12 +110,21 @@
       },
       {
         "key": "trap_num",
-        "text": "How many traps were set at this house?",
         "type": "edit_text",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "hint": "# of traps set at this house"
+
+        "hint": "# of traps set at this house",
+        "relevance": {
+          "step1:trap_type": {
+            "ex-checkbox": [
+              {
+                "or": ["CDC"]
+              }
+            ]
+          }
+        }
       },
       {
         "key": "trap_location",
@@ -114,7 +146,6 @@
       },
       {
         "key": "trap_start",
-        "text": "When was trap set",
         "type": "date_picker",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -123,7 +154,6 @@
       },
       {
         "key": "trap_end",
-        "text": "When was trap collected",
         "type": "date_picker",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -132,7 +162,6 @@
       },
       {
         "key": "trap_temp",
-        "text": "Temperature recorded at the trap site",
         "type": "edit_text",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -141,7 +170,6 @@
       },
       {
         "key": "trap_RH",
-        "text": "Relative humidity recorded at the trap site",
         "type": "edit_text",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
