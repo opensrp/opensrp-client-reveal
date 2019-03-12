@@ -114,7 +114,6 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-
         "hint": "# of traps set at this house",
         "relevance": {
           "step1:trap_type": {
@@ -124,6 +123,10 @@
               }
             ]
           }
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
         }
       },
       {
@@ -150,7 +153,11 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "hint": "Date trap was set"
+        "hint": "Date trap was set",
+        "v_required": {
+          "value": true,
+          "err": "Please specify the date trap was set"
+        }
       },
       {
         "key": "trap_end",
@@ -158,7 +165,11 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "hint": "Date trap was collected"
+        "hint": "Date trap was collected",
+        "v_required": {
+          "value": true,
+          "err": "Please specify the date trap was collected"
+        }
       },
       {
         "key": "trap_temp",
@@ -166,7 +177,11 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "hint": "Temperature recorded at trap site"
+        "hint": "Temperature recorded at trap site",
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        }
       },
       {
         "key": "trap_RH",
@@ -174,7 +189,11 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "hint": "Relative humidity recorded at trap site"
+        "hint": "Relative humidity recorded at trap site",
+        "v_numeric": {
+          "value": "true",
+          "err": "Relative humidity must be a number"
+        }
       },
       {
         "key": "moz_type",
@@ -219,7 +238,11 @@
             "text": "Culex",
             "value": false
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "Please select all mosquito species found"
+        }
       }
     ]
   }
