@@ -172,6 +172,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.register_family).setOnClickListener(this);
 
+        findViewById(R.id.task_register).setOnClickListener(this);
+
     }
 
     @Override
@@ -229,13 +231,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     private void displayMyLocationAtButtom() {
-        ImageButton myLocationIcon = findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
-        if (myLocationIcon != null) {
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) myLocationIcon.getLayoutParams();
+        ImageButton myLocationComponent = findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
+        if (myLocationComponent != null) {
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) myLocationComponent.getLayoutParams();
             params.gravity = Gravity.BOTTOM | Gravity.END;
             params.bottomMargin = params.topMargin;
             params.topMargin = 0;
-            myLocationIcon.setLayoutParams(params);
+            myLocationComponent.setLayoutParams(params);
         }
     }
 
@@ -339,7 +341,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             closeStructureCardView();
         } else if (v.getId() == R.id.register_family) {
             registerFamily();
+        } else if (v.getId() == R.id.task_register) {
+            openTaskRegister();
         }
+    }
+
+    private void openTaskRegister() {
+        Intent intent = new Intent(this, TaskRegisterActivity.class);
+        startActivity(intent);
     }
 
     private void registerFamily() {
