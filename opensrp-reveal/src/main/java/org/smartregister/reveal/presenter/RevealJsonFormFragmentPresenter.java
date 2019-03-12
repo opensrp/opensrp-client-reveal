@@ -5,7 +5,6 @@ import android.location.Location;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
@@ -13,7 +12,6 @@ import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interactors.JsonFormInteractor;
 import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 import com.vijay.jsonwizard.utils.ValidationStatus;
-import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -23,8 +21,6 @@ import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallba
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
-
-import retrofit2.http.HEAD;
 
 /**
  * Created by samuelgithengi on 1/30/19.
