@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -30,6 +31,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
@@ -49,12 +51,14 @@ import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.BaseMapActivity;
-import org.smartregister.reveal.activity.RevealJsonForm;
+import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
+import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.Constants.Action;
+import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -63,15 +67,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
+import io.ona.kujaku.utils.Constants;
+
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
+import static org.smartregister.reveal.util.Utils.getGlobalConfig;
+import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
+
 
 /**
  * Created by samuelgithengi on 11/20/18.
  */
-public class ListTasksActivity extends BaseMapActivity implements ListTaskContract.ListTaskView, View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener {
+public class ListTasksActivity extends BaseMapActivity implements ListTaskContract.ListTaskView,
+        View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener, UserLocationView, OnLocationComponentInitializedCallback {
 
     private static final String TAG = "ListTasksActivity";
 
@@ -107,6 +121,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
 
+    private boolean hasRequestedLocation;
+
     private Snackbar syncProgressSnackbar;
 
     @Override
@@ -128,7 +144,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         initializeCardView();
 
         syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
-
     }
 
     private void initializeCardView() {
@@ -153,6 +168,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         tvReason = findViewById(R.id.reason);
         findViewById(R.id.change_spray_status).setOnClickListener(this);
 
+        findViewById(R.id.register_family).setOnClickListener(this);
+
     }
 
     @Override
@@ -166,17 +183,22 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private void initializeMapView(Bundle savedInstanceState) {
         kujakuMapView = findViewById(R.id.kujakuMapView);
+
+        kujakuMapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
+
         kujakuMapView.onCreate(savedInstanceState);
 
-        kujakuMapView.setStyleUrl(getString(R.string.reveal_satellite_style));
-
         kujakuMapView.showCurrentLocationBtn(true);
+
+        Float locationBufferRadius = Float.valueOf(getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString()));
+        kujakuMapView.setLocationBufferRadius(locationBufferRadius);
 
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
                 mMapboxMap = mapboxMap;
-                mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
+
+                RevealMapHelper.addSymbolLayers(mapboxMap, ListTasksActivity.this);
 
                 mapboxMap.setMinZoomPreference(10);
                 mapboxMap.setMaxZoomPreference(21);
@@ -191,7 +213,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 selectedGeoJsonSource = mapboxMap.getSourceAs(getString(R.string.selected_datasource_name));
 
                 listTaskPresenter.onMapReady();
-
 
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                     @Override
@@ -301,6 +322,23 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (v.getId() == R.id.btn_collapse_structure_card_view) {
             setViewVisibility(tvReason, false);
             closeStructureCardView();
+        } else if (v.getId() == R.id.register_family) {
+            registerFamily();
+        }
+    }
+
+    private void registerFamily() {
+        Intent intent = new Intent(this, FamilyRegisterActivity.class);
+        intent.putExtra(START_REGISTRATION, true);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onLocationComponentInitialized() {
+        if (PermissionsManager.areLocationPermissionsGranted(this)) {
+            kujakuMapView.getMapboxLocationComponentWrapper()
+                    .getLocationComponent()
+                    .applyStyle(getApplicationContext(), R.style.LocationComponentStyling);
         }
     }
 
@@ -404,7 +442,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void startJsonForm(JSONObject form) {
-        Intent intent = new Intent(getApplicationContext(), RevealJsonForm.class);
+        Intent intent = new Intent(getApplicationContext(), RevealJsonFormActivity.class);
         try {
             intent.putExtra(JSON_FORM_PARAM_JSON, form.toString());
             startActivityForResult(intent, REQUEST_CODE_GET_JSON);
@@ -451,6 +489,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
             Log.d(TAG, json);
             listTaskPresenter.saveJsonForm(json);
+        } else if (requestCode == Constants.RequestCode.LOCATION_SETTINGS && hasRequestedLocation) {
+            if (resultCode == RESULT_OK) {
+                listTaskPresenter.getLocationPresenter().waitForUserLocation();
+            } else if (resultCode == RESULT_CANCELED) {
+                listTaskPresenter.getLocationPresenter().onGetUserLocationFailed();
+            }
+            hasRequestedLocation = false;
         }
     }
 
@@ -487,8 +532,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void showProgressDialog() {
+    public void showProgressDialog(@StringRes int title, @StringRes int message) {
         if (progressDialog != null) {
+            progressDialog.setTitle(title);
+            progressDialog.setMessage(getString(message));
             progressDialog.show();
         }
     }
@@ -498,6 +545,17 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
+    }
+
+    @Override
+    public Location getUserCurrentLocation() {
+        return kujakuMapView.getLocationClient() == null ? null : kujakuMapView.getLocationClient().getLastLocation();
+    }
+
+    @Override
+    public void requestUserLocation() {
+        kujakuMapView.setWarmGps(true, getString(R.string.location_service_disabled), getString(R.string.location_services_disabled_spray));
+        hasRequestedLocation = true;
     }
 
     @Override
@@ -552,11 +610,16 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         super.onPause();
     }
 
-
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            listTaskPresenter.refreshStructures();
+            Bundle extras = intent.getExtras();
+            if (extras != null && extras.getBoolean(UPDATE_LOCATION_BUFFER_RADIUS)) {
+                String bufferRadius = getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString());
+                kujakuMapView.setLocationBufferRadius(Float.valueOf(bufferRadius));
+            } else {
+                listTaskPresenter.refreshStructures();
+            }
         }
     }
 }

@@ -7,7 +7,10 @@ import android.util.Log;
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobCreator;
 
+import org.smartregister.job.ExtendedSyncServiceJob;
+import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.job.SyncServiceJob;
+import org.smartregister.job.ValidateSyncDataServiceJob;
 import org.smartregister.reveal.sync.RevealSyncIntentService;
 
 /**
@@ -24,6 +27,14 @@ public class RevealJobCreator implements JobCreator {
                 return new RevealCampaignServiceJob();
             case LocationTaskServiceJob.TAG:
                 return new LocationTaskServiceJob();
+            case RevealSyncSettingsServiceJob.TAG:
+                return new RevealSyncSettingsServiceJob();
+            case ExtendedSyncServiceJob.TAG:
+                return new ExtendedSyncServiceJob();
+            case PullUniqueIdsServiceJob.TAG:
+                return new PullUniqueIdsServiceJob();
+            case ValidateSyncDataServiceJob.TAG:
+                return new ValidateSyncDataServiceJob();
             default:
                 Log.w(RevealJobCreator.class.getCanonicalName(), tag + " is not declared in RevealJobCreator Job Creator");
                 return null;

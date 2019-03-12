@@ -30,6 +30,12 @@ public interface Constants {
 
     interface CONFIGURATION {
         String LOGIN = "login";
+        String GLOBAL_CONFIGS = "global_configs";
+        String KEY = "key";
+        String VALUE = "value";
+        String LOCATION_BUFFER_RADIUS_IN_METRES = "location_buffer_radius_in_metres";
+        Float DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES = 25f;
+        String UPDATE_LOCATION_BUFFER_RADIUS = "update_location_buffer_radius";
     }
 
     interface Preferences {
@@ -69,6 +75,12 @@ public interface Constants {
         String IRS = "IRS";
         String ITN = "ITN";
         String MDA = "MDA";
+
+        String MOSQUITO_COLLECTION = "Mosquito Collection";
+
+        String LARVAL_DIPPING = "Larval Dipping";
+
+        String IRS_VISIT = "IRS Visit";
     }
 
     interface BusinessStatus {
@@ -88,10 +100,6 @@ public interface Constants {
 
         String ENCOUNTER_TYPE = "encounter_type";
 
-        String RESIDENTIAL = "Residential Structure";
-
-        String NON_RESIDENTIAL = "Non-Residential Structure";
-
         String SPRAY_STATUS = "sprayStatus";
 
         String TASK_BUSINESS_STATUS = "business_status";
@@ -102,15 +110,13 @@ public interface Constants {
 
         String STRUCTURE_PROPERTIES_TYPE = "[structure_type]";
 
-        String SPRAY_FORM = "json.form/botswana_spray_form.json";
+        String SPRAY_FORM = "json.form/spray_form.json";
 
         String SPRAY_FORM_NAMIBIA = "json.form/namibia_spray_form.json";
 
         String SPRAY_FORM_BOTSWANA = "json.form/botswana_spray_form.json";
 
         String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
-
-        String IRS_VISIT = "IRS Visit";
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 
@@ -141,6 +147,17 @@ public interface Constants {
     interface ECClientConfig {
         String NAMIBIA_EC_CLIENT_FIELDS = "ec_client_fields_namibia.json";
         String BOTSWANA_EC_CLIENT_FIELDS = "ec_client_fields_botswana.json";
+    }
+
+
+    interface StructureType {
+        String RESIDENTIAL = "Residential Structure";
+
+        String NON_RESIDENTIAL = "Non-Residential Structure";
+
+        String MOSQUITO_COLLECTION_POINT = "Mosquito Collection Point";
+
+        String LARVAL_BREEDING_SITE = "Larval Breeding Site";
     }
 
 
