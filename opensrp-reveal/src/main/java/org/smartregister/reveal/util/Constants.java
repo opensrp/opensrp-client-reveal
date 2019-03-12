@@ -102,9 +102,11 @@ public interface Constants {
 
         String STRUCTURE_PROPERTIES_TYPE = "[structure_type]";
 
-        String SPRAY_FORM = "json.form/spray_form.json";
+        String SPRAY_FORM = "json.form/botswana_spray_form.json";
 
         String SPRAY_FORM_NAMIBIA = "json.form/namibia_spray_form.json";
+
+        String SPRAY_FORM_BOTSWANA = "json.form/botswana_spray_form.json";
 
         String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
 
@@ -138,6 +140,7 @@ public interface Constants {
 
     interface ECClientConfig {
         String NAMIBIA_EC_CLIENT_FIELDS = "ec_client_fields_namibia.json";
+        String BOTSWANA_EC_CLIENT_FIELDS = "ec_client_fields_botswana.json";
     }
 
 
