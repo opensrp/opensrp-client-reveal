@@ -71,7 +71,11 @@
             "text": "Facility"
           }
         ],
-        "value": "[structure_type]"
+        "value": "[structure_type]",
+        "v_required": {
+          "value": "true",
+          "err": "Specify type of Structure"
+        }
       },
       {
         "key": "sprayStatus",
@@ -94,7 +98,10 @@
             "text": "Not Eligible"
           }
         ],
-        "value": "Not Sprayable",
+        "v_required": {
+          "value": "true",
+          "err": "Specify Spray status"
+        },
         "relevance": {
           "step1:structureType": {
             "type": "string",
@@ -135,7 +142,10 @@
             "text": "Other"
           }
         ],
-        "value": "No one home/Missed",
+        "v_required": {
+          "value": "true",
+          "err": "Specify Not Sprayed Reason"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -202,7 +212,10 @@
             "text": "Not Applicable"
           }
         ],
-        "value": "Male",
+        "v_required": {
+          "value": "true",
+          "err": "Specify Sex of Household Head"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -312,6 +325,10 @@
           }
         ],
         "value": "No",
+        "v_required": {
+          "value": "true",
+          "err": "Is this a mop-up activity?"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
