@@ -2,6 +2,7 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 
 import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
@@ -13,6 +14,7 @@ import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
+import org.smartregister.domain.db.Obs;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.fragment.RevealJsonFormFragment;
@@ -24,6 +26,9 @@ import org.smartregister.util.AssetHandler;
 import java.lang.ref.WeakReference;
 import java.util.Collections;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -139,6 +144,8 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
 
         verify(userLocationPresenter).requestUserLocation();
 
+        assertEquals(mapView, presenter.getMapView());
+
     }
 
     @Test
@@ -157,6 +164,37 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
         verify(presenter).validateAndWriteValues();
         verify(view).finishWithResult(any());
 
+    }
+
+
+    @Test
+    public void testOnPasswordVerified() {
+        setUpFormActivity(JsonForm.ADD_STRUCTURE_FORM);
+        presenter = spy(presenter);
+        JsonFormFragmentView view = spy(Whitebox.getInternalState(presenter, JsonFormFragmentView.class));
+        Whitebox.setInternalState(presenter, "viewRef", new WeakReference<>(view));
+        presenter.onPasswordVerified();
+        verify(presenter).onLocationValidated();
+    }
+
+    @Test
+    public void testRequestUserPassword() {
+        setUpFormActivity(JsonForm.ADD_STRUCTURE_FORM);
+
+        AlertDialog passwordDialog = Whitebox.getInternalState(presenter, "passwordDialog");
+        passwordDialog = spy(passwordDialog);
+        doNothing().when(passwordDialog).show();
+        Whitebox.setInternalState(presenter, "passwordDialog", passwordDialog);
+        presenter.requestUserPassword();
+
+        verify(passwordDialog).show();
+
+    }
+
+    @Test
+    public void testGetLocationPresenter() {
+        setUpFormActivity(JsonForm.ADD_STRUCTURE_FORM);
+        assertNotNull(presenter.getLocationPresenter());
     }
 
 }
