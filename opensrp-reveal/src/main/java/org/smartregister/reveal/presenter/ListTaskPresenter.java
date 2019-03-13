@@ -553,6 +553,11 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     }
 
     @Override
+    public void onMosquitoCollectionFormSaved() {
+        listTaskView.hideProgressDialog();
+    }
+
+    @Override
     public void onFormSaveFailure(String eventType) {
         listTaskView.hideProgressDialog();
         listTaskView.displayNotification(R.string.form_save_failure_title,
