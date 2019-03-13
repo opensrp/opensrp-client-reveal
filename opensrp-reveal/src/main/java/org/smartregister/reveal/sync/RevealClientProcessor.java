@@ -14,6 +14,8 @@ import org.smartregister.domain.db.Obs;
 import org.smartregister.domain.jsonmapping.ClientClassification;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
+import org.smartregister.repository.StructureRepository;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -37,8 +39,17 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     private static final String TAG = RevealClientProcessor.class.getCanonicalName();
     private static RevealClientProcessor instance;
 
+    private EventClientRepository eventClientRepository;
+
+    private TaskRepository taskRepository;
+
+    private StructureRepository structureRepository;
+
     public RevealClientProcessor(Context context) {
         super(context);
+        eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+        taskRepository = RevealApplication.getInstance().getTaskRepository();
+        structureRepository = RevealApplication.getInstance().getStructureRepository();
     }
 
 
@@ -106,8 +117,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         String operationalAreaId = null;
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
             String taskIdentifier = event.getDetails().get(TASK_IDENTIFIER);
-            Task task = RevealApplication.getInstance().getTaskRepository().getTaskByIdentifier(taskIdentifier);
-            EventClientRepository eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+            Task task = taskRepository.getTaskByIdentifier(taskIdentifier);
             if (task != null) {
                 task.setBusinessStatus(calculateBusinessStatus(event));
                 task.setStatus(Task.TaskStatus.COMPLETED);
@@ -119,17 +129,17 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     //for events synced from server and task exists mark events as being fully synced
                     eventClientRepository.markEventAsSynced(event.getFormSubmissionId());
                 }
-                RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
+                taskRepository.addOrUpdate(task);
                 operationalAreaId = task.getGroupIdentifier();
             } else {
                 eventClientRepository.markEventAsTaskUnprocessed(event.getFormSubmissionId());
             }
-            Location structure = RevealApplication.getInstance().getStructureRepository().getLocationById(event.getBaseEntityId());
+            Location structure = structureRepository.getLocationById(event.getBaseEntityId());
             if (structure != null) {
                 Obs structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE);
                 if (structureType != null) {
                     structure.getProperties().setType(structureType.getValue().toString());
-                    RevealApplication.getInstance().getStructureRepository().addOrUpdate(structure);
+                    structureRepository.addOrUpdate(structure);
                 }
                 if (operationalAreaId == null) {
                     operationalAreaId = structure.getProperties().getParentId();
@@ -163,8 +173,4 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         }
     }
 
-    @Override
-    public void updateClientDetailsTable(Event event, Client client) {
-        //do nothing
-    }
 }

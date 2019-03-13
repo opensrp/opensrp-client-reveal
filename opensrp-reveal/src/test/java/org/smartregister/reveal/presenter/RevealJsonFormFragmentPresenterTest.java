@@ -14,7 +14,6 @@ import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
-import org.smartregister.domain.db.Obs;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.fragment.RevealJsonFormFragment;
@@ -28,7 +27,6 @@ import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
