@@ -524,14 +524,6 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         }
     }
 
-    private void startSprayForm(Feature feature) {
-        startSprayForm(feature, null);
-    }
-
-    private void startSprayForm(Feature feature, CardDetails cardDetails) {
-        startForm(feature, cardDetails, SPRAY_EVENT);
-    }
-
     public void onChangeSprayStatus() {
         listTaskView.showProgressDialog(R.string.fetching_structure_title, R.string.fetching_structure_message);
         listTaskInteractor.fetchSprayDetails(selectedFeature.id(), true);
