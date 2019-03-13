@@ -73,9 +73,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         if (!Utils.isEmptyCollection(mapView.getValidators())) {
             for (METValidator validator : mapView.getValidators()) {
                 if (validator instanceof MinZoomValidator) {
-                    MapboxMap mapboxMap = mapView.getMapboxMap();
-                    double zoom = mapView.getMapboxMap().getCameraPosition().zoom;
-                    if (mapboxMap != null && !validator.isValid(String.valueOf(zoom), false)) {
+                    Double zoom = mapView.getMapboxMapZoom();
+                    if (zoom != null && !validator.isValid(String.valueOf(zoom), false)) {
                         Toast.makeText(formFragmentView.getContext(), validator.getErrorMessage(), Toast.LENGTH_LONG).show();
                         return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
                     }

@@ -2,6 +2,7 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Intent;
 import android.location.Location;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -61,7 +62,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                         String fieldKey = mStepName + " (" + mStepDetails.optString("title") + ") :" + key;
                         getInvalidFields().put(fieldKey, validationStatus);
                     } else {
-                        if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
+                        if (validateFarStructures()) {
                             validateUserLocation(mapView);
                         } else {
                             onLocationValidated();
@@ -84,6 +85,12 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         }
     }
 
+    @VisibleForTesting
+    protected boolean validateFarStructures() {
+        return BuildConfig.VALIDATE_FAR_STRUCTURES;
+    }
+
+
     private void validateUserLocation(RevealMapView mapView) {
         this.mapView = mapView;
         Location location = jsonFormView.getUserCurrentLocation();
@@ -105,7 +112,8 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         Intent returnIntent = new Intent();
         getView().onFormFinish();
         returnIntent.putExtra("json", getView().getCurrentJsonState());
-        returnIntent.putExtra(JsonFormConstants.SKIP_VALIDATION, Boolean.valueOf(formFragment.getMainView().getTag(com.vijay.jsonwizard.R.id.skip_validation).toString()));
+        Object skipValidation = formFragment.getMainView().getTag(com.vijay.jsonwizard.R.id.skip_validation);
+        returnIntent.putExtra(JsonFormConstants.SKIP_VALIDATION, Boolean.valueOf(skipValidation == null ? Boolean.FALSE.toString() : skipValidation.toString()));
         getView().finishWithResult(returnIntent);
 
     }
