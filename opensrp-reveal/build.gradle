@@ -195,6 +195,7 @@ dependencies {
         exclude group: 'net.zetetic', module: 'android-database-sqlcipher'
         exclude group: 'com.google.android.gms', module: 'play-services-vision'
         exclude group: 'org.apache.httpcomponents', module: 'httpmime'
+        exclude group: 'com.github.ybq', module: 'Android-SpinKit'
     }
 
     implementation('org.smartregister:opensrp-client-configurable-views:1.1.2-SNAPSHOT@aar') {
@@ -236,6 +237,8 @@ dependencies {
     }
 
     implementation 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
+
+    implementation 'com.github.ybq:Android-SpinKit:1.2.0'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.apache.maven:maven-ant-tasks:2.1.3'
