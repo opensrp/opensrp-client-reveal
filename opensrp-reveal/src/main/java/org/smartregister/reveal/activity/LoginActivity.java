@@ -3,6 +3,7 @@ package org.smartregister.reveal.activity;
 import android.content.Intent;
 
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.presenter.LoginPresenter;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.task.SaveTeamLocationsTask;
@@ -29,6 +30,8 @@ public class LoginActivity extends BaseLoginActivity implements BaseLoginContrac
         startActivity(new Intent(this, ListTasksActivity.class));
 
         finish();
+
+        RevealApplication.getInstance().processGlobalConfigs();
 
     }
 

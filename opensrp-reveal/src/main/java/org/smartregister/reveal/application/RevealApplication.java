@@ -113,7 +113,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         //init Job Manager
         JobManager.create(this).addJobCreator(new RevealJobCreator());
 
-        processGlobalConfigs();
     }
 
     @Override
