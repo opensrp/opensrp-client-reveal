@@ -6,7 +6,7 @@ import org.robolectric.annotation.Config;
 
 
 @RunWith(RobolectricTestRunner.class)
-@Config(application = TestRevealApplication.class, constants = BuildConfig.class, sdk = 22)
+@Config(application = TestRevealApplication.class)
 public abstract class BaseUnitTest {
 
     protected static final String DUMMY_USERNAME = "myusername";
