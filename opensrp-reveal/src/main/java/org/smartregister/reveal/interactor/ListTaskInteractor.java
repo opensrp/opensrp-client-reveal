@@ -75,8 +75,6 @@ public class ListTaskInteractor {
 
     private static final String TAG = ListTaskInteractor.class.getCanonicalName();
 
-    private AppExecutors appExecutors;
-
     private CampaignRepository campaignRepository;
 
     private TaskRepository taskRepository;
@@ -92,9 +90,10 @@ public class ListTaskInteractor {
     private String operationalAreaId;
 
     private AllSharedPreferences sharedPreferences;
+    private AppExecutors appExecutors;
 
     public ListTaskInteractor(PresenterCallBack presenterCallBack) {
-        this(new AppExecutors());
+        appExecutors = RevealApplication.getInstance().getAppExecutors();
         this.presenterCallBack = presenterCallBack;
         campaignRepository = RevealApplication.getInstance().getCampaignRepository();
         taskRepository = RevealApplication.getInstance().getTaskRepository();
@@ -102,11 +101,6 @@ public class ListTaskInteractor {
         eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
         clientProcessor = RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext());
         sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
-    }
-
-    @VisibleForTesting
-    protected ListTaskInteractor(AppExecutors appExecutors) {
-        this.appExecutors = appExecutors;
     }
 
     public void fetchCampaigns() {

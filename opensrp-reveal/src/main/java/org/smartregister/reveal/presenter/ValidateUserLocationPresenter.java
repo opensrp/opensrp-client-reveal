@@ -8,6 +8,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.UserLocationContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
@@ -31,10 +32,10 @@ public class ValidateUserLocationPresenter implements UserLocationContract.UserL
 
     private AppExecutors appExecutors;
 
-    public ValidateUserLocationPresenter(UserLocationView locationView, UserLocationCallback callback) {
+    protected ValidateUserLocationPresenter(UserLocationView locationView, UserLocationCallback callback) {
         this.locationView = locationView;
         this.callback = callback;
-        appExecutors = new AppExecutors();
+        appExecutors = RevealApplication.getInstance().getAppExecutors();
     }
 
     @Override

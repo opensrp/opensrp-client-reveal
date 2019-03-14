@@ -36,6 +36,7 @@ import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.job.RevealJobCreator;
 import org.smartregister.reveal.repository.RevealRepository;
+import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.RevealSyncConfiguration;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.FamilyProfileActivity;
@@ -74,6 +75,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     private static CommonFtsObject commonFtsObject;
 
+    private AppExecutors appExecutors;
+
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
     }
@@ -86,6 +89,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        appExecutors = new AppExecutors();
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
         context.updateCommonFtsObject(createCommonFtsObject());
@@ -215,7 +219,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     }
 
     public void processGlobalConfigs() {
-        Setting globalSettings =  getSettingsRepository().getSetting(GLOBAL_CONFIGS);
+        Setting globalSettings = getSettingsRepository().getSetting(GLOBAL_CONFIGS);
         populateGlobalConfigs(globalSettings);
     }
 
@@ -286,5 +290,9 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
                     .LAST_INTERACTED_WITH, DBConstants.KEY.DATE_REMOVED};
         }
         return null;
+    }
+
+    public AppExecutors getAppExecutors() {
+        return appExecutors;
     }
 }
