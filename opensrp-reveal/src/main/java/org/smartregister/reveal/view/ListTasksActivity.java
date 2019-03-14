@@ -147,7 +147,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     private void initializeCardView() {
-        structureInfoCardView = findViewById(R.id.spray_card_view);
+        structureInfoCardView = findViewById(R.id.mosquito_collection_card_view);  // TODO: revert this to the previous implementation
         structureInfoCardView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -157,7 +157,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         });
         findViewById(R.id.btn_add_structure).setOnClickListener(this);
 
-        findViewById(R.id.btn_collapse_structure_card_view).setOnClickListener(this);
+        findViewById(R.id.btn_collapse_spray_card_view).setOnClickListener(this);
 
 
         tvSprayStatus = findViewById(R.id.spray_status);
@@ -319,7 +319,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             listTaskPresenter.onAddStructureClicked();
         } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeSprayStatus();
-        } else if (v.getId() == R.id.btn_collapse_structure_card_view) {
+        } else if (v.getId() == R.id.btn_collapse_spray_card_view) {
             setViewVisibility(tvReason, false);
             closeStructureCardView();
         } else if (v.getId() == R.id.register_family) {
