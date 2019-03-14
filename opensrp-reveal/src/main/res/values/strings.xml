@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Actions -->
     <string name="action_logout">Logout</string>
     <!-- General -->
@@ -89,5 +89,8 @@
 
     <string name="register_family">Register Family</string>
     <string name="list">List</string>
+    <string name="map">Map</string>
+    <string name="hamburger_menu">Hamburger menu</string>
+    <string name="focus_investigation">Focus Investigation</string>
 
 </resources>
