@@ -147,7 +147,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     private void initializeCardView() {
-        structureInfoCardView = findViewById(R.id.structure_info_card_view);
+        structureInfoCardView = findViewById(R.id.spray_card_view);
         structureInfoCardView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
