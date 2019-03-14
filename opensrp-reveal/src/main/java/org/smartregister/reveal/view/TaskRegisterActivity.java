@@ -2,9 +2,10 @@ package org.smartregister.reveal.view;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import org.json.JSONObject;
-import org.smartregister.helper.BottomNavigationHelper;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.fragment.TaskRegisterFragment;
 import org.smartregister.reveal.presenter.TaskRegisterPresenter;
 import org.smartregister.view.activity.BaseRegisterActivity;
@@ -59,7 +60,8 @@ public class TaskRegisterActivity extends BaseRegisterActivity {
 
     @Override
     protected void registerBottomNavigation() {
-        bottomNavigationHelper = new BottomNavigationHelper();
-        bottomNavigationView = findViewById(org.smartregister.R.id.bottom_navigation);
+        //not used for task register
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.GONE);
     }
 }
