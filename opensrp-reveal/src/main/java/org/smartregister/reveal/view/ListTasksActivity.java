@@ -111,7 +111,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private DrawerLayout mDrawerLayout;
 
-    private CardView structureInfoCardView;
+    private CardView sprayCardView;
+    private CardView mosquitoCollectionCardView;
     private TextView tvSprayStatus;
     private TextView tvPropertyType;
     private TextView tvSprayDate;
@@ -141,24 +142,26 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.btn_add_structure).setOnClickListener(this);
 
-        initializeCardView();
+        initializeCardViews();
 
         syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
     }
 
-    private void initializeCardView() {
-        structureInfoCardView = findViewById(R.id.mosquito_collection_card_view);  // TODO: revert this to the previous implementation
-        structureInfoCardView.setOnTouchListener(new View.OnTouchListener() {
+    private void initializeCardViews() {
+        sprayCardView = findViewById(R.id.spray_card_view);
+        sprayCardView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 //intercept clicks and interaction of map below card view
                 return true;
             }
         });
+
+        mosquitoCollectionCardView = findViewById(R.id.mosquito_collection_card_view);
+
         findViewById(R.id.btn_add_structure).setOnClickListener(this);
 
         findViewById(R.id.btn_collapse_spray_card_view).setOnClickListener(this);
-
 
         tvSprayStatus = findViewById(R.id.spray_status);
         tvPropertyType = findViewById(R.id.property_type);
@@ -170,11 +173,16 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.register_family).setOnClickListener(this);
 
+        findViewById(R.id.btn_collapse_mosquito_collection_card_view).setOnClickListener(this);
     }
 
     @Override
-    public void closeStructureCardView() {
-        setViewVisibility(structureInfoCardView, false);
+    public void closeCardView(int id) {
+        if (id == R.id.btn_collapse_spray_card_view) {
+            setViewVisibility(sprayCardView, false);
+        } else if (id == R.id.btn_collapse_mosquito_collection_card_view) {
+            setViewVisibility(mosquitoCollectionCardView, false);
+        }
     }
 
     private void setViewVisibility(View view, boolean isVisible) {
@@ -321,9 +329,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             listTaskPresenter.onChangeSprayStatus();
         } else if (v.getId() == R.id.btn_collapse_spray_card_view) {
             setViewVisibility(tvReason, false);
-            closeStructureCardView();
+            closeCardView(v.getId());
         } else if (v.getId() == R.id.register_family) {
             registerFamily();
+        } else if (v.getId() == R.id.btn_collapse_mosquito_collection_card_view) {
+            closeCardView(v.getId());
         }
     }
 
@@ -437,7 +447,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             tvReason.setVisibility(View.GONE);
         }
 
-        structureInfoCardView.setVisibility(View.VISIBLE);
+//        sprayCardView.setVisibility(View.VISIBLE); // todo : uncomment this
+        mosquitoCollectionCardView.setVisibility(View.VISIBLE);
     }
 
     @Override

@@ -33,7 +33,7 @@ public interface ListTaskContract {
 
         Context getContext();
 
-        void closeStructureCardView();
+        void closeCardView(int id);
 
         void showOperationalAreaSelector(Pair<String, ArrayList<String>> locationHierarchy);
 

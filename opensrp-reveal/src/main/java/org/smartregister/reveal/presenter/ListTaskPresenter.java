@@ -315,7 +315,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
                 structuresGeoJson.put(FEATURES, new JSONArray());
                 listTaskView.setGeoJsonSource(FeatureCollection.fromJson(structuresGeoJson.toString()), operationalAreaGeometry);
                 listTaskView.clearSelectedFeature();
-                listTaskView.closeStructureCardView();
+                listTaskView.closeCardView(R.id.btn_collapse_spray_card_view);
             } catch (JSONException e) {
                 Log.e(TAG, "error resetting structures");
             }
@@ -379,7 +379,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     private void onFeatureSelected(Feature feature) {
         selectedFeature = feature;
         changeSprayStatus = false;
-        listTaskView.closeStructureCardView();
+        listTaskView.closeCardView(R.id.btn_collapse_mosquito_collection_card_view);
         listTaskView.displaySelectedFeature(feature, clickedPoint);
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
