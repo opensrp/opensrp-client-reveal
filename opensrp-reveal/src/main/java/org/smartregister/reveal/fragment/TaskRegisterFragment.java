@@ -6,11 +6,12 @@ import org.smartregister.cursoradapter.RecyclerViewPaginatedAdapter;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
 import org.smartregister.reveal.provider.TaskRegisterProvider;
+import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.view.activity.BaseRegisterActivity;
 import org.smartregister.view.contract.BaseRegisterFragmentContract;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
-import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -28,7 +29,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements BaseRe
 
     @Override
     protected void initializePresenter() {
-        presenter = new TaskRegisterFragmentPresenter(this);
+        presenter = new TaskRegisterFragmentPresenter(this, TaskRegister.VIEW_IDENTIFIER);
     }
 
     @Override

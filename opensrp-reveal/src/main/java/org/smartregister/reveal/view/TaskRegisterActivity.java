@@ -42,12 +42,10 @@ public class TaskRegisterActivity extends BaseRegisterActivity {
 
     @Override
     public void startFormActivity(JSONObject jsonObject) {
-
     }
 
     @Override
     protected void onActivityResultExtended(int requestCode, int resultCode, Intent data) {
-
     }
 
     @Override
@@ -61,7 +59,6 @@ public class TaskRegisterActivity extends BaseRegisterActivity {
 
     @Override
     protected void registerBottomNavigation() {
-        //do nothing. bottom navigation not being used on reveal task register
         bottomNavigationHelper = new BottomNavigationHelper();
         bottomNavigationView = findViewById(org.smartregister.R.id.bottom_navigation);
     }
