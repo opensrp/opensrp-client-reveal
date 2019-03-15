@@ -8,12 +8,10 @@ import org.smartregister.configurableviews.model.View;
 import org.smartregister.configurableviews.model.ViewConfiguration;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.fragment.TaskRegisterFragment;
-import org.smartregister.reveal.interactor.TaskRegisterInteractor;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.view.contract.BaseRegisterFragmentContract;
 
 import java.lang.ref.WeakReference;
-import java.util.HashSet;
 import java.util.Set;
 
 /**

@@ -61,7 +61,6 @@ public class TaskRegisterActivity extends BaseRegisterActivity {
     @Override
     protected void registerBottomNavigation() {
         //not used for task register
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setVisibility(View.GONE);
+        findViewById(R.id.bottom_navigation).setVisibility(View.GONE);
     }
 }

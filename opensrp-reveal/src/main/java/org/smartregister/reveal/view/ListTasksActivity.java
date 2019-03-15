@@ -60,6 +60,7 @@ import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.Constants.Action;
+import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.util.Utils;
 
@@ -348,6 +349,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private void openTaskRegister() {
         Intent intent = new Intent(this, TaskRegisterActivity.class);
+        intent.putExtra(TaskRegister.INTERVENTION_TYPE, getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
         startActivity(intent);
     }
 

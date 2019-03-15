@@ -92,5 +92,6 @@
     <string name="map">Map</string>
     <string name="hamburger_menu">Hamburger menu</string>
     <string name="focus_investigation">Focus Investigation</string>
+    <string name="irs">IRS</string>
 
 </resources>

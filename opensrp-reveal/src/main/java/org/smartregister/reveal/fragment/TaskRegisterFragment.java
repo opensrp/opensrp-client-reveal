@@ -1,6 +1,7 @@
 package org.smartregister.reveal.fragment;
 
 import android.view.View;
+import android.widget.TextView;
 
 import org.smartregister.cursoradapter.RecyclerViewPaginatedAdapter;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
@@ -30,6 +31,15 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements BaseRe
         clientAdapter = new RecyclerViewPaginatedAdapter(null, taskRegisterProvider, context().commonrepository(this.tablename));
         clientAdapter.setCurrentlimit(20);
         clientsView.setAdapter(clientAdapter);
+    }
+
+    @Override
+    public void setupViews(View view) {
+        super.setupViews(view);
+        if (getActivity() != null) {
+            ((TextView) view.findViewById(R.id.intervention_type)).setText(
+                    getActivity().getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
+        }
     }
 
     @Override

@@ -151,6 +151,8 @@ public interface Constants {
 
     interface TaskRegister {
         String VIEW_IDENTIFIER = "task_register";
+
+        String INTERVENTION_TYPE = "intervention_type";
     }
 
 
