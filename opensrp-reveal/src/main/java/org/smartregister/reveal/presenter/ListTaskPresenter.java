@@ -33,6 +33,8 @@ import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.util.Constants.JsonForm;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.Constants.StructureType;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -62,6 +64,8 @@ import static org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FOR
 import static org.smartregister.reveal.util.Constants.JsonForm.HEAD_OF_HOUSEHOLD;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
+import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM_BOTSWANA;
+import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM_NAMIBIA;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
@@ -475,7 +479,14 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         String structureVersion = getPropertyValue(feature, LOCATION_VERSION);
         String structureType = getPropertyValue(feature, LOCATION_TYPE);
         if (SPRAY_EVENT.equals(encounterType)) {
-            String formString = AssetHandler.readFileFromAssetsFolder(SPRAY_FORM, listTaskView.getContext());
+            String formString = null;
+            if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
+                formString = AssetHandler.readFileFromAssetsFolder(SPRAY_FORM_NAMIBIA, listTaskView.getContext());
+            } else if (BuildConfig.BUILD_COUNTRY == Country.BOTSWANA) {
+                formString = AssetHandler.readFileFromAssetsFolder(SPRAY_FORM_BOTSWANA, listTaskView.getContext());
+            } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                formString = AssetHandler.readFileFromAssetsFolder(SPRAY_FORM, listTaskView.getContext());
+            }
             String sprayStatus = cardDetails == null ? null : cardDetails.getSprayStatus();
             String familyHead = cardDetails == null ? null : cardDetails.getFamilyHead();
             startForm(formString, structureId, structureUUID, structureVersion, structureType, taskIdentifier,

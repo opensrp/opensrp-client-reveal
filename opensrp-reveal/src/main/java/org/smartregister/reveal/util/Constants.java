@@ -104,6 +104,8 @@ public interface Constants {
 
         String SPRAY_STATUS = "sprayStatus";
 
+        String TASK_BUSINESS_STATUS = "business_status";
+
         String STRUCTURE_TYPE = "structureType";
 
         String HEAD_OF_HOUSEHOLD = "familyHeadName";
@@ -113,6 +115,10 @@ public interface Constants {
         String SPRAY_FORM = "json.form/spray_form.json";
 
         String THAILAND_MOSQUITO_COLLECTION_FORM = "json.form/thailand_mosquito_collection_form.json";
+
+        String SPRAY_FORM_NAMIBIA = "json.form/namibia_spray_form.json";
+
+        String SPRAY_FORM_BOTSWANA = "json.form/botswana_spray_form.json";
 
         String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
 
@@ -140,6 +146,11 @@ public interface Constants {
 
     interface Action {
         String STRUCTURE_TASK_SYNCHED = "reveal.STRUCTURE_TASK_SYNCHED";
+    }
+
+    interface ECClientConfig {
+        String NAMIBIA_EC_CLIENT_FIELDS = "ec_client_fields_namibia.json";
+        String BOTSWANA_EC_CLIENT_FIELDS = "ec_client_fields_botswana.json";
     }
 
 
