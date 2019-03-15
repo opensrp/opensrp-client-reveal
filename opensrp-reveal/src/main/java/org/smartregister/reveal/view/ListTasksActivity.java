@@ -445,15 +445,15 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void openCardView(CardDetails cardDetails) {
         if (cardDetails instanceof SprayCardDetails) {
-            populateSprayCardDetails((SprayCardDetails) cardDetails);
+            populateSprayCardTextViews((SprayCardDetails) cardDetails);
             sprayCardView.setVisibility(View.VISIBLE);
         } else if (cardDetails instanceof MosquitoCollectionCardDetails) {
-            populateMosquitoCollectionCardDetails((MosquitoCollectionCardDetails) cardDetails);
+            populateMosquitoCollectionCardTextViews((MosquitoCollectionCardDetails) cardDetails);
             mosquitoCollectionCardView.setVisibility(View.VISIBLE);
         }
     }
 
-    private void populateSprayCardDetails(SprayCardDetails sprayCardDetails) {
+    private void populateSprayCardTextViews(SprayCardDetails sprayCardDetails) {
         tvSprayStatus.setTextColor(getResources().getColor(sprayCardDetails.getStatusColor()));
         tvSprayStatus.setText(sprayCardDetails.getStatusMessage());
         tvPropertyType.setText(sprayCardDetails.getPropertyType());
@@ -468,7 +468,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         }
     }
 
-    private void populateMosquitoCollectionCardDetails(MosquitoCollectionCardDetails mosquitoCollectionCardDetails) {
+    private void populateMosquitoCollectionCardTextViews(MosquitoCollectionCardDetails mosquitoCollectionCardDetails) {
         tvMosquitoCollectionStatus.setText(mosquitoCollectionCardDetails.getStatus());
         tvMosquitoTrapSetDate.setText(mosquitoCollectionCardDetails.getTrapSetDate());
         tvMosquitoTrapFollowUpDate.setText(mosquitoCollectionCardDetails.getTrapFollowUpDate());
