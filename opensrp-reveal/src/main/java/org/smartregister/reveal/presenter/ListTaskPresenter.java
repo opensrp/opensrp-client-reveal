@@ -492,8 +492,10 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             startForm(formString, structureId, structureUUID, structureVersion, structureType, taskIdentifier,
                     taskBusinessStatus, taskStatus, structureType, sprayStatus, familyHead);
         } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)) {
-            // TODO: read this value from manifest file i.e. generic or thailand?
-            String formString = AssetHandler.readFileFromAssetsFolder(THAILAND_MOSQUITO_COLLECTION_FORM, listTaskView.getContext());
+            String formString = null;
+            if (BuildConfig.BUILD_COUNTRY.equals(Country.THAILAND)) {
+                formString = AssetHandler.readFileFromAssetsFolder(THAILAND_MOSQUITO_COLLECTION_FORM, listTaskView.getContext());
+            }
             startForm(formString, structureId, structureUUID, structureVersion, structureType, taskIdentifier,
                     taskBusinessStatus, taskStatus, structureType, null, null);
         }
