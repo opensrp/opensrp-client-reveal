@@ -56,6 +56,8 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
+import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.RevealMapHelper;
@@ -112,13 +114,17 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private DrawerLayout mDrawerLayout;
 
     private CardView sprayCardView;
-    private CardView mosquitoCollectionCardView;
     private TextView tvSprayStatus;
     private TextView tvPropertyType;
     private TextView tvSprayDate;
     private TextView tvSprayOperator;
     private TextView tvFamilyHead;
     private TextView tvReason;
+
+    private CardView mosquitoCollectionCardView;
+    private TextView tvMosquitoCollectionStatus;
+    private TextView tvMosquitoTrapSetDate;
+    private TextView tvMosquitoTrapFollowUpDate;
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
 
@@ -169,6 +175,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         tvSprayOperator = findViewById(R.id.user_id);
         tvFamilyHead = findViewById(R.id.family_head);
         tvReason = findViewById(R.id.reason);
+
+        tvMosquitoCollectionStatus = findViewById(R.id.trap_collection_status);
+        tvMosquitoTrapSetDate = findViewById(R.id.trap_set_date);
+        tvMosquitoTrapFollowUpDate = findViewById(R.id.trap_follow_up_date);
+
         findViewById(R.id.change_spray_status).setOnClickListener(this);
 
         findViewById(R.id.register_family).setOnClickListener(this);
@@ -433,22 +444,34 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void openCardView(CardDetails cardDetails) {
+        if (cardDetails instanceof SprayCardDetails) {
+            populateSprayCardDetails((SprayCardDetails) cardDetails);
+            sprayCardView.setVisibility(View.VISIBLE);
+        } else if (cardDetails instanceof MosquitoCollectionCardDetails) {
+            populateMosquitoCollectionCardDetails((MosquitoCollectionCardDetails) cardDetails);
+            mosquitoCollectionCardView.setVisibility(View.VISIBLE);
+        }
+    }
 
-        tvSprayStatus.setTextColor(getResources().getColor(cardDetails.getStatusColor()));
-        tvSprayStatus.setText(cardDetails.getStatusMessage());
-        tvPropertyType.setText(cardDetails.getPropertyType());
-        tvSprayDate.setText(cardDetails.getSprayDate());
-        tvSprayOperator.setText(cardDetails.getSprayOperator());
-        tvFamilyHead.setText(cardDetails.getFamilyHead());
-        if (!TextUtils.isEmpty(cardDetails.getReason())) {
+    private void populateSprayCardDetails(SprayCardDetails sprayCardDetails) {
+        tvSprayStatus.setTextColor(getResources().getColor(sprayCardDetails.getStatusColor()));
+        tvSprayStatus.setText(sprayCardDetails.getStatusMessage());
+        tvPropertyType.setText(sprayCardDetails.getPropertyType());
+        tvSprayDate.setText(sprayCardDetails.getSprayDate());
+        tvSprayOperator.setText(sprayCardDetails.getSprayOperator());
+        tvFamilyHead.setText(sprayCardDetails.getFamilyHead());
+        if (!TextUtils.isEmpty(sprayCardDetails.getReason())) {
             tvReason.setVisibility(View.VISIBLE);
-            tvReason.setText(cardDetails.getReason());
+            tvReason.setText(sprayCardDetails.getReason());
         } else {
             tvReason.setVisibility(View.GONE);
         }
+    }
 
-//        sprayCardView.setVisibility(View.VISIBLE); // todo : uncomment this
-        mosquitoCollectionCardView.setVisibility(View.VISIBLE);
+    private void populateMosquitoCollectionCardDetails(MosquitoCollectionCardDetails mosquitoCollectionCardDetails) {
+        tvMosquitoCollectionStatus.setText(mosquitoCollectionCardDetails.getStatus());
+        tvMosquitoTrapSetDate.setText(mosquitoCollectionCardDetails.getTrapSetDate());
+        tvMosquitoTrapFollowUpDate.setText(mosquitoCollectionCardDetails.getTrapFollowUpDate());
     }
 
     @Override

@@ -16,6 +16,7 @@ import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.SprayCardDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +86,7 @@ public interface ListTaskContract {
 
         void onCardDetailsFetched(CardDetails cardDetails);
 
-        void onSprayFormDetailsFetched(CardDetails finalCardDetails);
+        void onSprayFormDetailsFetched(SprayCardDetails finalCardDetails);
     }
 
 }

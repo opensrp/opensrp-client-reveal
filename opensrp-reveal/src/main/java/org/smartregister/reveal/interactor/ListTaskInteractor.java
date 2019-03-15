@@ -33,7 +33,8 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract.PresenterCallBack;
-import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
+import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants.GeoJSON;
@@ -127,15 +128,15 @@ public class ListTaskInteractor {
         appExecutors.diskIO().execute(runnable);
     }
 
-    public void fetchSprayDetails(String structureId, boolean isSprayForm) {
+    public void fetchSprayDetails(String structureId, boolean isForSprayForm) {
         final String sql = "SELECT spray_status, not_sprayed_reason, not_sprayed_other_reason, property_type, spray_date," +
                 " spray_operator, family_head_name FROM sprayed_structures WHERE id=?";
         SQLiteDatabase db = RevealApplication.getInstance().getRepository().getWritableDatabase();
         Cursor cursor = db.rawQuery(sql, new String[]{structureId});
-        CardDetails cardDetails = null;
+        SprayCardDetails sprayCardDetails = null;
         try {
             if (cursor.moveToFirst()) {
-                cardDetails = createCardDetails(cursor);
+                sprayCardDetails = createSprayCardDetails(cursor);
             }
         } catch (Exception e) {
             Log.e(TAG, Log.getStackTraceString(e));
@@ -145,17 +146,17 @@ public class ListTaskInteractor {
             }
         }
 
-        CardDetails finalCardDetails = cardDetails;
+        SprayCardDetails finalSprayCardDetails = sprayCardDetails;
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-                        if (isSprayForm) {
-                            presenterCallBack.onSprayFormDetailsFetched(finalCardDetails);
+                        if (isForSprayForm) {
+                            presenterCallBack.onSprayFormDetailsFetched(finalSprayCardDetails);
                         } else {
-                            presenterCallBack.onCardDetailsFetched(finalCardDetails);
+                            presenterCallBack.onCardDetailsFetched(finalSprayCardDetails);
                         }
                     }
                 });
@@ -164,12 +165,18 @@ public class ListTaskInteractor {
         appExecutors.diskIO().execute(runnable);
     }
 
-    private CardDetails createCardDetails(Cursor cursor) {
+    public void fetchMosquitoCollectionDetails(String structureId, boolean isForMosquitoCollectionForm) {
+        // todo: add sql logic from mosquito collection ec tables
+        // todo: for now just open card view, use dummy details
+        presenterCallBack.onCardDetailsFetched(new MosquitoCollectionCardDetails("Status: Active", "Set Date: 12/09/14", "Follow-up Date: 09/01/17"));
+    }
+
+    private SprayCardDetails createSprayCardDetails(Cursor cursor) {
         String reason = cursor.getString(cursor.getColumnIndex("not_sprayed_reason"));
         if ("other".equals(reason)) {
             reason = cursor.getString(cursor.getColumnIndex("not_sprayed_other_reason"));
         }
-        return new CardDetails(
+        return new SprayCardDetails(
                 cursor.getString(cursor.getColumnIndex("spray_status")),
                 cursor.getString(cursor.getColumnIndex("property_type")),
                 cursor.getString(cursor.getColumnIndex("spray_date")),
