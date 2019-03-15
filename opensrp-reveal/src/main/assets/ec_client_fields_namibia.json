@@ -1,0 +1,70 @@
+{
+  "bindobjects": [
+    {
+      "name": "sprayed_structures",
+      "columns": [
+        {
+          "column_name": "base_entity_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "baseEntityId"
+          }
+        },
+        {
+          "column_name": "spray_status",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "business_status"
+          }
+        },
+        {
+          "column_name": "spray_date",
+          "type": "Event",
+          "json_mapping": {
+            "field": "eventDate"
+          }
+        },
+        {
+          "column_name": "spray_operator",
+          "type": "Event",
+          "json_mapping": {
+            "field": "providerId"
+          }
+        },
+        {
+          "column_name": "property_type",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "structureType"
+          }
+        },
+        {
+          "column_name": "not_sprayed_reason",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "reasons_for_not_spraying_household"
+          }
+        },
+        {
+          "column_name": "not_sprayed_other_reason",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "refusal_reason_for_not_spraying_household_comment"
+          }
+        },
+        {
+          "column_name": "family_head_name",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "name_household"
+          }
+        }
+      ]
+    }
+  ]
+}

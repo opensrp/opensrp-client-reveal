@@ -33,6 +33,8 @@ import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.util.Constants.JsonForm;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.Constants.StructureType;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -60,7 +62,6 @@ import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.HEAD_OF_HOUSEHOLD;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
-import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
@@ -462,7 +463,13 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     private void startSprayForm(String structureId, String structureUUID, String structureVersion, String structureType,
                                 String taskIdentifier, String taskBusinessStatus, String taskStatus, String propertyType, String sprayStatus, String familyHead) {
         try {
-            String formString = AssetHandler.readFileFromAssetsFolder(SPRAY_FORM, listTaskView.getContext());
+            String sprayForm = JsonForm.SPRAY_FORM;
+            if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
+                sprayForm = JsonForm.SPRAY_FORM_NAMIBIA;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.BOTSWANA) {
+                sprayForm = JsonForm.SPRAY_FORM_BOTSWANA;
+            }
+            String formString = AssetHandler.readFileFromAssetsFolder(sprayForm, listTaskView.getContext());
             if (StringUtils.isBlank(structureType)) {
                 structureType = StructureType.NON_RESIDENTIAL;
             }

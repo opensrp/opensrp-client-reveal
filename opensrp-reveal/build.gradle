@@ -34,6 +34,7 @@ jacoco {
 android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
+    testOptions.unitTests.includeAndroidResources = true
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -81,11 +82,13 @@ android {
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
             buildConfigField "int", "SYNC_INTERVAL_IN_MINUTES", '2'
+            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.ZAMBIA"
             buildConfigField "int", "PULL_UNIQUE_IDS_MINUTES", '10'
             buildConfigField "String", "ADMIN_PASSWORD_NOT_NEAR_STRUCTURES", '"AdminPass1"'
             buildConfigField "float", "MY_LOCATION_BUFFER", '100'
             buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '90'
+
 
             if (project.rootProject.file("local.properties").exists()) {
                 Properties properties = new Properties()
@@ -110,6 +113,7 @@ android {
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
             buildConfigField "int", "SYNC_INTERVAL_IN_MINUTES", '2'
+            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.ZAMBIA"
             buildConfigField "int", "PULL_UNIQUE_IDS_MINUTES", '10'
             buildConfigField "String", "ADMIN_PASSWORD_NOT_NEAR_STRUCTURES", '"AdminPass1"'
             buildConfigField "float", "MY_LOCATION_BUFFER", '100'
@@ -187,13 +191,14 @@ dependencies {
 
     implementation 'io.ona.kujaku:utils:0.6.1'
 
-    implementation('org.smartregister:opensrp-client-core:1.6.8-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.6.9-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'net.zetetic', module: 'android-database-sqlcipher'
         exclude group: 'com.google.android.gms', module: 'play-services-vision'
+        exclude group: 'com.github.ybq', module: 'Android-SpinKit'
         exclude group: 'org.apache.httpcomponents', module: 'httpmime'
         exclude group: 'com.github.ybq', module: 'Android-SpinKit'
     }
@@ -204,9 +209,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:1.3.12-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:1.5.1-SNAPSHOT@aar') {
         transitive = true
-        exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'cardview-v7'
         exclude group: 'com.android.support', module: 'support-media-compat'
@@ -230,6 +234,9 @@ dependencies {
 
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 
+
+    implementation 'com.github.ybq:Android-SpinKit:1.2.0'
+
     implementation 'com.evernote:android-job:1.2.6'
 
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
@@ -244,10 +251,10 @@ dependencies {
     testImplementation 'org.apache.maven:maven-ant-tasks:2.1.3'
     testImplementation('com.squareup:fest-android:1.0.8') { exclude module: 'support-v4' }
 
-    testImplementation 'org.robolectric:robolectric:3.8'
-    testImplementation 'org.robolectric:shadows-multidex:3.8'
+    testImplementation 'org.robolectric:robolectric:4.2'
+    testImplementation 'org.robolectric:shadows-multidex:4.2'
     // PowerMock
-    def powerMockVersion = '1.7.3'
+    def powerMockVersion = '2.0.0'
     testImplementation "org.powermock:powermock-module-junit4:$powerMockVersion"
     testImplementation "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testImplementation "org.powermock:powermock-api-mockito2:$powerMockVersion"
