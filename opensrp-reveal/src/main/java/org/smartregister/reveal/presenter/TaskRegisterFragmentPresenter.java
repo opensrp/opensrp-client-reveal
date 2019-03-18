@@ -7,9 +7,11 @@ import org.smartregister.configurableviews.model.RegisterConfiguration;
 import org.smartregister.configurableviews.model.View;
 import org.smartregister.configurableviews.model.ViewConfiguration;
 import org.smartregister.domain.Task.TaskStatus;
+import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.fragment.TaskRegisterFragment;
+import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
+import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.Utils;
-import org.smartregister.view.contract.BaseRegisterFragmentContract;
 
 import java.lang.ref.WeakReference;
 import java.util.Set;
@@ -17,7 +19,7 @@ import java.util.Set;
 /**
  * Created by samuelgithengi on 3/11/19.
  */
-public class TaskRegisterFragmentPresenter implements BaseRegisterFragmentContract.Presenter {
+public class TaskRegisterFragmentPresenter implements TaskRegisterFragmentContract.Presenter {
 
     private WeakReference<TaskRegisterFragment> view;
 
@@ -25,14 +27,19 @@ public class TaskRegisterFragmentPresenter implements BaseRegisterFragmentContra
 
     private ConfigurableViewsHelper viewsHelper;
 
-
     private Set<View> visibleColumns;
 
+    private TaskRegisterFragmentInteractor interactor;
+
+    private String countSelect;
+
+    private String mainSelect;
 
     public TaskRegisterFragmentPresenter(TaskRegisterFragment view, String viewConfigurationIdentifier) {
         this.view = new WeakReference<>(view);
         this.viewConfigurationIdentifier = viewConfigurationIdentifier;
         viewsHelper = ConfigurableViewsLibrary.getInstance().getConfigurableViewsHelper();
+        interactor = new TaskRegisterFragmentInteractor();
     }
 
     @Override
@@ -43,13 +50,22 @@ public class TaskRegisterFragmentPresenter implements BaseRegisterFragmentContra
                 RegisterConfiguration config = (RegisterConfiguration) viewConfiguration.getMetadata();
                 visibleColumns = viewsHelper.getRegisterActiveColumns(this.viewConfigurationIdentifier);
             }
-
         }
     }
 
     @Override
     public void initializeQueries(String mainCondition) {
+
+        String tableName = TaskRegister.TASK_TABLE;
+
+        countSelect = interactor.countSelect(tableName, mainCondition);
+        mainSelect = interactor.mainSelect(tableName, mainCondition);
+
+        getView().initializeQueryParams(tableName, countSelect, mainSelect);
         getView().initializeAdapter(visibleColumns);
+
+        getView().countExecute();
+        getView().filterandSortInInitializeQueries();
     }
 
     @Override
@@ -63,7 +79,7 @@ public class TaskRegisterFragmentPresenter implements BaseRegisterFragmentContra
     }
 
     public String getMainCondition() {
-        return String.format(" status IN (%s, %s) ", TaskStatus.READY, TaskStatus.IN_PROGRESS);
+        return String.format(" status IN ('%s', '%s') ", TaskStatus.READY, TaskStatus.IN_PROGRESS);
     }
 
     public String getDefaultSortQuery() {
@@ -74,4 +90,13 @@ public class TaskRegisterFragmentPresenter implements BaseRegisterFragmentContra
         return view.get();
     }
 
+    @Override
+    public String countSelect() {
+        return countSelect;
+    }
+
+    @Override
+    public String mainSelect() {
+        return mainSelect;
+    }
 }

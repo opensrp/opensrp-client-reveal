@@ -94,6 +94,6 @@
     <string name="focus_investigation">Focus Investigation</string>
     <string name="irs">IRS</string>
     <string name="task_icon">Task Icon</string>
-    <string name="distance_from_structure">%1f m away</string>
+    <string name="distance_from_structure">%1.0f m away</string>
 
 </resources>

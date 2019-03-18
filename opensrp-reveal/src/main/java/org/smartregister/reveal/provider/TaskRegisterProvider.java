@@ -2,14 +2,14 @@ package org.smartregister.reveal.provider;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
-import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.cursoradapter.RecyclerViewProvider;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.R;
@@ -21,7 +21,7 @@ import org.smartregister.view.dialog.ServiceModeOption;
 import org.smartregister.view.dialog.SortOption;
 import org.smartregister.view.viewholder.OnClickFormLauncher;
 
-import java.util.Set;
+import java.text.MessageFormat;
 
 /**
  * Created by samuelgithengi on 3/12/19.
@@ -29,12 +29,15 @@ import java.util.Set;
 public class TaskRegisterProvider implements RecyclerViewProvider<TaskRegisterViewHolder> {
 
     private Context context;
+    private View.OnClickListener registerActionHandler;
+    private View.OnClickListener paginationClickListener;
 
     private StructureRepository structureRepository;
 
-
-    public TaskRegisterProvider(FragmentActivity activity, ) {
+    public TaskRegisterProvider(FragmentActivity activity, View.OnClickListener registerActionHandler, View.OnClickListener paginationClickListener) {
         context = activity;
+        this.registerActionHandler = registerActionHandler;
+        this.paginationClickListener = paginationClickListener;
     }
 
     @Override
@@ -42,12 +45,22 @@ public class TaskRegisterProvider implements RecyclerViewProvider<TaskRegisterVi
 
         viewHolder.setIcon(R.drawable.ic_bcc);
         viewHolder.setTaskName("Behaviour Change communication");
-        //viewHolder.setDistanceFromStructure(16);
-        viewHolder.setTaskAction("Record BCC");
+        viewHolder.setDistanceFromStructure(16);
+        viewHolder.setTaskAction("Record BCC", registerActionHandler);
     }
 
     @Override
-    public void getFooterView(RecyclerView.ViewHolder viewHolder, int currentPageCount, int totalCount, boolean hasNextPage, boolean hasPreviousPage) {
+    public void getFooterView(RecyclerView.ViewHolder viewHolder, int currentPageCount, int totalPageCount, boolean hasNextPage, boolean hasPreviousPage) {
+        FooterViewHolder footerViewHolder = (FooterViewHolder) viewHolder;
+        footerViewHolder.pageInfoView.setText(
+                MessageFormat.format(context.getString(R.string.str_page_info), currentPageCount,
+                        totalPageCount));
+
+        footerViewHolder.nextPageView.setVisibility(hasNextPage ? View.VISIBLE : View.INVISIBLE);
+        footerViewHolder.previousPageView.setVisibility(hasPreviousPage ? View.VISIBLE : View.INVISIBLE);
+
+        footerViewHolder.nextPageView.setOnClickListener(paginationClickListener);
+        footerViewHolder.previousPageView.setOnClickListener(paginationClickListener);
     }
 
     @Override
@@ -77,11 +90,27 @@ public class TaskRegisterProvider implements RecyclerViewProvider<TaskRegisterVi
 
     @Override
     public RecyclerView.ViewHolder createFooterHolder(ViewGroup parent) {
-        return null;
+        View view = inflater().inflate(R.layout.smart_register_pagination, parent, false);
+        return new FooterViewHolder(view);
     }
 
     @Override
     public boolean isFooterViewHolder(RecyclerView.ViewHolder viewHolder) {
-        return false;
+        return viewHolder instanceof FooterViewHolder;
     }
+
+    private class FooterViewHolder extends RecyclerView.ViewHolder {
+        private TextView pageInfoView;
+        private Button nextPageView;
+        private Button previousPageView;
+
+        private FooterViewHolder(View view) {
+            super(view);
+
+            nextPageView = view.findViewById(R.id.btn_next_page);
+            previousPageView = view.findViewById(R.id.btn_previous_page);
+            pageInfoView = view.findViewById(R.id.txt_page_info);
+        }
+    }
+
 }

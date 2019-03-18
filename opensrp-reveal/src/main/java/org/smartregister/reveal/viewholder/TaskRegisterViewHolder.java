@@ -28,6 +28,7 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
 
     public TaskRegisterViewHolder(@NonNull View itemView) {
         super(itemView);
+        context = itemView.getContext();
         iconView = itemView.findViewById(R.id.task_icon);
         nameView = itemView.findViewById(R.id.task_name);
         distanceView = itemView.findViewById(R.id.distance_from_structure);

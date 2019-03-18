@@ -153,6 +153,9 @@ public interface Constants {
         String VIEW_IDENTIFIER = "task_register";
 
         String INTERVENTION_TYPE = "intervention_type";
+
+
+        String TASK_TABLE = "task";
     }
 
 
