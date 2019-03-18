@@ -104,7 +104,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     private LocationHelper locationHelper;
 
-    private PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
+    private PreferencesUtil prefsUtil;
 
     private boolean changedCurrentSelection;
 
@@ -132,6 +132,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         locationHelper = LocationHelper.getInstance();
         passwordDialog = PasswordDialogUtils.initPasswordDialog(listTaskView.getContext(), this);
         locationPresenter = new ValidateUserLocationPresenter(listTaskView, this);
+        prefsUtil = PreferencesUtil.getInstance();
     }
 
     public void onInitializeDrawerLayout() {
