@@ -11,8 +11,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.smartregister.cursoradapter.RecyclerViewProvider;
+import org.smartregister.domain.Task;
 import org.smartregister.repository.StructureRepository;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.viewholder.TaskRegisterViewHolder;
 import org.smartregister.view.contract.SmartRegisterClient;
 import org.smartregister.view.contract.SmartRegisterClients;
@@ -22,6 +27,7 @@ import org.smartregister.view.dialog.SortOption;
 import org.smartregister.view.viewholder.OnClickFormLauncher;
 
 import java.text.MessageFormat;
+import java.util.Random;
 
 /**
  * Created by samuelgithengi on 3/12/19.
@@ -34,19 +40,43 @@ public class TaskRegisterProvider implements RecyclerViewProvider<TaskRegisterVi
 
     private StructureRepository structureRepository;
 
+    private TaskRepository taskRepository;
+
     public TaskRegisterProvider(FragmentActivity activity, View.OnClickListener registerActionHandler, View.OnClickListener paginationClickListener) {
         context = activity;
         this.registerActionHandler = registerActionHandler;
         this.paginationClickListener = paginationClickListener;
+        taskRepository = RevealApplication.getInstance().getTaskRepository();
     }
 
     @Override
     public void getView(Cursor cursor, SmartRegisterClient client, TaskRegisterViewHolder viewHolder) {
-
-        viewHolder.setIcon(R.drawable.ic_bcc);
-        viewHolder.setTaskName("Behaviour Change communication");
-        viewHolder.setDistanceFromStructure(16);
-        viewHolder.setTaskAction("Record BCC", registerActionHandler);
+        Random random = new Random();
+        Task task = taskRepository.readNativeCursor(cursor);
+        Float distance = 16f;
+        String name = cursor.getString(cursor.getColumnIndex(DatabaseKeys.FAMILY_NAME));
+        String action = null;
+        if (Constants.Intervention.IRS.equals(task.getCode())) {
+            if (name == null) {
+                name = "Structure " + random.nextInt(100);
+            }
+            action = "Record \n Status";
+        } else if (Constants.Intervention.MOSQUITO_COLLECTION.equals(task.getCode())) {
+            name = "Mosquito collection point";
+            action = "Record \n Collection";
+        } else if (Constants.Intervention.LARVAL_DIPPING.equals(task.getCode())) {
+            name = "Larval breeding site";
+            action = "Record \n Larvacide";
+        } else if (Constants.Intervention.BCC.equals(task.getCode())) {
+            viewHolder.setIcon(R.drawable.ic_bcc);
+            name = "Behaviour Change communication";
+            action = "Record \n BCC";
+            distance = null;
+        }
+        viewHolder.setTaskName(name);
+        viewHolder.setTaskAction(action, registerActionHandler);
+        if (distance != null)
+            viewHolder.setDistanceFromStructure(distance);
     }
 
     @Override

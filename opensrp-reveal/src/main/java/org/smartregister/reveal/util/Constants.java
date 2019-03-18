@@ -81,6 +81,7 @@ public interface Constants {
         String LARVAL_DIPPING = "Larval Dipping";
 
         String IRS_VISIT = "IRS Visit";
+        String BCC = "BCC";
     }
 
     interface BusinessStatus {
@@ -154,8 +155,24 @@ public interface Constants {
 
         String INTERVENTION_TYPE = "intervention_type";
 
+    }
+
+    interface DatabaseKeys {
 
         String TASK_TABLE = "task";
+
+        String SPRAYED_STRUCTURES = "sprayed_structures";
+
+        String ID = "id";
+
+        String CODE = "code";
+
+        String FOR = "for";
+
+        String BUSINESS_STATUS = "business_status";
+
+        String FAMILY_NAME = "family_head_name";
+
     }
 
 

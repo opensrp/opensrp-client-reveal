@@ -37,6 +37,7 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
 
 
     public void setIcon(@DrawableRes int iconResource) {
+        iconView.setVisibility(View.VISIBLE);
         iconView.setImageDrawable(context.getResources().getDrawable(iconResource));
     }
 
@@ -46,6 +47,10 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
 
     public void setDistanceFromStructure(float distance) {
         distanceView.setText(context.getString(R.string.distance_from_structure, distance));
+    }
+
+    public void hideDistanceFromStructure() {
+        distanceView.setVisibility(View.GONE);
     }
 
     public void setTaskAction(String actionLabel, View.OnClickListener onClickListener) {

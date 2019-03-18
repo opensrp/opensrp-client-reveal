@@ -10,7 +10,7 @@ import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.fragment.TaskRegisterFragment;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
-import org.smartregister.reveal.util.Constants.TaskRegister;
+import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Utils;
 
 import java.lang.ref.WeakReference;
@@ -56,7 +56,7 @@ public class TaskRegisterFragmentPresenter implements TaskRegisterFragmentContra
     @Override
     public void initializeQueries(String mainCondition) {
 
-        String tableName = TaskRegister.TASK_TABLE;
+        String tableName = DatabaseKeys.TASK_TABLE;
 
         countSelect = interactor.countSelect(tableName, mainCondition);
         mainSelect = interactor.mainSelect(tableName, mainCondition);
