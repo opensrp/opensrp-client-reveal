@@ -31,6 +31,6 @@
 
     <dimen name="task_register_launcher_horizontal_padding">16dp</dimen>
     <dimen name="task_register_launcher_vertical_padding">12dp</dimen>
-    <dimen name="task_register_launcher_text_size">18sp</dimen>
+    <dimen name="task_register_text_size">18sp</dimen>
 
 </resources>
