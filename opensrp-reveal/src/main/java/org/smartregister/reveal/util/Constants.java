@@ -24,6 +24,10 @@ public interface Constants {
 
     String STRUCTURE = "Structure";
 
+    String START_DATE = "start_date";
+
+    String END_DATE = "end_date";
+
     double MY_LOCATION_ZOOM_LEVEL = 17.5; // modifying this will also necessitate modifying the VERTICAL_OFFSET
 
     double VERTICAL_OFFSET = -0.0003;
@@ -104,6 +108,10 @@ public interface Constants {
 
         String SPRAY_STATUS = "sprayStatus";
 
+        String TRAP_SET_DATE = "trap_start";
+
+        String TRAP_FOLLOW_UP_DATE = "trap_end";
+
         String TASK_BUSINESS_STATUS = "business_status";
 
         String STRUCTURE_TYPE = "structureType";
@@ -145,7 +153,7 @@ public interface Constants {
     }
 
     interface Action {
-        String STRUCTURE_TASK_SYNCHED = "reveal.STRUCTURE_TASK_SYNCHED";
+        String STRUCTURE_TASK_SYNCED = "reveal.STRUCTURE_TASK_SYNCED";
     }
 
     interface ECClientConfig {

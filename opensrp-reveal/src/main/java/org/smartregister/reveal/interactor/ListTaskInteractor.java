@@ -373,8 +373,9 @@ public class ListTaskInteractor {
 
     private void saveMosquitoCollectionForm(JSONObject jsonForm) {
         try {
-            saveEvent(jsonForm, MOSQUITO_COLLECTION_EVENT, STRUCTURE);
-            presenterCallBack.onMosquitoCollectionFormSaved();
+            org.smartregister.domain.db.Event event = saveEvent(jsonForm, MOSQUITO_COLLECTION_EVENT, STRUCTURE);
+            clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
+            presenterCallBack.onMosquitoCollectionFormSaved(); // todo: implement this as appexecutor thread
         } catch (Exception e) {
             Log.e(TAG, "Error saving mosquito collection point data");
         }
