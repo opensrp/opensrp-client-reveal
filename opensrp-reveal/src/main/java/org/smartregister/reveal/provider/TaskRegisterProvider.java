@@ -60,17 +60,17 @@ public class TaskRegisterProvider implements RecyclerViewProvider<TaskRegisterVi
             if (name == null) {
                 name = "Structure " + random.nextInt(100);
             }
-            action = "Record \n Status";
+            action = context.getString(R.string.record_status);
         } else if (Constants.Intervention.MOSQUITO_COLLECTION.equals(task.getCode())) {
-            name = "Mosquito collection point";
-            action = "Record \n Collection";
+            name = context.getString(R.string.mosquito_collection_point);
+            action = context.getString(R.string.record_mosquito_collection);
         } else if (Constants.Intervention.LARVAL_DIPPING.equals(task.getCode())) {
-            name = "Larval breeding site";
-            action = "Record \n Larvacide";
+            name = context.getString(R.string.larval_breeding_site);
+            action = context.getString(R.string.record_larvacide);
         } else if (Constants.Intervention.BCC.equals(task.getCode())) {
             viewHolder.setIcon(R.drawable.ic_bcc);
-            name = "Behaviour Change communication";
-            action = "Record \n BCC";
+            name = context.getString(R.string.bcc);
+            action = context.getString(R.string.record_bcc);
             distance = null;
         }
         viewHolder.setTaskName(name);

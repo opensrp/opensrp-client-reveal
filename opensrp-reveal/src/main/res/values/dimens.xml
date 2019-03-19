@@ -32,9 +32,10 @@
     <dimen name="task_register_launcher_horizontal_padding">12dp</dimen>
     <dimen name="task_register_launcher_vertical_padding">8dp</dimen>
     <dimen name="task_register_text_size">16sp</dimen>
-    <dimen name="task_register_padding">10dp</dimen>
+    <dimen name="task_register_padding">8dp</dimen>
     <dimen name="task_register_action_width">110dp</dimen>
-    <dimen name="task_register_action_text">18sp</dimen>
+    <dimen name="task_register_action_text">16sp</dimen>
+    <dimen name="task_register_vertical_padding">4dp</dimen>
 
     <dimen name="task_toolbar_margin">20dp</dimen>
 </resources>

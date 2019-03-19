@@ -38,7 +38,6 @@ public class TaskRegisterActivity extends BaseRegisterActivity {
 
     @Override
     public void startFormActivity(String formName, String entityId, String metaData) {
-
     }
 
     @Override
