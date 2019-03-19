@@ -6,11 +6,14 @@ import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
 import org.smartregister.configurableviews.model.RegisterConfiguration;
 import org.smartregister.configurableviews.model.View;
 import org.smartregister.configurableviews.model.ViewConfiguration;
+import org.smartregister.domain.Location;
 import org.smartregister.domain.Task.TaskStatus;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.fragment.TaskRegisterFragment;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
 import java.lang.ref.WeakReference;
@@ -79,7 +82,8 @@ public class TaskRegisterFragmentPresenter implements TaskRegisterFragmentContra
     }
 
     public String getMainCondition() {
-        return String.format(" status IN ('%s', '%s') ", TaskStatus.READY, TaskStatus.IN_PROGRESS);
+        Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+        return String.format(" group_id = '%s' AND status IN ('%s', '%s') ", operationalArea.getId(), TaskStatus.READY, TaskStatus.IN_PROGRESS);
     }
 
     public String getDefaultSortQuery() {
