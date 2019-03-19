@@ -39,7 +39,9 @@ public class LocationTaskIntentService extends IntentService {
     }
 
     private void doSync() {
-        LocationServiceHelper locationServiceHelper = LocationServiceHelper.getInstance();
+        LocationServiceHelper locationServiceHelper = new LocationServiceHelper(
+                RevealApplication.getInstance().getLocationRepository(),
+                RevealApplication.getInstance().getStructureRepository());
         TaskServiceHelper taskServiceHelper = TaskServiceHelper.getInstance();
 
 

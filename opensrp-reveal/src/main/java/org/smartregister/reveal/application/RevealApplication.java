@@ -35,6 +35,7 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.job.RevealJobCreator;
+import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.repository.RevealRepository;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.RevealSyncConfiguration;
@@ -203,6 +204,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     public StructureRepository getStructureRepository() {
         if (structureRepository == null) {
             structureRepository = new StructureRepository(getRepository());
+            structureRepository.setHelper(new RevealMappingHelper());
         }
         return structureRepository;
     }
