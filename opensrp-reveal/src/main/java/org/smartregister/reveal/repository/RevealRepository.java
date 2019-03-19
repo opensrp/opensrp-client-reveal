@@ -86,7 +86,6 @@ public class RevealRepository extends Repository {
                 new HashSet<>(Arrays.asList(TABLE_NAME.FAMILY, TABLE_NAME.FAMILY_MEMBER)),
                 RevealApplication.createCommonFtsObject());
 
-
         //client process family events after 5 seconds so that get calls to getDatabase return
         new Timer().schedule(new TimerTask() {
             @Override

@@ -17,7 +17,7 @@ public class TaskRegisterFragmentInteractor {
 
     public String mainSelect(String tableName, String mainCondition) {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
-        queryBuilder.SelectInitiateMainTable(tableName, mainColumns(tableName));
+        queryBuilder.SelectInitiateMainTable(tableName, mainColumns(tableName),DatabaseKeys.ID);
         queryBuilder.customJoin("LEFT JOIN " + DatabaseKeys.SPRAYED_STRUCTURES +
                 " ON  " + tableName + "." + DatabaseKeys.FOR + " = " + DatabaseKeys.SPRAYED_STRUCTURES + "." + DBConstants.KEY.BASE_ENTITY_ID + " COLLATE NOCASE ");
         return queryBuilder.mainCondition(mainCondition);
