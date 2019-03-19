@@ -1,9 +1,10 @@
 package org.smartregister.reveal.interactor;
 
+import org.json.JSONObject;
 import org.junit.Test;
 import org.smartregister.reveal.util.AppExecutors;
 
-import static org.mockito.ArgumentMatchers.anyObject;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
@@ -198,8 +199,8 @@ public class ListTaskInteractorTest {
                 "}";
 
         ListTaskInteractor listTaskInteractorSpy = spy(listTaskInteractor);
-        doNothing().when(listTaskInteractorSpy, "saveMosquitoCollectionForm", anyObject());
+        doNothing().when(listTaskInteractorSpy, "saveMosquitoCollectionForm", any(JSONObject.class));
         listTaskInteractorSpy.saveJsonForm(mosquitoCollectionForm);
-        verifyPrivate(listTaskInteractorSpy, times(1)).invoke("saveMosquitoCollectionForm", anyObject());
+        verifyPrivate(listTaskInteractorSpy, times(1)).invoke("saveMosquitoCollectionForm", any(JSONObject.class));
     }
 }
