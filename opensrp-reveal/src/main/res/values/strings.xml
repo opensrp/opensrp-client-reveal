@@ -105,4 +105,9 @@
     <string name="record_status">Record\n Status</string>
     <string name="record_index">Record\n Index</string>
 
+    <plurals name="structures">
+        <item quantity="one">%1d structure within %2.0f m(%3$d total)</item>
+        <item quantity="other">%1d structures within %2.0f m(%3$d total)</item>
+    </plurals>
+
 </resources>

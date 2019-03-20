@@ -101,14 +101,14 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
     }
 
     @Override
-    public void onTasksFound(List<TaskDetails> tasks) {
+    public void onTasksFound(List<TaskDetails> tasks, int structuresWithinBuffer) {
         if (recalculateDistance) {//there was a location update when tasks were being retrieved recalculate distance and order
             interactor.calculateDistanceFromUser(tasks, lastLocation);
             recalculateDistance = false;
         } else {
             this.tasks = tasks;
             getView().setTaskDetails(tasks);
-            getView().setTotalPatients();
+            getView().setTotalPatients(structuresWithinBuffer);
             getView().hideProgressView();
         }
 

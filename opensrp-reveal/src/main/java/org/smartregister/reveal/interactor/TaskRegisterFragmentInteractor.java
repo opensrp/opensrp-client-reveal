@@ -12,6 +12,7 @@ import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
+import org.smartregister.reveal.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,21 +73,27 @@ public class TaskRegisterFragmentInteractor {
     public void findTasks(String mainCondition, Location lastLocation) {
         appExecutors.diskIO().execute(() -> {
             List<TaskDetails> tasks = new ArrayList<>();
+            int structuresWithinBuffer = 0;
             String query = mainSelect(mainCondition);
             Cursor cursor = null;
             try {
                 cursor = database.rawQuery(query, null);
                 while (cursor.moveToNext()) {
-                    tasks.add(readTaskDetails(cursor, lastLocation));
+                    TaskDetails taskDetails = readTaskDetails(cursor, lastLocation);
+                    if (taskDetails.getDistanceFromUser() <= Utils.getLocationBuffer()) {
+                        structuresWithinBuffer += 1;
+                    }
+                    tasks.add(taskDetails);
                 }
             } finally {
                 if (cursor != null) {
                     cursor.close();
                 }
             }
+            int finalStructuresWithinBuffer = structuresWithinBuffer;
             appExecutors.mainThread().execute(() -> {
                 Collections.sort(tasks);
-                presenter.onTasksFound(tasks);
+                presenter.onTasksFound(tasks, finalStructuresWithinBuffer);
             });
 
         });
@@ -116,12 +123,17 @@ public class TaskRegisterFragmentInteractor {
         if (tasks == null)
             return;
         appExecutors.diskIO().execute(() -> {
+            int structuresWithinBuffer = 0;
             for (TaskDetails taskDetails : tasks) {
                 taskDetails.setDistanceFromUser(taskDetails.getLocation().distanceTo(location));
+                if (taskDetails.getDistanceFromUser() <= Utils.getLocationBuffer()) {
+                    structuresWithinBuffer += 1;
+                }
             }
             Collections.sort(tasks);
+            int finalStructuresWithinBuffer = structuresWithinBuffer;
             appExecutors.mainThread().execute(() -> {
-                presenter.onTasksFound(tasks);
+                presenter.onTasksFound(tasks, finalStructuresWithinBuffer);
             });
         });
 

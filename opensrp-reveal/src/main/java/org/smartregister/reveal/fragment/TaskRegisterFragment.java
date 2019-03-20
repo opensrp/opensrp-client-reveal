@@ -13,6 +13,7 @@ import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.LocationUtils;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.view.activity.BaseRegisterActivity;
 import org.smartregister.view.contract.BaseRegisterFragmentContract;
 import org.smartregister.view.fragment.BaseRegisterFragment;
@@ -103,10 +104,15 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     @Override
     public void setTotalPatients() {
+        //do nothing
+    }
+
+
+    @Override
+    public void setTotalPatients(int structuresWithinBuffer) {
         if (headerTextDisplay != null) {
-            headerTextDisplay.setText(taskAdapter.getItemCount() > 1 ?
-                    String.format(getString(org.smartregister.R.string.clients), taskAdapter.getItemCount()) :
-                    String.format(getString(org.smartregister.R.string.client), taskAdapter.getItemCount()));
+            headerTextDisplay.setText(getResources().getQuantityString(R.plurals.structures,
+                    taskAdapter.getItemCount(), structuresWithinBuffer, Utils.getLocationBuffer(), taskAdapter.getItemCount()));
 
             filterRelativeLayout.setVisibility(View.GONE);
         }

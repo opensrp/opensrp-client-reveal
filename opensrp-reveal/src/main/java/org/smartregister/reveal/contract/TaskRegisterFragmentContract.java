@@ -16,7 +16,7 @@ import java.util.Set;
 public interface TaskRegisterFragmentContract {
 
     interface Presenter extends BaseRegisterFragmentContract.Presenter {
-        void onTasksFound(List<TaskDetails> tasks);
+        void onTasksFound(List<TaskDetails> tasks, int structuresWithinBuffer);
 
         void onDestroy();
     }
@@ -25,9 +25,9 @@ public interface TaskRegisterFragmentContract {
 
         Location getLastLocation();
 
-
         void initializeAdapter(Set<org.smartregister.configurableviews.model.View> visibleColumns);
 
+        void setTotalPatients(int structuresWithinBuffer);
 
         void setTaskDetails(List<TaskDetails> tasks);
     }
