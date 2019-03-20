@@ -13,7 +13,8 @@ import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.fragment.TaskRegisterFragment;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
-import org.smartregister.reveal.util.Constants.DatabaseKeys;
+import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
@@ -21,10 +22,12 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Set;
 
+import io.ona.kujaku.listeners.BaseLocationListener;
+
 /**
  * Created by samuelgithengi on 3/11/19.
  */
-public class TaskRegisterFragmentPresenter implements TaskRegisterFragmentContract.Presenter {
+public class TaskRegisterFragmentPresenter extends BaseLocationListener implements TaskRegisterFragmentContract.Presenter {
 
     private WeakReference<TaskRegisterFragment> view;
 
@@ -36,11 +39,17 @@ public class TaskRegisterFragmentPresenter implements TaskRegisterFragmentContra
 
     private TaskRegisterFragmentInteractor interactor;
 
+    private LocationUtils locationUtils;
+    private List<TaskDetails> tasks;
+    private android.location.Location lastLocation;
+
     public TaskRegisterFragmentPresenter(TaskRegisterFragment view, String viewConfigurationIdentifier) {
         this.view = new WeakReference<>(view);
         this.viewConfigurationIdentifier = viewConfigurationIdentifier;
         viewsHelper = ConfigurableViewsLibrary.getInstance().getConfigurableViewsHelper();
         interactor = new TaskRegisterFragmentInteractor(RevealApplication.getInstance().getAppExecutors(), this);
+        locationUtils = new LocationUtils(view.getContext());
+        locationUtils.requestLocationUpdates(this);
     }
 
     @Override
@@ -58,10 +67,9 @@ public class TaskRegisterFragmentPresenter implements TaskRegisterFragmentContra
     public void initializeQueries(String mainCondition) {
 
         getView().initializeAdapter(visibleColumns);
-        interactor.findTasks(getMainCondition());
+        lastLocation = locationUtils.getLastLocation();
+        interactor.findTasks(getMainCondition(), lastLocation);
 
-        /*getView().countExecute();
-        getView().filterandSortInInitializeQueries();*/
         getView().showProgressView();
     }
 
@@ -90,8 +98,26 @@ public class TaskRegisterFragmentPresenter implements TaskRegisterFragmentContra
 
     @Override
     public void onTasksFound(List<TaskDetails> tasks) {
+        this.tasks = tasks;
         getView().setTaskDetails(tasks);
         getView().setTotalPatients();
         getView().hideProgressView();
+
+    }
+
+    @Override
+    public void onLocationChanged(android.location.Location location) {
+        if (!location.equals(lastLocation)) {
+            if (lastLocation == null || location.distanceTo(lastLocation) >= Constants.REFRESH_MAP_MINIMUM_DISTANCE) {
+                interactor.calculateDistanceFromUser(tasks, location);
+            }
+            lastLocation = location;
+        }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        locationUtils.stopLocationClient();
     }
 }

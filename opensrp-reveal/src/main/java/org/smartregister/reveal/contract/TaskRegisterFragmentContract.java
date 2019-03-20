@@ -1,5 +1,8 @@
 package org.smartregister.reveal.contract;
 
+
+import android.location.Location;
+
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.view.contract.BaseRegisterFragmentContract;
 
@@ -12,5 +15,10 @@ public interface TaskRegisterFragmentContract {
 
     interface Presenter extends BaseRegisterFragmentContract.Presenter {
         void onTasksFound(List<TaskDetails> tasks);
+
+        void onLocationChanged(Location location);
+
+        void onDestroy();
     }
+
 }

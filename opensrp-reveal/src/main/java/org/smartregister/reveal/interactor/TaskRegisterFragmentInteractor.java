@@ -1,5 +1,7 @@
 package org.smartregister.reveal.interactor;
 
+import android.location.Location;
+
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -12,6 +14,7 @@ import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
@@ -66,7 +69,7 @@ public class TaskRegisterFragmentInteractor {
     }
 
 
-    public void findTasks(String mainCondition) {
+    public void findTasks(String mainCondition, Location lastLocation) {
         appExecutors.diskIO().execute(() -> {
             List<TaskDetails> tasks = new ArrayList<>();
             String query = mainSelect(mainCondition);
@@ -74,7 +77,7 @@ public class TaskRegisterFragmentInteractor {
             try {
                 cursor = database.rawQuery(query, null);
                 while (cursor.moveToNext()) {
-                    tasks.add(readTaskDetails(cursor));
+                    tasks.add(readTaskDetails(cursor, lastLocation));
                 }
             } finally {
                 if (cursor != null) {
@@ -82,6 +85,7 @@ public class TaskRegisterFragmentInteractor {
                 }
             }
             appExecutors.mainThread().execute(() -> {
+                Collections.sort(tasks);
                 presenter.onTasksFound(tasks);
             });
 
@@ -90,18 +94,37 @@ public class TaskRegisterFragmentInteractor {
     }
 
 
-    private TaskDetails readTaskDetails(Cursor cursor) {
-        TaskDetails task = new TaskDetails();
-        task.setTaskId(cursor.getString(cursor.getColumnIndex(ID)));
+    private TaskDetails readTaskDetails(Cursor cursor, Location lastLocation) {
+        TaskDetails task = new TaskDetails(cursor.getString(cursor.getColumnIndex(ID)));
         task.setTaskCode(cursor.getString(cursor.getColumnIndex(CODE)));
         task.setTaskEntity(cursor.getString(cursor.getColumnIndex(FOR)));
         task.setBusinessStatus(cursor.getString(cursor.getColumnIndex(BUSINESS_STATUS)));
-        task.setLatitude(cursor.getDouble(cursor.getColumnIndex(LATITUDE)));
-        task.setLongitude(cursor.getDouble(cursor.getColumnIndex(LONGITUDE)));
+        Location location = new Location((String) null);
+        location.setLatitude(cursor.getDouble(cursor.getColumnIndex(LATITUDE)));
+        location.setLongitude(cursor.getDouble(cursor.getColumnIndex(LONGITUDE)));
+        task.setLocation(location);
+        if (lastLocation != null) {
+            task.setDistanceFromUser(location.distanceTo(lastLocation));
+        }
         task.setStructureName(cursor.getString(cursor.getColumnIndex(NAME)));
         task.setFamilyName(cursor.getString(cursor.getColumnIndex(FAMILY_NAME)));
         return task;
     }
 
+
+    public void calculateDistanceFromUser(List<TaskDetails> tasks, Location location) {
+        if (tasks == null)
+            return;
+        appExecutors.diskIO().execute(() -> {
+            for (TaskDetails taskDetails : tasks) {
+                taskDetails.setDistanceFromUser(taskDetails.getLocation().distanceTo(location));
+            }
+            Collections.sort(tasks);
+            appExecutors.mainThread().execute(() -> {
+                presenter.onTasksFound(tasks);
+            });
+        });
+
+    }
 
 }

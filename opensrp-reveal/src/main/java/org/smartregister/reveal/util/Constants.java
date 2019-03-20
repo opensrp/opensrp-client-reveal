@@ -26,6 +26,8 @@ public interface Constants {
 
     double VERTICAL_OFFSET = -0.0003;
 
+    double REFRESH_MAP_MINIMUM_DISTANCE = 5;
+
     int ANIMATE_TO_LOCATION_DURATION = 1000;
 
     interface CONFIGURATION {

@@ -43,11 +43,11 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
     public void onBindViewHolder(@NonNull TaskRegisterViewHolder viewHolder, int position) {
         Random random = new Random();
         TaskDetails task = taskDetails.get(position);
-        Float distance = 16f;
+        Float distance = task.getDistanceFromUser();
         String name = task.getStructureName();
         String action = null;
         if (Constants.Intervention.IRS.equals(task.getTaskCode())) {
-            if (name == null) {
+            if (name == null) {//TODO remove setting structure name with serial numbers once its moved to server
                 name = task.getFamilyName() != null ? task.getFamilyName() : "Structure " + random.nextInt(100);
             }
             action = context.getString(R.string.record_status);
@@ -59,14 +59,13 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
             action = context.getString(R.string.record_larvacide);
         } else if (Constants.Intervention.BCC.equals(task.getTaskCode())) {
             viewHolder.setIcon(R.drawable.ic_bcc);
+            viewHolder.hideDistanceFromStructure();
             name = context.getString(R.string.bcc);
             action = context.getString(R.string.record_bcc);
-            distance = null;
         }
         viewHolder.setTaskName(name);
         viewHolder.setTaskAction(action, registerActionHandler);
-        if (distance != null)
-            viewHolder.setDistanceFromStructure(distance);
+        viewHolder.setDistanceFromStructure(distance);
     }
 
     @Override

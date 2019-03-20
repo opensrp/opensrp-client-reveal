@@ -1,14 +1,18 @@
 package org.smartregister.reveal.fragment;
 
+import android.location.Location;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import org.smartregister.family.fragment.NoMatchDialogFragment;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.TaskRegisterAdapter;
+import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
 import org.smartregister.reveal.util.Constants.TaskRegister;
+import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.view.activity.BaseRegisterActivity;
 import org.smartregister.view.contract.BaseRegisterFragmentContract;
 import org.smartregister.view.fragment.BaseRegisterFragment;
@@ -101,5 +105,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements BaseRe
 
     public void setTaskDetails(List<TaskDetails> tasks) {
         taskAdapter.setTaskDetails(tasks);
+    }
+
+    @Override
+    public void onDestroy() {
+        getPresenter().onDestroy();
+        super.onDestroy();
     }
 }

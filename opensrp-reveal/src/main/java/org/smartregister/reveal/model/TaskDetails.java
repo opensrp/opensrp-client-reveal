@@ -1,11 +1,12 @@
 package org.smartregister.reveal.model;
 
-import com.mapbox.mapboxsdk.geometry.LatLng;
+import android.location.Location;
+import android.support.annotation.NonNull;
 
 /**
  * Created by samuelgithengi on 3/20/19.
  */
-public class TaskDetails {
+public class TaskDetails implements Comparable<TaskDetails> {
 
     private String taskId;
 
@@ -15,13 +16,17 @@ public class TaskDetails {
 
     private String businessStatus;
 
-    private double latitude;
-
-    private double longitude;
+    private Location location;
 
     private String structureName;
 
     private String familyName;
+
+    private float distanceFromUser;
+
+    public TaskDetails(@NonNull String taskId) {
+        this.taskId = taskId;
+    }
 
     public String getTaskId() {
         return taskId;
@@ -55,20 +60,12 @@ public class TaskDetails {
         this.businessStatus = businessStatus;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public Location getLocation() {
+        return location;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public String getStructureName() {
@@ -85,5 +82,26 @@ public class TaskDetails {
 
     public void setFamilyName(String familyName) {
         this.familyName = familyName;
+    }
+
+    public float getDistanceFromUser() {
+        return distanceFromUser;
+    }
+
+    public void setDistanceFromUser(float distanceFromUser) {
+        this.distanceFromUser = distanceFromUser;
+    }
+
+    @Override
+    public int compareTo(@NonNull TaskDetails other) {
+        return Double.compare(distanceFromUser, other.getDistanceFromUser());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof TaskDetails))
+            return false;
+        TaskDetails other = (TaskDetails) obj;
+        return taskId.equals(other.getTaskId());
     }
 }
