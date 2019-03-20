@@ -157,6 +157,8 @@ public interface Constants {
 
         String INTERVENTION_TYPE = "intervention_type";
 
+        String LAST_USER_LOCATION = "last_location";
+
     }
 
     interface DatabaseKeys {

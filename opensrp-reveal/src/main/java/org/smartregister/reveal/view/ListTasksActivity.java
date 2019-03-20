@@ -350,6 +350,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private void openTaskRegister() {
         Intent intent = new Intent(this, TaskRegisterActivity.class);
         intent.putExtra(TaskRegister.INTERVENTION_TYPE, getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
+        if (getUserCurrentLocation() != null) {
+            intent.putExtra(TaskRegister.LAST_USER_LOCATION, getUserCurrentLocation());
+        }
         startActivity(intent);
     }
 

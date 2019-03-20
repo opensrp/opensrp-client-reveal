@@ -29,7 +29,7 @@ import io.ona.kujaku.listeners.BaseLocationListener;
  */
 public class TaskRegisterFragmentPresenter extends BaseLocationListener implements TaskRegisterFragmentContract.Presenter {
 
-    private WeakReference<TaskRegisterFragment> view;
+    private WeakReference<TaskRegisterFragmentContract.View> view;
 
     private String viewConfigurationIdentifier;
 
@@ -45,7 +45,7 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
 
     private boolean recalculateDistance;
 
-    public TaskRegisterFragmentPresenter(TaskRegisterFragment view, String viewConfigurationIdentifier) {
+    public TaskRegisterFragmentPresenter(TaskRegisterFragmentContract.View view, String viewConfigurationIdentifier) {
         this.view = new WeakReference<>(view);
         this.viewConfigurationIdentifier = viewConfigurationIdentifier;
         viewsHelper = ConfigurableViewsLibrary.getInstance().getConfigurableViewsHelper();
@@ -70,6 +70,9 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
 
         getView().initializeAdapter(visibleColumns);
         lastLocation = locationUtils.getLastLocation();
+        if (lastLocation == null) {//if location client has not initialized use last location passed from map
+            lastLocation = getView().getLastLocation();
+        }
         interactor.findTasks(getMainCondition(), lastLocation);
 
         getView().showProgressView();
@@ -94,7 +97,7 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
         return "start DESC ";
     }
 
-    private TaskRegisterFragment getView() {
+    private TaskRegisterFragmentContract.View getView() {
         return view.get();
     }
 

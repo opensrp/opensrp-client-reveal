@@ -24,7 +24,7 @@ import java.util.Set;
 /**
  * Created by samuelgithengi on 3/11/19.
  */
-public class TaskRegisterFragment extends BaseRegisterFragment implements BaseRegisterFragmentContract.View {
+public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRegisterFragmentContract.View {
 
     private TaskRegisterAdapter taskAdapter;
 
@@ -44,6 +44,15 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements BaseRe
         if (getActivity() != null) {
             ((TextView) view.findViewById(R.id.intervention_type)).setText(
                     getActivity().getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
+        }
+    }
+
+    @Override
+    public Location getLastLocation() {
+        if (getActivity() != null && getActivity().getIntent().getExtras() != null) {
+            return getActivity().getIntent().getExtras().getParcelable(TaskRegister.LAST_USER_LOCATION);
+        } else {
+            return null;
         }
     }
 
