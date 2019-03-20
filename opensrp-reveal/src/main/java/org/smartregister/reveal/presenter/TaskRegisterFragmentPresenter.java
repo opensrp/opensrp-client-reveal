@@ -43,6 +43,8 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
     private List<TaskDetails> tasks;
     private android.location.Location lastLocation;
 
+    private boolean recalculateDistance;
+
     public TaskRegisterFragmentPresenter(TaskRegisterFragment view, String viewConfigurationIdentifier) {
         this.view = new WeakReference<>(view);
         this.viewConfigurationIdentifier = viewConfigurationIdentifier;
@@ -98,17 +100,25 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
 
     @Override
     public void onTasksFound(List<TaskDetails> tasks) {
-        this.tasks = tasks;
-        getView().setTaskDetails(tasks);
-        getView().setTotalPatients();
-        getView().hideProgressView();
+        if (recalculateDistance) {//there was a location update when tasks were being retrieved recalculate distance and order
+            interactor.calculateDistanceFromUser(tasks, lastLocation);
+            recalculateDistance = false;
+        } else {
+            this.tasks = tasks;
+            getView().setTaskDetails(tasks);
+            getView().setTotalPatients();
+            getView().hideProgressView();
+        }
 
     }
+
 
     @Override
     public void onLocationChanged(android.location.Location location) {
         if (!location.equals(lastLocation)) {
-            if (lastLocation == null || location.distanceTo(lastLocation) >= Constants.REFRESH_MAP_MINIMUM_DISTANCE) {
+            if (lastLocation == null && tasks == null) {//tasks not yet retrieved from db
+                recalculateDistance = true;
+            } else if (location.distanceTo(lastLocation) >= Constants.REFRESH_MAP_MINIMUM_DISTANCE) {
                 interactor.calculateDistanceFromUser(tasks, location);
             }
             lastLocation = location;
