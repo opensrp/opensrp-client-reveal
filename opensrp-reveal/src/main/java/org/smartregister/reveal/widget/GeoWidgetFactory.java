@@ -47,11 +47,8 @@ import java.util.List;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 
-import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES;
-import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
-import static org.smartregister.reveal.util.Utils.getGlobalConfig;
 
 /**
  * Created by samuelgithengi on 12/13/18.
@@ -130,12 +127,12 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 RevealMapHelper.addSymbolLayers(mapboxMap, context);
                 mapView.setMapboxMap(mapboxMap);
 
-                String bufferRadius = getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString());
+                float bufferRadius = org.smartregister.reveal.util.Utils.getLocationBuffer();
                 if (finalOperationalArea != null) {
                     mapboxMap.setCameraPosition(mapboxMap.getCameraForGeometry(Geometry.fromJson(finalOperationalArea)));
-                    mapView.setLocationBufferRadius(Float.valueOf(bufferRadius));
+                    mapView.setLocationBufferRadius(bufferRadius);
                 } else {
-                    mapView.focusOnUserLocation(true, Float.valueOf(bufferRadius));
+                    mapView.focusOnUserLocation(true, bufferRadius);
                 }
 
                 GeoJsonSource geoJsonSource = mapboxMap.getSourceAs(context.getString(R.string.reveal_datasource_name));

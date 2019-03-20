@@ -10,7 +10,6 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
-import org.smartregister.reveal.fragment.TaskRegisterFragment;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;

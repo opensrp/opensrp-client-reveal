@@ -74,14 +74,11 @@ import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.utils.Constants;
 
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
-import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES;
-import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
-import static org.smartregister.reveal.util.Utils.getGlobalConfig;
 
 
 /**
@@ -195,7 +192,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         kujakuMapView.showCurrentLocationBtn(true);
 
-        Float locationBufferRadius = Float.valueOf(getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString()));
+        Float locationBufferRadius = org.smartregister.reveal.util.Utils.getLocationBuffer();
         kujakuMapView.setLocationBufferRadius(locationBufferRadius);
 
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
@@ -644,8 +641,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         public void onReceive(Context context, Intent intent) {
             Bundle extras = intent.getExtras();
             if (extras != null && extras.getBoolean(UPDATE_LOCATION_BUFFER_RADIUS)) {
-                String bufferRadius = getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString());
-                kujakuMapView.setLocationBufferRadius(Float.valueOf(bufferRadius));
+                float bufferRadius = org.smartregister.reveal.util.Utils.getLocationBuffer();
+                kujakuMapView.setLocationBufferRadius(bufferRadius);
             } else {
                 listTaskPresenter.refreshStructures();
             }
