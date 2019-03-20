@@ -1,28 +1,20 @@
 package org.smartregister.reveal.fragment;
 
-import android.database.Cursor;
-import android.os.Bundle;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import net.sqlcipher.database.SQLiteDatabase;
-
-import org.smartregister.cursoradapter.RecyclerViewPaginatedAdapter;
-import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.adapter.TaskRegisterAdapter;
+import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
-import org.smartregister.reveal.provider.TaskRegisterProvider;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.view.activity.BaseRegisterActivity;
 import org.smartregister.view.contract.BaseRegisterFragmentContract;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -30,7 +22,7 @@ import java.util.Set;
  */
 public class TaskRegisterFragment extends BaseRegisterFragment implements BaseRegisterFragmentContract.View {
 
-    private static final String COUNT = "count_execute";
+    private TaskRegisterAdapter taskAdapter;
 
     @Override
     protected int getLayout() {
@@ -38,11 +30,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements BaseRe
     }
 
     public void initializeAdapter(Set<org.smartregister.configurableviews.model.View> visibleColumns) {
-        TaskRegisterProvider taskRegisterProvider = new TaskRegisterProvider(getActivity(), registerActionHandler, paginationViewHandler);
-        clientAdapter = new RecyclerViewPaginatedAdapter(null, taskRegisterProvider, context().commonrepository(this.tablename));
-        clientAdapter.setCurrentlimit(20);
-        clientAdapter.setQueryClients(false);
-        clientsView.setAdapter(clientAdapter);
+        taskAdapter = new TaskRegisterAdapter(getActivity(), registerActionHandler);
+        clientsView.setAdapter(taskAdapter);
     }
 
     @Override
@@ -99,61 +88,18 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements BaseRe
         return (TaskRegisterFragmentPresenter) presenter;
     }
 
-
     @Override
-    public Loader<Cursor> onCreateLoader(int id, final Bundle args) {
-        switch (id) {
-            case LOADER_ID:
-                // Returns a new CursorLoader
-                return new CursorLoader(getActivity()) {
-                    @Override
-                    public Cursor loadInBackground() {
-                        // Count query
-                        if (args != null && args.getBoolean(COUNT)) {
-                            countExecute();
-                        }
-                        SmartRegisterQueryBuilder sqb = new SmartRegisterQueryBuilder(getPresenter().mainSelect());
+    public void setTotalPatients() {
+        if (headerTextDisplay != null) {
+            headerTextDisplay.setText(taskAdapter.getItemCount() > 1 ?
+                    String.format(getString(org.smartregister.R.string.clients), taskAdapter.getItemCount()) :
+                    String.format(getString(org.smartregister.R.string.client), taskAdapter.getItemCount()));
 
-                        String query = sqb.Endquery(sqb.addlimitandOffset(sqb.getSelectquery(), clientAdapter.getCurrentlimit(), clientAdapter.getCurrentoffset()));
-                        // Select register query
-
-                        return getRepository().rawQuery(query, null);
-                    }
-                };
-            default:
-                // An invalid id was passed in
-                return null;
-        }
-
-    }
-
-
-    public void countExecute() {
-        Cursor c = null;
-
-        try {
-            String query = getPresenter().countSelect();
-
-            Log.i(getClass().getName(), query);
-            c = getRepository().rawQuery(query, null);
-            c.moveToFirst();
-            clientAdapter.setTotalcount(c.getInt(0));
-            Log.v("total count here", "" + clientAdapter.getTotalcount());
-
-            clientAdapter.setCurrentoffset(0);
-
-
-        } catch (Exception e) {
-            Log.e(getClass().getName(), e.toString(), e);
-        } finally {
-            if (c != null) {
-                c.close();
-            }
+            filterRelativeLayout.setVisibility(View.GONE);
         }
     }
 
-    private SQLiteDatabase getRepository() {
-        return RevealApplication.getInstance().getRepository().getReadableDatabase();
+    public void setTaskDetails(List<TaskDetails> tasks) {
+        taskAdapter.setTaskDetails(tasks);
     }
-
 }

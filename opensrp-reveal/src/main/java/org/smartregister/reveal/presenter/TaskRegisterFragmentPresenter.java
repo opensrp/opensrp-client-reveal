@@ -12,11 +12,13 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.fragment.TaskRegisterFragment;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
+import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -34,15 +36,11 @@ public class TaskRegisterFragmentPresenter implements TaskRegisterFragmentContra
 
     private TaskRegisterFragmentInteractor interactor;
 
-    private String countSelect;
-
-    private String mainSelect;
-
     public TaskRegisterFragmentPresenter(TaskRegisterFragment view, String viewConfigurationIdentifier) {
         this.view = new WeakReference<>(view);
         this.viewConfigurationIdentifier = viewConfigurationIdentifier;
         viewsHelper = ConfigurableViewsLibrary.getInstance().getConfigurableViewsHelper();
-        interactor = new TaskRegisterFragmentInteractor();
+        interactor = new TaskRegisterFragmentInteractor(RevealApplication.getInstance().getAppExecutors(), this);
     }
 
     @Override
@@ -59,16 +57,12 @@ public class TaskRegisterFragmentPresenter implements TaskRegisterFragmentContra
     @Override
     public void initializeQueries(String mainCondition) {
 
-        String tableName = DatabaseKeys.TASK_TABLE;
-
-        countSelect = interactor.countSelect(tableName, mainCondition);
-        mainSelect = interactor.mainSelect(tableName, mainCondition);
-
-        getView().initializeQueryParams(tableName, countSelect, mainSelect);
         getView().initializeAdapter(visibleColumns);
+        interactor.findTasks(getMainCondition());
 
-        getView().countExecute();
-        getView().filterandSortInInitializeQueries();
+        /*getView().countExecute();
+        getView().filterandSortInInitializeQueries();*/
+        getView().showProgressView();
     }
 
     @Override
@@ -95,12 +89,9 @@ public class TaskRegisterFragmentPresenter implements TaskRegisterFragmentContra
     }
 
     @Override
-    public String countSelect() {
-        return countSelect;
-    }
-
-    @Override
-    public String mainSelect() {
-        return mainSelect;
+    public void onTasksFound(List<TaskDetails> tasks) {
+        getView().setTaskDetails(tasks);
+        getView().setTotalPatients();
+        getView().hideProgressView();
     }
 }

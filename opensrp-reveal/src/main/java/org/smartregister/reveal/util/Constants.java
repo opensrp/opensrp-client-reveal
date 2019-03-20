@@ -163,6 +163,8 @@ public interface Constants {
 
         String SPRAYED_STRUCTURES = "sprayed_structures";
 
+        String STRUCTURES_TABLE = "structure";
+
         String ID = "_id";
 
         String CODE = "code";
@@ -173,6 +175,9 @@ public interface Constants {
 
         String FAMILY_NAME = "family_head_name";
 
+        String LATITUDE = "latitude";
+        String LONGITUDE = "longitude";
+        String NAME = "name";
     }
 
 
