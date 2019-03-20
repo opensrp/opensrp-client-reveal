@@ -154,7 +154,7 @@ public class ListTaskInteractor {
                     @Override
                     public void run() {
                         if (isForSprayForm) {
-                            presenterCallBack.onSprayFormDetailsFetched(finalSprayCardDetails);
+                            presenterCallBack.onInterventionFormDetailsFetched(finalSprayCardDetails);
                         } else {
                             presenterCallBack.onCardDetailsFetched(finalSprayCardDetails);
                         }
@@ -168,7 +168,12 @@ public class ListTaskInteractor {
     public void fetchMosquitoCollectionDetails(String structureId, boolean isForMosquitoCollectionForm) {
         // todo: add sql logic from mosquito collection ec tables
         // todo: for now just open card view, use dummy details
-        presenterCallBack.onCardDetailsFetched(new MosquitoCollectionCardDetails("Status: Active", "Set Date: 12/09/14", "Follow-up Date: 09/01/17"));
+        // todo: also conditionally open card or form
+        if (isForMosquitoCollectionForm) {
+            presenterCallBack.onInterventionFormDetailsFetched(new MosquitoCollectionCardDetails("Status: Active", "Set Date: 12/09/14", "Follow-up Date: 09/01/17"));
+        } else {
+            presenterCallBack.onCardDetailsFetched(new MosquitoCollectionCardDetails("Status: Active", "Set Date: 12/09/14", "Follow-up Date: 09/01/17"));
+        }
     }
 
     private SprayCardDetails createSprayCardDetails(Cursor cursor) {

@@ -118,7 +118,11 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     private SprayCardDetails sprayCardDetails;
 
+    private MosquitoCollectionCardDetails mosquitoCollectionCardDetails;
+
     private boolean changeSprayStatus;
+
+    private boolean changeMosquitoCollectionStatus;
 
     public ListTaskPresenter(ListTaskView listTaskView) {
         this.listTaskView = listTaskView;
@@ -380,8 +384,10 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     }
 
     private void onFeatureSelected(Feature feature) {
-        selectedFeature = feature;
-        changeSprayStatus = false;
+        this.selectedFeature = feature;
+        this.changeSprayStatus = false;
+        this.changeMosquitoCollectionStatus = false;
+
         listTaskView.closeCardView(R.id.btn_collapse_mosquito_collection_card_view);
         listTaskView.displaySelectedFeature(feature, clickedPoint);
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
@@ -390,6 +396,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             // todo: add separate conditional to test mosquito collection card view display or collection form display
+            // todo: this logic will call listTaskInteractor.fetchMosquitoCollectionDetails and pop up a card like below
             if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code)) && NOT_VISITED.equals(businessStatus)) {
                 if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
                     validateUserLocation();
@@ -414,9 +421,14 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
 
     @Override
-    public void onSprayFormDetailsFetched(SprayCardDetails sprayCardDetails) {
-        this.sprayCardDetails = sprayCardDetails;
-        changeSprayStatus = true;
+    public void onInterventionFormDetailsFetched(CardDetails cardDetails) {
+        if (cardDetails instanceof SprayCardDetails) {
+            this.sprayCardDetails = (SprayCardDetails) cardDetails;
+            this.changeSprayStatus = true;
+        } else if (cardDetails instanceof MosquitoCollectionCardDetails) {
+            this.mosquitoCollectionCardDetails = (MosquitoCollectionCardDetails) cardDetails;
+            this.changeMosquitoCollectionStatus = true;
+        }
         listTaskView.hideProgressDialog();
         validateUserLocation();
     }
@@ -523,6 +535,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         listTaskInteractor.fetchSprayDetails(selectedFeature.id(), true);
     }
 
+    // todo: add onChangeMosquitoCollectionStatusLogic, can fuse with above
+
     public void saveJsonForm(String json) {
         listTaskView.showProgressDialog(R.string.saving_title, R.string.saving_message);
         listTaskInteractor.saveJsonForm(json);
@@ -542,7 +556,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         listTaskView.setGeoJsonSource(featureCollection, null);
         listTaskInteractor.fetchSprayDetails(structureId, false);
     }
-
+    // todo: add onMosquitoCollectionFormSaved or probably merge into above
 
     @Override
     public void onStructureAdded(Feature feature, JSONArray featureCoordinates) {
@@ -586,16 +600,28 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         if (IRS.equals(code)) {
             launchSprayForm();
         } else if (MOSQUITO_COLLECTION.equals(code))  {
-            // todo: launch mosquito collection form based on whether it is from mosquito collections form or not like in spray
-            // todo: this launches card view for now, which it shouln't
-            listTaskInteractor.fetchMosquitoCollectionDetails(selectedFeature.id(), false);
+            launchMosquitoCollectionForm();
         }
     }
 
     private void launchSprayForm() {
         if (sprayCardDetails == null || !changeSprayStatus) {
+            // todo: replace this with new startForm method, from other pr
             startSprayForm(selectedFeature);
         } else {
+            // todo: replace this with new startForm method, from other pr
+            startSprayForm(selectedFeature, sprayCardDetails.getPropertyType(), sprayCardDetails.getStatus(), sprayCardDetails.getFamilyHead());
+        }
+    }
+
+    private void launchMosquitoCollectionForm() {
+        if (mosquitoCollectionCardDetails == null || !changeMosquitoCollectionStatus) {
+             // todo: start mosquito collection form with card details, from other pr
+            // todo: for now it just launches the irs form, which it shouldn't
+            startSprayForm(selectedFeature);
+        } else {
+            // todo: start mosquito collection form with card details, from other pr
+            // todo: for now it just launches the irs form, which it shouldn't
             startSprayForm(selectedFeature, sprayCardDetails.getPropertyType(), sprayCardDetails.getStatus(), sprayCardDetails.getFamilyHead());
         }
     }

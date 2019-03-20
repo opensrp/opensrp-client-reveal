@@ -86,7 +86,7 @@ public interface ListTaskContract {
 
         void onCardDetailsFetched(CardDetails cardDetails);
 
-        void onSprayFormDetailsFetched(SprayCardDetails finalCardDetails);
+        void onInterventionFormDetailsFetched(CardDetails finalCardDetails);
     }
 
 }
