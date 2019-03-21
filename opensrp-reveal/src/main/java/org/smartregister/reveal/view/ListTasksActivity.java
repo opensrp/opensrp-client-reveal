@@ -41,6 +41,7 @@ import org.smartregister.domain.FetchStatus;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
+import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
@@ -94,14 +95,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private Snackbar syncProgressSnackbar;
 
-    private DrawerMenuMenu drawerView;
+    private BaseDrawerContract.View drawerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_tasks);
 
-        drawerView = new DrawerMenuMenu(this);
+        drawerView = new DrawerMenuView(this);
 
         listTaskPresenter = new ListTaskPresenter(this, drawerView.getPresenter());
         rootView = findViewById(R.id.content_frame);

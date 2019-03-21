@@ -1,9 +1,8 @@
 package org.smartregister.reveal.contract;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.annotation.StringRes;
 import android.support.v4.util.Pair;
-import android.support.v7.app.AppCompatActivity;
 
 import org.smartregister.domain.Campaign;
 
@@ -18,12 +17,14 @@ public class BaseDrawerContract {
     public interface DrawerActivity {
         void onDrawerClosed();
 
-        AppCompatActivity getActivity();
+        Activity getActivity();
     }
 
     public interface View {
 
-        Context getContext();
+        Activity getContext();
+
+        void initializeDrawerLayout();
 
         void setCampaign(String campaign);
 

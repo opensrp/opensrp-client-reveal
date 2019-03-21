@@ -1,6 +1,6 @@
 package org.smartregister.reveal.view;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -37,9 +37,9 @@ import java.util.Locale;
 /**
  * Created by samuelgithengi on 3/21/19.
  */
-public class DrawerMenuMenu implements View.OnClickListener, BaseDrawerContract.View {
+public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.View {
 
-    private static final String TAG = "DrawerMenuMenu";
+    private static final String TAG = "DrawerMenuView";
 
     private TextView campaignTextView;
     private TextView operationalAreaTextView;
@@ -55,16 +55,17 @@ public class DrawerMenuMenu implements View.OnClickListener, BaseDrawerContract.
     private BaseDrawerContract.DrawerActivity activity;
 
 
-    public DrawerMenuMenu(BaseDrawerContract.DrawerActivity activity) {
+    public DrawerMenuView(BaseDrawerContract.DrawerActivity activity) {
         this.activity = activity;
         presenter = new BaseDrawerPresenter(this, activity);
     }
 
-    protected void initializeDrawerLayout() {
+    @Override
+    public void initializeDrawerLayout() {
 
-        mDrawerLayout = activity.getActivity().findViewById(R.id.drawer_layout);
+        mDrawerLayout = getContext().findViewById(R.id.drawer_layout);
 
-        ImageButton mDrawerMenuButton = activity.getActivity().findViewById(R.id.drawerMenu);
+        ImageButton mDrawerMenuButton = getContext().findViewById(R.id.drawerMenu);
         mDrawerMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,15 +92,15 @@ public class DrawerMenuMenu implements View.OnClickListener, BaseDrawerContract.
             }
         });
 
-        NavigationView navigationView = activity.getActivity().findViewById(R.id.nav_view);
+        NavigationView navigationView = getContext().findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
 
         headerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 headerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int minimumOperatorMargin = activity.getActivity().getResources().getDimensionPixelSize(R.dimen.operator_top_margin);
-                int screenHeightPixels = activity.getActivity().getResources().getDisplayMetrics().heightPixels;
+                int minimumOperatorMargin = getContext().getResources().getDimensionPixelSize(R.dimen.operator_top_margin);
+                int screenHeightPixels = getContext().getResources().getDisplayMetrics().heightPixels;
                 //if content of hamburger menu is bigger than screen; scroll content
                 if (screenHeightPixels < headerView.getHeight() + minimumOperatorMargin) {
                     headerView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
@@ -109,21 +110,21 @@ public class DrawerMenuMenu implements View.OnClickListener, BaseDrawerContract.
                     operator.setLayoutParams(params);
                 } else {//content of hamburger menu fits on screen; set menu height to screen height
                     headerView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                            screenHeightPixels - activity.getActivity().getResources().getDimensionPixelSize(R.dimen.hamburger_margin)));
+                            screenHeightPixels - getContext().getResources().getDimensionPixelSize(R.dimen.hamburger_margin)));
                 }
             }
         });
 
         try {
             ((TextView) headerView.findViewById(R.id.application_version))
-                    .setText(activity.getActivity().getString(R.string.app_version, Utils.getVersion(activity.getActivity())));
+                    .setText(getContext().getString(R.string.app_version, Utils.getVersion(getContext())));
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(TAG, e.getMessage(), e);
         }
 
         String buildDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 .format(new Date(BuildConfig.BUILD_TIMESTAMP));
-        ((TextView) headerView.findViewById(R.id.application_updated)).setText(activity.getActivity().getString(R.string.app_updated, buildDate));
+        ((TextView) headerView.findViewById(R.id.application_updated)).setText(getContext().getString(R.string.app_updated, buildDate));
 
         campaignTextView = headerView.findViewById(R.id.campaign_selector);
         operationalAreaTextView = headerView.findViewById(R.id.operational_area_selector);
@@ -184,7 +185,7 @@ public class DrawerMenuMenu implements View.OnClickListener, BaseDrawerContract.
     @Override
     public void showOperationalAreaSelector(Pair<String, ArrayList<String>> locationHierarchy) {
         try {
-            TreeViewDialog treeViewDialog = new TreeViewDialog(activity.getActivity(),
+            TreeViewDialog treeViewDialog = new TreeViewDialog(getContext(),
                     R.style.AppTheme_WideDialog,
                     new JSONArray(locationHierarchy.first), locationHierarchy.second, locationHierarchy.second);
             treeViewDialog.setCancelable(true);
@@ -206,7 +207,7 @@ public class DrawerMenuMenu implements View.OnClickListener, BaseDrawerContract.
     @Override
     public void showCampaignSelector(List<String> campaigns, String entireTreeString) {
         try {
-            TreeViewDialog treeViewDialog = new TreeViewDialog(activity.getActivity(),
+            TreeViewDialog treeViewDialog = new TreeViewDialog(getContext(),
                     R.style.AppTheme_WideDialog,
                     new JSONArray(entireTreeString), new ArrayList<>(campaigns), new ArrayList<>(campaigns));
             treeViewDialog.show();
@@ -226,9 +227,9 @@ public class DrawerMenuMenu implements View.OnClickListener, BaseDrawerContract.
     @Override
     public void displayNotification(int title, int message, Object... formatArgs) {
         if (formatArgs.length == 0)
-            new AlertDialog.Builder(activity.getActivity()).setMessage(message).setTitle(title).setPositiveButton(R.string.ok, null).show();
+            new AlertDialog.Builder(getContext()).setMessage(message).setTitle(title).setPositiveButton(R.string.ok, null).show();
         else
-            new AlertDialog.Builder(activity.getActivity()).setMessage(activity.getActivity().getString(message, formatArgs)).setTitle(title).setPositiveButton(R.string.ok, null).show();
+            new AlertDialog.Builder(getContext()).setMessage(getContext().getString(message, formatArgs)).setTitle(title).setPositiveButton(R.string.ok, null).show();
     }
 
     @Override
@@ -237,8 +238,8 @@ public class DrawerMenuMenu implements View.OnClickListener, BaseDrawerContract.
     }
 
     @Override
-    public Context getContext() {
-        return null;
+    public Activity getContext() {
+        return activity.getActivity();
     }
 
 
@@ -265,4 +266,6 @@ public class DrawerMenuMenu implements View.OnClickListener, BaseDrawerContract.
     public BaseDrawerContract.Presenter getPresenter() {
         return presenter;
     }
+
+
 }
