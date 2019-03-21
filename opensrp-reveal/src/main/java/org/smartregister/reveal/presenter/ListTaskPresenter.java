@@ -470,14 +470,6 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     }
 
     private void startForm(Feature feature, CardDetails cardDetails, String encounterType) {
-        String taskBusinessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
-        String taskIdentifier = getPropertyValue(feature, TASK_IDENTIFIER);
-        String taskStatus = getPropertyValue(feature, TASK_STATUS);
-
-        String structureId = feature.id();
-        String structureUUID = getPropertyValue(feature, LOCATION_UUID);
-        String structureVersion = getPropertyValue(feature, LOCATION_VERSION);
-        String structureType = getPropertyValue(feature, LOCATION_TYPE);
         if (SPRAY_EVENT.equals(encounterType)) {
             String formName = null;
             if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
@@ -489,16 +481,22 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             }
             String sprayStatus = cardDetails == null ? null : cardDetails.getSprayStatus();
             String familyHead = cardDetails == null ? null : cardDetails.getFamilyHead();
-            startForm(formName, structureId, structureUUID, structureVersion, structureType, taskIdentifier,
-                    taskBusinessStatus, taskStatus, sprayStatus, familyHead);
+            startForm(formName, feature, sprayStatus, familyHead);
         } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)) {
-            startForm(THAILAND_MOSQUITO_COLLECTION_FORM, structureId, structureUUID, structureVersion, structureType, taskIdentifier,
-                    taskBusinessStatus, taskStatus, null, null);
+            startForm(THAILAND_MOSQUITO_COLLECTION_FORM,  feature, null, null);
         }
     }
 
-    private void startForm(String formName, String structureId, String structureUUID, String structureVersion, String structureType,
-                           String taskIdentifier, String taskBusinessStatus, String taskStatus, String sprayStatus, String familyHead) {
+    private void startForm(String formName, Feature feature, String sprayStatus, String familyHead) {
+
+        String taskBusinessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
+        String taskIdentifier = getPropertyValue(feature, TASK_IDENTIFIER);
+        String taskStatus = getPropertyValue(feature, TASK_STATUS);
+
+        String structureId = feature.id();
+        String structureUUID = getPropertyValue(feature, LOCATION_UUID);
+        String structureVersion = getPropertyValue(feature, LOCATION_VERSION);
+        String structureType = getPropertyValue(feature, LOCATION_TYPE);
 
         try {
             String formString = AssetHandler.readFileFromAssetsFolder(formName, listTaskView.getContext());

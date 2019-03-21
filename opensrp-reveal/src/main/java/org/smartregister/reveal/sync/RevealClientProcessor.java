@@ -162,7 +162,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         return operationalAreaId;
     }
 
-    private String processMosquitoCollectionEvent(Event event, ClientClassification clientClassification, boolean localEvent) {
+    private String processMosquitoCollectionEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
         String operationalAreaId = null;
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
             // todo: add logic to update business status when data dictionary is available
@@ -174,6 +174,10 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 event.getDetails().put(END_DATE, endDate);
                 Client client = new Client(event.getBaseEntityId());
                 processEvent(event, client, clientClassification);
+                if (localEvents) {
+                   // todo: may need to add extra task processing for local events vs remote
+                    Log.e(TAG, "Processing local events");
+                }
             } catch (Exception e) {
                 Log.e(TAG, "Error processing spray event", e);
             }
