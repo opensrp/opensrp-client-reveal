@@ -7,7 +7,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
-import org.smartregister.reveal.TestListTaskView;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
@@ -46,7 +45,7 @@ public class ListTaskPresenterTest {
         ValidateUserLocationPresenter validateUserLocationPresenterMock = mock(ValidateUserLocationPresenter.class);
         whenNew(ValidateUserLocationPresenter.class).withAnyArguments().thenReturn(validateUserLocationPresenterMock);
 
-        ListTaskContract.ListTaskView listTaskView = new TestListTaskView();
+        ListTaskContract.ListTaskView listTaskView = mock(ListTaskContract.ListTaskView.class);
         listTaskViewSpy = spy(listTaskView);
         listTaskPresenter = new ListTaskPresenter(listTaskViewSpy);
     }

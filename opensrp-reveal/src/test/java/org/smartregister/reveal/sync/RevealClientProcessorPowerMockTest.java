@@ -19,6 +19,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -59,7 +60,7 @@ public class RevealClientProcessorPowerMockTest {
         PowerMockito.doReturn("").when(clientProcessorSpy, "processSprayEvent", any(Event.class), any(ClientClassification.class), anyBoolean());
         clientProcessorSpy.processClient(eventClients, true);
 
-        PowerMockito.verifyPrivate(clientProcessorSpy, times(1)).invoke("processSprayEvent", any(Event.class), any(ClientClassification.class), anyBoolean());
+        PowerMockito.verifyPrivate(clientProcessorSpy, times(1)).invoke("processSprayEvent", eq(event), any(ClientClassification.class), anyBoolean());
     }
 
     @Test
@@ -88,6 +89,6 @@ public class RevealClientProcessorPowerMockTest {
         PowerMockito.doReturn("").when(clientProcessorSpy, "processMosquitoCollectionEvent", any(Event.class), any(ClientClassification.class), anyBoolean());
         clientProcessorSpy.processClient(eventClients, true);
 
-        PowerMockito.verifyPrivate(clientProcessorSpy, times(1)).invoke("processMosquitoCollectionEvent", any(Event.class), any(ClientClassification.class), anyBoolean());
+        PowerMockito.verifyPrivate(clientProcessorSpy, times(1)).invoke("processMosquitoCollectionEvent", eq(event), any(ClientClassification.class), anyBoolean());
     }
 }
