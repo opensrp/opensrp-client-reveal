@@ -1,9 +1,10 @@
 package org.smartregister.reveal.fragment;
 
+import android.content.Intent;
 import android.location.Location;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.smartregister.family.fragment.NoMatchDialogFragment;
 import org.smartregister.reveal.R;
@@ -12,10 +13,9 @@ import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
 import org.smartregister.reveal.util.Constants.TaskRegister;
-import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.view.activity.BaseRegisterActivity;
-import org.smartregister.view.contract.BaseRegisterFragmentContract;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
 import java.util.HashMap;
@@ -46,6 +46,17 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
             ((TextView) view.findViewById(R.id.intervention_type)).setText(
                     getActivity().getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
         }
+        view.findViewById(R.id.txt_map_label).setOnClickListener(v -> startMapActivity());
+        view.findViewById(R.id.left_menu).setOnClickListener(v -> startHamburgerMenu());
+    }
+
+    private void startMapActivity() {
+        Intent intent = new Intent(getContext(), ListTasksActivity.class);
+        startActivity(intent);
+    }
+
+    private void startHamburgerMenu() {
+        Toast.makeText(getContext(), "Open Drawer menu", Toast.LENGTH_LONG).show();
     }
 
     @Override
