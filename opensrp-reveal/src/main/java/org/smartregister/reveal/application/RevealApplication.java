@@ -38,6 +38,8 @@ import org.smartregister.reveal.job.RevealJobCreator;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.repository.RevealRepository;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealSyncConfiguration;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.FamilyProfileActivity;
@@ -97,6 +99,11 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         // Initialize Modules
         Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
         CoreLibrary.init(context, new RevealSyncConfiguration());
+        if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
+            CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.NAMIBIA_EC_CLIENT_FIELDS);
+        } else if (BuildConfig.BUILD_COUNTRY == Country.BOTSWANA) {
+            CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.BOTSWANA_EC_CLIENT_FIELDS);
+        }
         ConfigurableViewsLibrary.init(context, getRepository());
         FamilyLibrary.init(context, getRepository(), getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
 
@@ -118,7 +125,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         //init Job Manager
         JobManager.create(this).addJobCreator(new RevealJobCreator());
 
-        processGlobalConfigs();
     }
 
     @Override

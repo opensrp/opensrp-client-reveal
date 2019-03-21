@@ -3,6 +3,7 @@ package org.smartregister.reveal.activity;
 import android.content.Intent;
 
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.presenter.LoginPresenter;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.view.ListTasksActivity;
@@ -33,6 +34,8 @@ public class LoginActivity extends BaseLoginActivity implements BaseLoginContrac
         startActivity(intent);
 
         finish();
+
+        RevealApplication.getInstance().processGlobalConfigs();
 
     }
 

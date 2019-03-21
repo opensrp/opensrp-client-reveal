@@ -1,0 +1,73 @@
+---
+name: step1_prev_closed_open
+description: prev_closed_open
+priority: 1
+condition: "step1_visit_number.equals('Mop-up') && step1_any_sprayed.equals('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_number_sprayable
+description: number_sprayable
+priority: 1
+condition: "step1_any_sprayed.equals('Yes') || step1_prev_closed_open.equals('Closed')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_number_unsprayable
+description: number_unsprayable
+priority: 1
+condition: "step1_any_sprayed.equals('Yes') || step1_prev_closed_open.equals('Closed')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_number_unsprayed
+description: number_unsprayed
+priority: 1
+condition: "step1_any_sprayed.equals('Yes') && step1_visit_number.equals('First')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_number_unsprayed_mopup
+description: number_unsprayed_mopup
+priority: 1
+condition: "step1_any_sprayed.equals('Yes') && step1_visit_number.equals('Mop-up')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_reasons_for_not_spraying
+description: reasons_for_not_spraying
+priority: 1
+condition: "helper.ifNull(step1_number_unsprayed,0) > 0 || helper.ifNull(step1_number_unsprayed_mopup,0) > 0 "
+actions:
+  - "isRelevant = true"
+---
+name: step1_refusal_reasons_for_not_spraying
+description: refusal_reasons_for_not_spraying
+priority: 1
+condition: "(helper.ifNull(step1_number_unsprayed,0) > 0 || helper.ifNull(step1_number_unsprayed_mopup,0) > 0) && step1_reasons_for_not_spraying.contains('Refused')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_refusal_reasons_for_not_spraying_comment
+description: refusal_reasons_for_not_spraying_comment
+priority: 1
+condition: "(helper.ifNull(step1_number_unsprayed,0) > 0 || helper.ifNull(step1_number_unsprayed_mopup,0) > 0) && step1_refusal_reasons_for_not_spraying.contains('Other')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_refusal_reason_for_not_spraying_household
+description: refusal_reason_for_not_spraying_household
+priority: 1
+condition: "step1_any_sprayed.equals('No') && step1_reasons_for_not_spraying_household.contains('Refused')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_refusal_reason_for_not_spraying_household_comment
+description: refusal_reason_for_not_spraying_household_comment
+priority: 1
+condition: "step1_any_sprayed.equals('No') && step1_refusal_reason_for_not_spraying_household.contains('Other')"
+actions:
+  - "isRelevant = true"
+
+
+

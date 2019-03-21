@@ -2,10 +2,10 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Intent;
 import android.location.Location;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
@@ -15,6 +15,7 @@ import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 import com.vijay.jsonwizard.utils.ValidationStatus;
 
 import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
@@ -48,33 +49,47 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
     }
 
     @Override
-    public ValidationStatus writeValuesAndValidate(LinearLayout mainView) {
-        ValidationStatus validationStatus = super.writeValuesAndValidate(mainView);
-        if (validationStatus.isValid()) {
+    public void validateAndWriteValues() {
+        super.validateAndWriteValues();
+        if (isFormValid()) {
             for (View childAt : formFragment.getJsonApi().getFormDataViews()) {
                 if (childAt instanceof RevealMapView) {
                     RevealMapView mapView = (RevealMapView) childAt;
-                    validationStatus = GeoWidgetFactory.validate(formFragment, mapView);
-                    if (validationStatus.isValid()) {
-                        if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
+                    ValidationStatus validationStatus = GeoWidgetFactory.validate(formFragment, mapView);
+                    if (!validationStatus.isValid()) {
+                        String key = (String) childAt.getTag(com.vijay.jsonwizard.R.id.key);
+                        String mStepName = this.getView().getArguments().getString("stepName");
+                        String fieldKey = mStepName + " (" + mStepDetails.optString("title") + ") :" + key;
+                        getInvalidFields().put(fieldKey, validationStatus);
+                    } else {
+                        if (validateFarStructures()) {
                             validateUserLocation(mapView);
                         } else {
                             onLocationValidated();
                         }
-                        return validationStatus;
+                        return;
                     }
                     break;//exit loop, assumption; there will be only 1 map per form.
                 }
             }
         }
-        if (validationStatus.isValid()) {// if form is valid and did not have a map, if it had a map view it will be handled above
+        if (isFormValid()) {// if form is valid and did not have a map, if it had a map view it will be handled above
             onLocationValidated();
         } else {//if form is invalid whether having a map or not
-            Toast.makeText(getView().getContext(), validationStatus.getErrorMessage(), Toast.LENGTH_LONG).show();
-            validationStatus.requestAttention();
+            if (showErrorsOnSubmit()) {
+                launchErrorDialog();
+                getView().showToast(getView().getContext().getResources().getString(R.string.json_form_error_msg, this.getInvalidFields().size()));
+            } else {
+                getView().showSnackBar(getView().getContext().getResources().getString(R.string.json_form_error_msg, this.getInvalidFields().size()));
+            }
         }
-        return validationStatus;
     }
+
+    @VisibleForTesting
+    protected boolean validateFarStructures() {
+        return BuildConfig.VALIDATE_FAR_STRUCTURES;
+    }
+
 
     private void validateUserLocation(RevealMapView mapView) {
         this.mapView = mapView;
@@ -88,7 +103,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
 
     @Override
     public void onSaveClick(LinearLayout mainView) {
-        writeValuesAndValidate(mainView);
+        validateAndWriteValues();
     }
 
     @Override
@@ -97,7 +112,8 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         Intent returnIntent = new Intent();
         getView().onFormFinish();
         returnIntent.putExtra("json", getView().getCurrentJsonState());
-        returnIntent.putExtra(JsonFormConstants.SKIP_VALIDATION, Boolean.valueOf(formFragment.getMainView().getTag(com.vijay.jsonwizard.R.id.skip_validation).toString()));
+        Object skipValidation = formFragment.getMainView().getTag(com.vijay.jsonwizard.R.id.skip_validation);
+        returnIntent.putExtra(JsonFormConstants.SKIP_VALIDATION, Boolean.valueOf(skipValidation == null ? Boolean.FALSE.toString() : skipValidation.toString()));
         getView().finishWithResult(returnIntent);
 
     }
