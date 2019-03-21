@@ -33,7 +33,6 @@ import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
-import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.Constants.StructureType;
 import org.smartregister.reveal.util.PasswordDialogUtils;
@@ -480,34 +479,33 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         String structureVersion = getPropertyValue(feature, LOCATION_VERSION);
         String structureType = getPropertyValue(feature, LOCATION_TYPE);
         if (SPRAY_EVENT.equals(encounterType)) {
-            String formString = null;
+            String formName = null;
             if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
-                formString = AssetHandler.readFileFromAssetsFolder(SPRAY_FORM_NAMIBIA, listTaskView.getContext());
+                formName = SPRAY_FORM_NAMIBIA;
             } else if (BuildConfig.BUILD_COUNTRY == Country.BOTSWANA) {
-                formString = AssetHandler.readFileFromAssetsFolder(SPRAY_FORM_BOTSWANA, listTaskView.getContext());
+                formName = SPRAY_FORM_BOTSWANA;
             } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
-                formString = AssetHandler.readFileFromAssetsFolder(SPRAY_FORM, listTaskView.getContext());
+                formName = SPRAY_FORM;
             }
             String sprayStatus = cardDetails == null ? null : cardDetails.getSprayStatus();
             String familyHead = cardDetails == null ? null : cardDetails.getFamilyHead();
-            startForm(formString, structureId, structureUUID, structureVersion, structureType, taskIdentifier,
-                    taskBusinessStatus, taskStatus, structureType, sprayStatus, familyHead);
+            startForm(formName, structureId, structureUUID, structureVersion, structureType, taskIdentifier,
+                    taskBusinessStatus, taskStatus, sprayStatus, familyHead);
         } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)) {
-            String formString = null;
-            if (BuildConfig.BUILD_COUNTRY.equals(Country.THAILAND)) {
-                formString = AssetHandler.readFileFromAssetsFolder(THAILAND_MOSQUITO_COLLECTION_FORM, listTaskView.getContext());
-            }
-            startForm(formString, structureId, structureUUID, structureVersion, structureType, taskIdentifier,
-                    taskBusinessStatus, taskStatus, structureType, null, null);
+            startForm(THAILAND_MOSQUITO_COLLECTION_FORM, structureId, structureUUID, structureVersion, structureType, taskIdentifier,
+                    taskBusinessStatus, taskStatus, null, null);
         }
     }
 
-    private void startForm(String formString, String structureId, String structureUUID, String structureVersion, String structureType,
-                           String taskIdentifier, String taskBusinessStatus, String taskStatus, String propertyType, String sprayStatus, String familyHead) {
+    private void startForm(String formName, String structureId, String structureUUID, String structureVersion, String structureType,
+                           String taskIdentifier, String taskBusinessStatus, String taskStatus, String sprayStatus, String familyHead) {
+
         try {
+            String formString = AssetHandler.readFileFromAssetsFolder(formName, listTaskView.getContext());
             if (StringUtils.isBlank(structureType)) {
                 structureType = StructureType.NON_RESIDENTIAL;
             }
+
             formString = formString.replace(STRUCTURE_PROPERTIES_TYPE, structureType);
             JSONObject formJson = new JSONObject(formString);
             formJson.put(ENTITY_ID, structureId);
@@ -519,12 +517,12 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             formData.put(LOCATION_VERSION, structureVersion);
             formJson.put(DETAILS, formData);
             JSONArray fields = JsonFormUtils.fields(formJson);
-            if (StringUtils.isNotBlank(propertyType) || StringUtils.isNotBlank(sprayStatus) || StringUtils.isNotBlank(familyHead)) {
+            if (StringUtils.isNotBlank(structureType) || StringUtils.isNotBlank(sprayStatus) || StringUtils.isNotBlank(familyHead)) {
                 for (int i = 0; i < fields.length(); i++) {
                     JSONObject field = fields.getJSONObject(i);
                     String key = field.getString(KEY);
                     if (key.equalsIgnoreCase(STRUCTURE_TYPE))
-                        field.put(JsonFormUtils.VALUE, propertyType);
+                        field.put(JsonFormUtils.VALUE, structureType);
                     else if (key.equalsIgnoreCase(SPRAY_STATUS))
                         field.put(JsonFormUtils.VALUE, sprayStatus);
                     else if (key.equalsIgnoreCase(HEAD_OF_HOUSEHOLD))
