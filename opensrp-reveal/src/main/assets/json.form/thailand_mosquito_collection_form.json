@@ -51,29 +51,6 @@
     "display_back_button": "true",
     "fields": [
       {
-        "key": "structure_type",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Type of Structure",
-        "options": [
-          {
-            "key": "Residential Structure",
-            "text": "Residential Structure"
-          },
-          {
-            "key": "Non-Residential Structure",
-            "text": "Non-Residential Structure"
-          },
-          {
-            "key": "Facility",
-            "text": "Facility"
-          }
-        ],
-        "value": "[structure_type]"
-      },
-      {
         "key": "trap_type",
         "label": "Type of trap",
         "type": "check_box",

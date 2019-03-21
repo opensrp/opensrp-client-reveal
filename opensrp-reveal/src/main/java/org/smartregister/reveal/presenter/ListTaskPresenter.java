@@ -502,11 +502,14 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
         try {
             String formString = AssetHandler.readFileFromAssetsFolder(formName, listTaskView.getContext());
-            if (StringUtils.isBlank(structureType)) {
-                structureType = StructureType.NON_RESIDENTIAL;
+            if ((SPRAY_FORM.equals(formName) || SPRAY_FORM_BOTSWANA.equals(formName) || SPRAY_FORM_NAMIBIA.equals(formName))) {
+                String structType = structureType;
+                if (StringUtils.isBlank(structureType)) {
+                    structType = StructureType.NON_RESIDENTIAL;
+                }
+                formString = formString.replace(STRUCTURE_PROPERTIES_TYPE, structType);
             }
 
-            formString = formString.replace(STRUCTURE_PROPERTIES_TYPE, structureType);
             JSONObject formJson = new JSONObject(formString);
             formJson.put(ENTITY_ID, structureId);
             JSONObject formData = new JSONObject();
