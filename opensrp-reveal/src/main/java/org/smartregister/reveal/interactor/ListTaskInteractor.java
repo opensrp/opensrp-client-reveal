@@ -75,8 +75,6 @@ public class ListTaskInteractor {
 
     private static final String TAG = ListTaskInteractor.class.getCanonicalName();
 
-    private CampaignRepository campaignRepository;
-
     private TaskRepository taskRepository;
 
     private StructureRepository structureRepository;
@@ -95,7 +93,6 @@ public class ListTaskInteractor {
     public ListTaskInteractor(PresenterCallBack presenterCallBack) {
         appExecutors = RevealApplication.getInstance().getAppExecutors();
         this.presenterCallBack = presenterCallBack;
-        campaignRepository = RevealApplication.getInstance().getCampaignRepository();
         taskRepository = RevealApplication.getInstance().getTaskRepository();
         structureRepository = RevealApplication.getInstance().getStructureRepository();
         eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
@@ -103,23 +100,6 @@ public class ListTaskInteractor {
         sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
     }
 
-    public void fetchCampaigns() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                List<Campaign> campaigns = campaignRepository.getAllCampaigns();
-                appExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        presenterCallBack.onCampaignsFetched(campaigns);
-                    }
-                });
-
-            }
-        };
-
-        appExecutors.diskIO().execute(runnable);
-    }
 
     public void fetchSprayDetails(String structureId, boolean isSprayForm) {
         final String sql = "SELECT spray_status, not_sprayed_reason, not_sprayed_other_reason, property_type, spray_date," +

@@ -5,9 +5,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
@@ -24,18 +22,16 @@ import org.json.JSONObject;
 import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.domain.form.FormLocation;
-import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.util.Constants.JsonForm;
-import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.Constants.StructureType;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
@@ -43,11 +39,9 @@ import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
-import static org.smartregister.AllConstants.OPERATIONAL_AREAS;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
@@ -76,18 +70,13 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
-import static org.smartregister.reveal.util.Constants.Tags.COUNTRY;
-import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
-import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
-import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
-import static org.smartregister.reveal.util.Constants.Tags.PROVINCE;
 import static org.smartregister.reveal.util.Utils.formatDate;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
 /**
  * Created by samuelgithengi on 11/27/18.
  */
-public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, PasswordRequestCallback,
+public class ListTaskPresenter extends BaseDrawerPresenter implements ListTaskContract.PresenterCallBack, PasswordRequestCallback,
         UserLocationCallback {
 
     private static final String TAG = "ListTaskPresenter";
@@ -96,11 +85,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     private ListTaskInteractor listTaskInteractor;
 
-    private LocationHelper locationHelper;
-
     private PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
-
-    private boolean changedCurrentSelection;
 
     private FeatureCollection featureCollection;
 
@@ -119,139 +104,13 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     private boolean changeSprayStatus;
 
     public ListTaskPresenter(ListTaskView listTaskView) {
+        super(listTaskView);
         this.listTaskView = listTaskView;
         listTaskInteractor = new ListTaskInteractor(this);
-        locationHelper = LocationHelper.getInstance();
         passwordDialog = PasswordDialogUtils.initPasswordDialog(listTaskView.getContext(), this);
         locationPresenter = new ValidateUserLocationPresenter(listTaskView, this);
     }
 
-    public void onInitializeDrawerLayout() {
-
-        listTaskView.setOperator();
-
-        if (StringUtils.isBlank(prefsUtil.getCurrentOperationalArea())) {
-            ArrayList<String> operationalAreaLevels = new ArrayList<>();
-            operationalAreaLevels.add(DISTRICT);
-            operationalAreaLevels.add(HEALTH_CENTER);
-            List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels);
-
-            if (defaultLocation != null) {
-                listTaskView.setDistrict(defaultLocation.get(0));
-                listTaskView.setFacility(defaultLocation.get(1));
-            }
-        } else {
-            populateLocationsFromPreferences();
-        }
-
-        listTaskView.setCampaign(prefsUtil.getCurrentCampaign());
-
-    }
-
-    public void onShowOperationalAreaSelector() {
-        Pair<String, ArrayList<String>> locationHierarchy = extractLocationHierarchy();
-        if (locationHierarchy == null) {//try to evict location hierachy in cache
-            RevealApplication.getInstance().getContext().anmLocationController().evict();
-            locationHierarchy = extractLocationHierarchy();
-        }
-        if (locationHierarchy != null) {
-            listTaskView.showOperationalAreaSelector(extractLocationHierarchy());
-        } else {
-            listTaskView.displayNotification(R.string.error_fetching_location_hierarchy_title, R.string.error_fetching_location_hierarchy);
-            RevealApplication.getInstance().getContext().userService().forceRemoteLogin();
-        }
-
-    }
-
-    private Pair<String, ArrayList<String>> extractLocationHierarchy() {
-
-        ArrayList<String> operationalAreaLevels = new ArrayList<>();
-        operationalAreaLevels.add(COUNTRY);
-        operationalAreaLevels.add(PROVINCE);
-        operationalAreaLevels.add(DISTRICT);
-        operationalAreaLevels.add(OPERATIONAL_AREA);
-
-        List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels);
-
-        if (defaultLocation != null) {
-            List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
-            List<String> authorizedOperationalAreas = Arrays.asList(StringUtils.split(prefsUtil.getPreferenceValue(OPERATIONAL_AREAS), ','));
-            removeUnauthorizedOperationalAreas(authorizedOperationalAreas, entireTree);
-
-            String entireTreeString = AssetHandler.javaToJsonString(entireTree,
-                    new TypeToken<List<FormLocation>>() {
-                    }.getType());
-
-            return new Pair<>(entireTreeString, new ArrayList<>(defaultLocation));
-        } else {
-            return null;
-        }
-    }
-
-    private void populateLocationsFromPreferences() {
-        listTaskView.setDistrict(prefsUtil.getCurrentDistrict());
-        listTaskView.setFacility(prefsUtil.getCurrentFacility());
-        listTaskView.setOperationalArea(prefsUtil.getCurrentOperationalArea());
-    }
-
-    public void onOperationalAreaSelectorClicked(ArrayList<String> name) {
-
-        Log.d(TAG, "Selected Location Hierarchy: " + TextUtils.join(",", name));
-        if (name.size() != 4)//no operational area was selected, dialog was dismissed
-            return;
-        prefsUtil.setCurrentDistrict(name.get(2));
-        prefsUtil.setCurrentOperationalArea(name.get(3));
-
-        ArrayList<String> operationalAreaLevels = new ArrayList<>();
-        operationalAreaLevels.add(DISTRICT);
-        operationalAreaLevels.add(HEALTH_CENTER);
-        operationalAreaLevels.add(OPERATIONAL_AREA);
-        List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
-        String facility = getFacilityFromOperationalArea(name.get(2), name.get(3), entireTree);
-        prefsUtil.setCurrentFacility(facility);
-        changedCurrentSelection = true;
-
-        populateLocationsFromPreferences();
-        unlockDrawerLayout();
-
-    }
-
-
-    private void removeUnauthorizedOperationalAreas(List<String> operationalAreas, List<FormLocation> entireTree) {
-
-        for (FormLocation countryLocation : entireTree) {
-            for (FormLocation provinceLocation : countryLocation.nodes) {
-                for (FormLocation districtLocation : provinceLocation.nodes) {
-                    List<FormLocation> toRemove = new ArrayList<>();
-                    for (FormLocation operationalAreaLocation : districtLocation.nodes) {
-                        if (!operationalAreas.contains(operationalAreaLocation.name))
-                            toRemove.add(operationalAreaLocation);
-                    }
-                    districtLocation.nodes.removeAll(toRemove);
-                }
-            }
-        }
-    }
-
-    private String getFacilityFromOperationalArea(String district, String operationalArea, List<FormLocation> entireTree) {
-        for (FormLocation districtLocation : entireTree) {
-            if (!districtLocation.name.equals(district))
-                continue;
-            for (FormLocation facilityLocation : districtLocation.nodes) {
-                for (FormLocation operationalAreaLocation : facilityLocation.nodes) {
-                    if (operationalAreaLocation.name.equals(operationalArea)) {
-                        return facilityLocation.name;
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-
-    public void onShowCampaignSelector() {
-        listTaskInteractor.fetchCampaigns();
-    }
 
     @Override
     public void onCampaignsFetched(List<Campaign> campaigns) {
@@ -272,20 +131,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         listTaskView.showCampaignSelector(ids, entireTreeString);
     }
 
-    public void onCampaignSelectorClicked(ArrayList<String> value, ArrayList<String> name) {
-        if (Utils.isEmptyCollection(name))
-            return;
-        Log.d(TAG, "Selected Campaign : " + TextUtils.join(",", name));
-        Log.d(TAG, "Selected Campaign Ids: " + TextUtils.join(",", value));
-
-        prefsUtil.setCurrentCampaign(name.get(0));
-        prefsUtil.setCurrentCampaignId(value.get(0));
-        listTaskView.setCampaign(name.get(0));
-        changedCurrentSelection = true;
-        unlockDrawerLayout();
-
-    }
-
+    @Override
     public void onDrawerClosed() {
         if (changedCurrentSelection) {
             listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
@@ -323,14 +169,6 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         }
     }
 
-    private void unlockDrawerLayout() {
-        String campaign = PreferencesUtil.getInstance().getCurrentCampaignId();
-        String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
-        if (StringUtils.isNotBlank(campaign) &&
-                StringUtils.isNotBlank(operationalArea)) {
-            listTaskView.unlockNavigationDrawer();
-        }
-    }
 
     public void onMapReady() {
         String campaign = PreferencesUtil.getInstance().getCurrentCampaignId();
