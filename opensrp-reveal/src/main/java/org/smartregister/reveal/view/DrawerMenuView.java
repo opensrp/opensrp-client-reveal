@@ -13,7 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -64,14 +63,6 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     public void initializeDrawerLayout() {
 
         mDrawerLayout = getContext().findViewById(R.id.drawer_layout);
-
-        ImageButton mDrawerMenuButton = getContext().findViewById(R.id.drawerMenu);
-        mDrawerMenuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDrawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
 
         mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -243,7 +234,13 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     }
 
 
-    protected void closeDrawerLayout() {
+    @Override
+    public void openDrawerLayout() {
+        mDrawerLayout.openDrawer(GravityCompat.START);
+    }
+
+
+    private void closeDrawerLayout() {
         mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 

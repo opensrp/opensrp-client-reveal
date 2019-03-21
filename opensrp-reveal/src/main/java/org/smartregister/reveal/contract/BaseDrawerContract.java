@@ -48,6 +48,8 @@ public class BaseDrawerContract {
 
         void onInitializeDrawerLayout();
 
+        void openDrawerLayout();
+
         Presenter getPresenter();
     }
 

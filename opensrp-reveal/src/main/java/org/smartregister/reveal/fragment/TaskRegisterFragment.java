@@ -2,18 +2,20 @@ package org.smartregister.reveal.fragment;
 
 import android.content.Intent;
 import android.location.Location;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.smartregister.family.fragment.NoMatchDialogFragment;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.TaskRegisterAdapter;
+import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.reveal.view.DrawerMenuView;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.view.activity.BaseRegisterActivity;
 import org.smartregister.view.fragment.BaseRegisterFragment;
@@ -25,9 +27,19 @@ import java.util.Set;
 /**
  * Created by samuelgithengi on 3/11/19.
  */
-public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRegisterFragmentContract.View {
+public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity {
 
     private TaskRegisterAdapter taskAdapter;
+
+
+    private BaseDrawerContract.View drawerView;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        drawerView = new DrawerMenuView(this);
+        drawerView.initializeDrawerLayout();
+    }
 
     @Override
     protected int getLayout() {
@@ -47,16 +59,13 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                     getActivity().getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
         }
         view.findViewById(R.id.txt_map_label).setOnClickListener(v -> startMapActivity());
-        view.findViewById(R.id.left_menu).setOnClickListener(v -> startHamburgerMenu());
+        view.findViewById(R.id.drawerMenu).setOnClickListener(v -> drawerView.openDrawerLayout());
+        drawerView.onInitializeDrawerLayout();
     }
 
     private void startMapActivity() {
         Intent intent = new Intent(getContext(), ListTasksActivity.class);
         startActivity(intent);
-    }
-
-    private void startHamburgerMenu() {
-        Toast.makeText(getContext(), "Open Drawer menu", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -137,5 +146,10 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     public void onDestroy() {
         getPresenter().onDestroy();
         super.onDestroy();
+    }
+
+    @Override
+    public void onDrawerClosed() {
+
     }
 }

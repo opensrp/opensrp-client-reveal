@@ -113,6 +113,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         initializeProgressDialog();
 
         findViewById(R.id.btn_add_structure).setOnClickListener(this);
+        findViewById(R.id.drawerMenu).setOnClickListener(this);
 
         initializeCardView();
 
@@ -214,7 +215,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void onClick(View v) {
-
         if (v.getId() == R.id.btn_add_structure) {
             listTaskPresenter.onAddStructureClicked();
         } else if (v.getId() == R.id.change_spray_status) {
@@ -226,6 +226,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             registerFamily();
         } else if (v.getId() == R.id.task_register) {
             openTaskRegister();
+        } else if (v.getId() == R.id.drawerMenu) {
+            drawerView.openDrawerLayout();
         }
     }
 
