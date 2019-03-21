@@ -54,6 +54,7 @@ import io.fabric.sdk.android.Fabric;
 
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.GLOBAL_CONFIGS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KEY;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.SETTINGS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.VALUE;
 import static org.smartregister.reveal.util.FamilyConstants.CONFIGURATION;
 import static org.smartregister.reveal.util.FamilyConstants.EventType;
@@ -236,7 +237,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             return;
         }
         try {
-            JSONArray settingsArray = new JSONArray(setting.getValue());
+            JSONArray settingsArray = new JSONObject(setting.getValue()).getJSONArray(SETTINGS);
             for (int i = 0; i < settingsArray.length(); i++) {
                 JSONObject jsonObject = settingsArray.getJSONObject(i);
                 String value = jsonObject.optString(VALUE, null);
