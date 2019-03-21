@@ -579,6 +579,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     @Override
     public void onMosquitoCollectionFormSaved() {
+        // todo: add more logic here, like opening card view
         listTaskView.hideProgressDialog();
     }
 

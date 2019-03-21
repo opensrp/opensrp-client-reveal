@@ -103,11 +103,10 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
                     }
                 }
-            }
-
-            if (!hasSyncedEventsInTarget && operationalAreaLocationId != null &&
-                    operationalAreaLocationId.equals(operationalAreaId)) {
-                hasSyncedEventsInTarget = true;
+                if (!hasSyncedEventsInTarget && operationalAreaLocationId != null &&
+                        operationalAreaLocationId.equals(operationalAreaId)) {
+                    hasSyncedEventsInTarget = true;
+                }
             }
         }
 
