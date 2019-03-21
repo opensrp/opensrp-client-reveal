@@ -77,6 +77,9 @@
     <string name="fetching_structure_title">Fetching Structure Details</string>
     <string name="fetching_structure_message">Fetching Structure Details. Please wait</string>
 
+    <string name="fetching_mosquito_collection_points_title">Fetching Mosquito Collection Point Details</string>
+    <string name="fetching_mosquito_collection_points_message">Fetching Mosquito Collection Point Details. Please wait</string>
+
     <string name="narrowing_location_title">Calculating your location</string>
     <string name="narrowing_location_message">Calculating your location. Please wait</string>
 

@@ -530,12 +530,15 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     }
 
 
-    public void onChangeSprayStatus() {
-        listTaskView.showProgressDialog(R.string.fetching_structure_title, R.string.fetching_structure_message);
-        listTaskInteractor.fetchSprayDetails(selectedFeature.id(), true);
+    public void onChangeInterventionStatus(String interverntionType) {
+        if (IRS.equals(interverntionType)) {
+            listTaskView.showProgressDialog(R.string.fetching_structure_title, R.string.fetching_structure_message);
+            listTaskInteractor.fetchSprayDetails(selectedFeature.id(), true);
+        } else if (MOSQUITO_COLLECTION.equals(interverntionType)) {
+            listTaskView.showProgressDialog(R.string.fetching_mosquito_collection_points_title, R.string.fetching_mosquito_collection_points_message);
+            listTaskInteractor.fetchMosquitoCollectionDetails(selectedFeature.id(), true);
+        }
     }
-
-    // todo: add onChangeMosquitoCollectionStatusLogic, can fuse with above
 
     public void saveJsonForm(String json) {
         listTaskView.showProgressDialog(R.string.saving_title, R.string.saving_message);
@@ -543,8 +546,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     }
 
     @Override
-    public void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier,
-                                 @NonNull TaskStatus taskStatus, @NonNull String businessStatus) {
+    public void onFormSaved(@NonNull String structureId, @NonNull TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
         listTaskView.hideProgressDialog();
         for (Feature feature : featureCollection.features()) {
             if (structureId.equals(feature.id())) {
@@ -554,9 +556,13 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             }
         }
         listTaskView.setGeoJsonSource(featureCollection, null);
-        listTaskInteractor.fetchSprayDetails(structureId, false);
+
+        if (IRS.equals(interventionType)) {
+            listTaskInteractor.fetchSprayDetails(structureId, false);
+        } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
+            listTaskInteractor.fetchMosquitoCollectionDetails(structureId, false);
+        }
     }
-    // todo: add onMosquitoCollectionFormSaved or probably merge into above
 
     @Override
     public void onStructureAdded(Feature feature, JSONArray featureCoordinates) {
@@ -603,6 +609,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             launchMosquitoCollectionForm();
         }
     }
+
+    // todo: generic launchForm method to merge below, wait after merging other pr or look at it before refactoring
 
     private void launchSprayForm() {
         if (sprayCardDetails == null || !changeSprayStatus) {

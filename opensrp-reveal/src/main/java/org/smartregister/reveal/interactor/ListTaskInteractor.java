@@ -58,6 +58,7 @@ import java.util.UUID;
 import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.DETAILS;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.METADATA;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
@@ -281,8 +282,7 @@ public class ListTaskInteractor {
                         @Override
                         public void run() {
                             String businessStatus = clientProcessor.calculateBusinessStatus(event);
-                            presenterCallBack.onSprayFormSaved(event.getBaseEntityId(), event.getDetails().get(Properties.TASK_IDENTIFIER),
-                                    Task.TaskStatus.COMPLETED, businessStatus);
+                            presenterCallBack.onFormSaved(event.getBaseEntityId(), Task.TaskStatus.COMPLETED, businessStatus, IRS);
                         }
                     });
                 } catch (JSONException e) {
@@ -335,7 +335,7 @@ public class ListTaskInteractor {
                     task.setPriority(3);
                     Context applicationContext = RevealApplication.getInstance().getApplicationContext();
                     if (StructureType.RESIDENTIAL.equals(structureType)) {
-                        task.setCode(Intervention.IRS);
+                        task.setCode(IRS);
                         task.setDescription(applicationContext.getString(R.string.irs_task_description));
                         task.setFocus(Intervention.IRS_VISIT);
                     } else if (StructureType.MOSQUITO_COLLECTION_POINT.equals(structureType)) {

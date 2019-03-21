@@ -76,6 +76,8 @@ import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATI
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
@@ -337,7 +339,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (v.getId() == R.id.btn_add_structure) {
             listTaskPresenter.onAddStructureClicked();
         } else if (v.getId() == R.id.change_spray_status) {
-            listTaskPresenter.onChangeSprayStatus();
+            listTaskPresenter.onChangeInterventionStatus(IRS);
+        } else if (v.getId() == R.id.btn_record_mosquito_collection) {
+            listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
         } else if (v.getId() == R.id.btn_collapse_spray_card_view) {
             setViewVisibility(tvReason, false);
             closeCardView(v.getId());

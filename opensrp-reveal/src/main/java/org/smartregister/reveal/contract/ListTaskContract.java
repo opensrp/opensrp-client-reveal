@@ -16,7 +16,6 @@ import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
-import org.smartregister.reveal.model.SprayCardDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,8 +76,8 @@ public interface ListTaskContract {
 
         void onStructuresFetched(JSONObject structuresGeoJson, Geometry operationalAreaGeometry);
 
-        void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier,
-                              @NonNull TaskStatus taskStatus, @NonNull String businessStatus);
+        void onFormSaved(@NonNull String structureId,
+                         @NonNull TaskStatus taskStatus, @NonNull String businessStatus, String interventionType);
 
         void onStructureAdded(Feature feature, JSONArray featureCoordinates);
 
