@@ -7,6 +7,7 @@ import android.util.Log;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
+import org.smartregister.domain.Campaign;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.R;
@@ -31,11 +32,12 @@ import static org.smartregister.reveal.util.Constants.Tags.PROVINCE;
 /**
  * Created by samuelgithengi on 3/21/19.
  */
-public abstract class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
+public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     private static final String TAG = "BaseDrawerPresenter";
 
     private BaseDrawerContract.View view;
+    private BaseDrawerContract.DrawerActivity drawerActivity;
 
     private PreferencesUtil prefsUtil;
 
@@ -45,13 +47,15 @@ public abstract class BaseDrawerPresenter implements BaseDrawerContract.Presente
 
     private BaseDrawerContract.Interactor interactor;
 
-    public BaseDrawerPresenter(BaseDrawerContract.View view) {
+    public BaseDrawerPresenter(BaseDrawerContract.View view, BaseDrawerContract.DrawerActivity drawerActivity) {
         this.view = view;
+        this.drawerActivity = drawerActivity;
         this.prefsUtil = PreferencesUtil.getInstance();
         this.locationHelper = LocationHelper.getInstance();
         interactor = new BaseDrawerInteractor(this);
     }
 
+    @Override
     public void onInitializeDrawerLayout() {
 
         view.setOperator();
@@ -74,12 +78,33 @@ public abstract class BaseDrawerPresenter implements BaseDrawerContract.Presente
 
     }
 
+
+    @Override
+    public void onCampaignsFetched(List<Campaign> campaigns) {
+        List<String> ids = new ArrayList<>();
+        List<FormLocation> formLocations = new ArrayList<>();
+        for (Campaign campaign : campaigns) {
+            ids.add(campaign.getIdentifier());
+            FormLocation formLocation = new FormLocation();
+            formLocation.name = campaign.getTitle();
+            formLocation.key = campaign.getIdentifier();
+            formLocation.level = "";
+            formLocations.add(formLocation);
+        }
+
+        String entireTreeString = AssetHandler.javaToJsonString(formLocations,
+                new TypeToken<List<FormLocation>>() {
+                }.getType());
+        view.showCampaignSelector(ids, entireTreeString);
+    }
+
     private void populateLocationsFromPreferences() {
         view.setDistrict(prefsUtil.getCurrentDistrict());
         view.setFacility(prefsUtil.getCurrentFacility());
         view.setOperationalArea(prefsUtil.getCurrentOperationalArea());
     }
 
+    @Override
     public void onShowOperationalAreaSelector() {
         Pair<String, ArrayList<String>> locationHierarchy = extractLocationHierarchy();
         if (locationHierarchy == null) {//try to evict location hierachy in cache
@@ -175,7 +200,7 @@ public abstract class BaseDrawerPresenter implements BaseDrawerContract.Presente
         return null;
     }
 
-
+    @Override
     public void onShowCampaignSelector() {
         interactor.fetchCampaigns();
     }
@@ -195,7 +220,9 @@ public abstract class BaseDrawerPresenter implements BaseDrawerContract.Presente
 
     }
 
-    public abstract void onDrawerClosed();
+    public void onDrawerClosed() {
+        drawerActivity.onDrawerClosed();
+    }
 
     private void unlockDrawerLayout() {
         String campaign = PreferencesUtil.getInstance().getCurrentCampaignId();
@@ -204,6 +231,21 @@ public abstract class BaseDrawerPresenter implements BaseDrawerContract.Presente
                 StringUtils.isNotBlank(operationalArea)) {
             view.unlockNavigationDrawer();
         }
+    }
+
+    @Override
+    public boolean isChangedCurrentSelection() {
+        return changedCurrentSelection;
+    }
+
+    @Override
+    public void setChangedCurrentSelection(boolean changedCurrentSelection) {
+        this.changedCurrentSelection = changedCurrentSelection;
+    }
+
+    @Override
+    public BaseDrawerContract.View getView() {
+        return view;
     }
 
 }

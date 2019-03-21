@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
-import com.google.gson.reflect.TypeToken;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
@@ -19,11 +18,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Task.TaskStatus;
-import org.smartregister.domain.form.FormLocation;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
@@ -38,7 +36,6 @@ import org.smartregister.util.AssetHandler;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
@@ -76,7 +73,7 @@ import static org.smartregister.reveal.util.Utils.getPropertyValue;
 /**
  * Created by samuelgithengi on 11/27/18.
  */
-public class ListTaskPresenter extends BaseDrawerPresenter implements ListTaskContract.PresenterCallBack, PasswordRequestCallback,
+public class ListTaskPresenter  implements ListTaskContract.PresenterCallBack, PasswordRequestCallback,
         UserLocationCallback {
 
     private static final String TAG = "ListTaskPresenter";
@@ -103,37 +100,19 @@ public class ListTaskPresenter extends BaseDrawerPresenter implements ListTaskCo
 
     private boolean changeSprayStatus;
 
-    public ListTaskPresenter(ListTaskView listTaskView) {
-        super(listTaskView);
+    private BaseDrawerContract.Presenter drawerPresenter;
+
+    public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
+        this.drawerPresenter = drawerPresenter;
         listTaskInteractor = new ListTaskInteractor(this);
         passwordDialog = PasswordDialogUtils.initPasswordDialog(listTaskView.getContext(), this);
         locationPresenter = new ValidateUserLocationPresenter(listTaskView, this);
     }
 
-
-    @Override
-    public void onCampaignsFetched(List<Campaign> campaigns) {
-        List<String> ids = new ArrayList<>();
-        List<FormLocation> formLocations = new ArrayList<>();
-        for (Campaign campaign : campaigns) {
-            ids.add(campaign.getIdentifier());
-            FormLocation formLocation = new FormLocation();
-            formLocation.name = campaign.getTitle();
-            formLocation.key = campaign.getIdentifier();
-            formLocation.level = "";
-            formLocations.add(formLocation);
-        }
-
-        String entireTreeString = AssetHandler.javaToJsonString(formLocations,
-                new TypeToken<List<FormLocation>>() {
-                }.getType());
-        listTaskView.showCampaignSelector(ids, entireTreeString);
-    }
-
     @Override
     public void onDrawerClosed() {
-        if (changedCurrentSelection) {
+        if (drawerPresenter.isChangedCurrentSelection()) {
             listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
             listTaskInteractor.fetchLocations(prefsUtil.getCurrentCampaignId(), prefsUtil.getCurrentOperationalArea());
         }
@@ -147,7 +126,7 @@ public class ListTaskPresenter extends BaseDrawerPresenter implements ListTaskCo
     @Override
     public void onStructuresFetched(JSONObject structuresGeoJson, Geometry operationalAreaGeometry) {
         listTaskView.hideProgressDialog();
-        changedCurrentSelection = false;
+        drawerPresenter.setChangedCurrentSelection(false);
         if (structuresGeoJson.has(FEATURES)) {
             featureCollection = FeatureCollection.fromJson(structuresGeoJson.toString());
             listTaskView.setGeoJsonSource(featureCollection, operationalAreaGeometry);
@@ -178,7 +157,7 @@ public class ListTaskPresenter extends BaseDrawerPresenter implements ListTaskCo
             listTaskInteractor.fetchLocations(campaign, operationalArea);
         } else {
             listTaskView.displayNotification(R.string.select_campaign_operational_area_title, R.string.select_campaign_operational_area);
-            listTaskView.lockNavigationDrawerForSelection();
+            drawerPresenter.getView().lockNavigationDrawerForSelection();
         }
     }
 

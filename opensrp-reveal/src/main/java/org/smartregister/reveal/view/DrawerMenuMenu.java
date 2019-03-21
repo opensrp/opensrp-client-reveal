@@ -1,16 +1,15 @@
 package org.smartregister.reveal.view;
 
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -26,6 +25,7 @@ import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
+import org.smartregister.reveal.presenter.BaseDrawerPresenter;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -37,9 +37,9 @@ import java.util.Locale;
 /**
  * Created by samuelgithengi on 3/21/19.
  */
-public abstract class BaseDrawerActivity extends AppCompatActivity implements View.OnClickListener, BaseDrawerContract.View {
+public class DrawerMenuMenu implements View.OnClickListener, BaseDrawerContract.View {
 
-    private static final String TAG = "BaseDrawerActivity";
+    private static final String TAG = "DrawerMenuMenu";
 
     private TextView campaignTextView;
     private TextView operationalAreaTextView;
@@ -49,13 +49,22 @@ public abstract class BaseDrawerActivity extends AppCompatActivity implements Vi
 
     private DrawerLayout mDrawerLayout;
 
-    private ProgressDialog progressDialog;
+
+    private BaseDrawerContract.Presenter presenter;
+
+    private BaseDrawerContract.DrawerActivity activity;
+
+
+    public DrawerMenuMenu(BaseDrawerContract.DrawerActivity activity) {
+        this.activity = activity;
+        presenter = new BaseDrawerPresenter(this, activity);
+    }
 
     protected void initializeDrawerLayout() {
 
-        mDrawerLayout = findViewById(R.id.drawer_layout);
+        mDrawerLayout = activity.getActivity().findViewById(R.id.drawer_layout);
 
-        ImageButton mDrawerMenuButton = findViewById(R.id.drawerMenu);
+        ImageButton mDrawerMenuButton = activity.getActivity().findViewById(R.id.drawerMenu);
         mDrawerMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +83,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity implements Vi
 
             @Override
             public void onDrawerClosed(@NonNull View drawerView) {
-                getPresenter().onDrawerClosed();
+                presenter.onDrawerClosed();
             }
 
             @Override
@@ -82,15 +91,15 @@ public abstract class BaseDrawerActivity extends AppCompatActivity implements Vi
             }
         });
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = activity.getActivity().findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
 
         headerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 headerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int minimumOperatorMargin = getResources().getDimensionPixelSize(R.dimen.operator_top_margin);
-                int screenHeightPixels = getResources().getDisplayMetrics().heightPixels;
+                int minimumOperatorMargin = activity.getActivity().getResources().getDimensionPixelSize(R.dimen.operator_top_margin);
+                int screenHeightPixels = activity.getActivity().getResources().getDisplayMetrics().heightPixels;
                 //if content of hamburger menu is bigger than screen; scroll content
                 if (screenHeightPixels < headerView.getHeight() + minimumOperatorMargin) {
                     headerView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
@@ -100,21 +109,21 @@ public abstract class BaseDrawerActivity extends AppCompatActivity implements Vi
                     operator.setLayoutParams(params);
                 } else {//content of hamburger menu fits on screen; set menu height to screen height
                     headerView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                            screenHeightPixels - getResources().getDimensionPixelSize(R.dimen.hamburger_margin)));
+                            screenHeightPixels - activity.getActivity().getResources().getDimensionPixelSize(R.dimen.hamburger_margin)));
                 }
             }
         });
 
         try {
             ((TextView) headerView.findViewById(R.id.application_version))
-                    .setText(getString(R.string.app_version, Utils.getVersion(this)));
+                    .setText(activity.getActivity().getString(R.string.app_version, Utils.getVersion(activity.getActivity())));
         } catch (PackageManager.NameNotFoundException e) {
             Log.e(TAG, e.getMessage(), e);
         }
 
         String buildDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 .format(new Date(BuildConfig.BUILD_TIMESTAMP));
-        ((TextView) headerView.findViewById(R.id.application_updated)).setText(getString(R.string.app_updated, buildDate));
+        ((TextView) headerView.findViewById(R.id.application_updated)).setText(activity.getActivity().getString(R.string.app_updated, buildDate));
 
         campaignTextView = headerView.findViewById(R.id.campaign_selector);
         operationalAreaTextView = headerView.findViewById(R.id.operational_area_selector);
@@ -175,7 +184,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity implements Vi
     @Override
     public void showOperationalAreaSelector(Pair<String, ArrayList<String>> locationHierarchy) {
         try {
-            TreeViewDialog treeViewDialog = new TreeViewDialog(this,
+            TreeViewDialog treeViewDialog = new TreeViewDialog(activity.getActivity(),
                     R.style.AppTheme_WideDialog,
                     new JSONArray(locationHierarchy.first), locationHierarchy.second, locationHierarchy.second);
             treeViewDialog.setCancelable(true);
@@ -183,7 +192,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity implements Vi
             treeViewDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    getPresenter().onOperationalAreaSelectorClicked(treeViewDialog.getName());
+                    presenter.onOperationalAreaSelectorClicked(treeViewDialog.getName());
                 }
             });
             treeViewDialog.show();
@@ -197,7 +206,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity implements Vi
     @Override
     public void showCampaignSelector(List<String> campaigns, String entireTreeString) {
         try {
-            TreeViewDialog treeViewDialog = new TreeViewDialog(this,
+            TreeViewDialog treeViewDialog = new TreeViewDialog(activity.getActivity(),
                     R.style.AppTheme_WideDialog,
                     new JSONArray(entireTreeString), new ArrayList<>(campaigns), new ArrayList<>(campaigns));
             treeViewDialog.show();
@@ -205,7 +214,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity implements Vi
             treeViewDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    getPresenter().onCampaignSelectorClicked(treeViewDialog.getValue(), treeViewDialog.getName());
+                    presenter.onCampaignSelectorClicked(treeViewDialog.getValue(), treeViewDialog.getName());
                 }
             });
             treeViewDialog.show();
@@ -215,33 +224,45 @@ public abstract class BaseDrawerActivity extends AppCompatActivity implements Vi
     }
 
     @Override
-    public void showProgressDialog(@StringRes int title, @StringRes int message) {
-        if (progressDialog != null) {
-            progressDialog.setTitle(title);
-            progressDialog.setMessage(getString(message));
-            progressDialog.show();
-        }
+    public void displayNotification(int title, int message, Object... formatArgs) {
+        if (formatArgs.length == 0)
+            new AlertDialog.Builder(activity.getActivity()).setMessage(message).setTitle(title).setPositiveButton(R.string.ok, null).show();
+        else
+            new AlertDialog.Builder(activity.getActivity()).setMessage(activity.getActivity().getString(message, formatArgs)).setTitle(title).setPositiveButton(R.string.ok, null).show();
     }
 
     @Override
-    public void hideProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.dismiss();
-        }
+    public void onInitializeDrawerLayout() {
+        presenter.onInitializeDrawerLayout();
     }
 
-    protected void initializeProgressDialog() {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setCancelable(false);
-        progressDialog.setTitle(R.string.fetching_structures_title);
-        progressDialog.setMessage(getString(R.string.fetching_structures_message));
+    @Override
+    public Context getContext() {
+        return null;
     }
+
 
     protected void closeDrawerLayout() {
         mDrawerLayout.closeDrawer(GravityCompat.START);
     }
 
-    protected abstract BaseDrawerContract.Presenter getPresenter();
 
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.operational_area_selector)
+            presenter.onShowOperationalAreaSelector();
+        else if (v.getId() == R.id.campaign_selector)
+            presenter.onShowCampaignSelector();
+        else if (v.getId() == R.id.logout_button)
+            RevealApplication.getInstance().logoutCurrentUser();
+        else if (v.getId() == R.id.sync_button) {
+            org.smartregister.reveal.util.Utils.startImmediateSync();
+            closeDrawerLayout();
+        }
+    }
 
+    @Override
+    public BaseDrawerContract.Presenter getPresenter() {
+        return presenter;
+    }
 }

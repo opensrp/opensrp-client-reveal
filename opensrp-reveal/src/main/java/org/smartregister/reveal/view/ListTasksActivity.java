@@ -1,5 +1,6 @@
 package org.smartregister.reveal.view;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -39,8 +41,6 @@ import org.smartregister.domain.FetchStatus;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
-import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
@@ -76,6 +76,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private GeoJsonSource selectedGeoJsonSource;
 
+    private ProgressDialog progressDialog;
+
     private MapboxMap mMapboxMap;
 
     private CardView structureInfoCardView;
@@ -92,16 +94,21 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private Snackbar syncProgressSnackbar;
 
+    private DrawerMenuMenu drawerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_tasks);
 
-        listTaskPresenter = new ListTaskPresenter(this);
+        drawerView = new DrawerMenuMenu(this);
+
+        listTaskPresenter = new ListTaskPresenter(this, drawerView.getPresenter());
         rootView = findViewById(R.id.content_frame);
 
         initializeMapView(savedInstanceState);
-        initializeDrawerLayout();
+
+        drawerView.initializeDrawerLayout();
         initializeProgressDialog();
 
         findViewById(R.id.btn_add_structure).setOnClickListener(this);
@@ -206,16 +213,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.operational_area_selector)
-            listTaskPresenter.onShowOperationalAreaSelector();
-        else if (v.getId() == R.id.campaign_selector)
-            listTaskPresenter.onShowCampaignSelector();
-        else if (v.getId() == R.id.logout_button)
-            RevealApplication.getInstance().logoutCurrentUser();
-        else if (v.getId() == R.id.sync_button) {
-            org.smartregister.reveal.util.Utils.startImmediateSync();
-            closeDrawerLayout();
-        } else if (v.getId() == R.id.btn_add_structure) {
+
+        if (v.getId() == R.id.btn_add_structure) {
             listTaskPresenter.onAddStructureClicked();
         } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeSprayStatus();
@@ -354,6 +353,28 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         }
     }
 
+    private void initializeProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setTitle(R.string.fetching_structures_title);
+        progressDialog.setMessage(getString(R.string.fetching_structures_message));
+    }
+
+    @Override
+    public void showProgressDialog(@StringRes int title, @StringRes int message) {
+        if (progressDialog != null) {
+            progressDialog.setTitle(title);
+            progressDialog.setMessage(getString(message));
+            progressDialog.show();
+        }
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
 
     @Override
     public Location getUserCurrentLocation() {
@@ -408,7 +429,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
         IntentFilter filter = new IntentFilter(Action.STRUCTURE_TASK_SYNCHED);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(refreshGeowidgetReceiver, filter);
-        listTaskPresenter.onInitializeDrawerLayout();
+        drawerView.onInitializeDrawerLayout();
     }
 
     @Override
@@ -419,8 +440,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    protected BaseDrawerContract.Presenter getPresenter() {
-        return listTaskPresenter;
+    public void onDrawerClosed() {
+        listTaskPresenter.onDrawerClosed();
+    }
+
+    @Override
+    public AppCompatActivity getActivity() {
+        return this;
     }
 
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {

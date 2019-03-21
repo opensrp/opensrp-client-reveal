@@ -1,5 +1,6 @@
 package org.smartregister.reveal.contract;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
@@ -19,11 +20,20 @@ import org.smartregister.reveal.model.CardDetails;
  */
 public interface ListTaskContract {
 
-    interface ListTaskView extends UserLocationView, BaseDrawerContract.View {
+    interface ListTaskView extends UserLocationView, BaseDrawerContract.DrawerActivity {
+        void showProgressDialog(@StringRes int title, @StringRes int message);
+
+        void hideProgressDialog();
+
+        Context getContext();
 
         void closeStructureCardView();
 
         void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Geometry operationalAreaGeometry);
+
+        void displayNotification(int title, @StringRes int message, Object... formatArgs);
+
+        void displayNotification(String message);
 
         void openCardView(CardDetails cardDetails);
 
@@ -34,6 +44,7 @@ public interface ListTaskContract {
         void clearSelectedFeature();
 
         void displayToast(@StringRes int resourceId);
+
     }
 
     interface PresenterCallBack {
@@ -50,6 +61,8 @@ public interface ListTaskContract {
         void onCardDetailsFetched(CardDetails cardDetails);
 
         void onSprayFormDetailsFetched(CardDetails finalCardDetails);
+
+        void onDrawerClosed();
     }
 
 }

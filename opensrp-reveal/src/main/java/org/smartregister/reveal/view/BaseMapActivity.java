@@ -1,11 +1,12 @@
 package org.smartregister.reveal.view;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * Created by samuelgithengi on 11/20/18.
  */
-public abstract class BaseMapActivity extends BaseDrawerActivity {
+public abstract class BaseMapActivity extends AppCompatActivity {
 
     protected RevealMapView kujakuMapView;
 

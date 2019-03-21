@@ -21,6 +21,8 @@ import static org.smartregister.reveal.util.Constants.TaskRegister;
  */
 public class TaskRegisterActivity extends BaseRegisterActivity {
 
+
+
     @Override
     protected void initializePresenter() {
         presenter = new TaskRegisterPresenter();
