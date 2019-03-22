@@ -1,5 +1,12 @@
 package org.smartregister.reveal.presenter;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.mapbox.geojson.BoundingBox;
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,9 +17,13 @@ import org.powermock.reflect.Whitebox;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
+import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
+
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -52,7 +63,9 @@ public class ListTaskPresenterTest {
 
     @Test
     public void testOnMosquitoCollectionFormSavedHidesProgressDialog() throws Exception {
-        listTaskPresenter.onMosquitoCollectionFormSaved();
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
+
+        listTaskPresenter.onFormSaved(null, null, null, Constants.Intervention.IRS);
 
         verify(listTaskViewSpy).hideProgressDialog();
     }
@@ -80,9 +93,9 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", Constants.Intervention.IRS);
 
-        CardDetails cardDetails = new CardDetails(null, null, null, null, null, null);
+        CardDetails cardDetails = new SprayCardDetails(null, null, null, null, null, null);
 
-        Whitebox.setInternalState(listTaskPresenterSpy, "cardDetails", cardDetails);
+        Whitebox.setInternalState(listTaskPresenterSpy, "sprayCardDetails", cardDetails);
 
         Whitebox.setInternalState(listTaskPresenterSpy, "changeSprayStatus", true);
 
@@ -114,12 +127,14 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", Constants.Intervention.MOSQUITO_COLLECTION);
 
-        CardDetails cardDetails = new CardDetails(null, null, null, null, null, null);
+        CardDetails mosquitoCollectionCardDetails = new MosquitoCollectionCardDetails(null, null, null);
 
-        Whitebox.setInternalState(listTaskPresenterSpy, "cardDetails", cardDetails);
+        Whitebox.setInternalState(listTaskPresenterSpy, "mosquitoCollectionCardDetails", mosquitoCollectionCardDetails);
+
+        Whitebox.setInternalState(listTaskPresenterSpy, "changeMosquitoCollectionStatus", true);
 
         listTaskPresenterSpy.onLocationValidated();
 
-        PowerMockito.verifyPrivate(listTaskPresenterSpy, times(1)).invoke("startForm", isNull(), eq(cardDetails), eq(Constants.MOSQUITO_COLLECTION_EVENT));
+        PowerMockito.verifyPrivate(listTaskPresenterSpy, times(1)).invoke("startForm", isNull(), eq(mosquitoCollectionCardDetails), eq(Constants.MOSQUITO_COLLECTION_EVENT));
     }
 }
