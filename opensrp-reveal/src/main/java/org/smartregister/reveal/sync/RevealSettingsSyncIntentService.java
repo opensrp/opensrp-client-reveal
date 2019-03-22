@@ -8,7 +8,7 @@ import org.smartregister.AllConstants;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.sync.intent.SettingsSyncIntentService;
 
-import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCHED;
+import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
 
 /**
@@ -22,7 +22,7 @@ public class RevealSettingsSyncIntentService extends SettingsSyncIntentService {
         if (data != null && data.getInt(AllConstants.INTENT_KEY.SYNC_TOTAL_RECORDS, 0) > 0) {
             RevealApplication.getInstance().processGlobalConfigs();
             // broadcast sync event
-            Intent refreshGeoWidgetIntent = new Intent(STRUCTURE_TASK_SYNCHED);
+            Intent refreshGeoWidgetIntent = new Intent(STRUCTURE_TASK_SYNCED);
             refreshGeoWidgetIntent.putExtra(UPDATE_LOCATION_BUFFER_RADIUS, true);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(refreshGeoWidgetIntent);
         }

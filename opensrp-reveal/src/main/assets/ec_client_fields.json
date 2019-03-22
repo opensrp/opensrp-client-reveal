@@ -293,6 +293,39 @@
           }
         }
       ]
+    },
+    {
+      "name": "mosquito_interventions",
+      "columns": [
+        {
+          "column_name": "base_entity_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "baseEntityId"
+          }
+        },
+        {
+          "column_name": "status",
+          "type": "Event",
+          "json_mapping": {
+            "field": "status"
+          }
+        },
+        {
+          "column_name": "start_date",
+          "type": "Event",
+          "json_mapping": {
+            "field": "details.start_date"
+          }
+        },
+        {
+          "column_name": "end_date",
+          "type": "Event",
+          "json_mapping": {
+            "field": "details.end_date"
+          }
+        }
+      ]
     }
   ]
 }

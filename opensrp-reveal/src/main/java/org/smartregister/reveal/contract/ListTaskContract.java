@@ -63,6 +63,8 @@ public interface ListTaskContract {
         void onSprayFormDetailsFetched(CardDetails finalCardDetails);
 
         void onDrawerClosed();
+      
+        void onMosquitoCollectionFormSaved();
     }
 
 }

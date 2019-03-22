@@ -58,6 +58,7 @@ import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.METADATA;
+import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
@@ -204,10 +205,13 @@ public class ListTaskInteractor {
         try {
             JSONObject jsonForm = new JSONObject(json);
             String encounterType = jsonForm.getString(JsonForm.ENCOUNTER_TYPE);
-            if (SPRAY_EVENT.equals(encounterType))
+            if (SPRAY_EVENT.equals(encounterType)) {
                 saveSprayForm(jsonForm);
-            else if (REGISTER_STRUCTURE_EVENT.equals(encounterType))
+            } else if (REGISTER_STRUCTURE_EVENT.equals(encounterType)) {
                 saveRegisterStructureForm(jsonForm);
+            } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)) {
+                saveMosquitoCollectionForm(jsonForm);
+            }
         } catch (Exception e) {
             Log.e(TAG, "Error saving Json Form data", e);
         }
@@ -338,6 +342,27 @@ public class ListTaskInteractor {
             }
         };
 
+        appExecutors.diskIO().execute(runnable);
+    }
+
+    private void saveMosquitoCollectionForm(JSONObject jsonForm) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    org.smartregister.domain.db.Event event = saveEvent(jsonForm, MOSQUITO_COLLECTION_EVENT, STRUCTURE);
+                    clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
+                    appExecutors.mainThread().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            presenterCallBack.onMosquitoCollectionFormSaved();
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.e(TAG, "Error saving mosquito collection point data");
+                }
+            }
+        };
         appExecutors.diskIO().execute(runnable);
     }
 }
