@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCHED;
+import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
 
 public class LocationTaskIntentService extends IntentService {
 
@@ -47,7 +47,7 @@ public class LocationTaskIntentService extends IntentService {
         List<Task> synchedTasks = taskServiceHelper.syncTasks();
 
         if (hasChangesInCurrentOperationalArea(syncedStructures, synchedTasks)) {
-            Intent intent = new Intent(STRUCTURE_TASK_SYNCHED);
+            Intent intent = new Intent(STRUCTURE_TASK_SYNCED);
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
         }
 

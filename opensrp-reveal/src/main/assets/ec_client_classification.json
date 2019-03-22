@@ -25,6 +25,13 @@
             "creates_case": [
               "ec_family_member"
             ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "mosquito_collection",
+            "creates_case": [
+              "mosquito_interventions"
+            ]
           }
         ]
       }

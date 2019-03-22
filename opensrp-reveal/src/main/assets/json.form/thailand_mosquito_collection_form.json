@@ -1,0 +1,410 @@
+{
+  "count": "1",
+  "encounter_type": "mosquito_collection",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "Mosquito Collection Details",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "trap_type",
+        "label": "Type of trap",
+        "type": "check_box",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "options": [
+          {
+            "key": "CDC",
+            "text": "CDC",
+            "value": false
+          },
+          {
+            "key": "HLC",
+            "text": "HLC",
+            "value": false
+          },
+          {
+            "key": "Trap/net",
+            "text": "Trap/net",
+            "value": false
+          },
+          {
+            "key": "Backpack",
+            "text": "Backpack",
+            "value": false
+          },
+          {
+            "key": "Swingnet",
+            "text": "Swingnet",
+            "value": false
+          }
+        ]
+      },
+      {
+        "key": "trap_num",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "# of traps set at this house",
+        "relevance": {
+          "step1:trap_type": {
+            "ex-checkbox": [
+              {
+                "or": ["CDC"]
+              }
+            ]
+          }
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        }
+      },
+      {
+        "key": "trap_location",
+        "label": "Trap location",
+        "type": "native_radio",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "options": [
+          {
+            "key": "Indoor",
+            "text": "Indoor"
+          },
+          {
+            "key": "Outdoor",
+            "text": "Outdoor"
+          }
+        ]
+      },
+      {
+        "key": "trap_start",
+        "type": "date_picker",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "Date trap was set",
+        "max_date": "today",
+        "v_required": {
+          "value": true,
+          "err": "Please specify the date trap was set"
+        }
+      },
+      {
+        "key": "trap_end",
+        "type": "date_picker",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "Date trap was collected",
+        "max_date": "today",
+        "constraints": [
+          {
+            "type": "date",
+            "ex": "greaterThanEqualTo(., step1:trap_start)",
+            "err": "Date trap was collected cannot be after date trap was set"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "Please specify the date trap was collected"
+        }
+      },
+      {
+        "key": "trap_temp",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "Temperature recorded at trap site",
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        }
+      },
+      {
+        "key": "trap_RH",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "Relative humidity recorded at trap site",
+        "v_numeric": {
+          "value": "true",
+          "err": "Relative humidity must be a number"
+        }
+      },
+      {
+        "key": "moz_type",
+        "label": "Mosquito species found",
+        "type": "check_box",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "options": [
+          {
+            "key": "An. gambiae",
+            "text": "An. gambiae",
+            "value": false
+          },
+          {
+            "key": "An. funestus",
+            "text": "An. funestus",
+            "value": false
+          },
+          {
+            "key": "An. minimus",
+            "text": "An. minimus",
+            "value": false
+          },
+          {
+            "key": "An. dirus",
+            "text": "An. dirus",
+            "value": false
+          },
+          {
+            "key": "An. maximus",
+            "text": "An. maximus",
+            "value": false
+          },
+          {
+            "key": "An. other",
+            "text": "An. other",
+            "value": false
+          },
+          {
+            "key": "Culex",
+            "text": "Culex",
+            "value": false
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "Please select all mosquito species found"
+        }
+      },
+      {
+        "key": "An. gambiae",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "# of An. gambiae mosquitoes collected",
+        "relevance": {
+          "step1:moz_type": {
+            "ex-checkbox": [
+              {
+                "or": ["An. gambiae"]
+              }
+            ]
+          }
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please specify the number of mosquitoes of this species collected"
+        }
+      },
+      {
+        "key": "An. funestus",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "# of An. funestus mosquitoes collected",
+        "relevance": {
+          "step1:moz_type": {
+            "ex-checkbox": [
+              {
+                "or": ["An. funestus"]
+              }
+            ]
+          }
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please specify the number of mosquitoes of this species collected"
+        }
+      },
+      {
+        "key": "An. minimus",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "# of An. minimus mosquitoes collected",
+        "relevance": {
+          "step1:moz_type": {
+            "ex-checkbox": [
+              {
+                "or": ["An. minimus"]
+              }
+            ]
+          }
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please specify the number of mosquitoes of this species collected"
+        }
+      },
+      {
+        "key": "An. dirus",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "# of An. dirus mosquitoes collected",
+        "relevance": {
+          "step1:moz_type": {
+            "ex-checkbox": [
+              {
+                "or": ["An. dirus"]
+              }
+            ]
+          }
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please specify the number of mosquitoes of this species collected"
+        }
+      },
+      {
+        "key": "An. maximus",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "# of An. maximus mosquitoes collected",
+        "relevance": {
+          "step1:moz_type": {
+            "ex-checkbox": [
+              {
+                "or": ["An. maximus"]
+              }
+            ]
+          }
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please specify the number of mosquitoes of this species collected"
+        }
+      },
+      {
+        "key": "An. other",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "# of An. other mosquitoes collected",
+        "relevance": {
+          "step1:moz_type": {
+            "ex-checkbox": [
+              {
+                "or": ["An. other"]
+              }
+            ]
+          }
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please specify the number of mosquitoes of this species collected"
+        }
+      },
+      {
+        "key": "Culex",
+        "type": "edit_text",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "# of Culex mosquitoes collected",
+        "relevance": {
+          "step1:moz_type": {
+            "ex-checkbox": [
+              {
+                "or": ["Culex"]
+              }
+            ]
+          }
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please specify the number of mosquitoes of this species collected"
+        }
+      }
+    ]
+  }
+}
