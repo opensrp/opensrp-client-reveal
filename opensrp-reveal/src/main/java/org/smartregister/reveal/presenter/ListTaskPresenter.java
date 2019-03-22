@@ -49,6 +49,7 @@ import java.util.List;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static org.smartregister.AllConstants.OPERATIONAL_AREAS;
+import static org.smartregister.domain.Task.TaskStatus.COMPLETED;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
@@ -403,8 +404,6 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         } else {
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
-            // todo: add separate conditional to test mosquito collection card view display or collection form display
-            // todo: this logic will call listTaskInteractor.fetchMosquitoCollectionDetails and pop up a card like below
             selectedFeatureInterventionType = code;
             if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code)) && NOT_VISITED.equals(businessStatus)) {
                 if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
@@ -415,6 +414,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
                 listTaskInteractor.fetchSprayDetails(feature.id(), false);
+            } else if (MOSQUITO_COLLECTION.equals(code) && COMPLETED.equals(businessStatus)) {
+                // todo: refine this to correct status check after data dictionary is done
+                listTaskInteractor.fetchMosquitoCollectionDetails(feature.id(), false);
             }
         }
     }

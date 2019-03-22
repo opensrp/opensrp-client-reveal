@@ -28,6 +28,8 @@ import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
 import static org.smartregister.reveal.util.Constants.END_DATE;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
@@ -119,24 +121,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     private String processSprayEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
         String operationalAreaId = null;
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
-            String taskIdentifier = event.getDetails().get(TASK_IDENTIFIER);
-            Task task = taskRepository.getTaskByIdentifier(taskIdentifier);
-            if (task != null) {
-                task.setBusinessStatus(calculateBusinessStatus(event));
-                task.setStatus(Task.TaskStatus.COMPLETED);
-                // update task sync status to unsynced if it was already synced,
-                // ignore if task status is created so that it will be created on server
-                if (localEvents && BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
-                    task.setSyncStatus(BaseRepository.TYPE_Unsynced);
-                } else if (!localEvents) {
-                    // for events synced from server and task exists mark events as being fully synced
-                    eventClientRepository.markEventAsSynced(event.getFormSubmissionId());
-                }
-                taskRepository.addOrUpdate(task);
-                operationalAreaId = task.getGroupIdentifier();
-            } else {
-                eventClientRepository.markEventAsTaskUnprocessed(event.getFormSubmissionId());
-            }
+            operationalAreaId = updateTask(event, localEvents, IRS);
 
             Location structure = structureRepository.getLocationById(event.getBaseEntityId());
             if (structure != null) {
@@ -165,19 +150,15 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     private String processMosquitoCollectionEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
         String operationalAreaId = null;
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
-            // todo: add logic to update business status when data dictionary is available
+            operationalAreaId = updateTask(event, localEvents, MOSQUITO_COLLECTION);
+
             try {
-                // todo: add status when data dictionary specifies how to collect and determine its value
                 String startDate = event.findObs(null, false, JsonForm.TRAP_SET_DATE).getValue().toString();
                 String endDate = event.findObs(null, false, JsonForm.TRAP_FOLLOW_UP_DATE).getValue().toString();
                 event.getDetails().put(START_DATE, startDate);
                 event.getDetails().put(END_DATE, endDate);
                 Client client = new Client(event.getBaseEntityId());
                 processEvent(event, client, clientClassification);
-                if (localEvents) {
-                   // todo: may need to add extra task processing for local events vs remote
-                    Log.e(TAG, "Processing local events");
-                }
             } catch (Exception e) {
                 Log.e(TAG, "Error processing spray event", e);
             }
@@ -185,8 +166,40 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         return operationalAreaId;
     }
 
-    public String calculateBusinessStatus(Event event) {
-        // todo: add logic to calculate business status for other interventions
+    private String updateTask(Event event, boolean localEvents, String interventionType) {
+        String taskIdentifier = event.getDetails().get(TASK_IDENTIFIER);
+        Task task = taskRepository.getTaskByIdentifier(taskIdentifier);
+        String operationalAreaId = null;
+        if (task != null) {
+            task.setBusinessStatus(calculateBusinessStatus(event, interventionType));
+            task.setStatus(Task.TaskStatus.COMPLETED);
+            // update task sync status to unsynced if it was already synced,
+            // ignore if task status is created so that it will be created on server
+            if (localEvents && BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+            } else if (!localEvents) {
+                // for events synced from server and task exists mark events as being fully synced
+                eventClientRepository.markEventAsSynced(event.getFormSubmissionId());
+            }
+            taskRepository.addOrUpdate(task);
+            operationalAreaId = task.getGroupIdentifier();
+        } else {
+            eventClientRepository.markEventAsTaskUnprocessed(event.getFormSubmissionId());
+        }
+        return operationalAreaId;
+    }
+
+    public String calculateBusinessStatus(Event event, String interventionType) {
+        String businessStatus = null;
+        if (IRS.equals(interventionType)) {
+            businessStatus = calculateSprayTaskBusinessStatus(event);
+        } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
+            businessStatus = calculateMosquitoCollectionTaskBusinessStatus(event);
+        }
+        return businessStatus;
+    }
+
+    private String calculateSprayTaskBusinessStatus(Event event) {
         Obs businessStatusObs = event.findObs(null, false, JsonForm.TASK_BUSINESS_STATUS);
         if (businessStatusObs != null) {
             return businessStatusObs.getValue().toString();
@@ -202,4 +215,13 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         }
     }
 
+    private String calculateMosquitoCollectionTaskBusinessStatus(Event event) {
+        // todo: change the mosquito collection point color after update
+        // todo: refine this business status after data dictionary is done
+        Obs businessStatusObs = event.findObs(null, false, JsonForm.TASK_BUSINESS_STATUS);
+        if (businessStatusObs != null) {
+            return businessStatusObs.getValue().toString();
+        }
+        return Task.TaskStatus.COMPLETED.toString();
+    }
 }

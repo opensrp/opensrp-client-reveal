@@ -171,7 +171,6 @@ public class ListTaskInteractor {
     public void fetchMosquitoCollectionDetails(String structureId, boolean isForMosquitoCollectionForm) {
         // todo: add sql logic from mosquito collection ec tables
         // todo: for now just open card view, use dummy details
-        // todo: also conditionally open card or form
         if (isForMosquitoCollectionForm) {
             presenterCallBack.onInterventionFormDetailsFetched(new MosquitoCollectionCardDetails("Status: Active", "Set Date: 12/09/14", "Follow-up Date: 09/01/17"));
         } else {
@@ -286,7 +285,7 @@ public class ListTaskInteractor {
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override
                         public void run() {
-                            String businessStatus = clientProcessor.calculateBusinessStatus(event);
+                            String businessStatus = clientProcessor.calculateBusinessStatus(event, IRS);
                             presenterCallBack.onFormSaved(event.getBaseEntityId(), Task.TaskStatus.COMPLETED, businessStatus, IRS);
                         }
                     });
@@ -394,7 +393,7 @@ public class ListTaskInteractor {
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override
                         public void run() {
-                            String businessStatus = "FINISHED"; // todo: replace this with client processor business status calculation
+                            String businessStatus = clientProcessor.calculateBusinessStatus(event, MOSQUITO_COLLECTION);
                             presenterCallBack.onFormSaved(event.getBaseEntityId(), Task.TaskStatus.COMPLETED, businessStatus, MOSQUITO_COLLECTION);
                         }
                     });
