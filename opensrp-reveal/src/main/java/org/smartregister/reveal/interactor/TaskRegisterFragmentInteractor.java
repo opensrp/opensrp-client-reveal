@@ -151,8 +151,14 @@ public class TaskRegisterFragmentInteractor {
     }
 
 
-    public org.smartregister.domain.Location getStructure(String structureId) {
-        return RevealApplication.getInstance().getStructureRepository().getLocationById(structureId);
+    public void getStructure(TaskDetails taskDetails) {
+        appExecutors.diskIO().execute(() -> {
+            org.smartregister.domain.Location structure =
+                    RevealApplication.getInstance().getStructureRepository().getLocationById(taskDetails.getTaskEntity());
+            appExecutors.mainThread().execute(() -> {
+                presenter.onStructureFound(structure, taskDetails);
+            });
+        });
     }
 
 }

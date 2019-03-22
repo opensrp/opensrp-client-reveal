@@ -1,5 +1,6 @@
 package org.smartregister.reveal.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -39,12 +40,15 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     private BaseDrawerContract.View drawerView;
 
     private RevealJsonFormUtils jsonFormUtils;
+    private ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         drawerView = new DrawerMenuView(this);
         drawerView.initializeDrawerLayout();
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setCancelable(false);
     }
 
     @Override
@@ -176,6 +180,21 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     public RevealJsonFormUtils getJsonFormUtils() {
         return jsonFormUtils;
+    }
+
+    @Override
+    public void showProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.setTitle(R.string.opening_form_title);
+            progressDialog.setMessage(getString(R.string.opening_form_message));
+        }
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {

@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.support.v4.util.Pair;
+import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -164,12 +165,22 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
 
     @Override
     public void onTaskSelected(TaskDetails details) {
-        getView().showProgressView();
         if (details != null) {
-            Location structure = interactor.getStructure(details.getTaskEntity());
-            String formName = RevealJsonFormUtils.getFormName(null, details.getTaskCode());
-            JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), formName, details, structure);
-            getView().startForm(formJSON);
+            if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
+                //TODO implement functionality to link to structure details once its implemented
+                Toast.makeText(getView().getContext(), "To open structure details for " + details.getFamilyName(), Toast.LENGTH_LONG).show();
+            } else {
+                getView().showProgressDialog();
+                interactor.getStructure(details);
+            }
         }
+    }
+
+    @Override
+    public void onStructureFound(Location structure, TaskDetails details) {
+        String formName = RevealJsonFormUtils.getFormName(null, details.getTaskCode());
+        JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), formName, details, structure);
+        getView().startForm(formJSON);
+        getView().hideProgressDialog();
     }
 }

@@ -25,6 +25,8 @@ public interface TaskRegisterFragmentContract {
         void onDrawerClosed();
 
         void onTaskSelected(TaskDetails details);
+
+        void onStructureFound(org.smartregister.domain.Location structure, TaskDetails details);
     }
 
     interface View extends BaseRegisterFragmentContract.View {
@@ -42,6 +44,10 @@ public interface TaskRegisterFragmentContract {
         void startForm(JSONObject formName);
 
         RevealJsonFormUtils getJsonFormUtils();
+
+        void showProgressDialog();
+
+        void hideProgressDialog();
     }
 
 }

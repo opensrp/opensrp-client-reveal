@@ -67,7 +67,7 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
             action = context.getString(R.string.record_bcc);
         }
         viewHolder.setTaskName(name);
-        BaseCardDetails cardDetails = new BaseCardDetails(task.getSprayStatus());
+        BaseCardDetails cardDetails = new BaseCardDetails(task.getBusinessStatus());
         if (Task.TaskStatus.COMPLETED.name().equals(task.getTaskStatus())) {
             action = task.getBusinessStatus().replaceAll(" ", "\n");
             CardDetailsUtil.formatCardDetails(cardDetails);

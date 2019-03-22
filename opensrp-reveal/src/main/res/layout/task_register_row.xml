@@ -46,7 +46,7 @@
 
     <View
         android:id="@+id/separator"
-        android:layout_width="1dp"
+        android:layout_width="2dp"
         android:layout_height="0dp"
         android:layout_marginEnd="@dimen/task_register_padding"
         android:background="@drawable/grey_left_border"
