@@ -636,7 +636,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void onResume() {
         super.onResume();
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
-        IntentFilter filter = new IntentFilter(Action.STRUCTURE_TASK_SYNCHED);
+        IntentFilter filter = new IntentFilter(Action.STRUCTURE_TASK_SYNCED);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(refreshGeowidgetReceiver, filter);
         listTaskPresenter.onInitializeDrawerLayout();
     }

@@ -36,6 +36,7 @@ import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.Constants.StructureType;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
@@ -64,10 +65,14 @@ import static org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FOR
 import static org.smartregister.reveal.util.Constants.JsonForm.HEAD_OF_HOUSEHOLD;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
+import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM_BOTSWANA;
+import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM_NAMIBIA;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_TYPE;
+import static org.smartregister.reveal.util.Constants.JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM;
+import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
@@ -100,7 +105,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     private LocationHelper locationHelper;
 
-    private PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
+    private PreferencesUtil prefsUtil;
 
     private boolean changedCurrentSelection;
 
@@ -109,6 +114,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     private Geometry operationalArea;
 
     private Feature selectedFeature;
+
+    private String selectedFeatureInterventionType;
 
     private LatLng clickedPoint;
 
@@ -130,6 +137,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         locationHelper = LocationHelper.getInstance();
         passwordDialog = PasswordDialogUtils.initPasswordDialog(listTaskView.getContext(), this);
         locationPresenter = new ValidateUserLocationPresenter(listTaskView, this);
+        prefsUtil = PreferencesUtil.getInstance();
     }
 
     public void onInitializeDrawerLayout() {
@@ -397,6 +405,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             String code = getPropertyValue(feature, TASK_CODE);
             // todo: add separate conditional to test mosquito collection card view display or collection form display
             // todo: this logic will call listTaskInteractor.fetchMosquitoCollectionDetails and pop up a card like below
+            selectedFeatureInterventionType = code;
             if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code)) && NOT_VISITED.equals(businessStatus)) {
                 if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
                     validateUserLocation();
@@ -479,14 +488,45 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         }
     }
 
-    private void startSprayForm(String structureId, String structureUUID, String structureVersion, String structureType,
-                                String taskIdentifier, String taskBusinessStatus, String taskStatus, String propertyType, String sprayStatus, String familyHead) {
-        try {
-            String formString = AssetHandler.readFileFromAssetsFolder(SPRAY_FORM, listTaskView.getContext());
-            if (StringUtils.isBlank(structureType)) {
-                structureType = StructureType.NON_RESIDENTIAL;
+    private void startForm(Feature feature, CardDetails cardDetails, String encounterType) {
+        if (SPRAY_EVENT.equals(encounterType)) {
+            String formName = null;
+            if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
+                formName = SPRAY_FORM_NAMIBIA;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.BOTSWANA) {
+                formName = SPRAY_FORM_BOTSWANA;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                formName = SPRAY_FORM;
             }
-            formString = formString.replace(STRUCTURE_PROPERTIES_TYPE, structureType);
+            String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();
+            String familyHead = cardDetails == null ? null : ((SprayCardDetails) cardDetails).getFamilyHead();
+            startForm(formName, feature, sprayStatus, familyHead);
+        } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)) {
+            startForm(THAILAND_MOSQUITO_COLLECTION_FORM,  feature, null, null);
+        }
+    }
+
+    private void startForm(String formName, Feature feature, String sprayStatus, String familyHead) {
+
+        String taskBusinessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
+        String taskIdentifier = getPropertyValue(feature, TASK_IDENTIFIER);
+        String taskStatus = getPropertyValue(feature, TASK_STATUS);
+
+        String structureId = feature.id();
+        String structureUUID = getPropertyValue(feature, LOCATION_UUID);
+        String structureVersion = getPropertyValue(feature, LOCATION_VERSION);
+        String structureType = getPropertyValue(feature, LOCATION_TYPE);
+
+        try {
+            String formString = AssetHandler.readFileFromAssetsFolder(formName, listTaskView.getContext());
+            if ((SPRAY_FORM.equals(formName) || SPRAY_FORM_BOTSWANA.equals(formName) || SPRAY_FORM_NAMIBIA.equals(formName))) {
+                String structType = structureType;
+                if (StringUtils.isBlank(structureType)) {
+                    structType = StructureType.NON_RESIDENTIAL;
+                }
+                formString = formString.replace(STRUCTURE_PROPERTIES_TYPE, structType);
+            }
+
             JSONObject formJson = new JSONObject(formString);
             formJson.put(ENTITY_ID, structureId);
             JSONObject formData = new JSONObject();
@@ -497,12 +537,12 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             formData.put(LOCATION_VERSION, structureVersion);
             formJson.put(DETAILS, formData);
             JSONArray fields = JsonFormUtils.fields(formJson);
-            if (StringUtils.isNotBlank(propertyType) || StringUtils.isNotBlank(sprayStatus) || StringUtils.isNotBlank(familyHead)) {
+            if (StringUtils.isNotBlank(structureType) || StringUtils.isNotBlank(sprayStatus) || StringUtils.isNotBlank(familyHead)) {
                 for (int i = 0; i < fields.length(); i++) {
                     JSONObject field = fields.getJSONObject(i);
                     String key = field.getString(KEY);
                     if (key.equalsIgnoreCase(STRUCTURE_TYPE))
-                        field.put(JsonFormUtils.VALUE, propertyType);
+                        field.put(JsonFormUtils.VALUE, structureType);
                     else if (key.equalsIgnoreCase(SPRAY_STATUS))
                         field.put(JsonFormUtils.VALUE, sprayStatus);
                     else if (key.equalsIgnoreCase(HEAD_OF_HOUSEHOLD))
@@ -515,20 +555,6 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             Log.e(TAG, "error launching spray form", e);
         }
     }
-
-    private void startSprayForm(Feature feature) {
-        startSprayForm(feature, null, null, null);
-    }
-
-    private void startSprayForm(Feature feature, String propertyType, String sprayStatus, String familyHead) {
-        String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
-        String identifier = getPropertyValue(feature, TASK_IDENTIFIER);
-        String status = getPropertyValue(feature, TASK_STATUS);
-        startSprayForm(feature.id(), getPropertyValue(feature, LOCATION_UUID), getPropertyValue(feature, LOCATION_VERSION),
-                getPropertyValue(feature, LOCATION_TYPE),
-                identifier, businessStatus, status, propertyType, sprayStatus, familyHead);
-    }
-
 
     public void onChangeInterventionStatus(String interverntionType) {
         if (IRS.equals(interverntionType)) {
@@ -602,35 +628,18 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     @Override
     public void onLocationValidated() {
-        String code = getPropertyValue(selectedFeature, TASK_CODE);
-        if (IRS.equals(code)) {
-            launchSprayForm();
-        } else if (MOSQUITO_COLLECTION.equals(code))  {
-            launchMosquitoCollectionForm();
-        }
-    }
-
-    // todo: generic launchForm method to merge below, wait after merging other pr or look at it before refactoring
-
-    private void launchSprayForm() {
-        if (sprayCardDetails == null || !changeSprayStatus) {
-            // todo: replace this with new startForm method, from other pr
-            startSprayForm(selectedFeature);
-        } else {
-            // todo: replace this with new startForm method, from other pr
-            startSprayForm(selectedFeature, sprayCardDetails.getPropertyType(), sprayCardDetails.getStatus(), sprayCardDetails.getFamilyHead());
-        }
-    }
-
-    private void launchMosquitoCollectionForm() {
-        if (mosquitoCollectionCardDetails == null || !changeMosquitoCollectionStatus) {
-             // todo: start mosquito collection form with card details, from other pr
-            // todo: for now it just launches the irs form, which it shouldn't
-            startSprayForm(selectedFeature);
-        } else {
-            // todo: start mosquito collection form with card details, from other pr
-            // todo: for now it just launches the irs form, which it shouldn't
-            startSprayForm(selectedFeature, sprayCardDetails.getPropertyType(), sprayCardDetails.getStatus(), sprayCardDetails.getFamilyHead());
+        if (IRS.equals(selectedFeatureInterventionType)) {
+            if (sprayCardDetails == null || !changeSprayStatus) {
+                startForm(selectedFeature, null, SPRAY_EVENT);
+            } else {
+                startForm(selectedFeature, sprayCardDetails, SPRAY_EVENT);
+            }
+        } else if (MOSQUITO_COLLECTION.equals(selectedFeatureInterventionType)) {
+            if (mosquitoCollectionCardDetails == null || !changeMosquitoCollectionStatus) {
+                startForm(selectedFeature, null, MOSQUITO_COLLECTION_EVENT);
+            } else {
+                startForm(selectedFeature, mosquitoCollectionCardDetails, MOSQUITO_COLLECTION_EVENT);
+            }
         }
     }
 
