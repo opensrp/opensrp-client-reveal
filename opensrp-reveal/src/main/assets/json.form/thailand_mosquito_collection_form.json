@@ -131,6 +131,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "hint": "Date trap was set",
+        "max_date": "today",
         "v_required": {
           "value": true,
           "err": "Please specify the date trap was set"
@@ -143,6 +144,14 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "hint": "Date trap was collected",
+        "max_date": "today",
+        "constraints": [
+          {
+            "type": "date",
+            "ex": "greaterThanEqualTo(., step1:trap_start)",
+            "err": "Date trap was collected cannot be after date trap was set"
+          }
+        ],
         "v_required": {
           "value": true,
           "err": "Please specify the date trap was collected"
