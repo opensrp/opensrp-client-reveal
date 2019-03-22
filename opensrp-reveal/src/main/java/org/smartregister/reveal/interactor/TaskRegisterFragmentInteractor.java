@@ -8,6 +8,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.family.util.DBConstants;
+import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
@@ -28,6 +29,8 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.LATITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LONGITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAY_STATUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TABLE;
 
 /**
@@ -63,10 +66,12 @@ public class TaskRegisterFragmentInteractor {
                 tableName + "." + CODE,
                 tableName + "." + FOR,
                 tableName + "." + BUSINESS_STATUS,
+                tableName + "." + STATUS,
                 STRUCTURES_TABLE + "." + LATITUDE,
                 STRUCTURES_TABLE + "." + LONGITUDE,
                 STRUCTURES_TABLE + "." + NAME,
                 SPRAYED_STRUCTURES + "." + FAMILY_NAME,
+                SPRAYED_STRUCTURES + "." + SPRAY_STATUS,
         };
     }
 
@@ -110,6 +115,7 @@ public class TaskRegisterFragmentInteractor {
         task.setTaskCode(cursor.getString(cursor.getColumnIndex(CODE)));
         task.setTaskEntity(cursor.getString(cursor.getColumnIndex(FOR)));
         task.setBusinessStatus(cursor.getString(cursor.getColumnIndex(BUSINESS_STATUS)));
+        task.setTaskStatus(cursor.getString(cursor.getColumnIndex(STATUS)));
         Location location = new Location((String) null);
         location.setLatitude(cursor.getDouble(cursor.getColumnIndex(LATITUDE)));
         location.setLongitude(cursor.getDouble(cursor.getColumnIndex(LONGITUDE)));
@@ -119,6 +125,7 @@ public class TaskRegisterFragmentInteractor {
         }
         task.setStructureName(cursor.getString(cursor.getColumnIndex(NAME)));
         task.setFamilyName(cursor.getString(cursor.getColumnIndex(FAMILY_NAME)));
+        task.setSprayStatus(cursor.getString(cursor.getColumnIndex(SPRAY_STATUS)));
         return task;
     }
 
@@ -141,6 +148,11 @@ public class TaskRegisterFragmentInteractor {
             });
         });
 
+    }
+
+
+    public org.smartregister.domain.Location getStructure(String structureId) {
+        return RevealApplication.getInstance().getStructureRepository().getLocationById(structureId);
     }
 
 }

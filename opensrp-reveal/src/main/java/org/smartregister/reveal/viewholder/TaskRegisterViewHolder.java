@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.model.TaskDetails;
 
 /**
  * Created by samuelgithengi on 3/12/19.
@@ -53,8 +54,9 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         distanceView.setVisibility(View.GONE);
     }
 
-    public void setTaskAction(String actionLabel, View.OnClickListener onClickListener) {
+    public void setTaskAction(String actionLabel, TaskDetails task, View.OnClickListener onClickListener) {
         actionView.setText(actionLabel);
         actionView.setOnClickListener(onClickListener);
+        actionView.setTag(R.id.task_details, task);
     }
 }

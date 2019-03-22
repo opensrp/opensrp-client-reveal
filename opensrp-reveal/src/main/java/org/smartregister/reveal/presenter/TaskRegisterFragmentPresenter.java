@@ -3,12 +3,14 @@ package org.smartregister.reveal.presenter;
 import android.support.v4.util.Pair;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
 import org.smartregister.configurableviews.model.RegisterConfiguration;
 import org.smartregister.configurableviews.model.View;
 import org.smartregister.configurableviews.model.ViewConfiguration;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
@@ -18,6 +20,7 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 
 import java.lang.ref.WeakReference;
@@ -157,5 +160,15 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
     @Override
     public void onDrawerClosed() {
         interactor.findTasks(getMainCondition(), lastLocation);
+    }
+
+    @Override
+    public void onTaskSelected(TaskDetails details) {
+        getView().showProgressView();
+        if (details != null) {
+            Location structure = interactor.getStructure(details.getTaskEntity());
+            JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), Constants.JsonForm.SPRAY_FORM, details, structure);
+            getView().startForm(formJSON);
+        }
     }
 }

@@ -201,7 +201,11 @@ public interface Constants {
 
         String BUSINESS_STATUS = "business_status";
 
+        String STATUS = "status";
+
         String FAMILY_NAME = "family_head_name";
+
+        String SPRAY_STATUS = "spray_status";
 
         String LATITUDE = "latitude";
 
@@ -212,6 +216,8 @@ public interface Constants {
         String GROUPID = "group_id";
 
         String CAMPAIGN_ID = "campaign_id";
+
+
     }
 
 

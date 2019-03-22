@@ -64,7 +64,7 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
             action = context.getString(R.string.record_bcc);
         }
         viewHolder.setTaskName(name);
-        viewHolder.setTaskAction(action, registerActionHandler);
+        viewHolder.setTaskAction(action,task, registerActionHandler);
         viewHolder.setDistanceFromStructure(distance);
     }
 

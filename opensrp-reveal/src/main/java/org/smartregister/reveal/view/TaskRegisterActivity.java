@@ -8,6 +8,8 @@ import org.json.JSONObject;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.fragment.TaskRegisterFragment;
 import org.smartregister.reveal.presenter.TaskRegisterPresenter;
+import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.view.activity.BaseRegisterActivity;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
@@ -21,7 +23,7 @@ import static org.smartregister.reveal.util.Constants.TaskRegister;
  */
 public class TaskRegisterActivity extends BaseRegisterActivity {
 
-
+    private RevealJsonFormUtils jsonFormUtils;
 
     @Override
     protected void initializePresenter() {
@@ -30,7 +32,10 @@ public class TaskRegisterActivity extends BaseRegisterActivity {
 
     @Override
     protected BaseRegisterFragment getRegisterFragment() {
-        return new TaskRegisterFragment();
+        jsonFormUtils = new RevealJsonFormUtils();
+        TaskRegisterFragment fragment = new TaskRegisterFragment();
+        fragment.setJsonFormUtils(jsonFormUtils);
+        return fragment;
     }
 
     @Override
@@ -44,6 +49,7 @@ public class TaskRegisterActivity extends BaseRegisterActivity {
 
     @Override
     public void startFormActivity(JSONObject jsonObject) {
+        jsonFormUtils.startJsonForm(jsonObject, this);
     }
 
     @Override

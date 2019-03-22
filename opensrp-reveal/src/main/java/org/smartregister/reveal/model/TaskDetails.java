@@ -16,6 +16,8 @@ public class TaskDetails implements Comparable<TaskDetails> {
 
     private String businessStatus;
 
+    private String taskStatus;
+
     private Location location;
 
     private String structureName;
@@ -23,6 +25,8 @@ public class TaskDetails implements Comparable<TaskDetails> {
     private String familyName;
 
     private float distanceFromUser;
+
+    private String sprayStatus;
 
     public TaskDetails(@NonNull String taskId) {
         this.taskId = taskId;
@@ -60,6 +64,14 @@ public class TaskDetails implements Comparable<TaskDetails> {
         this.businessStatus = businessStatus;
     }
 
+    public String getTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(String taskStatus) {
+        this.taskStatus = taskStatus;
+    }
+
     public Location getLocation() {
         return location;
     }
@@ -90,6 +102,14 @@ public class TaskDetails implements Comparable<TaskDetails> {
 
     public void setDistanceFromUser(float distanceFromUser) {
         this.distanceFromUser = distanceFromUser;
+    }
+
+    public String getSprayStatus() {
+        return sprayStatus;
+    }
+
+    public void setSprayStatus(String sprayStatus) {
+        this.sprayStatus = sprayStatus;
     }
 
     @Override

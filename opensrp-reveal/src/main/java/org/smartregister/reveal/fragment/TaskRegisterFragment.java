@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+import org.smartregister.family.activity.BaseFamilyRegisterActivity;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.TaskRegisterAdapter;
@@ -15,9 +17,11 @@ import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.TaskRegister;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.DrawerMenuView;
 import org.smartregister.reveal.view.ListTasksActivity;
+import org.smartregister.reveal.view.TaskRegisterActivity;
 import org.smartregister.view.activity.BaseRegisterActivity;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
@@ -32,8 +36,9 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     private TaskRegisterAdapter taskAdapter;
 
-
     private BaseDrawerContract.View drawerView;
+
+    private RevealJsonFormUtils jsonFormUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -111,6 +116,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     protected void onViewClicked(View view) {
 
+        TaskDetails details = (TaskDetails) view.getTag(R.id.task_details);
+        getPresenter().onTaskSelected(details);
     }
 
     @Override
@@ -151,6 +158,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     }
 
     @Override
+    public void startForm(JSONObject formName) {
+        ((TaskRegisterActivity) getActivity()).startFormActivity(formName);
+    }
+
+    @Override
     public void onDestroy() {
         getPresenter().onDestroy();
         super.onDestroy();
@@ -159,5 +171,14 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     public void onDrawerClosed() {
         getPresenter().onDrawerClosed();
+    }
+
+    @Override
+    public RevealJsonFormUtils getJsonFormUtils() {
+        return jsonFormUtils;
+    }
+
+    public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {
+        this.jsonFormUtils = jsonFormUtils;
     }
 }
