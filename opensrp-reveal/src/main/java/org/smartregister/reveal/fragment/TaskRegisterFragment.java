@@ -13,6 +13,7 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
+import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.DrawerMenuView;
@@ -140,6 +141,12 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     public void setTaskDetails(List<TaskDetails> tasks) {
         taskAdapter.setTaskDetails(tasks);
+    }
+
+    @Override
+    public void displayNotification(int title, int message, Object... formatArgs) {
+        setRefreshList(false);
+        AlertDialogUtils.displayNotification(getContext(), title, message, formatArgs);
     }
 
     @Override

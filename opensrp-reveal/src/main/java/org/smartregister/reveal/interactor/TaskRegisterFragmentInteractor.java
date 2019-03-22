@@ -72,6 +72,10 @@ public class TaskRegisterFragmentInteractor {
 
 
     public void findTasks(Pair<String, String[]> mainCondition, Location lastLocation) {
+        if (mainCondition.second == null || mainCondition.second[0] == null) {
+            presenter.onTasksFound(null, 0);
+            return;
+        }
         appExecutors.diskIO().execute(() -> {
             List<TaskDetails> tasks = new ArrayList<>();
             int structuresWithinBuffer = 0;
@@ -96,7 +100,6 @@ public class TaskRegisterFragmentInteractor {
                 Collections.sort(tasks);
                 presenter.onTasksFound(tasks, finalStructuresWithinBuffer);
             });
-
         });
 
     }

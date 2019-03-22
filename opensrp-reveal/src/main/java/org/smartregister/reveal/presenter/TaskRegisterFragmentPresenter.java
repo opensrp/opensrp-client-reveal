@@ -9,7 +9,7 @@ import org.smartregister.configurableviews.model.RegisterConfiguration;
 import org.smartregister.configurableviews.model.View;
 import org.smartregister.configurableviews.model.ViewConfiguration;
 import org.smartregister.domain.Location;
-import org.smartregister.domain.Task.TaskStatus;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
@@ -21,6 +21,7 @@ import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -47,6 +48,8 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
 
     private boolean recalculateDistance;
 
+    private PreferencesUtil prefsUtil;
+
     public TaskRegisterFragmentPresenter(TaskRegisterFragmentContract.View view, String viewConfigurationIdentifier) {
         this.view = new WeakReference<>(view);
         this.viewConfigurationIdentifier = viewConfigurationIdentifier;
@@ -54,6 +57,7 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
         interactor = new TaskRegisterFragmentInteractor(RevealApplication.getInstance().getAppExecutors(), this);
         locationUtils = new LocationUtils(view.getContext());
         locationUtils.requestLocationUpdates(this);
+        prefsUtil = PreferencesUtil.getInstance();
     }
 
     @Override
@@ -76,9 +80,10 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
             lastLocation = getView().getLastLocation();
         }
 
+        getView().showProgressView();
+
         interactor.findTasks(getMainCondition(), lastLocation);
 
-        getView().showProgressView();
     }
 
     @Override
@@ -97,9 +102,10 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
      * @return pair of filter clause and values for filter
      */
     private Pair<String, String[]> getMainCondition() {
-        Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+        Location operationalArea = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
         String whereClause = String.format("%s = ? AND %s = ?", DatabaseKeys.GROUPID, DatabaseKeys.CAMPAIGN_ID);
-        return new Pair<>(whereClause, new String[]{operationalArea.getId(), PreferencesUtil.getInstance().getCurrentCampaignId()});
+        return new Pair<>(whereClause, new String[]{operationalArea == null ?
+                null : operationalArea.getId(), prefsUtil.getCurrentCampaignId()});
     }
 
     private TaskRegisterFragmentContract.View getView() {
@@ -113,7 +119,16 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
             recalculateDistance = false;
         } else {
             this.tasks = tasks;
-            getView().setTaskDetails(tasks);
+            if (tasks == null) {
+                getView().displayNotification(R.string.fetching_structure_title,
+                        R.string.fetch_location_and_structures_failed, prefsUtil.getCurrentOperationalArea());
+                getView().setTaskDetails(new ArrayList<>());
+            } else if (tasks.isEmpty()) {
+                getView().displayNotification(R.string.fetching_structure_title, R.string.no_structures_found);
+                getView().setTaskDetails(tasks);
+            } else {
+                getView().setTaskDetails(tasks);
+            }
             getView().setTotalPatients(structuresWithinBuffer);
             getView().hideProgressView();
         }

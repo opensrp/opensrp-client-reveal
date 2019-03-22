@@ -9,7 +9,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -25,6 +24,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.presenter.BaseDrawerPresenter;
+import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -217,10 +217,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     @Override
     public void displayNotification(int title, int message, Object... formatArgs) {
-        if (formatArgs.length == 0)
-            new AlertDialog.Builder(getContext()).setMessage(message).setTitle(title).setPositiveButton(R.string.ok, null).show();
-        else
-            new AlertDialog.Builder(getContext()).setMessage(getContext().getString(message, formatArgs)).setTitle(title).setPositiveButton(R.string.ok, null).show();
+        AlertDialogUtils.displayNotification(getContext(), title, message, formatArgs);
     }
 
     @Override

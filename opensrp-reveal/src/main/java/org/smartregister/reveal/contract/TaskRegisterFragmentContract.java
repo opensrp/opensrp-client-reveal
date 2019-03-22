@@ -2,8 +2,8 @@ package org.smartregister.reveal.contract;
 
 
 import android.location.Location;
+import android.support.annotation.StringRes;
 
-import org.smartregister.configurableviews.model.View;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.view.contract.BaseRegisterFragmentContract;
 
@@ -32,6 +32,8 @@ public interface TaskRegisterFragmentContract {
         void setTotalPatients(int structuresWithinBuffer);
 
         void setTaskDetails(List<TaskDetails> tasks);
+
+        void displayNotification(int title, @StringRes int message, Object... formatArgs);
     }
 
 }

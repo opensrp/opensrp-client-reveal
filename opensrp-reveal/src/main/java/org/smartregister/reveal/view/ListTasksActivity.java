@@ -46,6 +46,7 @@ import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
+import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.RevealMapHelper;
@@ -267,15 +268,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void displayNotification(int title, int message, Object... formatArgs) {
-        if (formatArgs.length == 0)
-            new AlertDialog.Builder(this).setMessage(message).setTitle(title).setPositiveButton(R.string.ok, null).show();
-        else
-            new AlertDialog.Builder(this).setMessage(getString(message, formatArgs)).setTitle(title).setPositiveButton(R.string.ok, null).show();
+        AlertDialogUtils.displayNotification(this, title, message, formatArgs);
     }
 
     @Override
     public void displayNotification(String message) {
-        new AlertDialog.Builder(this).setMessage(message).setTitle(R.string.fetch_structures_title).setPositiveButton(R.string.ok, null).show();
+        AlertDialogUtils.displayNotification(this, message);
     }
 
     @Override
