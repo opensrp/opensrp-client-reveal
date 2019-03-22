@@ -7,8 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.model.BaseCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.viewholder.TaskRegisterViewHolder;
 
@@ -64,7 +67,12 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
             action = context.getString(R.string.record_bcc);
         }
         viewHolder.setTaskName(name);
-        viewHolder.setTaskAction(action,task, registerActionHandler);
+        BaseCardDetails cardDetails = new BaseCardDetails(task.getSprayStatus());
+        if (Task.TaskStatus.COMPLETED.name().equals(task.getTaskStatus())) {
+            action = task.getBusinessStatus().replaceAll(" ", "\n");
+            CardDetailsUtil.formatCardDetails(cardDetails);
+        }
+        viewHolder.setTaskAction(action, task, cardDetails, registerActionHandler);
         viewHolder.setDistanceFromStructure(distance);
     }
 

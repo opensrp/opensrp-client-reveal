@@ -3,32 +3,20 @@ package org.smartregister.reveal.model;
 /**
  * @author Vincent Karuri
  */
-public class CardDetails {
+public class CardDetails extends BaseCardDetails {
 
-    private String sprayStatus;
     private String propertyType;
     private String sprayDate;
     private String sprayOperator;
     private String familyHead;
-    private int statusMessage;
-    private int statusColor;
-    private String reason;
 
     public CardDetails(String sprayStatus, String propertyType, String sprayDate, String sprayOperator, String familyHead, String reason) {
-        this.sprayStatus = sprayStatus;
+        super(sprayStatus);
         this.propertyType = propertyType;
         this.sprayDate = sprayDate;
         this.sprayOperator = sprayOperator;
         this.familyHead = familyHead;
-        this.reason = reason;
-    }
-
-    public String getSprayStatus() {
-        return sprayStatus;
-    }
-
-    public void setSprayStatus(String sprayStatus) {
-        this.sprayStatus = sprayStatus;
+        setReason(reason);
     }
 
     public String getPropertyType() {
@@ -63,27 +51,5 @@ public class CardDetails {
         this.familyHead = familyHead;
     }
 
-    public int getStatusColor() {
-        return statusColor;
-    }
 
-    public void setStatusColor(int statusColor) {
-        this.statusColor = statusColor;
-    }
-
-    public int getStatusMessage() {
-        return statusMessage;
-    }
-
-    public void setStatusMessage(int statusMessage) {
-        this.statusMessage = statusMessage;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
 }

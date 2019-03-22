@@ -28,6 +28,7 @@ import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.Constants.StructureType;
@@ -274,20 +275,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             }
         }
 
-        // extract status color
-        String sprayStatus = cardDetails.getSprayStatus();
-        if (NOT_SPRAYED.equals(sprayStatus)) {
-            cardDetails.setStatusColor(R.color.unsprayed);
-            cardDetails.setStatusMessage(R.string.details_not_sprayed);
-        } else if (SPRAYED.equals(sprayStatus)) {
-            cardDetails.setStatusColor(R.color.sprayed);
-            cardDetails.setStatusMessage(R.string.details_sprayed);
-            cardDetails.setReason(null);
-        } else {
-            cardDetails.setStatusColor(R.color.unsprayable);
-            cardDetails.setStatusMessage(R.string.details_not_sprayable);
-            cardDetails.setReason(null);
-        }
+        CardDetailsUtil.formatCardDetails(cardDetails);
     }
 
     private void startForm(Feature feature, CardDetails cardDetails, String encounterType) {
