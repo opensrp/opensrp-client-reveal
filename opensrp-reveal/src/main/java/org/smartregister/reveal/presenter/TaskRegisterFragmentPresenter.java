@@ -91,7 +91,12 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
         //do nothing, tasks not searchable globally
     }
 
-    public Pair<String, String[]> getMainCondition() {
+    /**
+     * Gets the where clause for the task register, filters by operational area and campaign
+     *
+     * @return pair of filter clause and values for filter
+     */
+    private Pair<String, String[]> getMainCondition() {
         Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
         String whereClause = String.format("%s = ? AND %s = ?", DatabaseKeys.GROUPID, DatabaseKeys.CAMPAIGN_ID);
         return new Pair<>(whereClause, new String[]{operationalArea.getId(), PreferencesUtil.getInstance().getCurrentCampaignId()});
@@ -132,5 +137,10 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
     @Override
     public void onDestroy() {
         locationUtils.stopLocationClient();
+    }
+
+    @Override
+    public void onDrawerClosed() {
+        interactor.findTasks(getMainCondition(), lastLocation);
     }
 }

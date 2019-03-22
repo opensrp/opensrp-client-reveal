@@ -150,6 +150,6 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     @Override
     public void onDrawerClosed() {
-
+        getPresenter().onDrawerClosed();
     }
 }

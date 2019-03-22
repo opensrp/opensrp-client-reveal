@@ -19,6 +19,8 @@ public interface TaskRegisterFragmentContract {
         void onTasksFound(List<TaskDetails> tasks, int structuresWithinBuffer);
 
         void onDestroy();
+
+        void onDrawerClosed();
     }
 
     interface View extends BaseRegisterFragmentContract.View {
