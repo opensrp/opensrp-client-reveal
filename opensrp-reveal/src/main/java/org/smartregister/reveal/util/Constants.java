@@ -192,8 +192,14 @@ public interface Constants {
         String FAMILY_NAME = "family_head_name";
 
         String LATITUDE = "latitude";
+
         String LONGITUDE = "longitude";
+
         String NAME = "name";
+
+        String GROUPID = "group_id";
+
+        String CAMPAIGN_ID = "campaign_id";
     }
 
 

@@ -1,6 +1,7 @@
 package org.smartregister.reveal.interactor;
 
 import android.location.Location;
+import android.support.v4.util.Pair;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -70,14 +71,14 @@ public class TaskRegisterFragmentInteractor {
     }
 
 
-    public void findTasks(String mainCondition, Location lastLocation) {
+    public void findTasks(Pair<String, String[]> mainCondition, Location lastLocation) {
         appExecutors.diskIO().execute(() -> {
             List<TaskDetails> tasks = new ArrayList<>();
             int structuresWithinBuffer = 0;
-            String query = mainSelect(mainCondition);
+            String query = mainSelect(mainCondition.first);
             Cursor cursor = null;
             try {
-                cursor = database.rawQuery(query, null);
+                cursor = database.rawQuery(query, mainCondition.second);
                 while (cursor.moveToNext()) {
                     TaskDetails taskDetails = readTaskDetails(cursor, lastLocation);
                     if (taskDetails.getDistanceFromUser() <= Utils.getLocationBuffer()) {

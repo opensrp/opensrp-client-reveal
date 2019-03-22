@@ -95,12 +95,12 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     @Override
     protected String getMainCondition() {
-        return getPresenter().getMainCondition();
+        return null;//not used
     }
 
     @Override
     protected String getDefaultSortQuery() {
-        return getPresenter().getDefaultSortQuery();
+        return null;//not used
     }
 
     @Override

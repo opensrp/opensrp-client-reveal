@@ -1,5 +1,7 @@
 package org.smartregister.reveal.presenter;
 
+import android.support.v4.util.Pair;
+
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
@@ -13,6 +15,7 @@ import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
@@ -72,6 +75,7 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
         if (lastLocation == null) {//if location client has not initialized use last location passed from map
             lastLocation = getView().getLastLocation();
         }
+
         interactor.findTasks(getMainCondition(), lastLocation);
 
         getView().showProgressView();
@@ -87,13 +91,10 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
         //do nothing, tasks not searchable globally
     }
 
-    public String getMainCondition() {
+    public Pair<String, String[]> getMainCondition() {
         Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
-        return String.format(" group_id = '%s' AND status IN ('%s', '%s') ", operationalArea.getId(), TaskStatus.READY, TaskStatus.IN_PROGRESS);
-    }
-
-    public String getDefaultSortQuery() {
-        return "start DESC ";
+        String whereClause = String.format("%s = ? AND %s = ?", DatabaseKeys.GROUPID, DatabaseKeys.CAMPAIGN_ID);
+        return new Pair<>(whereClause, new String[]{operationalArea.getId(), PreferencesUtil.getInstance().getCurrentCampaignId()});
     }
 
     private TaskRegisterFragmentContract.View getView() {
