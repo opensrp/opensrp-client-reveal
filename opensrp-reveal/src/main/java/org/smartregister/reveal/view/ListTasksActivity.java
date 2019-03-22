@@ -187,6 +187,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         findViewById(R.id.register_family).setOnClickListener(this);
 
         findViewById(R.id.btn_collapse_mosquito_collection_card_view).setOnClickListener(this);
+
+        findViewById(R.id.btn_record_mosquito_collection).setOnClickListener(this);
     }
 
     @Override

@@ -414,7 +414,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
                 listTaskInteractor.fetchSprayDetails(feature.id(), false);
-            } else if (MOSQUITO_COLLECTION.equals(code) && COMPLETED.equals(businessStatus)) {
+            } else if (MOSQUITO_COLLECTION.equals(code) && COMPLETED.toString().equals(businessStatus)) {
                 // todo: refine this to correct status check after data dictionary is done
                 listTaskInteractor.fetchMosquitoCollectionDetails(feature.id(), false);
             }
