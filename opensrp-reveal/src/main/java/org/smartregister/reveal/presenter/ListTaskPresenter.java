@@ -291,21 +291,10 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     }
 
     private void startForm(Feature feature, CardDetails cardDetails, String encounterType) {
-        if (SPRAY_EVENT.equals(encounterType)) {
-            String formName = null;
-            if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
-                formName = SPRAY_FORM_NAMIBIA;
-            } else if (BuildConfig.BUILD_COUNTRY == Country.BOTSWANA) {
-                formName = SPRAY_FORM_BOTSWANA;
-            } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
-                formName = SPRAY_FORM;
-            }
-            String sprayStatus = cardDetails == null ? null : cardDetails.getSprayStatus();
-            String familyHead = cardDetails == null ? null : cardDetails.getFamilyHead();
-            startForm(formName, feature, sprayStatus, familyHead);
-        } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)) {
-            startForm(THAILAND_MOSQUITO_COLLECTION_FORM, feature, null, null);
-        }
+        String formName = RevealJsonFormUtils.getFormName(encounterType, null);
+        String sprayStatus = cardDetails == null ? null : cardDetails.getSprayStatus();
+        String familyHead = cardDetails == null ? null : cardDetails.getFamilyHead();
+        startForm(formName, feature, sprayStatus, familyHead);
     }
 
     private void startForm(String formName, Feature feature, String sprayStatus, String familyHead) {

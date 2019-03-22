@@ -167,7 +167,8 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
         getView().showProgressView();
         if (details != null) {
             Location structure = interactor.getStructure(details.getTaskEntity());
-            JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), Constants.JsonForm.SPRAY_FORM, details, structure);
+            String formName = RevealJsonFormUtils.getFormName(null, details.getTaskCode());
+            JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), formName, details, structure);
             getView().startForm(formJSON);
         }
     }

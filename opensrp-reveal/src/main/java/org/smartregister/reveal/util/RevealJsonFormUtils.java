@@ -12,9 +12,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
-import org.smartregister.domain.Task;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.util.AssetHandler;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
@@ -28,6 +30,7 @@ import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM_NAMIBI
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_TYPE;
+import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
@@ -35,6 +38,7 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_S
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
+import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
 /**
@@ -153,5 +157,22 @@ public class RevealJsonFormUtils {
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
+    }
+
+    public static String getFormName(String encounterType, String taskCode) {
+        String formName = null;
+        if (SPRAY_EVENT.equals(encounterType) || Intervention.IRS.equals(taskCode)) {
+            if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
+                formName = JsonForm.SPRAY_FORM_NAMIBIA;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.BOTSWANA) {
+                formName = JsonForm.SPRAY_FORM_BOTSWANA;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                formName = JsonForm.SPRAY_FORM;
+            }
+        } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)
+                || Intervention.MOSQUITO_COLLECTION.equals(taskCode)) {
+            formName = JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM;
+        }
+        return formName;
     }
 }
