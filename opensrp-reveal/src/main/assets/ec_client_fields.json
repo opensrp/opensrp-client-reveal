@@ -308,7 +308,7 @@
           "column_name": "status",
           "type": "Event",
           "json_mapping": {
-            "field": "status"
+            "field": "details.status"
           }
         },
         {

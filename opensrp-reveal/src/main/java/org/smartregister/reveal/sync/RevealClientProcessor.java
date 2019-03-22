@@ -34,6 +34,7 @@ import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.START_DATE;
+import static org.smartregister.reveal.util.Constants.STATUS;
 
 /**
  * Created by samuelgithengi on 12/7/18.
@@ -157,6 +158,10 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 String endDate = event.findObs(null, false, JsonForm.TRAP_FOLLOW_UP_DATE).getValue().toString();
                 event.getDetails().put(START_DATE, startDate);
                 event.getDetails().put(END_DATE, endDate);
+
+                RevealClientProcessor clientProcessor = getInstance(RevealApplication.getInstance().getApplicationContext());
+                event.getDetails().put(STATUS, clientProcessor.calculateBusinessStatus(event, MOSQUITO_COLLECTION));
+
                 Client client = new Client(event.getBaseEntityId());
                 processEvent(event, client, clientClassification);
             } catch (Exception e) {
