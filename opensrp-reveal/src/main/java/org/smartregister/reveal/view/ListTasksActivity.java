@@ -12,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
@@ -40,7 +39,6 @@ import org.json.JSONObject;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
@@ -49,6 +47,7 @@ import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.Constants.TaskRegister;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
@@ -98,6 +97,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private BaseDrawerContract.View drawerView;
 
+    private RevealJsonFormUtils jsonFormUtils;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +120,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         initializeCardView();
 
         syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
+
+        jsonFormUtils = new RevealJsonFormUtils();
     }
 
     private void initializeCardView() {
@@ -297,13 +300,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void startJsonForm(JSONObject form) {
-        Intent intent = new Intent(getApplicationContext(), RevealJsonFormActivity.class);
-        try {
-            intent.putExtra(JSON_FORM_PARAM_JSON, form.toString());
-            startActivityForResult(intent, REQUEST_CODE_GET_JSON);
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
+        jsonFormUtils.startJsonForm(form, this);
     }
 
     @Override
@@ -448,6 +445,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public AppCompatActivity getActivity() {
         return this;
+    }
+
+    @Override
+    public RevealJsonFormUtils getJsonFormUtils() {
+        return jsonFormUtils;
     }
 
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {

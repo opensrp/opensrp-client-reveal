@@ -129,7 +129,7 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
             } else {
                 getView().setTaskDetails(tasks);
             }
-            getView().setTotalPatients(structuresWithinBuffer);
+            getView().setTotalTasks(structuresWithinBuffer);
             getView().hideProgressView();
         }
 

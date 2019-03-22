@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.Task.TaskStatus;
+import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseDrawerContract;
@@ -33,6 +34,7 @@ import org.smartregister.reveal.util.Constants.StructureType;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.Utils;
@@ -80,7 +82,7 @@ import static org.smartregister.reveal.util.Utils.getPropertyValue;
 /**
  * Created by samuelgithengi on 11/27/18.
  */
-public class ListTaskPresenter  implements ListTaskContract.PresenterCallBack, PasswordRequestCallback,
+public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, PasswordRequestCallback,
         UserLocationCallback {
 
     private static final String TAG = "ListTaskPresenter";
@@ -88,8 +90,6 @@ public class ListTaskPresenter  implements ListTaskContract.PresenterCallBack, P
     private ListTaskView listTaskView;
 
     private ListTaskInteractor listTaskInteractor;
-
-    private LocationHelper locationHelper;
 
     private PreferencesUtil prefsUtil;
 
@@ -304,58 +304,14 @@ public class ListTaskPresenter  implements ListTaskContract.PresenterCallBack, P
             String familyHead = cardDetails == null ? null : cardDetails.getFamilyHead();
             startForm(formName, feature, sprayStatus, familyHead);
         } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)) {
-            startForm(THAILAND_MOSQUITO_COLLECTION_FORM,  feature, null, null);
+            startForm(THAILAND_MOSQUITO_COLLECTION_FORM, feature, null, null);
         }
     }
 
     private void startForm(String formName, Feature feature, String sprayStatus, String familyHead) {
-
-        String taskBusinessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
-        String taskIdentifier = getPropertyValue(feature, TASK_IDENTIFIER);
-        String taskStatus = getPropertyValue(feature, TASK_STATUS);
-
-        String structureId = feature.id();
-        String structureUUID = getPropertyValue(feature, LOCATION_UUID);
-        String structureVersion = getPropertyValue(feature, LOCATION_VERSION);
-        String structureType = getPropertyValue(feature, LOCATION_TYPE);
-
-        try {
-            String formString = AssetHandler.readFileFromAssetsFolder(formName, listTaskView.getContext());
-            if ((SPRAY_FORM.equals(formName) || SPRAY_FORM_BOTSWANA.equals(formName) || SPRAY_FORM_NAMIBIA.equals(formName))) {
-                String structType = structureType;
-                if (StringUtils.isBlank(structureType)) {
-                    structType = StructureType.NON_RESIDENTIAL;
-                }
-                formString = formString.replace(STRUCTURE_PROPERTIES_TYPE, structType);
-            }
-
-            JSONObject formJson = new JSONObject(formString);
-            formJson.put(ENTITY_ID, structureId);
-            JSONObject formData = new JSONObject();
-            formData.put(TASK_IDENTIFIER, taskIdentifier);
-            formData.put(TASK_BUSINESS_STATUS, taskBusinessStatus);
-            formData.put(TASK_STATUS, taskStatus);
-            formData.put(LOCATION_UUID, structureUUID);
-            formData.put(LOCATION_VERSION, structureVersion);
-            formJson.put(DETAILS, formData);
-            JSONArray fields = JsonFormUtils.fields(formJson);
-            if (StringUtils.isNotBlank(structureType) || StringUtils.isNotBlank(sprayStatus) || StringUtils.isNotBlank(familyHead)) {
-                for (int i = 0; i < fields.length(); i++) {
-                    JSONObject field = fields.getJSONObject(i);
-                    String key = field.getString(KEY);
-                    if (key.equalsIgnoreCase(STRUCTURE_TYPE))
-                        field.put(JsonFormUtils.VALUE, structureType);
-                    else if (key.equalsIgnoreCase(SPRAY_STATUS))
-                        field.put(JsonFormUtils.VALUE, sprayStatus);
-                    else if (key.equalsIgnoreCase(HEAD_OF_HOUSEHOLD))
-                        field.put(JsonFormUtils.VALUE, familyHead);
-
-                }
-            }
-            listTaskView.startJsonForm(formJson);
-        } catch (Exception e) {
-            Log.e(TAG, "error launching spray form", e);
-        }
+        JSONObject formJson = listTaskView.getJsonFormUtils().getFormJSON(listTaskView.getContext()
+                , formName, feature, sprayStatus, familyHead);
+        listTaskView.startJsonForm(formJson);
     }
 
     public void onChangeSprayStatus() {

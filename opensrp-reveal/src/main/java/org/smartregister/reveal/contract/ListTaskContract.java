@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 
 /**
  * Created by samuelgithengi on 11/27/18.
@@ -45,6 +46,7 @@ public interface ListTaskContract {
 
         void displayToast(@StringRes int resourceId);
 
+        RevealJsonFormUtils getJsonFormUtils();
     }
 
     interface PresenterCallBack {

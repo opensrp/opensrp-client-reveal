@@ -29,7 +29,7 @@ public interface TaskRegisterFragmentContract {
 
         void initializeAdapter(Set<org.smartregister.configurableviews.model.View> visibleColumns);
 
-        void setTotalPatients(int structuresWithinBuffer);
+        void setTotalTasks(int structuresWithinBuffer);
 
         void setTaskDetails(List<TaskDetails> tasks);
 

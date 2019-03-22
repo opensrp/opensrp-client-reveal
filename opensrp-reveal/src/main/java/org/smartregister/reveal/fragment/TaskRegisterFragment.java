@@ -110,6 +110,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     @Override
     protected void onViewClicked(View view) {
+
     }
 
     @Override
@@ -125,12 +126,12 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     @Override
     public void setTotalPatients() {
-        //do nothing
+        //do nothing using @link setTotalTasks(structuresWithinBuffer)
     }
 
 
     @Override
-    public void setTotalPatients(int structuresWithinBuffer) {
+    public void setTotalTasks(int structuresWithinBuffer) {
         if (headerTextDisplay != null) {
             headerTextDisplay.setText(getResources().getQuantityString(R.plurals.structures,
                     taskAdapter.getItemCount(), structuresWithinBuffer, Utils.getLocationBuffer(), taskAdapter.getItemCount()));
