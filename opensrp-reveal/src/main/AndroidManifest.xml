@@ -78,7 +78,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.FamilyProfileActivity" />
         </activity>
-        <activity android:name=".view.TaskRegisterActivity" />
+        <activity
+            android:name=".view.TaskRegisterActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
         <service android:name=".sync.RevealSyncIntentService" />
         <service android:name=".sync.RevealCampaignIntentService" />
