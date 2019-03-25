@@ -13,6 +13,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Utils;
 
@@ -28,6 +29,9 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LATITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LONGITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.NOT_SRAYED_OTHER_REASON;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.NOT_SRAYED_REASON;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.OTHER;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
@@ -72,6 +76,8 @@ public class TaskRegisterFragmentInteractor {
                 STRUCTURES_TABLE + "." + NAME,
                 SPRAYED_STRUCTURES + "." + FAMILY_NAME,
                 SPRAYED_STRUCTURES + "." + SPRAY_STATUS,
+                SPRAYED_STRUCTURES + "." + NOT_SRAYED_REASON,
+                SPRAYED_STRUCTURES + "." + NOT_SRAYED_OTHER_REASON
         };
     }
 
@@ -126,6 +132,14 @@ public class TaskRegisterFragmentInteractor {
         task.setStructureName(cursor.getString(cursor.getColumnIndex(NAME)));
         task.setFamilyName(cursor.getString(cursor.getColumnIndex(FAMILY_NAME)));
         task.setSprayStatus(cursor.getString(cursor.getColumnIndex(SPRAY_STATUS)));
+
+        if (Constants.BusinessStatus.NOT_SPRAYED.equals(task.getBusinessStatus())) {
+            String reason = cursor.getString(cursor.getColumnIndex(NOT_SRAYED_REASON));
+            if (OTHER.equals(reason)) {
+                reason = cursor.getString(cursor.getColumnIndex(NOT_SRAYED_OTHER_REASON));
+            }
+            task.setTaskDetails(reason);
+        }
         return task;
     }
 

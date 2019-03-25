@@ -28,6 +28,8 @@ public class TaskDetails implements Comparable<TaskDetails> {
 
     private String sprayStatus;
 
+    private String taskDetails;
+
     public TaskDetails(@NonNull String taskId) {
         this.taskId = taskId;
     }
@@ -110,6 +112,14 @@ public class TaskDetails implements Comparable<TaskDetails> {
 
     public void setSprayStatus(String sprayStatus) {
         this.sprayStatus = sprayStatus;
+    }
+
+    public String getTaskDetails() {
+        return taskDetails;
+    }
+
+    public void setTaskDetails(String taskDetails) {
+        this.taskDetails = taskDetails;
     }
 
     @Override

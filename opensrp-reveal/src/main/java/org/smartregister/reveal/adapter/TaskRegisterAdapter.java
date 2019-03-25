@@ -74,6 +74,7 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
         }
         viewHolder.setTaskAction(action, task, cardDetails, registerActionHandler);
         viewHolder.setDistanceFromStructure(distance);
+        viewHolder.setTaskDetails(task.getBusinessStatus(),task.getTaskDetails());
     }
 
     @Override

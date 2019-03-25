@@ -38,11 +38,24 @@
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/task_register_padding"
         android:paddingEnd="@dimen/task_register_padding"
-        android:paddingBottom="@dimen/task_register_padding"
+        android:paddingBottom="@dimen/task_register_vertical_padding"
         android:textColor="#7A7A7A"
         android:textSize="@dimen/task_register_text_size"
         app:layout_constraintStart_toEndOf="@id/task_icon"
         app:layout_constraintTop_toBottomOf="@id/task_name" />
+
+    <TextView
+        android:id="@+id/task_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/task_register_padding"
+        android:paddingEnd="@dimen/task_register_padding"
+        android:paddingBottom="@dimen/task_register_vertical_padding"
+        android:textColor="#7A7A7A"
+        android:textSize="@dimen/task_register_text_size"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/task_icon"
+        app:layout_constraintTop_toBottomOf="@id/distance_from_structure" />
 
     <View
         android:id="@+id/separator"

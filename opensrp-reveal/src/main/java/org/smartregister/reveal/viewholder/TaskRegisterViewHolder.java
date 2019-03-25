@@ -11,6 +11,7 @@ import android.widget.TextView;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.BaseCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.util.Constants;
 
 /**
  * Created by samuelgithengi on 3/12/19.
@@ -27,6 +28,8 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
 
     private TextView actionView;
 
+    private TextView taskDetailsView;
+
 
     public TaskRegisterViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -34,6 +37,7 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         iconView = itemView.findViewById(R.id.task_icon);
         nameView = itemView.findViewById(R.id.task_name);
         distanceView = itemView.findViewById(R.id.distance_from_structure);
+        taskDetailsView = itemView.findViewById(R.id.task_details);
         actionView = itemView.findViewById(R.id.task_action);
     }
 
@@ -66,5 +70,14 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         }
         actionView.setOnClickListener(onClickListener);
         actionView.setTag(R.id.task_details, task);
+    }
+
+    public void setTaskDetails(String businessStatus, String taskDetails) {
+        if (Constants.BusinessStatus.NOT_SPRAYED.equals(businessStatus)) {
+            taskDetailsView.setVisibility(View.VISIBLE);
+            taskDetailsView.setText(context.getString(R.string.task_reason, taskDetails));
+        } else {
+            taskDetailsView.setVisibility(View.GONE);
+        }
     }
 }

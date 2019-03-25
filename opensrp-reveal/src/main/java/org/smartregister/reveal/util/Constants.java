@@ -217,6 +217,12 @@ public interface Constants {
 
         String CAMPAIGN_ID = "campaign_id";
 
+        String NOT_SRAYED_REASON = "not_sprayed_reason";
+
+        String NOT_SRAYED_OTHER_REASON = "not_sprayed_other_reason";
+
+        String OTHER = "other";
+
 
     }
 
