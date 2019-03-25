@@ -9,9 +9,7 @@ import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -49,24 +47,15 @@ public interface ListTaskContract {
         RevealJsonFormUtils getJsonFormUtils();
     }
 
-    interface PresenterCallBack {
+    interface Presenter extends BaseContract.BasePresenter {
 
         void onStructuresFetched(JSONObject structuresGeoJson, Geometry operationalAreaGeometry);
-
-        void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier,
-                              @NonNull TaskStatus taskStatus, @NonNull String businessStatus);
-
-        void onStructureAdded(Feature feature, JSONArray featureCoordinates);
-
-        void onFormSaveFailure(String eventType);
 
         void onCardDetailsFetched(CardDetails cardDetails);
 
         void onSprayFormDetailsFetched(CardDetails finalCardDetails);
 
         void onDrawerClosed();
-      
-        void onMosquitoCollectionFormSaved();
     }
 
 }

@@ -17,26 +17,14 @@ import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
+import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.util.AssetHandler;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
-import static org.smartregister.reveal.util.Constants.JsonForm.HEAD_OF_HOUSEHOLD;
-import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
-import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM_BOTSWANA;
-import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM_NAMIBIA;
-import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_STATUS;
-import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
-import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_TYPE;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
-import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
-import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
-import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
-import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
-import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
-import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
@@ -51,14 +39,14 @@ public class RevealJsonFormUtils {
 
     public JSONObject getFormJSON(Context context, String formName, Feature feature, String sprayStatus, String familyHead) {
 
-        String taskBusinessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
-        String taskIdentifier = getPropertyValue(feature, TASK_IDENTIFIER);
-        String taskStatus = getPropertyValue(feature, TASK_STATUS);
+        String taskBusinessStatus = getPropertyValue(feature, Properties.TASK_BUSINESS_STATUS);
+        String taskIdentifier = getPropertyValue(feature, Properties.TASK_IDENTIFIER);
+        String taskStatus = getPropertyValue(feature, Properties.TASK_STATUS);
 
         String structureId = feature.id();
-        String structureUUID = getPropertyValue(feature, LOCATION_UUID);
-        String structureVersion = getPropertyValue(feature, LOCATION_VERSION);
-        String structureType = getPropertyValue(feature, LOCATION_TYPE);
+        String structureUUID = getPropertyValue(feature, Properties.LOCATION_UUID);
+        String structureVersion = getPropertyValue(feature, Properties.LOCATION_VERSION);
+        String structureType = getPropertyValue(feature, Properties.LOCATION_TYPE);
 
         String formString = getFormString(context, formName, structureType);
         try {
@@ -102,12 +90,13 @@ public class RevealJsonFormUtils {
 
     private String getFormString(Context context, String formName, String structureType) {
         String formString = AssetHandler.readFileFromAssetsFolder(formName, context);
-        if ((SPRAY_FORM.equals(formName) || SPRAY_FORM_BOTSWANA.equals(formName) || SPRAY_FORM_NAMIBIA.equals(formName))) {
+        if ((JsonForm.SPRAY_FORM.equals(formName) || JsonForm.SPRAY_FORM_BOTSWANA.equals(formName)
+                || JsonForm.SPRAY_FORM_NAMIBIA.equals(formName))) {
             String structType = structureType;
             if (StringUtils.isBlank(structureType)) {
                 structType = Constants.StructureType.NON_RESIDENTIAL;
             }
-            formString = formString.replace(STRUCTURE_PROPERTIES_TYPE, structType);
+            formString = formString.replace(JsonForm.STRUCTURE_PROPERTIES_TYPE, structType);
         }
         return formString;
     }
@@ -120,11 +109,11 @@ public class RevealJsonFormUtils {
         JSONObject formJson = new JSONObject(formString);
         formJson.put(ENTITY_ID, structureId);
         JSONObject formData = new JSONObject();
-        formData.put(TASK_IDENTIFIER, taskIdentifier);
-        formData.put(TASK_BUSINESS_STATUS, taskBusinessStatus);
-        formData.put(TASK_STATUS, taskStatus);
-        formData.put(LOCATION_UUID, structureUUID);
-        formData.put(LOCATION_VERSION, structureVersion);
+        formData.put(Properties.TASK_IDENTIFIER, taskIdentifier);
+        formData.put(Properties.TASK_BUSINESS_STATUS, taskBusinessStatus);
+        formData.put(Properties.TASK_STATUS, taskStatus);
+        formData.put(Properties.LOCATION_UUID, structureUUID);
+        formData.put(Properties.LOCATION_VERSION, structureVersion);
         formJson.put(DETAILS, formData);
         return formJson;
     }
@@ -137,11 +126,11 @@ public class RevealJsonFormUtils {
             for (int i = 0; i < fields.length(); i++) {
                 JSONObject field = fields.getJSONObject(i);
                 String key = field.getString(KEY);
-                if (key.equalsIgnoreCase(STRUCTURE_TYPE))
+                if (key.equalsIgnoreCase(JsonForm.STRUCTURE_TYPE))
                     field.put(org.smartregister.util.JsonFormUtils.VALUE, structureType);
-                else if (key.equalsIgnoreCase(SPRAY_STATUS))
+                else if (key.equalsIgnoreCase(JsonForm.SPRAY_STATUS))
                     field.put(org.smartregister.util.JsonFormUtils.VALUE, sprayStatus);
-                else if (key.equalsIgnoreCase(HEAD_OF_HOUSEHOLD))
+                else if (key.equalsIgnoreCase(JsonForm.HEAD_OF_HOUSEHOLD))
                     field.put(org.smartregister.util.JsonFormUtils.VALUE, familyHead);
             }
         }

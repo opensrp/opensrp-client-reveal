@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.json.JSONObject;
-import org.smartregister.family.activity.BaseFamilyRegisterActivity;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.TaskRegisterAdapter;

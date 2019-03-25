@@ -2,13 +2,14 @@ package org.smartregister.reveal.view;
 
 import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.View;
 
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.contract.TaskRegisterContract;
 import org.smartregister.reveal.fragment.TaskRegisterFragment;
-import org.smartregister.reveal.presenter.TaskRegisterPresenter;
-import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.presenter.TaskRegisterBasePresenter;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.view.activity.BaseRegisterActivity;
 import org.smartregister.view.fragment.BaseRegisterFragment;
@@ -16,6 +17,8 @@ import org.smartregister.view.fragment.BaseRegisterFragment;
 import java.util.Collections;
 import java.util.List;
 
+import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
+import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.TaskRegister;
 
 /**
@@ -27,7 +30,7 @@ public class TaskRegisterActivity extends BaseRegisterActivity {
 
     @Override
     protected void initializePresenter() {
-        presenter = new TaskRegisterPresenter();
+        presenter = new TaskRegisterBasePresenter();
     }
 
     @Override
@@ -44,7 +47,7 @@ public class TaskRegisterActivity extends BaseRegisterActivity {
     }
 
     @Override
-    public void startFormActivity(String formName, String entityId, String metaData) {
+    public void startFormActivity(String formName, String entityId, String metaData) {//not used
     }
 
     @Override
@@ -53,7 +56,12 @@ public class TaskRegisterActivity extends BaseRegisterActivity {
     }
 
     @Override
-    protected void onActivityResultExtended(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResultExtended(int requestCode, int resultCode, Intent data) {//do nothing
+        if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
+            String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
+            Log.d(TAG, json);
+            getPresenter().saveJsonForm(json);
+        }
     }
 
     @Override
@@ -69,5 +77,9 @@ public class TaskRegisterActivity extends BaseRegisterActivity {
     protected void registerBottomNavigation() {
         //not used for task register
         findViewById(R.id.bottom_navigation).setVisibility(View.GONE);
+    }
+
+    TaskRegisterContract.BasePresenter getPresenter() {
+        return (TaskRegisterContract.BasePresenter) presenter;
     }
 }

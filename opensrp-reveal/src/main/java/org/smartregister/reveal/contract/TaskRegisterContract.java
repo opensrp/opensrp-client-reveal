@@ -7,6 +7,10 @@ import java.util.List;
  */
 public interface TaskRegisterContract {
 
+    interface BasePresenter extends BaseContract.BasePresenter {
+        void saveJsonForm(String json);
+    }
+
     interface Interactor {
 
         void registerViewConfigurations(List<String> viewIdentifiers);

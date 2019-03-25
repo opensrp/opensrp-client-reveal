@@ -72,7 +72,6 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
         if (!StringUtils.isBlank(this.viewConfigurationIdentifier)) {
             ViewConfiguration viewConfiguration = viewsHelper.getViewConfiguration(this.viewConfigurationIdentifier);
             if (viewConfiguration != null) {
-                RegisterConfiguration config = (RegisterConfiguration) viewConfiguration.getMetadata();
                 visibleColumns = viewsHelper.getRegisterActiveColumns(this.viewConfigurationIdentifier);
             }
         }
