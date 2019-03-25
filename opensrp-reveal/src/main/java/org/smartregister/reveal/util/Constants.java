@@ -96,6 +96,8 @@ public interface Constants {
         String NOT_SPRAYED = "Not Sprayed";
         String SPRAYED = "Sprayed";
         String NOT_SPRAYABLE = "Not Sprayable";
+        String COMPLETE = "Complete"; // todo: refine these statuses after data dictionary
+        String INCOMPLETE = "Incomplete"; // todo: refine these statuses after data dictionary
     }
 
 
@@ -114,7 +116,7 @@ public interface Constants {
 
         String TRAP_FOLLOW_UP_DATE = "trap_end";
 
-        String TASK_BUSINESS_STATUS = "business_status";
+        String BUSINESS_STATUS = "business_status";
 
         String STRUCTURE_TYPE = "structureType";
 

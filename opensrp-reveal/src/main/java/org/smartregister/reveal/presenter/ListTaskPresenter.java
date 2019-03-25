@@ -51,6 +51,8 @@ import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static org.smartregister.AllConstants.OPERATIONAL_AREAS;
 import static org.smartregister.domain.Task.TaskStatus.COMPLETED;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
@@ -405,7 +407,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             selectedFeatureInterventionType = code;
-            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code)) && NOT_VISITED.equals(businessStatus)) {
+            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code))
+                    && (NOT_VISITED.equals(businessStatus) || INCOMPLETE.equals(businessStatus))) {
                 if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
                     validateUserLocation();
                 } else {
@@ -414,7 +417,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
                 listTaskInteractor.fetchSprayDetails(feature.id(), false);
-            } else if (MOSQUITO_COLLECTION.equals(code) && COMPLETED.toString().equals(businessStatus)) {
+            } else if (MOSQUITO_COLLECTION.equals(code) && COMPLETE.equals(businessStatus)) {
                 // todo: refine this to correct status check after data dictionary is done
                 listTaskInteractor.fetchMosquitoCollectionDetails(feature.id(), false);
             }

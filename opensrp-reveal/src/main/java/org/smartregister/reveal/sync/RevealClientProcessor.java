@@ -27,10 +27,12 @@ import org.smartregister.sync.ClientProcessorForJava;
 import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.END_DATE;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.START_DATE;
@@ -205,7 +207,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     }
 
     private String calculateSprayTaskBusinessStatus(Event event) {
-        Obs businessStatusObs = event.findObs(null, false, JsonForm.TASK_BUSINESS_STATUS);
+        Obs businessStatusObs = event.findObs(null, false, JsonForm.BUSINESS_STATUS);
         if (businessStatusObs != null) {
             return businessStatusObs.getValue().toString();
         } else {
@@ -223,10 +225,10 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     private String calculateMosquitoCollectionTaskBusinessStatus(Event event) {
         // todo: change the mosquito collection point color after update
         // todo: refine this business status after data dictionary is done
-        Obs businessStatusObs = event.findObs(null, false, JsonForm.TASK_BUSINESS_STATUS);
-        if (businessStatusObs != null) {
-            return businessStatusObs.getValue().toString();
+        Obs taskBusinessStatusObs = event.findObs(null, false, TASK_BUSINESS_STATUS);
+        if (taskBusinessStatusObs != null) {
+            return taskBusinessStatusObs.getValue().toString();
         }
-        return Task.TaskStatus.COMPLETED.toString();
+        return COMPLETE;
     }
 }

@@ -331,6 +331,14 @@
             "Not Sprayable"
           ],
           "hsl(0, 0%, 9%)",
+          [
+            "Incomplete"
+          ],
+          "hsl(3, 71%, 54%)",
+          [
+            "Complete"
+          ],
+          "hsl(89, 52%, 48%)",
           "hsl(0, 0%, 78%)"
         ],
         "circle-stroke-width": 1

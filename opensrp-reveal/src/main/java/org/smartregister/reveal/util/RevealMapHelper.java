@@ -53,7 +53,7 @@ public class RevealMapHelper {
         mMapboxMap.addLayer(symbolLayer);
 
 
-        icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_bleeding);
+        icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_breeding);
         mMapboxMap.addImage(LARVAL_BREEDING_ICON, icon);
         symbolLayer = new SymbolLayer(LARVAL_BREEDING_LAYER, context.getString(R.string.reveal_datasource_name));
         symbolLayer.setProperties(
