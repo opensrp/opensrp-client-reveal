@@ -49,6 +49,7 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
         Float distance = task.getDistanceFromUser();
         String name = task.getStructureName();
         String action = null;
+        boolean hasIcon = false;
         if (Constants.Intervention.IRS.equals(task.getTaskCode())) {
             if (name == null) {//TODO remove setting structure name with serial numbers once its moved to server
                 name = task.getFamilyName() != null ? task.getFamilyName() : "Structure " + random.nextInt(100);
@@ -62,9 +63,9 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
             action = context.getString(R.string.record_larvacide);
         } else if (Constants.Intervention.BCC.equals(task.getTaskCode())) {
             viewHolder.setIcon(R.drawable.ic_bcc);
-            viewHolder.hideDistanceFromStructure();
             name = context.getString(R.string.bcc);
             action = context.getString(R.string.record_bcc);
+            hasIcon = true;
         }
         viewHolder.setTaskName(name);
         BaseCardDetails cardDetails = new BaseCardDetails(task.getBusinessStatus());
@@ -74,7 +75,13 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
         }
         viewHolder.setTaskAction(action, task, cardDetails, registerActionHandler);
         viewHolder.setDistanceFromStructure(distance);
-        viewHolder.setTaskDetails(task.getBusinessStatus(),task.getTaskDetails());
+        viewHolder.setTaskDetails(task.getBusinessStatus(), task.getTaskDetails());
+        if (hasIcon) {
+            viewHolder.hideDistanceFromStructure();
+        } else {
+            viewHolder.hideIcon();
+        }
+
     }
 
     @Override

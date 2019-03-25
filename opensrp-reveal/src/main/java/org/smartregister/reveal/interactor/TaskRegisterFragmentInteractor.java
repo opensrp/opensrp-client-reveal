@@ -57,7 +57,7 @@ public class TaskRegisterFragmentInteractor {
         String tableName = DatabaseKeys.TASK_TABLE;
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
         queryBuilder.SelectInitiateMainTable(tableName, mainColumns(tableName), ID);
-        queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s  COLLATE NOCASE",
+        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s  COLLATE NOCASE",
                 STRUCTURES_TABLE, tableName, FOR, STRUCTURES_TABLE, ID));
         queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s  COLLATE NOCASE",
                 SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
@@ -126,7 +126,10 @@ public class TaskRegisterFragmentInteractor {
         location.setLatitude(cursor.getDouble(cursor.getColumnIndex(LATITUDE)));
         location.setLongitude(cursor.getDouble(cursor.getColumnIndex(LONGITUDE)));
         task.setLocation(location);
-        if (lastLocation != null) {
+        if (Constants.Intervention.BCC.equals(task.getTaskCode())) {
+            //set distance to -1 to always display on top of register
+            task.setDistanceFromUser(-1);
+        } else if (lastLocation != null) {
             task.setDistanceFromUser(location.distanceTo(lastLocation));
         }
         task.setStructureName(cursor.getString(cursor.getColumnIndex(NAME)));

@@ -94,7 +94,7 @@ public class RevealJsonFormUtils {
                     taskBusinessStatus, taskStatus, structureUUID, structureVersion);
             populateFormFields(formJson, structureType, sprayStatus, familyHead);
             return formJson;
-        } catch (Exception e) {
+        } catch (JSONException e) {
             Log.e(TAG, "error launching form" + formName, e);
         }
         return null;

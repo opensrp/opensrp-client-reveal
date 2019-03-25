@@ -80,4 +80,8 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
             taskDetailsView.setVisibility(View.GONE);
         }
     }
+
+    public void hideIcon() {
+        iconView.setVisibility(View.GONE);
+    }
 }

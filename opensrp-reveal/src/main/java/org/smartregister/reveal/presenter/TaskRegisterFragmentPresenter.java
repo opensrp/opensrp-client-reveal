@@ -31,6 +31,9 @@ import java.util.Set;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
 
+import static org.smartregister.reveal.util.Constants.Intervention.BCC;
+import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
+
 /**
  * Created by samuelgithengi on 3/11/19.
  */
@@ -166,9 +169,15 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
     @Override
     public void onTaskSelected(TaskDetails details) {
         if (details != null) {
-            if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
+            //TODO remove this condition once BCC and Larval dipping forms are implemented
+            if (BCC.equals(details.getTaskCode()) || LARVAL_DIPPING.equals(details.getTaskCode())) {
+                Toast.makeText(getView().getContext(), String.format("To open %s form for %s ",
+                        details.getTaskCode(), details.getFamilyName()), Toast.LENGTH_LONG).show();
+
+            } else if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
                 //TODO implement functionality to link to structure details once its implemented
-                Toast.makeText(getView().getContext(), "To open structure details for " + details.getFamilyName(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getView().getContext(), String.format("To open structure details view for %s ",
+                        details.getFamilyName()), Toast.LENGTH_LONG).show();
             } else {
                 getView().showProgressDialog();
                 interactor.getStructure(details);
