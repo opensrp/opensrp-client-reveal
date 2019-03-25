@@ -1,9 +1,5 @@
 package org.smartregister.reveal.contract;
 
-import android.support.annotation.StringRes;
-
-import org.smartregister.view.contract.BaseRegisterContract;
-
 import java.util.List;
 
 /**
