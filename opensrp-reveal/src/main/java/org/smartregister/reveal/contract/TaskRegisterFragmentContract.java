@@ -45,7 +45,7 @@ public interface TaskRegisterFragmentContract {
 
         RevealJsonFormUtils getJsonFormUtils();
 
-        void showProgressDialog();
+        void showProgressDialog(@StringRes int title, @StringRes int message);
 
         void hideProgressDialog();
     }

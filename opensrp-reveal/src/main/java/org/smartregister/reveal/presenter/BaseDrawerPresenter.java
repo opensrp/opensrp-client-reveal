@@ -43,9 +43,12 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     private LocationHelper locationHelper;
 
-    protected boolean changedCurrentSelection;
+    private boolean changedCurrentSelection;
 
     private BaseDrawerContract.Interactor interactor;
+
+
+    private boolean viewInitialized = false;
 
     public BaseDrawerPresenter(BaseDrawerContract.View view, BaseDrawerContract.DrawerActivity drawerActivity) {
         this.view = view;
@@ -55,8 +58,8 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         interactor = new BaseDrawerInteractor(this);
     }
 
-    @Override
-    public void onInitializeDrawerLayout() {
+
+    private void initializeDrawerLayout() {
 
         view.setOperator();
 
@@ -162,7 +165,6 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         String facility = getFacilityFromOperationalArea(name.get(2), name.get(3), entireTree);
         prefsUtil.setCurrentFacility(facility);
         changedCurrentSelection = true;
-
         populateLocationsFromPreferences();
         unlockDrawerLayout();
 
@@ -246,6 +248,20 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     @Override
     public BaseDrawerContract.View getView() {
         return view;
+    }
+
+    @Override
+    public void onViewResumed() {
+        if (viewInitialized) {
+            if (!prefsUtil.getCurrentCampaign().equals(view.getCampaign())
+                    || !prefsUtil.getCurrentFacility().equals(view.getOperationalArea())) {
+                changedCurrentSelection = true;
+                onDrawerClosed();
+            }
+        } else {
+            initializeDrawerLayout();
+            viewInitialized = true;
+        }
     }
 
 }

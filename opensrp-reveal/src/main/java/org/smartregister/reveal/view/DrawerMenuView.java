@@ -48,11 +48,9 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     private DrawerLayout mDrawerLayout;
 
-
     private BaseDrawerContract.Presenter presenter;
 
     private BaseDrawerContract.DrawerActivity activity;
-
 
     public DrawerMenuView(BaseDrawerContract.DrawerActivity activity) {
         this.activity = activity;
@@ -143,6 +141,16 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     }
 
     @Override
+    public String getCampaign() {
+        return campaignTextView.getText().toString();
+    }
+
+    @Override
+    public String getOperationalArea() {
+        return operationalAreaTextView.getText().toString();
+    }
+
+    @Override
     public void setDistrict(String district) {
         org.smartregister.reveal.util.Utils.setTextViewText(districtTextView, R.string.district, district);
     }
@@ -221,11 +229,6 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     }
 
     @Override
-    public void onInitializeDrawerLayout() {
-        presenter.onInitializeDrawerLayout();
-    }
-
-    @Override
     public Activity getContext() {
         return activity.getActivity();
     }
@@ -259,6 +262,11 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     @Override
     public BaseDrawerContract.Presenter getPresenter() {
         return presenter;
+    }
+
+    @Override
+    public void onResume() {
+        presenter.onViewResumed();
     }
 
 

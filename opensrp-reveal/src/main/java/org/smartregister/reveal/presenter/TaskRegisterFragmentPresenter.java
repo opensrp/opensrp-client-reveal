@@ -137,6 +137,7 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
                 getView().setTaskDetails(tasks);
             }
             getView().setTotalTasks(structuresWithinBuffer);
+            getView().hideProgressDialog();
             getView().hideProgressView();
         }
 
@@ -163,6 +164,7 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
 
     @Override
     public void onDrawerClosed() {
+        getView().showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
         interactor.findTasks(getMainCondition(), lastLocation);
     }
 
@@ -179,7 +181,7 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
                 Toast.makeText(getView().getContext(), String.format("To open structure details view for %s ",
                         details.getFamilyName()), Toast.LENGTH_LONG).show();
             } else {
-                getView().showProgressDialog();
+                getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
                 interactor.getStructure(details);
             }
         }

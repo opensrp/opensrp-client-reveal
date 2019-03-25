@@ -30,6 +30,10 @@ public class BaseDrawerContract {
 
         void setOperationalArea(String operationalArea);
 
+        String getCampaign();
+
+        String getOperationalArea();
+
         void setDistrict(String district);
 
         void setFacility(String facility);
@@ -46,11 +50,11 @@ public class BaseDrawerContract {
 
         void displayNotification(int title, @StringRes int message, Object... formatArgs);
 
-        void onInitializeDrawerLayout();
-
         void openDrawerLayout();
 
         Presenter getPresenter();
+
+        void onResume();
     }
 
     public interface Presenter {
@@ -65,8 +69,6 @@ public class BaseDrawerContract {
 
         void onCampaignSelectorClicked(ArrayList<String> value, ArrayList<String> name);
 
-        void onInitializeDrawerLayout();
-
         void onCampaignsFetched(List<Campaign> campaigns);
 
         boolean isChangedCurrentSelection();
@@ -74,6 +76,8 @@ public class BaseDrawerContract {
         void setChangedCurrentSelection(boolean changedCurrentSelection);
 
         View getView();
+
+        void onViewResumed();
     }
 
     public interface Interactor {

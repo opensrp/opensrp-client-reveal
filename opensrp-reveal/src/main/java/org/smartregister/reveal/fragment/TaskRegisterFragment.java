@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.view.View;
 import android.widget.TextView;
 
@@ -70,7 +71,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         }
         view.findViewById(R.id.txt_map_label).setOnClickListener(v -> startMapActivity());
         view.findViewById(R.id.drawerMenu).setOnClickListener(v -> drawerView.openDrawerLayout());
-        drawerView.onInitializeDrawerLayout();
+        drawerView.onResume();
     }
 
     private void startMapActivity() {
@@ -183,10 +184,10 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     }
 
     @Override
-    public void showProgressDialog() {
+    public void showProgressDialog(@StringRes int title, @StringRes int message) {
         if (progressDialog != null) {
-            progressDialog.setTitle(R.string.opening_form_title);
-            progressDialog.setMessage(getString(R.string.opening_form_message));
+            progressDialog.setTitle(title);
+            progressDialog.setMessage(getString(message));
         }
     }
 
