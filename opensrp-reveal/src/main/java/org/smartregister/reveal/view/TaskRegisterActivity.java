@@ -9,9 +9,10 @@ import org.json.JSONObject;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.TaskRegisterContract;
 import org.smartregister.reveal.fragment.TaskRegisterFragment;
-import org.smartregister.reveal.presenter.TaskRegisterBasePresenter;
+import org.smartregister.reveal.presenter.TaskRegisterPresenter;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.view.activity.BaseRegisterActivity;
+import org.smartregister.view.contract.BaseRegisterContract;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
 import java.util.Collections;
@@ -24,13 +25,13 @@ import static org.smartregister.reveal.util.Constants.TaskRegister;
 /**
  * Created by samuelgithengi on 3/11/19.
  */
-public class TaskRegisterActivity extends BaseRegisterActivity {
+public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRegisterContract.View {
 
     private RevealJsonFormUtils jsonFormUtils;
 
     @Override
     protected void initializePresenter() {
-        presenter = new TaskRegisterBasePresenter();
+        presenter = new TaskRegisterPresenter(this);
     }
 
     @Override
@@ -79,7 +80,7 @@ public class TaskRegisterActivity extends BaseRegisterActivity {
         findViewById(R.id.bottom_navigation).setVisibility(View.GONE);
     }
 
-    TaskRegisterContract.BasePresenter getPresenter() {
-        return (TaskRegisterContract.BasePresenter) presenter;
+    private TaskRegisterContract.Presenter getPresenter() {
+        return (TaskRegisterContract.Presenter) presenter;
     }
 }

@@ -6,6 +6,7 @@ import com.mapbox.geojson.Feature;
 
 import org.json.JSONArray;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.TaskRegisterContract;
 import org.smartregister.reveal.interactor.TaskRegisterInteractor;
 import org.smartregister.view.contract.BaseRegisterContract;
@@ -15,12 +16,14 @@ import java.util.List;
 /**
  * Created by samuelgithengi on 3/11/19.
  */
-public class TaskRegisterBasePresenter implements TaskRegisterContract.BasePresenter, BaseRegisterContract.Presenter {
-
+public class TaskRegisterPresenter implements TaskRegisterContract.Presenter, BaseRegisterContract.Presenter {
 
     private TaskRegisterInteractor taskRegisterInteractor;
 
-    public TaskRegisterBasePresenter() {
+    private BaseRegisterContract.View view;
+
+    public TaskRegisterPresenter(BaseRegisterContract.View view) {
+        this.view = view;
         taskRegisterInteractor = new TaskRegisterInteractor(this);
     }
 
@@ -45,22 +48,27 @@ public class TaskRegisterBasePresenter implements TaskRegisterContract.BasePrese
 
     @Override
     public void saveJsonForm(String json) {
+        view.showProgressDialog(R.string.saving_dialog_title);
         taskRegisterInteractor.saveJsonForm(json);
     }
 
     @Override
     public void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus) {
+        view.hideProgressDialog();//register will refresh on resume
     }
 
     @Override
     public void onStructureAdded(Feature feature, JSONArray featureCoordinates) {
+        view.hideProgressDialog();//register will refresh on resume
     }
 
     @Override
     public void onFormSaveFailure(String eventType) {
+        view.hideProgressDialog();//register will refresh on resume
     }
 
     @Override
-    public void onMosquitoCollectionFormSaved() {//refresh register
+    public void onMosquitoCollectionFormSaved() {
+        view.hideProgressDialog();//register will refresh on resume
     }
 }

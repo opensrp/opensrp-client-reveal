@@ -1,5 +1,9 @@
 package org.smartregister.reveal.contract;
 
+import android.support.annotation.StringRes;
+
+import org.smartregister.view.contract.BaseRegisterContract;
+
 import java.util.List;
 
 /**
@@ -7,7 +11,7 @@ import java.util.List;
  */
 public interface TaskRegisterContract {
 
-    interface BasePresenter extends BaseContract.BasePresenter {
+    interface Presenter extends BaseContract.BasePresenter {
         void saveJsonForm(String json);
     }
 
@@ -19,4 +23,5 @@ public interface TaskRegisterContract {
 
         void cleanupResources();
     }
+
 }
