@@ -1,27 +1,23 @@
 package org.smartregister.reveal.interactor;
 
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.Context;
-import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.util.AppExecutors;
 
-import static org.mockito.ArgumentMatchers.any;
+import java.util.concurrent.Executors;
+
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
+import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
@@ -34,12 +30,15 @@ public class ListTaskInteractorPowerMockTest {
 
     private ListTaskInteractor listTaskInteractor;
 
+    private ListTaskContract.Presenter presenter;
+
     private final String mosquitoCollectionForm = "{\n" +
             "  \"baseEntityId\": \"227ce82f-d688-467a-97d7-bdad30290cea\",\n" +
             "  \"duration\": 0,\n" +
             "  \"entityType\": \"Structure\",\n" +
             "  \"eventDate\": \"2019-03-18T00:00:00.000+0000\",\n" +
             "  \"eventType\": \"mosquito_collection\",\n" +
+            "  \"encounter_type\": \"mosquito_collection\",\n" +
             "  \"formSubmissionId\": \"cfd96619-5850-4277-b2b9-f30b0f2c0944\",\n" +
             "  \"locationId\": \"18e9f800-55c7-4261-907a-d804d6081f93\",\n" +
             "  \"obs\": [\n" +
@@ -220,15 +219,16 @@ public class ListTaskInteractorPowerMockTest {
         RevealApplication revealApplication = mock(RevealApplication.class);
         when(RevealApplication.getInstance()).thenReturn(revealApplication);
         when(revealApplication.getContext()).thenReturn(mock(Context.class));
-        listTaskInteractor = new ListTaskInteractor(mock(ListTaskContract.Presenter.class));
-        Whitebox.setInternalState(listTaskInteractor, "appExecutors", new AppExecutors());
+        presenter = mock(ListTaskContract.Presenter.class);
+        listTaskInteractor = new ListTaskInteractor(presenter);
+        Whitebox.setInternalState(listTaskInteractor, "appExecutors",
+                new AppExecutors(Executors.newSingleThreadExecutor(), Executors.newSingleThreadExecutor(), Executors.newSingleThreadExecutor()));
     }
 
     @Test
-    public void testSaveJsonFormShouldSaveMosquitoCollectionForm() throws Exception {
+    public void testSaveJsonFormShouldSaveMosquitoCollectionForm() {
         ListTaskInteractor listTaskInteractorSpy = spy(listTaskInteractor);
-        doNothing().when(listTaskInteractorSpy, "saveMosquitoCollectionForm", any(JSONObject.class));
         listTaskInteractorSpy.saveJsonForm(mosquitoCollectionForm);
-        verifyPrivate(listTaskInteractorSpy, times(1)).invoke("saveMosquitoCollectionForm", eq(mosquitoCollectionForm));
+        verify(listTaskInteractorSpy).saveJsonForm(eq(mosquitoCollectionForm));
     }
 }
