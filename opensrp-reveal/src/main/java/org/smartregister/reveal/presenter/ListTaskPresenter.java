@@ -561,11 +561,11 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         }
     }
 
-    public void onChangeInterventionStatus(String interverntionType) {
-        if (IRS.equals(interverntionType)) {
+    public void onChangeInterventionStatus(String interventionType) {
+        if (IRS.equals(interventionType)) {
             listTaskView.showProgressDialog(R.string.fetching_structure_title, R.string.fetching_structure_message);
             listTaskInteractor.fetchSprayDetails(selectedFeature.id(), true);
-        } else if (MOSQUITO_COLLECTION.equals(interverntionType)) {
+        } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
             listTaskView.showProgressDialog(R.string.fetching_mosquito_collection_points_title, R.string.fetching_mosquito_collection_points_message);
             listTaskInteractor.fetchMosquitoCollectionDetails(selectedFeature.id(), true);
         }
