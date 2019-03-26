@@ -35,7 +35,6 @@ import static org.mockito.Mockito.verify;
  */
 public class TaskRegisterAdapterTest extends BaseUnitTest {
 
-
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
 

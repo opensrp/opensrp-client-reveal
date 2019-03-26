@@ -31,6 +31,8 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
 
     private TextView taskDetailsView;
 
+    private PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
+
     public TaskRegisterViewHolder(@NonNull View itemView) {
         super(itemView);
         context = itemView.getContext();
@@ -54,7 +56,7 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
     public void setDistanceFromStructure(float distance, boolean distanceFromCenter) {
         if (distanceFromCenter) {
             distanceView.setText(context.getString(
-                    R.string.distance_from_center, distance, PreferencesUtil.getInstance().getCurrentOperationalArea()));
+                    R.string.distance_from_center, distance, prefsUtil.getCurrentOperationalArea()));
         } else {
             distanceView.setText(context.getString(R.string.distance_from_structure, distance));
         }
