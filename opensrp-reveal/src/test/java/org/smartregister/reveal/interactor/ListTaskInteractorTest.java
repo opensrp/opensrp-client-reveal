@@ -3,9 +3,7 @@ package org.smartregister.reveal.interactor;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.smartregister.reveal.BaseUnitTest;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
-import org.smartregister.reveal.util.AppExecutors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -20,8 +18,6 @@ import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
  */
 public class ListTaskInteractorTest extends BaseUnitTest {
 
-
-    private ListTaskInteractor listTaskInteractor;
 
     private final String mosquitoCollectionForm = "{\n" +
             "  \"baseEntityId\": \"227ce82f-d688-467a-97d7-bdad30290cea\",\n" +
@@ -204,9 +200,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
     @Test
     public void testSaveJsonFormShouldSaveMosquitoCollectionForm() throws Exception {
-       /* RevealApplication revealApplication = new RevealApplication();
-        revealApplication.onCreate();*/
-        listTaskInteractor = new ListTaskInteractor(mock(ListTaskContract.Presenter.class));
+        ListTaskInteractor listTaskInteractor = new ListTaskInteractor(mock(ListTaskContract.Presenter.class));
         ListTaskInteractor listTaskInteractorSpy = spy(listTaskInteractor);
         doNothing().when(listTaskInteractorSpy, "saveMosquitoCollectionForm", any(JSONObject.class));
         listTaskInteractorSpy.saveJsonForm(mosquitoCollectionForm);
