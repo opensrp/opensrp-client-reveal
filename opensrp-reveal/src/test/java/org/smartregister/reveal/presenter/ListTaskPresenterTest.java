@@ -1,7 +1,6 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
-import android.service.autofill.Validators;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -78,7 +77,7 @@ public class ListTaskPresenterTest {
     public void testOnMosquitoCollectionFormSavedHidesProgressDialog() throws Exception {
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
 
-        listTaskPresenter.onFormSaved(null, null, null, Constants.Intervention.IRS);
+        listTaskPresenter.onFormSaved(null, null, null, IRS);
 
         verify(listTaskViewSpy).hideProgressDialog();
     }
