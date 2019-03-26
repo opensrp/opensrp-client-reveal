@@ -93,7 +93,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        appExecutors = new AppExecutors();
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
         context.updateCommonFtsObject(createCommonFtsObject());
@@ -302,6 +301,9 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     }
 
     public AppExecutors getAppExecutors() {
+        if (appExecutors == null) {
+            appExecutors = new AppExecutors();
+        }
         return appExecutors;
     }
 }
