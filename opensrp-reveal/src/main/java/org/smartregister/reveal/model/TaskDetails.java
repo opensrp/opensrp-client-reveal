@@ -30,6 +30,8 @@ public class TaskDetails implements Comparable<TaskDetails> {
 
     private String taskDetails;
 
+    private boolean distanceFromCenter;
+
     public TaskDetails(@NonNull String taskId) {
         this.taskId = taskId;
     }
@@ -120,6 +122,14 @@ public class TaskDetails implements Comparable<TaskDetails> {
 
     public void setTaskDetails(String taskDetails) {
         this.taskDetails = taskDetails;
+    }
+
+    public boolean isDistanceFromCenter() {
+        return distanceFromCenter;
+    }
+
+    public void setDistanceFromCenter(boolean distanceFromCenter) {
+        this.distanceFromCenter = distanceFromCenter;
     }
 
     @Override

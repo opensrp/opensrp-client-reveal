@@ -3,7 +3,11 @@ package org.smartregister.reveal.presenter;
 import android.support.v4.util.Pair;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
@@ -16,12 +20,14 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.util.DateTimeTypeConverter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -87,8 +93,16 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
 
         getView().showProgressView();
 
-        interactor.findTasks(getMainCondition(), lastLocation);
+        interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter());
 
+    }
+
+    private android.location.Location getOperationalAreaCenter() {
+        Location operationalAreaLocation = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
+        RevealMappingHelper mappingHelper = new RevealMappingHelper();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
+        return mappingHelper.getCenter(gson.toJson(operationalAreaLocation.getGeometry()));
     }
 
     @Override
@@ -163,7 +177,7 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
     @Override
     public void onDrawerClosed() {
         getView().showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
-        interactor.findTasks(getMainCondition(), lastLocation);
+        interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter());
     }
 
     @Override

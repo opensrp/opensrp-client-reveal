@@ -95,6 +95,7 @@
     <string name="irs">IRS</string>
     <string name="task_icon">Task Icon</string>
     <string name="distance_from_structure">%1.0f m away</string>
+    <string name="distance_from_center">%1.0f m from %2s center </string>
 
     <string name="mosquito_collection_point">Mosquito collection point</string>
     <string name="record_mosquito_collection">Record \nCollection</string>

@@ -55,10 +55,10 @@ public class TaskRegisterFragmentInteractor {
     private String mainSelect(String mainCondition) {
         String tableName = DatabaseKeys.TASK_TABLE;
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
-        queryBuilder.SelectInitiateMainTable(tableName, mainColumns(tableName), ID);
-        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s  COLLATE NOCASE",
+        queryBuilder.selectInitiateMainTable(tableName, mainColumns(tableName), ID);
+        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
                 STRUCTURES_TABLE, tableName, FOR, STRUCTURES_TABLE, ID));
-        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s  COLLATE NOCASE",
+        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
                 SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
         return queryBuilder.mainCondition(mainCondition);
     }
@@ -81,7 +81,7 @@ public class TaskRegisterFragmentInteractor {
     }
 
 
-    public void findTasks(Pair<String, String[]> mainCondition, Location lastLocation) {
+    public void findTasks(Pair<String, String[]> mainCondition, Location lastLocation, Location operationalAreaCenter) {
         if (mainCondition.second == null || mainCondition.second[0] == null) {
             presenter.onTasksFound(null, 0);
             return;
@@ -94,7 +94,7 @@ public class TaskRegisterFragmentInteractor {
             try {
                 cursor = database.rawQuery(query, mainCondition.second);
                 while (cursor.moveToNext()) {
-                    TaskDetails taskDetails = readTaskDetails(cursor, lastLocation);
+                    TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter);
                     if (taskDetails.getDistanceFromUser() <= Utils.getLocationBuffer()) {
                         structuresWithinBuffer += 1;
                     }
@@ -115,7 +115,7 @@ public class TaskRegisterFragmentInteractor {
     }
 
 
-    private TaskDetails readTaskDetails(Cursor cursor, Location lastLocation) {
+    private TaskDetails readTaskDetails(Cursor cursor, Location lastLocation, Location operationalAreaCenter) {
         TaskDetails task = new TaskDetails(cursor.getString(cursor.getColumnIndex(ID)));
         task.setTaskCode(cursor.getString(cursor.getColumnIndex(CODE)));
         task.setTaskEntity(cursor.getString(cursor.getColumnIndex(FOR)));
@@ -130,6 +130,9 @@ public class TaskRegisterFragmentInteractor {
             task.setDistanceFromUser(-1);
         } else if (lastLocation != null) {
             task.setDistanceFromUser(location.distanceTo(lastLocation));
+        } else {
+            task.setDistanceFromUser(location.distanceTo(operationalAreaCenter));
+            task.setDistanceFromCenter(true);
         }
         task.setStructureName(cursor.getString(cursor.getColumnIndex(NAME)));
         task.setFamilyName(cursor.getString(cursor.getColumnIndex(FAMILY_NAME)));

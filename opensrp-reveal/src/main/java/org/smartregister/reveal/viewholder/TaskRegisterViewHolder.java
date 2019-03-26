@@ -12,6 +12,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.BaseCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.PreferencesUtil;
 
 /**
  * Created by samuelgithengi on 3/12/19.
@@ -29,7 +30,6 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
     private TextView actionView;
 
     private TextView taskDetailsView;
-
 
     public TaskRegisterViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -51,8 +51,13 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         nameView.setText(taskName);
     }
 
-    public void setDistanceFromStructure(float distance) {
-        distanceView.setText(context.getString(R.string.distance_from_structure, distance));
+    public void setDistanceFromStructure(float distance, boolean distanceFromCenter) {
+        if (distanceFromCenter) {
+            distanceView.setText(context.getString(
+                    R.string.distance_from_center, distance, PreferencesUtil.getInstance().getCurrentOperationalArea()));
+        } else {
+            distanceView.setText(context.getString(R.string.distance_from_structure, distance));
+        }
     }
 
     public void hideDistanceFromStructure() {
