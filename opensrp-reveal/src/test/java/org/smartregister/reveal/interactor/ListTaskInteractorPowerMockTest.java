@@ -1,9 +1,18 @@
 package org.smartregister.reveal.interactor;
 
 import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
+import org.smartregister.Context;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
+import org.smartregister.reveal.util.AppExecutors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -11,13 +20,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * @author Vincent Karuri
  */
-public class ListTaskInteractorTest extends BaseUnitTest {
+@PrepareForTest(RevealApplication.class)
+@RunWith(PowerMockRunner.class)
+public class ListTaskInteractorPowerMockTest {
 
+
+    private ListTaskInteractor listTaskInteractor;
 
     private final String mosquitoCollectionForm = "{\n" +
             "  \"baseEntityId\": \"227ce82f-d688-467a-97d7-bdad30290cea\",\n" +
@@ -198,9 +213,19 @@ public class ListTaskInteractorTest extends BaseUnitTest {
             "  }\n" +
             "}";
 
+
+    @Before
+    public void setUp() {
+        mockStatic(RevealApplication.class);
+        RevealApplication revealApplication = mock(RevealApplication.class);
+        when(RevealApplication.getInstance()).thenReturn(revealApplication);
+        when(revealApplication.getContext()).thenReturn(mock(Context.class));
+        listTaskInteractor = new ListTaskInteractor(mock(ListTaskContract.Presenter.class));
+        Whitebox.setInternalState(listTaskInteractor, "appExecutors", new AppExecutors());
+    }
+
     @Test
     public void testSaveJsonFormShouldSaveMosquitoCollectionForm() throws Exception {
-        ListTaskInteractor listTaskInteractor = new ListTaskInteractor(mock(ListTaskContract.Presenter.class));
         ListTaskInteractor listTaskInteractorSpy = spy(listTaskInteractor);
         doNothing().when(listTaskInteractorSpy, "saveMosquitoCollectionForm", any(JSONObject.class));
         listTaskInteractorSpy.saveJsonForm(mosquitoCollectionForm);
