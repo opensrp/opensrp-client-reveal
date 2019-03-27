@@ -62,6 +62,13 @@
                 layout="@layout/mosquito_collection_card_view"
                 android:visibility="gone"/>
 
+            <include
+                android:id="@+id/larval_breeding_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/larval_breeding_card_view"
+                android:visibility="gone"/>
+
         </LinearLayout>
 
     </FrameLayout>

@@ -93,8 +93,12 @@
     <string name="register_family">Register Family</string>
 
     <string name="record_mosquito_collection">Record mosquito collection</string>
+    <string name="record_larval_dipping">Record larval dipping</string>
     <string name="mosquito_collection_point">Mosquito Collection Point</string>
+    <string name="mosquito_breeding_site">Mosquito Breeding Site</string>
     <string name="mosquito_collection_status_test_text">Status: Inactive</string>
     <string name="mosquito_collection_trap_set_date_test_text">Set Date: DD/MM/YY</string>
     <string name="mosquito_collection_trap_follow_up_date_test_text">Follow-up Date: DD/MM/YY</string>
+    <string name="larval_breeding_identified_date_test_text">Identified Date: DD/MM/YY</string>
+    <string name="larval_breeding_larvacide_date_test_text">Larvacide Date: DD/MM/YY</string>
 </resources>
