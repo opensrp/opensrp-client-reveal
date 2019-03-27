@@ -1,5 +1,7 @@
 package org.smartregister.reveal.util;
 
+import android.location.Location;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -27,6 +29,8 @@ public class TestingUtils {
         taskDetails.setStructureName("Kenny House");
         taskDetails.setTaskCode(Constants.Intervention.IRS);
         taskDetails.setBusinessStatus(Constants.BusinessStatus.NOT_SPRAYABLE);
+        taskDetails.setTaskEntity(UUID.randomUUID().toString());
+        taskDetails.setLocation(new Location("Test"));
         return taskDetails;
     }
 

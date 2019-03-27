@@ -3,11 +3,14 @@ package org.smartregister.reveal.interactor;
 import android.location.Location;
 import android.support.v4.util.Pair;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.family.util.DBConstants;
+import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
@@ -41,15 +44,27 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TA
  */
 public class TaskRegisterFragmentInteractor {
 
+    private final StructureRepository structureRepository;
     private SQLiteDatabase database;
-    private AppExecutors appExecutors;
+    private final Float locationBuffer;
+    private final AppExecutors appExecutors;
 
     private TaskRegisterFragmentContract.Presenter presenter;
 
     public TaskRegisterFragmentInteractor(TaskRegisterFragmentContract.Presenter presenter) {
+        this(presenter, RevealApplication.getInstance().getRepository().getReadableDatabase(),
+                RevealApplication.getInstance().getAppExecutors(), Utils.getLocationBuffer());
+    }
+
+    @VisibleForTesting
+    public TaskRegisterFragmentInteractor(TaskRegisterFragmentContract.Presenter presenter,
+                                          SQLiteDatabase database, AppExecutors appExecutors,
+                                          Float locationBuffer) {
         this.presenter = presenter;
-        this.appExecutors = RevealApplication.getInstance().getAppExecutors();
-        database = RevealApplication.getInstance().getRepository().getReadableDatabase();
+        this.appExecutors = appExecutors;
+        this.database = database;
+        this.locationBuffer = locationBuffer;
+        this.structureRepository = RevealApplication.getInstance().getStructureRepository();
     }
 
     private String mainSelect(String mainCondition) {
@@ -82,7 +97,7 @@ public class TaskRegisterFragmentInteractor {
 
 
     public void findTasks(Pair<String, String[]> mainCondition, Location lastLocation, Location operationalAreaCenter) {
-        if (mainCondition.second == null || mainCondition.second[0] == null) {
+        if (mainCondition == null || mainCondition.second == null || mainCondition.second.length != 2 || mainCondition.second[0] == null) {
             presenter.onTasksFound(null, 0);
             return;
         }
@@ -95,7 +110,7 @@ public class TaskRegisterFragmentInteractor {
                 cursor = database.rawQuery(query, mainCondition.second);
                 while (cursor.moveToNext()) {
                     TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter);
-                    if (taskDetails.getDistanceFromUser() <= Utils.getLocationBuffer()) {
+                    if (taskDetails.getDistanceFromUser() <= locationBuffer) {
                         structuresWithinBuffer += 1;
                     }
                     tasks.add(taskDetails);
@@ -156,7 +171,7 @@ public class TaskRegisterFragmentInteractor {
             int structuresWithinBuffer = 0;
             for (TaskDetails taskDetails : tasks) {
                 taskDetails.setDistanceFromUser(taskDetails.getLocation().distanceTo(location));
-                if (taskDetails.getDistanceFromUser() <= Utils.getLocationBuffer()) {
+                if (taskDetails.getDistanceFromUser() <= locationBuffer) {
                     structuresWithinBuffer += 1;
                 }
             }
@@ -173,7 +188,7 @@ public class TaskRegisterFragmentInteractor {
     public void getStructure(TaskDetails taskDetails) {
         appExecutors.diskIO().execute(() -> {
             org.smartregister.domain.Location structure =
-                    RevealApplication.getInstance().getStructureRepository().getLocationById(taskDetails.getTaskEntity());
+                    structureRepository.getLocationById(taskDetails.getTaskEntity());
             appExecutors.mainThread().execute(() -> {
                 presenter.onStructureFound(structure, taskDetails);
             });
