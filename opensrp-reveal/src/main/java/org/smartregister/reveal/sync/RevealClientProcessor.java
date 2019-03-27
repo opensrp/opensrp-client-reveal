@@ -27,12 +27,10 @@ import org.smartregister.sync.ClientProcessorForJava;
 import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.END_DATE;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
-import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.START_DATE;
@@ -162,7 +160,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 event.getDetails().put(END_DATE, endDate);
 
                 RevealClientProcessor clientProcessor = getInstance(RevealApplication.getInstance().getApplicationContext());
-                event.getDetails().put(STATUS, clientProcessor.calculateBusinessStatus(event, MOSQUITO_COLLECTION));
+                event.getDetails().put(STATUS, clientProcessor.calculateBusinessStatus(event));
 
                 Client client = new Client(event.getBaseEntityId());
                 processEvent(event, client, clientClassification);
@@ -178,7 +176,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         Task task = taskRepository.getTaskByIdentifier(taskIdentifier);
         String operationalAreaId = null;
         if (task != null) {
-            task.setBusinessStatus(calculateBusinessStatus(event, interventionType));
+            task.setBusinessStatus(calculateBusinessStatus(event));
             task.setStatus(Task.TaskStatus.COMPLETED);
             // update task sync status to unsynced if it was already synced,
             // ignore if task status is created so that it will be created on server
@@ -196,17 +194,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         return operationalAreaId;
     }
 
-    public String calculateBusinessStatus(Event event, String interventionType) {
-        String businessStatus = null;
-        if (IRS.equals(interventionType)) {
-            businessStatus = calculateSprayTaskBusinessStatus(event);
-        } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
-            businessStatus = calculateMosquitoCollectionTaskBusinessStatus(event);
-        }
-        return businessStatus;
-    }
-
-    private String calculateSprayTaskBusinessStatus(Event event) {
+    public String calculateBusinessStatus(Event event) {
         Obs businessStatusObs = event.findObs(null, false, JsonForm.BUSINESS_STATUS);
         if (businessStatusObs != null) {
             return businessStatusObs.getValue().toString();
@@ -220,15 +208,5 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 return sprayStatus == null ? null : sprayStatus.getValue().toString();
             }
         }
-    }
-
-    private String calculateMosquitoCollectionTaskBusinessStatus(Event event) {
-        // todo: change the mosquito collection point color after update
-        // todo: refine this business status after data dictionary is done
-        Obs taskBusinessStatusObs = event.findObs(null, false, TASK_BUSINESS_STATUS);
-        if (taskBusinessStatusObs != null) {
-            return taskBusinessStatusObs.getValue().toString();
-        }
-        return COMPLETE;
     }
 }

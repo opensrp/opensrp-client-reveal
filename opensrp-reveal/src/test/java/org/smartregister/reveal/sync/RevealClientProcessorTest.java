@@ -38,7 +38,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 
 /**
  * Created by samuelgithengi on 3/13/19.
@@ -95,20 +94,20 @@ public class RevealClientProcessorTest extends BaseUnitTest {
 
     @Test
     public void testCalculateBusinessStatusUsingCalculatedFormStatus() {
-        assertEquals("Not Sprayable", clientProcessor.calculateBusinessStatus(event, IRS));
-        assertEquals("Sprayed", clientProcessor.calculateBusinessStatus(sprayedEvent, IRS));
+        assertEquals("Not Sprayable", clientProcessor.calculateBusinessStatus(event));
+        assertEquals("Sprayed", clientProcessor.calculateBusinessStatus(sprayedEvent));
     }
 
     @Test
     public void testCalculateBusinessStatusWithoutCalculatedFormStatus() {
         Obs businessStatusObs = event.findObs(null, false, JsonForm.BUSINESS_STATUS);
         event.getObs().remove(businessStatusObs);
-        assertEquals("Not Sprayable", clientProcessor.calculateBusinessStatus(event, IRS));
+        assertEquals("Not Sprayable", clientProcessor.calculateBusinessStatus(event));
 
 
         businessStatusObs = sprayedEvent.findObs(null, false, JsonForm.BUSINESS_STATUS);
         sprayedEvent.getObs().remove(businessStatusObs);
-        assertEquals("Sprayed", clientProcessor.calculateBusinessStatus(sprayedEvent, IRS));
+        assertEquals("Sprayed", clientProcessor.calculateBusinessStatus(sprayedEvent));
     }
 
     @Test
@@ -117,7 +116,7 @@ public class RevealClientProcessorTest extends BaseUnitTest {
         Obs structureTypeObs = event.findObs(null, false, JsonForm.STRUCTURE_TYPE);
         event.getObs().remove(businessStatusObs);
         event.getObs().remove(structureTypeObs);
-        assertNull(clientProcessor.calculateBusinessStatus(event, IRS));
+        assertNull(clientProcessor.calculateBusinessStatus(event));
     }
 
     @Test
@@ -128,7 +127,7 @@ public class RevealClientProcessorTest extends BaseUnitTest {
         Obs sprayStatus = sprayedEvent.findObs(null, false, JsonForm.SPRAY_STATUS);
         sprayedEvent.getObs().remove(sprayStatus);
 
-        assertNull(clientProcessor.calculateBusinessStatus(sprayedEvent, IRS));
+        assertNull(clientProcessor.calculateBusinessStatus(sprayedEvent));
     }
 
 
@@ -137,7 +136,7 @@ public class RevealClientProcessorTest extends BaseUnitTest {
         Obs businessStatusObs = sprayedEvent.findObs(null, false, JsonForm.BUSINESS_STATUS);
         sprayedEvent.getObs().remove(businessStatusObs);
 
-        assertEquals("Sprayed", clientProcessor.calculateBusinessStatus(sprayedEvent, IRS));
+        assertEquals("Sprayed", clientProcessor.calculateBusinessStatus(sprayedEvent));
     }
 
 

@@ -93,26 +93,6 @@ public class RevealClientProcessorPowerMockTest {
     }
 
     @Test
-    public void testCalculateBusinessStatusShouldCallCalculateSprayTaskBusinessStatusForSprayTask() throws Exception {
-        Event event = mock(Event.class);
-        PowerMockito.doReturn("").when(clientProcessor, "calculateSprayTaskBusinessStatus", any(Event.class));
-
-        clientProcessor.calculateBusinessStatus(event, IRS);
-
-        verifyPrivate(clientProcessor).invoke("calculateSprayTaskBusinessStatus", eq(event));
-    }
-
-    @Test
-    public void testCalculateBusinessStatusShouldCallCalculateMosquitoCollectionTaskBusinessStatusForMosquitoCollectionTask() throws Exception {
-        Event event = mock(Event.class);
-        PowerMockito.doReturn("").when(clientProcessor, "calculateMosquitoCollectionTaskBusinessStatus", any(Event.class));
-
-        clientProcessor.calculateBusinessStatus(event, MOSQUITO_COLLECTION);
-
-        verifyPrivate(clientProcessor).invoke("calculateMosquitoCollectionTaskBusinessStatus", eq(event));
-    }
-
-    @Test
     public void testUpdateTaskShouldUpdateTask() throws Exception {
         Event event = mock(Event.class);
 

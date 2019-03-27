@@ -502,8 +502,12 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
                 formName = SPRAY_FORM;
             }
+
             String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();
-            String familyHead = cardDetails == null ? null : ((SprayCardDetails) cardDetails).getFamilyHead();
+            String familyHead = null;
+            if (cardDetails instanceof  SprayCardDetails) {
+                familyHead = cardDetails == null ? null : ((SprayCardDetails) cardDetails).getFamilyHead();
+            }
             startForm(formName, feature, sprayStatus, familyHead);
         } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)) {
             startForm(THAILAND_MOSQUITO_COLLECTION_FORM,  feature, null, null);

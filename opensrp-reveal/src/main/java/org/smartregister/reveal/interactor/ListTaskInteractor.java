@@ -324,7 +324,7 @@ public class ListTaskInteractor {
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override
                         public void run() {
-                            String businessStatus = clientProcessor.calculateBusinessStatus(event, IRS);
+                            String businessStatus = clientProcessor.calculateBusinessStatus(event);
                             presenterCallBack.onFormSaved(event.getBaseEntityId(), Task.TaskStatus.COMPLETED, businessStatus, IRS);
                         }
                     });
@@ -433,7 +433,7 @@ public class ListTaskInteractor {
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override
                         public void run() {
-                            String businessStatus = clientProcessor.calculateBusinessStatus(event, MOSQUITO_COLLECTION);
+                            String businessStatus = clientProcessor.calculateBusinessStatus(event);
                             presenterCallBack.onFormSaved(event.getBaseEntityId(), Task.TaskStatus.COMPLETED, businessStatus, MOSQUITO_COLLECTION);
                         }
                     });
