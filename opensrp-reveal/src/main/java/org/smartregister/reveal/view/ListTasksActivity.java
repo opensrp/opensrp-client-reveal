@@ -476,8 +476,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private void populateMosquitoCollectionCardTextViews(MosquitoCollectionCardDetails mosquitoCollectionCardDetails) {
         tvMosquitoCollectionStatus.setText(mosquitoCollectionCardDetails.getStatus());
-        tvMosquitoTrapSetDate.setText(mosquitoCollectionCardDetails.getTrapSetDate());
-        tvMosquitoTrapFollowUpDate.setText(mosquitoCollectionCardDetails.getTrapFollowUpDate());
+        tvMosquitoTrapSetDate.setText(getResources().getString(R.string.mosquito_collection_trap_set_date) + mosquitoCollectionCardDetails.getTrapSetDate());
+        tvMosquitoTrapFollowUpDate.setText(getResources().getString(R.string.mosquito_collection_trap_follow_up_date) + mosquitoCollectionCardDetails.getTrapFollowUpDate());
     }
 
     @Override
