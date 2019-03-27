@@ -128,6 +128,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private TextView tvMosquitoTrapSetDate;
     private TextView tvMosquitoTrapFollowUpDate;
 
+    private CardView larvalBreedingCardView;
+
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
 
     private boolean hasRequestedLocation;
@@ -167,6 +169,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         mosquitoCollectionCardView = findViewById(R.id.mosquito_collection_card_view);
 
+        larvalBreedingCardView = findViewById(R.id.larval_breeding_card_view);
+
         findViewById(R.id.btn_add_structure).setOnClickListener(this);
 
         findViewById(R.id.btn_collapse_spray_card_view).setOnClickListener(this);
@@ -189,6 +193,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         findViewById(R.id.btn_collapse_mosquito_collection_card_view).setOnClickListener(this);
 
         findViewById(R.id.btn_record_mosquito_collection).setOnClickListener(this);
+
+        findViewById(R.id.btn_collapse_larval_breeding_card_view).setOnClickListener(this);
     }
 
     @Override
@@ -197,6 +203,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             setViewVisibility(sprayCardView, false);
         } else if (id == R.id.btn_collapse_mosquito_collection_card_view) {
             setViewVisibility(mosquitoCollectionCardView, false);
+        } else if (id == R.id.btn_collapse_larval_breeding_card_view) {
+            setViewVisibility(larvalBreedingCardView, false);
         }
     }
 
@@ -349,7 +357,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             closeCardView(v.getId());
         } else if (v.getId() == R.id.register_family) {
             registerFamily();
-        } else if (v.getId() == R.id.btn_collapse_mosquito_collection_card_view) {
+        } else if (v.getId() == R.id.btn_collapse_mosquito_collection_card_view
+                || v.getId() == R.id.btn_collapse_larval_breeding_card_view) {
             closeCardView(v.getId());
         }
     }
