@@ -18,6 +18,7 @@ import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.viewholder.TaskRegisterViewHolder;
 
 import java.util.ArrayList;
@@ -51,13 +52,7 @@ public class TaskRegisterAdapterTest extends BaseUnitTest {
     public void setUp() {
         adapter = new TaskRegisterAdapter(context, registerActionHandler);
         taskDetailsList = new ArrayList<>();
-        TaskDetails taskDetails = new TaskDetails(UUID.randomUUID().toString());
-        taskDetails.setDistanceFromUser(25.5f);
-        taskDetails.setTaskStatus(Task.TaskStatus.COMPLETED.name());
-        taskDetails.setStructureName("Kenny House");
-        taskDetails.setTaskCode(Constants.Intervention.IRS);
-        taskDetails.setBusinessStatus(Constants.BusinessStatus.NOT_SPRAYABLE);
-        taskDetailsList.add(taskDetails);
+        taskDetailsList.add(TestingUtils.getTaskDetails());
     }
 
     @Test

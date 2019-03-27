@@ -46,9 +46,9 @@ public class TaskRegisterFragmentInteractor {
 
     private TaskRegisterFragmentContract.Presenter presenter;
 
-    public TaskRegisterFragmentInteractor(AppExecutors appExecutors, TaskRegisterFragmentContract.Presenter presenter) {
-        this.appExecutors = appExecutors;
+    public TaskRegisterFragmentInteractor(TaskRegisterFragmentContract.Presenter presenter) {
         this.presenter = presenter;
+        this.appExecutors = RevealApplication.getInstance().getAppExecutors();
         database = RevealApplication.getInstance().getRepository().getReadableDatabase();
     }
 

@@ -48,6 +48,8 @@ public interface TaskRegisterFragmentContract {
         void showProgressDialog(@StringRes int title, @StringRes int message);
 
         void hideProgressDialog();
+
+        void displayToast(String message);
     }
 
 }

@@ -1,8 +1,8 @@
 package org.smartregister.reveal.presenter;
 
 import android.support.v4.util.Pair;
-import android.widget.Toast;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -16,7 +16,6 @@ import org.smartregister.configurableviews.model.ViewConfiguration;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
@@ -61,16 +60,26 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
     private boolean recalculateDistance;
 
     private PreferencesUtil prefsUtil;
+    private RevealMappingHelper mappingHelper;
 
     public TaskRegisterFragmentPresenter(TaskRegisterFragmentContract.View view, String viewConfigurationIdentifier) {
+        this(view, viewConfigurationIdentifier, null, new LocationUtils(view.getContext()));
+        this.interactor = new TaskRegisterFragmentInteractor(this);
+    }
+
+    @VisibleForTesting
+    protected TaskRegisterFragmentPresenter(TaskRegisterFragmentContract.View view, String viewConfigurationIdentifier,
+                                            TaskRegisterFragmentInteractor interactor, LocationUtils locationUtils) {
         this.view = new WeakReference<>(view);
         this.viewConfigurationIdentifier = viewConfigurationIdentifier;
+        this.interactor = interactor;
+        this.locationUtils = locationUtils;
         viewsHelper = ConfigurableViewsLibrary.getInstance().getConfigurableViewsHelper();
-        interactor = new TaskRegisterFragmentInteractor(RevealApplication.getInstance().getAppExecutors(), this);
-        locationUtils = new LocationUtils(view.getContext());
-        locationUtils.requestLocationUpdates(this);
         prefsUtil = PreferencesUtil.getInstance();
+        mappingHelper = new RevealMappingHelper();
+
     }
+
 
     @Override
     public void processViewConfigurations() {
@@ -99,7 +108,8 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
 
     private android.location.Location getOperationalAreaCenter() {
         Location operationalAreaLocation = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
-        RevealMappingHelper mappingHelper = new RevealMappingHelper();
+        if (operationalAreaLocation == null)
+            return null;
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
         return mappingHelper.getCenter(gson.toJson(operationalAreaLocation.getGeometry()));
@@ -111,8 +121,7 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
     }
 
     @Override
-    public void searchGlobally(String uniqueId) {
-        //do nothing, tasks not searchable globally
+    public void searchGlobally(String uniqueId) {//do nothing, tasks not searchable globally
     }
 
     /**
@@ -185,13 +194,13 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
         if (details != null) {
             //TODO remove this condition once BCC and Larval dipping forms are implemented
             if (BCC.equals(details.getTaskCode()) || LARVAL_DIPPING.equals(details.getTaskCode())) {
-                Toast.makeText(getView().getContext(), String.format("To open %s form for %s ",
-                        details.getTaskCode(), details.getFamilyName()), Toast.LENGTH_LONG).show();
+                getView().displayToast(String.format("To open %s form for %s",
+                        details.getTaskCode(), details.getTaskId()));
 
             } else if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
                 //TODO implement functionality to link to structure details once its implemented
-                Toast.makeText(getView().getContext(), String.format("To open structure details view for %s ",
-                        details.getFamilyName()), Toast.LENGTH_LONG).show();
+                getView().displayToast(String.format("To open structure details view for %s",
+                        details.getFamilyName()));
             } else {
                 getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
                 interactor.getStructure(details);

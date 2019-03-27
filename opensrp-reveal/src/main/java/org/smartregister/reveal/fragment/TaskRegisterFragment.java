@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
@@ -195,6 +196,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
+    }
+
+    @Override
+    public void displayToast(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {
