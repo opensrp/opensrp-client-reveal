@@ -47,13 +47,11 @@ public class TaskRegisterAdapterTest extends BaseUnitTest {
 
     private List<TaskDetails> taskDetailsList;
 
-    private TaskDetails taskDetails;
-
     @Before
     public void setUp() {
         adapter = new TaskRegisterAdapter(context, registerActionHandler);
         taskDetailsList = new ArrayList<>();
-        taskDetails = new TaskDetails(UUID.randomUUID().toString());
+        TaskDetails taskDetails = new TaskDetails(UUID.randomUUID().toString());
         taskDetails.setDistanceFromUser(25.5f);
         taskDetails.setTaskStatus(Task.TaskStatus.COMPLETED.name());
         taskDetails.setStructureName("Kenny House");

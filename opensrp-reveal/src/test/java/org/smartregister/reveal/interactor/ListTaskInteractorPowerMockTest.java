@@ -30,9 +30,7 @@ public class ListTaskInteractorPowerMockTest {
 
     private ListTaskInteractor listTaskInteractor;
 
-    private ListTaskContract.Presenter presenter;
-
-    private final String mosquitoCollectionForm = "{\n" +
+    private static final String mosquitoCollectionForm = "{\n" +
             "  \"baseEntityId\": \"227ce82f-d688-467a-97d7-bdad30290cea\",\n" +
             "  \"duration\": 0,\n" +
             "  \"entityType\": \"Structure\",\n" +
@@ -219,7 +217,7 @@ public class ListTaskInteractorPowerMockTest {
         RevealApplication revealApplication = mock(RevealApplication.class);
         when(RevealApplication.getInstance()).thenReturn(revealApplication);
         when(revealApplication.getContext()).thenReturn(mock(Context.class));
-        presenter = mock(ListTaskContract.Presenter.class);
+        ListTaskContract.Presenter presenter = mock(ListTaskContract.Presenter.class);
         listTaskInteractor = new ListTaskInteractor(presenter);
         Whitebox.setInternalState(listTaskInteractor, "appExecutors",
                 new AppExecutors(Executors.newSingleThreadExecutor(), Executors.newSingleThreadExecutor(), Executors.newSingleThreadExecutor()));
