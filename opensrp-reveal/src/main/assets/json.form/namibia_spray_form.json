@@ -92,6 +92,12 @@
         "v_required": {
           "value": "true",
           "err": "First visit or mop-up"
+        },
+        "relevance": {
+          "step1:structureType": {
+            "type": "string",
+            "ex": "equalTo(., \"Residential Structure\")"
+          }
         }
       },
       {
@@ -114,6 +120,12 @@
         "v_required": {
           "value": "true",
           "err": "Were any structures sprayed?"
+        },
+        "relevance": {
+          "step1:structureType": {
+            "type": "string",
+            "ex": "equalTo(., \"Residential Structure\")"
+          }
         }
       },
       {
@@ -209,6 +221,10 @@
           "value": "true",
           "err": "Must be a number"
         },
+        "v_relative_max": {
+          "value": "number_sprayable",
+          "err": "# structures sprayed with DDT cannot be greater sprayable number rooms"
+        },
         "relevance": {
           "step1:any_sprayed": {
             "type": "string",
@@ -232,6 +248,10 @@
           "value": "true",
           "err": "Must be a number"
         },
+        "v_relative_max": {
+          "value": "number_sprayable",
+          "err": "# structures sprayed with Delta cannot be greater sprayable number rooms"
+        },
         "relevance": {
           "step1:any_sprayed": {
             "type": "string",
@@ -254,6 +274,18 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_sprayable",
+          "err": "# structures sprayed with Actellic cannot be greater sprayable number rooms"
+        },
+        "v_cumulative_total": {
+          "value": "number_sprayable",
+          "related_fields": [
+            "numbersprayed_ddt",
+            "numbersprayed_delta"
+          ],
+          "err": "Number of rooms sprayed with DDT + Actellic + Delta should be equal to rooms sprayable"
         },
         "relevance": {
           "step1:any_sprayed": {
