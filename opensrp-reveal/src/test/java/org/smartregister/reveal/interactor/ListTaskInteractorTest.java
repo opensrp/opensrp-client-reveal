@@ -36,7 +36,7 @@ public class ListTaskInteractorTest {
 
     private ListTaskInteractor listTaskInteractor;
 
-    private final  String mosquitoCollectionForm = "{\n" +
+    public static final String mosquitoCollectionForm = "{\n" +
             "  \"baseEntityId\": \"227ce82f-d688-467a-97d7-bdad30290cea\",\n" +
             "  \"duration\": 0,\n" +
             "  \"entityType\": \"Structure\",\n" +

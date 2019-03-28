@@ -1,11 +1,13 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
 
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +17,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.domain.Location;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
@@ -24,6 +27,9 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.util.AssetHandler;
+
+import java.util.concurrent.Executor;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -40,6 +46,7 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.smartregister.reveal.interactor.ListTaskInteractorTest.mosquitoCollectionForm;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
@@ -52,15 +59,14 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER
  * @author Vincent Karuri
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ListTaskPresenter.class, ValidateUserLocationPresenter.class, PasswordDialogUtils.class, PreferencesUtil.class, Utils.class})
+@PrepareForTest({ListTaskPresenter.class, ValidateUserLocationPresenter.class, PasswordDialogUtils.class, PreferencesUtil.class, Utils.class, AssetHandler.class})
 public class ListTaskPresenterTest {
     private ListTaskContract.ListTaskView listTaskViewSpy;
     private ListTaskPresenter listTaskPresenter;
 
     @Before
     public void setUp() throws Exception {
-        mockStatic(PasswordDialogUtils.class);
-        mockStatic(PreferencesUtil.class);
+        mockStaticMethods();
 
         ListTaskInteractor listTaskInteractorMock = mock(ListTaskInteractor.class);
         whenNew(ListTaskInteractor.class).withAnyArguments().thenReturn(listTaskInteractorMock);
@@ -83,26 +89,33 @@ public class ListTaskPresenterTest {
     }
 
     @Test
-    public void testOnLocationValidatedCallsStartFormWithCorrectArgumentsForIRSEventWithNullCardDetails() throws Exception {
+    public void testOnLocationValidatedCallsStartFormWithCorrectArgumentsForIRSEventWithNullCardDetails() {
+        mockStaticMethods();
 
         ListTaskPresenter listTaskPresenterSpy = spy(listTaskPresenter);
 
-        PowerMockito.doNothing().when(listTaskPresenterSpy, "startForm", any(), any(), anyString());
+        Feature feature = mock(Feature.class);
+        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeature", feature);
+
+        doNothing().when(listTaskViewSpy).startJsonForm(any(JSONObject.class));
 
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", Constants.Intervention.IRS);
 
         listTaskPresenterSpy.onLocationValidated();
 
-        PowerMockito.verifyPrivate(listTaskPresenterSpy, times(1)).invoke("startForm", isNull(), isNull(), eq(Constants.SPRAY_EVENT));
+        verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
     }
 
     @Test
-    public void testOnLocationValidatedCallsStartFormWithCorrectArgumentsForIRSEventWithCardDetails() throws Exception {
+    public void testOnLocationValidatedCallsStartFormWithCorrectArgumentsForIRSEventWithCardDetails() {
+        mockStaticMethods();
 
         ListTaskPresenter listTaskPresenterSpy = spy(listTaskPresenter);
 
-        PowerMockito.doNothing().when(listTaskPresenterSpy, "startForm", any(), any(), anyString());
+        Feature feature = mock(Feature.class);
+        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeature", feature);
 
+        doNothing().when(listTaskViewSpy).startJsonForm(any(JSONObject.class));
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", Constants.Intervention.IRS);
 
         CardDetails cardDetails = new SprayCardDetails(null, null, null, null, null, null);
@@ -113,29 +126,32 @@ public class ListTaskPresenterTest {
 
         listTaskPresenterSpy.onLocationValidated();
 
-        PowerMockito.verifyPrivate(listTaskPresenterSpy, times(1)).invoke("startForm", isNull(), eq(cardDetails), eq(Constants.SPRAY_EVENT));
+        verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
     }
 
     @Test
-    public void testOnLocationValidatedCallsStartFormWithCorrectArgumentsForMosquitoCollectionEventWithNullCardDetails() throws Exception {
+    public void testOnLocationValidatedCallsStartFormWithCorrectArgumentsForMosquitoCollectionEventWithNullCardDetails() {
+        mockStaticMethods();
 
         ListTaskPresenter listTaskPresenterSpy = spy(listTaskPresenter);
 
-        PowerMockito.doNothing().when(listTaskPresenterSpy, "startForm", any(), any(), anyString());
+        Feature feature = mock(Feature.class);
+        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeature", feature);
+
+        doNothing().when(listTaskViewSpy).startJsonForm(any(JSONObject.class));
 
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", MOSQUITO_COLLECTION);
 
         listTaskPresenterSpy.onLocationValidated();
 
-        PowerMockito.verifyPrivate(listTaskPresenterSpy, times(1)).invoke("startForm", isNull(), isNull(), eq(Constants.MOSQUITO_COLLECTION_EVENT));
+        verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
     }
 
     @Test
-    public void testOnLocationValidatedCallsStartFormWithCorrectArgumentsForMosquitoCollectionEventWithCardDetails() throws Exception {
+    public void testOnLocationValidatedCallsStartFormWithCorrectArgumentsForMosquitoCollectionEventWithCardDetails() {
+        mockStaticMethods();
 
         ListTaskPresenter listTaskPresenterSpy = spy(listTaskPresenter);
-
-        PowerMockito.doNothing().when(listTaskPresenterSpy, "startForm", any(), any(), anyString());
 
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", MOSQUITO_COLLECTION);
 
@@ -145,9 +161,14 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenterSpy, "changeMosquitoCollectionStatus", true);
 
+        Feature feature = mock(Feature.class);
+        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeature", feature);
+
+        doNothing().when(listTaskViewSpy).startJsonForm(any(JSONObject.class));
+
         listTaskPresenterSpy.onLocationValidated();
 
-        PowerMockito.verifyPrivate(listTaskPresenterSpy, times(1)).invoke("startForm", isNull(), eq(mosquitoCollectionCardDetails), eq(Constants.MOSQUITO_COLLECTION_EVENT));
+        verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
     }
 
     @Test
@@ -189,8 +210,6 @@ public class ListTaskPresenterTest {
         ListTaskInteractor listTaskInteractor = mock(ListTaskInteractor.class);
         Whitebox.setInternalState(listTaskPresenter, "listTaskInteractor", listTaskInteractor);
 
-        mockStatic(Utils.class);
-
         doNothing().when(listTaskInteractor).fetchMosquitoCollectionDetails(anyString(), anyBoolean());
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(COMPLETE);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
@@ -211,12 +230,15 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenter, "listTaskInteractor", listTaskInteractor);
 
-        mockStatic(Utils.class);
-
         doNothing().when(listTaskInteractor).fetchMosquitoCollectionDetails(anyString(), anyBoolean());
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(INCOMPLETE);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
-        PowerMockito.doNothing().when(listTaskPresenter, "validateUserLocation");
+        doReturn(mock(android.location.Location.class)).when(listTaskViewSpy).getUserCurrentLocation();
+
+        ValidateUserLocationPresenter locationPresenter = mock(ValidateUserLocationPresenter.class);
+        Whitebox.setInternalState(listTaskPresenter, "locationPresenter", locationPresenter);
+        doNothing().when(locationPresenter).requestUserLocation();
+        doNothing().when(locationPresenter).onGetUserLocation(any(android.location.Location.class));
 
         Feature feature = mock(Feature.class);
         doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
@@ -304,5 +326,20 @@ public class ListTaskPresenterTest {
         listTaskPresenter.onFormSaved(null, null, null, MOSQUITO_COLLECTION);
 
         verify(listTaskInteractor, times(1)).fetchMosquitoCollectionDetails(AdditionalMatchers.or(anyString(), isNull()), eq(false));
+    }
+
+    private void mockStaticMethods() {
+        mockStatic(Utils.class);
+        mockStatic(PreferencesUtil.class);
+        mockStatic(PasswordDialogUtils.class);
+        mockStatic(AssetHandler.class);
+
+        when(AssetHandler.readFileFromAssetsFolder(AdditionalMatchers.or(isNull(), anyString()), AdditionalMatchers.or(isNull(), any(Context.class)))).thenReturn(mosquitoCollectionForm);
+
+        PreferencesUtil preferencesUtil = mock(PreferencesUtil.class);
+        PowerMockito.when(preferencesUtil.getCurrentOperationalArea()).thenReturn(new JSONObject().toString());
+        PowerMockito.when(PreferencesUtil.getInstance()).thenReturn(preferencesUtil);
+
+        PowerMockito.when(Utils.getOperationalAreaLocation(anyString())).thenReturn(new Location());
     }
 }
