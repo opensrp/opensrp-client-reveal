@@ -154,10 +154,14 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             operationalAreaId = updateTask(event, localEvents, MOSQUITO_COLLECTION);
 
             try {
-                String startDate = event.findObs(null, false, JsonForm.TRAP_SET_DATE).getValue().toString();
-                String endDate = event.findObs(null, false, JsonForm.TRAP_FOLLOW_UP_DATE).getValue().toString();
-                event.getDetails().put(START_DATE, startDate);
-                event.getDetails().put(END_DATE, endDate);
+                Obs startDateObs = event.findObs(null, false, JsonForm.TRAP_SET_DATE);
+                Obs endDateObs = event.findObs(null, false, JsonForm.TRAP_FOLLOW_UP_DATE);
+
+                Object startDate = startDateObs == null ? null : startDateObs.getValue();
+                Object endDate = endDateObs == null ? null : endDateObs.getValue();
+
+                event.getDetails().put(START_DATE, startDate == null ? null : startDate.toString());
+                event.getDetails().put(END_DATE, endDate == null ? null : endDate.toString());
 
                 RevealClientProcessor clientProcessor = getInstance(RevealApplication.getInstance().getApplicationContext());
                 event.getDetails().put(STATUS, clientProcessor.calculateBusinessStatus(event));
