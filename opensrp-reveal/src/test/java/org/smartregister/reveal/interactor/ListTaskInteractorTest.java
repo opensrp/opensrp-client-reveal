@@ -16,8 +16,11 @@ import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.AppExecutors;
 
+import java.util.concurrent.Executor;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -226,7 +229,14 @@ public class ListTaskInteractorTest {
     public void testSaveJsonFormShouldSaveMosquitoCollectionForm() throws Exception {
         ListTaskInteractor listTaskInteractorSpy = PowerMockito.spy(listTaskInteractor);
 
-        doNothing().when(listTaskInteractorSpy, "saveMosquitoCollectionForm", any(JSONObject.class));
+        AppExecutors appExecutors = mock(AppExecutors.class);
+        Whitebox.setInternalState(listTaskInteractorSpy, "appExecutors", appExecutors);
+
+        Executor executor = mock(Executor.class);
+
+        doReturn(executor).when(appExecutors).diskIO();
+        doNothing().when(executor).execute(any(Runnable.class));
+
         listTaskInteractorSpy.saveJsonForm(mosquitoCollectionForm);
 
         verifyPrivate(listTaskInteractorSpy, times(1)).invoke("saveMosquitoCollectionForm", captor.capture());
