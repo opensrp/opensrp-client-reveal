@@ -96,8 +96,10 @@ public interface Constants {
         String NOT_SPRAYED = "Not Sprayed";
         String SPRAYED = "Sprayed";
         String NOT_SPRAYABLE = "Not Sprayable";
-        String COMPLETE = "Complete"; // todo: refine these statuses after data dictionary
-        String INCOMPLETE = "Incomplete"; // todo: refine these statuses after data dictionary
+        String COMPLETE = "Complete";
+        String INCOMPLETE = "Incomplete";
+        String NOT_ELIGIBLE = "Not Eligible";
+        String IN_PROGRESS = "In Progress";
     }
 
 
