@@ -45,6 +45,9 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.smartregister.reveal.interactor.ListTaskInteractorTest.mosquitoCollectionForm;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -60,16 +63,17 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER
 public class ListTaskPresenterTest {
     private ListTaskContract.ListTaskView listTaskViewSpy;
     private ListTaskPresenter listTaskPresenter;
+    private ListTaskInteractor listTaskInteractor;
 
     @Before
     public void setUp() throws Exception {
         mockStaticMethods();
 
-        ListTaskInteractor listTaskInteractorMock = mock(ListTaskInteractor.class);
-        whenNew(ListTaskInteractor.class).withAnyArguments().thenReturn(listTaskInteractorMock);
-
         ValidateUserLocationPresenter validateUserLocationPresenterMock = mock(ValidateUserLocationPresenter.class);
         whenNew(ValidateUserLocationPresenter.class).withAnyArguments().thenReturn(validateUserLocationPresenterMock);
+
+        listTaskInteractor = mock(ListTaskInteractor.class);
+        whenNew(ListTaskInteractor.class).withAnyArguments().thenReturn(listTaskInteractor);
 
         ListTaskContract.ListTaskView listTaskView = mock(ListTaskContract.ListTaskView.class);
         listTaskViewSpy = spy(listTaskView);
@@ -204,11 +208,50 @@ public class ListTaskPresenterTest {
 
     @Test
     public void testfetchMosquitoCollectionDetailsIsCalledForCompleteMosquitoCollectionTask() throws Exception {
-        ListTaskInteractor listTaskInteractor = mock(ListTaskInteractor.class);
-        Whitebox.setInternalState(listTaskPresenter, "listTaskInteractor", listTaskInteractor);
-
         doNothing().when(listTaskInteractor).fetchMosquitoCollectionDetails(anyString(), anyBoolean());
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(COMPLETE);
+        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
+
+        Feature feature = mock(Feature.class);
+        doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
+
+        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
+
+        verify(listTaskInteractor, times(1)).fetchMosquitoCollectionDetails(AdditionalMatchers.or(anyString(), isNull()), eq(false));
+    }
+
+    @Test
+    public void testfetchMosquitoCollectionDetailsIsCalledForInCompleteMosquitoCollectionTask() throws Exception {
+        doNothing().when(listTaskInteractor).fetchMosquitoCollectionDetails(anyString(), anyBoolean());
+        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(INCOMPLETE);
+        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
+
+        Feature feature = mock(Feature.class);
+        doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
+
+        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
+
+        verify(listTaskInteractor, times(1)).fetchMosquitoCollectionDetails(AdditionalMatchers.or(anyString(), isNull()), eq(false));
+    }
+
+    @Test
+    public void testfetchMosquitoCollectionDetailsIsCalledForInProgressMosquitoCollectionTask() throws Exception {
+        doNothing().when(listTaskInteractor).fetchMosquitoCollectionDetails(anyString(), anyBoolean());
+        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(IN_PROGRESS);
+        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
+
+        Feature feature = mock(Feature.class);
+        doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
+
+        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
+
+        verify(listTaskInteractor, times(1)).fetchMosquitoCollectionDetails(AdditionalMatchers.or(anyString(), isNull()), eq(false));
+    }
+
+    @Test
+    public void testfetchMosquitoCollectionDetailsIsCalledForNotEligibleMosquitoCollectionTask() throws Exception {
+        doNothing().when(listTaskInteractor).fetchMosquitoCollectionDetails(anyString(), anyBoolean());
+        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(NOT_ELIGIBLE);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
 
         Feature feature = mock(Feature.class);
@@ -267,9 +310,6 @@ public class ListTaskPresenterTest {
 
     @Test
     public void testFetchSprayDetailsIsCalledForChangeSprayStatus() {
-        ListTaskInteractor listTaskInteractor = mock(ListTaskInteractor.class);
-
-        Whitebox.setInternalState(listTaskPresenter, "listTaskInteractor", listTaskInteractor);
         Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mock(Feature.class));
 
         doNothing().when(listTaskViewSpy).showProgressDialog(anyInt(), anyInt());
@@ -281,9 +321,6 @@ public class ListTaskPresenterTest {
 
     @Test
     public void testFetchMosquitoCollectionDetailsIsCalledForChangeMosquitoCollectionStatus() {
-        ListTaskInteractor listTaskInteractor = mock(ListTaskInteractor.class);
-
-        Whitebox.setInternalState(listTaskPresenter, "listTaskInteractor", listTaskInteractor);
         Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mock(Feature.class));
 
         doNothing().when(listTaskViewSpy).showProgressDialog(anyInt(), anyInt());
@@ -295,9 +332,6 @@ public class ListTaskPresenterTest {
 
     @Test
     public void testFetchSprayDetailsIsCalledAfterSprayFormIsSaved() {
-        ListTaskInteractor listTaskInteractor = mock(ListTaskInteractor.class);
-
-        Whitebox.setInternalState(listTaskPresenter, "listTaskInteractor", listTaskInteractor);
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
 
         doNothing().when(listTaskViewSpy).hideProgressDialog();
@@ -311,9 +345,6 @@ public class ListTaskPresenterTest {
 
     @Test
     public void testFetchMosquitoCollectionDetailsIsCalledAfterMosquitoCollectionFormIsSaved() {
-        ListTaskInteractor listTaskInteractor = mock(ListTaskInteractor.class);
-
-        Whitebox.setInternalState(listTaskPresenter, "listTaskInteractor", listTaskInteractor);
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
 
         doNothing().when(listTaskViewSpy).hideProgressDialog();
@@ -324,6 +355,8 @@ public class ListTaskPresenterTest {
 
         verify(listTaskInteractor, times(1)).fetchMosquitoCollectionDetails(AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
+
+
 
     private void mockStaticMethods() {
         mockStatic(Utils.class);
