@@ -116,7 +116,7 @@ public class RevealClientProcessorPowerMockTest {
     public void testUpdateTaskShouldUpdateTask() throws Exception {
         mockRepositories();
 
-        Whitebox.invokeMethod(clientProcessor, "updateTask", event, true, IRS);
+        Whitebox.invokeMethod(clientProcessor, "updateTask", event, true);
 
         verify(taskRepository, times(1)).addOrUpdate(eq(task));
         assertEquals(task.getStatus(), Task.TaskStatus.COMPLETED);
@@ -129,7 +129,7 @@ public class RevealClientProcessorPowerMockTest {
         task = null;
         doReturn(task).when(taskRepository).getTaskByIdentifier(anyString());
 
-        Whitebox.invokeMethod(clientProcessor, "updateTask", event, true, IRS);
+        Whitebox.invokeMethod(clientProcessor, "updateTask", event, true);
 
         verify(eventClientRepository).markEventAsTaskUnprocessed(eq(FORM_SUBMISSION_ID));
     }
@@ -138,7 +138,7 @@ public class RevealClientProcessorPowerMockTest {
     public void testUpdateTaskShouldMarkEventAsSynced() throws Exception {
         mockRepositories();
 
-        Whitebox.invokeMethod(clientProcessor, "updateTask", event, false, IRS);
+        Whitebox.invokeMethod(clientProcessor, "updateTask", event, false);
 
         verify(eventClientRepository).markEventAsSynced(eq(FORM_SUBMISSION_ID));
     }
@@ -147,7 +147,7 @@ public class RevealClientProcessorPowerMockTest {
     public void testUpdateTaskShouldSetTaskSyncStatusToUnsynced() throws Exception {
         mockRepositories();
 
-        Whitebox.invokeMethod(clientProcessor, "updateTask", event, true, IRS);
+        Whitebox.invokeMethod(clientProcessor, "updateTask", event, true);
 
         assertEquals(task.getSyncStatus(), BaseRepository.TYPE_Unsynced);
     }

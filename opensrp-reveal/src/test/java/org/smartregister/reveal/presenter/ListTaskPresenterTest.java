@@ -45,7 +45,7 @@ import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.smartregister.reveal.interactor.ListTaskInteractorTest.mosquitoCollectionForm;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
@@ -220,7 +220,7 @@ public class ListTaskPresenterTest {
     }
 
     @Test
-    public void testvalidateUserLocationIsCalledForInCompleteMosquitoCollectionTask() throws Exception {
+    public void testValidateUserLocationIsCalledForInCompleteMosquitoCollectionTask() throws Exception {
         ListTaskInteractor listTaskInteractor = mock(ListTaskInteractor.class);
 
         ListTaskPresenter listTaskPresenter = spy(this.listTaskPresenter);
@@ -228,7 +228,7 @@ public class ListTaskPresenterTest {
         Whitebox.setInternalState(listTaskPresenter, "listTaskInteractor", listTaskInteractor);
 
         doNothing().when(listTaskInteractor).fetchMosquitoCollectionDetails(anyString(), anyBoolean());
-        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(INCOMPLETE);
+        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(NOT_VISITED);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
         doReturn(mock(android.location.Location.class)).when(listTaskViewSpy).getUserCurrentLocation();
 
