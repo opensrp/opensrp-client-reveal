@@ -51,6 +51,32 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "task_business_status",
+        "label": "Status",
+        "type": "native_radio",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "options": [
+          {
+            "key": "In Progress",
+            "text": "In Progress"
+          },
+          {
+            "key": "Incomplete",
+            "text": "Incomplete"
+          },
+          {
+            "key": "Not Eligible",
+            "text": "Not Eligible"
+          },
+          {
+            "key": "Complete",
+            "text": "Complete"
+          }
+        ]
+      },
+      {
         "key": "trap_type",
         "label": "Type of trap",
         "type": "check_box",

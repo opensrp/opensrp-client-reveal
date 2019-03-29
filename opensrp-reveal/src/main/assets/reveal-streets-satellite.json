@@ -320,25 +320,21 @@
           ],
           "hsl(46, 88%, 62%)",
           [
-            "Not Sprayed"
+            "Not Sprayed",
+            "Incomplete",
+            "In Progress"
           ],
           "hsl(3, 71%, 54%)",
           [
-            "Sprayed"
-          ],
-          "hsl(89, 52%, 48%)",
-          [
-            "Not Sprayable"
-          ],
-          "hsl(0, 0%, 9%)",
-          [
-            "Incomplete"
-          ],
-          "hsl(3, 71%, 54%)",
-          [
+            "Sprayed",
             "Complete"
           ],
           "hsl(89, 52%, 48%)",
+          [
+            "Not Sprayable",
+            "Not Eligible"
+          ],
+          "hsl(0, 0%, 9%)",
           "hsl(0, 0%, 78%)"
         ],
         "circle-stroke-width": 1

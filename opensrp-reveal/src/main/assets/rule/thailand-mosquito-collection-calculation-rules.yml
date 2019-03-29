@@ -4,4 +4,4 @@ description: Task business status
 priority: 1
 condition: "true"
 actions:
-- "calculation = step1_trap_type.contains('CDC') || step1_trap_type.contains('HLC') || step1_trap_type.contains('Trap/net') || step1_trap_type.contains('Backpack') || step1_trap_type.contains('Swingnet') ? 'Complete' : 'Incomplete' "
+- "calculation = step1_task_business_status"

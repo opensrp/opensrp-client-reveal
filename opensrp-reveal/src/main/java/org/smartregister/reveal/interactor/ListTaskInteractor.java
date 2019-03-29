@@ -385,7 +385,6 @@ public class ListTaskInteractor {
                         task.setCode(Intervention.MOSQUITO_COLLECTION);
                         task.setDescription(applicationContext.getString(R.string.mosquito_collection_task_description));
                         task.setFocus(Intervention.MOSQUITO_COLLECTION);
-                        task.setBusinessStatus(INCOMPLETE);
                     } else if (StructureType.LARVAL_BREEDING_SITE.equals(structureType)) {
                         task.setCode(Intervention.LARVAL_DIPPING);
                         task.setDescription(applicationContext.getString(R.string.larval_dipping_task_description));
