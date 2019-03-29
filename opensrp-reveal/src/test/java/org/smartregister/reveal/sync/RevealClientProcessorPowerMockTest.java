@@ -25,7 +25,6 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
-import org.smartregister.sync.ClientProcessor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +45,7 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 import static org.smartregister.reveal.util.Constants.END_DATE;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
@@ -89,7 +89,7 @@ public class RevealClientProcessorPowerMockTest {
         PowerMockito.doReturn(new ClientClassification()).when(clientProcessor, "assetJsonToJava", anyString(), any());
         clientProcessor.processClient(eventClients, true);
 
-        PowerMockito.verifyPrivate(clientProcessor, times(1)).invoke("processSprayEvent", eq(event), any(ClientClassification.class), anyBoolean());
+        verifyPrivate(clientProcessor, times(1)).invoke("processSprayEvent", eq(event), any(ClientClassification.class), anyBoolean());
         verify(structureRepository).addOrUpdate(any(Location.class));
     }
 
@@ -107,7 +107,7 @@ public class RevealClientProcessorPowerMockTest {
         PowerMockito.doReturn(new ClientClassification()).when(clientProcessor, "assetJsonToJava", anyString(), any());
         clientProcessor.processClient(eventClients, true);
 
-        PowerMockito.verifyPrivate(clientProcessor, times(1)).invoke("processMosquitoCollectionEvent", eq(event), any(ClientClassification.class), anyBoolean());
+        verifyPrivate(clientProcessor, times(1)).invoke("processMosquitoCollectionEvent", eq(event), any(ClientClassification.class), anyBoolean());
         assertEquals(event.getDetails().get(START_DATE), TRAP_SET_DATE);
         assertEquals(event.getDetails().get(END_DATE), TRAP_FOLLOW_UP_DATE);
     }

@@ -28,8 +28,6 @@ import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
 import static org.smartregister.reveal.util.Constants.END_DATE;
-import static org.smartregister.reveal.util.Constants.Intervention.IRS;
-import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
@@ -122,7 +120,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     private String processSprayEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
         String operationalAreaId = null;
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
-            operationalAreaId = updateTask(event, localEvents, IRS);
+            operationalAreaId = updateTask(event, localEvents);
 
             Location structure = structureRepository.getLocationById(event.getBaseEntityId());
             if (structure != null) {
@@ -151,7 +149,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     private String processMosquitoCollectionEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
         String operationalAreaId = null;
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
-            operationalAreaId = updateTask(event, localEvents, MOSQUITO_COLLECTION);
+            operationalAreaId = updateTask(event, localEvents);
 
             try {
                 Obs startDateObs = event.findObs(null, false, JsonForm.TRAP_SET_DATE);
@@ -175,7 +173,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         return operationalAreaId;
     }
 
-    private String updateTask(Event event, boolean localEvents, String interventionType) {
+    private String updateTask(Event event, boolean localEvents) {
         String taskIdentifier = event.getDetails().get(TASK_IDENTIFIER);
         Task task = taskRepository.getTaskByIdentifier(taskIdentifier);
         String operationalAreaId = null;
