@@ -108,8 +108,6 @@ public class RevealClientProcessorPowerMockTest {
         clientProcessor.processClient(eventClients, true);
 
         verifyPrivate(clientProcessor, times(1)).invoke("processMosquitoCollectionEvent", eq(event), any(ClientClassification.class), anyBoolean());
-        assertEquals(event.getDetails().get(START_DATE), TRAP_SET_DATE);
-        assertEquals(event.getDetails().get(END_DATE), TRAP_FOLLOW_UP_DATE);
     }
 
     @Test

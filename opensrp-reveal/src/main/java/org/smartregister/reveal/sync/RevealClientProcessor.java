@@ -27,12 +27,9 @@ import org.smartregister.sync.ClientProcessorForJava;
 import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
-import static org.smartregister.reveal.util.Constants.END_DATE;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
-import static org.smartregister.reveal.util.Constants.START_DATE;
-import static org.smartregister.reveal.util.Constants.STATUS;
 
 /**
  * Created by samuelgithengi on 12/7/18.
@@ -150,20 +147,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         String operationalAreaId = null;
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
             operationalAreaId = updateTask(event, localEvents);
-
             try {
-                Obs startDateObs = event.findObs(null, false, JsonForm.TRAP_SET_DATE);
-                Obs endDateObs = event.findObs(null, false, JsonForm.TRAP_FOLLOW_UP_DATE);
-
-                Object startDate = startDateObs == null ? null : startDateObs.getValue();
-                Object endDate = endDateObs == null ? null : endDateObs.getValue();
-
-                event.getDetails().put(START_DATE, startDate == null ? null : startDate.toString());
-                event.getDetails().put(END_DATE, endDate == null ? null : endDate.toString());
-
-                RevealClientProcessor clientProcessor = getInstance(RevealApplication.getInstance().getApplicationContext());
-                event.getDetails().put(STATUS, clientProcessor.calculateBusinessStatus(event));
-
                 Client client = new Client(event.getBaseEntityId());
                 processEvent(event, client, clientClassification);
             } catch (Exception e) {
