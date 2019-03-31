@@ -189,9 +189,9 @@
           "err": "Please specify household name"
         },
         "relevance": {
-          "step1:visit_number": {
+          "step1:structureType": {
             "type": "string",
-            "ex": "equalTo(., \"First Visit\")"
+            "ex": "equalTo(., \"Residential Structure\")"
           }
         }
       },
@@ -207,9 +207,10 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "step1:visit_number": {
-            "type": "string",
-            "ex": "equalTo(., \"First Visit\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -223,6 +224,12 @@
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
+        },
+        "relevance": {
+          "step1:structureType": {
+            "type": "string",
+            "ex": "equalTo(., \"Residential Structure\")"
+          }
         }
       },
       {
@@ -295,9 +302,10 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "step1:visit_number": {
-            "type": "string",
-            "ex": "equalTo(., \"First Visit\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -374,9 +382,10 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "step1:visit_number": {
-            "type": "string",
-            "ex": "equalTo(., \"First Visit\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -397,9 +406,10 @@
           "err": "Must be a number"
         },
         "relevance": {
-          "step1:visit_number": {
-            "type": "string",
-            "ex": "equalTo(., \"First Visit\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -699,6 +709,10 @@
           {
             "key": "There is a patient in the home",
             "text": "There is a patient in the home"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
           }
         ],
         "v_required": {
@@ -729,11 +743,29 @@
           "value": "true",
           "err": "Must be a number"
         },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "n_rooms_nobody",
+            "n_rooms_refused",
+            "n_rooms_baby",
+            "n_rooms_funeral",
+            "n_rooms_kitchen",
+            "n_rooms_food",
+            "n_rooms_patient",
+            "n_rooms_other"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "botswana-spray-relevance-rules.yml"
-            }
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "Locked"
+                ]
+              }
+            ]
           }
         }
       },
@@ -753,11 +785,29 @@
           "value": "true",
           "err": "Must be a number"
         },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "rooms_locked",
+            "n_rooms_refused",
+            "n_rooms_baby",
+            "n_rooms_funeral",
+            "n_rooms_kitchen",
+            "n_rooms_food",
+            "n_rooms_patient",
+            "n_rooms_other"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "botswana-spray-relevance-rules.yml"
-            }
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "No one home"
+                ]
+              }
+            ]
           }
         }
       },
@@ -777,11 +827,29 @@
           "value": "true",
           "err": "Must be a number"
         },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "rooms_locked",
+            "n_rooms_nobody",
+            "n_rooms_baby",
+            "n_rooms_funeral",
+            "n_rooms_kitchen",
+            "n_rooms_food",
+            "n_rooms_patient",
+            "n_rooms_other"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "botswana-spray-relevance-rules.yml"
-            }
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "Head of household refused"
+                ]
+              }
+            ]
           }
         }
       },
@@ -801,11 +869,29 @@
           "value": "true",
           "err": "Must be a number"
         },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "rooms_locked",
+            "n_rooms_nobody",
+            "n_rooms_refused",
+            "n_rooms_funeral",
+            "n_rooms_kitchen",
+            "n_rooms_food",
+            "n_rooms_patient",
+            "n_rooms_other"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "botswana-spray-relevance-rules.yml"
-            }
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "There is a newborn"
+                ]
+              }
+            ]
           }
         }
       },
@@ -825,11 +911,29 @@
           "value": "true",
           "err": "Must be a number"
         },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "rooms_locked",
+            "n_rooms_nobody",
+            "n_rooms_refused",
+            "n_rooms_baby",
+            "n_rooms_kitchen",
+            "n_rooms_food",
+            "n_rooms_patient",
+            "n_rooms_other"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "botswana-spray-relevance-rules.yml"
-            }
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "There is a funeral"
+                ]
+              }
+            ]
           }
         }
       },
@@ -849,11 +953,29 @@
           "value": "true",
           "err": "Must be a number"
         },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "rooms_locked",
+            "n_rooms_nobody",
+            "n_rooms_refused",
+            "n_rooms_baby",
+            "n_rooms_funeral",
+            "n_rooms_food",
+            "n_rooms_patient",
+            "n_rooms_other"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "botswana-spray-relevance-rules.yml"
-            }
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "Room is a kitchen"
+                ]
+              }
+            ]
           }
         }
       },
@@ -873,11 +995,29 @@
           "value": "true",
           "err": "Must be a number"
         },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "rooms_locked",
+            "n_rooms_nobody",
+            "n_rooms_refused",
+            "n_rooms_baby",
+            "n_rooms_funeral",
+            "n_rooms_kitchen",
+            "n_rooms_patient",
+            "n_rooms_other"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "botswana-spray-relevance-rules.yml"
-            }
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "Room is a food store"
+                ]
+              }
+            ]
           }
         }
       },
@@ -897,11 +1037,29 @@
           "value": "true",
           "err": "Must be a number"
         },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "rooms_locked",
+            "n_rooms_nobody",
+            "n_rooms_refused",
+            "n_rooms_baby",
+            "n_rooms_funeral",
+            "n_rooms_kitchen",
+            "n_rooms_food",
+            "n_rooms_other"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "botswana-spray-relevance-rules.yml"
-            }
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "There is a patient in the home"
+                ]
+              }
+            ]
           }
         }
       },
@@ -921,11 +1079,29 @@
           "value": "true",
           "err": "Must be a number"
         },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "rooms_locked",
+            "n_rooms_nobody",
+            "n_rooms_refused",
+            "n_rooms_baby",
+            "n_rooms_funeral",
+            "n_rooms_kitchen",
+            "n_rooms_food",
+            "n_rooms_patient"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "botswana-spray-relevance-rules.yml"
-            }
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "Other"
+                ]
+              }
+            ]
           }
         }
       },
