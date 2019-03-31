@@ -33,8 +33,10 @@ import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
-import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
+import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.Constants.StructureType;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
@@ -48,6 +50,10 @@ import java.util.List;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static org.smartregister.AllConstants.OPERATIONAL_AREAS;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
@@ -121,9 +127,13 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     private ValidateUserLocationPresenter locationPresenter;
 
-    private CardDetails cardDetails;
+    private SprayCardDetails sprayCardDetails;
+
+    private MosquitoCollectionCardDetails mosquitoCollectionCardDetails;
 
     private boolean changeSprayStatus;
+
+    private boolean changeMosquitoCollectionStatus;
 
     public ListTaskPresenter(ListTaskView listTaskView) {
         this.listTaskView = listTaskView;
@@ -324,7 +334,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
                 structuresGeoJson.put(FEATURES, new JSONArray());
                 listTaskView.setGeoJsonSource(FeatureCollection.fromJson(structuresGeoJson.toString()), operationalAreaGeometry);
                 listTaskView.clearSelectedFeature();
-                listTaskView.closeStructureCardView();
+                listTaskView.closeCardView(R.id.btn_collapse_spray_card_view);
             } catch (JSONException e) {
                 Log.e(TAG, "error resetting structures");
             }
@@ -386,9 +396,11 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     }
 
     private void onFeatureSelected(Feature feature) {
-        selectedFeature = feature;
-        changeSprayStatus = false;
-        listTaskView.closeStructureCardView();
+        this.selectedFeature = feature;
+        this.changeSprayStatus = false;
+        this.changeMosquitoCollectionStatus = false;
+
+        listTaskView.closeCardView(R.id.btn_collapse_mosquito_collection_card_view);
         listTaskView.displaySelectedFeature(feature, clickedPoint);
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
@@ -405,6 +417,10 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
                 listTaskInteractor.fetchSprayDetails(feature.id(), false);
+            } else if (MOSQUITO_COLLECTION.equals(code)
+                    && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
+                    || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
+                listTaskInteractor.fetchMosquitoCollectionDetails(feature.id(), false);
             }
         }
     }
@@ -420,52 +436,61 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
 
     @Override
-    public void onSprayFormDetailsFetched(CardDetails cardDetails) {
-        this.cardDetails = cardDetails;
-        changeSprayStatus = true;
+    public void onInterventionFormDetailsFetched(CardDetails cardDetails) {
+        if (cardDetails instanceof SprayCardDetails) {
+            this.sprayCardDetails = (SprayCardDetails) cardDetails;
+            this.changeSprayStatus = true;
+        } else if (cardDetails instanceof MosquitoCollectionCardDetails) {
+            this.mosquitoCollectionCardDetails = (MosquitoCollectionCardDetails) cardDetails;
+            this.changeMosquitoCollectionStatus = true;
+        }
         listTaskView.hideProgressDialog();
         validateUserLocation();
     }
 
     @Override
     public void onCardDetailsFetched(CardDetails cardDetails) {
-        if (cardDetails == null) {
-            return;
+        if (cardDetails instanceof SprayCardDetails) {
+            if (cardDetails == null) {
+                return;
+            }
+            formatSprayCardDetails((SprayCardDetails) cardDetails);
+            listTaskView.openCardView(cardDetails);
+        } else if (cardDetails instanceof MosquitoCollectionCardDetails) {
+            listTaskView.openCardView(cardDetails);
         }
-        formatCardDetails(cardDetails);
-        listTaskView.openCardView(cardDetails);
     }
 
-    private void formatCardDetails(CardDetails cardDetails) {
+    private void formatSprayCardDetails(SprayCardDetails sprayCardDetails) {
         try {
             // format date
-            String formattedDate = formatDate(cardDetails.getSprayDate(), EVENT_DATE_FORMAT_Z);
-            cardDetails.setSprayDate(formattedDate);
+            String formattedDate = formatDate(sprayCardDetails.getSprayDate(), EVENT_DATE_FORMAT_Z);
+            sprayCardDetails.setSprayDate(formattedDate);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
             Log.i(TAG, "Date parsing failed, trying another date format");
             try {
                 // try another date format
-                String formattedDate = formatDate(cardDetails.getSprayDate(), EVENT_DATE_FORMAT_XXX);
-                cardDetails.setSprayDate(formattedDate);
+                String formattedDate = formatDate(sprayCardDetails.getSprayDate(), EVENT_DATE_FORMAT_XXX);
+                sprayCardDetails.setSprayDate(formattedDate);
             } catch (Exception exception) {
                 Log.e(TAG, exception.getMessage());
             }
         }
 
         // extract status color
-        String sprayStatus = cardDetails.getSprayStatus();
+        String sprayStatus = sprayCardDetails.getStatus();
         if (NOT_SPRAYED.equals(sprayStatus)) {
-            cardDetails.setStatusColor(R.color.unsprayed);
-            cardDetails.setStatusMessage(R.string.details_not_sprayed);
+            sprayCardDetails.setStatusColor(R.color.unsprayed);
+            sprayCardDetails.setStatusMessage(R.string.details_not_sprayed);
         } else if (SPRAYED.equals(sprayStatus)) {
-            cardDetails.setStatusColor(R.color.sprayed);
-            cardDetails.setStatusMessage(R.string.details_sprayed);
-            cardDetails.setReason(null);
+            sprayCardDetails.setStatusColor(R.color.sprayed);
+            sprayCardDetails.setStatusMessage(R.string.details_sprayed);
+            sprayCardDetails.setReason(null);
         } else {
-            cardDetails.setStatusColor(R.color.unsprayable);
-            cardDetails.setStatusMessage(R.string.details_not_sprayable);
-            cardDetails.setReason(null);
+            sprayCardDetails.setStatusColor(R.color.unsprayable);
+            sprayCardDetails.setStatusMessage(R.string.details_not_sprayable);
+            sprayCardDetails.setReason(null);
         }
     }
 
@@ -479,8 +504,12 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
                 formName = SPRAY_FORM;
             }
-            String sprayStatus = cardDetails == null ? null : cardDetails.getSprayStatus();
-            String familyHead = cardDetails == null ? null : cardDetails.getFamilyHead();
+
+            String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();
+            String familyHead = null;
+            if (cardDetails instanceof  SprayCardDetails) {
+                familyHead = cardDetails == null ? null : ((SprayCardDetails) cardDetails).getFamilyHead();
+            }
             startForm(formName, feature, sprayStatus, familyHead);
         } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)) {
             startForm(THAILAND_MOSQUITO_COLLECTION_FORM,  feature, null, null);
@@ -537,9 +566,14 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         }
     }
 
-    public void onChangeSprayStatus() {
-        listTaskView.showProgressDialog(R.string.fetching_structure_title, R.string.fetching_structure_message);
-        listTaskInteractor.fetchSprayDetails(selectedFeature.id(), true);
+    public void onChangeInterventionStatus(String interventionType) {
+        if (IRS.equals(interventionType)) {
+            listTaskView.showProgressDialog(R.string.fetching_structure_title, R.string.fetching_structure_message);
+            listTaskInteractor.fetchSprayDetails(selectedFeature.id(), true);
+        } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
+            listTaskView.showProgressDialog(R.string.fetching_mosquito_collection_points_title, R.string.fetching_mosquito_collection_points_message);
+            listTaskInteractor.fetchMosquitoCollectionDetails(selectedFeature.id(), true);
+        }
     }
 
     public void saveJsonForm(String json) {
@@ -548,8 +582,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     }
 
     @Override
-    public void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier,
-                                 @NonNull TaskStatus taskStatus, @NonNull String businessStatus) {
+    public void onFormSaved(@NonNull String structureId, @NonNull TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
         listTaskView.hideProgressDialog();
         for (Feature feature : featureCollection.features()) {
             if (structureId.equals(feature.id())) {
@@ -559,9 +592,13 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             }
         }
         listTaskView.setGeoJsonSource(featureCollection, null);
-        listTaskInteractor.fetchSprayDetails(structureId, false);
-    }
 
+        if (IRS.equals(interventionType)) {
+            listTaskInteractor.fetchSprayDetails(structureId, false);
+        } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
+            listTaskInteractor.fetchMosquitoCollectionDetails(structureId, false);
+        }
+    }
 
     @Override
     public void onStructureAdded(Feature feature, JSONArray featureCoordinates) {
@@ -576,12 +613,6 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             Log.e(TAG, "error extracting coordinates of added structure", e);
         }
 
-    }
-
-    @Override
-    public void onMosquitoCollectionFormSaved() {
-        // todo: add more logic here, like opening card view
-        listTaskView.hideProgressDialog();
     }
 
     @Override
@@ -608,17 +639,16 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     @Override
     public void onLocationValidated() {
         if (IRS.equals(selectedFeatureInterventionType)) {
-            if (cardDetails == null || !changeSprayStatus) {
+            if (sprayCardDetails == null || !changeSprayStatus) {
                 startForm(selectedFeature, null, SPRAY_EVENT);
             } else {
-                startForm(selectedFeature, cardDetails, SPRAY_EVENT);
+                startForm(selectedFeature, sprayCardDetails, SPRAY_EVENT);
             }
         } else if (MOSQUITO_COLLECTION.equals(selectedFeatureInterventionType)) {
-            // TODO: add global variable to change mosquito collection details
-            if (cardDetails == null) {
+            if (mosquitoCollectionCardDetails == null || !changeMosquitoCollectionStatus) {
                 startForm(selectedFeature, null, MOSQUITO_COLLECTION_EVENT);
             } else {
-                startForm(selectedFeature, cardDetails, MOSQUITO_COLLECTION_EVENT);
+                startForm(selectedFeature, mosquitoCollectionCardDetails, MOSQUITO_COLLECTION_EVENT);
             }
         }
     }

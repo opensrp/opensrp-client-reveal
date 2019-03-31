@@ -1,27 +1,46 @@
 package org.smartregister.reveal.interactor;
 
+import net.sqlcipher.Cursor;
+
 import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
+import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
+import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.AppExecutors;
 
+import java.util.concurrent.Executor;
+
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 
 /**
  * @author Vincent Karuri
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(ListTaskInteractor.class)
 public class ListTaskInteractorTest {
 
-    private ListTaskInteractor listTaskInteractor = new ListTaskInteractor(new AppExecutors());
+    private ListTaskInteractor listTaskInteractor;
 
-    private final  String mosquitoCollectionForm = "{\n" +
+    public static final String mosquitoCollectionForm = "{\n" +
             "  \"baseEntityId\": \"227ce82f-d688-467a-97d7-bdad30290cea\",\n" +
             "  \"duration\": 0,\n" +
             "  \"entityType\": \"Structure\",\n" +
+            "  \"encounter_type\": \"mosquito_collection\",\n" +
             "  \"eventDate\": \"2019-03-18T00:00:00.000+0000\",\n" +
             "  \"eventType\": \"mosquito_collection\",\n" +
             "  \"formSubmissionId\": \"cfd96619-5850-4277-b2b9-f30b0f2c0944\",\n" +
@@ -197,11 +216,78 @@ public class ListTaskInteractorTest {
             "  }\n" +
             "}";
 
+    @Captor
+    private ArgumentCaptor<JSONObject> captor;
+
+
+    @Before
+    public void setUp() {
+        listTaskInteractor = new ListTaskInteractor(new AppExecutors());
+    }
+
     @Test
     public void testSaveJsonFormShouldSaveMosquitoCollectionForm() throws Exception {
-        ListTaskInteractor listTaskInteractorSpy = spy(listTaskInteractor);
-        doNothing().when(listTaskInteractorSpy, "saveMosquitoCollectionForm", any(JSONObject.class));
+        ListTaskInteractor listTaskInteractorSpy = PowerMockito.spy(listTaskInteractor);
+
+        AppExecutors appExecutors = mock(AppExecutors.class);
+        Whitebox.setInternalState(listTaskInteractorSpy, "appExecutors", appExecutors);
+
+        Executor executor = mock(Executor.class);
+
+        doReturn(executor).when(appExecutors).diskIO();
+        doNothing().when(executor).execute(any(Runnable.class));
+
         listTaskInteractorSpy.saveJsonForm(mosquitoCollectionForm);
-        verifyPrivate(listTaskInteractorSpy, times(1)).invoke("saveMosquitoCollectionForm", eq(mosquitoCollectionForm));
+
+        verifyPrivate(listTaskInteractorSpy, times(1)).invoke("saveMosquitoCollectionForm", captor.capture());
+        assertEquals(new JSONObject(mosquitoCollectionForm).toString(), captor.getValue().toString());
+    }
+
+    @Test
+    public void testCreateMosquitoCollectionCardDetailsShouldPopulateCorrectCardDetails() throws Exception {
+        final String STATUS = "active";
+        final String START_DATE = "11/02/1977";
+        final String END_DATE = "23/04/1990";
+
+        Cursor cursor = mock(Cursor.class);
+        when(cursor.getColumnIndex("status")).thenReturn(0);
+        when(cursor.getColumnIndex("start_date")).thenReturn(1);
+        when(cursor.getColumnIndex("end_date")).thenReturn(2);
+
+        when(cursor.getString(0)).thenReturn(STATUS);
+        when(cursor.getString(1)).thenReturn(START_DATE);
+        when(cursor.getString(2)).thenReturn(END_DATE);
+
+        MosquitoCollectionCardDetails mosquitoCollectionCardDetails = Whitebox.invokeMethod(listTaskInteractor, "createMosquitoCollectionCardDetails", cursor);
+
+        assertEquals(mosquitoCollectionCardDetails.getStatus(), STATUS);
+        assertEquals(mosquitoCollectionCardDetails.getTrapSetDate(), START_DATE);
+        assertEquals(mosquitoCollectionCardDetails.getTrapFollowUpDate(), END_DATE);
+    }
+
+    @Test
+    public void testCreateSprayCardDetailsShouldPopulateCorrectCardDetails() throws Exception {
+        final String PROPERTY_TYPE = "Residential";
+        final String SPRAY_DATE = "11/02/1977";
+        final String SPRAY_OPERATOR = "John Doe";
+        final String FAMILY_HEAD = "Doe John";
+
+        Cursor cursor = mock(Cursor.class);
+        when(cursor.getColumnIndex("property_type")).thenReturn(0);
+        when(cursor.getColumnIndex("spray_date")).thenReturn(1);
+        when(cursor.getColumnIndex("spray_operator")).thenReturn(2);
+        when(cursor.getColumnIndex("family_head_name")).thenReturn(3);
+
+        when(cursor.getString(0)).thenReturn(PROPERTY_TYPE);
+        when(cursor.getString(1)).thenReturn(SPRAY_DATE);
+        when(cursor.getString(2)).thenReturn(SPRAY_OPERATOR);
+        when(cursor.getString(3)).thenReturn(FAMILY_HEAD);
+
+        SprayCardDetails sprayCardDetails = Whitebox.invokeMethod(listTaskInteractor, "createSprayCardDetails", cursor);
+
+        assertEquals(sprayCardDetails.getPropertyType(), PROPERTY_TYPE);
+        assertEquals(sprayCardDetails.getSprayDate(), SPRAY_DATE);
+        assertEquals(sprayCardDetails.getSprayOperator(), SPRAY_OPERATOR);
+        assertEquals(sprayCardDetails.getFamilyHead(), FAMILY_HEAD);
     }
 }

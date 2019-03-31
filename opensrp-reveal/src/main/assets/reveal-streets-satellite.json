@@ -320,15 +320,19 @@
           ],
           "hsl(46, 88%, 62%)",
           [
-            "Not Sprayed"
+            "Not Sprayed",
+            "Incomplete",
+            "In Progress"
           ],
           "hsl(3, 71%, 54%)",
           [
-            "Sprayed"
+            "Sprayed",
+            "Complete"
           ],
           "hsl(89, 52%, 48%)",
           [
-            "Not Sprayable"
+            "Not Sprayable",
+            "Not Eligible"
           ],
           "hsl(0, 0%, 9%)",
           "hsl(0, 0%, 78%)"

@@ -27,11 +27,9 @@ import org.smartregister.sync.ClientProcessorForJava;
 import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
-import static org.smartregister.reveal.util.Constants.END_DATE;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
-import static org.smartregister.reveal.util.Constants.START_DATE;
 
 /**
  * Created by samuelgithengi on 12/7/18.
@@ -119,24 +117,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     private String processSprayEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
         String operationalAreaId = null;
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
-            String taskIdentifier = event.getDetails().get(TASK_IDENTIFIER);
-            Task task = taskRepository.getTaskByIdentifier(taskIdentifier);
-            if (task != null) {
-                task.setBusinessStatus(calculateBusinessStatus(event));
-                task.setStatus(Task.TaskStatus.COMPLETED);
-                // update task sync status to unsynced if it was already synced,
-                // ignore if task status is created so that it will be created on server
-                if (localEvents && BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
-                    task.setSyncStatus(BaseRepository.TYPE_Unsynced);
-                } else if (!localEvents) {
-                    // for events synced from server and task exists mark events as being fully synced
-                    eventClientRepository.markEventAsSynced(event.getFormSubmissionId());
-                }
-                taskRepository.addOrUpdate(task);
-                operationalAreaId = task.getGroupIdentifier();
-            } else {
-                eventClientRepository.markEventAsTaskUnprocessed(event.getFormSubmissionId());
-            }
+            operationalAreaId = updateTask(event, localEvents);
 
             Location structure = structureRepository.getLocationById(event.getBaseEntityId());
             if (structure != null) {
@@ -165,19 +146,10 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     private String processMosquitoCollectionEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
         String operationalAreaId = null;
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
-            // todo: add logic to update business status when data dictionary is available
+            operationalAreaId = updateTask(event, localEvents);
             try {
-                // todo: add status when data dictionary specifies how to collect and determine its value
-                String startDate = event.findObs(null, false, JsonForm.TRAP_SET_DATE).getValue().toString();
-                String endDate = event.findObs(null, false, JsonForm.TRAP_FOLLOW_UP_DATE).getValue().toString();
-                event.getDetails().put(START_DATE, startDate);
-                event.getDetails().put(END_DATE, endDate);
                 Client client = new Client(event.getBaseEntityId());
                 processEvent(event, client, clientClassification);
-                if (localEvents) {
-                   // todo: may need to add extra task processing for local events vs remote
-                    Log.e(TAG, "Processing local events");
-                }
             } catch (Exception e) {
                 Log.e(TAG, "Error processing spray event", e);
             }
@@ -185,8 +157,31 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         return operationalAreaId;
     }
 
+    private String updateTask(Event event, boolean localEvents) {
+        String taskIdentifier = event.getDetails().get(TASK_IDENTIFIER);
+        Task task = taskRepository.getTaskByIdentifier(taskIdentifier);
+        String operationalAreaId = null;
+        if (task != null) {
+            task.setBusinessStatus(calculateBusinessStatus(event));
+            task.setStatus(Task.TaskStatus.COMPLETED);
+            // update task sync status to unsynced if it was already synced,
+            // ignore if task status is created so that it will be created on server
+            if (localEvents && BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+            } else if (!localEvents) {
+                // for events synced from server and task exists mark events as being fully synced
+                eventClientRepository.markEventAsSynced(event.getFormSubmissionId());
+            }
+            taskRepository.addOrUpdate(task);
+            operationalAreaId = task.getGroupIdentifier();
+        } else {
+            eventClientRepository.markEventAsTaskUnprocessed(event.getFormSubmissionId());
+        }
+        return operationalAreaId;
+    }
+
     public String calculateBusinessStatus(Event event) {
-        Obs businessStatusObs = event.findObs(null, false, JsonForm.TASK_BUSINESS_STATUS);
+        Obs businessStatusObs = event.findObs(null, false, JsonForm.BUSINESS_STATUS);
         if (businessStatusObs != null) {
             return businessStatusObs.getValue().toString();
         } else {
@@ -200,5 +195,4 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             }
         }
     }
-
 }

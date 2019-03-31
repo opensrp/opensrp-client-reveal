@@ -33,7 +33,7 @@ public interface ListTaskContract {
 
         Context getContext();
 
-        void closeStructureCardView();
+        void closeCardView(int id);
 
         void showOperationalAreaSelector(Pair<String, ArrayList<String>> locationHierarchy);
 
@@ -76,8 +76,8 @@ public interface ListTaskContract {
 
         void onStructuresFetched(JSONObject structuresGeoJson, Geometry operationalAreaGeometry);
 
-        void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier,
-                              @NonNull TaskStatus taskStatus, @NonNull String businessStatus);
+        void onFormSaved(@NonNull String structureId,
+                         @NonNull TaskStatus taskStatus, @NonNull String businessStatus, String interventionType);
 
         void onStructureAdded(Feature feature, JSONArray featureCoordinates);
 
@@ -85,9 +85,7 @@ public interface ListTaskContract {
 
         void onCardDetailsFetched(CardDetails cardDetails);
 
-        void onSprayFormDetailsFetched(CardDetails finalCardDetails);
-
-        void onMosquitoCollectionFormSaved();
+        void onInterventionFormDetailsFetched(CardDetails finalCardDetails);
     }
 
 }

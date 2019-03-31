@@ -100,19 +100,19 @@ public class RevealClientProcessorTest extends BaseUnitTest {
 
     @Test
     public void testCalculateBusinessStatusWithoutCalculatedFormStatus() {
-        Obs businessStatusObs = event.findObs(null, false, JsonForm.TASK_BUSINESS_STATUS);
+        Obs businessStatusObs = event.findObs(null, false, JsonForm.BUSINESS_STATUS);
         event.getObs().remove(businessStatusObs);
         assertEquals("Not Sprayable", clientProcessor.calculateBusinessStatus(event));
 
 
-        businessStatusObs = sprayedEvent.findObs(null, false, JsonForm.TASK_BUSINESS_STATUS);
+        businessStatusObs = sprayedEvent.findObs(null, false, JsonForm.BUSINESS_STATUS);
         sprayedEvent.getObs().remove(businessStatusObs);
         assertEquals("Sprayed", clientProcessor.calculateBusinessStatus(sprayedEvent));
     }
 
     @Test
     public void testCalculateBusinessStatusWithoutStructureType() {
-        Obs businessStatusObs = event.findObs(null, false, JsonForm.TASK_BUSINESS_STATUS);
+        Obs businessStatusObs = event.findObs(null, false, JsonForm.BUSINESS_STATUS);
         Obs structureTypeObs = event.findObs(null, false, JsonForm.STRUCTURE_TYPE);
         event.getObs().remove(businessStatusObs);
         event.getObs().remove(structureTypeObs);
@@ -121,7 +121,7 @@ public class RevealClientProcessorTest extends BaseUnitTest {
 
     @Test
     public void testCalculateBusinessStatusUsingNullSprayStatus() {
-        Obs businessStatusObs = sprayedEvent.findObs(null, false, JsonForm.TASK_BUSINESS_STATUS);
+        Obs businessStatusObs = sprayedEvent.findObs(null, false, JsonForm.BUSINESS_STATUS);
         sprayedEvent.getObs().remove(businessStatusObs);
 
         Obs sprayStatus = sprayedEvent.findObs(null, false, JsonForm.SPRAY_STATUS);
@@ -133,7 +133,7 @@ public class RevealClientProcessorTest extends BaseUnitTest {
 
     @Test
     public void testCalculateBusinessStatusUsingSprayStatus() {
-        Obs businessStatusObs = sprayedEvent.findObs(null, false, JsonForm.TASK_BUSINESS_STATUS);
+        Obs businessStatusObs = sprayedEvent.findObs(null, false, JsonForm.BUSINESS_STATUS);
         sprayedEvent.getObs().remove(businessStatusObs);
 
         assertEquals("Sprayed", clientProcessor.calculateBusinessStatus(sprayedEvent));
@@ -199,6 +199,4 @@ public class RevealClientProcessorTest extends BaseUnitTest {
 
 
     }
-
-
 }
