@@ -68,6 +68,7 @@ import io.ona.kujaku.layers.BoundaryLayer;
 
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
+import static org.smartregister.reveal.util.Constants.Map;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 
@@ -111,6 +112,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
 
     private Snackbar syncProgressSnackbar;
+
+    private BoundaryLayer.Builder boundaryBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -362,14 +365,15 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 if (cameraPosition != null) {
                     mMapboxMap.setCameraPosition(cameraPosition);
                 }
-                BoundaryLayer.Builder builder = new BoundaryLayer.Builder(FeatureCollection.fromFeature(operationalArea))
-                        .setLabelProperty("name")
-                        .setLabelTextSize(18f)
-                        .setLabelColorInt(Color.WHITE)
-                        .setBoundaryColor(Color.WHITE)
-                        .setBoundaryWidth(4f);
-                BoundaryLayer boundaryLayer = builder.build();
-                kujakuMapView.addLayer(boundaryLayer);
+                if (boundaryBuilder == null) {
+                    boundaryBuilder = new BoundaryLayer.Builder(FeatureCollection.fromFeature(operationalArea))
+                            .setLabelProperty(Map.NAME_PROPERTY)
+                            .setLabelTextSize(getResources().getDimension(R.dimen.operational_area_boundary_text_size))
+                            .setLabelColorInt(Color.WHITE)
+                            .setBoundaryColor(Color.WHITE)
+                            .setBoundaryWidth(getResources().getDimension(R.dimen.operational_area_boundary_width));
+                }
+                kujakuMapView.addLayer(boundaryBuilder.build());
             }
         }
     }

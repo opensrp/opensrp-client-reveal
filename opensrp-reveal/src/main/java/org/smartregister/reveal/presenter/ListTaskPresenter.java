@@ -542,7 +542,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack {
         String formString = AssetHandler.readFileFromAssetsFolder(ADD_STRUCTURE_FORM, listTaskView.getContext());
         try {
             JSONObject formJson = new JSONObject(formString);
-            formJson.put(OPERATIONAL_AREA_TAG, operationalArea.toJson());
+            formJson.put(OPERATIONAL_AREA_TAG, operationalArea.geometry().toJson());
             formJson.put(STRUCTURES_TAG, featureCollection.toJson());
             listTaskView.startJsonForm(formJson);
         } catch (Exception e) {

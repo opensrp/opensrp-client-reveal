@@ -82,6 +82,7 @@ public interface Constants {
     interface Map {
         int MAX_SELECT_ZOOM_LEVEL = 16;
         int CLICK_SELECT_RADIUS = 24;
+        String NAME_PROPERTY = "name";
     }
 
     interface JsonForm {
