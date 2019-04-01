@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -32,7 +33,6 @@ import android.widget.Toast;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -63,6 +63,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import io.ona.kujaku.layers.BoundaryLayer;
 
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
@@ -352,11 +354,22 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Geometry operationalAreaGeometry) {
+    public void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea) {
         if (geoJsonSource != null) {
             geoJsonSource.setGeoJson(featureCollection);
-            if (operationalAreaGeometry != null) {
-                mMapboxMap.setCameraPosition(mMapboxMap.getCameraForGeometry(operationalAreaGeometry));
+            if (operationalArea != null) {
+                CameraPosition cameraPosition = mMapboxMap.getCameraForGeometry(operationalArea.geometry());
+                if (cameraPosition != null) {
+                    mMapboxMap.setCameraPosition(cameraPosition);
+                }
+                BoundaryLayer.Builder builder = new BoundaryLayer.Builder(FeatureCollection.fromFeature(operationalArea))
+                        .setLabelProperty("name")
+                        .setLabelTextSize(18f)
+                        .setLabelColorInt(Color.WHITE)
+                        .setBoundaryColor(Color.WHITE)
+                        .setBoundaryWidth(4f);
+                BoundaryLayer boundaryLayer = builder.build();
+                kujakuMapView.addLayer(boundaryLayer);
             }
         }
     }

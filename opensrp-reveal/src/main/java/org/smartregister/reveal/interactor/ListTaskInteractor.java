@@ -8,8 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.Geometry;
-import com.mapbox.geojson.gson.GeometryGeoJson;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -210,13 +208,13 @@ public class ListTaskInteractor {
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage(), e);
                 }
+                Feature operationalAreaFeature = Feature.fromJson(gson.toJson(operationalAreaLocation));
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
                         if (operationalAreaLocation != null) {
-                            Geometry geometry = GeometryGeoJson.fromJson(gson.toJson(operationalAreaLocation.getGeometry()));
                             operationalAreaId = operationalAreaLocation.getId();
-                            presenterCallBack.onStructuresFetched(featureCollection, geometry);
+                            presenterCallBack.onStructuresFetched(featureCollection, operationalAreaFeature);
                         } else {
                             presenterCallBack.onStructuresFetched(featureCollection, null);
                         }
