@@ -6,7 +6,6 @@ import com.mapbox.geojson.Feature;
 
 import org.json.JSONArray;
 import org.smartregister.domain.Task;
-import org.smartregister.domain.Task.TaskStatus;
 
 /**
  * Created by samuelgithengi on 3/25/19.

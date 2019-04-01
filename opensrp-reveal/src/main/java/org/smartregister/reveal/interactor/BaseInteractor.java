@@ -46,7 +46,6 @@ import java.util.UUID;
 
 import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
 import static org.smartregister.reveal.util.Constants.DETAILS;
-import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.METADATA;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
@@ -252,7 +251,7 @@ public abstract class BaseInteractor {
                         @Override
                         public void run() {
                             String businessStatus = clientProcessor.calculateBusinessStatus(event);
-                            presenterCallBack.onFormSaved(event.getBaseEntityId(), Task.TaskStatus.COMPLETED, businessStatus, MOSQUITO_COLLECTION);
+                            presenterCallBack.onFormSaved(event.getBaseEntityId(), Task.TaskStatus.COMPLETED, businessStatus, Intervention.MOSQUITO_COLLECTION);
                         }
                     });
                 } catch (Exception e) {

@@ -12,7 +12,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
-import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.AppExecutors;
@@ -26,6 +25,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 
 /**
@@ -223,7 +223,7 @@ public class ListTaskInteractorTest {
 
     @Before
     public void setUp() {
-        listTaskInteractor = new ListTaskInteractor(mock(ListTaskContract.Presenter.class));
+        listTaskInteractor = spy(Whitebox.newInstance(ListTaskInteractor.class));
     }
 
     @Test
