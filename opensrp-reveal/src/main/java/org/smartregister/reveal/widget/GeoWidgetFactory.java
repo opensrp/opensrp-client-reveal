@@ -15,10 +15,12 @@ import android.widget.Toast;
 import com.cocoahero.android.geojson.Feature;
 import com.cocoahero.android.geojson.Point;
 import com.mapbox.android.gestures.MoveGestureDetector;
-import com.mapbox.geojson.Geometry;
+import com.mapbox.geojson.gson.GeometryGeoJson;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.rengwuxian.materialedittext.validation.METValidator;
 import com.rey.material.util.ViewUtil;
@@ -112,7 +114,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
 
         mapView = rootLayout.findViewById(R.id.geoWidgetMapView);
         mapView.onCreate(null);
-        mapView.setStyleUrl(context.getString(R.string.reveal_satellite_style));
+
 
         String finalOperationalArea = operationalArea;
         String finalFeatureCollection = featureCollection;
@@ -120,20 +122,29 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
 
+                mapboxMap.setStyle(context.getString(R.string.reveal_satellite_style), new Style.OnStyleLoaded() {
+                    @Override
+                    public void onStyleLoaded(@NonNull Style style) {
+                        GeoJsonSource geoJsonSource = style.getSourceAs(context.getString(R.string.reveal_datasource_name));
+
+                        if (geoJsonSource != null && StringUtils.isNotBlank(finalFeatureCollection)) {
+                            geoJsonSource.setGeoJson(finalFeatureCollection);
+                        }
+                    }
+                });
+
                 mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
 
                 mapView.setMapboxMap(mapboxMap);
                 if (finalOperationalArea != null) {
-                    mapboxMap.setCameraPosition(mapboxMap.getCameraForGeometry(Geometry.fromJson(finalOperationalArea)));
+                    CameraPosition cameraPosition = mapboxMap.getCameraForGeometry(GeometryGeoJson.fromJson(finalOperationalArea));
+                    if (cameraPosition != null) {
+                        mapboxMap.setCameraPosition(cameraPosition);
+                    }
                 } else {
                     mapView.focusOnUserLocation(true);
                 }
 
-                GeoJsonSource geoJsonSource = mapboxMap.getSourceAs(context.getString(R.string.reveal_datasource_name));
-
-                if (geoJsonSource != null && StringUtils.isNotBlank(finalFeatureCollection)) {
-                    geoJsonSource.setGeoJson(finalFeatureCollection);
-                }
 
                 writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom);
                 mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {

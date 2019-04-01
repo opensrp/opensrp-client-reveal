@@ -16,7 +16,6 @@
             android:id="@+id/kujakuMapView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:mapbox_styleUrl="@string/mapbox_style_satellite_streets"
             app:mapbox_uiAttributionGravity="right|end|bottom"
             app:mapbox_uiLogoGravity="right|bottom"
             app:mapbox_uiLogoMarginRight="30dp" />
@@ -69,7 +68,8 @@
                         android:background="@color/white"
                         android:src="@drawable/ic_keyboard_arrow_down" />
 
-                    <ScrollView android:layout_width="match_parent"
+                    <ScrollView
+                        android:layout_width="match_parent"
                         android:layout_height="@dimen/structure_info_card_scroll_layout_height">
 
                         <LinearLayout

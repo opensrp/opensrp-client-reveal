@@ -37,6 +37,7 @@ import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.vijay.jsonwizard.customviews.TreeViewDialog;
 
@@ -168,13 +169,19 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         kujakuMapView = findViewById(R.id.kujakuMapView);
         kujakuMapView.onCreate(savedInstanceState);
 
-        kujakuMapView.setStyleUrl(getString(R.string.reveal_satellite_style));
-
         kujakuMapView.showCurrentLocationBtn(true);
 
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onMapReady(MapboxMap mapboxMap) {
+            public void onMapReady(@NonNull MapboxMap mapboxMap) {
+                mapboxMap.setStyle(getString(R.string.reveal_satellite_style), new Style.OnStyleLoaded() {
+                    @Override
+                    public void onStyleLoaded(@NonNull Style style) {
+                        geoJsonSource = style.getSourceAs(getString(R.string.reveal_datasource_name));
+
+                        selectedGeoJsonSource = style.getSourceAs(getString(R.string.selected_datasource_name));
+                    }
+                });
                 mMapboxMap = mapboxMap;
                 mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
 
@@ -186,21 +193,20 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         .build();
                 mapboxMap.setCameraPosition(cameraPosition);
 
-                geoJsonSource = mapboxMap.getSourceAs(getString(R.string.reveal_datasource_name));
-
-                selectedGeoJsonSource = mapboxMap.getSourceAs(getString(R.string.selected_datasource_name));
 
                 listTaskPresenter.onMapReady();
 
 
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                     @Override
-                    public void onMapClick(@NonNull LatLng point) {
+                    public boolean onMapClick(@NonNull LatLng point) {
                         listTaskPresenter.onMapClicked(mapboxMap, point);
+                        return false;
                     }
                 });
             }
         });
+
     }
 
     private void initializeDrawerLayout() {
