@@ -70,7 +70,9 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
         viewHolder.setTaskName(name);
         CardDetails cardDetails = new CardDetails(task.getBusinessStatus());
         if (Task.TaskStatus.COMPLETED.name().equals(task.getTaskStatus())) {
-            action = task.getBusinessStatus().replaceAll(" ", "\n");
+            if (task.getBusinessStatus() != null) {
+                action = task.getBusinessStatus().replaceAll(" ", "\n");
+            }
             CardDetailsUtil.formatCardDetails(cardDetails);
         }
         viewHolder.setTaskAction(action, task, cardDetails, registerActionHandler);
