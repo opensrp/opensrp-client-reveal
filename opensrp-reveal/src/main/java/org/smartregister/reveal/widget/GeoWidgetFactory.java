@@ -2,6 +2,7 @@ package org.smartregister.reveal.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.cocoahero.android.geojson.Feature;
 import com.cocoahero.android.geojson.Point;
 import com.mapbox.android.gestures.MoveGestureDetector;
+import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.gson.GeometryGeoJson;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -38,12 +40,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.Map;
 import org.smartregister.reveal.validators.MinZoomValidator;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.ona.kujaku.layers.BoundaryLayer;
 
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
@@ -63,6 +69,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
     private RevealMapView mapView;
 
     private JsonApi jsonApi;
+
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView, RevealMapView mapView) {
         if (!Utils.isEmptyCollection(mapView.getValidators())) {
@@ -115,12 +122,25 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         mapView = rootLayout.findViewById(R.id.geoWidgetMapView);
         mapView.onCreate(null);
 
+        com.mapbox.geojson.Feature operationalAreaFeature = null;
+        if (operationalArea != null) {
+            operationalAreaFeature = com.mapbox.geojson.Feature.fromJson(operationalArea);
+            BoundaryLayer.Builder boundaryBuilder = new BoundaryLayer.Builder(FeatureCollection.fromFeature(operationalAreaFeature))
+                    .setLabelProperty(Map.NAME_PROPERTY)
+                    .setLabelTextSize(context.getResources().getDimension(R.dimen.operational_area_boundary_text_size))
+                    .setLabelColorInt(Color.WHITE)
+                    .setBoundaryColor(Color.WHITE)
+                    .setBoundaryWidth(context.getResources().getDimension(R.dimen.operational_area_boundary_width));
+            mapView.addLayer(boundaryBuilder.build());
+        }
 
-        String finalOperationalArea = operationalArea;
+
         String finalFeatureCollection = featureCollection;
+        com.mapbox.geojson.Feature finalOperationalAreaFeature = operationalAreaFeature;
+
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onMapReady(MapboxMap mapboxMap) {
+            public void onMapReady(@NonNull MapboxMap mapboxMap) {
 
                 mapboxMap.setStyle(context.getString(R.string.reveal_satellite_style), new Style.OnStyleLoaded() {
                     @Override
@@ -136,8 +156,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
                 mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
 
                 mapView.setMapboxMap(mapboxMap);
-                if (finalOperationalArea != null) {
-                    CameraPosition cameraPosition = mapboxMap.getCameraForGeometry(GeometryGeoJson.fromJson(finalOperationalArea));
+                if (finalOperationalAreaFeature != null) {
+                    CameraPosition cameraPosition = mapboxMap.getCameraForGeometry(finalOperationalAreaFeature.geometry());
                     if (cameraPosition != null) {
                         mapboxMap.setCameraPosition(cameraPosition);
                     }
