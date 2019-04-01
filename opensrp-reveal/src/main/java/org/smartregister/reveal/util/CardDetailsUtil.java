@@ -1,7 +1,7 @@
 package org.smartregister.reveal.util;
 
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.model.BaseCardDetails;
+import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 
 /**
@@ -9,9 +9,9 @@ import org.smartregister.reveal.util.Constants.BusinessStatus;
  */
 public class CardDetailsUtil {
 
-    public static void formatCardDetails(BaseCardDetails cardDetails) {
+    public static void formatCardDetails(CardDetails cardDetails) {
         // extract status color
-        String sprayStatus = cardDetails.getSprayStatus();
+        String sprayStatus = cardDetails.getStatus();
         if (BusinessStatus.NOT_SPRAYED.equals(sprayStatus)) {
             cardDetails.setStatusColor(R.color.unsprayed);
             cardDetails.setStatusMessage(R.string.details_not_sprayed);

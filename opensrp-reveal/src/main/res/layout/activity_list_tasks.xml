@@ -67,130 +67,19 @@
                 android:src="@drawable/ic_add"
                 android:textColor="@color/white" />
 
-            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/structure_info_card_view"
+            <include
+                android:id="@+id/spray_card_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="5dp"
-                android:visibility="gone"
-                card_view:cardCornerRadius="10dp">
+                layout="@layout/spray_card_view"
+                android:visibility="gone"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <ImageButton
-                        android:id="@+id/btn_collapse_structure_card_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:src="@drawable/ic_keyboard_arrow_down" />
-
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/structure_info_card_scroll_layout_height">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/spray_status"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="25dp"
-                                android:textAllCaps="false"
-                                android:textColor="#EE0427"
-                                android:textSize="@dimen/structure_info_card_text_size" />
-
-                            <TextView
-                                android:id="@+id/reason"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="25dp"
-                                android:layout_marginRight="5dp"
-                                android:textAllCaps="false"
-                                android:textColor="#6C6C6C"
-                                android:textSize="@dimen/structure_info_card_text_size"
-                                android:visibility="gone" />
-
-                            <TextView
-                                android:id="@+id/property_type"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="15dp"
-                                android:layout_marginTop="5dp"
-                                android:drawableLeft="@drawable/ic_outline_home"
-                                android:gravity="center_vertical"
-                                android:textColor="@color/text_black"
-                                android:textSize="@dimen/structure_info_card_text_size" />
-
-                            <TextView
-                                android:id="@+id/spray_date"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="15dp"
-                                android:drawableLeft="@drawable/ic_outline_calendar"
-                                android:gravity="center_vertical"
-                                android:textAllCaps="false"
-                                android:textColor="@color/text_black"
-                                android:textSize="@dimen/structure_info_card_text_size" />
-
-                            <TextView
-                                android:id="@+id/user_id"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="15dp"
-                                android:drawableLeft="@drawable/ic_outline_account_circle"
-                                android:gravity="center_vertical"
-                                android:textColor="@color/text_black"
-                                android:textSize="@dimen/structure_info_card_text_size" />
-
-                            <TextView
-                                android:id="@+id/family_head"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="15dp"
-                                android:drawableLeft="@drawable/ic_outline_admin"
-                                android:gravity="center_vertical"
-                                android:textColor="@color/text_black"
-                                android:textSize="@dimen/structure_info_card_text_size" />
-                        </LinearLayout>
-
-                    </ScrollView>
-
-                    <Button
-                        android:id="@+id/change_spray_status"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center|bottom"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="@dimen/change_spray_status_btn_bottom_margin"
-                        android:background="@drawable/rounded_blue_outline"
-                        android:text="@string/change_spray_status"
-                        android:textAllCaps="false"
-                        android:textColor="#1892D4"
-                        android:textSize="@dimen/structure_info_card_text_size" />
-
-
-                    <Button
-                        android:id="@+id/register_family"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center|bottom"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="@dimen/change_spray_status_btn_bottom_margin"
-                        android:background="@drawable/rounded_blue_outline"
-                        android:text="@string/register_family"
-                        android:textAllCaps="false"
-                        android:textColor="#1892D4"
-                        android:textSize="@dimen/structure_info_card_text_size" />
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
+            <include
+                android:id="@+id/mosquito_collection_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/mosquito_collection_card_view"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

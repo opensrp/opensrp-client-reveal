@@ -51,6 +51,32 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "task_business_status",
+        "label": "Status",
+        "type": "native_radio",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "options": [
+          {
+            "key": "In Progress",
+            "text": "In Progress"
+          },
+          {
+            "key": "Incomplete",
+            "text": "Incomplete"
+          },
+          {
+            "key": "Not Eligible",
+            "text": "Not Eligible"
+          },
+          {
+            "key": "Complete",
+            "text": "Complete"
+          }
+        ]
+      },
+      {
         "key": "trap_type",
         "label": "Type of trap",
         "type": "check_box",
@@ -83,7 +109,14 @@
             "text": "Swingnet",
             "value": false
           }
-        ]
+        ],
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-mosquito-collection-relevance-rules.yml"
+            }
+          }
+        }
       },
       {
         "key": "trap_num",
@@ -93,12 +126,10 @@
         "openmrs_entity_id": "",
         "hint": "# of traps set at this house",
         "relevance": {
-          "step1:trap_type": {
-            "ex-checkbox": [
-              {
-                "or": ["CDC"]
-              }
-            ]
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-mosquito-collection-relevance-rules.yml"
+            }
           }
         },
         "v_numeric_integer": {
@@ -122,7 +153,14 @@
             "key": "Outdoor",
             "text": "Outdoor"
           }
-        ]
+        ],
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-mosquito-collection-relevance-rules.yml"
+            }
+          }
+        }
       },
       {
         "key": "trap_start",
@@ -135,6 +173,13 @@
         "v_required": {
           "value": true,
           "err": "Please specify the date trap was set"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-mosquito-collection-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -155,6 +200,13 @@
         "v_required": {
           "value": true,
           "err": "Please specify the date trap was collected"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-mosquito-collection-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -167,6 +219,13 @@
         "v_numeric_integer": {
           "value": "true",
           "err": "Must be a rounded number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-mosquito-collection-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -179,6 +238,13 @@
         "v_numeric": {
           "value": "true",
           "err": "Relative humidity must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-mosquito-collection-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -228,6 +294,13 @@
         "v_required": {
           "value": true,
           "err": "Please select all mosquito species found"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-mosquito-collection-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -403,6 +476,20 @@
         "v_required": {
           "value": true,
           "err": "Please specify the number of mosquitoes of this species collected"
+        }
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-mosquito-collection-calculation-rules.yml"
+            }
+          }
         }
       }
     ]

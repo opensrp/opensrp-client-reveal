@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.model.BaseCardDetails;
+import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants;
@@ -68,7 +68,7 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
             hasIcon = true;
         }
         viewHolder.setTaskName(name);
-        BaseCardDetails cardDetails = new BaseCardDetails(task.getBusinessStatus());
+        CardDetails cardDetails = new CardDetails(task.getBusinessStatus());
         if (Task.TaskStatus.COMPLETED.name().equals(task.getTaskStatus())) {
             action = task.getBusinessStatus().replaceAll(" ", "\n");
             CardDetailsUtil.formatCardDetails(cardDetails);

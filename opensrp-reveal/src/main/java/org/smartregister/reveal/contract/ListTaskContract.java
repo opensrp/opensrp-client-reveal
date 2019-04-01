@@ -9,7 +9,9 @@ import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -26,7 +28,7 @@ public interface ListTaskContract {
 
         Context getContext();
 
-        void closeStructureCardView();
+        void closeCardView(int id);
 
         void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Geometry operationalAreaGeometry);
 
@@ -53,9 +55,14 @@ public interface ListTaskContract {
 
         void onCardDetailsFetched(CardDetails cardDetails);
 
-        void onSprayFormDetailsFetched(CardDetails finalCardDetails);
-
         void onDrawerClosed();
+
+        void onStructureAdded(Feature feature, JSONArray featureCoordinates);
+
+        void onFormSaveFailure(String eventType);
+
+        void onInterventionFormDetailsFetched(CardDetails finalCardDetails);
+
     }
 
 }

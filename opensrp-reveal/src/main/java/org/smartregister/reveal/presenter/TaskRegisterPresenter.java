@@ -53,7 +53,7 @@ public class TaskRegisterPresenter implements TaskRegisterContract.Presenter, Ba
     }
 
     @Override
-    public void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus) {
+    public void onFormSaved(@NonNull String structureId, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
         view.hideProgressDialog();//register will refresh on resume
     }
 
@@ -67,8 +67,4 @@ public class TaskRegisterPresenter implements TaskRegisterContract.Presenter, Ba
         view.hideProgressDialog();//register will refresh on resume
     }
 
-    @Override
-    public void onMosquitoCollectionFormSaved() {
-        view.hideProgressDialog();//register will refresh on resume
-    }
 }

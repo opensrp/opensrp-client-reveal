@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.model.BaseCardDetails;
+import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -66,7 +66,7 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         distanceView.setVisibility(View.GONE);
     }
 
-    public void setTaskAction(String actionLabel, TaskDetails task, BaseCardDetails cardDetails, View.OnClickListener onClickListener) {
+    public void setTaskAction(String actionLabel, TaskDetails task, CardDetails cardDetails, View.OnClickListener onClickListener) {
         actionView.setText(actionLabel);
         if (cardDetails != null && cardDetails.getStatusColor() != null) {
             actionView.setBackground(null);

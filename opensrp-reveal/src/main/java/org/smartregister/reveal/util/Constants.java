@@ -28,6 +28,8 @@ public interface Constants {
 
     String END_DATE = "end_date";
 
+    String STATUS = "status";
+
     double MY_LOCATION_ZOOM_LEVEL = 17.5; // modifying this will also necessitate modifying the VERTICAL_OFFSET
 
     double VERTICAL_OFFSET = -0.0003;
@@ -98,6 +100,10 @@ public interface Constants {
         String NOT_SPRAYED = "Not Sprayed";
         String SPRAYED = "Sprayed";
         String NOT_SPRAYABLE = "Not Sprayable";
+        String COMPLETE = "Complete";
+        String INCOMPLETE = "Incomplete";
+        String NOT_ELIGIBLE = "Not Eligible";
+        String IN_PROGRESS = "In Progress";
     }
 
 
@@ -116,7 +122,7 @@ public interface Constants {
 
         String TRAP_FOLLOW_UP_DATE = "trap_end";
 
-        String TASK_BUSINESS_STATUS = "business_status";
+        String BUSINESS_STATUS = "business_status";
 
         String STRUCTURE_TYPE = "structureType";
 

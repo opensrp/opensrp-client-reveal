@@ -17,7 +17,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.Shadows;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.model.BaseCardDetails;
+import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -41,7 +41,7 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
     private TaskDetails taskDetails;
 
     @Mock
-    private BaseCardDetails cardDetails;
+    private CardDetails cardDetails;
 
     @Mock
     private View.OnClickListener onClickListener;

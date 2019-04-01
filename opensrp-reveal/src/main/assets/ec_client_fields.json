@@ -308,21 +308,24 @@
           "column_name": "status",
           "type": "Event",
           "json_mapping": {
-            "field": "status"
+            "field": "obs.fieldCode",
+            "concept": "business_status"
           }
         },
         {
           "column_name": "start_date",
           "type": "Event",
           "json_mapping": {
-            "field": "details.start_date"
+            "field": "obs.fieldCode",
+            "concept": "trap_start"
           }
         },
         {
           "column_name": "end_date",
           "type": "Event",
           "json_mapping": {
-            "field": "details.end_date"
+            "field": "obs.fieldCode",
+            "concept": "trap_end"
           }
         }
       ]

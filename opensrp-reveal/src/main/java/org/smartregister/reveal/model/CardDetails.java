@@ -3,53 +3,46 @@ package org.smartregister.reveal.model;
 /**
  * @author Vincent Karuri
  */
-public class CardDetails extends BaseCardDetails {
 
-    private String propertyType;
-    private String sprayDate;
-    private String sprayOperator;
-    private String familyHead;
+public class CardDetails {
+    protected String status;
+    private int statusMessage;
+    private Integer statusColor;
+    private String reason;
 
-    public CardDetails(String sprayStatus, String propertyType, String sprayDate, String sprayOperator, String familyHead, String reason) {
-        super(sprayStatus);
-        this.propertyType = propertyType;
-        this.sprayDate = sprayDate;
-        this.sprayOperator = sprayOperator;
-        this.familyHead = familyHead;
-        setReason(reason);
+    public CardDetails(String status) {
+        this.status = status;
     }
 
-    public String getPropertyType() {
-        return propertyType;
+    public String getStatus() {
+        return status;
     }
 
-    public void setPropertyType(String propertyType) {
-        this.propertyType = propertyType;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public String getSprayDate() {
-        return sprayDate;
+    public int getStatusMessage() {
+        return statusMessage;
     }
 
-    public void setSprayDate(String date) {
-        this.sprayDate = date;
+    public void setStatusMessage(int statusMessage) {
+        this.statusMessage = statusMessage;
     }
 
-    public String getSprayOperator() {
-        return sprayOperator;
+    public Integer getStatusColor() {
+        return statusColor;
     }
 
-    public void setSprayOperator(String sprayOperator) {
-        this.sprayOperator = sprayOperator;
+    public void setStatusColor(Integer statusColor) {
+        this.statusColor = statusColor;
     }
 
-    public String getFamilyHead() {
-        return familyHead;
+    public String getReason() {
+        return reason;
     }
 
-    public void setFamilyHead(String familyHead) {
-        this.familyHead = familyHead;
+    public void setReason(String reason) {
+        this.reason = reason;
     }
-
-
 }

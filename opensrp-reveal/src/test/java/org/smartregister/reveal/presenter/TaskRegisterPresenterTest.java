@@ -12,7 +12,9 @@ import org.smartregister.domain.Task;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.interactor.TaskRegisterInteractor;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
+import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.view.contract.BaseRegisterContract;
 
@@ -80,8 +82,8 @@ public class TaskRegisterPresenterTest extends BaseUnitTest {
     }
 
     @Test
-    public void testOnSprayFormSaved() {
-        presenter.onSprayFormSaved(UUID.randomUUID().toString(), UUID.randomUUID().toString(), Task.TaskStatus.COMPLETED, BusinessStatus.NOT_SPRAYED);
+    public void testOnFormSaved() {
+        presenter.onFormSaved(UUID.randomUUID().toString(), Task.TaskStatus.COMPLETED, BusinessStatus.NOT_SPRAYED,Intervention.IRS);
         verify(view).hideProgressDialog();
         verifyNoMoreInteractions(view);
     }
@@ -100,14 +102,5 @@ public class TaskRegisterPresenterTest extends BaseUnitTest {
         verify(view).hideProgressDialog();
         verifyNoMoreInteractions(view);
     }
-
-
-    @Test
-    public void testOnMosquitoCollectionFormSaved() {
-        presenter.onMosquitoCollectionFormSaved();
-        verify(view).hideProgressDialog();
-        verifyNoMoreInteractions(view);
-    }
-
 
 }

@@ -25,6 +25,9 @@
 
     <dimen name="status_label_vertical_padding">12dp</dimen>
     <dimen name="status_label_horizontal_padding">20dp</dimen>
+    <dimen name="mosquito_collection_card_view_title_text_size">26sp</dimen>
+    <dimen name="mosquito_collection_card_view_title_left_margin">40dp</dimen>
+    <dimen name="mosquito_collection_card_view_status_left_margin">75dp</dimen>
     <dimen name="change_spray_status_btn_bottom_margin">15dp</dimen>
     <dimen name="my_location_btn_margin">32dp</dimen>
     <dimen name="my_location_button_dimen">70dp</dimen>
