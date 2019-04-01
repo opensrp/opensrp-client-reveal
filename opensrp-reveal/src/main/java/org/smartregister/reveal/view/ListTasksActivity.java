@@ -38,6 +38,8 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.style.layers.Layer;
+import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.vijay.jsonwizard.customviews.TreeViewDialog;
 
@@ -113,7 +115,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private Snackbar syncProgressSnackbar;
 
-    private BoundaryLayer.Builder boundaryBuilder;
+    private BoundaryLayer boundaryLayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -365,17 +367,24 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 if (cameraPosition != null) {
                     mMapboxMap.setCameraPosition(cameraPosition);
                 }
-                if (boundaryBuilder == null) {
-                    boundaryBuilder = new BoundaryLayer.Builder(FeatureCollection.fromFeature(operationalArea))
-                            .setLabelProperty(Map.NAME_PROPERTY)
-                            .setLabelTextSize(getResources().getDimension(R.dimen.operational_area_boundary_text_size))
-                            .setLabelColorInt(Color.WHITE)
-                            .setBoundaryColor(Color.WHITE)
-                            .setBoundaryWidth(getResources().getDimension(R.dimen.operational_area_boundary_width));
+                if (boundaryLayer == null) {
+                    boundaryLayer = createBoundaryLayer(operationalArea);
+                } else {
+                    kujakuMapView.disableLayer(boundaryLayer);
+                    boundaryLayer = createBoundaryLayer(operationalArea);
                 }
-                kujakuMapView.addLayer(boundaryBuilder.build());
+                kujakuMapView.addLayer(boundaryLayer);
             }
         }
+    }
+
+    private BoundaryLayer createBoundaryLayer(Feature operationalArea) {
+        return new BoundaryLayer.Builder(FeatureCollection.fromFeature(operationalArea))
+                .setLabelProperty(Map.NAME_PROPERTY)
+                .setLabelTextSize(getResources().getDimension(R.dimen.operational_area_boundary_text_size))
+                .setLabelColorInt(Color.WHITE)
+                .setBoundaryColor(Color.WHITE)
+                .setBoundaryWidth(getResources().getDimension(R.dimen.operational_area_boundary_width)).build();
     }
 
     @Override
