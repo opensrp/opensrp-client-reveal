@@ -169,7 +169,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "normal_edit_text",
-        "hint": "Total number of existing LLINs *",
+        "hint": "How many of these nets are LLINs that are in good condition? *",
         "edit_type": "number",
         "value": "0",
         "is_mandatory": true,
@@ -184,6 +184,13 @@
         "v_min": {
           "value": "0",
           "err": "There must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -192,7 +199,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "normal_edit_text",
-        "hint": "Total number of existing ITNs *",
+        "hint": "How many of these nets are in good condition and have been dipped in the last 12 months? *",
         "edit_type": "number",
         "value": "0",
         "is_mandatory": true,
@@ -207,6 +214,13 @@
         "v_min": {
           "value": "0",
           "err": "There must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-relevance-rules.yml"
+            }
+          }
         }
       },
       {
