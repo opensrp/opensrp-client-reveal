@@ -1,0 +1,22 @@
+---
+name: step1_calcNumNetsNeeded
+description: Number of nets needed
+priority: 1
+condition: "true"
+actions:
+- 'calculation = roundUp((step1_malePopulation + step1_femalePopulation)/2)'
+---
+name: step1_calcNumNetsToDistribute
+description: Number of nets to give
+priority: 1
+condition: "true"
+actions:
+- 'calculation = step1_calcNumNetsNeeded - step1_existingNets'
+---
+name: step1_calcDistributedRecommendationYesNo
+description: Did they distribut the recommended number of nets
+priority: 1
+condition: "true"
+actions:
+- 'calculation = (calcNumNetsToGive == (distributedITNs + distributedLLINs)) ? "Yes" : "No"'
+---
