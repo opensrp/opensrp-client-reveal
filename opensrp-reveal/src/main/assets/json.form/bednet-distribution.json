@@ -210,7 +210,7 @@
         }
       },
       {
-        "key": "calcNumNetsToGive",
+        "key": "calcNumNetsToDistribute",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -242,18 +242,18 @@
         "hint": "Please enter the voucher number"
       },
       {
-        "key": "distributedITNs",
+        "key": "distributedLLINs",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "normal_edit_text",
-        "hint": "Total number of ITNs distributed *",
+        "hint": "Total number of LLINs distributed *",
         "edit_type": "number",
         "value": "0",
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "The total number of ITNs distributed is required"
+          "err": "The total number of LLINs distributed is required"
         },
         "v_numeric": {
           "value": "true",
