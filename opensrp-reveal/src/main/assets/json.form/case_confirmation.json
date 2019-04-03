@@ -57,7 +57,6 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Please enter the case number *",
-        "edit_type": "name",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -215,7 +214,6 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Please add a comment",
-        "edit_type": "name",
         "relevance": {
           "rules-engine": {
             "ex-rules": {
