@@ -311,13 +311,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "hidden",
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "case-confirmation-calculation-rules.yml"
-            }
-          }
-        }
+        "value": "Complete"
       }
     ]
   }
