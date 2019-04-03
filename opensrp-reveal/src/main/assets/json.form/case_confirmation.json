@@ -1,0 +1,310 @@
+{
+  "count": "1",
+  "encounter_type": "Case_Confirmation",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "Case Confirmation",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "caseNumber",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Please enter the case number *",
+        "edit_type": "name",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "A case number is required"
+        }
+      },
+      {
+        "key": "indexYesNo",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this the index case? *",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "is_mandatory": true,
+        "value": "No",
+        "v_required": {
+          "value": "true",
+          "err": "Please choose if this is the index case"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "case-confirmation-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "caseNotificationDate",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "date_picker",
+        "hint": "When was the case notified? *",
+        "expanded": false,
+        "min_date": "today-1y",
+        "max_date": "today",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the case notification date"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "case-confirmation-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "caseInvestigationDate",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "date_picker",
+        "hint": "When was the case investigated? *",
+        "expanded": false,
+        "min_date": "today-1y",
+        "max_date": "today",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the case investigation date"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "case-confirmation-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "forestGoerYesNo",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this person a forest goer?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "value": "No",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "case-confirmation-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "otherFocusYesNo",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this case linked to any other focus?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "value": "No",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "case-confirmation-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "otherFocusValue",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "openmrs_data_type": "text",
+        "type": "tree",
+        "hint": "Which focus?",
+        "tree": [],
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "case-confirmation-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "comment",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Please add a comment",
+        "edit_type": "name",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "case-confirmation-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "treatmentProvidedYesNo",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Was treatment provided at this time? *",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "value": "No",
+        "is_mandatory": true,
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the case investigation date"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "case-confirmation-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "treatmentProvided",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "Which treatment was provided? *",
+        "options": [
+          {
+            "key": "A",
+            "text": "A"
+          },
+          {
+            "key": "M",
+            "text": "M"
+          },
+          {
+            "key": "C",
+            "text": "C"
+          },
+          {
+            "key": "Pri5",
+            "text": "Pri (5)"
+          },
+          {
+            "key": "Pri10",
+            "text": "Pri (10)"
+          },
+          {
+            "key": "FD-ACT",
+            "text": "FD-ACT"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
+          }
+        ],
+        "is_mandatory": true,
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the case investigation date"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "case-confirmation-relevance-rules.yml"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
