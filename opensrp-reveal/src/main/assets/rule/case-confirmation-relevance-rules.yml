@@ -1,0 +1,36 @@
+---
+name: step1_caseNotificationDate
+description: Not An Index Case
+priority: 1
+condition: "step1_indexYesNo.equals('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_caseInvestigationDate
+description: Not An Index Case
+priority: 1
+condition: "step1_indexYesNo.equals('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_otherFocusValue
+description: Not An Index Case
+priority: 1
+condition: "step1_otherFocusYesNo.equals('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_comment
+description: Not An Index Case
+priority: 1
+condition: "step1_indexYesNo.equals('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_treatmentProvided
+description: Not An Index Case
+priority: 1
+condition: "step1_treatmentProvidedYesNo.equals('Yes')"
+actions:
+  - "isRelevant = true"
+---
