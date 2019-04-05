@@ -367,11 +367,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 }
                 if (boundaryLayer == null) {
                     boundaryLayer = createBoundaryLayer(operationalArea);
+                    kujakuMapView.addLayer(boundaryLayer);
+
                 } else {
-                    kujakuMapView.disableLayer(boundaryLayer);
-                    boundaryLayer = createBoundaryLayer(operationalArea);
+                    boundaryLayer.updateFeatures(FeatureCollection.fromFeature(operationalArea));
                 }
-                kujakuMapView.addLayer(boundaryLayer);
             }
         }
     }
