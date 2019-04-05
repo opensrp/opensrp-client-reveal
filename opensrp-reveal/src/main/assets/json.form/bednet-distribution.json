@@ -118,7 +118,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
+        "type": "hidden",
         "calculation": {
           "rules-engine": {
             "ex-rules": {
@@ -134,7 +134,7 @@
         "openmrs_entity_id": "",
         "type": "toaster_notes",
         "text": "{calcNumNetsNeeded} nets are needed",
-        "text_color": "#FFFFFF",
+        "text_color": "#000000",
         "toaster_type": "info",
         "calculation": {
           "rules-engine": {
@@ -381,7 +381,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
+        "type": "hidden",
         "calculation": {
           "rules-engine": {
             "ex-rules": {
@@ -397,7 +397,7 @@
         "openmrs_entity_id": "",
         "type": "toaster_notes",
         "text": "{calcNumNetsToDistribute} nets are recommended",
-        "text_color": "#FFFFFF",
+        "text_color": "#000000",
         "toaster_type": "info",
         "calculation": {
           "rules-engine": {
@@ -497,7 +497,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
+        "type": "hidden",
         "calculation": {
           "rules-engine": {
             "ex-rules": {
@@ -532,7 +532,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
+        "type": "hidden",
         "value": "Complete"
       }
     ]
