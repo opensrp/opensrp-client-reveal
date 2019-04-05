@@ -55,10 +55,9 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "normal_edit_text",
-        "hint": "Number of males *",
+        "type": "edit_text",
+        "hint": "Number of males",
         "edit_type": "number",
-        "is_mandatory": true,
         "v_required": {
           "value": true,
           "err": "The male population is required"
@@ -77,10 +76,9 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "normal_edit_text",
-        "hint": "Number of females *",
+        "type": "edit_text",
+        "hint": "Number of females",
         "edit_type": "number",
-        "is_mandatory": true,
         "v_required": {
           "value": true,
           "err": "The female population is required"
@@ -99,10 +97,9 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "normal_edit_text",
-        "hint": "Number of bed spaces *",
+        "type": "edit_text",
+        "hint": "Number of bed spaces",
         "edit_type": "number",
-        "is_mandatory": true,
         "v_required": {
           "value": true,
           "err": "The number of bed spaces is required"
@@ -121,7 +118,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "hidden",
+        "type": "edit_text",
         "calculation": {
           "rules-engine": {
             "ex-rules": {
@@ -132,12 +129,19 @@
       },
       {
         "key": "displayRecommendedNumNets",
-        "type": "label",
-        "label_text_style": "bold",
-        "text": "{calcNetsNeeded} nets are recommended",
-        "text_color": "#000000",
-        "v_required": {
-          "value": true
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "{calcNumNetsNeeded} nets are needed",
+        "text_color": "#FFFFFF",
+        "toaster_type": "info",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
         }
       },
       {
@@ -145,11 +149,10 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "normal_edit_text",
-        "hint": "Total number of existing Nets *",
+        "type": "edit_text",
+        "hint": "Total number of existing Nets",
         "edit_type": "number",
         "value": "0",
-        "is_mandatory": true,
         "v_required": {
           "value": true,
           "err": "The total number of existing nets is required"
@@ -168,11 +171,10 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "normal_edit_text",
-        "hint": "How many of these nets are LLINs that are in good condition? *",
+        "type": "edit_text",
+        "hint": "How many of these nets are LLINs or HLINs?",
         "edit_type": "number",
         "value": "0",
-        "is_mandatory": true,
         "v_required": {
           "value": true,
           "err": "The total number of existing LLINs is required"
@@ -184,6 +186,158 @@
         "v_min": {
           "value": "0",
           "err": "There must be greater than or equal to 0"
+        },
+        "v_cumulative_total": {
+          "value":"existingNets",
+          "related_fields": [
+            "existingITNs"
+          ],
+          "err": "The total number of existing nets should be equal to the sum of LLINs and ITNs"
+        }
+      },
+      {
+        "key": "existingLLINsLessThan1yr",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many LLINs or HLINs are <1 year old?",
+        "edit_type": "number",
+        "value": "0",
+        "v_required": {
+          "value": true,
+          "err": "The total number of existing LLINs or HLINs is required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": ""
+        },
+        "v_min": {
+          "value": "0",
+          "err": "There must be greater than or equal to 0"
+        },
+        "v_cumulative_total": {
+          "value":"existingLLINs",
+          "related_fields": [
+            "existingLLINs1yrTo2yr",
+            "existingLLINs2yrTo3Yr",
+            "existingLLINsGreaterThan3yr"
+          ],
+          "err": "The sum of the 1-3 year old fields of existing LLINs or HLINs should equal the number of existing LLINs"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "existingLLINs1yrTo2yr",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many LLINs or HLINs are between 1 and 2 years old?",
+        "edit_type": "number",
+        "value": "0",
+        "v_required": {
+          "value": true,
+          "err": "The total number of existing LLINs is required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": ""
+        },
+        "v_min": {
+          "value": "0",
+          "err": "There must be greater than or equal to 0"
+        },
+        "v_cumulative_total": {
+          "value":"existingLLINs",
+          "related_fields": [
+            "existingLLINsLessThan1yr",
+            "existingLLINs2yrTo3Yr",
+            "existingLLINsGreaterThan3yr"
+          ],
+          "err": "The sum of the 1-3 year old fields of existing LLINs or HLINs should equal the number of existing LLINs"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "existingLLINs2yrTo3yr",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many LLINs or HLINs are between 2 and 3 years old?",
+        "edit_type": "number",
+        "value": "0",
+        "v_required": {
+          "value": true,
+          "err": "The total number of existing LLINs is required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": ""
+        },
+        "v_min": {
+          "value": "0",
+          "err": "There must be greater than or equal to 0"
+        },
+        "v_cumulative_total": {
+          "value":"existingLLINs",
+          "related_fields": [
+            "existingLLINsLessThan1yr",
+            "existingLLINs1yrTo2yr",
+            "existingLLINsGreaterThan3yr"
+          ],
+          "err": "The sum of the 1-3 year old fields of existing LLINs or HLINs should equal the number of existing LLINs"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "existingLLINsGreaterThan3yr",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many LLINs or HLINs are over 3 years old?",
+        "edit_type": "number",
+        "value": "0",
+        "v_required": {
+          "value": true,
+          "err": "The total number of existing LLINs is required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": ""
+        },
+        "v_min": {
+          "value": "0",
+          "err": "There must be greater than or equal to 0"
+        },
+        "v_cumulative_total": {
+          "value":"existingLLINs",
+          "related_fields": [
+            "existingLLINsLessThan1yr",
+            "existingLLINs1yrTo2yr",
+            "existingLLINs2yrTo3Yr"
+          ],
+          "err": "The sum of the 1-3 year old fields of existing LLINs or HLINs should equal the number of existing LLINs"
         },
         "relevance": {
           "rules-engine": {
@@ -198,11 +352,10 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "normal_edit_text",
-        "hint": "How many of these nets are in good condition and have been dipped in the last 12 months? *",
+        "type": "edit_text",
+        "hint": "How many of these nets are normal nets and have been dipped in the last 12 months?",
         "edit_type": "number",
         "value": "0",
-        "is_mandatory": true,
         "v_required": {
           "value": true,
           "err": "The total number of existing ITNs is required"
@@ -215,12 +368,12 @@
           "value": "0",
           "err": "There must be greater than or equal to 0"
         },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "bednet-distribution-relevance-rules.yml"
-            }
-          }
+        "v_cumulative_total": {
+          "value":"existingNets",
+          "related_fields": [
+            "existingLLINs"
+          ],
+          "err": "The total number of existing nets should be equal to the sum of LLINs and ITNs"
         }
       },
       {
@@ -228,7 +381,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "hidden",
+        "type": "edit_text",
         "calculation": {
           "rules-engine": {
             "ex-rules": {
@@ -238,36 +391,54 @@
         }
       },
       {
-        "key": "displayRecommendedNumNetsToGive",
-        "type": "label",
-        "label_text_style": "bold",
-        "text": "{calcNetsToGive} nets should be distributed",
-        "text_color": "#000000",
-        "v_required": {
-          "value": true
-        }
-      },
-      {
-        "key": "voucherNumber",
+        "key": "displayRecommendedNumNets",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Please enter the voucher number"
+        "type": "toaster_notes",
+        "text": "{calcNumNetsToDistribute} nets are recommended",
+        "text_color": "#FFFFFF",
+        "toaster_type": "info",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
       },
       {
         "key": "distributedLLINs",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "normal_edit_text",
-        "hint": "Total number of LLINs distributed *",
+        "type": "edit_text",
+        "hint": "Total number of LLINs distributed",
         "edit_type": "number",
-        "value": "0",
-        "is_mandatory": true,
         "v_required": {
           "value": true,
           "err": "The total number of LLINs distributed is required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": ""
+        },
+        "v_min": {
+          "value": "0",
+          "err": "There must be greater than or equal to 0"
+        }
+      },
+      {
+        "key": "distributedHLINs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Total number of HLINs distributed",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "The total number of HLINs distributed is required"
         },
         "v_numeric": {
           "value": "true",
@@ -283,11 +454,9 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "normal_edit_text",
-        "hint": "Total number of ITNs distributed *",
+        "type": "edit_text",
+        "hint": "Total number of ITNs distributed",
         "edit_type": "number",
-        "value": "0",
-        "is_mandatory": true,
         "v_required": {
           "value": true,
           "err": "The total number of ITNs distributed is required"
@@ -306,11 +475,10 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "normal_edit_text",
-        "hint": "Total number of redipped ITNs *",
+        "type": "edit_text",
+        "hint": "Total number of redipped ITNs",
         "edit_type": "number",
         "value": "0",
-        "is_mandatory": true,
         "v_required": {
           "value": true,
           "err": "The total number of redipped ITNs is required"
@@ -325,11 +493,11 @@
         }
       },
       {
-        "key": "calcDistributedRecommendationYesNo",
+        "key": "calcDistributedRecommendation",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "hidden",
+        "type": "edit_text",
         "calculation": {
           "rules-engine": {
             "ex-rules": {
@@ -339,11 +507,32 @@
         }
       },
       {
+        "key": "distributedRepellant",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of personal repellant units distributed",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "The total number of personal repellant units distributed is required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": ""
+        },
+        "v_min": {
+          "value": "0",
+          "err": "There must be greater than or equal to 0"
+        }
+      },
+      {
         "key": "business_status",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "hidden",
+        "type": "edit_text",
         "value": "Complete"
       }
     ]
