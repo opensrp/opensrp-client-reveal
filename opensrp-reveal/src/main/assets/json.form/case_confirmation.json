@@ -56,8 +56,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Please enter the case number *",
-        "is_mandatory": true,
+        "hint": "Please enter the case number",
         "v_required": {
           "value": true,
           "err": "A case number is required"
@@ -69,7 +68,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Is this the index case? *",
+        "label": "Is this the index case?",
         "options": [
           {
             "key": "Yes",
@@ -80,18 +79,10 @@
             "text": "No"
           }
         ],
-        "is_mandatory": true,
-        "value": "No",
+        "value": "Yes",
         "v_required": {
           "value": "true",
           "err": "Please choose if this is the index case"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "case-confirmation-relevance-rules.yml"
-            }
-          }
         }
       },
       {
@@ -100,7 +91,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "date_picker",
-        "hint": "When was the case notified? *",
+        "hint": "When was the case notified?",
         "expanded": false,
         "min_date": "today-1y",
         "max_date": "today",
@@ -111,7 +102,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "case-confirmation-relevance.yml"
+              "rules-file": "case-confirmation-relevance-rules.yml"
             }
           }
         }
@@ -122,7 +113,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "date_picker",
-        "hint": "When was the case investigated? *",
+        "hint": "When was the case investigated?",
         "expanded": false,
         "min_date": "today-1y",
         "max_date": "today",
@@ -133,7 +124,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "case-confirmation-relevance.yml"
+              "rules-file": "case-confirmation-relevance-rules.yml"
             }
           }
         }
@@ -155,14 +146,7 @@
             "text": "No"
           }
         ],
-        "value": "No",
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "case-confirmation-relevance-rules.yml"
-            }
-          }
-        }
+        "value": "No"
       },
       {
         "key": "otherFocusYesNo",
@@ -181,14 +165,7 @@
             "text": "No"
           }
         ],
-        "value": "No",
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "case-confirmation-relevance-rules.yml"
-            }
-          }
-        }
+        "value": "No"
       },
       {
         "key": "otherFocusValue",
@@ -196,7 +173,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "openmrs_data_type": "text",
-        "type": "tree",
+        "type": "edit_text",
         "hint": "Which focus?",
         "tree": [],
         "relevance": {
@@ -214,87 +191,6 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Please add a comment",
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "case-confirmation-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "treatmentProvidedYesNo",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Was treatment provided at this time? *",
-        "options": [
-          {
-            "key": "Yes",
-            "text": "Yes"
-          },
-          {
-            "key": "No",
-            "text": "No"
-          }
-        ],
-        "value": "No",
-        "is_mandatory": true,
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the case investigation date"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "case-confirmation-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "treatmentProvided",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "check_box",
-        "label": "Which treatment was provided? *",
-        "options": [
-          {
-            "key": "A",
-            "text": "A"
-          },
-          {
-            "key": "M",
-            "text": "M"
-          },
-          {
-            "key": "C",
-            "text": "C"
-          },
-          {
-            "key": "Pri5",
-            "text": "Pri (5)"
-          },
-          {
-            "key": "Pri10",
-            "text": "Pri (10)"
-          },
-          {
-            "key": "FD-ACT",
-            "text": "FD-ACT"
-          },
-          {
-            "key": "Other",
-            "text": "Other"
-          }
-        ],
-        "is_mandatory": true,
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the case investigation date"
-        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
