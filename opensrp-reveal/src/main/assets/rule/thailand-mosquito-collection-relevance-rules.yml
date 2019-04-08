@@ -1,0 +1,56 @@
+---
+name: step1_trap_type
+description: trap_type
+priority: 1
+condition: "step1_task_business_status.equals('Not Eligible') == false"
+actions:
+  - "isRelevant = true"
+---
+name: step1_trap_num
+description: trap_num
+priority: 1
+condition: "step1_trap_type.contains('CDC') && step1_task_business_status.equals('Not Eligible') == false"
+actions:
+  - "isRelevant = true"
+---
+name: step1_trap_location
+description: trap_location
+priority: 1
+condition: "step1_task_business_status.equals('Not Eligible') == false"
+actions:
+  - "isRelevant = true"
+---
+name: step1_trap_start
+description: trap_start
+priority: 1
+condition: "step1_task_business_status.equals('Not Eligible') == false"
+actions:
+  - "isRelevant = true"
+---
+name: step1_trap_end
+description: trap_end
+priority: 1
+condition: "step1_task_business_status.equals('Not Eligible') == false"
+actions:
+  - "isRelevant = true"
+---
+name: step1_trap_temp
+description: trap_temp
+priority: 1
+condition: "step1_task_business_status.equals('Not Eligible') == false"
+actions:
+  - "isRelevant = true"
+---
+name: step1_trap_RH
+description: trap_RH
+priority: 1
+condition: "step1_task_business_status.equals('Not Eligible') == false"
+actions:
+  - "isRelevant = true"
+---
+name: step1_moz_type
+description: moz_type
+priority: 1
+condition: "step1_task_business_status.equals('Not Eligible') == false"
+actions:
+  - "isRelevant = true"

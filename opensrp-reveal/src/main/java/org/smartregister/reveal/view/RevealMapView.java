@@ -66,4 +66,12 @@ public class RevealMapView extends KujakuMapView {
     public void setMapboxMap(MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
     }
+
+
+    public Double getMapboxMapZoom() {
+        if (mapboxMap != null)
+            return mapboxMap.getCameraPosition().zoom;
+        else
+            return null;
+    }
 }

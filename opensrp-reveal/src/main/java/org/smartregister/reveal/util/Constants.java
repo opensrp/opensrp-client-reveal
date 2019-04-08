@@ -20,7 +20,15 @@ public interface Constants {
 
     String REGISTER_STRUCTURE_EVENT = "Register_Structure";
 
+    String MOSQUITO_COLLECTION_EVENT = "mosquito_collection";
+
     String STRUCTURE = "Structure";
+
+    String START_DATE = "start_date";
+
+    String END_DATE = "end_date";
+
+    String STATUS = "status";
 
     double MY_LOCATION_ZOOM_LEVEL = 17.5; // modifying this will also necessitate modifying the VERTICAL_OFFSET
 
@@ -30,6 +38,12 @@ public interface Constants {
 
     interface CONFIGURATION {
         String LOGIN = "login";
+        String GLOBAL_CONFIGS = "global_configs";
+        String KEY = "key";
+        String VALUE = "value";
+        String LOCATION_BUFFER_RADIUS_IN_METRES = "location_buffer_radius_in_metres";
+        Float DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES = 25f;
+        String UPDATE_LOCATION_BUFFER_RADIUS = "update_location_buffer_radius";
     }
 
     interface Preferences {
@@ -69,6 +83,12 @@ public interface Constants {
         String IRS = "IRS";
         String ITN = "ITN";
         String MDA = "MDA";
+
+        String MOSQUITO_COLLECTION = "Mosquito Collection";
+
+        String LARVAL_DIPPING = "Larval Dipping";
+
+        String IRS_VISIT = "IRS Visit";
     }
 
     interface BusinessStatus {
@@ -76,6 +96,10 @@ public interface Constants {
         String NOT_SPRAYED = "Not Sprayed";
         String SPRAYED = "Sprayed";
         String NOT_SPRAYABLE = "Not Sprayable";
+        String COMPLETE = "Complete";
+        String INCOMPLETE = "Incomplete";
+        String NOT_ELIGIBLE = "Not Eligible";
+        String IN_PROGRESS = "In Progress";
     }
 
 
@@ -89,13 +113,13 @@ public interface Constants {
 
         String ENCOUNTER_TYPE = "encounter_type";
 
-        String RESIDENTIAL = "Residential Structure";
-
-        String NON_RESIDENTIAL = "Non-Residential Structure";
-
         String SPRAY_STATUS = "sprayStatus";
 
-        String TASK_BUSINESS_STATUS = "business_status";
+        String TRAP_SET_DATE = "trap_start";
+
+        String TRAP_FOLLOW_UP_DATE = "trap_end";
+
+        String BUSINESS_STATUS = "business_status";
 
         String STRUCTURE_TYPE = "structureType";
 
@@ -103,15 +127,15 @@ public interface Constants {
 
         String STRUCTURE_PROPERTIES_TYPE = "[structure_type]";
 
-        String SPRAY_FORM = "json.form/botswana_spray_form.json";
+        String SPRAY_FORM = "json.form/spray_form.json";
+
+        String THAILAND_MOSQUITO_COLLECTION_FORM = "json.form/thailand_mosquito_collection_form.json";
 
         String SPRAY_FORM_NAMIBIA = "json.form/namibia_spray_form.json";
 
         String SPRAY_FORM_BOTSWANA = "json.form/botswana_spray_form.json";
 
         String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
-
-        String IRS_VISIT = "IRS Visit";
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 
@@ -136,12 +160,23 @@ public interface Constants {
     }
 
     interface Action {
-        String STRUCTURE_TASK_SYNCHED = "reveal.STRUCTURE_TASK_SYNCHED";
+        String STRUCTURE_TASK_SYNCED = "reveal.STRUCTURE_TASK_SYNCED";
     }
 
     interface ECClientConfig {
         String NAMIBIA_EC_CLIENT_FIELDS = "ec_client_fields_namibia.json";
         String BOTSWANA_EC_CLIENT_FIELDS = "ec_client_fields_botswana.json";
+    }
+
+
+    interface StructureType {
+        String RESIDENTIAL = "Residential Structure";
+
+        String NON_RESIDENTIAL = "Non-Residential Structure";
+
+        String MOSQUITO_COLLECTION_POINT = "Mosquito Collection Point";
+
+        String LARVAL_BREEDING_SITE = "Larval Breeding Site";
     }
 
 

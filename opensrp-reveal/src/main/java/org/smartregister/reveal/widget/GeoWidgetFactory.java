@@ -10,11 +10,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.cocoahero.android.geojson.Feature;
 import com.cocoahero.android.geojson.Point;
+import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -40,6 +41,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.util.Constants.Map;
+import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.reveal.validators.MinZoomValidator;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.Utils;
@@ -47,16 +49,19 @@ import org.smartregister.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
 
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
-
+import static org.smartregister.reveal.util.Utils.getGlobalConfig;
 
 /**
  * Created by samuelgithengi on 12/13/18.
  */
-public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
+public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, OnLocationComponentInitializedCallback {
 
     private static final String TAG = "GeoWidgetFactory";
 
@@ -70,12 +75,12 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
 
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView, RevealMapView mapView) {
+
         if (!Utils.isEmptyCollection(mapView.getValidators())) {
             for (METValidator validator : mapView.getValidators()) {
                 if (validator instanceof MinZoomValidator) {
-                    MapboxMap mapboxMap = mapView.getMapboxMap();
-                    double zoom = mapView.getMapboxMap().getCameraPosition().zoom;
-                    if (mapboxMap != null && !validator.isValid(String.valueOf(zoom), false)) {
+                    Double zoom = mapView.getMapboxMapZoom();
+                    if (zoom != null && !validator.isValid(String.valueOf(zoom), false)) {
                         Toast.makeText(formFragmentView.getContext(), validator.getErrorMessage(), Toast.LENGTH_LONG).show();
                         return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
                     }
@@ -104,9 +109,9 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
         List<View> views = new ArrayList<>(1);
 
         final int canvasId = ViewUtil.generateViewId();
-        View rootLayout = LayoutInflater.from(context)
+        mapView = (RevealMapView) LayoutInflater.from(context)
                 .inflate(R.layout.item_geowidget, null);
-        rootLayout.setId(canvasId);
+
         String operationalArea = null;
         String featureCollection = null;
 
@@ -117,8 +122,9 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
             Log.e(TAG, "error extracting geojson form jsonform", e);
         }
 
-        mapView = rootLayout.findViewById(R.id.geoWidgetMapView);
+        mapView.setId(canvasId);
         mapView.onCreate(null);
+        mapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
 
         com.mapbox.geojson.Feature operationalAreaFeature = null;
         if (operationalArea != null) {
@@ -148,19 +154,24 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
                         if (geoJsonSource != null && StringUtils.isNotBlank(finalFeatureCollection)) {
                             geoJsonSource.setGeoJson(finalFeatureCollection);
                         }
+                        RevealMapHelper.addSymbolLayers(style, context);
+                        mapView.setMapboxMap(mapboxMap);
+
                     }
                 });
 
                 mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
 
                 mapView.setMapboxMap(mapboxMap);
+                String bufferRadius = getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString());
+                mapView.setLocationBufferRadius(Float.valueOf(bufferRadius));
                 if (finalOperationalAreaFeature != null) {
                     CameraPosition cameraPosition = mapboxMap.getCameraForGeometry(finalOperationalAreaFeature.geometry());
                     if (cameraPosition != null) {
                         mapboxMap.setCameraPosition(cameraPosition);
                     }
                 } else {
-                    mapView.focusOnUserLocation(true);
+                    mapView.focusOnUserLocation(true, Float.valueOf(bufferRadius));
                 }
 
 
@@ -200,18 +211,13 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
 
         ((JsonApi) context).addFormDataView(mapView);
 
-        int screenHeightPixels = context.getResources().getDisplayMetrics().heightPixels;
-
-        int editTextHeight = context.getResources().getDimensionPixelSize(R.dimen.native_form_edit_text_height);
-        mapView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, screenHeightPixels - editTextHeight));
+        mapView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1));
 
         addMaximumZoomLevel(jsonObject, mapView);
-        views.add(rootLayout);
+        views.add(mapView);
         mapView.onStart();
-
         mapView.showCurrentLocationBtn(true);
         mapView.enableAddPoint(true);
-        ((JsonApi) context).onFormFinish();
         disableParentScroll((Activity) context, mapView);
         return views;
     }
@@ -263,6 +269,15 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
     }
 
     @Override
+    public void onLocationComponentInitialized() {
+        if (PermissionsManager.areLocationPermissionsGranted(mapView.getContext())) {
+            mapView.getMapboxLocationComponentWrapper()
+                    .getLocationComponent()
+                    .applyStyle(mapView.getContext(), R.style.LocationComponentStyling);
+        }
+    }
+
+    @Override
     public void onCreate(Bundle bundle) {
         if (mapView != null) {
             mapView.onCreate(bundle);
@@ -271,8 +286,9 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener {
 
     @Override
     public void onStart() {
-        if (mapView != null)
+        if (mapView != null) {
             mapView.onStart();
+        }
     }
 
     @Override

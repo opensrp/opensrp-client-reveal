@@ -1,7 +1,9 @@
 package org.smartregister.reveal.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 
 import com.vijay.jsonwizard.constants.JsonFormConstants;
@@ -18,9 +20,12 @@ import org.smartregister.reveal.util.Constants;
  */
 public class RevealJsonFormFragment extends JsonFormFragment {
 
+    private RevealJsonFormFragmentPresenter presenter;
+
     @Override
     protected JsonFormFragmentPresenter createPresenter() {
-        return new RevealJsonFormFragmentPresenter(this, new RevealJsonFormInteractor());
+        presenter = new RevealJsonFormFragmentPresenter(this, new RevealJsonFormInteractor());
+        return presenter;
     }
 
     public static RevealJsonFormFragment getFormFragment(String stepName) {
@@ -44,7 +49,10 @@ public class RevealJsonFormFragment extends JsonFormFragment {
                 view.findViewById(R.id.main_layout).setPadding(0, 0, 0, 0);
             }
         }
+    }
 
+    public RevealJsonFormFragmentPresenter getPresenter() {
+        return presenter;
     }
 
 }

@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Task.TaskStatus;
+import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 
 import java.util.ArrayList;
@@ -23,15 +24,15 @@ import java.util.List;
  */
 public interface ListTaskContract {
 
-    interface ListTaskView {
+    interface ListTaskView extends UserLocationView {
 
-        void showProgressDialog();
+        void showProgressDialog(@StringRes int title, @StringRes int message);
 
         void hideProgressDialog();
 
         Context getContext();
 
-        void closeStructureCardView();
+        void closeCardView(int id);
 
         void showOperationalAreaSelector(Pair<String, ArrayList<String>> locationHierarchy);
 
@@ -74,9 +75,8 @@ public interface ListTaskContract {
 
         void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea);
 
-        void onSprayFormSaved(@NonNull String structureId, @NonNull String taskIdentifier,
-                              @NonNull TaskStatus taskStatus, @NonNull String businessStatus);
-
+        void onFormSaved(@NonNull String structureId,
+                         @NonNull TaskStatus taskStatus, @NonNull String businessStatus, String interventionType);
 
         void onStructureAdded(Feature feature, JSONArray featureCoordinates);
 
@@ -84,6 +84,7 @@ public interface ListTaskContract {
 
         void onCardDetailsFetched(CardDetails cardDetails);
 
-        void onSprayFormDetailsFetched(CardDetails finalCardDetails);
+        void onInterventionFormDetailsFetched(CardDetails finalCardDetails);
     }
+
 }

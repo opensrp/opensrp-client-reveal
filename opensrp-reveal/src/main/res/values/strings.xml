@@ -66,4 +66,37 @@
     <string name="reveal_icon">Reveal Icon</string>
 
     <string name="attribution_text">Powered by OpenSRP \nBuilt on mSpray and DiSARM</string>
+
+    <string name="request_password_title">You are not near the structure</string>
+    <string name="enter_admin_password"> Input admin password</string>
+    <string name="wrong_admin_password">Wrong admin password</string>
+
+    <string name="saving_title">Saving</string>
+    <string name="saving_message">Saving form on Progress. Please wait</string>
+
+    <string name="fetching_structure_title">Fetching Structure Details</string>
+    <string name="fetching_structure_message">Fetching Structure Details. Please wait</string>
+
+    <string name="fetching_mosquito_collection_points_title">Fetching Mosquito Collection Point Details</string>
+    <string name="fetching_mosquito_collection_points_message">Fetching Mosquito Collection Point Details. Please wait</string>
+
+    <string name="narrowing_location_title">Calculating your location</string>
+    <string name="narrowing_location_message">Calculating your location. Please wait</string>
+
+    <string name="location_services_disabled">Location Services Disabled</string>
+    <string name="location_services_disabled_spray">You have declined enabling location services to get your current location. You shall have to enter admin password to spray the structure</string>
+    <string name="location_services_disabled_add">You have declined enabling location services to get your current location. You shall have to enter admin password to add the structure</string>
+
+    <string name="mosquito_collection_task_description">Setup Mosquito Collection Point and Record Results</string>
+    <string name="larval_dipping_task_description">Perform Larval Dipping, Classify and Intervene</string>
+
+    <string name="register_family">Register Family</string>
+
+    <string name="record_mosquito_collection">Record mosquito collection</string>
+    <string name="mosquito_collection_point">Mosquito Collection Point</string>
+    <string name="mosquito_collection_status_test_text">Status: Inactive</string>
+    <string name="mosquito_collection_trap_set_date_test_text">Set Date: DD/MM/YY</string>
+    <string name="mosquito_collection_trap_follow_up_date_test_text">Follow-up Date: DD/MM/YY</string>
+    <string name="mosquito_collection_trap_set_date">Set Date:&#160;</string>
+    <string name="mosquito_collection_trap_follow_up_date">Follow-up Date:&#160;</string>
 </resources>

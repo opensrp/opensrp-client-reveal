@@ -294,7 +294,21 @@
       ],
       "layout": {},
       "paint": {
-        "circle-radius": 10,
+        "circle-radius": [
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "zoom"
+          ],
+          13.98,
+          0,
+          17.79,
+          10,
+          18.8,
+          15
+        ],
         "circle-color": [
           "match",
           [
@@ -306,15 +320,19 @@
           ],
           "hsl(46, 88%, 62%)",
           [
-            "Not Sprayed"
+            "Not Sprayed",
+            "Incomplete",
+            "In Progress"
           ],
           "hsl(3, 71%, 54%)",
           [
-            "Sprayed"
+            "Sprayed",
+            "Complete"
           ],
           "hsl(89, 52%, 48%)",
           [
-            "Not Sprayable"
+            "Not Sprayable",
+            "Not Eligible"
           ],
           "hsl(0, 0%, 9%)",
           "hsl(0, 0%, 78%)"
@@ -349,7 +367,21 @@
       ],
       "paint": {
         "circle-color": "hsl(26, 84%, 56%)",
-        "circle-radius": 16,
+        "circle-radius": [
+          "interpolate",
+          [
+            "linear"
+          ],
+          [
+            "zoom"
+          ],
+          13.98,
+          0,
+          17.79,
+          10,
+          18.8,
+          15
+        ],
         "circle-stroke-width": 1
       }
     }

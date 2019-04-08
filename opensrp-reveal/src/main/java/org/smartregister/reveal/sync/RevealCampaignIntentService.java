@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.reveal.job.LocationTaskServiceJob;
+import org.smartregister.reveal.job.RevealSyncSettingsServiceJob;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.sync.intent.CampaignIntentService;
 import org.smartregister.util.NetworkUtils;
@@ -31,6 +32,7 @@ public class RevealCampaignIntentService extends CampaignIntentService {
             @Override
             public void run() {
                 LocationTaskServiceJob.scheduleJobImmediately(LocationTaskServiceJob.TAG);
+                RevealSyncSettingsServiceJob.scheduleJobImmediately(RevealSyncSettingsServiceJob.TAG);
             }
         });
     }
