@@ -9,6 +9,7 @@ import org.smartregister.family.presenter.BaseFamilyProfilePresenter;
 import org.smartregister.family.util.Constants;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.fragment.FamilyProfileMemberFragment;
+import org.smartregister.reveal.fragment.StructureTasksFragment;
 
 /**
  * Created by samuelgithengi on 2/8/19.
@@ -30,6 +31,10 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity {
 
         FamilyProfileMemberFragment profileMemberFragment = FamilyProfileMemberFragment.newInstance(this.getIntent().getExtras());
         adapter.addFragment(profileMemberFragment, this.getString(R.string.residents).toUpperCase());
+
+
+        StructureTasksFragment structureTasksFragment = StructureTasksFragment.newInstance(this.getIntent().getExtras());
+        adapter.addFragment(structureTasksFragment, this.getString(R.string.tasks).toUpperCase());
 
         viewPager.setAdapter(adapter);
 

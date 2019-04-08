@@ -124,4 +124,6 @@
     <string name="mosquito_collection_trap_follow_up_date">Follow-up Date:&#160;</string>
 
     <string name="residents">RESIDENTS</string>
+    <string name="return_to_all_families">Return</string>
+    <string name="tasks">TASKS</string>
 </resources>
