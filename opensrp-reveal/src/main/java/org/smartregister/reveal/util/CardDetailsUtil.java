@@ -19,7 +19,7 @@ public class CardDetailsUtil {
             cardDetails.setStatusColor(R.color.sprayed);
             cardDetails.setStatusMessage(R.string.details_sprayed);
             cardDetails.setReason(null);
-        } else {
+        } else if (BusinessStatus.NOT_SPRAYABLE.equals(sprayStatus)) {
             cardDetails.setStatusColor(R.color.unsprayable);
             cardDetails.setStatusMessage(R.string.details_not_sprayable);
             cardDetails.setReason(null);

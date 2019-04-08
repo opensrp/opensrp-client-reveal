@@ -36,7 +36,7 @@
     <dimen name="task_register_launcher_vertical_padding">8dp</dimen>
     <dimen name="task_register_text_size">16sp</dimen>
     <dimen name="task_register_padding">8dp</dimen>
-    <dimen name="task_register_action_width">110dp</dimen>
+    <dimen name="task_register_action_width">120dp</dimen>
     <dimen name="task_register_action_text">16sp</dimen>
     <dimen name="task_register_vertical_padding">4dp</dimen>
 

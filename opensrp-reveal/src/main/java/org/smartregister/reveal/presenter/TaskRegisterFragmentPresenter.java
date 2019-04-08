@@ -35,6 +35,7 @@ import java.util.Set;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
 
+import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 
@@ -110,7 +111,7 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
         Location operationalAreaLocation = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
         if (operationalAreaLocation == null)
             return null;
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+        Gson gson = new GsonBuilder().setDateFormat(EVENT_DATE_FORMAT_Z)
                 .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
         return mappingHelper.getCenter(gson.toJson(operationalAreaLocation.getGeometry()));
     }
