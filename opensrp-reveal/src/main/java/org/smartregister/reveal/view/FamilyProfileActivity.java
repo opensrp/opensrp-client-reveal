@@ -7,6 +7,7 @@ import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.family.model.BaseFamilyProfileModel;
 import org.smartregister.family.presenter.BaseFamilyProfilePresenter;
 import org.smartregister.family.util.Constants;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.fragment.FamilyProfileMemberFragment;
 
 /**
@@ -28,7 +29,7 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         FamilyProfileMemberFragment profileMemberFragment = FamilyProfileMemberFragment.newInstance(this.getIntent().getExtras());
-        adapter.addFragment(profileMemberFragment, this.getString(org.smartregister.family.R.string.member).toUpperCase());
+        adapter.addFragment(profileMemberFragment, this.getString(R.string.residents).toUpperCase());
 
         viewPager.setAdapter(adapter);
 
