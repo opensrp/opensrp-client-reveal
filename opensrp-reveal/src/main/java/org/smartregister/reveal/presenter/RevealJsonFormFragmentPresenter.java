@@ -67,7 +67,6 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                     } else if (isFormValid()) {
                         onLocationValidated();
                     }
-                    return;
                 }
                 break;//exit loop, assumption; there will be only 1 map per form.
             }
