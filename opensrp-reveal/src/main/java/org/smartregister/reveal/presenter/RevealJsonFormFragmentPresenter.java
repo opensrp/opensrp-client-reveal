@@ -64,8 +64,6 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                     getInvalidFields().remove(fieldKey);
                     if (isFormValid() && validateFarStructures()) {
                         validateUserLocation(mapView);
-                    } else if (isFormValid()) {
-                        onLocationValidated();
                     }
                 }
                 break;//exit loop, assumption; there will be only 1 map per form.
