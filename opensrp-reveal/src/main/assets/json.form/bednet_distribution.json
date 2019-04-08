@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "Bednet_Distribution",
+  "encounter_type": "bednet_distribution",
   "entity_id": "",
   "metadata": {
     "start": {
@@ -490,6 +490,20 @@
         "v_min": {
           "value": "0",
           "err": "There must be greater than or equal to 0"
+        }
+      },
+      {
+        "key": "calcTotalNetsDistributed",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
         }
       },
       {

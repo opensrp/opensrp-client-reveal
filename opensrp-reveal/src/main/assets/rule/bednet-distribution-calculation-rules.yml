@@ -20,6 +20,14 @@ condition: "true"
 actions:
 - 'calculation = (helper.ifNull(step1_calcNumNetsToDistribute,0) == (helper.ifNull(step1_distributedITNs + step1_distributedLLINs + step1_distributedHLINs,0))) ? "Exact" : (helper.ifNull(step1_calcNumNetsToDistribute,0) < (helper.ifNull(step1_distributedITNs + step1_distributedLLINs + step1_distributedHLINs,0))) ? "More" : "Fewer"'
 ---
+name: step1_calcTotalNetsDistributed
+description: The total number of nets distributed
+priority: 1
+condition: "true"
+actions:
+- 'calculation = helper.ifNull(step1_distributedITNs + step1_distributedLLINs + step1_distributedHLINs,0)"'
+
+---
 name: step1_displayRecommendedNumNets
 description: Display Calculated number of nets needed
 priority: 1

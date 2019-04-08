@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "Blood_Screening",
+  "encounter_type": "blood_screening",
   "entity_id": "",
   "metadata": {
     "start": {

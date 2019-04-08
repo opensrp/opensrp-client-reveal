@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "Case_Confirmation",
+  "encounter_type": "case_confirmation",
   "entity_id": "",
   "metadata": {
     "start": {
