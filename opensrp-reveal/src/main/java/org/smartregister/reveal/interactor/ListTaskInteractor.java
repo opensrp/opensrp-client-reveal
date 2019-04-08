@@ -208,12 +208,12 @@ public class ListTaskInteractor {
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage(), e);
                 }
-                Feature operationalAreaFeature = Feature.fromJson(gson.toJson(operationalAreaLocation));
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
                         if (operationalAreaLocation != null) {
                             operationalAreaId = operationalAreaLocation.getId();
+                            Feature operationalAreaFeature = Feature.fromJson(gson.toJson(operationalAreaLocation));
                             presenterCallBack.onStructuresFetched(featureCollection, operationalAreaFeature);
                         } else {
                             presenterCallBack.onStructuresFetched(featureCollection, null);
