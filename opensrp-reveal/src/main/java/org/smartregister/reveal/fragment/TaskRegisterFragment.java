@@ -299,6 +299,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.RequestCode.LOCATION_SETTINGS && hasRequestedLocation) {
             if (resultCode == RESULT_OK) {
+                locationUtils.requestLocationUpdates(getPresenter());
                 getPresenter().getLocationPresenter().waitForUserLocation();
             } else if (resultCode == RESULT_CANCELED) {
                 getPresenter().getLocationPresenter().onGetUserLocationFailed();
