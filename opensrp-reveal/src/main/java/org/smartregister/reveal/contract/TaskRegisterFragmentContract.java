@@ -6,6 +6,7 @@ import android.support.annotation.StringRes;
 
 import org.json.JSONObject;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.view.contract.BaseRegisterFragmentContract;
 
@@ -29,7 +30,7 @@ public interface TaskRegisterFragmentContract {
         void onStructureFound(org.smartregister.domain.Location structure, TaskDetails details);
     }
 
-    interface View extends BaseRegisterFragmentContract.View {
+    interface View extends BaseRegisterFragmentContract.View, UserLocationContract.UserLocationView {
 
         Location getLastLocation();
 
@@ -50,6 +51,8 @@ public interface TaskRegisterFragmentContract {
         void hideProgressDialog();
 
         void displayToast(String message);
+
+        LocationUtils getLocationUtils();
     }
 
 }

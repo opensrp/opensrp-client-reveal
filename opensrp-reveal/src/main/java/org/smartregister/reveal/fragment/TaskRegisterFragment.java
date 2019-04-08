@@ -19,6 +19,7 @@ import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.TaskRegister;
+import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.DrawerMenuView;
@@ -42,6 +43,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     private RevealJsonFormUtils jsonFormUtils;
     private ProgressDialog progressDialog;
+
+    private LocationUtils locationUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +94,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     protected void initializePresenter() {
         presenter = new TaskRegisterFragmentPresenter(this, TaskRegister.VIEW_IDENTIFIER);
+        locationUtils = new LocationUtils(getContext());
+        locationUtils.requestLocationUpdates(getPresenter());
     }
 
     @Override
@@ -184,6 +189,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     }
 
     @Override
+    public Location getUserCurrentLocation() {
+        return locationUtils.getLastLocation();
+    }
+
+    @Override
     public void showProgressDialog(@StringRes int title, @StringRes int message) {
         if (progressDialog != null) {
             progressDialog.setTitle(title);
@@ -199,8 +209,18 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     }
 
     @Override
+    public void requestUserLocation() {
+        locationUtils.requestLocationUpdates(getPresenter());
+    }
+
+    @Override
     public void displayToast(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public LocationUtils getLocationUtils() {
+        return locationUtils;
     }
 
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {
