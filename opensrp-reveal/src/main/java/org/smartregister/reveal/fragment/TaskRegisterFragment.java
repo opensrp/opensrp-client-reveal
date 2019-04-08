@@ -55,6 +55,9 @@ import io.ona.kujaku.utils.LocationSettingsHelper;
 import io.ona.kujaku.utils.LogUtil;
 import timber.log.Timber;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by samuelgithengi on 3/11/19.
  */
@@ -69,6 +72,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     private ProgressDialog progressDialog;
 
     private LocationUtils locationUtils;
+
+    private boolean hasRequestedLocation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -234,6 +239,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     @Override
     public void requestUserLocation() {
+        hasRequestedLocation = true;
         checkLocationSettingsAndStartLocationServices();
     }
 
@@ -255,8 +261,6 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                             Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings");
 
                             try {
-                                // Show the dialog by calling startResolutionForResult(), and check the result
-                                // in onActivityResult().
                                 status.startResolutionForResult(activity, Constants.RequestCode.LOCATION_SETTINGS);
                             } catch (IntentSender.SendIntentException e) {
                                 Log.i(TAG, "PendingIntent unable to execute request.");
@@ -289,5 +293,17 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {
         this.jsonFormUtils = jsonFormUtils;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.RequestCode.LOCATION_SETTINGS && hasRequestedLocation) {
+            if (resultCode == RESULT_OK) {
+                getPresenter().getLocationPresenter().waitForUserLocation();
+            } else if (resultCode == RESULT_CANCELED) {
+                getPresenter().getLocationPresenter().onGetUserLocationFailed();
+            }
+            hasRequestedLocation = false;
+        }
     }
 }

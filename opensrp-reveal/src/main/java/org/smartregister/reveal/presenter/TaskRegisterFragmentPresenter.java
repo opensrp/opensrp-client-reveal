@@ -278,6 +278,6 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
 
     @Override
     public ValidateUserLocationPresenter getLocationPresenter() {
-        return null;
+        return locationPresenter;
     }
 }
