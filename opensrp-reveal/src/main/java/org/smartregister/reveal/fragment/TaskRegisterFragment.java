@@ -1,13 +1,30 @@
 package org.smartregister.reveal.fragment;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONObject;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
@@ -32,11 +49,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import io.ona.kujaku.callbacks.OnLocationServicesEnabledCallBack;
+import io.ona.kujaku.utils.Constants;
+import io.ona.kujaku.utils.LocationSettingsHelper;
+import io.ona.kujaku.utils.LogUtil;
+import timber.log.Timber;
+
 /**
  * Created by samuelgithengi on 3/11/19.
  */
 public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity {
 
+    private static final String TAG = TaskRegisterFragment.class.getName();
     private TaskRegisterAdapter taskAdapter;
 
     private BaseDrawerContract.View drawerView;
@@ -210,7 +234,47 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     @Override
     public void requestUserLocation() {
-        locationUtils.requestLocationUpdates(getPresenter());
+        checkLocationSettingsAndStartLocationServices();
+    }
+
+    private void checkLocationSettingsAndStartLocationServices() {
+        if (getContext() instanceof Activity) {
+            Activity activity = (Activity) getContext();
+
+            LocationSettingsHelper.checkLocationEnabled(activity, new ResultCallback<LocationSettingsResult>() {
+                @Override
+                public void onResult(LocationSettingsResult result) {
+                    final Status status = result.getStatus();
+
+                    switch (status.getStatusCode()) {
+                        case LocationSettingsStatusCodes.SUCCESS:
+                            Log.i(TAG, "All location settings are satisfied.");
+                            locationUtils.requestLocationUpdates(getPresenter());
+                            break;
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                            Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings");
+
+                            try {
+                                // Show the dialog by calling startResolutionForResult(), and check the result
+                                // in onActivityResult().
+                                status.startResolutionForResult(activity, Constants.RequestCode.LOCATION_SETTINGS);
+                            } catch (IntentSender.SendIntentException e) {
+                                Log.i(TAG, "PendingIntent unable to execute request.");
+                            }
+                            break;
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            Log.e(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog cannot be created.");
+                            break;
+
+                        default:
+                            Log.e(TAG, "Unknown status code returned after checking location settings");
+                            break;
+                    }
+                }
+            });
+        } else {
+            LogUtil.e(TAG, "KujakuMapView is not started in an Activity and can therefore not start location services");
+        }
     }
 
     @Override
