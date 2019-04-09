@@ -22,6 +22,8 @@ public interface Constants {
 
     String MOSQUITO_COLLECTION_EVENT = "mosquito_collection";
 
+    String LARVAL_DIPPING_EVENT = "larval_dipping";
+
     String STRUCTURE = "Structure";
 
     String START_DATE = "start_date";

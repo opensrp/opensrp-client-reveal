@@ -64,6 +64,7 @@ import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORM
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.HEAD_OF_HOUSEHOLD;
@@ -75,7 +76,9 @@ import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_TYPE;
+import static org.smartregister.reveal.util.Constants.JsonForm.THAILAND_LARVAL_DIPPING_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM;
+import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
@@ -408,7 +411,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             selectedFeatureInterventionType = code;
-            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code)) && NOT_VISITED.equals(businessStatus)) {
+            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code)) && NOT_VISITED.equals(businessStatus)) {
                 if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
                     validateUserLocation();
                 } else {
@@ -513,6 +516,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             startForm(formName, feature, sprayStatus, familyHead);
         } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)) {
             startForm(THAILAND_MOSQUITO_COLLECTION_FORM,  feature, null, null);
+        } else if (LARVAL_DIPPING_EVENT.equals(encounterType)) {
+            startForm(THAILAND_LARVAL_DIPPING_FORM, feature, null, null);
         }
     }
 
@@ -650,6 +655,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             } else {
                 startForm(selectedFeature, mosquitoCollectionCardDetails, MOSQUITO_COLLECTION_EVENT);
             }
+        } else if (LARVAL_DIPPING.equals(selectedFeatureInterventionType)) {
+            // todo: add larval dipping card details check
+            startForm(selectedFeature, null, LARVAL_DIPPING_EVENT);
         }
     }
 
