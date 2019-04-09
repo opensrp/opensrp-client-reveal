@@ -6,7 +6,6 @@ import android.support.annotation.StringRes;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.json.JSONArray;
@@ -29,7 +28,7 @@ public interface ListTaskContract {
 
         void closeCardView(int id);
 
-        void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Geometry operationalAreaGeometry);
+        void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea);
 
         void displayNotification(int title, @StringRes int message, Object... formatArgs);
 
@@ -50,7 +49,7 @@ public interface ListTaskContract {
 
     interface Presenter extends BaseContract.BasePresenter {
 
-        void onStructuresFetched(JSONObject structuresGeoJson, Geometry operationalAreaGeometry);
+        void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea);
 
         void onCardDetailsFetched(CardDetails cardDetails);
 

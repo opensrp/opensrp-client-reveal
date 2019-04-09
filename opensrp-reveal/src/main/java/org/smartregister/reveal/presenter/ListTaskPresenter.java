@@ -10,7 +10,6 @@ import android.util.Log;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
@@ -83,7 +82,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private FeatureCollection featureCollection;
 
-    private Geometry operationalArea;
+    private Feature operationalArea;
 
     private Feature selectedFeature;
 
@@ -129,13 +128,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
-    public void onStructuresFetched(JSONObject structuresGeoJson, Geometry operationalAreaGeometry) {
+    public void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea) {
         listTaskView.hideProgressDialog();
         drawerPresenter.setChangedCurrentSelection(false);
         if (structuresGeoJson.has(FEATURES)) {
             featureCollection = FeatureCollection.fromJson(structuresGeoJson.toString());
-            listTaskView.setGeoJsonSource(featureCollection, operationalAreaGeometry);
-            operationalArea = operationalAreaGeometry;
+            listTaskView.setGeoJsonSource(featureCollection, operationalArea);
+            this.operationalArea = operationalArea;
             if (Utils.isEmptyCollection(featureCollection.features())) {
                 listTaskView.displayNotification(R.string.fetching_structures_title, R.string.no_structures_found);
             }
@@ -144,7 +143,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     R.string.fetch_location_and_structures_failed, prefsUtil.getCurrentOperationalArea());
             try {
                 structuresGeoJson.put(FEATURES, new JSONArray());
-                listTaskView.setGeoJsonSource(FeatureCollection.fromJson(structuresGeoJson.toString()), operationalAreaGeometry);
+                listTaskView.setGeoJsonSource(FeatureCollection.fromJson(structuresGeoJson.toString()), operationalArea);
                 listTaskView.clearSelectedFeature();
                 listTaskView.closeCardView(R.id.btn_collapse_spray_card_view);
             } catch (JSONException e) {

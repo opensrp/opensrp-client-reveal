@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Geometry;
 
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -339,7 +338,7 @@ public class ListTaskPresenterTest {
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
 
         doNothing().when(listTaskViewSpy).hideProgressDialog();
-        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Geometry.class));
+        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class));
         doNothing().when(listTaskInteractor).fetchSprayDetails(anyString(), anyBoolean());
 
         listTaskPresenter.onFormSaved(null, null, null, IRS);
@@ -352,7 +351,7 @@ public class ListTaskPresenterTest {
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
 
         doNothing().when(listTaskViewSpy).hideProgressDialog();
-        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Geometry.class));
+        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class));
         doNothing().when(listTaskInteractor).fetchMosquitoCollectionDetails(anyString(), anyBoolean());
 
         listTaskPresenter.onFormSaved(null, null, null, MOSQUITO_COLLECTION);
