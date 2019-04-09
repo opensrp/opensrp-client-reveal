@@ -134,6 +134,8 @@ public interface Constants {
 
         String SPRAY_FORM_BOTSWANA = "json.form/botswana_spray_form.json";
 
+        String THAILAND_LARVAL_DIPPING_FORM = "json.form/thailand_larval_dipping_form.json";
+
         String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
 
         String OPERATIONAL_AREA_TAG = "operational_area";
