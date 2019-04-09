@@ -2,6 +2,7 @@ package org.smartregister.reveal.widget;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -16,10 +17,12 @@ import com.cocoahero.android.geojson.Feature;
 import com.cocoahero.android.geojson.Point;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.android.gestures.MoveGestureDetector;
-import com.mapbox.geojson.Geometry;
+import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.rengwuxian.materialedittext.validation.METValidator;
 import com.rey.material.util.ViewUtil;
@@ -37,6 +40,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.util.Constants.Map;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.reveal.validators.MinZoomValidator;
 import org.smartregister.reveal.view.RevealMapView;
@@ -46,6 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
+import io.ona.kujaku.layers.BoundaryLayer;
 
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES;
@@ -67,6 +72,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
     private RevealMapView mapView;
 
     private JsonApi jsonApi;
+
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView, RevealMapView mapView) {
 
@@ -120,27 +126,54 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         mapView.onCreate(null);
         mapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
 
-        String finalOperationalArea = operationalArea;
+        com.mapbox.geojson.Feature operationalAreaFeature = null;
+        if (operationalArea != null) {
+            operationalAreaFeature = com.mapbox.geojson.Feature.fromJson(operationalArea);
+            BoundaryLayer.Builder boundaryBuilder = new BoundaryLayer.Builder(FeatureCollection.fromFeature(operationalAreaFeature))
+                    .setLabelProperty(Map.NAME_PROPERTY)
+                    .setLabelTextSize(context.getResources().getDimension(R.dimen.operational_area_boundary_text_size))
+                    .setLabelColorInt(Color.WHITE)
+                    .setBoundaryColor(Color.WHITE)
+                    .setBoundaryWidth(context.getResources().getDimension(R.dimen.operational_area_boundary_width));
+            mapView.addLayer(boundaryBuilder.build());
+        }
+
+
         String finalFeatureCollection = featureCollection;
+        com.mapbox.geojson.Feature finalOperationalAreaFeature = operationalAreaFeature;
+
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onMapReady(MapboxMap mapboxMap) {
-                RevealMapHelper.addSymbolLayers(mapboxMap, context);
-                mapView.setMapboxMap(mapboxMap);
+            public void onMapReady(@NonNull MapboxMap mapboxMap) {
 
+                mapboxMap.setStyle(context.getString(R.string.reveal_satellite_style), new Style.OnStyleLoaded() {
+                    @Override
+                    public void onStyleLoaded(@NonNull Style style) {
+                        GeoJsonSource geoJsonSource = style.getSourceAs(context.getString(R.string.reveal_datasource_name));
+
+                        if (geoJsonSource != null && StringUtils.isNotBlank(finalFeatureCollection)) {
+                            geoJsonSource.setGeoJson(finalFeatureCollection);
+                        }
+                        RevealMapHelper.addSymbolLayers(style, context);
+                        mapView.setMapboxMap(mapboxMap);
+
+                    }
+                });
+
+                mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
+
+                mapView.setMapboxMap(mapboxMap);
                 String bufferRadius = getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString());
-                if (finalOperationalArea != null) {
-                    mapboxMap.setCameraPosition(mapboxMap.getCameraForGeometry(Geometry.fromJson(finalOperationalArea)));
-                    mapView.setLocationBufferRadius(Float.valueOf(bufferRadius));
+                mapView.setLocationBufferRadius(Float.valueOf(bufferRadius));
+                if (finalOperationalAreaFeature != null) {
+                    CameraPosition cameraPosition = mapboxMap.getCameraForGeometry(finalOperationalAreaFeature.geometry());
+                    if (cameraPosition != null) {
+                        mapboxMap.setCameraPosition(cameraPosition);
+                    }
                 } else {
                     mapView.focusOnUserLocation(true, Float.valueOf(bufferRadius));
                 }
 
-                GeoJsonSource geoJsonSource = mapboxMap.getSourceAs(context.getString(R.string.reveal_datasource_name));
-
-                if (geoJsonSource != null && StringUtils.isNotBlank(finalFeatureCollection)) {
-                    geoJsonSource.setGeoJson(finalFeatureCollection);
-                }
 
                 writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom);
                 mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {

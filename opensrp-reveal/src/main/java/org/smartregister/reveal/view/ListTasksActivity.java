@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,11 +35,11 @@ import android.widget.Toast;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.vijay.jsonwizard.customviews.TreeViewDialog;
 
@@ -70,6 +71,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
+import io.ona.kujaku.layers.BoundaryLayer;
 import io.ona.kujaku.utils.Constants;
 
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
@@ -79,11 +81,11 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCAT
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
+import static org.smartregister.reveal.util.Constants.Map;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
-import static org.smartregister.reveal.util.Utils.getGlobalConfig;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
-
+import static org.smartregister.reveal.util.Utils.getGlobalConfig;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -133,6 +135,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private boolean hasRequestedLocation;
 
     private Snackbar syncProgressSnackbar;
+
+    private BoundaryLayer boundaryLayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -218,10 +222,18 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onMapReady(MapboxMap mapboxMap) {
+            public void onMapReady(@NonNull MapboxMap mapboxMap) {
+                mapboxMap.setStyle(getString(R.string.reveal_satellite_style), new Style.OnStyleLoaded() {
+                    @Override
+                    public void onStyleLoaded(@NonNull Style style) {
+                        geoJsonSource = style.getSourceAs(getString(R.string.reveal_datasource_name));
+
+                        selectedGeoJsonSource = style.getSourceAs(getString(R.string.selected_datasource_name));
+                        RevealMapHelper.addSymbolLayers(style, ListTasksActivity.this);
+                    }
+                });
                 mMapboxMap = mapboxMap;
 
-                RevealMapHelper.addSymbolLayers(mapboxMap, ListTasksActivity.this);
 
                 mapboxMap.setMinZoomPreference(10);
                 mapboxMap.setMaxZoomPreference(21);
@@ -231,20 +243,19 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         .build();
                 mapboxMap.setCameraPosition(cameraPosition);
 
-                geoJsonSource = mapboxMap.getSourceAs(getString(R.string.reveal_datasource_name));
-
-                selectedGeoJsonSource = mapboxMap.getSourceAs(getString(R.string.selected_datasource_name));
 
                 listTaskPresenter.onMapReady();
 
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                     @Override
-                    public void onMapClick(@NonNull LatLng point) {
+                    public boolean onMapClick(@NonNull LatLng point) {
                         listTaskPresenter.onMapClicked(mapboxMap, point);
+                        return false;
                     }
                 });
             }
         });
+
     }
 
     private void initializeDrawerLayout() {
@@ -411,13 +422,32 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Geometry operationalAreaGeometry) {
+    public void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea) {
         if (geoJsonSource != null) {
             geoJsonSource.setGeoJson(featureCollection);
-            if (operationalAreaGeometry != null) {
-                mMapboxMap.setCameraPosition(mMapboxMap.getCameraForGeometry(operationalAreaGeometry));
+            if (operationalArea != null) {
+                CameraPosition cameraPosition = mMapboxMap.getCameraForGeometry(operationalArea.geometry());
+                if (cameraPosition != null) {
+                    mMapboxMap.setCameraPosition(cameraPosition);
+                }
+                if (boundaryLayer == null) {
+                    boundaryLayer = createBoundaryLayer(operationalArea);
+                    kujakuMapView.addLayer(boundaryLayer);
+
+                } else {
+                    boundaryLayer.updateFeatures(FeatureCollection.fromFeature(operationalArea));
+                }
             }
         }
+    }
+
+    private BoundaryLayer createBoundaryLayer(Feature operationalArea) {
+        return new BoundaryLayer.Builder(FeatureCollection.fromFeature(operationalArea))
+                .setLabelProperty(Map.NAME_PROPERTY)
+                .setLabelTextSize(getResources().getDimension(R.dimen.operational_area_boundary_text_size))
+                .setLabelColorInt(Color.WHITE)
+                .setBoundaryColor(Color.WHITE)
+                .setBoundaryWidth(getResources().getDimension(R.dimen.operational_area_boundary_width)).build();
     }
 
     @Override
