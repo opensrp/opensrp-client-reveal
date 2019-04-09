@@ -21,6 +21,7 @@ import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.sync.RevealClientProcessor;
+import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import org.smartregister.util.DatabaseMigrationUtils;
@@ -30,6 +31,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static org.smartregister.util.DatabaseMigrationUtils.isColumnExists;
 
 
 public class RevealRepository extends Repository {
@@ -81,6 +84,10 @@ public class RevealRepository extends Repository {
         SettingsRepository.onUpgrade(db);
 
         UniqueIdRepository.createTable(db);
+
+        if (!isColumnExists(db, DatabaseKeys.SPRAYED_STRUCTURES, DatabaseKeys.STRUCTURE_NAME)) {
+            db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s VARCHAR ", DatabaseKeys.SPRAYED_STRUCTURES, DatabaseKeys.STRUCTURE_NAME));
+        }
 
         DatabaseMigrationUtils.createAddedECTables(db,
                 new HashSet<>(Arrays.asList(TABLE_NAME.FAMILY, TABLE_NAME.FAMILY_MEMBER)),

@@ -199,6 +199,8 @@ public interface Constants {
 
         String STRUCTURES_TABLE = "structure";
 
+        String STRUCTURE_NAME = "structure_name";
+
         String ID = "_id";
 
         String CODE = "code";

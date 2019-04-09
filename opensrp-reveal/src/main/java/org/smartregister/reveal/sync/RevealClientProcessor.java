@@ -91,15 +91,17 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     operationalAreaId = processMosquitoCollectionEvent(event, clientClassification, localEvents);
                 } else {
                     Client client = eventClient.getClient();
-                    //iterate through the events
-                    if (client != null) {
-                        try {
-                            processEvent(event, client, clientClassification);
-                        } catch (Exception e) {
-                            Log.d(TAG, e.getMessage());
-                        }
-
+                    if (client == null) {
+                        client = new Client(event.getBaseEntityId());
                     }
+                    //iterate through the events
+                    try {
+                        processEvent(event, client, clientClassification);
+                    } catch (Exception e) {
+                        Log.d(TAG, e.getMessage());
+                    }
+
+
                 }
                 if (!hasSyncedEventsInTarget && operationalAreaLocationId != null &&
                         operationalAreaLocationId.equals(operationalAreaId)) {
