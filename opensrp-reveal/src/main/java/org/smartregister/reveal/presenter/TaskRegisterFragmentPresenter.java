@@ -187,7 +187,8 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
         if (!location.equals(lastLocation)) {
             if (lastLocation == null && tasks == null) {//tasks not yet retrieved from db
                 recalculateDistance = true;
-            } else if (lastLocation != null && location.distanceTo(lastLocation) >= Constants.REFRESH_MAP_MINIMUM_DISTANCE) {
+            } else if (lastLocation == null ||
+                    location.distanceTo(lastLocation) >= Constants.REFRESH_MAP_MINIMUM_DISTANCE) {
                 interactor.calculateDistanceFromUser(tasks, location);
             }
             lastLocation = location;
