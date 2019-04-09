@@ -170,8 +170,10 @@ public class TaskRegisterFragmentInteractor {
         appExecutors.diskIO().execute(() -> {
             int structuresWithinBuffer = 0;
             for (TaskDetails taskDetails : tasks) {
-                taskDetails.setDistanceFromUser(taskDetails.getLocation().distanceTo(location));
-                taskDetails.setDistanceFromCenter(false);
+                if (!Constants.Intervention.BCC.equals(taskDetails.getTaskCode())) {
+                    taskDetails.setDistanceFromUser(taskDetails.getLocation().distanceTo(location));
+                    taskDetails.setDistanceFromCenter(false);
+                }
                 if (taskDetails.getDistanceFromUser() <= locationBuffer) {
                     structuresWithinBuffer += 1;
                 }
