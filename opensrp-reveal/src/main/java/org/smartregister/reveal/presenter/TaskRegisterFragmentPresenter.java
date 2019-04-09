@@ -231,7 +231,7 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
         this.structure = structure;
         this.details = details;
         if ((IRS.equals(details.getTaskCode()) || MOSQUITO_COLLECTION.equals(details.getTaskCode()))) {
-            if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
+            if (validateFarStructures()) {
                 validateUserLocation();
             } else {
                 onLocationValidated();
@@ -240,6 +240,10 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
             onLocationValidated();
         }
 
+    }
+
+    protected boolean validateFarStructures() {
+        return BuildConfig.VALIDATE_FAR_STRUCTURES;
     }
 
     private void validateUserLocation() {
