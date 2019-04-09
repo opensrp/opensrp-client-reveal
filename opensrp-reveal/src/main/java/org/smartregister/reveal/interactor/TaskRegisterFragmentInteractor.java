@@ -8,6 +8,7 @@ import com.google.common.annotations.VisibleForTesting;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.repository.StructureRepository;
@@ -38,6 +39,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUC
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TABLE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_NAME;
 
 /**
  * Created by samuelgithengi on 3/18/19.
@@ -88,6 +90,7 @@ public class TaskRegisterFragmentInteractor {
                 STRUCTURES_TABLE + "." + LATITUDE,
                 STRUCTURES_TABLE + "." + LONGITUDE,
                 STRUCTURES_TABLE + "." + NAME,
+                SPRAYED_STRUCTURES + "." + STRUCTURE_NAME,
                 SPRAYED_STRUCTURES + "." + FAMILY_NAME,
                 SPRAYED_STRUCTURES + "." + SPRAY_STATUS,
                 SPRAYED_STRUCTURES + "." + NOT_SRAYED_REASON,
@@ -150,6 +153,9 @@ public class TaskRegisterFragmentInteractor {
             task.setDistanceFromCenter(true);
         }
         task.setStructureName(cursor.getString(cursor.getColumnIndex(NAME)));
+        if (StringUtils.isBlank(task.getStructureName())) {
+            task.setStructureName(cursor.getString(cursor.getColumnIndex(STRUCTURE_NAME)));
+        }
         task.setFamilyName(cursor.getString(cursor.getColumnIndex(FAMILY_NAME)));
         task.setSprayStatus(cursor.getString(cursor.getColumnIndex(SPRAY_STATUS)));
 
