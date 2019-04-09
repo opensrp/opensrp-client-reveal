@@ -66,7 +66,6 @@ import static org.smartregister.reveal.util.Constants.Map;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
-import static org.smartregister.reveal.util.Utils.getGlobalConfig;
 
 /**
  * Created by samuelgithengi on 11/20/18.
