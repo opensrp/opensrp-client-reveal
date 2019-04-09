@@ -5,7 +5,7 @@ import android.location.Location;
 
 import io.ona.kujaku.interfaces.ILocationClient;
 import io.ona.kujaku.listeners.BaseLocationListener;
-import io.ona.kujaku.location.clients.AndroidLocationClient;
+import io.ona.kujaku.location.clients.GoogleLocationClient;
 
 /**
  * Created by samuelgithengi on 3/20/19.
@@ -15,7 +15,7 @@ public class LocationUtils {
     private ILocationClient locationClient;
 
     public LocationUtils(Context context) {
-        locationClient = new AndroidLocationClient(context);
+        locationClient = new GoogleLocationClient(context);
     }
 
     public void requestLocationUpdates(BaseLocationListener locationListener) {

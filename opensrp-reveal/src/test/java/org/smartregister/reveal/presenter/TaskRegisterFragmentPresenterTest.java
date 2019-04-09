@@ -42,8 +42,10 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -90,7 +92,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        presenter = new TaskRegisterFragmentPresenter(view, TaskRegister.VIEW_IDENTIFIER, interactor, locationUtils);
+        presenter = new TaskRegisterFragmentPresenter(view, TaskRegister.VIEW_IDENTIFIER, interactor);
         Whitebox.setInternalState(presenter, "viewsHelper", viewsHelper);
         Whitebox.setInternalState(presenter, "prefsUtil", preferencesUtil);
         visibleColumns = new HashSet<>();
@@ -103,6 +105,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         operationalArea = TestingUtils.gson.fromJson(TestingUtils.operationalAreaGeoJSON, org.smartregister.domain.Location.class);
         cache.get("MTI_84", () -> operationalArea);
         Whitebox.setInternalState(Utils.class, cache);
+        when(this.view.getLocationUtils()).thenReturn(locationUtils);
     }
 
     @Test
@@ -168,6 +171,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         verify(view).hideProgressDialog();
         verify(view).hideProgressView();
         verify(view).setTotalTasks(eq(0));
+        verify(view).getContext();
         verifyNoMoreInteractions(view);
 
     }
@@ -180,6 +184,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         verify(view).hideProgressDialog();
         verify(view).hideProgressView();
         verify(view).setTotalTasks(eq(0));
+        verify(view).getContext();
         verifyNoMoreInteractions(view);
     }
 
@@ -193,6 +198,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         verify(view).hideProgressDialog();
         verify(view).hideProgressView();
         verify(view).setTotalTasks(eq(1));
+        verify(view).getContext();
         verifyNoMoreInteractions(view);
     }
 
@@ -202,6 +208,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         detailsList.add(TestingUtils.getTaskDetails());
         Whitebox.setInternalState(presenter, "recalculateDistance", true);
         presenter.onTasksFound(detailsList, 1);
+        verify(view).getContext();
         verifyNoMoreInteractions(view);
         assertFalse(Whitebox.getInternalState(presenter, "recalculateDistance"));
         verify(interactor).calculateDistanceFromUser(detailsList, null);
@@ -254,6 +261,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         taskDetails.setFamilyName("Craig");
         presenter.onTaskSelected(taskDetails);
         verify(view).displayToast("To open structure details view for Craig");
+        verify(view).getContext();
         verifyNoMoreInteractions(view);
     }
 
@@ -264,6 +272,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         presenter.onTaskSelected(taskDetails);
         verify(view).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
         verify(interactor).getStructure(taskDetails);
+        verify(view).getContext();
         verifyNoMoreInteractions(view);
         verifyNoMoreInteractions(interactor);
     }
@@ -273,6 +282,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
         taskDetails.setTaskCode(Constants.Intervention.BCC);
         presenter.onTaskSelected(taskDetails);
+        verify(view).getContext();
         verify(view).displayToast("To open BCC form for " + taskDetails.getTaskId());
         verifyNoMoreInteractions(view);
     }
@@ -282,6 +292,19 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         when(view.getJsonFormUtils()).thenReturn(mock(RevealJsonFormUtils.class));
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
         presenter.onStructureFound(null, taskDetails);
+        verify(view).getContext();
+        verify(view).requestUserLocation();
+        verify(view).getUserCurrentLocation();
+        verifyNoMoreInteractions(view);
+    }
+
+    @Test
+    public void testOnStructureFoundWithLocationValidationDisabled() {
+        when(view.getJsonFormUtils()).thenReturn(mock(RevealJsonFormUtils.class));
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        presenter = spy(presenter);
+        doReturn(false).when(presenter).validateFarStructures();
+        presenter.onStructureFound(null, taskDetails);
         verify(view).startForm(any());
         verify(view).hideProgressDialog();
     }
@@ -289,6 +312,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void testSearchGloballyDoesNothing() {
         presenter.searchGlobally("");
+        verify(view).getContext();
         verifyNoMoreInteractions(view);
         verifyNoMoreInteractions(interactor);
 

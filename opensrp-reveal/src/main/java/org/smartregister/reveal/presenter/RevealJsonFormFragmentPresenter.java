@@ -51,26 +51,23 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
     @Override
     public void validateAndWriteValues() {
         super.validateAndWriteValues();
-        if (isFormValid()) {
-            for (View childAt : formFragment.getJsonApi().getFormDataViews()) {
-                if (childAt instanceof RevealMapView) {
-                    RevealMapView mapView = (RevealMapView) childAt;
-                    ValidationStatus validationStatus = GeoWidgetFactory.validate(formFragment, mapView);
-                    if (!validationStatus.isValid()) {
-                        String key = (String) childAt.getTag(com.vijay.jsonwizard.R.id.key);
-                        String mStepName = this.getView().getArguments().getString("stepName");
-                        String fieldKey = mStepName + " (" + mStepDetails.optString("title") + ") :" + key;
-                        getInvalidFields().put(fieldKey, validationStatus);
-                    } else {
-                        if (validateFarStructures()) {
-                            validateUserLocation(mapView);
-                        } else {
-                            onLocationValidated();
-                        }
+        for (View childAt : formFragment.getJsonApi().getFormDataViews()) {
+            if (childAt instanceof RevealMapView) {
+                RevealMapView mapView = (RevealMapView) childAt;
+                ValidationStatus validationStatus = GeoWidgetFactory.validate(formFragment, mapView);
+                String key = (String) childAt.getTag(com.vijay.jsonwizard.R.id.key);
+                String mStepName = this.getView().getArguments().getString("stepName");
+                String fieldKey = mStepName + " (" + mStepDetails.optString("title") + ") :" + key;
+                if (!validationStatus.isValid()) {
+                    getInvalidFields().put(fieldKey, validationStatus);
+                } else {
+                    getInvalidFields().remove(fieldKey);
+                    if (isFormValid() && validateFarStructures()) {
+                        validateUserLocation(mapView);
                         return;
                     }
-                    break;//exit loop, assumption; there will be only 1 map per form.
                 }
+                break;//exit loop, assumption; there will be only 1 map per form.
             }
         }
         if (isFormValid()) {// if form is valid and did not have a map, if it had a map view it will be handled above

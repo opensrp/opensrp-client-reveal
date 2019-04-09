@@ -31,16 +31,17 @@
     <dimen name="change_spray_status_btn_bottom_margin">15dp</dimen>
     <dimen name="my_location_btn_margin">16dp</dimen>
     <dimen name="my_location_button_dimen">48dp</dimen>
-
     <dimen name="task_register_launcher_horizontal_padding">12dp</dimen>
     <dimen name="task_register_launcher_vertical_padding">8dp</dimen>
     <dimen name="task_register_text_size">16sp</dimen>
     <dimen name="task_register_padding">8dp</dimen>
-    <dimen name="task_register_action_width">110dp</dimen>
+    <dimen name="task_register_action_width">120dp</dimen>
     <dimen name="task_register_action_text">16sp</dimen>
     <dimen name="task_register_vertical_padding">4dp</dimen>
-
     <dimen name="task_toolbar_margin">20dp</dimen>
+
+    <dimen name="operational_area_boundary_text_size">10sp</dimen>
+    <dimen name="operational_area_boundary_width">1dp</dimen>
 </resources>
 
 

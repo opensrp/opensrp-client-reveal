@@ -1,13 +1,21 @@
 package org.smartregister.reveal.fragment;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import org.json.JSONObject;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
@@ -19,6 +27,7 @@ import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.TaskRegister;
+import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.DrawerMenuView;
@@ -31,17 +40,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import io.ona.kujaku.utils.Constants;
+import io.ona.kujaku.utils.LocationSettingsHelper;
+import io.ona.kujaku.utils.LogUtil;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by samuelgithengi on 3/11/19.
  */
 public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity {
 
+    private static final String TAG = TaskRegisterFragment.class.getName();
     private TaskRegisterAdapter taskAdapter;
 
     private BaseDrawerContract.View drawerView;
 
     private RevealJsonFormUtils jsonFormUtils;
     private ProgressDialog progressDialog;
+
+    private LocationUtils locationUtils;
+
+    private boolean hasRequestedLocation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +112,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     protected void initializePresenter() {
         presenter = new TaskRegisterFragmentPresenter(this, TaskRegister.VIEW_IDENTIFIER);
+        locationUtils = new LocationUtils(getContext());
+        locationUtils.requestLocationUpdates(getPresenter());
     }
 
     @Override
@@ -184,6 +207,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     }
 
     @Override
+    public Location getUserCurrentLocation() {
+        return locationUtils.getLastLocation();
+    }
+
+    @Override
     public void showProgressDialog(@StringRes int title, @StringRes int message) {
         if (progressDialog != null) {
             progressDialog.setTitle(title);
@@ -199,11 +227,73 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     }
 
     @Override
+    public void requestUserLocation() {
+        hasRequestedLocation = true;
+        checkLocationSettingsAndStartLocationServices();
+    }
+
+    private void checkLocationSettingsAndStartLocationServices() {
+        if (getContext() instanceof Activity) {
+            Activity activity = (Activity) getContext();
+
+            LocationSettingsHelper.checkLocationEnabled(activity, new ResultCallback<LocationSettingsResult>() {
+                @Override
+                public void onResult(LocationSettingsResult result) {
+                    final Status status = result.getStatus();
+
+                    switch (status.getStatusCode()) {
+                        case LocationSettingsStatusCodes.SUCCESS:
+                            Log.i(TAG, "All location settings are satisfied.");
+                            locationUtils.requestLocationUpdates(getPresenter());
+                            break;
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                            Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings");
+
+                            try {
+                                status.startResolutionForResult(activity, Constants.RequestCode.LOCATION_SETTINGS);
+                            } catch (IntentSender.SendIntentException e) {
+                                Log.i(TAG, "PendingIntent unable to execute request.");
+                            }
+                            break;
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            Log.e(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog cannot be created.");
+                            break;
+
+                        default:
+                            Log.e(TAG, "Unknown status code returned after checking location settings");
+                            break;
+                    }
+                }
+            });
+        } else {
+            LogUtil.e(TAG, "KujakuMapView is not started in an Activity and can therefore not start location services");
+        }
+    }
+
+    @Override
     public void displayToast(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    public LocationUtils getLocationUtils() {
+        return locationUtils;
+    }
+
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {
         this.jsonFormUtils = jsonFormUtils;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.RequestCode.LOCATION_SETTINGS && hasRequestedLocation) {
+            if (resultCode == RESULT_OK) {
+                locationUtils.requestLocationUpdates(getPresenter());
+                getPresenter().getLocationPresenter().waitForUserLocation();
+            } else if (resultCode == RESULT_CANCELED) {
+                getPresenter().getLocationPresenter().onGetUserLocationFailed();
+            }
+            hasRequestedLocation = false;
+        }
     }
 }

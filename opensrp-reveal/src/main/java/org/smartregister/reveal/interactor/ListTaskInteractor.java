@@ -2,7 +2,7 @@ package org.smartregister.reveal.interactor;
 
 import android.util.Log;
 
-import com.mapbox.geojson.Geometry;
+import com.mapbox.geojson.Feature;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -161,9 +161,9 @@ public class ListTaskInteractor extends BaseInteractor {
                     @Override
                     public void run() {
                         if (operationalAreaLocation != null) {
-                            Geometry geometry = Geometry.fromJson(gson.toJson(operationalAreaLocation.getGeometry()));
                             operationalAreaId = operationalAreaLocation.getId();
-                            getPresenter().onStructuresFetched(featureCollection, geometry);
+                            Feature operationalAreaFeature = Feature.fromJson(gson.toJson(operationalAreaLocation));
+                            getPresenter().onStructuresFetched(featureCollection, operationalAreaFeature);
                         } else {
                             getPresenter().onStructuresFetched(featureCollection, null);
                         }

@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
@@ -228,7 +227,7 @@ public class ListTaskInteractorTest {
 
     @Test
     public void testSaveJsonFormShouldSaveMosquitoCollectionForm() throws Exception {
-        ListTaskInteractor listTaskInteractorSpy = PowerMockito.spy(listTaskInteractor);
+        ListTaskInteractor listTaskInteractorSpy = spy(listTaskInteractor);
 
         AppExecutors appExecutors = mock(AppExecutors.class);
         Whitebox.setInternalState(listTaskInteractorSpy, "appExecutors", appExecutors);

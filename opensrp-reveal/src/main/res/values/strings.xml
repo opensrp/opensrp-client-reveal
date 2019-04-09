@@ -113,8 +113,8 @@
     <string name="task_reason">Reason: %1s</string>
 
     <plurals name="structures">
-        <item quantity="one">%1d structure within %2.0f m(%3$d total)</item>
-        <item quantity="other">%1d structures within %2.0f m(%3$d total)</item>
+        <item quantity="one">%1d structure within %2.0f m (%3$d total)</item>
+        <item quantity="other">%1d structures within %2.0f m (%3$d total)</item>
     </plurals>
 
     <string name="mosquito_collection_status_test_text">Status: Inactive</string>

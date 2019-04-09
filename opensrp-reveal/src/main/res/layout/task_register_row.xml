@@ -46,7 +46,7 @@
 
     <TextView
         android:id="@+id/task_details"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingStart="@dimen/task_register_padding"
         android:paddingEnd="@dimen/task_register_padding"
@@ -54,6 +54,7 @@
         android:textColor="#7A7A7A"
         android:textSize="@dimen/task_register_text_size"
         android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/separator"
         app:layout_constraintStart_toEndOf="@id/task_icon"
         app:layout_constraintTop_toBottomOf="@id/distance_from_structure" />
 
