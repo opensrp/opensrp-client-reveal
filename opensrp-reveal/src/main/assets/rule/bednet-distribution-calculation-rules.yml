@@ -4,29 +4,28 @@ description: Number of nets needed
 priority: 1
 condition: "true"
 actions:
-- 'calculation = Math.ceil(helper.ifNull(step1_malePopulation + step1_femalePopulation,0)/2.0)'
+- "calculation = Math.ceil(helper.ifNull(step1_malePopulation + step1_femalePopulation,0)/2.0)"
 ---
 name: step1_calcNumNetsToDistribute
 description: Number of nets to give
 priority: 1
 condition: "true"
 actions:
-- 'calculation = helper.ifNull(step1_calcNumNetsNeeded - step1_existingNets,0)'
+- "calculation = helper.ifNull(step1_calcNumNetsNeeded - step1_existingNets,0)"
 ---
 name: step1_calcDistributedRecommendation
 description: Did they distribute the recommended number of nets
 priority: 1
 condition: "true"
 actions:
-- 'calculation = (helper.ifNull(step1_calcNumNetsToDistribute,0) == (helper.ifNull(step1_distributedITNs + step1_distributedLLINs + step1_distributedHLINs,0))) ? "Exact" : (helper.ifNull(step1_calcNumNetsToDistribute,0) < (helper.ifNull(step1_distributedITNs + step1_distributedLLINs + step1_distributedHLINs,0))) ? "More" : "Fewer"'
+- "calculation = helper.ifNull(step1_calcNumNetsToDistribute,0) == helper.ifNull(step1_distributedITNs + step1_distributedLLINs + step1_distributedHLINs,0) ? 'Exact' : helper.ifNull(step1_calcNumNetsToDistribute,0) < helper.ifNull(step1_distributedITNs + step1_distributedLLINs + step1_distributedHLINs,0) ? 'More' : 'Fewer'"
 ---
 name: step1_calcTotalNetsDistributed
 description: The total number of nets distributed
 priority: 1
 condition: "true"
 actions:
-- 'calculation = helper.ifNull(step1_distributedITNs + step1_distributedLLINs + step1_distributedHLINs,0)"'
-
+- "calculation = helper.ifNull(step1_distributedITNs + step1_distributedLLINs + step1_distributedHLINs,0)"
 ---
 name: step1_displayRecommendedNumNets
 description: Display Calculated number of nets needed

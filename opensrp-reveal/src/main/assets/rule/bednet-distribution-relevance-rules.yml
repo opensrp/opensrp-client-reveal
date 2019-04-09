@@ -4,25 +4,25 @@ description: Display if existingLLIN is greater than 0
 priority: 1
 condition: "step1_existingLLINs > 0"
 actions:
-  - "isRelevant = true"
+- "isRelevant = true"
 ---
 name: step1_existingLLINs1yrTo2yr
 description: Display if existingLLIN is greater than 0
 priority: 1
 condition: "step1_existingLLINs > 0"
 actions:
-  - "isRelevant = true"
+- "isRelevant = true"
 ---
 name: step1_existingLLINs2yrTo3yr
 description: Display if existingLLIN is greater than 0
 priority: 1
 condition: "step1_existingLLINs > 0"
 actions:
-  - "isRelevant = true"
+- "isRelevant = true"
 ---
 name: step1_existingLLINsGreaterThan3yr
 description: Display if existingLLIN is greater than 0
 priority: 1
 condition: "step1_existingLLINs > 0"
 actions:
-  - "isRelevant = true"
+- "isRelevant = true"
