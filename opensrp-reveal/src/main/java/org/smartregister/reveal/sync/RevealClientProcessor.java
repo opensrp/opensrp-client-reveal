@@ -28,7 +28,9 @@ import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
+import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 
 /**
@@ -89,19 +91,19 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     operationalAreaId = processSprayEvent(event, clientClassification, localEvents);
                 } else if (eventType.equals(MOSQUITO_COLLECTION_EVENT)) {
                     operationalAreaId = processMosquitoCollectionEvent(event, clientClassification, localEvents);
+                } else if (eventType.equals(REGISTER_STRUCTURE_EVENT)) {
+                    operationalAreaId = processRegisterStructureEvent(event, clientClassification);
                 } else {
                     Client client = eventClient.getClient();
-                    if (client == null) {
-                        client = new Client(event.getBaseEntityId());
-                    }
-                    //iterate through the events
-                    try {
-                        processEvent(event, client, clientClassification);
-                    } catch (Exception e) {
-                        Log.d(TAG, e.getMessage());
-                    }
 
+                    if (client != null) {
+                        try {
+                            processEvent(event, client, clientClassification);
+                        } catch (Exception e) {
+                            Log.d(TAG, e.getMessage());
+                        }
 
+                    }
                 }
                 if (!hasSyncedEventsInTarget && operationalAreaLocationId != null &&
                         operationalAreaLocationId.equals(operationalAreaId)) {
@@ -114,6 +116,18 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             Intent intent = new Intent(STRUCTURE_TASK_SYNCED);
             LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
         }
+    }
+
+    private String processRegisterStructureEvent(Event event, ClientClassification clientClassification) {
+        try {
+            processEvent(event, new Client(event.getBaseEntityId()), clientClassification);
+            if (event.getDetails() != null && event.getDetails().get(LOCATION_PARENT) != null) {
+                return event.getDetails().get(LOCATION_PARENT);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error processing register structure event", e);
+        }
+        return null;
     }
 
     private String processSprayEvent(Event event, ClientClassification clientClassification, boolean localEvents) {

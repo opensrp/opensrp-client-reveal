@@ -22,6 +22,12 @@ public interface Constants {
 
     String MOSQUITO_COLLECTION_EVENT = "mosquito_collection";
 
+    String BEDNET_DISTRIBUTION_EVENT = "bednet_distribution";
+
+    String BLOOD_SCREENING_EVENT = "blood_screening";
+
+    String CASE_CONFIRMATION_EVENT = "case_confirmation";
+
     String STRUCTURE = "Structure";
 
     String START_DATE = "start_date";
@@ -73,6 +79,7 @@ public interface Constants {
         String LOCATION_UUID = "locationUUID";
         String LOCATION_VERSION = "locationVersion";
         String LOCATION_TYPE = "locationType";
+        String LOCATION_PARENT = "locationParent";
     }
 
 
@@ -84,7 +91,6 @@ public interface Constants {
 
     interface Intervention {
         String IRS = "IRS";
-        String ITN = "ITN";
         String MDA = "MDA";
 
         String MOSQUITO_COLLECTION = "Mosquito Collection";
@@ -93,6 +99,12 @@ public interface Constants {
 
         String IRS_VISIT = "IRS Visit";
         String BCC = "BCC";
+
+        String BEDNET_DISTRIBUTION = "Bednet Distribution";
+
+        String BLOOD_SCREENING = "Blood Screening";
+
+        String CASE_CONFIRMATION = "Case Confirmation";
     }
 
     interface BusinessStatus {
@@ -140,6 +152,12 @@ public interface Constants {
         String SPRAY_FORM_BOTSWANA = "json.form/botswana_spray_form.json";
 
         String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
+
+        String BEDNET_DISTRIBUTION_FORM = "json.form/bednet_distribution.json";
+
+        String BLOOD_SCREENING_FORM = "json.form/blood_screening.json";
+
+        String CASE_CONFIRMATION_FORM = "json.form/case_confirmation.json";
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 

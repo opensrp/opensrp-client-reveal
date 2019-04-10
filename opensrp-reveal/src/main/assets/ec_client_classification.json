@@ -39,6 +39,13 @@
             "creates_case": [
               "mosquito_interventions"
             ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "bednet_distribution",
+            "creates_case": [
+              "bednet_distribution"
+            ]
           }
         ]
       }
