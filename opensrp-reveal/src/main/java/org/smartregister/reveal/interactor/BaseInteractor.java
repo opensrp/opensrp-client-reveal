@@ -45,7 +45,9 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
+import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.METADATA;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
@@ -106,6 +108,8 @@ public abstract class BaseInteractor {
                 saveRegisterStructureForm(jsonForm);
             } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)) {
                 saveMosquitoCollectionForm(jsonForm);
+            } else if (BEDNET_DISTRIBUTION_EVENT.equals(encounterType)) {
+                saveBednetDistributionForm(jsonForm);
             }
         } catch (Exception e) {
             Log.e(TAG, "Error saving Json Form data", e);
@@ -256,6 +260,29 @@ public abstract class BaseInteractor {
                     });
                 } catch (Exception e) {
                     Log.e(TAG, "Error saving mosquito collection point data");
+                }
+            }
+        };
+        appExecutors.diskIO().execute(runnable);
+    }
+
+
+    private void saveBednetDistributionForm(JSONObject jsonForm) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    org.smartregister.domain.db.Event event = saveEvent(jsonForm, BEDNET_DISTRIBUTION_EVENT, STRUCTURE);
+                    clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
+                    appExecutors.mainThread().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            String businessStatus = clientProcessor.calculateBusinessStatus(event);
+                            presenterCallBack.onFormSaved(event.getBaseEntityId(), Task.TaskStatus.COMPLETED, businessStatus, BEDNET_DISTRIBUTION);
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.e(TAG, "Error saving bednet distribution point data");
                 }
             }
         };
