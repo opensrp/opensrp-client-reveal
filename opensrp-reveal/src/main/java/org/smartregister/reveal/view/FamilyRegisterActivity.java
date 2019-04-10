@@ -6,10 +6,11 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 import org.smartregister.family.activity.BaseFamilyRegisterActivity;
-import org.smartregister.family.model.BaseFamilyRegisterModel;
 import org.smartregister.family.presenter.BaseFamilyRegisterPresenter;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.fragment.FamilyRegisterFragment;
+import org.smartregister.reveal.model.FamilyRegisterModel;
+import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
 /**
@@ -27,7 +28,7 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity {
 
     @Override
     protected void initializePresenter() {
-        presenter = new BaseFamilyRegisterPresenter(this, new BaseFamilyRegisterModel());
+        presenter = new BaseFamilyRegisterPresenter(this, new FamilyRegisterModel(getIntent().getStringExtra(Properties.LOCATION_UUID)));
     }
 
     @Override

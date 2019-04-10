@@ -408,4 +408,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public ValidateUserLocationPresenter getLocationPresenter() {
         return locationPresenter;
     }
+
+    @Override
+    public Feature getSelectedFeature() {
+        return selectedFeature;
+    }
 }
