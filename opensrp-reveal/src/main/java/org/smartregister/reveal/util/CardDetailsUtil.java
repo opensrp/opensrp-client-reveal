@@ -12,19 +12,26 @@ public class CardDetailsUtil {
     public static void formatCardDetails(CardDetails cardDetails) {
         // extract status color
         String sprayStatus = cardDetails.getStatus();
-        if (BusinessStatus.NOT_SPRAYED.equals(sprayStatus) || BusinessStatus.INCOMPLETE.equals(sprayStatus)) {
-            cardDetails.setStatusColor(R.color.unsprayed);
-            cardDetails.setStatusMessage(R.string.details_not_sprayed);
-        } else if (BusinessStatus.SPRAYED.equals(sprayStatus) || BusinessStatus.COMPLETE.equals(sprayStatus)) {
-            cardDetails.setStatusColor(R.color.sprayed);
-            cardDetails.setStatusMessage(R.string.details_sprayed);
-            cardDetails.setReason(null);
-        } else if (BusinessStatus.NOT_SPRAYABLE.equals(sprayStatus) || BusinessStatus.NOT_ELIGIBLE.equals(sprayStatus)) {
-            cardDetails.setStatusColor(R.color.unsprayable);
-            cardDetails.setStatusMessage(R.string.details_not_sprayable);
-            cardDetails.setReason(null);
+        switch (sprayStatus) {
+            case BusinessStatus.NOT_SPRAYED:
+            case BusinessStatus.INCOMPLETE:
+            case BusinessStatus.IN_PROGRESS:
+                cardDetails.setStatusColor(R.color.unsprayed);
+                cardDetails.setStatusMessage(R.string.details_not_sprayed);
+                break;
+            case BusinessStatus.SPRAYED:
+            case BusinessStatus.COMPLETE:
+                cardDetails.setStatusColor(R.color.sprayed);
+                cardDetails.setStatusMessage(R.string.details_sprayed);
+                cardDetails.setReason(null);
+                break;
+            case BusinessStatus.NOT_SPRAYABLE:
+            case BusinessStatus.NOT_ELIGIBLE:
+                cardDetails.setStatusColor(R.color.unsprayable);
+                cardDetails.setStatusMessage(R.string.details_not_sprayable);
+                cardDetails.setReason(null);
+                break;
         }
-
     }
 
 }
