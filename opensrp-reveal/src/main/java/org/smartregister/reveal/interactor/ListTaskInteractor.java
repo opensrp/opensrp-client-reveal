@@ -56,7 +56,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
@@ -324,7 +323,7 @@ public class ListTaskInteractor {
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override
                         public void run() {
-                            String businessStatus = clientProcessor.calculateBusinessStatus(event, IRS);
+                            String businessStatus = clientProcessor.calculateBusinessStatus(event);
                             presenterCallBack.onFormSaved(event.getBaseEntityId(), Task.TaskStatus.COMPLETED, businessStatus, IRS);
                         }
                     });
@@ -385,7 +384,6 @@ public class ListTaskInteractor {
                         task.setCode(Intervention.MOSQUITO_COLLECTION);
                         task.setDescription(applicationContext.getString(R.string.mosquito_collection_task_description));
                         task.setFocus(Intervention.MOSQUITO_COLLECTION);
-                        task.setBusinessStatus(INCOMPLETE);
                     } else if (StructureType.LARVAL_BREEDING_SITE.equals(structureType)) {
                         task.setCode(Intervention.LARVAL_DIPPING);
                         task.setDescription(applicationContext.getString(R.string.larval_dipping_task_description));
@@ -433,7 +431,7 @@ public class ListTaskInteractor {
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override
                         public void run() {
-                            String businessStatus = clientProcessor.calculateBusinessStatus(event, MOSQUITO_COLLECTION);
+                            String businessStatus = clientProcessor.calculateBusinessStatus(event);
                             presenterCallBack.onFormSaved(event.getBaseEntityId(), Task.TaskStatus.COMPLETED, businessStatus, MOSQUITO_COLLECTION);
                         }
                     });

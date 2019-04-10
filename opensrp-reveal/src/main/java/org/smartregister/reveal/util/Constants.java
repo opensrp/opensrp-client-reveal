@@ -22,6 +22,8 @@ public interface Constants {
 
     String MOSQUITO_COLLECTION_EVENT = "mosquito_collection";
 
+    String LARVAL_DIPPING_EVENT = "larval_dipping";
+
     String STRUCTURE = "Structure";
 
     String START_DATE = "start_date";
@@ -96,8 +98,10 @@ public interface Constants {
         String NOT_SPRAYED = "Not Sprayed";
         String SPRAYED = "Sprayed";
         String NOT_SPRAYABLE = "Not Sprayable";
-        String COMPLETE = "Complete"; // todo: refine these statuses after data dictionary
-        String INCOMPLETE = "Incomplete"; // todo: refine these statuses after data dictionary
+        String COMPLETE = "Complete";
+        String INCOMPLETE = "Incomplete";
+        String NOT_ELIGIBLE = "Not Eligible";
+        String IN_PROGRESS = "In Progress";
     }
 
 
@@ -131,6 +135,8 @@ public interface Constants {
         String SPRAY_FORM_NAMIBIA = "json.form/namibia_spray_form.json";
 
         String SPRAY_FORM_BOTSWANA = "json.form/botswana_spray_form.json";
+
+        String THAILAND_LARVAL_DIPPING_FORM = "json.form/thailand_larval_dipping_form.json";
 
         String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
 

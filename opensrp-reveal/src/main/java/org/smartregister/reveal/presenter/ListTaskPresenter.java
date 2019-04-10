@@ -52,6 +52,8 @@ import static org.smartregister.AllConstants.OPERATIONAL_AREAS;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
@@ -62,6 +64,7 @@ import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORM
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.HEAD_OF_HOUSEHOLD;
@@ -73,7 +76,9 @@ import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_PROPERTIES_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_TYPE;
+import static org.smartregister.reveal.util.Constants.JsonForm.THAILAND_LARVAL_DIPPING_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM;
+import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
@@ -406,8 +411,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             selectedFeatureInterventionType = code;
-            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code))
-                    && (NOT_VISITED.equals(businessStatus) || INCOMPLETE.equals(businessStatus))) {
+            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code)) && NOT_VISITED.equals(businessStatus)) {
                 if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
                     validateUserLocation();
                 } else {
@@ -416,8 +420,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
                 listTaskInteractor.fetchSprayDetails(feature.id(), false);
-            } else if (MOSQUITO_COLLECTION.equals(code) && COMPLETE.equals(businessStatus)) {
-                // todo: refine this to correct status check after data dictionary is done
+            } else if (MOSQUITO_COLLECTION.equals(code)
+                    && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
+                    || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
                 listTaskInteractor.fetchMosquitoCollectionDetails(feature.id(), false);
             }
         }
@@ -502,11 +507,17 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
                 formName = SPRAY_FORM;
             }
+
             String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();
-            String familyHead = cardDetails == null ? null : ((SprayCardDetails) cardDetails).getFamilyHead();
+            String familyHead = null;
+            if (cardDetails instanceof  SprayCardDetails) {
+                familyHead = cardDetails == null ? null : ((SprayCardDetails) cardDetails).getFamilyHead();
+            }
             startForm(formName, feature, sprayStatus, familyHead);
         } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)) {
             startForm(THAILAND_MOSQUITO_COLLECTION_FORM,  feature, null, null);
+        } else if (LARVAL_DIPPING_EVENT.equals(encounterType)) {
+            startForm(THAILAND_LARVAL_DIPPING_FORM, feature, null, null);
         }
     }
 
@@ -644,6 +655,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             } else {
                 startForm(selectedFeature, mosquitoCollectionCardDetails, MOSQUITO_COLLECTION_EVENT);
             }
+        } else if (LARVAL_DIPPING.equals(selectedFeatureInterventionType)) {
+            // todo: add larval dipping card details check
+            startForm(selectedFeature, null, LARVAL_DIPPING_EVENT);
         }
     }
 
