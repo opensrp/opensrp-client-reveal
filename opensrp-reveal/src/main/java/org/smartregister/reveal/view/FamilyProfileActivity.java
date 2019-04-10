@@ -1,15 +1,18 @@
 package org.smartregister.reveal.view;
 
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import org.smartregister.family.activity.BaseFamilyProfileActivity;
 import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.family.model.BaseFamilyProfileModel;
-import org.smartregister.family.presenter.BaseFamilyProfilePresenter;
 import org.smartregister.family.util.Constants;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.fragment.FamilyProfileMemberFragment;
 import org.smartregister.reveal.fragment.StructureTasksFragment;
+import org.smartregister.reveal.presenter.FamilyProfilePresenter;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by samuelgithengi on 2/8/19.
@@ -22,7 +25,7 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity {
         String familyHead = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_HEAD);
         String primaryCaregiver = getIntent().getStringExtra(Constants.INTENT_KEY.PRIMARY_CAREGIVER);
         String familyName = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_NAME);
-        presenter = new BaseFamilyProfilePresenter(this, new BaseFamilyProfileModel(familyName), familyBaseEntityId, familyHead, primaryCaregiver, familyName);
+        presenter = new FamilyProfilePresenter(this, new BaseFamilyProfileModel(familyName), familyBaseEntityId, familyHead, primaryCaregiver, familyName);
     }
 
     @Override
@@ -41,4 +44,8 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity {
         return viewPager;
     }
 
+    @Override
+    public void setProfileImage(String baseEntityId) {
+        //do nothing
+    }
 }
