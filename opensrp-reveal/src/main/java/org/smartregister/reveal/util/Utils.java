@@ -21,6 +21,7 @@ import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.job.RevealCampaignServiceJob;
+import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
 
@@ -110,5 +111,9 @@ public class Utils {
     public static String getGlobalConfig(String key, String defaultValue) {
         String val = RevealApplication.getInstance().getGlobalConfigs().get(key);
         return val == null ? defaultValue : val;
+    }
+
+    public static Float getLocationBuffer() {
+        return Float.valueOf(getGlobalConfig(CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES, CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString()));
     }
 }

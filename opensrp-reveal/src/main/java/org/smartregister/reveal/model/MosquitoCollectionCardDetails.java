@@ -9,6 +9,7 @@ public class MosquitoCollectionCardDetails extends CardDetails {
     private String trapFollowUpDate;
 
     public MosquitoCollectionCardDetails(String status, String trapSetDate, String trapFollowUpDate) {
+        super(status);
         this.status = status;
         this.trapSetDate = trapSetDate;
         this.trapFollowUpDate = trapFollowUpDate;

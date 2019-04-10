@@ -3,32 +3,25 @@ package org.smartregister.reveal.view;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.util.Pair;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,42 +34,30 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.vijay.jsonwizard.customviews.TreeViewDialog;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
-import org.smartregister.repository.AllSharedPreferences;
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.activity.BaseMapActivity;
-import org.smartregister.reveal.activity.RevealJsonFormActivity;
-import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
+import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Action;
+import org.smartregister.reveal.util.Constants.TaskRegister;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
-import org.smartregister.util.Utils;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
 import io.ona.kujaku.utils.Constants;
 
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
-import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES;
-import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -85,7 +66,6 @@ import static org.smartregister.reveal.util.Constants.Map;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
-import static org.smartregister.reveal.util.Utils.getGlobalConfig;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -95,17 +75,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private static final String TAG = "ListTasksActivity";
 
-    private AllSharedPreferences sharedPreferences;
-
     private ListTaskPresenter listTaskPresenter;
 
     private View rootView;
-
-    private TextView campaignTextView;
-    private TextView operationalAreaTextView;
-    private TextView districtTextView;
-    private TextView facilityTextView;
-    private TextView operatorTextView;
 
     private GeoJsonSource geoJsonSource;
 
@@ -115,7 +87,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private MapboxMap mMapboxMap;
 
-    private DrawerLayout mDrawerLayout;
 
     private CardView sprayCardView;
     private TextView tvSprayStatus;
@@ -136,6 +107,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private Snackbar syncProgressSnackbar;
 
+
+    private BaseDrawerContract.View drawerView;
+
+    private RevealJsonFormUtils jsonFormUtils;
+
     private BoundaryLayer boundaryLayer;
 
     @Override
@@ -143,20 +119,24 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_tasks);
 
-        listTaskPresenter = new ListTaskPresenter(this);
+        drawerView = new DrawerMenuView(this);
+
+        listTaskPresenter = new ListTaskPresenter(this, drawerView.getPresenter());
         rootView = findViewById(R.id.content_frame);
 
-        sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
-
         initializeMapView(savedInstanceState);
-        initializeDrawerLayout();
+
+        drawerView.initializeDrawerLayout();
         initializeProgressDialog();
 
         findViewById(R.id.btn_add_structure).setOnClickListener(this);
+        findViewById(R.id.drawerMenu).setOnClickListener(this);
 
         initializeCardViews();
 
         syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
+
+        jsonFormUtils = new RevealJsonFormUtils();
     }
 
     private void initializeCardViews() {
@@ -190,9 +170,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.register_family).setOnClickListener(this);
 
+
+        findViewById(R.id.task_register).setOnClickListener(this);
+
         findViewById(R.id.btn_collapse_mosquito_collection_card_view).setOnClickListener(this);
 
         findViewById(R.id.btn_record_mosquito_collection).setOnClickListener(this);
+
     }
 
     @Override
@@ -217,7 +201,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         kujakuMapView.showCurrentLocationBtn(true);
 
-        Float locationBufferRadius = Float.valueOf(getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString()));
+        Float locationBufferRadius = org.smartregister.reveal.util.Utils.getLocationBuffer();
         kujakuMapView.setLocationBufferRadius(locationBufferRadius);
 
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
@@ -253,103 +237,28 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         return false;
                     }
                 });
+
+                displayMyLocationAtButtom();
             }
         });
 
     }
 
-    private void initializeDrawerLayout() {
 
-        mDrawerLayout = findViewById(R.id.drawer_layout);
-
-        ImageButton mDrawerMenuButton = findViewById(R.id.drawerMenu);
-        mDrawerMenuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDrawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
-
-        mDrawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {//do nothing
-            }
-
-            @Override
-            public void onDrawerOpened(@NonNull View drawerView) {//do nothing
-            }
-
-            @Override
-            public void onDrawerClosed(@NonNull View drawerView) {
-                listTaskPresenter.onDrawerClosed();
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {//do nothing
-            }
-        });
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        View headerView = navigationView.getHeaderView(0);
-
-        headerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                headerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                int minimumOperatorMargin = getResources().getDimensionPixelSize(R.dimen.operator_top_margin);
-                int screenHeightPixels = getResources().getDisplayMetrics().heightPixels;
-                //if content of hamburger menu is bigger than screen; scroll content
-                if (screenHeightPixels < headerView.getHeight() + minimumOperatorMargin) {
-                    headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-                    View operator = headerView.findViewById(R.id.operator_label);
-                    ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) operator.getLayoutParams();
-                    params.height = ConstraintLayout.LayoutParams.WRAP_CONTENT;
-                    operator.setLayoutParams(params);
-                } else {//content of hamburger menu fits on screen; set menu height to screen height
-                    headerView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-                            screenHeightPixels - getResources().getDimensionPixelSize(R.dimen.hamburger_margin)));
-                }
-            }
-        });
-
-        try {
-            ((TextView) headerView.findViewById(R.id.application_version))
-                    .setText(getString(R.string.app_version, Utils.getVersion(this)));
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, e.getMessage(), e);
+    private void displayMyLocationAtButtom() {
+        ImageButton myLocationComponent = findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
+        if (myLocationComponent != null) {
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) myLocationComponent.getLayoutParams();
+            params.gravity = Gravity.BOTTOM | Gravity.END;
+            params.bottomMargin = params.topMargin;
+            params.topMargin = 0;
+            myLocationComponent.setLayoutParams(params);
         }
-
-        String buildDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                .format(new Date(BuildConfig.BUILD_TIMESTAMP));
-        ((TextView) headerView.findViewById(R.id.application_updated)).setText(getString(R.string.app_updated, buildDate));
-
-        campaignTextView = headerView.findViewById(R.id.campaign_selector);
-        operationalAreaTextView = headerView.findViewById(R.id.operational_area_selector);
-        districtTextView = headerView.findViewById(R.id.district_label);
-        facilityTextView = headerView.findViewById(R.id.facility_label);
-        operatorTextView = headerView.findViewById(R.id.operator_label);
-
-        operationalAreaTextView.setOnClickListener(this);
-
-        campaignTextView.setOnClickListener(this);
-
-        headerView.findViewById(R.id.logout_button).setOnClickListener(this);
-        headerView.findViewById(R.id.sync_button).setOnClickListener(this);
-
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.operational_area_selector)
-            listTaskPresenter.onShowOperationalAreaSelector();
-        else if (v.getId() == R.id.campaign_selector)
-            listTaskPresenter.onShowCampaignSelector();
-        else if (v.getId() == R.id.logout_button)
-            RevealApplication.getInstance().logoutCurrentUser();
-        else if (v.getId() == R.id.sync_button) {
-            org.smartregister.reveal.util.Utils.startImmediateSync();
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else if (v.getId() == R.id.btn_add_structure) {
+        if (v.getId() == R.id.btn_add_structure) {
             listTaskPresenter.onAddStructureClicked();
         } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeInterventionStatus(IRS);
@@ -360,9 +269,22 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             closeCardView(v.getId());
         } else if (v.getId() == R.id.register_family) {
             registerFamily();
+        } else if (v.getId() == R.id.task_register) {
+            openTaskRegister();
+        } else if (v.getId() == R.id.drawerMenu) {
+            drawerView.openDrawerLayout();
         } else if (v.getId() == R.id.btn_collapse_mosquito_collection_card_view) {
             closeCardView(v.getId());
         }
+    }
+
+    private void openTaskRegister() {
+        Intent intent = new Intent(this, TaskRegisterActivity.class);
+        intent.putExtra(TaskRegister.INTERVENTION_TYPE, getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
+        if (getUserCurrentLocation() != null) {
+            intent.putExtra(TaskRegister.LAST_USER_LOCATION, getUserCurrentLocation());
+        }
+        startActivity(intent);
     }
 
     private void registerFamily() {
@@ -377,47 +299,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             kujakuMapView.getMapboxLocationComponentWrapper()
                     .getLocationComponent()
                     .applyStyle(getApplicationContext(), R.style.LocationComponentStyling);
-        }
-    }
-
-    @Override
-    public void showOperationalAreaSelector(Pair<String, ArrayList<String>> locationHierarchy) {
-        try {
-            TreeViewDialog treeViewDialog = new TreeViewDialog(ListTasksActivity.this,
-                    R.style.AppTheme_WideDialog,
-                    new JSONArray(locationHierarchy.first), locationHierarchy.second, locationHierarchy.second);
-            treeViewDialog.setCancelable(true);
-            treeViewDialog.setCanceledOnTouchOutside(true);
-            treeViewDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    listTaskPresenter.onOperationalAreaSelectorClicked(treeViewDialog.getName());
-                }
-            });
-            treeViewDialog.show();
-        } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
-        }
-
-    }
-
-    @Override
-    public void showCampaignSelector(List<String> campaigns, String entireTreeString) {
-        try {
-            TreeViewDialog treeViewDialog = new TreeViewDialog(ListTasksActivity.this,
-                    R.style.AppTheme_WideDialog,
-                    new JSONArray(entireTreeString), new ArrayList<>(campaigns), new ArrayList<>(campaigns));
-            treeViewDialog.show();
-            treeViewDialog.setCanceledOnTouchOutside(true);
-            treeViewDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    listTaskPresenter.onCampaignSelectorClicked(treeViewDialog.getValue(), treeViewDialog.getName());
-                }
-            });
-            treeViewDialog.show();
-        } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
         }
     }
 
@@ -451,31 +332,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void lockNavigationDrawerForSelection() {
-        mDrawerLayout.openDrawer(GravityCompat.START);
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
-
-    }
-
-    @Override
-    public void unlockNavigationDrawer() {
-        if (mDrawerLayout.getDrawerLockMode(GravityCompat.START) == DrawerLayout.LOCK_MODE_LOCKED_OPEN) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        }
-    }
-
-    @Override
     public void displayNotification(int title, int message, Object... formatArgs) {
-        if (formatArgs.length == 0)
-            new AlertDialog.Builder(this).setMessage(message).setTitle(title).setPositiveButton(R.string.ok, null).show();
-        else
-            new AlertDialog.Builder(this).setMessage(getString(message, formatArgs)).setTitle(title).setPositiveButton(R.string.ok, null).show();
+        AlertDialogUtils.displayNotification(this, title, message, formatArgs);
     }
 
     @Override
     public void displayNotification(String message) {
-        new AlertDialog.Builder(this).setMessage(message).setTitle(R.string.fetch_structures_title).setPositiveButton(R.string.ok, null).show();
+        AlertDialogUtils.displayNotification(this, message);
     }
 
     @Override
@@ -512,13 +375,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void startJsonForm(JSONObject form) {
-        Intent intent = new Intent(getApplicationContext(), RevealJsonFormActivity.class);
-        try {
-            intent.putExtra(JSON_FORM_PARAM_JSON, form.toString());
-            startActivityForResult(intent, REQUEST_CODE_GET_JSON);
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
+        jsonFormUtils.startJsonForm(form, this);
     }
 
     @Override
@@ -567,31 +424,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             }
             hasRequestedLocation = false;
         }
-    }
-
-    @Override
-    public void setCampaign(String campaign) {
-        campaignTextView.setText(campaign);
-    }
-
-    @Override
-    public void setOperationalArea(String operationalArea) {
-        operationalAreaTextView.setText(operationalArea);
-    }
-
-    @Override
-    public void setDistrict(String district) {
-        org.smartregister.reveal.util.Utils.setTextViewText(districtTextView, R.string.district, district);
-    }
-
-    @Override
-    public void setFacility(String facility) {
-        org.smartregister.reveal.util.Utils.setTextViewText(facilityTextView, R.string.facility, facility);
-    }
-
-    @Override
-    public void setOperator() {
-        org.smartregister.reveal.util.Utils.setTextViewText(operatorTextView, R.string.operator, sharedPreferences.fetchRegisteredANM());
     }
 
     private void initializeProgressDialog() {
@@ -670,7 +502,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
         IntentFilter filter = new IntentFilter(Action.STRUCTURE_TASK_SYNCED);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(refreshGeowidgetReceiver, filter);
-        listTaskPresenter.onInitializeDrawerLayout();
+        drawerView.onResume();
     }
 
     @Override
@@ -680,13 +512,28 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         super.onPause();
     }
 
+    @Override
+    public void onDrawerClosed() {
+        listTaskPresenter.onDrawerClosed();
+    }
+
+    @Override
+    public AppCompatActivity getActivity() {
+        return this;
+    }
+
+    @Override
+    public RevealJsonFormUtils getJsonFormUtils() {
+        return jsonFormUtils;
+    }
+
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle extras = intent.getExtras();
             if (extras != null && extras.getBoolean(UPDATE_LOCATION_BUFFER_RADIUS)) {
-                String bufferRadius = getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString());
-                kujakuMapView.setLocationBufferRadius(Float.valueOf(bufferRadius));
+                float bufferRadius = org.smartregister.reveal.util.Utils.getLocationBuffer();
+                kujakuMapView.setLocationBufferRadius(bufferRadius);
             } else {
                 listTaskPresenter.refreshStructures();
             }

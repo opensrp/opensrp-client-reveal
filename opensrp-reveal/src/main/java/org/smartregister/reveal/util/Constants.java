@@ -40,6 +40,8 @@ public interface Constants {
 
     double VERTICAL_OFFSET = -0.0003;
 
+    double REFRESH_MAP_MINIMUM_DISTANCE = 5;
+
     int ANIMATE_TO_LOCATION_DURATION = 1000;
 
     interface CONFIGURATION {
@@ -47,6 +49,7 @@ public interface Constants {
         String GLOBAL_CONFIGS = "global_configs";
         String KEY = "key";
         String VALUE = "value";
+        String SETTINGS = "settings";
         String LOCATION_BUFFER_RADIUS_IN_METRES = "location_buffer_radius_in_metres";
         Float DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES = 25f;
         String UPDATE_LOCATION_BUFFER_RADIUS = "update_location_buffer_radius";
@@ -76,6 +79,7 @@ public interface Constants {
         String LOCATION_UUID = "locationUUID";
         String LOCATION_VERSION = "locationVersion";
         String LOCATION_TYPE = "locationType";
+        String LOCATION_PARENT = "locationParent";
     }
 
 
@@ -94,6 +98,7 @@ public interface Constants {
         String LARVAL_DIPPING = "Larval Dipping";
 
         String IRS_VISIT = "IRS Visit";
+        String BCC = "BCC";
 
         String BEDNET_DISTRIBUTION = "Bednet Distribution";
 
@@ -194,6 +199,58 @@ public interface Constants {
         String MOSQUITO_COLLECTION_POINT = "Mosquito Collection Point";
 
         String LARVAL_BREEDING_SITE = "Larval Breeding Site";
+    }
+
+    interface TaskRegister {
+        String VIEW_IDENTIFIER = "task_register";
+
+        String INTERVENTION_TYPE = "intervention_type";
+
+        String LAST_USER_LOCATION = "last_location";
+
+    }
+
+    interface DatabaseKeys {
+
+        String TASK_TABLE = "task";
+
+        String SPRAYED_STRUCTURES = "sprayed_structures";
+
+        String STRUCTURES_TABLE = "structure";
+
+        String STRUCTURE_NAME = "structure_name";
+
+        String ID = "_id";
+
+        String CODE = "code";
+
+        String FOR = "for";
+
+        String BUSINESS_STATUS = "business_status";
+
+        String STATUS = "status";
+
+        String FAMILY_NAME = "family_head_name";
+
+        String SPRAY_STATUS = "spray_status";
+
+        String LATITUDE = "latitude";
+
+        String LONGITUDE = "longitude";
+
+        String NAME = "name";
+
+        String GROUPID = "group_id";
+
+        String CAMPAIGN_ID = "campaign_id";
+
+        String NOT_SRAYED_REASON = "not_sprayed_reason";
+
+        String NOT_SRAYED_OTHER_REASON = "not_sprayed_other_reason";
+
+        String OTHER = "other";
+
+
     }
 
 

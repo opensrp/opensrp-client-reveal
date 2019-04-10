@@ -52,11 +52,8 @@ import java.util.List;
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
 
-import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES;
-import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
-import static org.smartregister.reveal.util.Utils.getGlobalConfig;
 
 /**
  * Created by samuelgithengi on 12/13/18.
@@ -156,22 +153,21 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         }
                         RevealMapHelper.addSymbolLayers(style, context);
                         mapView.setMapboxMap(mapboxMap);
-
                     }
                 });
 
                 mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
 
                 mapView.setMapboxMap(mapboxMap);
-                String bufferRadius = getGlobalConfig(LOCATION_BUFFER_RADIUS_IN_METRES, DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString());
-                mapView.setLocationBufferRadius(Float.valueOf(bufferRadius));
+                float bufferRadius = org.smartregister.reveal.util.Utils.getLocationBuffer();
+                mapView.setLocationBufferRadius(bufferRadius);
                 if (finalOperationalAreaFeature != null) {
                     CameraPosition cameraPosition = mapboxMap.getCameraForGeometry(finalOperationalAreaFeature.geometry());
                     if (cameraPosition != null) {
                         mapboxMap.setCameraPosition(cameraPosition);
                     }
                 } else {
-                    mapView.focusOnUserLocation(true, Float.valueOf(bufferRadius));
+                    mapView.focusOnUserLocation(true, bufferRadius);
                 }
 
 
