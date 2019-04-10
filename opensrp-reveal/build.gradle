@@ -46,7 +46,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 28
         versionCode 2
-        versionName "1.4"
+        versionName "1.5.0"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -88,7 +88,6 @@ android {
             buildConfigField "float", "MY_LOCATION_BUFFER", '100'
             buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '90'
-
 
             if (project.rootProject.file("local.properties").exists()) {
                 Properties properties = new Properties()
@@ -183,13 +182,9 @@ tasks.withType(Test) {
 
 dependencies {
 
-    implementation('io.ona.kujaku:library:0.6.3') {
-        transitive = true
+    implementation('io.ona.kujaku:library:0.7.1') {
         exclude group: 'com.android.volley'
-        exclude group: 'kujaku', module: 'utils'
     }
-
-    implementation 'io.ona.kujaku:utils:0.6.1'
 
     implementation('org.smartregister:opensrp-client-core:1.6.9-SNAPSHOT@aar') {
         transitive = true

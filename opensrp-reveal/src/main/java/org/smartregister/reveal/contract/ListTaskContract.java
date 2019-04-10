@@ -7,7 +7,6 @@ import android.support.v4.util.Pair;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.json.JSONArray;
@@ -49,7 +48,7 @@ public interface ListTaskContract {
 
         void showCampaignSelector(List<String> campaigns, String entireTreeString);
 
-        void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Geometry operationalAreaGeometry);
+        void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea);
 
         void lockNavigationDrawerForSelection();
 
@@ -74,7 +73,7 @@ public interface ListTaskContract {
 
         void onCampaignsFetched(List<Campaign> campaigns);
 
-        void onStructuresFetched(JSONObject structuresGeoJson, Geometry operationalAreaGeometry);
+        void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea);
 
         void onFormSaved(@NonNull String structureId,
                          @NonNull TaskStatus taskStatus, @NonNull String businessStatus, String interventionType);

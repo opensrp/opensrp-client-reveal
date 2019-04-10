@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.Geometry;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -256,9 +255,9 @@ public class ListTaskInteractor {
                     @Override
                     public void run() {
                         if (operationalAreaLocation != null) {
-                            Geometry geometry = Geometry.fromJson(gson.toJson(operationalAreaLocation.getGeometry()));
                             operationalAreaId = operationalAreaLocation.getId();
-                            presenterCallBack.onStructuresFetched(featureCollection, geometry);
+                            Feature operationalAreaFeature = Feature.fromJson(gson.toJson(operationalAreaLocation));
+                            presenterCallBack.onStructuresFetched(featureCollection, operationalAreaFeature);
                         } else {
                             presenterCallBack.onStructuresFetched(featureCollection, null);
                         }
