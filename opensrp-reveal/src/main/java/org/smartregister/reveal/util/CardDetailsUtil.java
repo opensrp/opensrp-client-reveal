@@ -1,5 +1,7 @@
 package org.smartregister.reveal.util;
 
+import android.util.Log;
+
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
@@ -11,8 +13,8 @@ public class CardDetailsUtil {
 
     public static void formatCardDetails(CardDetails cardDetails) {
         // extract status color
-        String sprayStatus = cardDetails.getStatus();
-        switch (sprayStatus) {
+        String status = cardDetails.getStatus();
+        switch (status) {
             case BusinessStatus.NOT_SPRAYED:
             case BusinessStatus.INCOMPLETE:
             case BusinessStatus.IN_PROGRESS:
@@ -31,6 +33,8 @@ public class CardDetailsUtil {
                 cardDetails.setStatusMessage(R.string.details_not_sprayable);
                 cardDetails.setReason(null);
                 break;
+            default:
+                Log.w(CardDetailsUtil.class.getName(), "business status not defined :" + cardDetails.getStatus());
         }
     }
 
