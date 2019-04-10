@@ -2,11 +2,15 @@ package org.smartregister.reveal.fragment;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -46,6 +50,7 @@ import io.ona.kujaku.utils.LogUtil;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static org.smartregister.reveal.util.Constants.Action;
 
 /**
  * Created by samuelgithengi on 3/11/19.
@@ -63,6 +68,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     private LocationUtils locationUtils;
 
     private boolean hasRequestedLocation;
+
+    private RefreshRegisterReceiver refreshRegisterReceiver = new RefreshRegisterReceiver();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -294,6 +301,30 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                 getPresenter().getLocationPresenter().onGetUserLocationFailed();
             }
             hasRequestedLocation = false;
+        }
+    }
+
+
+    @Override
+    public void onPause() {
+        if (getContext() != null)
+            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(refreshRegisterReceiver);
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getContext() != null) {
+            IntentFilter filter = new IntentFilter(Action.STRUCTURE_TASK_SYNCED);
+            LocalBroadcastManager.getInstance(getContext()).registerReceiver(refreshRegisterReceiver, filter);
+        }
+    }
+
+    private class RefreshRegisterReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            getPresenter().initializeQueries(getMainCondition());
         }
     }
 }

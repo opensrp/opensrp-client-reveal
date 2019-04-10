@@ -79,6 +79,7 @@ public interface Constants {
         String LOCATION_UUID = "locationUUID";
         String LOCATION_VERSION = "locationVersion";
         String LOCATION_TYPE = "locationType";
+        String LOCATION_PARENT = "locationParent";
     }
 
 
