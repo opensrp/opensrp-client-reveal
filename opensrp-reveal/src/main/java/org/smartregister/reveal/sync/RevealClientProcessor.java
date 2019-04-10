@@ -92,7 +92,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 } else if (eventType.equals(MOSQUITO_COLLECTION_EVENT)) {
                     operationalAreaId = processMosquitoCollectionEvent(event, clientClassification, localEvents);
                 } else if (eventType.equals(REGISTER_STRUCTURE_EVENT)) {
-                    operationalAreaId = processRegisterStructureEvent(event, clientClassification, localEvents);
+                    operationalAreaId = processRegisterStructureEvent(event, clientClassification);
                 } else {
                     Client client = eventClient.getClient();
 
@@ -118,7 +118,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         }
     }
 
-    private String processRegisterStructureEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
+    private String processRegisterStructureEvent(Event event, ClientClassification clientClassification) {
         try {
             processEvent(event, new Client(event.getBaseEntityId()), clientClassification);
             if (event.getDetails() != null && event.getDetails().get(LOCATION_PARENT) != null) {

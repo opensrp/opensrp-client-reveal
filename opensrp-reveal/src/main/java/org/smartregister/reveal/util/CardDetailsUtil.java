@@ -12,6 +12,8 @@ import org.smartregister.reveal.util.Constants.BusinessStatus;
 public class CardDetailsUtil {
 
     public static void formatCardDetails(CardDetails cardDetails) {
+        if (cardDetails == null || cardDetails.getStatus() == null)
+            return;
         // extract status color
         String status = cardDetails.getStatus();
         switch (status) {
@@ -35,6 +37,7 @@ public class CardDetailsUtil {
                 break;
             default:
                 Log.w(CardDetailsUtil.class.getName(), "business status not defined :" + cardDetails.getStatus());
+                break;
         }
     }
 
