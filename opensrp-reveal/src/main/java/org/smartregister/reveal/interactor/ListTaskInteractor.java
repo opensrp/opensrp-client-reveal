@@ -178,7 +178,7 @@ public class ListTaskInteractor {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final String sql = "SELECT status, start_date, end_date FROM mosquito_interventions WHERE id=?";
+                final String sql = "SELECT status, start_date, end_date FROM mosquito_collections WHERE id=?";
                 SQLiteDatabase db = RevealApplication.getInstance().getRepository().getWritableDatabase();
                 Cursor cursor = db.rawQuery(sql, new String[]{mosquitoCollectionPointId});
 
