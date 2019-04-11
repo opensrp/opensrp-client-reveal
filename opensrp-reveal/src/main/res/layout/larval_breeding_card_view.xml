@@ -52,7 +52,7 @@
                     android:background="#DEDEDE" />
 
                 <TextView
-                    android:id="@+id/trap_set_date"
+                    android:id="@+id/larval_identified_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
@@ -64,7 +64,7 @@
                     android:textSize="@dimen/structure_info_card_text_size" />
 
                 <TextView
-                    android:id="@+id/trap_follow_up_date"
+                    android:id="@+id/larvacide_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"

@@ -33,7 +33,7 @@ import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
-import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
+import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.Constants.StructureType;
 import org.smartregister.reveal.util.Country;
@@ -132,11 +132,11 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     private SprayCardDetails sprayCardDetails;
 
-    private MosquitoCollectionCardDetails mosquitoCollectionCardDetails;
+    private MosquitoHarvestCardDetails mosquitoHarvestCardDetails;
 
     private boolean changeSprayStatus;
 
-    private boolean changeMosquitoCollectionStatus;
+    private boolean changeMosquitoHarvestStatus;
 
     public ListTaskPresenter(ListTaskView listTaskView) {
         this.listTaskView = listTaskView;
@@ -401,7 +401,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     private void onFeatureSelected(Feature feature) {
         this.selectedFeature = feature;
         this.changeSprayStatus = false;
-        this.changeMosquitoCollectionStatus = false;
+        this.changeMosquitoHarvestStatus = false;
 
         listTaskView.closeCardView(R.id.btn_collapse_mosquito_collection_card_view);
         listTaskView.displaySelectedFeature(feature, clickedPoint);
@@ -443,9 +443,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         if (cardDetails instanceof SprayCardDetails) {
             this.sprayCardDetails = (SprayCardDetails) cardDetails;
             this.changeSprayStatus = true;
-        } else if (cardDetails instanceof MosquitoCollectionCardDetails) {
-            this.mosquitoCollectionCardDetails = (MosquitoCollectionCardDetails) cardDetails;
-            this.changeMosquitoCollectionStatus = true;
+        } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
+            this.mosquitoHarvestCardDetails = (MosquitoHarvestCardDetails) cardDetails;
+            this.changeMosquitoHarvestStatus = true;
         }
         listTaskView.hideProgressDialog();
         validateUserLocation();
@@ -459,7 +459,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             }
             formatSprayCardDetails((SprayCardDetails) cardDetails);
             listTaskView.openCardView(cardDetails);
-        } else if (cardDetails instanceof MosquitoCollectionCardDetails) {
+        } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
             listTaskView.openCardView(cardDetails);
         }
     }
@@ -650,10 +650,10 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
                 startForm(selectedFeature, sprayCardDetails, SPRAY_EVENT);
             }
         } else if (MOSQUITO_COLLECTION.equals(selectedFeatureInterventionType)) {
-            if (mosquitoCollectionCardDetails == null || !changeMosquitoCollectionStatus) {
+            if (mosquitoHarvestCardDetails == null || !changeMosquitoHarvestStatus) {
                 startForm(selectedFeature, null, MOSQUITO_COLLECTION_EVENT);
             } else {
-                startForm(selectedFeature, mosquitoCollectionCardDetails, MOSQUITO_COLLECTION_EVENT);
+                startForm(selectedFeature, mosquitoHarvestCardDetails, MOSQUITO_COLLECTION_EVENT);
             }
         } else if (LARVAL_DIPPING.equals(selectedFeatureInterventionType)) {
             // todo: add larval dipping card details check

@@ -34,7 +34,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract.PresenterCallBack;
 import org.smartregister.reveal.model.CardDetails;
-import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
+import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
@@ -143,9 +143,9 @@ public class ListTaskInteractor {
         if (IRS.equals(interventionType)) {
             sql = "SELECT spray_status, not_sprayed_reason, not_sprayed_other_reason, property_type, spray_date," +
                     " spray_operator, family_head_name FROM sprayed_structures WHERE id=?";
-        } else if (MOSQUITO_COLLECTION_EVENT.equals(interventionType)) {
+        } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
             sql = String.format(sql, MOSQUITO_COLLECTIONS_TABLE);
-        } else if (LARVAL_DIPPING_EVENT.equals(interventionType)) {
+        } else if (LARVAL_DIPPING.equals(interventionType)) {
             sql = String.format(sql, LARVAL_DIPPINGS_TABLE);
         }
 
@@ -189,8 +189,8 @@ public class ListTaskInteractor {
 
     private CardDetails createCardDetails(Cursor cursor, String interventionType) {
         CardDetails cardDetails = null;
-        if (MOSQUITO_COLLECTION.equals(interventionType)) {
-            cardDetails = createMosquitoCollectionCardDetails(cursor);
+        if (MOSQUITO_COLLECTION.equals(interventionType) || LARVAL_DIPPING.equals(interventionType)) {
+            cardDetails = createMosquitoHarvestingCardDetails(cursor, interventionType);
         } else if (IRS.equals(interventionType)) {
             cardDetails = createSprayCardDetails(cursor);
         }
@@ -212,11 +212,12 @@ public class ListTaskInteractor {
         );
     }
 
-    private MosquitoCollectionCardDetails createMosquitoCollectionCardDetails(Cursor cursor) {
-        return new MosquitoCollectionCardDetails(
+    private MosquitoHarvestCardDetails createMosquitoHarvestingCardDetails(Cursor cursor, String interventionType) {
+        return new MosquitoHarvestCardDetails(
                 cursor.getString(cursor.getColumnIndex("status")),
                 cursor.getString(cursor.getColumnIndex("start_date")),
-                cursor.getString(cursor.getColumnIndex("end_date"))
+                cursor.getString(cursor.getColumnIndex("end_date")),
+                interventionType
         );
     }
 

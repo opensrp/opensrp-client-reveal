@@ -56,7 +56,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
-import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
+import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.Constants.Action;
@@ -77,6 +77,7 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_LOCA
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
@@ -129,6 +130,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private TextView tvMosquitoTrapFollowUpDate;
 
     private CardView larvalBreedingCardView;
+    private TextView tvIdentifiedDate;
+    private TextView tvLarvicideDate;
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
 
@@ -185,6 +188,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         tvMosquitoCollectionStatus = findViewById(R.id.trap_collection_status);
         tvMosquitoTrapSetDate = findViewById(R.id.trap_set_date);
         tvMosquitoTrapFollowUpDate = findViewById(R.id.trap_follow_up_date);
+
+        tvIdentifiedDate = findViewById(R.id.larval_identified_date);
+        tvLarvicideDate = findViewById(R.id.larvacide_date);
 
         findViewById(R.id.change_spray_status).setOnClickListener(this);
 
@@ -462,9 +468,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         if (cardDetails instanceof SprayCardDetails) {
             populateSprayCardTextViews((SprayCardDetails) cardDetails);
             sprayCardView.setVisibility(View.VISIBLE);
-        } else if (cardDetails instanceof MosquitoCollectionCardDetails) {
-            populateMosquitoCollectionCardTextViews((MosquitoCollectionCardDetails) cardDetails);
-            mosquitoCollectionCardView.setVisibility(View.VISIBLE);
+        } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
+            populateAndOpenMosquitoHarvestCard((MosquitoHarvestCardDetails) cardDetails);
         }
     }
 
@@ -483,10 +488,20 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         }
     }
 
-    private void populateMosquitoCollectionCardTextViews(MosquitoCollectionCardDetails mosquitoCollectionCardDetails) {
-        tvMosquitoCollectionStatus.setText(mosquitoCollectionCardDetails.getStatus());
-        tvMosquitoTrapSetDate.setText(getResources().getString(R.string.mosquito_collection_trap_set_date) + mosquitoCollectionCardDetails.getTrapSetDate());
-        tvMosquitoTrapFollowUpDate.setText(getResources().getString(R.string.mosquito_collection_trap_follow_up_date) + mosquitoCollectionCardDetails.getTrapFollowUpDate());
+    private void populateAndOpenMosquitoHarvestCard(MosquitoHarvestCardDetails mosquitoHarvestCardDetails) {
+        String interventionType = mosquitoHarvestCardDetails.getInterventionType();
+        String startDate = mosquitoHarvestCardDetails.getStartDate();
+        String endDate = mosquitoHarvestCardDetails.getEndDate();
+        if (MOSQUITO_COLLECTION.equals(interventionType)) {
+            tvMosquitoCollectionStatus.setText(mosquitoHarvestCardDetails.getStatus());
+            tvMosquitoTrapSetDate.setText(getResources().getString(R.string.mosquito_collection_trap_set_date) + startDate);
+            tvMosquitoTrapFollowUpDate.setText(getResources().getString(R.string.mosquito_collection_trap_follow_up_date) + endDate);
+            mosquitoCollectionCardView.setVisibility(View.VISIBLE);
+        } else if (LARVAL_DIPPING.equals(interventionType)) {
+            tvIdentifiedDate.setText(getResources().getString(R.string.larval_breeding_identified_date_test_text) + startDate);
+            tvLarvicideDate.setText(getResources().getString(R.string.larval_breeding_larvacide_date_test_text) + endDate);
+            larvalBreedingCardView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

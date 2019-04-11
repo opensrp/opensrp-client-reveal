@@ -12,7 +12,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
-import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
+import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.AppExecutors;
 
@@ -258,11 +258,11 @@ public class ListTaskInteractorTest {
         when(cursor.getString(1)).thenReturn(START_DATE);
         when(cursor.getString(2)).thenReturn(END_DATE);
 
-        MosquitoCollectionCardDetails mosquitoCollectionCardDetails = Whitebox.invokeMethod(listTaskInteractor, "createMosquitoCollectionCardDetails", cursor);
+        MosquitoHarvestCardDetails mosquitoHarvestCardDetails = Whitebox.invokeMethod(listTaskInteractor, "createMosquitoCollectionCardDetails", cursor);
 
-        assertEquals(mosquitoCollectionCardDetails.getStatus(), STATUS);
-        assertEquals(mosquitoCollectionCardDetails.getTrapSetDate(), START_DATE);
-        assertEquals(mosquitoCollectionCardDetails.getTrapFollowUpDate(), END_DATE);
+        assertEquals(mosquitoHarvestCardDetails.getStatus(), STATUS);
+        assertEquals(mosquitoHarvestCardDetails.getStartDate(), START_DATE);
+        assertEquals(mosquitoHarvestCardDetails.getEndDate(), END_DATE);
     }
 
     @Test

@@ -20,7 +20,7 @@ import org.smartregister.domain.Location;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
-import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
+import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PasswordDialogUtils;
@@ -156,7 +156,7 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", MOSQUITO_COLLECTION);
 
-        CardDetails mosquitoCollectionCardDetails = new MosquitoCollectionCardDetails(null, null, null);
+        CardDetails mosquitoCollectionCardDetails = new MosquitoHarvestCardDetails(null, null, null);
 
         Whitebox.setInternalState(listTaskPresenterSpy, "mosquitoCollectionCardDetails", mosquitoCollectionCardDetails);
 
@@ -182,7 +182,7 @@ public class ListTaskPresenterTest {
     @Test
     public void testOnInterventionFormDetailsFetchedShouldSetChangeMosquitoCollectionStatusToTrueForMosquitoCollectionCard() {
         Assert.assertFalse(Whitebox.getInternalState(listTaskPresenter, "changeMosquitoCollectionStatus"));
-        listTaskPresenter.onInterventionFormDetailsFetched(mock(MosquitoCollectionCardDetails.class));
+        listTaskPresenter.onInterventionFormDetailsFetched(mock(MosquitoHarvestCardDetails.class));
         Assert.assertTrue(Whitebox.getInternalState(listTaskPresenter, "changeMosquitoCollectionStatus"));
     }
 
@@ -300,12 +300,12 @@ public class ListTaskPresenterTest {
 
     @Test
     public void testOpenCardViewIsCalledWithCorrectArgumentOnMosquitoCollectionCardDetailsFetched() {
-        MosquitoCollectionCardDetails mosquitoCollectionCardDetails = new MosquitoCollectionCardDetails(null, null, null);
+        MosquitoHarvestCardDetails mosquitoHarvestCardDetails = new MosquitoHarvestCardDetails(null, null, null);
 
         doNothing().when(listTaskViewSpy).openCardView(any(CardDetails.class));
-        listTaskPresenter.onCardDetailsFetched(mosquitoCollectionCardDetails);
+        listTaskPresenter.onCardDetailsFetched(mosquitoHarvestCardDetails);
 
-        verify(listTaskViewSpy, times(1)).openCardView(eq(mosquitoCollectionCardDetails));
+        verify(listTaskViewSpy, times(1)).openCardView(eq(mosquitoHarvestCardDetails));
     }
 
     @Test
