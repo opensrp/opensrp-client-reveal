@@ -22,6 +22,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.job.RevealCampaignServiceJob;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
+import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
 
@@ -36,8 +37,7 @@ import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_
 public class Utils {
 
     public static final ArrayList<String> ALLOWED_LEVELS;
-    public static final String DEFAULT_LOCATION_LEVEL = "Rural Health Centre";
-    public static final String OPERATIONAL_AREA = "Operational Area";
+    public static final String DEFAULT_LOCATION_LEVEL = Tags.HEALTH_CENTER;
     public static final String REVEAL_PROJECT = "reveal";
 
     private static Cache<Location> cache = new Cache<>();
@@ -45,7 +45,9 @@ public class Utils {
     static {
         ALLOWED_LEVELS = new ArrayList<>();
         ALLOWED_LEVELS.add(DEFAULT_LOCATION_LEVEL);
-        ALLOWED_LEVELS.add(OPERATIONAL_AREA);
+        ALLOWED_LEVELS.add(Tags.OPERATIONAL_AREA);
+        ALLOWED_LEVELS.add(Tags.CANTON);
+        ALLOWED_LEVELS.add(Tags.VILLAGE);
         ALLOWED_LEVELS.add(REVEAL_PROJECT);
     }
 
