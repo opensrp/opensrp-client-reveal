@@ -190,7 +190,7 @@ public class ListTaskInteractor {
     private CardDetails createCardDetails(Cursor cursor, String interventionType) {
         CardDetails cardDetails = null;
         if (MOSQUITO_COLLECTION.equals(interventionType) || LARVAL_DIPPING.equals(interventionType)) {
-            cardDetails = createMosquitoHarvestingCardDetails(cursor, interventionType);
+            cardDetails = createMosquitoHarvestCardDetails(cursor, interventionType);
         } else if (IRS.equals(interventionType)) {
             cardDetails = createSprayCardDetails(cursor);
         }
@@ -212,7 +212,7 @@ public class ListTaskInteractor {
         );
     }
 
-    private MosquitoHarvestCardDetails createMosquitoHarvestingCardDetails(Cursor cursor, String interventionType) {
+    private MosquitoHarvestCardDetails createMosquitoHarvestCardDetails(Cursor cursor, String interventionType) {
         return new MosquitoHarvestCardDetails(
                 cursor.getString(cursor.getColumnIndex("status")),
                 cursor.getString(cursor.getColumnIndex("start_date")),

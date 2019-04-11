@@ -420,10 +420,10 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
                 listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
-            } else if (MOSQUITO_COLLECTION.equals(code)
+            } else if ((MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code))
                     && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
                     || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
-                listTaskInteractor.fetchInterventionDetails(MOSQUITO_COLLECTION, feature.id(), false);
+                listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
             }
         }
     }
@@ -656,8 +656,11 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
                 startForm(selectedFeature, mosquitoHarvestCardDetails, MOSQUITO_COLLECTION_EVENT);
             }
         } else if (LARVAL_DIPPING.equals(selectedFeatureInterventionType)) {
-            // todo: add larval dipping card details check
-            startForm(selectedFeature, null, LARVAL_DIPPING_EVENT);
+            if (mosquitoHarvestCardDetails == null || !changeMosquitoHarvestStatus) {
+                startForm(selectedFeature, null, LARVAL_DIPPING_EVENT);
+            } else {
+                startForm(selectedFeature, mosquitoHarvestCardDetails, LARVAL_DIPPING_EVENT);
+            }
         }
     }
 
