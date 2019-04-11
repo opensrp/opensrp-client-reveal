@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.smartregister.AllConstants.OPERATIONAL_AREAS;
+import static org.smartregister.reveal.util.Constants.Tags.CANTON;
 import static org.smartregister.reveal.util.Constants.Tags.COUNTRY;
 import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
@@ -67,11 +68,20 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             ArrayList<String> operationalAreaLevels = new ArrayList<>();
             operationalAreaLevels.add(DISTRICT);
             operationalAreaLevels.add(HEALTH_CENTER);
+            operationalAreaLevels.add(CANTON);
             List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels);
 
             if (defaultLocation != null) {
                 view.setDistrict(defaultLocation.get(0));
-                view.setFacility(defaultLocation.get(1));
+                ArrayList<String> levels = new ArrayList<>();
+                levels.add(CANTON);
+                String level;
+                if (locationHelper.generateLocationHierarchyTree(false, levels).isEmpty()) {
+                    level = HEALTH_CENTER;
+                } else {
+                    level = CANTON;
+                }
+                view.setFacility(defaultLocation.get(1), level);
             }
         } else {
             populateLocationsFromPreferences();
@@ -103,7 +113,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     private void populateLocationsFromPreferences() {
         view.setDistrict(prefsUtil.getCurrentDistrict());
-        view.setFacility(prefsUtil.getCurrentFacility());
+        view.setFacility(prefsUtil.getCurrentFacility(), prefsUtil.getCurrentFacilityLevel());
         view.setOperationalArea(prefsUtil.getCurrentOperationalArea());
     }
 
@@ -160,10 +170,12 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         ArrayList<String> operationalAreaLevels = new ArrayList<>();
         operationalAreaLevels.add(DISTRICT);
         operationalAreaLevels.add(HEALTH_CENTER);
+        operationalAreaLevels.add(CANTON);
         operationalAreaLevels.add(OPERATIONAL_AREA);
         List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
-        String facility = getFacilityFromOperationalArea(name.get(2), name.get(3), entireTree);
-        prefsUtil.setCurrentFacility(facility);
+        Pair<String, String> facility = getFacilityFromOperationalArea(name.get(2), name.get(3), entireTree);
+        prefsUtil.setCurrentFacility(facility.second);
+        prefsUtil.setCurrentFacilityLevel(facility.first);
         changedCurrentSelection = true;
         populateLocationsFromPreferences();
         unlockDrawerLayout();
@@ -187,14 +199,14 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         }
     }
 
-    private String getFacilityFromOperationalArea(String district, String operationalArea, List<FormLocation> entireTree) {
+    private Pair<String, String> getFacilityFromOperationalArea(String district, String operationalArea, List<FormLocation> entireTree) {
         for (FormLocation districtLocation : entireTree) {
             if (!districtLocation.name.equals(district))
                 continue;
             for (FormLocation facilityLocation : districtLocation.nodes) {
                 for (FormLocation operationalAreaLocation : facilityLocation.nodes) {
                     if (operationalAreaLocation.name.equals(operationalArea)) {
-                        return facilityLocation.name;
+                        return new Pair<>(facilityLocation.level, facilityLocation.name);
                     }
                 }
             }
