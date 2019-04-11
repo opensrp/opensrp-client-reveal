@@ -51,6 +51,32 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "task_business_status",
+        "label": "Status",
+        "type": "native_radio",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "options": [
+          {
+            "key": "In Progress",
+            "text": "In Progress"
+          },
+          {
+            "key": "Incomplete",
+            "text": "Incomplete"
+          },
+          {
+            "key": "Not Eligible",
+            "text": "Not Eligible"
+          },
+          {
+            "key": "Complete",
+            "text": "Complete"
+          }
+        ]
+      },
+      {
         "key": "occurred_date",
         "type": "date_picker",
         "openmrs_entity_parent": "",
@@ -345,6 +371,20 @@
             "hint": "Add a comment"
           }
         ]
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-mosquito-collection-calculation-rules.yml"
+            }
+          }
+        }
       }
     ]
   }
