@@ -80,7 +80,7 @@
         </ScrollView>
 
         <Button
-            android:id="@+id/btn_record_mosquito_collection"
+            android:id="@+id/btn_record_larval_dipping"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|bottom"

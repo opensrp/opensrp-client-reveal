@@ -80,6 +80,9 @@
     <string name="fetching_mosquito_collection_points_title">Fetching Mosquito Collection Point Details</string>
     <string name="fetching_mosquito_collection_points_message">Fetching Mosquito Collection Point Details. Please wait</string>
 
+    <string name="fetching_larval_dipping_points_title">Fetching Larval Dipping Point Details</string>
+    <string name="fetching_larval_dipping_points_message">Fetching Larval Dipping Point Details. Please wait</string>
+
     <string name="narrowing_location_title">Calculating your location</string>
     <string name="narrowing_location_message">Calculating your location. Please wait</string>
 

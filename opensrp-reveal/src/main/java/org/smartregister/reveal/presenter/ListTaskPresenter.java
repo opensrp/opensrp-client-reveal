@@ -134,9 +134,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     private MosquitoHarvestCardDetails mosquitoHarvestCardDetails;
 
-    private boolean changeSprayStatus;
+    private CardDetails cardDetails;
 
-    private boolean changeMosquitoHarvestStatus;
+    private boolean changeInterventionStatus;
 
     public ListTaskPresenter(ListTaskView listTaskView) {
         this.listTaskView = listTaskView;
@@ -400,8 +400,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     private void onFeatureSelected(Feature feature) {
         this.selectedFeature = feature;
-        this.changeSprayStatus = false;
-        this.changeMosquitoHarvestStatus = false;
+        this.changeInterventionStatus = false;
 
         listTaskView.closeCardView(R.id.btn_collapse_mosquito_collection_card_view);
         listTaskView.displaySelectedFeature(feature, clickedPoint);
@@ -440,13 +439,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     @Override
     public void onInterventionFormDetailsFetched(CardDetails cardDetails) {
-        if (cardDetails instanceof SprayCardDetails) {
-            this.sprayCardDetails = (SprayCardDetails) cardDetails;
-            this.changeSprayStatus = true;
-        } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
-            this.mosquitoHarvestCardDetails = (MosquitoHarvestCardDetails) cardDetails;
-            this.changeMosquitoHarvestStatus = true;
-        }
+        this.cardDetails = cardDetails;
+        this.changeInterventionStatus = true;
         listTaskView.hideProgressDialog();
         validateUserLocation();
     }
@@ -497,8 +491,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         }
     }
 
-    private void startForm(Feature feature, CardDetails cardDetails, String encounterType) {
-        if (SPRAY_EVENT.equals(encounterType)) {
+    private void startForm(Feature feature, CardDetails cardDetails, String interventionType) {
+        if (IRS.equals(interventionType)) {
             String formName = null;
             if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
                 formName = SPRAY_FORM_NAMIBIA;
@@ -514,9 +508,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
                 familyHead = cardDetails == null ? null : ((SprayCardDetails) cardDetails).getFamilyHead();
             }
             startForm(formName, feature, sprayStatus, familyHead);
-        } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)) {
+        } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
             startForm(THAILAND_MOSQUITO_COLLECTION_FORM,  feature, null, null);
-        } else if (LARVAL_DIPPING_EVENT.equals(encounterType)) {
+        } else if (LARVAL_DIPPING.equals(interventionType)) {
             startForm(THAILAND_LARVAL_DIPPING_FORM, feature, null, null);
         }
     }
@@ -574,11 +568,12 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     public void onChangeInterventionStatus(String interventionType) {
         if (IRS.equals(interventionType)) {
             listTaskView.showProgressDialog(R.string.fetching_structure_title, R.string.fetching_structure_message);
-            listTaskInteractor.fetchInterventionDetails(IRS, selectedFeature.id(), true);
         } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
             listTaskView.showProgressDialog(R.string.fetching_mosquito_collection_points_title, R.string.fetching_mosquito_collection_points_message);
-            listTaskInteractor.fetchInterventionDetails(MOSQUITO_COLLECTION, selectedFeature.id(), true);
+        } else if (LARVAL_DIPPING.equals(interventionType)) {
+            listTaskView.showProgressDialog(R.string.fetching_larval_dipping_points_title, R.string.fetching_larval_dipping_points_message);
         }
+        listTaskInteractor.fetchInterventionDetails(interventionType, selectedFeature.id(), true);
     }
 
     public void saveJsonForm(String json) {
@@ -600,8 +595,8 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
         if (IRS.equals(interventionType)) {
             listTaskInteractor.fetchInterventionDetails(IRS, structureId, false);
-        } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
-            listTaskInteractor.fetchInterventionDetails(MOSQUITO_COLLECTION, structureId, false);
+        } else if (MOSQUITO_COLLECTION.equals(interventionType) || LARVAL_DIPPING.equals(interventionType)) {
+            listTaskInteractor.fetchInterventionDetails(interventionType, structureId, false);
         }
     }
 
@@ -643,24 +638,10 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     @Override
     public void onLocationValidated() {
-        if (IRS.equals(selectedFeatureInterventionType)) {
-            if (sprayCardDetails == null || !changeSprayStatus) {
-                startForm(selectedFeature, null, SPRAY_EVENT);
-            } else {
-                startForm(selectedFeature, sprayCardDetails, SPRAY_EVENT);
-            }
-        } else if (MOSQUITO_COLLECTION.equals(selectedFeatureInterventionType)) {
-            if (mosquitoHarvestCardDetails == null || !changeMosquitoHarvestStatus) {
-                startForm(selectedFeature, null, MOSQUITO_COLLECTION_EVENT);
-            } else {
-                startForm(selectedFeature, mosquitoHarvestCardDetails, MOSQUITO_COLLECTION_EVENT);
-            }
-        } else if (LARVAL_DIPPING.equals(selectedFeatureInterventionType)) {
-            if (mosquitoHarvestCardDetails == null || !changeMosquitoHarvestStatus) {
-                startForm(selectedFeature, null, LARVAL_DIPPING_EVENT);
-            } else {
-                startForm(selectedFeature, mosquitoHarvestCardDetails, LARVAL_DIPPING_EVENT);
-            }
+        if (cardDetails == null || !changeInterventionStatus) {
+            startForm(selectedFeature, null, selectedFeatureInterventionType);
+        } else {
+            startForm(selectedFeature, cardDetails, selectedFeatureInterventionType);
         }
     }
 
