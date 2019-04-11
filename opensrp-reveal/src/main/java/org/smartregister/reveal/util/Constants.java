@@ -70,6 +70,7 @@ public interface Constants {
         String DISTRICT = "District";
         String HEALTH_CENTER = "Rural Health Centre";
         String CANTON = "Canton";
+        String VILLAGE = "Village";
         String OPERATIONAL_AREA = "Operational Area";
     }
 
