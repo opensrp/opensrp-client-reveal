@@ -35,6 +35,8 @@ public interface ListTaskContract {
 
         void closeCardView(int id);
 
+        void closeAllCardViews();
+
         void showOperationalAreaSelector(Pair<String, ArrayList<String>> locationHierarchy);
 
         void setCampaign(String campaign);

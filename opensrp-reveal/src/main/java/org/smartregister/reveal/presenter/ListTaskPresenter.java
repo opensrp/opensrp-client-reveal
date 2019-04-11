@@ -402,7 +402,7 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         this.selectedFeature = feature;
         this.changeInterventionStatus = false;
 
-        listTaskView.closeCardView(R.id.btn_collapse_mosquito_collection_card_view);
+        listTaskView.closeAllCardViews();
         listTaskView.displaySelectedFeature(feature, clickedPoint);
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));

@@ -216,6 +216,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         }
     }
 
+    @Override
+    public void closeAllCardViews() {
+        setViewVisibility(sprayCardView, false);
+        setViewVisibility(mosquitoCollectionCardView, false);
+        setViewVisibility(larvalBreedingCardView, false);
+    }
+
     private void setViewVisibility(View view, boolean isVisible) {
         view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
