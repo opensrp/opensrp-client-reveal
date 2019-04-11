@@ -36,7 +36,7 @@ public class BaseDrawerContract {
 
         void setDistrict(String district);
 
-        void setFacility(String facility);
+        void setFacility(String facility, String facilityLevel);
 
         void setOperator();
 

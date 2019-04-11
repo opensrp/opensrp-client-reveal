@@ -61,6 +61,7 @@ public interface Constants {
         String CURRENT_DISTRICT = "CURRENT_DISTRICT";
         String CURRENT_CAMPAIGN = "CURRENT_CAMPAIGN";
         String CURRENT_CAMPAIGN_ID = "CURRENT_CAMPAIGN_ID";
+        String FACILITY_LEVEL = "FACILITY_LEVEL";
     }
 
     interface Tags {
@@ -68,6 +69,7 @@ public interface Constants {
         String PROVINCE = "Province";
         String DISTRICT = "District";
         String HEALTH_CENTER = "Rural Health Centre";
+        String CANTON = "Canton";
         String OPERATIONAL_AREA = "Operational Area";
     }
 

@@ -25,6 +25,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.presenter.BaseDrawerPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
+import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -156,8 +157,9 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     }
 
     @Override
-    public void setFacility(String facility) {
-        org.smartregister.reveal.util.Utils.setTextViewText(facilityTextView, R.string.facility, facility);
+    public void setFacility(String facility, String facilityLevel) {
+        org.smartregister.reveal.util.Utils.setTextViewText(facilityTextView,
+                Tags.CANTON.equals(facilityLevel) ? R.string.canton : R.string.facility, facility);
     }
 
     @Override

@@ -8,6 +8,7 @@ import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_CAMPAI
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_DISTRICT;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_FACILITY;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_OPERATIONAL_AREA;
+import static org.smartregister.reveal.util.Constants.Preferences.FACILITY_LEVEL;
 
 /**
  * Created by samuelgithengi on 11/29/18.
@@ -74,4 +75,15 @@ public class PreferencesUtil {
     public String getPreferenceValue(String key) {
         return allSharedPreferences.getPreference(key);
     }
+
+    public void setCurrentFacilityLevel(String facilityLevel) {
+        allSharedPreferences.savePreference(FACILITY_LEVEL, facilityLevel);
+    }
+
+
+    public String getCurrentFacilityLevel() {
+        return allSharedPreferences.getPreference(FACILITY_LEVEL);
+    }
+
+
 }
