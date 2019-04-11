@@ -93,6 +93,11 @@ public interface Constants {
         String IRS_VISIT = "IRS Visit";
     }
 
+    interface Tables {
+        String MOSQUITO_COLLECTIONS_TABLE = "mosquito_collections";
+        String LARVAL_DIPPINGS_TABLE = "larval_dippings";
+    }
+
     interface BusinessStatus {
         String NOT_VISITED = "Not Visited";
         String NOT_SPRAYED = "Not Sprayed";

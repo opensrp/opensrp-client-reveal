@@ -33,6 +33,7 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract.PresenterCallBack;
+import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.sync.RevealClientProcessor;
@@ -68,6 +69,8 @@ import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
+import static org.smartregister.reveal.util.Constants.Tables.LARVAL_DIPPINGS_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.MOSQUITO_COLLECTIONS_TABLE;
 import static org.smartregister.util.JsonFormUtils.ENTITY_ID;
 import static org.smartregister.util.JsonFormUtils.getJSONObject;
 import static org.smartregister.util.JsonFormUtils.getString;
@@ -134,19 +137,29 @@ public class ListTaskInteractor {
         appExecutors.diskIO().execute(runnable);
     }
 
-    public void fetchSprayDetails(String structureId, boolean isForSprayForm) {
+    public void fetchInterventionDetails(String interventionType, String featureId, boolean isForForm) {
 
+        String sql = "SELECT status, start_date, end_date FROM %s WHERE id=?";
+        if (IRS.equals(interventionType)) {
+            sql = "SELECT spray_status, not_sprayed_reason, not_sprayed_other_reason, property_type, spray_date," +
+                    " spray_operator, family_head_name FROM sprayed_structures WHERE id=?";
+        } else if (MOSQUITO_COLLECTION_EVENT.equals(interventionType)) {
+            sql = String.format(sql, MOSQUITO_COLLECTIONS_TABLE);
+        } else if (LARVAL_DIPPING_EVENT.equals(interventionType)) {
+            sql = String.format(sql, LARVAL_DIPPINGS_TABLE);
+        }
+
+        final String SQL = sql;
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final String sql = "SELECT spray_status, not_sprayed_reason, not_sprayed_other_reason, property_type, spray_date," +
-                        " spray_operator, family_head_name FROM sprayed_structures WHERE id=?";
                 SQLiteDatabase db = RevealApplication.getInstance().getRepository().getWritableDatabase();
-                Cursor cursor = db.rawQuery(sql, new String[]{structureId});
-                SprayCardDetails sprayCardDetails = null;
+                Cursor cursor = db.rawQuery(SQL, new String[]{featureId});
+
+                CardDetails cardDetails = null;
                 try {
                     if (cursor.moveToFirst()) {
-                        sprayCardDetails = createSprayCardDetails(cursor);
+                        cardDetails = createCardDetails(cursor, interventionType);
                     }
                 } catch (Exception e) {
                     Log.e(TAG, Log.getStackTraceString(e));
@@ -157,60 +170,31 @@ public class ListTaskInteractor {
                 }
 
                 // run on ui thread
-                SprayCardDetails finalSprayCardDetails = sprayCardDetails;
+                final CardDetails CARD_DETAILS = cardDetails;
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-                        if (isForSprayForm) {
-                            presenterCallBack.onInterventionFormDetailsFetched(finalSprayCardDetails);
+                        if (isForForm) {
+                            presenterCallBack.onInterventionFormDetailsFetched(CARD_DETAILS);
                         } else {
-                            presenterCallBack.onCardDetailsFetched(finalSprayCardDetails);
+                            presenterCallBack.onCardDetailsFetched(CARD_DETAILS);
                         }
                     }
                 });
             }
         };
+
         appExecutors.diskIO().execute(runnable);
     }
 
-    public void fetchMosquitoCollectionDetails(String mosquitoCollectionPointId, boolean isForMosquitoCollectionForm) {
-
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                final String sql = "SELECT status, start_date, end_date FROM mosquito_collections WHERE id=?";
-                SQLiteDatabase db = RevealApplication.getInstance().getRepository().getWritableDatabase();
-                Cursor cursor = db.rawQuery(sql, new String[]{mosquitoCollectionPointId});
-
-                MosquitoCollectionCardDetails mosquitoCollectionCardDetails = null;
-                try {
-                    if (cursor.moveToFirst()) {
-                        mosquitoCollectionCardDetails = createMosquitoCollectionCardDetails(cursor);
-                    }
-                } catch (Exception e) {
-                    Log.e(TAG, Log.getStackTraceString(e));
-                } finally {
-                    if (cursor != null) {
-                        cursor.close();
-                    }
-                }
-
-                // run on ui thread
-                MosquitoCollectionCardDetails finalMosquitoCollectionCardDetails = mosquitoCollectionCardDetails;
-                appExecutors.mainThread().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isForMosquitoCollectionForm) {
-                            presenterCallBack.onInterventionFormDetailsFetched(finalMosquitoCollectionCardDetails);
-                        } else {
-                            presenterCallBack.onCardDetailsFetched(finalMosquitoCollectionCardDetails);
-                        }
-                    }
-                });
-            }
-        };
-
-        appExecutors.diskIO().execute(runnable);
+    private CardDetails createCardDetails(Cursor cursor, String interventionType) {
+        CardDetails cardDetails = null;
+        if (MOSQUITO_COLLECTION.equals(interventionType)) {
+            cardDetails = createMosquitoCollectionCardDetails(cursor);
+        } else if (IRS.equals(interventionType)) {
+            cardDetails = createSprayCardDetails(cursor);
+        }
+        return cardDetails;
     }
 
     private SprayCardDetails createSprayCardDetails(Cursor cursor) {

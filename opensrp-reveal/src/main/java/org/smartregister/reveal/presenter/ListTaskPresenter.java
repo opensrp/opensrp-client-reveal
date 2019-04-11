@@ -419,11 +419,11 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
                 }
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
-                listTaskInteractor.fetchSprayDetails(feature.id(), false);
+                listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
             } else if (MOSQUITO_COLLECTION.equals(code)
                     && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
                     || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
-                listTaskInteractor.fetchMosquitoCollectionDetails(feature.id(), false);
+                listTaskInteractor.fetchInterventionDetails(MOSQUITO_COLLECTION, feature.id(), false);
             }
         }
     }
@@ -574,10 +574,10 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
     public void onChangeInterventionStatus(String interventionType) {
         if (IRS.equals(interventionType)) {
             listTaskView.showProgressDialog(R.string.fetching_structure_title, R.string.fetching_structure_message);
-            listTaskInteractor.fetchSprayDetails(selectedFeature.id(), true);
+            listTaskInteractor.fetchInterventionDetails(IRS, selectedFeature.id(), true);
         } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
             listTaskView.showProgressDialog(R.string.fetching_mosquito_collection_points_title, R.string.fetching_mosquito_collection_points_message);
-            listTaskInteractor.fetchMosquitoCollectionDetails(selectedFeature.id(), true);
+            listTaskInteractor.fetchInterventionDetails(MOSQUITO_COLLECTION, selectedFeature.id(), true);
         }
     }
 
@@ -599,9 +599,9 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
         listTaskView.setGeoJsonSource(featureCollection, null);
 
         if (IRS.equals(interventionType)) {
-            listTaskInteractor.fetchSprayDetails(structureId, false);
+            listTaskInteractor.fetchInterventionDetails(IRS, structureId, false);
         } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
-            listTaskInteractor.fetchMosquitoCollectionDetails(structureId, false);
+            listTaskInteractor.fetchInterventionDetails(MOSQUITO_COLLECTION, structureId, false);
         }
     }
 

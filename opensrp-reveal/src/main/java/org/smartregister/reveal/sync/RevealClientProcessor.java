@@ -89,7 +89,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 if (eventType.equals(SPRAY_EVENT)) {
                     operationalAreaId = processSprayEvent(event, clientClassification, localEvents);
                 } else if (eventType.equals(MOSQUITO_COLLECTION_EVENT) || eventType.equals(LARVAL_DIPPING_EVENT)) {
-                    operationalAreaId = processMosquitoInterventionEvent(event, clientClassification, localEvents);
+                    operationalAreaId = processMosquitoHarvestingEvent(event, clientClassification, localEvents);
                 } else {
                     Client client = eventClient.getClient();
                     //iterate through the events
@@ -144,7 +144,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         return operationalAreaId;
     }
 
-    private String processMosquitoInterventionEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
+    private String processMosquitoHarvestingEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
         String operationalAreaId = null;
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
             operationalAreaId = updateTask(event, localEvents);

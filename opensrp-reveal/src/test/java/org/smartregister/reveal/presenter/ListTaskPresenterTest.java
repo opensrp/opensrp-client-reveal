@@ -208,7 +208,7 @@ public class ListTaskPresenterTest {
 
     @Test
     public void testfetchMosquitoCollectionDetailsIsCalledForCompleteMosquitoCollectionTask() throws Exception {
-        doNothing().when(listTaskInteractor).fetchMosquitoCollectionDetails(anyString(), anyBoolean());
+        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(IRS),anyString(), anyBoolean());
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(COMPLETE);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
 
@@ -217,12 +217,12 @@ public class ListTaskPresenterTest {
 
         Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
 
-        verify(listTaskInteractor, times(1)).fetchMosquitoCollectionDetails(AdditionalMatchers.or(anyString(), isNull()), eq(false));
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(IRS),AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
 
     @Test
     public void testfetchMosquitoCollectionDetailsIsCalledForInCompleteMosquitoCollectionTask() throws Exception {
-        doNothing().when(listTaskInteractor).fetchMosquitoCollectionDetails(anyString(), anyBoolean());
+        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(IRS),anyString(), anyBoolean());
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(INCOMPLETE);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
 
@@ -231,12 +231,12 @@ public class ListTaskPresenterTest {
 
         Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
 
-        verify(listTaskInteractor, times(1)).fetchMosquitoCollectionDetails(AdditionalMatchers.or(anyString(), isNull()), eq(false));
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(IRS),AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
 
     @Test
     public void testfetchMosquitoCollectionDetailsIsCalledForInProgressMosquitoCollectionTask() throws Exception {
-        doNothing().when(listTaskInteractor).fetchMosquitoCollectionDetails(anyString(), anyBoolean());
+        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(IRS),anyString(), anyBoolean());
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(IN_PROGRESS);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
 
@@ -245,12 +245,12 @@ public class ListTaskPresenterTest {
 
         Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
 
-        verify(listTaskInteractor, times(1)).fetchMosquitoCollectionDetails(AdditionalMatchers.or(anyString(), isNull()), eq(false));
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(IRS),AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
 
     @Test
     public void testfetchMosquitoCollectionDetailsIsCalledForNotEligibleMosquitoCollectionTask() throws Exception {
-        doNothing().when(listTaskInteractor).fetchMosquitoCollectionDetails(anyString(), anyBoolean());
+        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(IRS),anyString(), anyBoolean());
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(NOT_ELIGIBLE);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
 
@@ -259,7 +259,7 @@ public class ListTaskPresenterTest {
 
         Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
 
-        verify(listTaskInteractor, times(1)).fetchMosquitoCollectionDetails(AdditionalMatchers.or(anyString(), isNull()), eq(false));
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(IRS),AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
 
     @Test
@@ -270,7 +270,7 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenter, "listTaskInteractor", listTaskInteractor);
 
-        doNothing().when(listTaskInteractor).fetchMosquitoCollectionDetails(anyString(), anyBoolean());
+        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(IRS),anyString(), anyBoolean());
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(NOT_VISITED);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
         doReturn(mock(android.location.Location.class)).when(listTaskViewSpy).getUserCurrentLocation();
@@ -316,7 +316,7 @@ public class ListTaskPresenterTest {
 
         listTaskPresenter.onChangeInterventionStatus(IRS);
 
-        verify(listTaskInteractor, times(1)).fetchSprayDetails(AdditionalMatchers.or(anyString(), isNull()), eq(true));
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(IRS), AdditionalMatchers.or(anyString(), isNull()), eq(true));
     }
 
     @Test
@@ -327,7 +327,7 @@ public class ListTaskPresenterTest {
 
         listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
 
-        verify(listTaskInteractor, times(1)).fetchMosquitoCollectionDetails(AdditionalMatchers.or(anyString(), isNull()), eq(true));
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(IRS),AdditionalMatchers.or(anyString(), isNull()), eq(true));
     }
 
     @Test
@@ -336,11 +336,11 @@ public class ListTaskPresenterTest {
 
         doNothing().when(listTaskViewSpy).hideProgressDialog();
         doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Geometry.class));
-        doNothing().when(listTaskInteractor).fetchSprayDetails(anyString(), anyBoolean());
+        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(IRS), anyString(), anyBoolean());
 
         listTaskPresenter.onFormSaved(null, null, null, IRS);
 
-        verify(listTaskInteractor, times(1)).fetchSprayDetails(AdditionalMatchers.or(anyString(), isNull()), eq(false));
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(IRS), AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
 
     @Test
@@ -349,14 +349,12 @@ public class ListTaskPresenterTest {
 
         doNothing().when(listTaskViewSpy).hideProgressDialog();
         doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Geometry.class));
-        doNothing().when(listTaskInteractor).fetchMosquitoCollectionDetails(anyString(), anyBoolean());
+        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(IRS),anyString(), anyBoolean());
 
         listTaskPresenter.onFormSaved(null, null, null, MOSQUITO_COLLECTION);
 
-        verify(listTaskInteractor, times(1)).fetchMosquitoCollectionDetails(AdditionalMatchers.or(anyString(), isNull()), eq(false));
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(IRS), AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
-
-
 
     private void mockStaticMethods() {
         mockStatic(Utils.class);
