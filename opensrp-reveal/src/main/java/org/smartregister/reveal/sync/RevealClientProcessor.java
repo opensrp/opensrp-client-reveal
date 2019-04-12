@@ -20,6 +20,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.StructureType;
+import org.smartregister.reveal.util.FamilyConstants.EventType;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.ClientProcessorForJava;
@@ -98,6 +99,11 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
                     if (client != null) {
                         try {
+                            if (event.getDetails().get(TASK_IDENTIFIER) != null &&
+                                    (EventType.FAMILY_REGISTRATION.equals(event.getEventType()) ||
+                                            EventType.FAMILY_MEMBER_REGISTRATION.equals(event.getEventType()))) {
+                                updateTask(event, localEvents);
+                            }
                             processEvent(event, client, clientClassification);
                         } catch (Exception e) {
                             Log.d(TAG, e.getMessage());
@@ -197,6 +203,9 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     }
 
     public String calculateBusinessStatus(Event event) {
+        if (EventType.FAMILY_REGISTRATION.equals(event.getEventType()) || EventType.FAMILY_MEMBER_REGISTRATION.equals(event.getEventType())) {
+            return BusinessStatus.COMPLETE;
+        }
         Obs businessStatusObs = event.findObs(null, false, JsonForm.BUSINESS_STATUS);
         if (businessStatusObs != null) {
             return businessStatusObs.getValue().toString();

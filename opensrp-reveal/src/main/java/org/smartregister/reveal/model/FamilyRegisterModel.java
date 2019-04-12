@@ -32,7 +32,7 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
             eventClient.getClient().addAttribute(RESIDENCE, structureId);
             eventClient.getEvent().addDetails(Constants.Properties.TASK_IDENTIFIER, taskId);
             eventClient.getEvent().addDetails(Constants.Properties.TASK_BUSINESS_STATUS, taskBusinessStatus);
-            eventClient.getEvent().addDetails((Constants.Properties.TASK_STATUS, taskStatus);
+            eventClient.getEvent().addDetails(Constants.Properties.TASK_STATUS, taskStatus);
             eventClient.getEvent().addDetails(Constants.Properties.LOCATION_UUID, structureId);
         }
         return eventClientList;
