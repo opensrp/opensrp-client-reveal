@@ -43,6 +43,9 @@ public class StructureTaskAdapter extends RecyclerView.Adapter<StructureTaskView
         if (Intervention.BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode())) {
             viewHolder.setTaskName(context.getString(R.string.distribute_llin));
             viewHolder.setTaskAction(context.getString(R.string.record_llin), taskDetails.getBusinessStatus(), onClickListener);
+        } else if (Intervention.IRS.equals(taskDetails.getTaskCode())) {
+            viewHolder.setTaskName(context.getString(R.string.irs));
+            viewHolder.setTaskAction(context.getString(R.string.record_status), taskDetails.getBusinessStatus(), onClickListener);
         } else {
             viewHolder.setTaskName(taskDetails.getTaskName());
             viewHolder.setTaskAction(taskDetails.getTaskAction(), taskDetails.getBusinessStatus(), onClickListener);
