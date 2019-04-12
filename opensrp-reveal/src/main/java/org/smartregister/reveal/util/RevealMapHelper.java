@@ -81,6 +81,10 @@ public class RevealMapHelper {
         mMapboxMapStyle.addLayer(symbolLayer);
 
         // index case symbol layer
+        dynamicIconSize = interpolate(linear(), zoom(),
+                literal(13.98f), literal(1),
+                literal(17.79f), literal(3f),
+                literal(18.8f), literal(4));
         icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_index_case_target_icon);
         mMapboxMapStyle.addImage(INDEX_CASE_TARGET_ICON, icon);
         symbolLayer = new SymbolLayer(INDEX_CASE_SYMBOL_LAYER, context.getString(R.string.reveal_datasource_name));
@@ -96,7 +100,7 @@ public class RevealMapHelper {
         circleLayer.withProperties(
                 circleOpacity(0f),
                 circleColor(Color.parseColor("#ffffff")),
-                circleRadius(100f),
+                circleRadius(200f),
                 circleStrokeColor("#ffffff"),
                 circleStrokeWidth(2f),
                 circleStrokeOpacity(1f)
