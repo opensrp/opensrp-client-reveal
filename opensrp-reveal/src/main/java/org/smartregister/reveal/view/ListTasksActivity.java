@@ -288,10 +288,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         startActivity(intent);
     }
 
-    private void registerFamily() {
+    @Override
+    public void registerFamily() {
         Intent intent = new Intent(this, FamilyRegisterActivity.class);
         intent.putExtra(START_REGISTRATION, true);
         intent.putExtra(Properties.LOCATION_UUID, listTaskPresenter.getSelectedFeature().id());
+        intent.putExtra(Properties.TASK_IDENTIFIER, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_IDENTIFIER));
+        intent.putExtra(Properties.TASK_BUSINESS_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_BUSINESS_STATUS));
+        intent.putExtra(Properties.TASK_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_STATUS));
         startActivity(intent);
     }
 

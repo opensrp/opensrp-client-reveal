@@ -5,7 +5,6 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
@@ -30,7 +29,7 @@ import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.CardDetailsUtil;
-import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -51,8 +50,11 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_XXX;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
@@ -213,7 +215,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             selectedFeatureInterventionType = code;
-            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code)) && NOT_VISITED.equals(businessStatus)) {
+            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || REGISTER_FAMILY.equals(code))
+                    && NOT_VISITED.equals(businessStatus)) {
                 if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
                     validateUserLocation();
                 } else {
@@ -386,6 +389,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             } else {
                 startForm(selectedFeature, mosquitoCollectionCardDetails, MOSQUITO_COLLECTION_EVENT);
             }
+        } else if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)) {
+            listTaskView.registerFamily();
         }
     }
 

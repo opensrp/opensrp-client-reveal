@@ -28,6 +28,8 @@ public interface ListTaskContract {
 
         void closeCardView(int id);
 
+        void registerFamily();
+
         void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea);
 
         void displayNotification(int title, @StringRes int message, Object... formatArgs);

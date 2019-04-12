@@ -108,6 +108,8 @@ public interface Constants {
         String BLOOD_SCREENING = "Blood Screening";
 
         String CASE_CONFIRMATION = "Case Confirmation";
+
+        String REGISTER_FAMILY = "RACD Register Family";
     }
 
     interface BusinessStatus {

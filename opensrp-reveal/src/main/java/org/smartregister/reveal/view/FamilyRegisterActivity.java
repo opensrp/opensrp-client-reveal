@@ -28,7 +28,11 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity {
 
     @Override
     protected void initializePresenter() {
-        presenter = new BaseFamilyRegisterPresenter(this, new FamilyRegisterModel(getIntent().getStringExtra(Properties.LOCATION_UUID)));
+        String structureId = getIntent().getStringExtra(Properties.LOCATION_UUID);
+        String taskId = getIntent().getStringExtra(Properties.TASK_IDENTIFIER);
+        String taskBusinessStatus = getIntent().getStringExtra(Properties.TASK_BUSINESS_STATUS);
+        String taskStatus = getIntent().getStringExtra(Properties.TASK_STATUS);
+        presenter = new BaseFamilyRegisterPresenter(this, new FamilyRegisterModel(structureId,taskId,taskBusinessStatus,taskStatus));
     }
 
     @Override
