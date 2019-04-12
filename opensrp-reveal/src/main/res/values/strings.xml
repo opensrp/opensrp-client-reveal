@@ -130,4 +130,6 @@
     <string name="comma">,</string>
     <string name="distribute_llin">Distribute LLIN</string>
     <string name="record_llin">Record LLIN</string>
+    <string name="record_test">Record Test</string>
+    <string name="detect_case">Detect Case</string>
 </resources>
