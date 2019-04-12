@@ -49,6 +49,7 @@ import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Action;
+import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
@@ -64,6 +65,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLL
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.Map;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
+import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 
@@ -290,6 +292,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private void registerFamily() {
         Intent intent = new Intent(this, FamilyRegisterActivity.class);
         intent.putExtra(START_REGISTRATION, true);
+        intent.putExtra(Properties.LOCATION_UUID, listTaskPresenter.getSelectedFeature().id());
         startActivity(intent);
     }
 
