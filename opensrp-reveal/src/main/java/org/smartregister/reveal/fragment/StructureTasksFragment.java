@@ -13,13 +13,8 @@ import android.widget.TextView;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.StructureTaskAdapter;
 import org.smartregister.reveal.contract.StructureTasksContract;
-import org.smartregister.reveal.model.StructureTaskDetails;
-import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.presenter.StructureTasksPresenter;
 import org.smartregister.reveal.util.Utils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by samuelgithengi on 4/8/19.
@@ -29,12 +24,20 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     private RecyclerView taskRecyclerView;
     private StructureTaskAdapter adapter;
 
+    private StructureTasksContract.Presenter presenter;
+
     public static StructureTasksFragment newInstance(Bundle bundle) {
         StructureTasksFragment fragment = new StructureTasksFragment();
         if (bundle != null) {
             fragment.setArguments(bundle);
         }
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        presenter = new StructureTasksPresenter(this);
     }
 
     @Nullable
@@ -57,24 +60,6 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         taskRecyclerView = view.findViewById(R.id.task_recyclerView);
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        List<StructureTaskDetails> taskDetailsList = new ArrayList<>();
-        StructureTaskDetails details = new StructureTaskDetails(UUID.randomUUID().toString());
-        details.setTaskName("Distibute LLIN");
-        details.setTaskAction("Record LLIN");
-        taskDetailsList.add(details);
-
-        details = new StructureTaskDetails(UUID.randomUUID().toString());
-        details.setTaskName("Bob Smith, 33");
-        details.setTaskAction("Detect Case");
-        taskDetailsList.add(details);
-        adapter.setTaskDetailsList(taskDetailsList);
-
-    }
-
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -85,5 +70,10 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     @Override
     public StructureTaskAdapter getAdapter() {
         return adapter;
+    }
+
+    @Override
+    public void setStructure(String structureId) {
+        presenter.findTasks(structureId);
     }
 }

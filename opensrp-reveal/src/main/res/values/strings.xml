@@ -128,4 +128,6 @@
     <string name="return_to_all_families">Return</string>
     <string name="tasks">TASKS</string>
     <string name="comma">,</string>
+    <string name="distribute_llin">Distribute LLIN</string>
+    <string name="record_llin">Record LLIN</string>
 </resources>

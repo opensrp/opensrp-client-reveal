@@ -26,5 +26,7 @@ public interface StructureTasksContract {
     interface View {
 
         StructureTaskAdapter getAdapter();
+
+        void setStructure(String structureId);
     }
 }

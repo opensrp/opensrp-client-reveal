@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import org.smartregister.reveal.contract.StructureTasksContract;
+import org.smartregister.reveal.interactor.StructureTasksInteractor;
 import org.smartregister.reveal.model.StructureTaskDetails;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class StructureTasksPresenter implements Presenter {
 
     public StructureTasksPresenter(StructureTasksContract.View view) {
         this.view = view;
+        interactor = new StructureTasksInteractor(this);
     }
 
     @Override
