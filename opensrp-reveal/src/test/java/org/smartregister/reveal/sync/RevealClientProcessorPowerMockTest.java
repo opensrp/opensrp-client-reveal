@@ -91,7 +91,7 @@ public class RevealClientProcessorPowerMockTest {
     }
 
     @Test
-    public void testProcessClientShouldCallProcessMosquitoCollectionEventWhenIsMosquitoCollectionEventType() throws Exception {
+    public void testProcessClientShouldCallProcessMosquitoHarvestingEventWhenIsMosquitoCollectionEventType() throws Exception {
         mockStaticMethods();
         mockRepositories();
 
@@ -104,7 +104,7 @@ public class RevealClientProcessorPowerMockTest {
         PowerMockito.doReturn(new ClientClassification()).when(clientProcessor, "assetJsonToJava", anyString(), any());
         clientProcessor.processClient(eventClients, true);
 
-        verifyPrivate(clientProcessor, times(1)).invoke("processMosquitoCollectionEvent", eq(event), any(ClientClassification.class), anyBoolean());
+        verifyPrivate(clientProcessor, times(1)).invoke("processMosquitoHarvestingEvent", eq(event), any(ClientClassification.class), anyBoolean());
     }
 
     @Test
