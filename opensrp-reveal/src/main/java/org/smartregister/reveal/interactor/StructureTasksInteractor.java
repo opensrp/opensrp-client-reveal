@@ -21,6 +21,7 @@ import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.LAST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.MIDDLE_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.CAMPAIGN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
@@ -46,12 +47,13 @@ public class StructureTasksInteractor implements StructureTasksContract.Interact
     }
 
     @Override
-    public void findTasks(String structureId) {
+    public void findTasks(String structureId, String campaignId) {
         appExecutors.diskIO().execute(() -> {
             List<StructureTaskDetails> taskDetailsList = new ArrayList<>();
             Cursor cursor = null;
             try {
-                cursor = database.rawQuery(getStructureSelect(FOR + "=?"), new String[]{structureId});
+                cursor = database.rawQuery(getStructureSelect(FOR + "=? AND " + CAMPAIGN_ID + "= ?"),
+                        new String[]{structureId, campaignId});
                 while (cursor.moveToNext()) {
                     taskDetailsList.add(readTaskDetails(cursor));
                 }

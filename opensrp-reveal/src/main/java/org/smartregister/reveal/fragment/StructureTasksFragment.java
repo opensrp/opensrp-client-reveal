@@ -28,17 +28,13 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
 
     public static StructureTasksFragment newInstance(Bundle bundle) {
         StructureTasksFragment fragment = new StructureTasksFragment();
+        fragment.setPresenter(new StructureTasksPresenter(fragment));
         if (bundle != null) {
             fragment.setArguments(bundle);
         }
         return fragment;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        presenter = new StructureTasksPresenter(this);
-    }
 
     @Nullable
     @Override
@@ -75,5 +71,9 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     @Override
     public void setStructure(String structureId) {
         presenter.findTasks(structureId);
+    }
+
+    public void setPresenter(StructureTasksContract.Presenter presenter) {
+        this.presenter = presenter;
     }
 }

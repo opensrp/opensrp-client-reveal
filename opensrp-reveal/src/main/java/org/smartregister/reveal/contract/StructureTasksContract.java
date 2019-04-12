@@ -19,7 +19,7 @@ public interface StructureTasksContract {
 
     interface Interactor {
 
-        void findTasks(String structureId);
+        void findTasks(String structureId, String currentCampaignId);
 
     }
 
