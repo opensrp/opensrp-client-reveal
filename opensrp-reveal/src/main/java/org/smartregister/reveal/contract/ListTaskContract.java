@@ -62,6 +62,9 @@ public interface ListTaskContract {
         void onInterventionFormDetailsFetched(CardDetails finalCardDetails);
 
         Feature getSelectedFeature();
+
+        @StringRes
+        int getInterventionLabel();
     }
 
 }

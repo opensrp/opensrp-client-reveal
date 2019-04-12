@@ -5,6 +5,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
@@ -29,6 +30,7 @@ import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.CardDetailsUtil;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -412,5 +414,16 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public Feature getSelectedFeature() {
         return selectedFeature;
+    }
+
+    @StringRes
+    @Override
+    public int getInterventionLabel() {
+        String campaignId = prefsUtil.getCurrentCampaignId();
+        String intervention = campaignId.substring(0, campaignId.indexOf("_"));
+        if (Constants.Intervention.IRS.equals(intervention))
+            return R.string.irs;
+        else
+            return R.string.focus_investigation;
     }
 }

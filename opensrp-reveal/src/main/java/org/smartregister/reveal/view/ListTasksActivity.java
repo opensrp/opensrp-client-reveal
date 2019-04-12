@@ -65,7 +65,6 @@ import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLL
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.Map;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
-import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 
@@ -282,7 +281,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private void openTaskRegister() {
         Intent intent = new Intent(this, TaskRegisterActivity.class);
-        intent.putExtra(TaskRegister.INTERVENTION_TYPE, getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
+        intent.putExtra(TaskRegister.INTERVENTION_TYPE, getString(listTaskPresenter.getInterventionLabel()));
         if (getUserCurrentLocation() != null) {
             intent.putExtra(TaskRegister.LAST_USER_LOCATION, getUserCurrentLocation());
         }

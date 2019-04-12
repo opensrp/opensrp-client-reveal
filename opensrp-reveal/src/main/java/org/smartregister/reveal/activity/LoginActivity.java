@@ -5,7 +5,6 @@ import android.content.Intent;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.presenter.LoginPresenter;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.task.SaveTeamLocationsTask;
 import org.smartregister.view.activity.BaseLoginActivity;
@@ -29,8 +28,6 @@ public class LoginActivity extends BaseLoginActivity implements BaseLoginContrac
             org.smartregister.util.Utils.startAsyncTask(new SaveTeamLocationsTask(), null);
         }
         Intent intent = new Intent(this, ListTasksActivity.class);
-        //Todo set this when implementing the selector for IRS campaigns and FI
-        intent.putExtra(Constants.TaskRegister.INTERVENTION_TYPE, getString(R.string.irs));
         startActivity(intent);
 
         finish();
