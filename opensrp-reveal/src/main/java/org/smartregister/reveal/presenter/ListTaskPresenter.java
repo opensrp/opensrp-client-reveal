@@ -130,10 +130,6 @@ public class ListTaskPresenter implements ListTaskContract.PresenterCallBack, Pa
 
     private ValidateUserLocationPresenter locationPresenter;
 
-    private SprayCardDetails sprayCardDetails;
-
-    private MosquitoHarvestCardDetails mosquitoHarvestCardDetails;
-
     private CardDetails cardDetails;
 
     private boolean changeInterventionStatus;
