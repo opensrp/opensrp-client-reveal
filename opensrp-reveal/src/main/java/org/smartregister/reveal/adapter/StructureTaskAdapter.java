@@ -47,5 +47,6 @@ public class StructureTaskAdapter extends RecyclerView.Adapter<StructureTaskView
 
     public void setTaskDetailsList(List<StructureTaskDetails> taskDetailsList) {
         this.taskDetailsList = taskDetailsList;
+        notifyDataSetChanged();
     }
 }

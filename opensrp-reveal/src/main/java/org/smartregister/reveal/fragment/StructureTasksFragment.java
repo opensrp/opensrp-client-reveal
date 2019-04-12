@@ -25,7 +25,6 @@ import java.util.UUID;
  */
 public class StructureTasksFragment extends Fragment {
 
-    private TextView interventionType;
     private RecyclerView taskRecyclerView;
     private StructureTaskAdapter adapter;
 
@@ -52,7 +51,7 @@ public class StructureTasksFragment extends Fragment {
     }
 
     private void setUpViews(View view) {
-        interventionType = view.findViewById(R.id.intervention_type);
+        TextView interventionType = view.findViewById(R.id.intervention_type);
         interventionType.setText(getString(Utils.getInterventionLabel()));
         taskRecyclerView = view.findViewById(R.id.task_recyclerView);
     }
