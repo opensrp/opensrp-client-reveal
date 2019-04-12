@@ -90,6 +90,7 @@ public interface Constants {
         String TYPE = "type";
         String FEATURE_COLLECTION = "FeatureCollection";
         String FEATURES = "features";
+        String IS_INDEX_CASE = "is_index_case";
     }
 
     interface Intervention {

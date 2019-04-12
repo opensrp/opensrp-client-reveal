@@ -213,7 +213,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         geoJsonSource = style.getSourceAs(getString(R.string.reveal_datasource_name));
 
                         selectedGeoJsonSource = style.getSourceAs(getString(R.string.selected_datasource_name));
-                        RevealMapHelper.addSymbolLayers(style, ListTasksActivity.this);
+                        RevealMapHelper.addCustomLayers(style, ListTasksActivity.this);
                     }
                 });
                 mMapboxMap = mapboxMap;
