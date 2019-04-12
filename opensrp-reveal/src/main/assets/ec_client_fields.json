@@ -125,6 +125,13 @@
           }
         },
         {
+          "column_name": "structure_id",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.residence"
+          }
+        },
+        {
           "column_name": "unique_id",
           "type": "Client",
           "json_mapping": {
@@ -204,6 +211,13 @@
           "type": "Client",
           "json_mapping": {
             "field": "relationships.family"
+          }
+        },
+        {
+          "column_name": "structure_id",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.residence"
           }
         },
         {
