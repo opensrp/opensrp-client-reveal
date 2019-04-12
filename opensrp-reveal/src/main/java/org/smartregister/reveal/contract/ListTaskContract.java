@@ -10,6 +10,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -27,6 +28,8 @@ public interface ListTaskContract {
         Context getContext();
 
         void closeCardView(int id);
+
+        void openStructureProfile(CommonPersonObjectClient family);
 
         void registerFamily();
 
@@ -67,6 +70,8 @@ public interface ListTaskContract {
 
         @StringRes
         int getInterventionLabel();
+
+        void onFamilyFound(CommonPersonObjectClient finalFamily);
     }
 
 }

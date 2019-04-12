@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -29,7 +30,6 @@ import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.CardDetailsUtil;
-import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -52,7 +52,6 @@ import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORM
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
-import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -232,6 +231,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
                     || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
                 listTaskInteractor.fetchMosquitoCollectionDetails(feature.id(), false);
+            } else if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.focus_investigation) {
+                listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
             }
         }
     }
@@ -429,5 +430,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public int getInterventionLabel() {
         return org.smartregister.reveal.util.Utils.getInterventionLabel();
+    }
+
+    @Override
+    public void onFamilyFound(CommonPersonObjectClient finalFamily) {
+        listTaskView.openStructureProfile(finalFamily);
     }
 }
