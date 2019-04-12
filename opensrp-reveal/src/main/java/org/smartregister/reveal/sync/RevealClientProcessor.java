@@ -28,6 +28,7 @@ import org.smartregister.sync.ClientProcessorForJava;
 import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
+import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
@@ -90,8 +91,8 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 String eventType = event.getEventType();
                 if (eventType.equals(SPRAY_EVENT)) {
                     operationalAreaId = processSprayEvent(event, clientClassification, localEvents);
-                } else if (eventType.equals(MOSQUITO_COLLECTION_EVENT)) {
-                    operationalAreaId = processMosquitoCollectionEvent(event, clientClassification, localEvents);
+                } else if (eventType.equals(MOSQUITO_COLLECTION_EVENT) || BEDNET_DISTRIBUTION_EVENT.equals(eventType)) {
+                    operationalAreaId = processStructureEvent(event, clientClassification, localEvents);
                 } else if (eventType.equals(REGISTER_STRUCTURE_EVENT)) {
                     operationalAreaId = processRegisterStructureEvent(event, clientClassification);
                 } else {
@@ -165,7 +166,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         return operationalAreaId;
     }
 
-    private String processMosquitoCollectionEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
+    private String processStructureEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
         String operationalAreaId = null;
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
             operationalAreaId = updateTask(event, localEvents);

@@ -39,6 +39,7 @@ import org.smartregister.util.Utils;
 import java.util.List;
 
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
+import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
@@ -51,6 +52,7 @@ import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORM
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -215,7 +217,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             selectedFeatureInterventionType = code;
-            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || REGISTER_FAMILY.equals(code))
+            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || REGISTER_FAMILY.equals(code) ||
+                    BEDNET_DISTRIBUTION.equals(code))
                     && NOT_VISITED.equals(businessStatus)) {
                 if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
                     validateUserLocation();
@@ -389,6 +392,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             } else {
                 startForm(selectedFeature, mosquitoCollectionCardDetails, MOSQUITO_COLLECTION_EVENT);
             }
+        } else if (BEDNET_DISTRIBUTION.equals(selectedFeatureInterventionType)) {
+            startForm(selectedFeature, null, BEDNET_DISTRIBUTION_EVENT);
         } else if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)) {
             listTaskView.registerFamily();
         }
