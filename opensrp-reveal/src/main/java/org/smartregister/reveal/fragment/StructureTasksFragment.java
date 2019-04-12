@@ -14,6 +14,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.StructureTaskAdapter;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,7 @@ public class StructureTasksFragment extends Fragment {
 
     private void setUpViews(View view) {
         interventionType = view.findViewById(R.id.intervention_type);
+        interventionType.setText(getString(Utils.getInterventionLabel()));
         taskRecyclerView = view.findViewById(R.id.task_recyclerView);
     }
 

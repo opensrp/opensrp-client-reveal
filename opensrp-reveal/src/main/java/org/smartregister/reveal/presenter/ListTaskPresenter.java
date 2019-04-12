@@ -418,11 +418,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public int getInterventionLabel() {
-        String campaignId = prefsUtil.getCurrentCampaignId();
-        String intervention = campaignId.substring(0, campaignId.indexOf("_"));
-        if (Constants.Intervention.IRS.equals(intervention))
-            return R.string.irs;
-        else
-            return R.string.focus_investigation;
+        return org.smartregister.reveal.util.Utils.getInterventionLabel();
     }
 }

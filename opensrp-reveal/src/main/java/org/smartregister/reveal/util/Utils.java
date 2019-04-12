@@ -118,4 +118,13 @@ public class Utils {
     public static Float getLocationBuffer() {
         return Float.valueOf(getGlobalConfig(CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES, CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString()));
     }
+
+    public static int getInterventionLabel() {
+        String campaignId = PreferencesUtil.getInstance().getCurrentCampaignId();
+        String intervention = campaignId.substring(0, campaignId.indexOf("_"));
+        if (Constants.Intervention.IRS.equals(intervention))
+            return R.string.irs;
+        else
+            return R.string.focus_investigation;
+    }
 }
