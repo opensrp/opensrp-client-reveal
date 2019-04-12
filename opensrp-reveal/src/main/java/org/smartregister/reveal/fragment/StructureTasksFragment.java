@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.StructureTaskAdapter;
+import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Utils;
@@ -23,7 +24,7 @@ import java.util.UUID;
 /**
  * Created by samuelgithengi on 4/8/19.
  */
-public class StructureTasksFragment extends Fragment {
+public class StructureTasksFragment extends Fragment implements StructureTasksContract.View {
 
     private RecyclerView taskRecyclerView;
     private StructureTaskAdapter adapter;
@@ -80,4 +81,9 @@ public class StructureTasksFragment extends Fragment {
 
         }
     };
+
+    @Override
+    public StructureTaskAdapter getAdapter() {
+        return adapter;
+    }
 }

@@ -26,7 +26,8 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
         nameTextView.setText(name);
     }
 
-    public void setTaskAction(String action, String businessStatus) {
+    public void setTaskAction(String action, String businessStatus, View.OnClickListener onClickListener) {
         actionTextView.setText(action);
+        actionTextView.setOnClickListener(onClickListener);
     }
 }

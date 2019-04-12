@@ -36,7 +36,7 @@ public class StructureTaskAdapter extends RecyclerView.Adapter<StructureTaskView
     public void onBindViewHolder(@NonNull StructureTaskViewHolder viewHolder, int position) {
         StructureTaskDetails taskDetails = taskDetailsList.get(position);
         viewHolder.setTaskName(taskDetails.getTaskName());
-        viewHolder.setTaskAction(taskDetails.getTaskAction(), taskDetails.getBusinessStatus());
+        viewHolder.setTaskAction(taskDetails.getTaskAction(), taskDetails.getBusinessStatus(),onClickListener);
 
     }
 
