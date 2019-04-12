@@ -64,6 +64,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     private RevealJsonFormUtils jsonFormUtils;
     private ProgressDialog progressDialog;
+    private TextView interventionTypeTv;
 
     private LocationUtils locationUtils;
 
@@ -93,8 +94,9 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     public void setupViews(View view) {
         super.setupViews(view);
+        interventionTypeTv = view.findViewById(R.id.intervention_type);
         if (getActivity() != null) {
-            ((TextView) view.findViewById(R.id.intervention_type)).setText(
+            interventionTypeTv.setText(
                     getActivity().getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
         }
         view.findViewById(R.id.txt_map_label).setOnClickListener(v -> startMapActivity());
@@ -206,6 +208,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     public void onDrawerClosed() {
         getPresenter().onDrawerClosed();
+
     }
 
     @Override
@@ -285,6 +288,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     public LocationUtils getLocationUtils() {
         return locationUtils;
+    }
+
+    @Override
+    public void setInventionType(int interventionLabel) {
+        interventionTypeTv.setText(getString(interventionLabel));
     }
 
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {

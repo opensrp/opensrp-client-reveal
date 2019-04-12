@@ -205,6 +205,7 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
     public void onDrawerClosed() {
         getView().showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
         interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter());
+        getView().setInventionType(getInterventionLabel());
     }
 
     @Override
@@ -284,5 +285,16 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
     @Override
     public ValidateUserLocationPresenter getLocationPresenter() {
         return locationPresenter;
+    }
+
+
+    @Override
+    public int getInterventionLabel() {
+        String campaignId = prefsUtil.getCurrentCampaignId();
+        String intervention = campaignId.substring(0, campaignId.indexOf("_"));
+        if (Constants.Intervention.IRS.equals(intervention))
+            return R.string.irs;
+        else
+            return R.string.focus_investigation;
     }
 }

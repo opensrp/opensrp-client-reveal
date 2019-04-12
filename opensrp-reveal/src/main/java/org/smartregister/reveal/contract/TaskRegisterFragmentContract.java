@@ -28,6 +28,9 @@ public interface TaskRegisterFragmentContract {
         void onTaskSelected(TaskDetails details);
 
         void onStructureFound(org.smartregister.domain.Location structure, TaskDetails details);
+
+        @StringRes
+        int getInterventionLabel();
     }
 
     interface View extends BaseRegisterFragmentContract.View, UserLocationContract.UserLocationView {
@@ -53,6 +56,8 @@ public interface TaskRegisterFragmentContract {
         void displayToast(String message);
 
         LocationUtils getLocationUtils();
+
+        void setInventionType(int interventionLabel);
     }
 
 }

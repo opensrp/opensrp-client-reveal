@@ -416,7 +416,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         return selectedFeature;
     }
 
-    @StringRes
     @Override
     public int getInterventionLabel() {
         String campaignId = prefsUtil.getCurrentCampaignId();
