@@ -66,6 +66,7 @@ public class StructureTasksInteractor implements StructureTasksContract.Interact
                     taskDetailsList.add(readTaskDetails(cursor));
                 }
 
+                cursor.close();
                 cursor = database.rawQuery(getMembersSelect(String.format("%s.%s=? AND %s=?",
                         STRUCTURES_TABLE, ID, CAMPAIGN_ID)), new String[]{structureId, campaignId});
                 while (cursor.moveToNext()) {

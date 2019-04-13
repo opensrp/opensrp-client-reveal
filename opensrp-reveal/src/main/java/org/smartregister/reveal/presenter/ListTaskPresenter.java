@@ -434,6 +434,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onFamilyFound(CommonPersonObjectClient finalFamily) {
-        listTaskView.openStructureProfile(finalFamily);
+        if (finalFamily == null)
+            listTaskView.displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
+        else
+            listTaskView.openStructureProfile(finalFamily);
     }
 }

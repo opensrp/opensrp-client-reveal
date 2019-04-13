@@ -132,4 +132,6 @@
     <string name="record_llin">Record LLIN</string>
     <string name="record_test">Record Test</string>
     <string name="detect_case">Detect Case</string>
+    <string name="fetch_family_failed">Fetch Family Failed</string>
+    <string name="failed_to_find_family">Failed to get Family Details</string>
 </resources>

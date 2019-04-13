@@ -100,9 +100,9 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
                     if (client != null) {
                         try {
-                            if (event.getDetails().get(TASK_IDENTIFIER) != null &&
-                                    (EventType.FAMILY_REGISTRATION.equals(event.getEventType()) ||
-                                            EventType.FAMILY_MEMBER_REGISTRATION.equals(event.getEventType()))) {
+                            if ((EventType.FAMILY_REGISTRATION.equals(event.getEventType()) ||
+                                    EventType.FAMILY_MEMBER_REGISTRATION.equals(event.getEventType()))
+                                    && event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
                                 updateTask(event, localEvents);
                             }
                             processEvent(event, client, clientClassification);
