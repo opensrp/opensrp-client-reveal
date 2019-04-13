@@ -134,4 +134,5 @@
     <string name="detect_case">Detect \n Case</string>
     <string name="fetch_family_failed">Fetch Family Failed</string>
     <string name="failed_to_find_family">Failed to get Family Details</string>
+    <string name="family_registration">Family Registration</string>
 </resources>

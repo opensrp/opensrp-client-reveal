@@ -47,13 +47,18 @@ public class StructureTaskAdapter extends RecyclerView.Adapter<StructureTaskView
             viewHolder.setTaskName(context.getString(R.string.irs));
             viewHolder.setTaskAction(context.getString(R.string.record_status), taskDetails.getBusinessStatus(), onClickListener);
         } else {
-            viewHolder.setTaskName(taskDetails.getTaskName());
+
             String action = taskDetails.getTaskAction();
+            String name = taskDetails.getTaskName();
             if (Intervention.BLOOD_SCREENING.equals(taskDetails.getTaskCode())) {
                 action = context.getString(R.string.record_test);
             } else if (Intervention.CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
                 action = context.getString(R.string.detect_case);
+            } else if (Intervention.REGISTER_FAMILY.equals(taskDetails.getTaskCode())) {
+                action = context.getString(R.string.register_family);
+                name = context.getString(R.string.family_registration);
             }
+            viewHolder.setTaskName(name);
             viewHolder.setTaskAction(action, taskDetails.getBusinessStatus(), onClickListener);
         }
 
