@@ -3,6 +3,7 @@ package org.smartregister.reveal.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.mapbox.geojson.Feature;
@@ -149,6 +150,16 @@ public class RevealJsonFormUtils {
 
     public void startJsonForm(JSONObject form, Activity context) {
         Intent intent = new Intent(context.getApplicationContext(), RevealJsonFormActivity.class);
+        try {
+            intent.putExtra(JSON_FORM_PARAM_JSON, form.toString());
+            context.startActivityForResult(intent, REQUEST_CODE_GET_JSON);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    public void startJsonForm(JSONObject form, Fragment context) {
+        Intent intent = new Intent(context.getContext(), RevealJsonFormActivity.class);
         try {
             intent.putExtra(JSON_FORM_PARAM_JSON, form.toString());
             context.startActivityForResult(intent, REQUEST_CODE_GET_JSON);

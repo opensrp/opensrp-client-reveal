@@ -2,6 +2,7 @@ package org.smartregister.reveal.fragment;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
@@ -32,11 +33,17 @@ import org.smartregister.reveal.presenter.StructureTasksPresenter;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.reveal.view.FamilyProfileActivity;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
 import io.ona.kujaku.utils.Constants;
 import io.ona.kujaku.utils.LocationSettingsHelper;
 import io.ona.kujaku.utils.LogUtil;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
+import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 
 /**
  * Created by samuelgithengi on 4/8/19.
@@ -68,9 +75,9 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter = new StructureTasksPresenter(this);
+        jsonFormUtils = new RevealJsonFormUtils();
         locationUtils = new LocationUtils(getActivity());
         locationUtils.requestLocationUpdates(new BaseLocationListener());
-        jsonFormUtils = new RevealJsonFormUtils();
     }
 
     @Nullable
@@ -195,7 +202,23 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
 
     @Override
     public void startForm(JSONObject formJSON) {
-        jsonFormUtils.startJsonForm(formJSON, getActivity());
+        jsonFormUtils.startJsonForm(formJSON, this);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.RequestCode.LOCATION_SETTINGS && hasRequestedLocation) {
+            if (resultCode == RESULT_OK) {
+                locationUtils.requestLocationUpdates(new BaseLocationListener());
+                presenter.getLocationPresenter().waitForUserLocation();
+            } else if (resultCode == RESULT_CANCELED) {
+                presenter.getLocationPresenter().onGetUserLocationFailed();
+            }
+            hasRequestedLocation = false;
+        } else if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
+            String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
+            Log.d(TAG, json);
+            presenter.saveJsonForm(json);
+        }
+    }
 }

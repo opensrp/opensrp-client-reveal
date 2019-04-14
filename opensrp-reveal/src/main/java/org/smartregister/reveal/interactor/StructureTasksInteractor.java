@@ -39,7 +39,7 @@ import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_ME
 /**
  * Created by samuelgithengi on 4/12/19.
  */
-public class StructureTasksInteractor implements StructureTasksContract.Interactor {
+public class StructureTasksInteractor extends BaseInteractor implements StructureTasksContract.Interactor {
 
 
     private static final String TAG = StructureTasksInteractor.class.getName();
@@ -50,6 +50,7 @@ public class StructureTasksInteractor implements StructureTasksContract.Interact
     private StructureRepository structureRepository;
 
     public StructureTasksInteractor(StructureTasksContract.Presenter presenter) {
+        super(presenter);
         this.presenter = presenter;
         appExecutors = RevealApplication.getInstance().getAppExecutors();
         database = RevealApplication.getInstance().getRepository().getReadableDatabase();

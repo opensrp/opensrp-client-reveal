@@ -16,6 +16,7 @@ import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Task;
+import org.smartregister.domain.db.Client;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.tag.FormTag;
 import org.smartregister.repository.AllSharedPreferences;
@@ -25,6 +26,7 @@ import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
@@ -46,6 +48,8 @@ import java.util.UUID;
 
 import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
+import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
+import static org.smartregister.reveal.util.Constants.CASE_CONFIRMATION_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.METADATA;
@@ -53,6 +57,7 @@ import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
+import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 import static org.smartregister.util.JsonFormUtils.ENTITY_ID;
 import static org.smartregister.util.JsonFormUtils.getJSONObject;
 import static org.smartregister.util.JsonFormUtils.getString;
@@ -61,7 +66,7 @@ import static org.smartregister.util.JsonFormUtils.getString;
 /**
  * Created by samuelgithengi on 3/25/19.
  */
-public abstract class BaseInteractor {
+public abstract class BaseInteractor implements BaseContract.BaseInteractor {
 
     private static final String TAG = BaseInteractor.class.getCanonicalName();
 
@@ -98,6 +103,7 @@ public abstract class BaseInteractor {
 
     }
 
+    @Override
     public void saveJsonForm(String json) {
         try {
             JSONObject jsonForm = new JSONObject(json);
@@ -110,6 +116,10 @@ public abstract class BaseInteractor {
                 saveMosquitoCollectionForm(jsonForm);
             } else if (BEDNET_DISTRIBUTION_EVENT.equals(encounterType)) {
                 saveBednetDistributionForm(jsonForm);
+            } else if (BLOOD_SCREENING_EVENT.equals(encounterType)) {
+                saveMemberForm(jsonForm, encounterType, Intervention.BLOOD_SCREENING);
+            } else if (CASE_CONFIRMATION_EVENT.equals(encounterType)) {
+                saveMemberForm(jsonForm, encounterType, Intervention.CASE_CONFIRMATION);
             }
         } catch (Exception e) {
             Log.e(TAG, "Error saving Json Form data", e);
@@ -290,4 +300,29 @@ public abstract class BaseInteractor {
         };
         appExecutors.diskIO().execute(runnable);
     }
+
+    private void saveMemberForm(JSONObject jsonForm, String eventType, String intervention) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    org.smartregister.domain.db.Event event = saveEvent(jsonForm, eventType, FAMILY_MEMBER);
+                    Client client = eventClientRepository.fetchClientByBaseEntityId(event.getBaseEntityId());
+                    clientProcessor.processClient(Collections.singletonList(new EventClient(event, client)), true);
+                    appExecutors.mainThread().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            String businessStatus = clientProcessor.calculateBusinessStatus(event);
+                            presenterCallBack.onFormSaved(event.getBaseEntityId(), Task.TaskStatus.COMPLETED, businessStatus, intervention);
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.e(TAG, "Error saving bednet distribution point data");
+                }
+            }
+        };
+        appExecutors.diskIO().execute(runnable);
+    }
+
+
 }

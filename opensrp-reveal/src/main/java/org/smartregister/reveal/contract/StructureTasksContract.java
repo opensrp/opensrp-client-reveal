@@ -18,7 +18,7 @@ import io.ona.kujaku.listeners.BaseLocationListener;
  */
 public interface StructureTasksContract {
 
-    interface Presenter {
+    interface Presenter extends BaseContract.BasePresenter {
 
         void findTasks(String structureId);
 
@@ -27,9 +27,13 @@ public interface StructureTasksContract {
         void onTaskSelected(StructureTaskDetails details);
 
         void onStructureFound(Location structure, StructureTaskDetails details);
+
+        UserLocationContract.UserLocationPresenter getLocationPresenter();
+
+        void saveJsonForm(String json);
     }
 
-    interface Interactor {
+    interface Interactor extends BaseContract.BaseInteractor {
 
         void findTasks(String structureId, String currentCampaignId);
 

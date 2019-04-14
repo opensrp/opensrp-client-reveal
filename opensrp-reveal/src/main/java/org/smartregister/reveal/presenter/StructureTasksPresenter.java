@@ -1,12 +1,15 @@
 package org.smartregister.reveal.presenter;
 
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mapbox.geojson.Feature;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.joda.time.DateTime;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
@@ -164,5 +167,25 @@ public class StructureTasksPresenter implements Presenter, PasswordRequestCallba
     @Override
     public ValidateUserLocationPresenter getLocationPresenter() {
         return locationPresenter;
+    }
+
+    @Override
+    public void saveJsonForm(String json) {
+        getView().showProgressDialog(R.string.saving_title, R.string.saving_message);
+        interactor.saveJsonForm(json);
+    }
+
+    @Override
+    public void onFormSaved(@NonNull String structureId, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
+        getView().hideProgressDialog();
+    }
+
+    @Override
+    public void onStructureAdded(Feature feature, JSONArray featureCoordinates) {//not used
+    }
+
+    @Override
+    public void onFormSaveFailure(String eventType) {
+        getView().hideProgressDialog();//register will refresh on resume
     }
 }

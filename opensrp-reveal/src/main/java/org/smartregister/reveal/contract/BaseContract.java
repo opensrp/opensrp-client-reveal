@@ -21,4 +21,9 @@ public interface BaseContract {
 
         void onFormSaveFailure(String eventType);
     }
+
+    interface BaseInteractor {
+
+        void saveJsonForm(String json);
+    }
 }
