@@ -11,6 +11,8 @@ public class StructureTaskDetails extends BaseTaskDetails {
 
     private String taskAction;
 
+    private String structureId;
+
     public StructureTaskDetails(@NonNull String taskId) {
         super(taskId);
     }
@@ -29,5 +31,13 @@ public class StructureTaskDetails extends BaseTaskDetails {
 
     public void setTaskAction(String taskAction) {
         this.taskAction = taskAction;
+    }
+
+    public String getStructureId() {
+        return structureId;
+    }
+
+    public void setStructureId(String structureId) {
+        this.structureId = structureId;
     }
 }

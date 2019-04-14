@@ -33,6 +33,7 @@ import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 
+import io.ona.kujaku.listeners.BaseLocationListener;
 import io.ona.kujaku.utils.Constants;
 import io.ona.kujaku.utils.LocationSettingsHelper;
 import io.ona.kujaku.utils.LogUtil;
@@ -68,7 +69,7 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         super.onCreate(savedInstanceState);
         presenter = new StructureTasksPresenter(this);
         locationUtils = new LocationUtils(getActivity());
-        locationUtils.requestLocationUpdates((StructureTasksPresenter) presenter);
+        locationUtils.requestLocationUpdates(new BaseLocationListener());
         jsonFormUtils = new RevealJsonFormUtils();
     }
 
@@ -156,7 +157,7 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
                     switch (status.getStatusCode()) {
                         case LocationSettingsStatusCodes.SUCCESS:
                             Log.i(TAG, "All location settings are satisfied.");
-                            locationUtils.requestLocationUpdates((StructureTasksPresenter) presenter);
+                            locationUtils.requestLocationUpdates(new BaseLocationListener());
                             break;
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                             Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings");

@@ -44,7 +44,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMI
 /**
  * Created by samuelgithengi on 4/12/19.
  */
-public class StructureTasksPresenter extends BaseLocationListener implements Presenter, PasswordRequestCallback,
+public class StructureTasksPresenter implements Presenter, PasswordRequestCallback,
         UserLocationContract.UserLocationCallback {
 
     private final RevealMappingHelper mappingHelper;
@@ -86,8 +86,8 @@ public class StructureTasksPresenter extends BaseLocationListener implements Pre
     @Override
     public void onTaskSelected(StructureTaskDetails details) {
         if (details != null) {
-            //TODO remove this condition once BCC and Larval dipping forms are implemented
-            if (BCC.equals(details.getTaskCode()) || LARVAL_DIPPING.equals(details.getTaskCode())) {
+            //TODO remove this condition once BCC
+            if (BCC.equals(details.getTaskCode())) {
                 getView().displayToast(String.format("To open %s form for %s",
                         details.getTaskCode(), details.getTaskId()));
 
@@ -153,12 +153,6 @@ public class StructureTasksPresenter extends BaseLocationListener implements Pre
         android.location.Location center = mappingHelper.getCenter(gson.toJson(structure.getGeometry()));
         return new LatLng(center.getLatitude(), center.getLongitude());
     }
-
-    @Override
-    public void onLocationChanged(android.location.Location location) {
-        lastLocation = location;
-    }
-
 
     @Override
     public void requestUserPassword() {

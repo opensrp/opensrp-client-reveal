@@ -14,6 +14,7 @@ import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
+import org.smartregister.reveal.util.Constants.Intervention;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,8 +90,14 @@ public class StructureTasksInteractor implements StructureTasksContract.Interact
     @Override
     public void getStructure(StructureTaskDetails details) {
         appExecutors.diskIO().execute(() -> {
+
+            String structureId = details.getTaskEntity();
+            if (Intervention.BLOOD_SCREENING.equals(details.getTaskCode()) ||
+                    Intervention.CASE_CONFIRMATION.equals(details.getTaskCode())) {
+                structureId = details.getStructureId();
+            }
             org.smartregister.domain.Location structure =
-                    structureRepository.getLocationById(details.getTaskEntity());
+                    structureRepository.getLocationById(structureId);
             appExecutors.mainThread().execute(() -> {
                 presenter.onStructureFound(structure, details);
             });
@@ -127,10 +134,12 @@ public class StructureTasksInteractor implements StructureTasksContract.Interact
 
     private String[] getMemberColumns() {
         String[] columns = getStructureColumns();
-        String names = "printf('%s %s %s'," + FIRST_NAME + "," + MIDDLE_NAME + "," + LAST_NAME + ") AS " + NAME;
-        columns = ArrayUtils.add(columns, names);
-        columns = ArrayUtils.add(columns, DOB);
-        return columns;
+        String[] otherColumns = new String[]{
+                "printf('%s %s %s'," + FIRST_NAME + "," + MIDDLE_NAME + "," + LAST_NAME + ") AS " + NAME,
+                DOB,
+                STRUCTURE_ID
+        };
+        return ArrayUtils.addAll(columns, otherColumns);
     }
 
     private StructureTaskDetails readTaskDetails(Cursor cursor) {
@@ -148,6 +157,7 @@ public class StructureTasksInteractor implements StructureTasksContract.Interact
         String dobString = Utils.getDuration(dob);
         dobString = dobString.contains("y") ? dobString.substring(0, dobString.indexOf("y")) : dobString;
         task.setTaskName(cursor.getString(cursor.getColumnIndex(NAME)) + ", " + dobString);
+        task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
         return task;
     }
 }
