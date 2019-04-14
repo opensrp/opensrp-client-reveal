@@ -7,10 +7,13 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.presenter.BaseFamilyProfilePresenter;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.TaskUtils;
+import org.smartregister.reveal.util.Utils;
 
 import static org.smartregister.family.util.Constants.INTENT_KEY.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
@@ -23,6 +26,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter {
     private AppExecutors appExecutors;
     private SQLiteDatabase database;
     private String structureId;
+    private String memberBaseEntityId;
 
     public FamilyProfilePresenter(FamilyProfileContract.View view, FamilyProfileContract.Model model, String familyBaseEntityId, String familyHead, String primaryCaregiver, String familyName) {
         super(view, model, familyBaseEntityId, familyHead, primaryCaregiver, familyName);
@@ -74,5 +78,15 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter {
     @Override
     public FamilyProfileContract.View getView() {
         return (FamilyProfileContract.View) super.getView();
+    }
+
+    @Override
+    public void onRegistrationSaved(boolean isEdit) {
+        super.onRegistrationSaved(isEdit);
+        if (!isEdit && Utils.getInterventionLabel() == R.string.focus_investigation) {
+            TaskUtils.generateBloodScreeningTask(getView().getApplicationContext(),
+                    getModel().getEventClient().getEvent().getBaseEntityId());
+        }
+
     }
 }

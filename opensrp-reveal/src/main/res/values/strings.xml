@@ -135,4 +135,7 @@
     <string name="fetch_family_failed">Fetch Family Failed</string>
     <string name="failed_to_find_family">Failed to get Family Details</string>
     <string name="family_registration">Family Registration</string>
+
+    <string name="blood_screening_description">Perform blood screening on the family member</string>
+    <string name="bednet_distribution_description">Visit the residential structure and provide nets</string>
 </resources>
