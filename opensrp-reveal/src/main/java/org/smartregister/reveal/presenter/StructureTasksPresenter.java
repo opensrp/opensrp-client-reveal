@@ -21,7 +21,6 @@ import org.smartregister.reveal.contract.UserLocationContract;
 import org.smartregister.reveal.interactor.StructureTasksInteractor;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -29,8 +28,6 @@ import org.smartregister.util.DateTimeTypeConverter;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
-
-import io.ona.kujaku.listeners.BaseLocationListener;
 
 import static org.smartregister.reveal.contract.StructureTasksContract.Interactor;
 import static org.smartregister.reveal.contract.StructureTasksContract.Presenter;
@@ -83,7 +80,7 @@ public class StructureTasksPresenter implements Presenter, PasswordRequestCallba
 
     @Override
     public void onTasksFound(List<StructureTaskDetails> taskDetailsList) {
-        getView().getAdapter().setTaskDetailsList(taskDetailsList);
+        getView().setTaskDetailsList(taskDetailsList);
     }
 
     @Override
@@ -176,8 +173,9 @@ public class StructureTasksPresenter implements Presenter, PasswordRequestCallba
     }
 
     @Override
-    public void onFormSaved(@NonNull String structureId, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
+    public void onFormSaved(@NonNull String structureId, String taskID, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
         getView().hideProgressDialog();
+        getView().updateTask(taskID,taskStatus,businessStatus);
     }
 
     @Override

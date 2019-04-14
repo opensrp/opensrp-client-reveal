@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.Constants.Intervention;
@@ -75,5 +76,13 @@ public class StructureTaskAdapter extends RecyclerView.Adapter<StructureTaskView
     public void setTaskDetailsList(List<StructureTaskDetails> taskDetailsList) {
         this.taskDetailsList = taskDetailsList;
         notifyDataSetChanged();
+    }
+
+    public void updateTask(String taskID, Task.TaskStatus taskStatus, String businessStatus) {
+        int position = taskDetailsList.indexOf(new StructureTaskDetails(taskID));
+        StructureTaskDetails taskDetails = taskDetailsList.get(position);
+        taskDetails.setBusinessStatus(businessStatus);
+        taskDetails.setTaskStatus(taskStatus.name());
+        notifyItemChanged(position);
     }
 }

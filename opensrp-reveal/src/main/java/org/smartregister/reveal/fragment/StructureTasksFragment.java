@@ -24,6 +24,7 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import org.json.JSONObject;
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.StructureTaskAdapter;
 import org.smartregister.reveal.contract.StructureTasksContract;
@@ -34,6 +35,8 @@ import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.FamilyProfileActivity;
+
+import java.util.List;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
 import io.ona.kujaku.utils.Constants;
@@ -111,11 +114,6 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
             presenter.onTaskSelected(details);
         }
     };
-
-    @Override
-    public StructureTaskAdapter getAdapter() {
-        return adapter;
-    }
 
     @Override
     public void setStructure(String structureId) {
@@ -204,6 +202,16 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     @Override
     public void startForm(JSONObject formJSON) {
         jsonFormUtils.startJsonForm(formJSON, getActivity(), REQUEST_CODE_GET_JSON_FRAGMENT);
+    }
+
+    @Override
+    public void setTaskDetailsList(List<StructureTaskDetails> taskDetailsList) {
+        adapter.setTaskDetailsList(taskDetailsList);
+    }
+
+    @Override
+    public void updateTask(String taskID, Task.TaskStatus taskStatus, String businessStatus) {
+        adapter.updateTask(taskID,taskStatus,businessStatus);
     }
 
     @Override

@@ -86,12 +86,4 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
     public int compareTo(@NonNull TaskDetails other) {
         return Double.compare(distanceFromUser, other.getDistanceFromUser());
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof TaskDetails))
-            return false;
-        TaskDetails other = (TaskDetails) obj;
-        return getTaskId().equals(other.getTaskId());
-    }
 }

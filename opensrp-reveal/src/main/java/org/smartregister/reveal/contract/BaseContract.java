@@ -15,7 +15,7 @@ public interface BaseContract {
     interface BasePresenter {
 
         void onFormSaved(@NonNull String structureId,
-                         @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType);
+                         String taskID, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType);
 
         void onStructureAdded(Feature feature, JSONArray featureCoordinates);
 

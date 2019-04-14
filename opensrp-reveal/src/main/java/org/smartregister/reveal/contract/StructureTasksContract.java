@@ -5,6 +5,7 @@ import android.location.LocationListener;
 
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.adapter.StructureTaskAdapter;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -42,8 +43,6 @@ public interface StructureTasksContract {
 
     interface View extends UserLocationContract.UserLocationView {
 
-        StructureTaskAdapter getAdapter();
-
         void setStructure(String structureId);
 
         void displayToast(String message);
@@ -59,5 +58,9 @@ public interface StructureTasksContract {
         RevealJsonFormUtils getJsonFormUtils();
 
         void startForm(JSONObject formJSON);
+
+        void setTaskDetailsList(List<StructureTaskDetails> taskDetailsList);
+
+        void updateTask(String taskID, Task.TaskStatus taskStatus, String businessStatus);
     }
 }

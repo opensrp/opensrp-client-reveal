@@ -54,6 +54,7 @@ import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.METADATA;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
@@ -155,8 +156,9 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
                         @Override
                         public void run() {
                             String businessStatus = clientProcessor.calculateBusinessStatus(event);
+                            String taskID = event.getDetails().get(Properties.TASK_IDENTIFIER);
                             presenterCallBack.onFormSaved(event.getBaseEntityId(),
-                                    Task.TaskStatus.COMPLETED, businessStatus, Intervention.IRS);
+                                    taskID, Task.TaskStatus.COMPLETED, businessStatus, Intervention.IRS);
 
                         }
                     });
@@ -235,7 +237,7 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
                         @Override
                         public void run() {
                             Map<String, String> taskProperties = new HashMap<>();
-                            taskProperties.put(Constants.Properties.TASK_IDENTIFIER, task.getIdentifier());
+                            taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
                             taskProperties.put(Properties.TASK_BUSINESS_STATUS, task.getBusinessStatus());
                             taskProperties.put(Properties.TASK_STATUS, task.getStatus().name());
                             taskProperties.put(Properties.TASK_CODE, task.getCode());
@@ -267,7 +269,8 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
                         @Override
                         public void run() {
                             String businessStatus = clientProcessor.calculateBusinessStatus(event);
-                            presenterCallBack.onFormSaved(event.getBaseEntityId(), Task.TaskStatus.COMPLETED, businessStatus, Intervention.MOSQUITO_COLLECTION);
+                            String taskID = event.getDetails().get(Properties.TASK_IDENTIFIER);
+                            presenterCallBack.onFormSaved(event.getBaseEntityId(), taskID, Task.TaskStatus.COMPLETED, businessStatus, Intervention.MOSQUITO_COLLECTION);
                         }
                     });
                 } catch (Exception e) {
@@ -290,7 +293,8 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
                         @Override
                         public void run() {
                             String businessStatus = clientProcessor.calculateBusinessStatus(event);
-                            presenterCallBack.onFormSaved(event.getBaseEntityId(), Task.TaskStatus.COMPLETED, businessStatus, BEDNET_DISTRIBUTION);
+                            String taskID = event.getDetails().get(Properties.TASK_IDENTIFIER);
+                            presenterCallBack.onFormSaved(event.getBaseEntityId(), taskID, Task.TaskStatus.COMPLETED, businessStatus, BEDNET_DISTRIBUTION);
                         }
                     });
                 } catch (Exception e) {
@@ -313,7 +317,8 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
                         @Override
                         public void run() {
                             String businessStatus = clientProcessor.calculateBusinessStatus(event);
-                            presenterCallBack.onFormSaved(event.getBaseEntityId(), Task.TaskStatus.COMPLETED, businessStatus, intervention);
+                            String taskID = event.getDetails().get(Properties.TASK_IDENTIFIER);
+                            presenterCallBack.onFormSaved(event.getBaseEntityId(), taskID, Task.TaskStatus.COMPLETED, businessStatus, intervention);
                         }
                     });
                 } catch (Exception e) {

@@ -60,4 +60,12 @@ public class BaseTaskDetails {
     public void setTaskStatus(String taskStatus) {
         this.taskStatus = taskStatus;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof BaseTaskDetails))
+            return false;
+        BaseTaskDetails other = (BaseTaskDetails) obj;
+        return getTaskId().equals(other.getTaskId());
+    }
 }
