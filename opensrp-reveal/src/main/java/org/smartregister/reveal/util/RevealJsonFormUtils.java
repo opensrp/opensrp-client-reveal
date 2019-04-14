@@ -31,6 +31,7 @@ import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
+import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON_FRAGMENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
@@ -55,7 +56,7 @@ public class RevealJsonFormUtils {
 
         String formString = getFormString(context, formName, structureType);
         try {
-            JSONObject formJson = populateFormDetails(formString, structureId, taskIdentifier,
+            JSONObject formJson = populateFormDetails(formString, structureId, structureId, taskIdentifier,
                     taskBusinessStatus, taskStatus, structureUUID,
                     structureVersion == null ? null : Integer.valueOf(structureVersion));
 
@@ -73,6 +74,7 @@ public class RevealJsonFormUtils {
         String taskIdentifier = task.getTaskId();
         String taskStatus = task.getTaskStatus();
 
+        String entityId = task.getTaskEntity();
         String structureId = structure.getId();
         String structureUUID = structure.getProperties().getUid();
         int structureVersion = structure.getProperties().getVersion();
@@ -88,7 +90,7 @@ public class RevealJsonFormUtils {
 
         String formString = getFormString(context, formName, structureType);
         try {
-            JSONObject formJson = populateFormDetails(formString, structureId, taskIdentifier,
+            JSONObject formJson = populateFormDetails(formString, entityId, structureId, taskIdentifier,
                     taskBusinessStatus, taskStatus, structureUUID, structureVersion);
             populateFormFields(formJson, structureType, sprayStatus, familyHead);
             return formJson;
@@ -112,16 +114,17 @@ public class RevealJsonFormUtils {
     }
 
 
-    private JSONObject populateFormDetails(String formString, String structureId, String taskIdentifier,
+    private JSONObject populateFormDetails(String formString, String entityId, String structureId, String taskIdentifier,
                                            String taskBusinessStatus, String taskStatus, String structureUUID,
                                            Integer structureVersion) throws JSONException {
 
         JSONObject formJson = new JSONObject(formString);
-        formJson.put(ENTITY_ID, structureId);
+        formJson.put(ENTITY_ID, entityId);
         JSONObject formData = new JSONObject();
         formData.put(Properties.TASK_IDENTIFIER, taskIdentifier);
         formData.put(Properties.TASK_BUSINESS_STATUS, taskBusinessStatus);
         formData.put(Properties.TASK_STATUS, taskStatus);
+        formData.put(Properties.LOCATION_ID, structureId);
         formData.put(Properties.LOCATION_UUID, structureUUID);
         formData.put(Properties.LOCATION_VERSION, structureVersion);
         formJson.put(DETAILS, formData);
@@ -149,20 +152,14 @@ public class RevealJsonFormUtils {
 
 
     public void startJsonForm(JSONObject form, Activity context) {
-        Intent intent = new Intent(context.getApplicationContext(), RevealJsonFormActivity.class);
-        try {
-            intent.putExtra(JSON_FORM_PARAM_JSON, form.toString());
-            context.startActivityForResult(intent, REQUEST_CODE_GET_JSON);
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
+        startJsonForm(form, context, REQUEST_CODE_GET_JSON);
     }
 
-    public void startJsonForm(JSONObject form, Fragment context) {
-        Intent intent = new Intent(context.getContext(), RevealJsonFormActivity.class);
+    public void startJsonForm(JSONObject form, Activity context, int requestCode) {
+        Intent intent = new Intent(context, RevealJsonFormActivity.class);
         try {
             intent.putExtra(JSON_FORM_PARAM_JSON, form.toString());
-            context.startActivityForResult(intent, REQUEST_CODE_GET_JSON);
+            context.startActivityForResult(intent, requestCode);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }

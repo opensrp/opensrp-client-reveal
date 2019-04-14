@@ -14,6 +14,7 @@ import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.presenter.FamilyProfilePresenter;
 
 import static io.ona.kujaku.utils.Constants.*;
+import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON_FRAGMENT;
 
 /**
  * Created by samuelgithengi on 2/8/19.
@@ -61,7 +62,8 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == io.ona.kujaku.utils.Constants.RequestCode.LOCATION_SETTINGS) {
+        if (requestCode == io.ona.kujaku.utils.Constants.RequestCode.LOCATION_SETTINGS ||
+                requestCode == REQUEST_CODE_GET_JSON_FRAGMENT) {
             structureTasksFragment.onActivityResult(requestCode, resultCode, data);
         } else {
             super.onActivityResult(requestCode, resultCode, data);

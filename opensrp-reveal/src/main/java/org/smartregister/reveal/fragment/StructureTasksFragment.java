@@ -44,6 +44,7 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
+import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON_FRAGMENT;
 
 /**
  * Created by samuelgithengi on 4/8/19.
@@ -202,7 +203,7 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
 
     @Override
     public void startForm(JSONObject formJSON) {
-        jsonFormUtils.startJsonForm(formJSON, this);
+        jsonFormUtils.startJsonForm(formJSON, getActivity(), REQUEST_CODE_GET_JSON_FRAGMENT);
     }
 
     @Override
@@ -215,7 +216,7 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
                 presenter.getLocationPresenter().onGetUserLocationFailed();
             }
             hasRequestedLocation = false;
-        } else if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
+        } else if (requestCode == REQUEST_CODE_GET_JSON_FRAGMENT && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
             String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
             Log.d(TAG, json);
             presenter.saveJsonForm(json);
