@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
+import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -63,7 +64,7 @@ public class RevealJsonFormUtils {
         return null;
     }
 
-    public JSONObject getFormJSON(Context context, String formName, TaskDetails task, Location structure) {
+    public JSONObject getFormJSON(Context context, String formName, BaseTaskDetails task, Location structure) {
 
         String taskBusinessStatus = task.getBusinessStatus();
         String taskIdentifier = task.getTaskId();
@@ -74,8 +75,13 @@ public class RevealJsonFormUtils {
         int structureVersion = structure.getProperties().getVersion();
         String structureType = structure.getProperties().getType();
 
-        String sprayStatus = task.getSprayStatus();
-        String familyHead = task.getFamilyName();
+        String sprayStatus = null;
+        String familyHead = null;
+
+        if (task instanceof TaskDetails) {
+            sprayStatus = ((TaskDetails) task).getSprayStatus();
+            familyHead = ((TaskDetails) task).getFamilyName();
+        }
 
         String formString = getFormString(context, formName, structureType);
         try {

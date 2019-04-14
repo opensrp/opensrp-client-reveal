@@ -7,8 +7,8 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
-import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
+import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.model.StructureTaskDetails;
@@ -18,7 +18,6 @@ import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.smartregister.family.util.Constants.JSON_FORM_KEY.AGE;
 import static org.smartregister.family.util.DBConstants.KEY.BASE_ENTITY_ID;
 import static org.smartregister.family.util.DBConstants.KEY.DOB;
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
@@ -47,11 +46,13 @@ public class StructureTasksInteractor implements StructureTasksContract.Interact
 
     private SQLiteDatabase database;
     private StructureTasksContract.Presenter presenter;
+    private StructureRepository structureRepository;
 
     public StructureTasksInteractor(StructureTasksContract.Presenter presenter) {
         this.presenter = presenter;
         appExecutors = RevealApplication.getInstance().getAppExecutors();
         database = RevealApplication.getInstance().getRepository().getReadableDatabase();
+        structureRepository = RevealApplication.getInstance().getStructureRepository();
     }
 
     @Override
@@ -87,7 +88,13 @@ public class StructureTasksInteractor implements StructureTasksContract.Interact
 
     @Override
     public void getStructure(StructureTaskDetails details) {
-
+        appExecutors.diskIO().execute(() -> {
+            org.smartregister.domain.Location structure =
+                    structureRepository.getLocationById(details.getTaskEntity());
+            appExecutors.mainThread().execute(() -> {
+                presenter.onStructureFound(structure, details);
+            });
+        });
     }
 
 
