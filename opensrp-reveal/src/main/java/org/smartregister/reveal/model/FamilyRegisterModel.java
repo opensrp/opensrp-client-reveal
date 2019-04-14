@@ -18,6 +18,8 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
     private final String taskBusinessStatus;
     private final String taskStatus;
 
+    private  List<FamilyEventClient> eventClientList;
+
     public FamilyRegisterModel(String structureId, String taskId, String taskBusinessStatus, String taskStatus) {
         this.structureId = structureId;
         this.taskId = taskId;
@@ -27,7 +29,7 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
 
     @Override
     public List<FamilyEventClient> processRegistration(String jsonString) {
-        List<FamilyEventClient> eventClientList = super.processRegistration(jsonString);
+        eventClientList = super.processRegistration(jsonString);
         for (FamilyEventClient eventClient : eventClientList) {
             eventClient.getClient().addAttribute(RESIDENCE, structureId);
             eventClient.getEvent().addDetails(Constants.Properties.TASK_IDENTIFIER, taskId);
@@ -36,5 +38,13 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
             eventClient.getEvent().addDetails(Constants.Properties.LOCATION_UUID, structureId);
         }
         return eventClientList;
+    }
+
+    public List<FamilyEventClient> getEventClientList() {
+        return eventClientList;
+    }
+
+    public String getStructureId() {
+        return structureId;
     }
 }
