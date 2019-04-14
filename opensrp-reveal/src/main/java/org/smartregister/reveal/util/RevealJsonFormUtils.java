@@ -23,6 +23,8 @@ import org.smartregister.util.AssetHandler;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
+import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
+import static org.smartregister.reveal.util.Constants.CASE_CONFIRMATION_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
@@ -171,6 +173,12 @@ public class RevealJsonFormUtils {
         } else if (BEDNET_DISTRIBUTION_EVENT.equals(encounterType)
                 || Intervention.BEDNET_DISTRIBUTION.equals(taskCode)) {
             formName = JsonForm.BEDNET_DISTRIBUTION_FORM;
+        } else if (CASE_CONFIRMATION_EVENT.equals(encounterType)
+                || Intervention.CASE_CONFIRMATION.equals(taskCode)) {
+            formName = JsonForm.CASE_CONFIRMATION_FORM;
+        } else if (BLOOD_SCREENING_EVENT.equals(encounterType)
+                || Intervention.BLOOD_SCREENING.equals(taskCode)) {
+            formName = JsonForm.BLOOD_SCREENING_FORM;
         }
         return formName;
     }

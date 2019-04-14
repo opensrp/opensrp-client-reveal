@@ -33,9 +33,13 @@ import static org.smartregister.reveal.contract.StructureTasksContract.Interacto
 import static org.smartregister.reveal.contract.StructureTasksContract.Presenter;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 
 /**
  * Created by samuelgithengi on 4/12/19.
@@ -100,7 +104,10 @@ public class StructureTasksPresenter extends BaseLocationListener implements Pre
     public void onStructureFound(Location structure, StructureTaskDetails details) {
         this.structure = structure;
         this.details = details;
-        if ((IRS.equals(details.getTaskCode()) || MOSQUITO_COLLECTION.equals(details.getTaskCode()))) {
+        if (IRS.equals(details.getTaskCode()) || MOSQUITO_COLLECTION.equals(details.getTaskCode()) ||
+                LARVAL_DIPPING.equals(details.getTaskCode()) || REGISTER_FAMILY.equals(details.getTaskCode()) ||
+                BEDNET_DISTRIBUTION.equals(details.getTaskCode()) || CASE_CONFIRMATION.equals(details.getTaskCode()) ||
+                BLOOD_SCREENING.equals(details.getTaskCode())) {
             if (validateFarStructures()) {
                 validateUserLocation();
             } else {

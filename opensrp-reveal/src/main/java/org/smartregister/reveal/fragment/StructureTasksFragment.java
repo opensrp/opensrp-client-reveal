@@ -56,6 +56,7 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
 
     public static StructureTasksFragment newInstance(Bundle bundle) {
         StructureTasksFragment fragment = new StructureTasksFragment();
+        fragment.setPresenter(new StructureTasksPresenter(fragment));
         if (bundle != null) {
             fragment.setArguments(bundle);
         }
@@ -67,6 +68,7 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         super.onCreate(savedInstanceState);
         presenter = new StructureTasksPresenter(this);
         locationUtils = new LocationUtils(getActivity());
+        locationUtils.requestLocationUpdates((StructureTasksPresenter) presenter);
         jsonFormUtils = new RevealJsonFormUtils();
     }
 
@@ -114,6 +116,10 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     @Override
     public void displayToast(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    public void setPresenter(StructureTasksContract.Presenter presenter) {
+        this.presenter = presenter;
     }
 
     @Override
