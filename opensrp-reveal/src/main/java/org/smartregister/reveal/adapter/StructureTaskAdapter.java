@@ -41,11 +41,11 @@ public class StructureTaskAdapter extends RecyclerView.Adapter<StructureTaskView
     public void onBindViewHolder(@NonNull StructureTaskViewHolder viewHolder, int position) {
         StructureTaskDetails taskDetails = taskDetailsList.get(position);
         if (Intervention.BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode())) {
-            viewHolder.setTaskName(context.getString(R.string.distribute_llin));
-            viewHolder.setTaskAction(context.getString(R.string.record_llin), taskDetails.getBusinessStatus(), onClickListener);
+            taskDetails.setTaskName(context.getString(R.string.distribute_llin));
+            taskDetails.setTaskAction(context.getString(R.string.record_llin));
         } else if (Intervention.IRS.equals(taskDetails.getTaskCode())) {
-            viewHolder.setTaskName(context.getString(R.string.irs));
-            viewHolder.setTaskAction(context.getString(R.string.record_status), taskDetails.getBusinessStatus(), onClickListener);
+            taskDetails.setTaskName(context.getString(R.string.irs));
+            taskDetails.setTaskAction(context.getString(R.string.record_status));
         } else {
 
             String action = taskDetails.getTaskAction();
@@ -58,9 +58,12 @@ public class StructureTaskAdapter extends RecyclerView.Adapter<StructureTaskView
                 action = context.getString(R.string.register_family);
                 name = context.getString(R.string.family_registration);
             }
-            viewHolder.setTaskName(name);
-            viewHolder.setTaskAction(action, taskDetails.getBusinessStatus(), onClickListener);
+            taskDetails.setTaskName(name);
+            taskDetails.setTaskAction(action);
+
         }
+        viewHolder.setTaskName(taskDetails.getTaskName());
+        viewHolder.setTaskAction(taskDetails, onClickListener);
 
     }
 

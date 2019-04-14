@@ -1,18 +1,23 @@
 package org.smartregister.reveal.fragment;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.StructureTaskAdapter;
 import org.smartregister.reveal.contract.StructureTasksContract;
+import org.smartregister.reveal.model.StructureTaskDetails;
+import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.StructureTasksPresenter;
 import org.smartregister.reveal.util.Utils;
 
@@ -25,6 +30,7 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     private StructureTaskAdapter adapter;
 
     private StructureTasksContract.Presenter presenter;
+    private ProgressDialog progressDialog;
 
     public static StructureTasksFragment newInstance(Bundle bundle) {
         StructureTasksFragment fragment = new StructureTasksFragment();
@@ -54,12 +60,16 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         TextView interventionType = view.findViewById(R.id.intervention_type);
         interventionType.setText(getString(Utils.getInterventionLabel()));
         taskRecyclerView = view.findViewById(R.id.task_recyclerView);
+
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setCancelable(false);
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
-
+        public void onClick(View view) {
+            StructureTaskDetails details = (StructureTaskDetails) view.getTag(R.id.task_details);
+            presenter.onTaskSelected(details);
         }
     };
 
@@ -72,6 +82,28 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     public void setStructure(String structureId) {
         presenter.findTasks(structureId);
     }
+
+    @Override
+    public void displayToast(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showProgressDialog(@StringRes int title, @StringRes int message) {
+        if (progressDialog != null) {
+            progressDialog.setTitle(title);
+            progressDialog.setMessage(getString(message));
+            progressDialog.show();
+        }
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
 
     public void setPresenter(StructureTasksContract.Presenter presenter) {
         this.presenter = presenter;

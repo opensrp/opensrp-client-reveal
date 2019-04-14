@@ -15,12 +15,15 @@ public interface StructureTasksContract {
         void findTasks(String structureId);
 
         void onTasksFound(List<StructureTaskDetails> taskDetailsList);
+
+        void onTaskSelected(StructureTaskDetails details);
     }
 
     interface Interactor {
 
         void findTasks(String structureId, String currentCampaignId);
 
+        void getStructure(StructureTaskDetails details);
     }
 
     interface View {
@@ -28,5 +31,11 @@ public interface StructureTasksContract {
         StructureTaskAdapter getAdapter();
 
         void setStructure(String structureId);
+
+        void displayToast(String message);
+
+        void showProgressDialog(int title, int message);
+
+        void hideProgressDialog();
     }
 }

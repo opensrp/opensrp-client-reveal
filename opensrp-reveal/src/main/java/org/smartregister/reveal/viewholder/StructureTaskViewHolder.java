@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants;
 
@@ -33,18 +34,19 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
         nameTextView.setText(name);
     }
 
-    public void setTaskAction(String action, String businessStatus, View.OnClickListener onClickListener) {
-        if (!Constants.BusinessStatus.NOT_VISITED.equals(businessStatus)) {
-            actionTextView.setText(businessStatus);
+    public void setTaskAction(StructureTaskDetails taskDetails, View.OnClickListener onClickListener) {
+        if (!Constants.BusinessStatus.NOT_VISITED.equals(taskDetails.getBusinessStatus())) {
+            actionTextView.setText(taskDetails.getBusinessStatus());
             actionTextView.setBackground(null);
-            CardDetails cardDetails = new CardDetails(businessStatus);
+            CardDetails cardDetails = new CardDetails(taskDetails.getBusinessStatus());
             CardDetailsUtil.formatCardDetails(cardDetails);
             actionTextView.setTextColor(context.getResources().getColor(cardDetails.getStatusColor()));
         } else {
-            actionTextView.setText(action);
+            actionTextView.setText(taskDetails.getTaskAction());
             actionTextView.setBackground(context.getResources().getDrawable(R.drawable.structure_task_action_bg));
             actionTextView.setTextColor(context.getResources().getColor(R.color.task_not_done));
         }
         actionTextView.setOnClickListener(onClickListener);
+        actionTextView.setTag(R.id.task_details, taskDetails);
     }
 }

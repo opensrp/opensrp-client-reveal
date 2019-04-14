@@ -85,6 +85,11 @@ public class StructureTasksInteractor implements StructureTasksContract.Interact
         });
     }
 
+    @Override
+    public void getStructure(StructureTaskDetails details) {
+
+    }
+
 
     private String getStructureSelect(String mainCondition) {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
