@@ -207,8 +207,8 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
                     structureRepository.addOrUpdate(structure);
                     Context applicationContext = RevealApplication.getInstance().getApplicationContext();
                     Task task;
-                    if (Utils.getInterventionLabel() == R.string.focus_investigation) {
-                        task=TaskUtils.generateRegisterFamilyTask(applicationContext, structure.getId());
+                    if (StructureType.RESIDENTIAL.equals(structureType) && Utils.getInterventionLabel() == R.string.focus_investigation) {
+                        task = TaskUtils.generateRegisterFamilyTask(applicationContext, structure.getId());
                     } else {
                         task = new Task();
                         task.setIdentifier(UUID.randomUUID().toString());
@@ -228,7 +228,7 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
                         } else if (StructureType.LARVAL_BREEDING_SITE.equals(structureType)) {
                             task.setCode(Intervention.LARVAL_DIPPING);
                             task.setDescription(applicationContext.getString(R.string.larval_dipping_task_description));
-                            task.setFocus(Constants.Intervention.LARVAL_DIPPING);
+                            task.setFocus(Intervention.LARVAL_DIPPING);
                         }
                         task.setForEntity(structure.getId());
                         task.setExecutionStartDate(now);
