@@ -6,17 +6,18 @@ import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 import org.smartregister.family.activity.BaseFamilyRegisterActivity;
-import org.smartregister.family.presenter.BaseFamilyRegisterPresenter;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.contract.FamilyRegisterContract;
 import org.smartregister.reveal.fragment.FamilyRegisterFragment;
 import org.smartregister.reveal.model.FamilyRegisterModel;
+import org.smartregister.reveal.presenter.FamilyRegisterPresenter;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
 /**
  * Created by samuelgithengi on 2/8/19.
  */
-public class FamilyRegisterActivity extends BaseFamilyRegisterActivity {
+public class FamilyRegisterActivity extends BaseFamilyRegisterActivity implements FamilyRegisterContract.View {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity {
         String taskId = getIntent().getStringExtra(Properties.TASK_IDENTIFIER);
         String taskBusinessStatus = getIntent().getStringExtra(Properties.TASK_BUSINESS_STATUS);
         String taskStatus = getIntent().getStringExtra(Properties.TASK_STATUS);
-        presenter = new BaseFamilyRegisterPresenter(this, new FamilyRegisterModel(structureId,taskId,taskBusinessStatus,taskStatus));
+        presenter = new FamilyRegisterPresenter(this, new FamilyRegisterModel(structureId, taskId, taskBusinessStatus, taskStatus));
     }
 
     @Override
@@ -67,4 +68,5 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity {
         }
         super.switchToFragment(position);
     }
+
 }
