@@ -40,7 +40,7 @@ public class TaskUtils {
         });
     }
 
-    public static Task generateBedNetDistributionTask(Context context, String entityId) {
+    public static void generateBedNetDistributionTask(Context context, String entityId) {
         RevealApplication.getInstance().getAppExecutors().diskIO().execute(() -> {
             Task task = new Task();
             DateTime now = new DateTime();
@@ -61,5 +61,27 @@ public class TaskUtils {
             task.setSyncStatus(BaseRepository.TYPE_Created);
             RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
         });
+    }
+
+    public static Task generateRegisterFamilyTask(Context context, String entityId) {
+        Task task = new Task();
+        DateTime now = new DateTime();
+        task.setIdentifier(UUID.randomUUID().toString());
+        task.setCampaignIdentifier(PreferencesUtil.getInstance().getCurrentCampaignId());
+        task.setGroupIdentifier(Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea()).getId());
+        task.setStatus(Task.TaskStatus.READY);
+        task.setBusinessStatus(BusinessStatus.NOT_VISITED);
+        task.setPriority(3);
+        task.setCode(Intervention.REGISTER_FAMILY);
+        task.setDescription(context.getString(R.string.register_family_description));
+        task.setFocus(Intervention.REGISTER_FAMILY);
+        task.setForEntity(entityId);
+        task.setExecutionStartDate(now);
+        task.setAuthoredOn(now);
+        task.setLastModified(now);
+        task.setOwner(RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM());
+        task.setSyncStatus(BaseRepository.TYPE_Created);
+        RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
+        return task;
     }
 }

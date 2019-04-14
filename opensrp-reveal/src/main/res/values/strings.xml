@@ -138,4 +138,5 @@
 
     <string name="blood_screening_description">Perform blood screening on the family member</string>
     <string name="bednet_distribution_description">Visit the residential structure and provide nets</string>
+    <string name="register_family_description">Visit the residential structure and register each family member</string>
 </resources>
