@@ -12,6 +12,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 
@@ -26,20 +27,21 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter {
     private AppExecutors appExecutors;
     private SQLiteDatabase database;
     private String structureId;
-    private String memberBaseEntityId;
+    private PreferencesUtil preferencesUtil;
 
     public FamilyProfilePresenter(FamilyProfileContract.View view, FamilyProfileContract.Model model, String familyBaseEntityId, String familyHead, String primaryCaregiver, String familyName) {
         super(view, model, familyBaseEntityId, familyHead, primaryCaregiver, familyName);
         appExecutors = RevealApplication.getInstance().getAppExecutors();
         database = RevealApplication.getInstance().getRepository().getReadableDatabase();
+        preferencesUtil = PreferencesUtil.getInstance();
         getStructureId(familyBaseEntityId);
     }
 
     @Override
     public void refreshProfileTopSection(CommonPersonObjectClient client) {
         super.refreshProfileTopSection(client);
-        getView().setProfileDetailOne("MTI_13");
-        getView().setProfileDetailTwo("Chadiza");
+        getView().setProfileDetailOne(preferencesUtil.getCurrentOperationalArea());
+        getView().setProfileDetailTwo(preferencesUtil.getCurrentDistrict());
     }
 
 
