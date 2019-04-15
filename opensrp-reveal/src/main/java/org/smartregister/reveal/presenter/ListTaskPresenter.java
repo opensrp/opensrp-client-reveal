@@ -218,8 +218,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             selectedFeatureInterventionType = code;
-            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || REGISTER_FAMILY.equals(code) ||
-                    BEDNET_DISTRIBUTION.equals(code) || CASE_CONFIRMATION.equals(code) || BLOOD_SCREENING.equals(code))
+            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || REGISTER_FAMILY.equals(code))
                     && NOT_VISITED.equals(businessStatus)) {
                 if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
                     validateUserLocation();
