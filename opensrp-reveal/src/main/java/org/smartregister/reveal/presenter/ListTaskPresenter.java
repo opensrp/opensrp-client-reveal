@@ -62,7 +62,6 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
-import static org.smartregister.reveal.util.RevealMapHelper.addFocusInvestigationBoundaryCircle;
 import static org.smartregister.reveal.util.Utils.formatDate;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
@@ -153,7 +152,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 Log.e(TAG, "error resetting structures");
             }
         }
-        addFocusInvestigationBoundaryCircle(mapboxMap.getStyle(), listTaskView.getContext());
     }
 
 
@@ -337,7 +335,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
             listTaskInteractor.fetchMosquitoCollectionDetails(structureId, false);
         }
-        addFocusInvestigationBoundaryCircle(mapboxMap.getStyle(), listTaskView.getContext());
     }
 
     @Override
@@ -352,7 +349,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } catch (JSONException e) {
             Log.e(TAG, "error extracting coordinates of added structure", e);
         }
-        addFocusInvestigationBoundaryCircle(mapboxMap.getStyle(), listTaskView.getContext());
     }
 
     @Override

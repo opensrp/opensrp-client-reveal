@@ -37,6 +37,7 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reveal.R;
@@ -66,7 +67,10 @@ import static org.smartregister.reveal.util.Constants.Map;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
-import static org.smartregister.reveal.util.RevealMapHelper.addFocusInvestigationBoundaryCircle;
+import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_CIRCLE_LAYER;
+import static org.smartregister.reveal.util.RevealMapHelper.addCaseIndexBoundary;
+import static org.smartregister.reveal.util.RevealMapHelper.removeCaseIndexBoundary;
+import static org.smartregister.reveal.util.Utils.getInterventionLabel;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -309,6 +313,15 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             geoJsonSource.setGeoJson(featureCollection);
             if (operationalArea != null) {
                 CameraPosition cameraPosition = mMapboxMap.getCameraForGeometry(operationalArea.geometry());
+                if (getInterventionLabel() == R.string.focus_investigation) {
+                    Feature indexCase = addCaseIndexBoundary(mMapboxMap.getStyle(), getContext());
+                    if (indexCase != null) {
+                        cameraPosition = mMapboxMap.getCameraForGeometry(indexCase.geometry());
+                    }
+                } else {
+                    removeCaseIndexBoundary(mMapboxMap.getStyle());
+                }
+
                 if (cameraPosition != null) {
                     mMapboxMap.setCameraPosition(cameraPosition);
                 }
@@ -487,7 +500,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (fetchStatus.equals(FetchStatus.fetched)
                 || fetchStatus.equals(FetchStatus.nothingFetched)) {
             Snackbar.make(rootView, org.smartregister.R.string.sync_complete, Snackbar.LENGTH_LONG).show();
-            addFocusInvestigationBoundaryCircle(mMapboxMap.getStyle(), getContext());
+            if (getInterventionLabel() == R.string.focus_investigation) {
+                addCaseIndexBoundary(mMapboxMap.getStyle(), getContext());
+            }
         } else if (fetchStatus.equals(FetchStatus.noConnection)) {
             Snackbar.make(rootView, org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_LONG).show();
         }
