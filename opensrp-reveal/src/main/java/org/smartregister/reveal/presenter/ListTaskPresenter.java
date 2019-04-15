@@ -62,6 +62,7 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.RevealMapHelper.addFocusInvestigationBoundaryCircle;
 import static org.smartregister.reveal.util.Utils.formatDate;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
@@ -103,6 +104,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private boolean changeMosquitoCollectionStatus;
 
     private BaseDrawerContract.Presenter drawerPresenter;
+
+    private MapboxMap mapboxMap;
 
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
 
@@ -150,10 +153,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 Log.e(TAG, "error resetting structures");
             }
         }
+        addFocusInvestigationBoundaryCircle(mapboxMap.getStyle(), listTaskView.getContext());
     }
 
 
-    public void onMapReady() {
+    public void onMapReady(final MapboxMap mapboxMap) {
+        this.mapboxMap = mapboxMap;
         String campaign = PreferencesUtil.getInstance().getCurrentCampaignId();
         String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
         if (StringUtils.isNotBlank(campaign) &&
@@ -332,6 +337,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
             listTaskInteractor.fetchMosquitoCollectionDetails(structureId, false);
         }
+        addFocusInvestigationBoundaryCircle(mapboxMap.getStyle(), listTaskView.getContext());
     }
 
     @Override
@@ -346,7 +352,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } catch (JSONException e) {
             Log.e(TAG, "error extracting coordinates of added structure", e);
         }
-
+        addFocusInvestigationBoundaryCircle(mapboxMap.getStyle(), listTaskView.getContext());
     }
 
     @Override

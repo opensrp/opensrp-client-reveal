@@ -66,6 +66,7 @@ import static org.smartregister.reveal.util.Constants.Map;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
+import static org.smartregister.reveal.util.RevealMapHelper.addFocusInvestigationBoundaryCircle;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -228,7 +229,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 mapboxMap.setCameraPosition(cameraPosition);
 
 
-                listTaskPresenter.onMapReady();
+                listTaskPresenter.onMapReady(mapboxMap);
 
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                     @Override
@@ -486,6 +487,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (fetchStatus.equals(FetchStatus.fetched)
                 || fetchStatus.equals(FetchStatus.nothingFetched)) {
             Snackbar.make(rootView, org.smartregister.R.string.sync_complete, Snackbar.LENGTH_LONG).show();
+            addFocusInvestigationBoundaryCircle(mMapboxMap.getStyle(), getContext());
         } else if (fetchStatus.equals(FetchStatus.noConnection)) {
             Snackbar.make(rootView, org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_LONG).show();
         }
