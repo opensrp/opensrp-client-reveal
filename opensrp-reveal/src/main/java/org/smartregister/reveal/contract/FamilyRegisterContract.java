@@ -7,6 +7,7 @@ public interface FamilyRegisterContract extends org.smartregister.family.contrac
 
     interface View extends org.smartregister.family.contract.FamilyRegisterContract.View {
 
-        void finish();
+        void startProfileActivity(String baseEntityId, String familyHead, String primaryCareGiver,
+                                  String cityVillage, String firstName);
     }
 }

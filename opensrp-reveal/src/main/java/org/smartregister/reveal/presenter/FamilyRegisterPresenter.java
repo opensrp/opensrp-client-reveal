@@ -1,10 +1,12 @@
 package org.smartregister.reveal.presenter;
 
 
+import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.presenter.BaseFamilyRegisterPresenter;
 import org.smartregister.reveal.contract.FamilyRegisterContract;
 import org.smartregister.reveal.model.FamilyRegisterModel;
+import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.TaskUtils;
 
 import java.util.HashSet;
@@ -26,8 +28,22 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter {
     @Override
     public void onRegistrationSaved(boolean isEdit) {
         view.hideProgressDialog();
-        view.finish();
+        openProfileActivity();
         generateTasks();
+    }
+
+    private void openProfileActivity() {
+        for (FamilyEventClient eventClient : getModel().getEventClientList()) {
+            if (eventClient.getClient().getLastName().equals("Family")) {
+                Client family = eventClient.getClient();
+                view.startProfileActivity(family.getBaseEntityId(),
+                        family.findRelatives(FamilyConstants.RELATIONSHIP.FAMILY_HEAD).get(0),
+                        family.findRelatives(FamilyConstants.RELATIONSHIP.PRIMARY_CAREGIVER).get(0),
+                        family.getAddress("").getCityVillage(),
+                        family.getFirstName());
+                break;
+            }
+        }
     }
 
     private void generateTasks() {

@@ -1,11 +1,13 @@
 package org.smartregister.reveal.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 import org.smartregister.family.activity.BaseFamilyRegisterActivity;
+import org.smartregister.family.util.Utils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FamilyRegisterContract;
 import org.smartregister.reveal.fragment.FamilyRegisterFragment;
@@ -69,4 +71,16 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity implement
         super.switchToFragment(position);
     }
 
+    @Override
+    public void startProfileActivity(String baseEntityId, String familyHead, String primaryCareGiver, String cityVillage, String firstName) {
+        Intent intent = new Intent(this, Utils.metadata().profileActivity);
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID, baseEntityId);
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_HEAD, familyHead);
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.PRIMARY_CAREGIVER, primaryCareGiver);
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.VILLAGE_TOWN, cityVillage);
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_NAME, firstName);
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.GO_TO_DUE_PAGE, false);
+
+        startActivity(intent);
+    }
 }
