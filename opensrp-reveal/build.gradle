@@ -204,7 +204,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:1.5.6-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:1.5.11-PREVIEW-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'cardview-v7'
