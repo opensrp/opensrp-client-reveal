@@ -10,6 +10,7 @@ import org.smartregister.family.presenter.BaseFamilyProfilePresenter;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyProfileContract;
+import org.smartregister.reveal.interactor.RevealFamilyProfileInteractor;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -37,6 +38,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter {
         preferencesUtil = PreferencesUtil.getInstance();
         taskUtils = TaskUtils.getInstance();
         getStructureId(familyBaseEntityId);
+        setInteractor(new RevealFamilyProfileInteractor());
     }
 
     @Override

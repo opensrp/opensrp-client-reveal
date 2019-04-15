@@ -5,6 +5,7 @@ import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.presenter.BaseFamilyRegisterPresenter;
 import org.smartregister.reveal.contract.FamilyRegisterContract;
+import org.smartregister.reveal.interactor.RevealFamilyRegisterInteractor;
 import org.smartregister.reveal.model.FamilyRegisterModel;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.FamilyConstants;
@@ -26,6 +27,7 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter {
         super(view, model);
         this.view = view;
         taskUtils = TaskUtils.getInstance();
+        setInteractor(new RevealFamilyRegisterInteractor());
     }
 
 
