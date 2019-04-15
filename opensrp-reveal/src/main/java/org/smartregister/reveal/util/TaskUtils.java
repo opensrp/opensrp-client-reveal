@@ -22,8 +22,6 @@ public class TaskUtils {
 
     private TaskRepository taskRepository;
 
-    private AppExecutors appExecutors;
-
     private AllSharedPreferences sharedPreferences;
 
     private PreferencesUtil prefsUtil;
@@ -39,25 +37,19 @@ public class TaskUtils {
 
     private TaskUtils() {
         taskRepository = RevealApplication.getInstance().getTaskRepository();
-        appExecutors = RevealApplication.getInstance().getAppExecutors();
         sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
         prefsUtil = PreferencesUtil.getInstance();
     }
 
     public void generateBloodScreeningTask(Context context, String entityId) {
-        appExecutors.diskIO().execute(() -> {
-            appExecutors.diskIO().execute(() -> {
-                generateTask(context, entityId, BusinessStatus.NOT_VISITED, Intervention.BLOOD_SCREENING,
-                        R.string.blood_screening_description);
-            });
-        });
+        generateTask(context, entityId, BusinessStatus.NOT_VISITED, Intervention.BLOOD_SCREENING,
+                R.string.blood_screening_description);
+
     }
 
     public void generateBedNetDistributionTask(Context context, String entityId) {
-        appExecutors.diskIO().execute(() -> {
-            generateTask(context, entityId, BusinessStatus.NOT_VISITED, Intervention.BEDNET_DISTRIBUTION,
-                    R.string.bednet_distribution_description);
-        });
+        generateTask(context, entityId, BusinessStatus.NOT_VISITED, Intervention.BEDNET_DISTRIBUTION,
+                R.string.bednet_distribution_description);
     }
 
     private Task generateTask(Context context, String entityId, String businessStatus, String intervention, @StringRes int description) {

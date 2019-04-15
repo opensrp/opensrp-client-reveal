@@ -208,7 +208,7 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
 
     @Override
     public void updateTask(String taskID, Task.TaskStatus taskStatus, String businessStatus) {
-        adapter.updateTask(taskID,taskStatus,businessStatus);
+        adapter.updateTask(taskID, taskStatus, businessStatus);
     }
 
     @Override
@@ -226,5 +226,9 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
             Log.d(TAG, json);
             presenter.saveJsonForm(json);
         }
+    }
+
+    public void refreshTasks(String structureId) {
+        presenter.findTasks(structureId);
     }
 }

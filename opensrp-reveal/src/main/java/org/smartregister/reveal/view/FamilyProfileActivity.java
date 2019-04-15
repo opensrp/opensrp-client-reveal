@@ -13,7 +13,6 @@ import org.smartregister.reveal.fragment.StructureTasksFragment;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.presenter.FamilyProfilePresenter;
 
-import static io.ona.kujaku.utils.Constants.*;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON_FRAGMENT;
 
 /**
@@ -58,6 +57,11 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
     @Override
     public void setStructureId(String structureId) {
         structureTasksFragment.setStructure(structureId);
+    }
+
+    @Override
+    public void refreshTasks(String structureId) {
+        structureTasksFragment.refreshTasks(structureId);
     }
 
     @Override

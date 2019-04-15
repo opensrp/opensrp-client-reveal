@@ -7,17 +7,13 @@ import org.smartregister.family.presenter.BaseFamilyRegisterPresenter;
 import org.smartregister.reveal.contract.FamilyRegisterContract;
 import org.smartregister.reveal.interactor.RevealFamilyRegisterInteractor;
 import org.smartregister.reveal.model.FamilyRegisterModel;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.TaskUtils;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by samuelgithengi on 4/14/19.
  */
-public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter {
+public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter implements FamilyRegisterContract.Presenter {
 
     private FamilyRegisterContract.View view;
 
@@ -27,15 +23,20 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter {
         super(view, model);
         this.view = view;
         taskUtils = TaskUtils.getInstance();
-        setInteractor(new RevealFamilyRegisterInteractor());
+        setInteractor(new RevealFamilyRegisterInteractor(this));
     }
 
 
     @Override
     public void onRegistrationSaved(boolean isEdit) {
+        getInteractor().generateTasks(getModel().getEventClientList(), getModel().getStructureId(), view.getContext());
+
+    }
+
+    @Override
+    public void onTasksGenerated() {
         view.hideProgressDialog();
         openProfileActivity();
-        generateTasks();
     }
 
     private void openProfileActivity() {
@@ -52,22 +53,11 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter {
         }
     }
 
-    private void generateTasks() {
-        Set<String> generatedIds = new HashSet<>();
-        for (FamilyEventClient eventClient : getModel().getEventClientList()) {
-            if (eventClient.getClient().getLastName().equals("Family"))
-                continue;
-            String entityId = eventClient.getClient().getBaseEntityId();
-            if (!generatedIds.contains(entityId)) {
-                generatedIds.add(entityId);
-                taskUtils.generateBloodScreeningTask(view.getContext(), entityId);
-            }
-        }
-        taskUtils.generateBedNetDistributionTask(view.getContext(), getModel().getStructureId());
-    }
-
-
     private FamilyRegisterModel getModel() {
         return (FamilyRegisterModel) model;
+    }
+
+    private FamilyRegisterContract.Interactor getInteractor() {
+        return (FamilyRegisterContract.Interactor) interactor;
     }
 }
