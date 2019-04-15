@@ -238,7 +238,8 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnDrawerClosed() {
-        String campaignId = UUID.randomUUID().toString();
+        String campaignId = "IRS_2019_season1";
+        PreferencesUtil.getInstance().setCurrentCampaignId(campaignId);
         when(preferencesUtil.getCurrentCampaignId()).thenReturn(campaignId);
         when(preferencesUtil.getCurrentOperationalArea()).thenReturn("MTI_84");
         presenter.onLocationChanged(location);
