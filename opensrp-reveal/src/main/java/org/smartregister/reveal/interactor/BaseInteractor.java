@@ -91,6 +91,8 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
 
     private RevealClientProcessor clientProcessor;
 
+    private TaskUtils taskUtils;
+
 
     public BaseInteractor(BasePresenter presenterCallBack) {
         this.presenterCallBack = presenterCallBack;
@@ -100,7 +102,7 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
         eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
         clientProcessor = RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext());
         sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
-
+        taskUtils = TaskUtils.getInstance();
     }
 
     @Override
@@ -205,7 +207,7 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
                     Context applicationContext = RevealApplication.getInstance().getApplicationContext();
                     Task task;
                     if (StructureType.RESIDENTIAL.equals(structureType) && Utils.getInterventionLabel() == R.string.focus_investigation) {
-                        task = TaskUtils.generateRegisterFamilyTask(applicationContext, structure.getId());
+                        task = taskUtils.generateRegisterFamilyTask(applicationContext, structure.getId());
                     } else {
                         task = new Task();
                         task.setIdentifier(UUID.randomUUID().toString());

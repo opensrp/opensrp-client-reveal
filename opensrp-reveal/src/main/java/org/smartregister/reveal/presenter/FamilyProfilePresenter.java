@@ -28,12 +28,14 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter {
     private SQLiteDatabase database;
     private String structureId;
     private PreferencesUtil preferencesUtil;
+    private TaskUtils taskUtils;
 
     public FamilyProfilePresenter(FamilyProfileContract.View view, FamilyProfileContract.Model model, String familyBaseEntityId, String familyHead, String primaryCaregiver, String familyName) {
         super(view, model, familyBaseEntityId, familyHead, primaryCaregiver, familyName);
         appExecutors = RevealApplication.getInstance().getAppExecutors();
         database = RevealApplication.getInstance().getRepository().getReadableDatabase();
         preferencesUtil = PreferencesUtil.getInstance();
+        taskUtils = TaskUtils.getInstance();
         getStructureId(familyBaseEntityId);
     }
 
@@ -86,7 +88,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter {
     public void onRegistrationSaved(boolean isEdit) {
         super.onRegistrationSaved(isEdit);
         if (!isEdit && Utils.getInterventionLabel() == R.string.focus_investigation) {
-            TaskUtils.generateBloodScreeningTask(getView().getApplicationContext(),
+            taskUtils.generateBloodScreeningTask(getView().getApplicationContext(),
                     getModel().getEventClient().getEvent().getBaseEntityId());
         }
 

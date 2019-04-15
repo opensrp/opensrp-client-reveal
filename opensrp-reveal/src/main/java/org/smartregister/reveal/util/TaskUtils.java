@@ -1,10 +1,13 @@
 package org.smartregister.reveal.util;
 
 import android.content.Context;
+import android.support.annotation.StringRes;
 
 import org.joda.time.DateTime;
 import org.smartregister.domain.Task;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
@@ -17,71 +20,73 @@ import java.util.UUID;
  */
 public class TaskUtils {
 
-    public static void generateBloodScreeningTask(Context context, String entityId) {
-        RevealApplication.getInstance().getAppExecutors().diskIO().execute(() -> {
-            Task task = new Task();
-            DateTime now = new DateTime();
-            task.setIdentifier(UUID.randomUUID().toString());
-            task.setCampaignIdentifier(PreferencesUtil.getInstance().getCurrentCampaignId());
-            task.setGroupIdentifier(Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea()).getId());
-            task.setStatus(Task.TaskStatus.READY);
-            task.setBusinessStatus(BusinessStatus.NOT_VISITED);
-            task.setPriority(3);
-            task.setCode(Intervention.BLOOD_SCREENING);
-            task.setDescription(context.getString(R.string.blood_screening_description));
-            task.setFocus(Intervention.BLOOD_SCREENING);
-            task.setForEntity(entityId);
-            task.setExecutionStartDate(now);
-            task.setAuthoredOn(now);
-            task.setLastModified(now);
-            task.setOwner(RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM());
-            task.setSyncStatus(BaseRepository.TYPE_Created);
-            RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
+    private TaskRepository taskRepository;
+
+    private AppExecutors appExecutors;
+
+    private AllSharedPreferences sharedPreferences;
+
+    private PreferencesUtil prefsUtil;
+
+    private static TaskUtils instance;
+
+    public static TaskUtils getInstance() {
+        if (instance == null) {
+            instance = new TaskUtils();
+        }
+        return instance;
+    }
+
+    private TaskUtils() {
+        taskRepository = RevealApplication.getInstance().getTaskRepository();
+        appExecutors = RevealApplication.getInstance().getAppExecutors();
+        sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
+        prefsUtil = PreferencesUtil.getInstance();
+    }
+
+    public void generateBloodScreeningTask(Context context, String entityId) {
+        appExecutors.diskIO().execute(() -> {
+            appExecutors.diskIO().execute(() -> {
+                generateTask(context, entityId, BusinessStatus.NOT_VISITED, Intervention.BLOOD_SCREENING,
+                        R.string.blood_screening_description);
+            });
         });
     }
 
-    public static void generateBedNetDistributionTask(Context context, String entityId) {
-        RevealApplication.getInstance().getAppExecutors().diskIO().execute(() -> {
-            Task task = new Task();
-            DateTime now = new DateTime();
-            task.setIdentifier(UUID.randomUUID().toString());
-            task.setCampaignIdentifier(PreferencesUtil.getInstance().getCurrentCampaignId());
-            task.setGroupIdentifier(Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea()).getId());
-            task.setStatus(Task.TaskStatus.READY);
-            task.setBusinessStatus(BusinessStatus.NOT_VISITED);
-            task.setPriority(3);
-            task.setCode(Intervention.BEDNET_DISTRIBUTION);
-            task.setDescription(context.getString(R.string.bednet_distribution_description));
-            task.setFocus(Intervention.BEDNET_DISTRIBUTION);
-            task.setForEntity(entityId);
-            task.setExecutionStartDate(now);
-            task.setAuthoredOn(now);
-            task.setLastModified(now);
-            task.setOwner(RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM());
-            task.setSyncStatus(BaseRepository.TYPE_Created);
-            RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
+    public void generateBedNetDistributionTask(Context context, String entityId) {
+        appExecutors.diskIO().execute(() -> {
+            generateTask(context, entityId, BusinessStatus.NOT_VISITED, Intervention.BEDNET_DISTRIBUTION,
+                    R.string.bednet_distribution_description);
         });
     }
 
-    public static Task generateRegisterFamilyTask(Context context, String entityId) {
+    private Task generateTask(Context context, String entityId, String businessStatus, String intervention, @StringRes int description) {
         Task task = new Task();
         DateTime now = new DateTime();
         task.setIdentifier(UUID.randomUUID().toString());
-        task.setCampaignIdentifier(PreferencesUtil.getInstance().getCurrentCampaignId());
-        task.setGroupIdentifier(Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea()).getId());
+        task.setCampaignIdentifier(prefsUtil.getCurrentCampaignId());
+        task.setGroupIdentifier(Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId());
         task.setStatus(Task.TaskStatus.READY);
-        task.setBusinessStatus(BusinessStatus.NOT_VISITED);
+        task.setBusinessStatus(businessStatus);
         task.setPriority(3);
-        task.setCode(Intervention.REGISTER_FAMILY);
-        task.setDescription(context.getString(R.string.register_family_description));
-        task.setFocus(Intervention.REGISTER_FAMILY);
+        task.setCode(intervention);
+        task.setDescription(context.getString(description));
+        task.setFocus(intervention);
         task.setForEntity(entityId);
         task.setExecutionStartDate(now);
         task.setAuthoredOn(now);
         task.setLastModified(now);
-        task.setOwner(RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM());
+        task.setOwner(sharedPreferences.fetchRegisteredANM());
         task.setSyncStatus(BaseRepository.TYPE_Created);
-        RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
+        taskRepository.addOrUpdate(task);
         return task;
     }
+
+
+    public Task generateRegisterFamilyTask(Context context, String entityId) {
+        return generateTask(context, entityId, BusinessStatus.NOT_VISITED, Intervention.REGISTER_FAMILY,
+                R.string.register_family_description);
+
+    }
+
 }

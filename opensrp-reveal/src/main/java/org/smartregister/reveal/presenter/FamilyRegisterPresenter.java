@@ -6,6 +6,7 @@ import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.presenter.BaseFamilyRegisterPresenter;
 import org.smartregister.reveal.contract.FamilyRegisterContract;
 import org.smartregister.reveal.model.FamilyRegisterModel;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.TaskUtils;
 
@@ -19,9 +20,12 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter {
 
     private FamilyRegisterContract.View view;
 
+    private TaskUtils taskUtils;
+
     public FamilyRegisterPresenter(FamilyRegisterContract.View view, FamilyRegisterContract.Model model) {
         super(view, model);
         this.view = view;
+        taskUtils = TaskUtils.getInstance();
     }
 
 
@@ -54,11 +58,12 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter {
             String entityId = eventClient.getClient().getBaseEntityId();
             if (!generatedIds.contains(entityId)) {
                 generatedIds.add(entityId);
-                TaskUtils.generateBloodScreeningTask(view.getContext(), entityId);
+                taskUtils.generateBloodScreeningTask(view.getContext(), entityId);
             }
         }
-        TaskUtils.generateBedNetDistributionTask(view.getContext(), getModel().getStructureId());
+        taskUtils.generateBedNetDistributionTask(view.getContext(), getModel().getStructureId());
     }
+
 
     private FamilyRegisterModel getModel() {
         return (FamilyRegisterModel) model;
