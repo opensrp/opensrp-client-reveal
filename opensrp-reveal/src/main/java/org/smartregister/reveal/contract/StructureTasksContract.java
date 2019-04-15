@@ -1,18 +1,14 @@
 package org.smartregister.reveal.contract;
 
 import android.content.Context;
-import android.location.LocationListener;
 
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
-import org.smartregister.reveal.adapter.StructureTaskAdapter;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 
 import java.util.List;
-
-import io.ona.kujaku.listeners.BaseLocationListener;
 
 /**
  * Created by samuelgithengi on 4/12/19.

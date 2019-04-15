@@ -156,9 +156,9 @@ public class FamilyMemberViewHolder implements RecyclerViewProvider<FamilyMember
         public ImageView profile;
         public CustomFontTextView patientNameAge;
         public TextView gender;
-        public android.view.View patientColumn;
+        public View patientColumn;
 
-        public RegisterViewHolder(android.view.View itemView) {
+        public RegisterViewHolder(View itemView) {
             super(itemView);
             this.status = itemView.findViewById(R.id.status);
             this.profile = itemView.findViewById(R.id.profile);

@@ -30,7 +30,6 @@ import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -53,10 +52,8 @@ import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.CASE_CONFIRMATION_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
-import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.METADATA;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
-import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
@@ -243,7 +240,7 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
                         @Override
                         public void run() {
                             Map<String, String> taskProperties = new HashMap<>();
-                            taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
+                            taskProperties.put(Properties.TASK_IDENTIFIER, task.getIdentifier());
                             taskProperties.put(Properties.TASK_BUSINESS_STATUS, task.getBusinessStatus());
                             taskProperties.put(Properties.TASK_STATUS, task.getStatus().name());
                             taskProperties.put(Properties.TASK_CODE, task.getCode());
@@ -300,7 +297,7 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
                         public void run() {
                             String businessStatus = clientProcessor.calculateBusinessStatus(event);
                             String taskID = event.getDetails().get(Properties.TASK_IDENTIFIER);
-                            presenterCallBack.onFormSaved(event.getBaseEntityId(), taskID, Task.TaskStatus.COMPLETED, businessStatus, BEDNET_DISTRIBUTION);
+                            presenterCallBack.onFormSaved(event.getBaseEntityId(), taskID, Task.TaskStatus.COMPLETED, businessStatus, Intervention.BEDNET_DISTRIBUTION);
                         }
                     });
                 } catch (Exception e) {

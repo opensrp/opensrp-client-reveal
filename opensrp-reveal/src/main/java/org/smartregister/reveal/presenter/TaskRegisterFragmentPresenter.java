@@ -290,6 +290,6 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
 
     @Override
     public int getInterventionLabel() {
-        return org.smartregister.reveal.util.Utils.getInterventionLabel();
+        return Utils.getInterventionLabel();
     }
 }

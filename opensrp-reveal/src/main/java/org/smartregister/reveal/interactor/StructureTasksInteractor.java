@@ -108,7 +108,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
 
     private String getStructureSelect(String mainCondition) {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
-        queryBuilder.selectInitiateMainTable(DatabaseKeys.TASK_TABLE, getStructureColumns(), ID);
+        queryBuilder.selectInitiateMainTable(TASK_TABLE, getStructureColumns(), ID);
         return queryBuilder.mainCondition(mainCondition);
     }
 

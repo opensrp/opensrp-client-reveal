@@ -61,7 +61,6 @@ public class StructureTasksPresenter implements Presenter, PasswordRequestCallba
     private Gson gson = new GsonBuilder().setDateFormat(EVENT_DATE_FORMAT_Z)
             .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
     private AlertDialog passwordDialog;
-    private android.location.Location lastLocation;
 
 
     public StructureTasksPresenter(StructureTasksContract.View view) {
@@ -175,7 +174,7 @@ public class StructureTasksPresenter implements Presenter, PasswordRequestCallba
     @Override
     public void onFormSaved(@NonNull String structureId, String taskID, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
         getView().hideProgressDialog();
-        getView().updateTask(taskID,taskStatus,businessStatus);
+        getView().updateTask(taskID, taskStatus, businessStatus);
     }
 
     @Override
