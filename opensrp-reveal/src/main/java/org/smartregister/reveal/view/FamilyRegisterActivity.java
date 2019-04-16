@@ -60,6 +60,7 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity implement
         bottomNavigationView.getMenu().removeItem(R.id.action_search);
         bottomNavigationView.getMenu().removeItem(R.id.action_library);
         bottomNavigationView.getMenu().removeItem(R.id.action_job_aids);
+        bottomNavigationView.getMenu().removeItem(R.id.action_register);
     }
 
     @Override
