@@ -10,7 +10,7 @@ import android.util.Log;
 
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.Geometry;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.CircleLayer;
@@ -41,6 +41,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeWidt
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
 import static org.smartregister.reveal.util.Constants.GeoJSON.TYPE;
+import static org.smartregister.reveal.util.Utils.calculateZoomLevelRadius;
 import static org.smartregister.reveal.util.Utils.getInterventionLabel;
 
 /**
@@ -96,8 +97,8 @@ public class RevealMapHelper {
         mMapboxMapStyle.addLayer(symbolLayer);
     }
 
-    public static Feature addCaseIndexBoundary(Style mMapboxMapStyle, Context context) {
-        Feature indexCase = null;
+    public static void addCaseIndexBoundary(MapboxMap mapboxMap, Context context) {
+        Style mMapboxMapStyle = mapboxMap.getStyle();
         try {
             Expression dynamicIconSize = interpolate(linear(), zoom(),
                     literal(13.98f), literal(1),
@@ -123,10 +124,8 @@ public class RevealMapHelper {
             GeoJsonSource indexCaseSource = new GeoJsonSource(INDEX_CASE_SOURCE);
             GeoJsonSource revealSource = mMapboxMapStyle.getSourceAs(context.getString(R.string.reveal_datasource_name));
             //        List<Feature> indexCase = revealSource.querySourceFeatures(eq(get(IS_INDEX_CASE), true));
-            List<Feature> features = revealSource.querySourceFeatures(eq(get("uid"), "d2fb1ee0-5d30-11e9-8647-d663bd873d93"));
-            if (features.size() > 0) {
-                indexCase = features.get(0);
-
+            Feature indexCase = getIndexCase(revealSource);
+            if (indexCase != null) {
                 Location centre = (new RevealMappingHelper()).getCenter(indexCase.geometry().toJson());
                 JSONObject feature = new JSONObject(indexCase.toJson());
                 JSONObject geometry = new JSONObject();
@@ -139,7 +138,7 @@ public class RevealMapHelper {
                 circleLayer.withProperties(
                         circleOpacity(0f),
                         circleColor(Color.parseColor("#ffffff")),
-                        circleRadius(200f),
+                        circleRadius(calculateZoomLevelRadius(mapboxMap, centre.getLatitude(), 500)),
                         circleStrokeColor("#ffffff"),
                         circleStrokeWidth(2f),
                         circleStrokeOpacity(1f)
@@ -148,14 +147,21 @@ public class RevealMapHelper {
                 if (mMapboxMapStyle.getSource(INDEX_CASE_SOURCE) == null) {
                     mMapboxMapStyle.addSource(indexCaseSource);
                 }
+
                 if (mMapboxMapStyle.getLayer(INDEX_CASE_CIRCLE_LAYER) == null) {
                     mMapboxMapStyle.addLayer(circleLayer);
+                } else {
+                    mMapboxMapStyle.getLayer(INDEX_CASE_CIRCLE_LAYER).setProperties(circleRadius(calculateZoomLevelRadius(mapboxMap, centre.getLatitude(), 500)));
                 }
             }
         } catch (JSONException e) {
             Log.e(TAG, e.getStackTrace().toString());
         }
-        return indexCase;
+    }
+
+    public static Feature getIndexCase(GeoJsonSource source) {
+        List<Feature> features = source.querySourceFeatures(eq(get("uid"), "d2fb1ee0-5d30-11e9-8647-d663bd873d93"));
+        return features.size() > 0 ? features.get(0) : null;
     }
 
     public static void removeCaseIndexBoundary(Style mMapboxMapStyle) {

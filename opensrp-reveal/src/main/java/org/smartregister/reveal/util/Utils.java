@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import org.smartregister.domain.Location;
 import org.smartregister.job.PullUniqueIdsServiceJob;
@@ -117,5 +119,19 @@ public class Utils {
 
     public static Float getLocationBuffer() {
         return Float.valueOf(getGlobalConfig(CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES, CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString()));
+    }
+
+    public static int getInterventionLabel() {
+        String campaignId = PreferencesUtil.getInstance().getCurrentCampaignId();
+        String intervention = campaignId.substring(0, campaignId.indexOf("_"));
+        if (Constants.Intervention.IRS.equals(intervention))
+            return R.string.irs;
+        else
+            return R.string.focus_investigation;
+    }
+
+    public static float calculateZoomLevelRadius(@NonNull final MapboxMap mapboxMap, double latitude, float radius) {
+        double metersPerPixel = mapboxMap.getProjection().getMetersPerPixelAtLatitude(latitude);
+        return (float) (radius / metersPerPixel);
     }
 }

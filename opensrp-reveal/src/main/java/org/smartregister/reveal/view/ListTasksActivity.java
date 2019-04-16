@@ -69,6 +69,7 @@ import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_CIRCLE_LAYER;
 import static org.smartregister.reveal.util.RevealMapHelper.addCaseIndexBoundary;
+import static org.smartregister.reveal.util.RevealMapHelper.getIndexCase;
 import static org.smartregister.reveal.util.RevealMapHelper.removeCaseIndexBoundary;
 import static org.smartregister.reveal.util.Utils.getInterventionLabel;
 
@@ -221,7 +222,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         RevealMapHelper.addCustomLayers(style, ListTasksActivity.this);
                     }
                 });
+
                 mMapboxMap = mapboxMap;
+                mMapboxMap.addOnCameraMoveListener(new MapboxMap.OnCameraMoveListener() {
+                    @Override
+                    public void onCameraMove() {
+                        addCaseIndexBoundary(mMapboxMap, getContext());
+                    }
+                });
 
 
                 mapboxMap.setMinZoomPreference(10);
@@ -314,7 +322,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             if (operationalArea != null) {
                 CameraPosition cameraPosition = mMapboxMap.getCameraForGeometry(operationalArea.geometry());
                 if (getInterventionLabel() == R.string.focus_investigation) {
-                    Feature indexCase = addCaseIndexBoundary(mMapboxMap.getStyle(), getContext());
+                    Feature indexCase = getIndexCase(mMapboxMap.getStyle().getSourceAs(getContext().getString(R.string.reveal_datasource_name)));
                     if (indexCase != null) {
                         cameraPosition = mMapboxMap.getCameraForGeometry(indexCase.geometry());
                     }
@@ -325,12 +333,16 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 if (cameraPosition != null) {
                     mMapboxMap.setCameraPosition(cameraPosition);
                 }
+
                 if (boundaryLayer == null) {
                     boundaryLayer = createBoundaryLayer(operationalArea);
                     kujakuMapView.addLayer(boundaryLayer);
-
                 } else {
                     boundaryLayer.updateFeatures(FeatureCollection.fromFeature(operationalArea));
+                }
+
+                if (getInterventionLabel() == R.string.focus_investigation) {
+                    addCaseIndexBoundary(mMapboxMap, getContext());
                 }
             }
         }
@@ -501,7 +513,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 || fetchStatus.equals(FetchStatus.nothingFetched)) {
             Snackbar.make(rootView, org.smartregister.R.string.sync_complete, Snackbar.LENGTH_LONG).show();
             if (getInterventionLabel() == R.string.focus_investigation) {
-                addCaseIndexBoundary(mMapboxMap.getStyle(), getContext());
+                addCaseIndexBoundary(mMapboxMap, getContext());
             }
         } else if (fetchStatus.equals(FetchStatus.noConnection)) {
             Snackbar.make(rootView, org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_LONG).show();
