@@ -2,6 +2,7 @@ package org.smartregister.reveal.fragment;
 
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.smartregister.family.fragment.BaseFamilyRegisterFragment;
 import org.smartregister.family.model.BaseFamilyRegisterFramentModel;
@@ -47,5 +48,7 @@ public class FamilyRegisterFragment extends BaseFamilyRegisterFragment {
             EditText searchView = view.findViewById(R.id.edt_search);
             searchView.setTextColor(getResources().getColor(R.color.text_black));
         }
+
+        view.findViewById(org.smartregister.family.R.id.filter_sort_layout).setVisibility(View.GONE);
     }
 }
