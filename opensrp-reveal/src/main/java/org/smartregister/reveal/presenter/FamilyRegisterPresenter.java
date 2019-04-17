@@ -8,7 +8,6 @@ import org.smartregister.reveal.contract.FamilyRegisterContract;
 import org.smartregister.reveal.interactor.RevealFamilyRegisterInteractor;
 import org.smartregister.reveal.model.FamilyRegisterModel;
 import org.smartregister.reveal.util.FamilyConstants;
-import org.smartregister.reveal.util.TaskUtils;
 
 /**
  * Created by samuelgithengi on 4/14/19.
@@ -17,12 +16,9 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter impleme
 
     private FamilyRegisterContract.View view;
 
-    private TaskUtils taskUtils;
-
     public FamilyRegisterPresenter(FamilyRegisterContract.View view, FamilyRegisterContract.Model model) {
         super(view, model);
         this.view = view;
-        taskUtils = TaskUtils.getInstance();
         setInteractor(new RevealFamilyRegisterInteractor(this));
     }
 

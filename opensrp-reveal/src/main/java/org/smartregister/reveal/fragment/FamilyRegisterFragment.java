@@ -2,7 +2,6 @@ package org.smartregister.reveal.fragment;
 
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import org.smartregister.family.fragment.BaseFamilyRegisterFragment;
 import org.smartregister.family.model.BaseFamilyRegisterFramentModel;
