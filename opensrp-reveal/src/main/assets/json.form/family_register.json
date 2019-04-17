@@ -85,16 +85,12 @@
         }
       },
       {
-        "key": "quarter_clan",
+        "key": "house_number",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_address",
-        "openmrs_entity_id": "commune",
+        "openmrs_entity_id": "address2",
         "type": "edit_text",
-        "hint": "Quarter/Clan *",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the quarter or clan"
-        }
+        "hint": "House Number"
       },
       {
         "key": "street",
@@ -220,10 +216,6 @@
         "type": "edit_text",
         "hint": "Middle name *",
         "edit_type": "name",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the middle name"
-        },
         "v_regex": {
           "value": "[A-Za-z\\s.-]*",
           "err": "Please enter a valid name"
@@ -279,7 +271,7 @@
         "hint": "Age *",
         "v_numeric": {
           "value": "true",
-          "err": "Number must begin with 0 and must be a total of 10 digits in length"
+          "err": "Number must begin with 0 and must be a total of 3 digits in length"
         },
         "v_min": {
           "value": "5",
@@ -327,15 +319,11 @@
         "hint": "Phone number *",
         "v_numeric": {
           "value": "true",
-          "err": "Number must be a total of 10 digits in length"
+          "err": "Number must be a total of 9 digits in length"
         },
         "v_regex": {
-          "value": "0\\d{9}",
-          "err": "Number must be 10 digits and must start with 0."
-        },
-        "v_required": {
-          "value": true,
-          "err": "Please specify the phone number"
+          "value": "^$|0[0-9]{8}",
+          "err": "Number must be 9 digits and must start with 0."
         }
       },
       {
