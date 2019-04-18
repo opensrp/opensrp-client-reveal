@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.Set;
 
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 
 /**
@@ -91,7 +94,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
 
         getView().showProgressView();
 
-        interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter());
+        interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter(), getView().getContext().getString(R.string.house));
 
     }
 
@@ -175,7 +178,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public void onDrawerClosed() {
         getView().showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
-        interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter());
+        interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter(), getView().getContext().getString(R.string.house));
         getView().setInventionType(getInterventionLabel());
     }
 
@@ -190,6 +193,13 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             } else if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
                 //TODO implement functionality to link to structure details once its implemented
                 getView().displayToast(String.format("To open structure details view for %s",
+                        details.getFamilyName()));
+            }
+            if (CASE_CONFIRMATION.equals(details.getTaskCode()) ||
+                    BLOOD_SCREENING.equals(details.getTaskCode()) ||
+                    BEDNET_DISTRIBUTION.equals(details.getTaskCode())) {
+                //TODO implement functionality to link to structure details once its implemented
+                getView().displayToast(String.format("To open family view for %s",
                         details.getFamilyName()));
             } else {
                 getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);

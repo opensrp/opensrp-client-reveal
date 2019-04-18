@@ -17,6 +17,8 @@ public class BaseTaskDetails {
 
     private String taskStatus;
 
+    private String structureId;
+
     public BaseTaskDetails(@NonNull String taskId) {
         this.taskId = taskId;
     }
@@ -59,6 +61,14 @@ public class BaseTaskDetails {
 
     public void setTaskStatus(String taskStatus) {
         this.taskStatus = taskStatus;
+    }
+
+    public String getStructureId() {
+        return structureId;
+    }
+
+    public void setStructureId(String structureId) {
+        this.structureId = structureId;
     }
 
     @Override

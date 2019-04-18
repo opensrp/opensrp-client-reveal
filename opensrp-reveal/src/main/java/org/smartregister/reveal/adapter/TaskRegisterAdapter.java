@@ -66,6 +66,13 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
             name = context.getString(R.string.bcc);
             action = context.getString(R.string.record_bcc);
             hasIcon = true;
+        } else {
+            if (name == null) {
+                name = task.getFamilyName() != null ? task.getFamilyName() : "Structure " + random.nextInt(100);
+            }
+            if (task.getBusinessStatus() != null) {
+                action = task.getBusinessStatus().replaceAll(" ", "\n");
+            }
         }
         viewHolder.setTaskName(name);
         CardDetails cardDetails = new CardDetails(task.getBusinessStatus());
