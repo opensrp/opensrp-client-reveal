@@ -13,7 +13,6 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.AppExecutors;
-import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Constants.Intervention;
 
 import java.util.ArrayList;
