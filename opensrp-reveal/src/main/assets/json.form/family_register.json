@@ -61,7 +61,7 @@
         "openmrs_entity": "person",
         "openmrs_entity_id": "first_name",
         "type": "edit_text",
-        "hint": "Family name *",
+        "hint": "Family name",
         "edit_type": "name",
         "v_required": {
           "value": "true",
@@ -78,23 +78,19 @@
         "openmrs_entity": "person_address",
         "openmrs_entity_id": "cityVillage",
         "type": "edit_text",
-        "hint": "Village/Town *",
+        "hint": "Village/Town",
         "v_required": {
           "value": "true",
           "err": "Please enter the village or town"
         }
       },
       {
-        "key": "quarter_clan",
+        "key": "house_number",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_address",
-        "openmrs_entity_id": "commune",
+        "openmrs_entity_id": "address2",
         "type": "edit_text",
-        "hint": "Quarter/Clan *",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the quarter or clan"
-        }
+        "hint": "House Number"
       },
       {
         "key": "street",
@@ -123,7 +119,7 @@
         "openmrs_entity": "person_identifier",
         "openmrs_entity_id": "opensrp_id",
         "type": "edit_text",
-        "hint": "ID *",
+        "hint": "ID",
         "v_required": {
           "value": "true",
           "err": "Please enter the ID"
@@ -145,7 +141,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Surname *",
+        "hint": "Surname",
         "edit_type": "name",
         "v_required": {
           "value": "true",
@@ -201,7 +197,7 @@
         "openmrs_entity": "person",
         "openmrs_entity_id": "first_name",
         "type": "edit_text",
-        "hint": "First name *",
+        "hint": "First name",
         "edit_type": "name",
         "v_required": {
           "value": "true",
@@ -218,12 +214,8 @@
         "openmrs_entity": "person",
         "openmrs_entity_id": "middle_name",
         "type": "edit_text",
-        "hint": "Middle name *",
+        "hint": "Middle name",
         "edit_type": "name",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the middle name"
-        },
         "v_regex": {
           "value": "[A-Za-z\\s.-]*",
           "err": "Please enter a valid name"
@@ -235,7 +227,7 @@
         "openmrs_entity": "person",
         "openmrs_entity_id": "birthdate",
         "type": "date_picker",
-        "hint": "Date of birth (DOB) *",
+        "hint": "Date of birth (DOB)",
         "expanded": false,
         "duration": {
           "label": "Age"
@@ -276,10 +268,10 @@
         "openmrs_entity": "person_attribute",
         "openmrs_entity_id": "age_entered",
         "type": "edit_text",
-        "hint": "Age *",
+        "hint": "Age",
         "v_numeric": {
           "value": "true",
-          "err": "Number must begin with 0 and must be a total of 10 digits in length"
+          "err": "Number must begin with 0 and must be a total of 3 digits in length"
         },
         "v_min": {
           "value": "5",
@@ -307,7 +299,7 @@
         "openmrs_entity": "person",
         "openmrs_entity_id": "sex",
         "type": "spinner",
-        "hint": "Sex *",
+        "hint": "Sex",
         "values": [
           "Male",
           "Female",
@@ -324,18 +316,14 @@
         "openmrs_entity": "concept",
         "openmrs_entity_id": "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
         "type": "edit_text",
-        "hint": "Phone number *",
+        "hint": "Phone number",
         "v_numeric": {
           "value": "true",
-          "err": "Number must be a total of 10 digits in length"
+          "err": "Number must be a total of 9 digits in length"
         },
         "v_regex": {
-          "value": "0\\d{9}",
-          "err": "Number must be 10 digits and must start with 0."
-        },
-        "v_required": {
-          "value": true,
-          "err": "Please specify the phone number"
+          "value": "^$|0[0-9]{8}",
+          "err": "Number must be 9 digits and must start with 0."
         }
       },
       {
