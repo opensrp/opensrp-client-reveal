@@ -7,6 +7,7 @@ import com.google.gson.GsonBuilder;
 
 import org.joda.time.DateTime;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.util.DateTimeTypeConverter;
 
@@ -31,6 +32,16 @@ public class TestingUtils {
         taskDetails.setBusinessStatus(Constants.BusinessStatus.NOT_SPRAYABLE);
         taskDetails.setTaskEntity(UUID.randomUUID().toString());
         taskDetails.setLocation(new Location("Test"));
+        return taskDetails;
+    }
+
+
+    public static StructureTaskDetails getStructureTaskDetails() {
+        StructureTaskDetails taskDetails = new StructureTaskDetails(UUID.randomUUID().toString());
+        taskDetails.setTaskStatus(Task.TaskStatus.COMPLETED.name());
+        taskDetails.setTaskCode(Constants.Intervention.REGISTER_FAMILY);
+        taskDetails.setBusinessStatus(Constants.BusinessStatus.NOT_VISITED);
+        taskDetails.setTaskEntity(UUID.randomUUID().toString());
         return taskDetails;
     }
 

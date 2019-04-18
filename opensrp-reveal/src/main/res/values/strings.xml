@@ -106,9 +106,9 @@
     <string name="larval_breeding_site">Larval breeding site</string>
     <string name="record_larvacide">Record \nLarvacide</string>
     <string name="bcc">Behaviour Change communication</string>
-    <string name="record_bcc">Record\n BCC</string>
-    <string name="record_status">Record\n Status</string>
-    <string name="record_index">Record\n Index</string>
+    <string name="record_bcc">Record\nBCC</string>
+    <string name="record_status">Record\nStatus</string>
+    <string name="record_index">Record\nIndex</string>
     <string name="opening_form_title">Opening Form</string>
     <string name="opening_form_message">Please wait, Opening form</string>
     <string name="task_reason">Reason: %1s</string>
@@ -129,9 +129,9 @@
     <string name="tasks">TASKS</string>
     <string name="comma">,</string>
     <string name="distribute_llin">Distribute LLIN</string>
-    <string name="record_llin">Record \n LLIN</string>
-    <string name="record_test">Record \n Test</string>
-    <string name="detect_case">Detect \n Case</string>
+    <string name="record_llin">Record\nLLIN</string>
+    <string name="record_test">Record\nTest</string>
+    <string name="detect_case">Detect\nCase</string>
     <string name="fetch_family_failed">Fetch Family Failed</string>
     <string name="failed_to_find_family">Failed to get Family Details</string>
     <string name="family_registration">Family Registration</string>
