@@ -13,10 +13,12 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.viewholder.StructureTaskViewHolder;
 
@@ -26,6 +28,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by samuelgithengi on 4/18/19.
@@ -138,6 +142,18 @@ public class StructureTaskAdapterTest extends BaseUnitTest {
         assertEquals(0, adapter.getItemCount());
         adapter.setTaskDetailsList(taskDetailsList);
         assertEquals(1, adapter.getItemCount());
+
+    }
+
+    @Test
+    public void testUpdateTask() {
+        adapter = spy(adapter);
+        adapter.setTaskDetailsList(taskDetailsList);
+        adapter.updateTask(taskDetailsList.get(0).getTaskId(), Task.TaskStatus.FAILED, BusinessStatus.NOT_ELIGIBLE);
+        assertEquals(Task.TaskStatus.FAILED.name(), taskDetailsList.get(0).getTaskStatus());
+        assertEquals(BusinessStatus.NOT_ELIGIBLE, taskDetailsList.get(0).getBusinessStatus());
+        verify(adapter).notifyItemChanged(0);
+
 
     }
 }

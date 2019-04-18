@@ -38,10 +38,11 @@ public class TestingUtils {
 
     public static StructureTaskDetails getStructureTaskDetails() {
         StructureTaskDetails taskDetails = new StructureTaskDetails(UUID.randomUUID().toString());
-        taskDetails.setTaskStatus(Task.TaskStatus.COMPLETED.name());
+        taskDetails.setTaskStatus(Task.TaskStatus.READY.name());
         taskDetails.setTaskCode(Constants.Intervention.REGISTER_FAMILY);
         taskDetails.setBusinessStatus(Constants.BusinessStatus.NOT_VISITED);
         taskDetails.setTaskEntity(UUID.randomUUID().toString());
+        taskDetails.setTaskAction("Register Family");
         return taskDetails;
     }
 
