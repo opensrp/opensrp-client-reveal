@@ -32,7 +32,6 @@ import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
@@ -293,7 +292,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     private void startForm(Feature feature, CardDetails cardDetails, String encounterType) {
-        String formName = RevealJsonFormUtils.getFormName(encounterType, null);
+        String formName = listTaskView.getJsonFormUtils().getFormName(encounterType, null);
         String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();
         String familyHead = null;
         if (cardDetails instanceof SprayCardDetails) {

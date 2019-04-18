@@ -19,7 +19,6 @@ import org.powermock.reflect.Whitebox;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.BaseUnitTest;
-import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.AppExecutors;

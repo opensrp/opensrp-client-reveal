@@ -81,8 +81,15 @@ public class TaskRegisterPresenterTest extends BaseUnitTest {
     }
 
     @Test
+    public void testUpdateInitialsDoesNothing() {
+        presenter.updateInitials();
+        verifyNoMoreInteractions(view);
+        verifyNoMoreInteractions(interactor);
+    }
+
+    @Test
     public void testOnFormSaved() {
-        presenter.onFormSaved(UUID.randomUUID().toString(), null, Task.TaskStatus.COMPLETED, BusinessStatus.NOT_SPRAYED,Intervention.IRS);
+        presenter.onFormSaved(UUID.randomUUID().toString(), null, Task.TaskStatus.COMPLETED, BusinessStatus.NOT_SPRAYED, Intervention.IRS);
         verify(view).hideProgressDialog();
         verifyNoMoreInteractions(view);
     }

@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 
 import com.mapbox.geojson.Feature;
 
@@ -32,10 +33,16 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
 
     public StructureTasksPresenter(StructureTasksContract.View view) {
+        this(view, null, PreferencesUtil.getInstance());
+        interactor = new StructureTasksInteractor(this);
+    }
+
+    @VisibleForTesting
+    public StructureTasksPresenter(StructureTasksContract.View view, Interactor interactor, PreferencesUtil prefsUtil) {
         super(view, view.getContext());
         this.view = new WeakReference<>(view);
-        interactor = new StructureTasksInteractor(this);
-        prefsUtil = PreferencesUtil.getInstance();
+        this.interactor = interactor;
+        this.prefsUtil = prefsUtil;
     }
 
     @Override

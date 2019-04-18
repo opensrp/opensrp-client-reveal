@@ -15,7 +15,6 @@ import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.PasswordDialogUtils;
-import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.util.DateTimeTypeConverter;
 
 import java.lang.ref.WeakReference;
@@ -34,7 +33,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMI
 /**
  * Created by samuelgithengi on 4/18/19.
  */
-public abstract class BaseFormFragmentPresenter extends BaseLocationListener implements BaseFormFragmentContract.Presenter {
+public class BaseFormFragmentPresenter extends BaseLocationListener implements BaseFormFragmentContract.Presenter {
 
     private final WeakReference<BaseFormFragmentContract.View> view;
     private AlertDialog passwordDialog;
@@ -80,7 +79,7 @@ public abstract class BaseFormFragmentPresenter extends BaseLocationListener imp
 
     @Override
     public void onLocationValidated() {
-        String formName = RevealJsonFormUtils.getFormName(null, taskDetails.getTaskCode());
+        String formName = getView().getJsonFormUtils().getFormName(null, taskDetails.getTaskCode());
         JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(context, formName, taskDetails, structure);
         getView().startForm(formJSON);
         getView().hideProgressDialog();
