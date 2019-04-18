@@ -2,11 +2,8 @@ package org.smartregister.reveal.contract;
 
 import android.content.Context;
 
-import org.json.JSONObject;
-import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.model.StructureTaskDetails;
-import org.smartregister.reveal.util.RevealJsonFormUtils;
 
 import java.util.List;
 

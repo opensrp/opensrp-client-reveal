@@ -47,7 +47,6 @@ import static org.smartregister.reveal.util.Constants.Action;
  */
 public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity {
 
-    private static final String TAG = TaskRegisterFragment.class.getName();
     private TaskRegisterAdapter taskAdapter;
 
     private BaseDrawerContract.View drawerView;
