@@ -1,9 +1,7 @@
 package org.smartregister.reveal.fragment;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,11 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import org.json.JSONObject;
 import org.smartregister.domain.Task;
@@ -38,8 +31,6 @@ import java.util.List;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
 import io.ona.kujaku.utils.Constants;
-import io.ona.kujaku.utils.LocationSettingsHelper;
-import io.ona.kujaku.utils.LogUtil;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -145,46 +136,9 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     @Override
     public void requestUserLocation() {
         hasRequestedLocation = true;
-        checkLocationSettingsAndStartLocationServices();
+        locationUtils.checkLocationSettingsAndStartLocationServices(getActivity(), new BaseLocationListener());
     }
 
-    private void checkLocationSettingsAndStartLocationServices() {
-        if (getContext() instanceof Activity) {
-            Activity activity = (Activity) getContext();
-
-            LocationSettingsHelper.checkLocationEnabled(activity, new ResultCallback<LocationSettingsResult>() {
-                @Override
-                public void onResult(LocationSettingsResult result) {
-                    final Status status = result.getStatus();
-
-                    switch (status.getStatusCode()) {
-                        case LocationSettingsStatusCodes.SUCCESS:
-                            Log.i(TAG, "All location settings are satisfied.");
-                            locationUtils.requestLocationUpdates(new BaseLocationListener());
-                            break;
-                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                            Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings");
-
-                            try {
-                                status.startResolutionForResult(activity, Constants.RequestCode.LOCATION_SETTINGS);
-                            } catch (IntentSender.SendIntentException e) {
-                                Log.i(TAG, "PendingIntent unable to execute request.");
-                            }
-                            break;
-                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            Log.e(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog cannot be created.");
-                            break;
-
-                        default:
-                            Log.e(TAG, "Unknown status code returned after checking location settings");
-                            break;
-                    }
-                }
-            });
-        } else {
-            LogUtil.e(TAG, "KujakuMapView is not started in an Activity and can therefore not start location services");
-        }
-    }
 
     @Override
     public Location getUserCurrentLocation() {
