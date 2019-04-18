@@ -60,7 +60,7 @@ public abstract class BaseFormFragmentPresenter extends BaseLocationListener imp
         mappingHelper = new RevealMappingHelper();
     }
 
-    private boolean validateFarStructures() {
+    protected boolean validateFarStructures() {
         return BuildConfig.VALIDATE_FAR_STRUCTURES;
     }
 
