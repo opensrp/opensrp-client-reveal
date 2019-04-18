@@ -15,17 +15,13 @@ import java.util.List;
  */
 public interface StructureTasksContract {
 
-    interface Presenter extends BaseContract.BasePresenter {
+    interface Presenter extends BaseContract.BasePresenter, BaseFormFragmentContract.Presenter {
 
         void findTasks(String structureId);
 
         void onTasksFound(List<StructureTaskDetails> taskDetailsList);
 
         void onTaskSelected(StructureTaskDetails details);
-
-        void onStructureFound(Location structure, StructureTaskDetails details);
-
-        UserLocationContract.UserLocationPresenter getLocationPresenter();
 
         void saveJsonForm(String json);
     }
@@ -37,11 +33,9 @@ public interface StructureTasksContract {
         void getStructure(StructureTaskDetails details);
     }
 
-    interface View extends UserLocationContract.UserLocationView {
+    interface View extends UserLocationContract.UserLocationView, BaseFormFragmentContract.View {
 
         void setStructure(String structureId);
-
-        void displayToast(String message);
 
         void showProgressDialog(int title, int message);
 
@@ -50,10 +44,6 @@ public interface StructureTasksContract {
         android.location.Location getUserCurrentLocation();
 
         Context getContext();
-
-        RevealJsonFormUtils getJsonFormUtils();
-
-        void startForm(JSONObject formJSON);
 
         void setTaskDetailsList(List<StructureTaskDetails> taskDetailsList);
 
