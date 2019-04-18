@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public interface TaskRegisterFragmentContract {
 
-    interface Presenter extends BaseRegisterFragmentContract.Presenter {
+    interface Presenter extends BaseRegisterFragmentContract.Presenter, BaseFormFragmentContract.Presenter {
         void onTasksFound(List<TaskDetails> tasks, int structuresWithinBuffer);
 
         void onDestroy();
@@ -27,13 +27,11 @@ public interface TaskRegisterFragmentContract {
 
         void onTaskSelected(TaskDetails details);
 
-        void onStructureFound(org.smartregister.domain.Location structure, TaskDetails details);
-
         @StringRes
         int getInterventionLabel();
     }
 
-    interface View extends BaseRegisterFragmentContract.View, UserLocationContract.UserLocationView {
+    interface View extends BaseRegisterFragmentContract.View, BaseFormFragmentContract.View {
 
         Location getLastLocation();
 
@@ -45,15 +43,9 @@ public interface TaskRegisterFragmentContract {
 
         void displayNotification(int title, @StringRes int message, Object... formatArgs);
 
-        void startForm(JSONObject formName);
-
-        RevealJsonFormUtils getJsonFormUtils();
-
         void showProgressDialog(@StringRes int title, @StringRes int message);
 
         void hideProgressDialog();
-
-        void displayToast(String message);
 
         LocationUtils getLocationUtils();
 

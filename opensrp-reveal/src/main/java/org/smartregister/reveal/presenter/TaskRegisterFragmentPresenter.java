@@ -1,56 +1,37 @@
 package org.smartregister.reveal.presenter;
 
 import android.support.v4.util.Pair;
-import android.support.v7.app.AlertDialog;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
-import org.json.JSONObject;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
 import org.smartregister.configurableviews.model.View;
 import org.smartregister.configurableviews.model.ViewConfiguration;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
-import org.smartregister.reveal.contract.UserLocationContract;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
-import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
-import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
-import org.smartregister.util.DateTimeTypeConverter;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import io.ona.kujaku.listeners.BaseLocationListener;
-
-import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
-import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
-import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 
 /**
  * Created by samuelgithengi on 3/11/19.
  */
-public class TaskRegisterFragmentPresenter extends BaseLocationListener implements TaskRegisterFragmentContract.Presenter, PasswordRequestCallback,
-        UserLocationContract.UserLocationCallback {
+public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter implements TaskRegisterFragmentContract.Presenter {
 
     private WeakReference<TaskRegisterFragmentContract.View> view;
 
@@ -68,16 +49,6 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
     private boolean recalculateDistance;
 
     private PreferencesUtil prefsUtil;
-    private RevealMappingHelper mappingHelper;
-
-    private AlertDialog passwordDialog;
-    private Location structure;
-    private TaskDetails details;
-
-    private ValidateUserLocationPresenter locationPresenter;
-
-    private Gson gson = new GsonBuilder().setDateFormat(EVENT_DATE_FORMAT_Z)
-            .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
 
 
     public TaskRegisterFragmentPresenter(TaskRegisterFragmentContract.View view, String viewConfigurationIdentifier) {
@@ -88,14 +59,13 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
     @VisibleForTesting
     protected TaskRegisterFragmentPresenter(TaskRegisterFragmentContract.View view, String viewConfigurationIdentifier,
                                             TaskRegisterFragmentInteractor interactor) {
+        super(view, view.getContext());
         this.view = new WeakReference<>(view);
         this.viewConfigurationIdentifier = viewConfigurationIdentifier;
         this.interactor = interactor;
         viewsHelper = ConfigurableViewsLibrary.getInstance().getConfigurableViewsHelper();
         prefsUtil = PreferencesUtil.getInstance();
-        mappingHelper = new RevealMappingHelper();
-        passwordDialog = PasswordDialogUtils.initPasswordDialog(view.getContext(), this);
-        locationPresenter = new ValidateUserLocationPresenter(view, this);
+
 
     }
 
@@ -153,7 +123,8 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
                 null : operationalArea.getId(), prefsUtil.getCurrentCampaignId()});
     }
 
-    private TaskRegisterFragmentContract.View getView() {
+    @Override
+    protected TaskRegisterFragmentContract.View getView() {
         return view.get();
     }
 
@@ -228,68 +199,8 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
     }
 
     @Override
-    public void onStructureFound(Location structure, TaskDetails details) {
-        this.structure = structure;
-        this.details = details;
-        if ((IRS.equals(details.getTaskCode()) || MOSQUITO_COLLECTION.equals(details.getTaskCode()))) {
-            if (validateFarStructures()) {
-                validateUserLocation();
-            } else {
-                onLocationValidated();
-            }
-        } else {
-            onLocationValidated();
-        }
-
-    }
-
-    protected boolean validateFarStructures() {
-        return BuildConfig.VALIDATE_FAR_STRUCTURES;
-    }
-
-    private void validateUserLocation() {
-        android.location.Location location = getView().getUserCurrentLocation();
-        if (location == null) {
-            locationPresenter.requestUserLocation();
-        } else {
-            locationPresenter.onGetUserLocation(location);
-        }
-    }
-
-    @Override
-    public void onPasswordVerified() {
-        onLocationValidated();
-    }
-
-    @Override
-    public void onLocationValidated() {
-        String formName = RevealJsonFormUtils.getFormName(null, details.getTaskCode());
-        JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), formName, details, structure);
-        getView().startForm(formJSON);
-        getView().hideProgressDialog();
-    }
-
-    @Override
-    public LatLng getTargetCoordinates() {
-        android.location.Location center = mappingHelper.getCenter(gson.toJson(structure.getGeometry()));
-        return new LatLng(center.getLatitude(), center.getLongitude());
-    }
-
-    @Override
-    public void requestUserPassword() {
-        if (passwordDialog != null) {
-            passwordDialog.show();
-        }
-    }
-
-    @Override
-    public ValidateUserLocationPresenter getLocationPresenter() {
-        return locationPresenter;
-    }
-
-
-    @Override
     public int getInterventionLabel() {
         return Utils.getInterventionLabel();
     }
+
 }
