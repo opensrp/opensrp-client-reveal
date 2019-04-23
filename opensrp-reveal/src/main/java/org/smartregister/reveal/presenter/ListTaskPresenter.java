@@ -104,8 +104,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private BaseDrawerContract.Presenter drawerPresenter;
 
-    private MapboxMap mapboxMap;
-
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
 
         this.listTaskView = listTaskView;
@@ -154,9 +152,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
     }
 
-
-    public void onMapReady(final MapboxMap mapboxMap) {
-        this.mapboxMap = mapboxMap;
+    public void onMapReady() {
         String campaign = PreferencesUtil.getInstance().getCurrentCampaignId();
         String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
         if (StringUtils.isNotBlank(campaign) &&

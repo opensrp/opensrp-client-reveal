@@ -8,7 +8,6 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.geojson.Feature;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;

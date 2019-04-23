@@ -37,7 +37,6 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reveal.R;
@@ -67,7 +66,6 @@ import static org.smartregister.reveal.util.Constants.Map;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
-import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_CIRCLE_LAYER;
 import static org.smartregister.reveal.util.RevealMapHelper.addCaseIndexBoundary;
 import static org.smartregister.reveal.util.RevealMapHelper.getIndexCase;
 import static org.smartregister.reveal.util.RevealMapHelper.removeCaseIndexBoundary;
@@ -241,7 +239,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 mapboxMap.setCameraPosition(cameraPosition);
 
 
-                listTaskPresenter.onMapReady(mapboxMap);
+                listTaskPresenter.onMapReady();
 
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                     @Override

@@ -6,8 +6,6 @@ import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 
-import static org.smartregister.reveal.util.Constants.FILTER_TEAM_ID;
-
 /**
  * Created by samuelgithengi on 11/29/18.
  */
