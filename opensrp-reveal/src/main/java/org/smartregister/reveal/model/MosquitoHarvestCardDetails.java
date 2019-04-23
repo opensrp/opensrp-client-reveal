@@ -10,7 +10,7 @@ public class MosquitoHarvestCardDetails extends CardDetails {
     private String interventionType;
 
     public MosquitoHarvestCardDetails(String status, String trapSetDate, String endDate, String interventionType) {
-        this.status = status;
+        super(status);
         this.startDate = trapSetDate;
         this.endDate = endDate;
         this.interventionType = interventionType;

@@ -17,14 +17,17 @@ public class LoginInteractor extends BaseLoginInteractor implements BaseLoginCon
     }
 
     @Override
-    protected void scheduleJobs() {
-        Utils.startImmediateSync();
-
+    protected void scheduleJobsPeriodically() {
         RevealCampaignServiceJob.scheduleJob(RevealCampaignServiceJob.TAG, TimeUnit.MINUTES.toMillis(
                 BuildConfig.SYNC_INTERVAL_IN_MINUTES), getFlexValue(BuildConfig.SYNC_INTERVAL_IN_MINUTES));
 
         PullUniqueIdsServiceJob.scheduleJob(SyncServiceJob.TAG, TimeUnit.MINUTES.toMillis(
                 BuildConfig.PULL_UNIQUE_IDS_MINUTES), getFlexValue(BuildConfig.PULL_UNIQUE_IDS_MINUTES));
+    }
+
+    @Override
+    protected void scheduleJobsImmediately() {
+        Utils.startImmediateSync();
     }
 
 }

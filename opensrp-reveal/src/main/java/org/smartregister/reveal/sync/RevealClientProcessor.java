@@ -29,7 +29,9 @@ import java.util.List;
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
+import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 
 /**
@@ -39,6 +41,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
 
     private static final String TAG = RevealClientProcessor.class.getCanonicalName();
+
     private static RevealClientProcessor instance;
 
     private EventClientRepository eventClientRepository;
@@ -90,9 +93,11 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     operationalAreaId = processSprayEvent(event, clientClassification, localEvents);
                 } else if (eventType.equals(MOSQUITO_COLLECTION_EVENT) || eventType.equals(LARVAL_DIPPING_EVENT)) {
                     operationalAreaId = processMosquitoHarvestingEvent(event, clientClassification, localEvents);
+                } else if (eventType.equals(REGISTER_STRUCTURE_EVENT)) {
+                    operationalAreaId = processRegisterStructureEvent(event, clientClassification);
                 } else {
                     Client client = eventClient.getClient();
-                    //iterate through the events
+
                     if (client != null) {
                         try {
                             processEvent(event, client, clientClassification);
@@ -113,6 +118,18 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             Intent intent = new Intent(STRUCTURE_TASK_SYNCED);
             LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
         }
+    }
+
+    private String processRegisterStructureEvent(Event event, ClientClassification clientClassification) {
+        try {
+            processEvent(event, new Client(event.getBaseEntityId()), clientClassification);
+            if (event.getDetails() != null && event.getDetails().get(LOCATION_PARENT) != null) {
+                return event.getDetails().get(LOCATION_PARENT);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error processing register structure event", e);
+        }
+        return null;
     }
 
     private String processSprayEvent(Event event, ClientClassification clientClassification, boolean localEvents) {

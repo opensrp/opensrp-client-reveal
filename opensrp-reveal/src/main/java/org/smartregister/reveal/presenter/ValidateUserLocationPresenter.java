@@ -8,6 +8,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.UserLocationContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
@@ -31,10 +32,10 @@ public class ValidateUserLocationPresenter implements UserLocationContract.UserL
 
     private AppExecutors appExecutors;
 
-    public ValidateUserLocationPresenter(UserLocationView locationView, UserLocationCallback callback) {
+    protected ValidateUserLocationPresenter(UserLocationView locationView, UserLocationCallback callback) {
         this.locationView = locationView;
         this.callback = callback;
-        appExecutors = new AppExecutors();
+        appExecutors = RevealApplication.getInstance().getAppExecutors();
     }
 
     @Override
@@ -71,7 +72,7 @@ public class ValidateUserLocationPresenter implements UserLocationContract.UserL
         Location location = locationView.getUserCurrentLocation();
         Log.d(TAG, "user location: " + location);
         if (location == null) {
-            if (elapsedTimeInMillis >= BuildConfig.RESOLVE_LOCATION_TIMEOUT_IN_SECONDS) {
+            if (elapsedTimeInMillis / 1000 >= BuildConfig.RESOLVE_LOCATION_TIMEOUT_IN_SECONDS) {
                 appExecutors.mainThread().execute(() -> onGetUserLocationFailed());
             } else {
                 if (elapsedTimeInMillis == 0) {//first try running in main thread ; show progress dialog.

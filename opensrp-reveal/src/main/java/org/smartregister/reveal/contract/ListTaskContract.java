@@ -3,29 +3,23 @@ package org.smartregister.reveal.contract;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.v4.util.Pair;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Geometry;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.smartregister.domain.Campaign;
-import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 
 /**
  * Created by samuelgithengi on 11/27/18.
  */
 public interface ListTaskContract {
 
-    interface ListTaskView extends UserLocationView {
+    interface ListTaskView extends UserLocationView, BaseDrawerContract.DrawerActivity {
 
         void showProgressDialog(@StringRes int title, @StringRes int message);
 
@@ -37,25 +31,7 @@ public interface ListTaskContract {
 
         void closeAllCardViews();
 
-        void showOperationalAreaSelector(Pair<String, ArrayList<String>> locationHierarchy);
-
-        void setCampaign(String campaign);
-
-        void setOperationalArea(String operationalArea);
-
-        void setDistrict(String district);
-
-        void setFacility(String facility);
-
-        void setOperator();
-
-        void showCampaignSelector(List<String> campaigns, String entireTreeString);
-
-        void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Geometry operationalAreaGeometry);
-
-        void lockNavigationDrawerForSelection();
-
-        void unlockNavigationDrawer();
+        void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea);
 
         void displayNotification(int title, @StringRes int message, Object... formatArgs);
 
@@ -70,24 +46,18 @@ public interface ListTaskContract {
         void clearSelectedFeature();
 
         void displayToast(@StringRes int resourceId);
+
+        RevealJsonFormUtils getJsonFormUtils();
     }
 
-    interface PresenterCallBack {
+    interface Presenter extends BaseContract.BasePresenter {
 
-        void onCampaignsFetched(List<Campaign> campaigns);
+        void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea);
 
-        void onStructuresFetched(JSONObject structuresGeoJson, Geometry operationalAreaGeometry);
-
-        void onFormSaved(@NonNull String structureId,
-                         @NonNull TaskStatus taskStatus, @NonNull String businessStatus, String interventionType);
+        void onDrawerClosed();
 
         void onStructureAdded(Feature feature, JSONArray featureCoordinates);
 
         void onFormSaveFailure(String eventType);
-
-        void onCardDetailsFetched(CardDetails cardDetails);
-
-        void onInterventionFormDetailsFetched(CardDetails finalCardDetails);
     }
-
 }

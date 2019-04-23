@@ -35,7 +35,9 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.job.RevealJobCreator;
+import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.repository.RevealRepository;
+import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealSyncConfiguration;
@@ -52,6 +54,7 @@ import io.fabric.sdk.android.Fabric;
 
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.GLOBAL_CONFIGS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KEY;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.SETTINGS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.VALUE;
 import static org.smartregister.reveal.util.FamilyConstants.CONFIGURATION;
 import static org.smartregister.reveal.util.FamilyConstants.EventType;
@@ -75,6 +78,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     private Map<String, String> globalConfigs;
 
     private static CommonFtsObject commonFtsObject;
+
+    private AppExecutors appExecutors;
 
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
@@ -205,6 +210,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     public StructureRepository getStructureRepository() {
         if (structureRepository == null) {
             structureRepository = new StructureRepository(getRepository());
+            structureRepository.setHelper(new RevealMappingHelper());
         }
         return structureRepository;
     }
@@ -221,7 +227,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     }
 
     public void processGlobalConfigs() {
-        Setting globalSettings =  getSettingsRepository().getSetting(GLOBAL_CONFIGS);
+        Setting globalSettings = getSettingsRepository().getSetting(GLOBAL_CONFIGS);
         populateGlobalConfigs(globalSettings);
     }
 
@@ -230,7 +236,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             return;
         }
         try {
-            JSONArray settingsArray = new JSONArray(setting.getValue());
+            JSONArray settingsArray = new JSONObject(setting.getValue()).getJSONArray(SETTINGS);
             for (int i = 0; i < settingsArray.length(); i++) {
                 JSONObject jsonObject = settingsArray.getJSONObject(i);
                 String value = jsonObject.optString(VALUE, null);
@@ -292,5 +298,12 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
                     .LAST_INTERACTED_WITH, DBConstants.KEY.DATE_REMOVED};
         }
         return null;
+    }
+
+    public AppExecutors getAppExecutors() {
+        if (appExecutors == null) {
+            appExecutors = new AppExecutors();
+        }
+        return appExecutors;
     }
 }

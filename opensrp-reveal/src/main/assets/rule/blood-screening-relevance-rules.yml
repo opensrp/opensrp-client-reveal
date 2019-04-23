@@ -1,0 +1,14 @@
+---
+name: step1_caseNumberTrigger
+description: Display if caseTestingProtocol is Active, Special, Investigation, or Follow-up
+priority: 1
+condition: "step1_caseTestingProtocol == 'Investigation' || step1_caseTestingProtocol == 'ACD' || step1_caseTestingProtocol == 'SCD' || step1_caseTestingProtocol == 'Follow-up'"
+actions:
+  - "isRelevant = true"
+---
+name: step1_slideNumber
+description: Display if test type is Microscopy
+priority: 1
+condition: "step1_testType == 'Microscopy'"
+actions:
+  - "isRelevant = true"
