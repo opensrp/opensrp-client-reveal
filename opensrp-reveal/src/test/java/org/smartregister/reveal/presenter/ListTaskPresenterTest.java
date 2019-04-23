@@ -87,7 +87,7 @@ public class ListTaskPresenterTest {
     public void testOnMosquitoCollectionFormSavedHidesProgressDialog() throws Exception {
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
 
-        listTaskPresenter.onFormSaved(null, null, null, null, IRS);
+        listTaskPresenter.onFormSaved(null, null, null, IRS);
 
         verify(listTaskViewSpy).hideProgressDialog();
     }
@@ -342,7 +342,7 @@ public class ListTaskPresenterTest {
         doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(IRS), anyString(), anyBoolean());
 
 
-        listTaskPresenter.onFormSaved(null, null, null, null, IRS);
+        listTaskPresenter.onFormSaved(null, null, null, IRS);
 
         verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(IRS), AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
@@ -355,7 +355,7 @@ public class ListTaskPresenterTest {
         doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class));
         doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION),anyString(), anyBoolean());
 
-        listTaskPresenter.onFormSaved(null, null, null, null, MOSQUITO_COLLECTION);
+        listTaskPresenter.onFormSaved(null, null, null, MOSQUITO_COLLECTION);
 
         verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
