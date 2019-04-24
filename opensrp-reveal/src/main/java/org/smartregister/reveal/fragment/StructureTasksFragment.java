@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -54,6 +55,8 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     private LocationUtils locationUtils;
     private boolean hasRequestedLocation;
 
+    private TabLayout tabLayout;
+
     public static StructureTasksFragment newInstance(Bundle bundle) {
         StructureTasksFragment fragment = new StructureTasksFragment();
         fragment.setPresenter(new StructureTasksPresenter(fragment));
@@ -70,6 +73,7 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         jsonFormUtils = new RevealJsonFormUtils();
         locationUtils = new LocationUtils(getActivity());
         locationUtils.requestLocationUpdates(new BaseLocationListener());
+        tabLayout = getActivity().findViewById(R.id.tabs);
     }
 
     @Nullable
@@ -158,6 +162,9 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     @Override
     public void setTaskDetailsList(List<StructureTaskDetails> taskDetailsList) {
         adapter.setTaskDetailsList(taskDetailsList);
+        if (tabLayout != null && tabLayout.getTabAt(1) != null) {
+            tabLayout.getTabAt(1).setText(getString(R.string.tasks, taskDetailsList.size()));
+        }
     }
 
     @Override
