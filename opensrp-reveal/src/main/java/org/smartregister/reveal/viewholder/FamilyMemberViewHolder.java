@@ -56,8 +56,7 @@ public class FamilyMemberViewHolder implements RecyclerViewProvider<FamilyMember
         String patientName = getName(firstName, middleName, lastName);
 
         String dob = Utils.getValue(pc.getColumnmaps(), DBConstants.KEY.DOB, false);
-        String dobString = Utils.getDuration(dob);
-        dobString = dobString.contains("y") ? dobString.substring(0, dobString.indexOf("y")) : dobString;
+        String dobString = org.smartregister.reveal.util.Utils.getAge(dob);
 
         String dod = Utils.getValue(pc.getColumnmaps(), DBConstants.KEY.DOD, false);
         if (StringUtils.isNotBlank(dod)) {

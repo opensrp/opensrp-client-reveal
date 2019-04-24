@@ -80,8 +80,8 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
 
         interactor.findTasks(structure, campaign);
 
-        verify(database).rawQuery(taskQuery, new String[]{structure, campaign});
-        verify(database).rawQuery(memberQuery, new String[]{structure, campaign});
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(taskQuery, new String[]{structure, campaign});
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(memberQuery, new String[]{structure, campaign});
 
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskDetailsArgumentCaptor.capture());
 
@@ -100,7 +100,8 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
         assertEquals("w08989-ejkjkj-eere", memberTask.getTaskEntity());
         assertEquals(BusinessStatus.NOT_VISITED, memberTask.getBusinessStatus());
         assertEquals(Task.TaskStatus.READY.name(), memberTask.getTaskStatus());
-        assertEquals("Charity Otala, 37", memberTask.getTaskName());
+        String age = org.smartregister.reveal.util.Utils.getAge("1982-01-01T03:00:00.000+03:00");
+        assertEquals("Charity Otala, " + age, memberTask.getTaskName());
         assertEquals("434343", memberTask.getStructureId());
 
 
