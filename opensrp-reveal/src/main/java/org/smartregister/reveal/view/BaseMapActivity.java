@@ -1,9 +1,7 @@
-package org.smartregister.reveal.activity;
+package org.smartregister.reveal.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-
-import org.smartregister.reveal.view.RevealMapView;
 
 /**
  * Created by samuelgithengi on 11/20/18.

@@ -11,6 +11,14 @@
           }
         },
         {
+          "column_name": "structure_name",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "structureName"
+          }
+        },
+        {
           "column_name": "spray_status",
           "type": "Event",
           "json_mapping": {
@@ -326,6 +334,41 @@
           "json_mapping": {
             "field": "obs.fieldCode",
             "concept": "trap_end"
+          }
+        }
+      ]
+    },
+    {
+      "name": "bednet_distribution",
+      "columns": [
+        {
+          "column_name": "base_entity_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "baseEntityId"
+          }
+        },
+        {
+          "column_name": "status",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "business_status"
+          }
+        },
+        {
+          "column_name": "distribution_date",
+          "type": "Event",
+          "json_mapping": {
+            "field": "eventDate"
+          }
+        },
+        {
+          "column_name": "total_nets_distributed",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "calcTotalNetsDistributed"
           }
         }
       ]

@@ -14,6 +14,13 @@
           },
           {
             "field": "eventType",
+            "field_value": "Register_Structure",
+            "creates_case": [
+              "sprayed_structures"
+            ]
+          },
+          {
+            "field": "eventType",
             "field_value": "Family Registration",
             "creates_case": [
               "ec_family"
@@ -31,6 +38,13 @@
             "field_value": "mosquito_collection",
             "creates_case": [
               "mosquito_interventions"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "bednet_distribution",
+            "creates_case": [
+              "bednet_distribution"
             ]
           }
         ]

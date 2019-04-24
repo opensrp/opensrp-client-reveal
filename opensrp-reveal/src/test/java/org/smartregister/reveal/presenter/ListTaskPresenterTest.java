@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Geometry;
 
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -17,6 +16,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.domain.Location;
+import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
@@ -25,6 +25,7 @@ import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.AssetHandler;
 
@@ -75,9 +76,11 @@ public class ListTaskPresenterTest {
         listTaskInteractor = mock(ListTaskInteractor.class);
         whenNew(ListTaskInteractor.class).withAnyArguments().thenReturn(listTaskInteractor);
 
-        ListTaskContract.ListTaskView listTaskView = mock(ListTaskContract.ListTaskView.class);
-        listTaskViewSpy = spy(listTaskView);
-        listTaskPresenter = new ListTaskPresenter(listTaskViewSpy);
+        RevealJsonFormUtils jsonFormUtils = mock(RevealJsonFormUtils.class);
+        when(jsonFormUtils.getFormJSON(any(), any(), any(), any(), any())).thenReturn(new JSONObject());
+        listTaskViewSpy = mock(ListTaskContract.ListTaskView.class);
+        when(listTaskViewSpy.getJsonFormUtils()).thenReturn(jsonFormUtils);
+        listTaskPresenter = new ListTaskPresenter(listTaskViewSpy, mock(BaseDrawerContract.Presenter.class));
     }
 
     @Test
@@ -285,7 +288,7 @@ public class ListTaskPresenterTest {
 
         Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
 
-        PowerMockito.verifyPrivate(listTaskPresenter,  times(1)).invoke("validateUserLocation");
+        PowerMockito.verifyPrivate(listTaskPresenter, times(1)).invoke("validateUserLocation");
     }
 
     @Test
@@ -335,7 +338,7 @@ public class ListTaskPresenterTest {
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
 
         doNothing().when(listTaskViewSpy).hideProgressDialog();
-        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Geometry.class));
+        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class));
         doNothing().when(listTaskInteractor).fetchSprayDetails(anyString(), anyBoolean());
 
         listTaskPresenter.onFormSaved(null, null, null, IRS);
@@ -348,14 +351,13 @@ public class ListTaskPresenterTest {
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
 
         doNothing().when(listTaskViewSpy).hideProgressDialog();
-        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Geometry.class));
+        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class));
         doNothing().when(listTaskInteractor).fetchMosquitoCollectionDetails(anyString(), anyBoolean());
 
         listTaskPresenter.onFormSaved(null, null, null, MOSQUITO_COLLECTION);
 
         verify(listTaskInteractor, times(1)).fetchMosquitoCollectionDetails(AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
-
 
 
     private void mockStaticMethods() {

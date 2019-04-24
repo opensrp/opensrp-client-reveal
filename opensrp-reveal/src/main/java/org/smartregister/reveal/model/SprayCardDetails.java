@@ -9,17 +9,14 @@ public class SprayCardDetails extends CardDetails {
     private String sprayDate;
     private String sprayOperator;
     private String familyHead;
-    private int statusMessage;
-    private int statusColor;
-    private String reason;
 
     public SprayCardDetails(String status, String propertyType, String sprayDate, String sprayOperator, String familyHead, String reason) {
-        this.status = status;
+        super(status);
         this.propertyType = propertyType;
         this.sprayDate = sprayDate;
         this.sprayOperator = sprayOperator;
         this.familyHead = familyHead;
-        this.reason = reason;
+        setReason(reason);
     }
 
     public String getPropertyType() {
@@ -54,27 +51,4 @@ public class SprayCardDetails extends CardDetails {
         this.familyHead = familyHead;
     }
 
-    public int getStatusColor() {
-        return statusColor;
-    }
-
-    public void setStatusColor(int statusColor) {
-        this.statusColor = statusColor;
-    }
-
-    public int getStatusMessage() {
-        return statusMessage;
-    }
-
-    public void setStatusMessage(int statusMessage) {
-        this.statusMessage = statusMessage;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
 }

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Actions -->
     <string name="action_logout">Logout</string>
     <!-- General -->
@@ -26,6 +26,7 @@
     <string name="app_updated">Updated %1$s</string>
     <string name="district">District:</string>
     <string name="facility">Facility:</string>
+    <string name="canton">Canton:</string>
     <string name="operator">Spray Operator:</string>
 
     <string name="fetch_location_and_structures_failed">This operational area has not been defined in the system. Please try to sync your device. Please contact the system administrator if that doesn\'t solve the issue noting the operational area number %1$s.</string>
@@ -91,9 +92,32 @@
     <string name="larval_dipping_task_description">Perform Larval Dipping, Classify and Intervene</string>
 
     <string name="register_family">Register Family</string>
+    <string name="list">List</string>
+    <string name="map">Map</string>
+    <string name="hamburger_menu">Hamburger menu</string>
+    <string name="focus_investigation">Focus Investigation</string>
+    <string name="irs">IRS</string>
+    <string name="task_icon">Task Icon</string>
+    <string name="distance_from_structure">%1.0f m away</string>
+    <string name="distance_from_center">%1.0f m from %2s center </string>
 
-    <string name="record_mosquito_collection">Record mosquito collection</string>
-    <string name="mosquito_collection_point">Mosquito Collection Point</string>
+    <string name="mosquito_collection_point">Mosquito collection point</string>
+    <string name="record_mosquito_collection">Record \nCollection</string>
+    <string name="larval_breeding_site">Larval breeding site</string>
+    <string name="record_larvacide">Record \nLarvacide</string>
+    <string name="bcc">Behaviour Change communication</string>
+    <string name="record_bcc">Record\n BCC</string>
+    <string name="record_status">Record\n Status</string>
+    <string name="record_index">Record\n Index</string>
+    <string name="opening_form_title">Opening Form</string>
+    <string name="opening_form_message">Please wait, Opening form</string>
+    <string name="task_reason">Reason: %1s</string>
+
+    <plurals name="structures">
+        <item quantity="one">%1d structure within %2.0f m (%3$d total)</item>
+        <item quantity="other">%1d structures within %2.0f m (%3$d total)</item>
+    </plurals>
+
     <string name="mosquito_collection_status_test_text">Status: Inactive</string>
     <string name="mosquito_collection_trap_set_date_test_text">Set Date: DD/MM/YY</string>
     <string name="mosquito_collection_trap_follow_up_date_test_text">Follow-up Date: DD/MM/YY</string>
