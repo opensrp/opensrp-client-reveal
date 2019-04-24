@@ -1,5 +1,6 @@
 package org.smartregister.reveal.interactor;
 
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import net.sqlcipher.Cursor;
@@ -49,11 +50,17 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     private StructureRepository structureRepository;
 
     public StructureTasksInteractor(StructureTasksContract.Presenter presenter) {
+        this(presenter, RevealApplication.getInstance().getAppExecutors(), RevealApplication.getInstance().getRepository().getReadableDatabase(), RevealApplication.getInstance().getStructureRepository());
+    }
+
+    @VisibleForTesting
+    protected StructureTasksInteractor(StructureTasksContract.Presenter presenter, AppExecutors appExecutors,
+                                       SQLiteDatabase database, StructureRepository structureRepository) {
         super(presenter);
         this.presenter = presenter;
-        appExecutors = RevealApplication.getInstance().getAppExecutors();
-        database = RevealApplication.getInstance().getRepository().getReadableDatabase();
-        structureRepository = RevealApplication.getInstance().getStructureRepository();
+        this.appExecutors = appExecutors;
+        this.database = database;
+        this.structureRepository = structureRepository;
     }
 
     @Override
