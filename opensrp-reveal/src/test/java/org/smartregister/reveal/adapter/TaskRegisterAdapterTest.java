@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.spy;
@@ -79,6 +80,21 @@ public class TaskRegisterAdapterTest extends BaseUnitTest {
         assertEquals(View.GONE, holder.itemView.findViewById(R.id.task_icon).getVisibility());
     }
 
+    @Test
+    public void testonBindViewHolderWithoutName() {
+        LinearLayout vg = new LinearLayout(context);
+        TaskRegisterViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+        Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
+        TaskDetails taskDetails = new TaskDetails(UUID.randomUUID().toString());
+        taskDetails.setBusinessStatus(Constants.BusinessStatus.IN_PROGRESS);
+        taskDetailsList.add(taskDetails);
+        adapter.onBindViewHolder(holder, 1);
+        assertTrue(((TextView) holder.itemView.findViewById(R.id.task_name)).getText().toString().matches("Structure \\d{1,2}"));
+        assertEquals("In\nProgress", ((TextView) holder.itemView.findViewById(R.id.task_action)).getText());
+        assertEquals(View.GONE, holder.itemView.findViewById(R.id.task_details).getVisibility());
+        assertEquals(View.GONE, holder.itemView.findViewById(R.id.task_icon).getVisibility());
+    }
+
 
     @Test
     public void testonBindViewHolderMosquitoPoint() {
@@ -130,13 +146,14 @@ public class TaskRegisterAdapterTest extends BaseUnitTest {
 
         TaskDetails task = taskDetailsList.get(0);
         task.setBusinessStatus(Constants.BusinessStatus.NOT_SPRAYED);
+        task.setStructureName(null);
         task.setTaskDetails("Locked");
         LinearLayout vg = new LinearLayout(context);
         TaskRegisterViewHolder holder = adapter.onCreateViewHolder(vg, 0);
         Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
         adapter.onBindViewHolder(holder, 0);
 
-        assertEquals("Kenny House", ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+        assertTrue(((TextView) holder.itemView.findViewById(R.id.task_name)).getText().toString().matches("Structure \\d{1,2}"));
         assertEquals("26 m away", ((TextView) holder.itemView.findViewById(R.id.distance_from_structure)).getText());
         assertEquals("Not\nSprayed", ((TextView) holder.itemView.findViewById(R.id.task_action)).getText());
         assertEquals("Reason: Locked", ((TextView) holder.itemView.findViewById(R.id.task_details)).getText());
