@@ -25,8 +25,11 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter impleme
 
     @Override
     public void onRegistrationSaved(boolean isEdit) {
-        getInteractor().generateTasks(getModel().getEventClientList(), getModel().getStructureId(), view.getContext());
-
+        if (isEdit) {
+            onTasksGenerated();
+        } else {
+            getInteractor().generateTasks(getModel().getEventClientList(), getModel().getStructureId(), view.getContext());
+        }
     }
 
     @Override

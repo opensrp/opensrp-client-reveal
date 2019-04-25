@@ -17,9 +17,7 @@ import org.smartregister.family.util.DBConstants.KEY;
 import org.smartregister.family.util.Utils;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
-
-import java.util.HashMap;
-import java.util.UUID;
+import org.smartregister.reveal.util.TestingUtils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -61,13 +59,7 @@ public class FamilyMemberViewHolderTest extends BaseUnitTest {
     @Before
     public void setUp() {
         viewHolder = new FamilyMemberViewHolder(context, registerActionHandler, paginationClickListener);
-        HashMap<String, String> map = new HashMap<>();
-        map.put(KEY.FIRST_NAME, "Charity");
-        map.put(KEY.LAST_NAME, "Otala");
-        map.put(KEY.DOB, "1982-01-01T03:00:00.000+03:00");
-        map.put(KEY.GENDER, "Female");
-        smartRegisterClient = new CommonPersonObjectClient(UUID.randomUUID().toString(), null, null);
-        smartRegisterClient.setColumnmaps(map);
+        smartRegisterClient = TestingUtils.getCommonPersonObjectClient();
     }
 
     @Test

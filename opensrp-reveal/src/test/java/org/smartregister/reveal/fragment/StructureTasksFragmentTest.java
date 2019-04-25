@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import org.json.JSONObject;
 import org.junit.Before;
@@ -47,8 +48,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
@@ -89,8 +88,6 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
     @Before
     public void setUp() {
         fragment = new StructureTasksFragment();
-        fragment = spy(fragment);
-        doNothing().when(fragment).initDependencies();
         activity = Robolectric.buildActivity(AppCompatActivity.class).create().get();
         activity.setContentView(R.layout.activity_family_profile);
         activity.getSupportFragmentManager().beginTransaction().add(fragment, "Tasks").commit();
@@ -99,7 +96,8 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
     @Test
     public void testOnCreate() {
         assertNotNull(Whitebox.getInternalState(fragment, "tabLayout"));
-        verify(fragment).initDependencies();
+        assertNotNull(Whitebox.getInternalState(fragment, "jsonFormUtils"));
+        assertNotNull(Whitebox.getInternalState(fragment, "locationUtils"));
     }
 
     @Test
@@ -248,6 +246,19 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
         assertNotNull(fragment);
         assertEquals(bundle, fragment.getArguments());
         assertNotNull(Whitebox.getInternalState(fragment, "presenter"));
+    }
+
+    @Test
+    public void testOnClickListener() {
+        View.OnClickListener onClickListener = Whitebox.getInternalState(fragment, "onClickListener");
+        fragment.setPresenter(presenter);
+        assertNotNull(onClickListener);
+        View view = new View(context);
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        view.setTag(R.id.task_details, taskDetails);
+        view.setOnClickListener(onClickListener);
+        view.performClick();
+        verify(presenter).onTaskSelected(taskDetails);
     }
 
 }
