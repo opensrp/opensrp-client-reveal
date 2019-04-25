@@ -1,7 +1,6 @@
 package org.smartregister.reveal.viewholder;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import org.junit.Before;
@@ -85,8 +84,6 @@ public class FamilyMemberViewHolderTest extends BaseUnitTest {
         registerViewHolder = viewHolder.createViewHolder(null);
         smartRegisterClient.getColumnmaps().put(KEY.DOD, "2017-08-19T00:00:00.000+03:00");
         viewHolder.getView(null, smartRegisterClient, registerViewHolder);
-        String age = org.smartregister.reveal.util.Utils.getAge("1982-01-01T03:00:00.000+03:00");
-
         String dobString = Utils.getDuration(smartRegisterClient.getColumnmaps().get(KEY.DOB), smartRegisterClient.getColumnmaps().get(KEY.DOD));
         dobString = dobString.contains("y") ? dobString.substring(0, dobString.indexOf("y")) : dobString;
         assertEquals("Charity Otala, " + dobString + " (deceased)", registerViewHolder.patientNameAge.getText());

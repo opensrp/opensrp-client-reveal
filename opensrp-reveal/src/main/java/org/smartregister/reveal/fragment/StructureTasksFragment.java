@@ -61,6 +61,7 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         StructureTasksFragment fragment = new StructureTasksFragment();
         if (bundle != null) {
             fragment.setArguments(bundle);
+            fragment.setPresenter(new StructureTasksPresenter(fragment));
         }
         return fragment;
     }
@@ -75,7 +76,6 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     }
 
     protected void initDependencies() {
-        presenter = new StructureTasksPresenter(this);
         jsonFormUtils = new RevealJsonFormUtils();
         locationUtils = new LocationUtils(getActivity());
         locationUtils.requestLocationUpdates(new BaseLocationListener());
@@ -192,5 +192,9 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
 
     public void refreshTasks(String structureId) {
         presenter.findTasks(structureId);
+    }
+
+    public void setPresenter(StructureTasksContract.Presenter presenter) {
+        this.presenter = presenter;
     }
 }

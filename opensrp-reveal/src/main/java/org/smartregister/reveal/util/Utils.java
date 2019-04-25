@@ -16,7 +16,6 @@ import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
 
 import org.smartregister.domain.Location;
-import org.smartregister.family.util.DBConstants;
 import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
@@ -26,7 +25,6 @@ import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
-import org.smartregister.view.contract.SmartRegisterClient;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
