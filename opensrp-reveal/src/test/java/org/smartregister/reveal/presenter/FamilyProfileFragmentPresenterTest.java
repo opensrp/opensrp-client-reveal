@@ -85,10 +85,10 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         String sql = "SELECT DISTINCT structure_id FROM EC_FAMILY WHERE base_entity_id = ?";
         when(database.rawQuery(sql, new String[]{familyId})).thenReturn(createCursor());
         Whitebox.invokeMethod(presenter, "getStructureId", familyId);
-        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery("SELECT DISTINCT structure_id FROM EC_FAMILY WHERE base_entity_id = ?",
+        verify(database, timeout(ASYNC_TIMEOUT).atLeastOnce()).rawQuery(sql,
                 new String[]{familyId});
-        verify(model, timeout(ASYNC_TIMEOUT)).setStructureId(structureId);
-        verify(view, timeout(ASYNC_TIMEOUT)).setStructureId(structureId);
+        verify(model, timeout(ASYNC_TIMEOUT).atLeastOnce()).setStructureId(structureId);
+        verify(view, timeout(ASYNC_TIMEOUT).atLeastOnce()).setStructureId(structureId);
         assertEquals(structureId, presenter.getStructureId());
     }
 
