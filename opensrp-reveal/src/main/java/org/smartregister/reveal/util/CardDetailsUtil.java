@@ -100,6 +100,7 @@ public class CardDetailsUtil {
             TextView tvMosquitoCollectionStatus = activity.findViewById(R.id.trap_collection_status);
             TextView tvMosquitoTrapSetDate = activity.findViewById(R.id.trap_set_date);
             TextView tvMosquitoTrapFollowUpDate = activity.findViewById(R.id.trap_follow_up_date);
+
             tvMosquitoCollectionStatus.setText(mosquitoHarvestCardDetails.getStatus());
             tvMosquitoTrapSetDate.setText(activity.getResources().getString(R.string.mosquito_collection_trap_set_date) + startDate);
             tvMosquitoTrapFollowUpDate.setText(activity.getResources().getString(R.string.mosquito_collection_trap_follow_up_date) + endDate);
@@ -107,6 +108,7 @@ public class CardDetailsUtil {
         } else if (LARVAL_DIPPING.equals(interventionType)) {
             TextView tvIdentifiedDate = activity.findViewById(R.id.larval_identified_date);
             TextView tvLarvicideDate = activity.findViewById(R.id.larvacide_date);
+
             tvIdentifiedDate.setText(activity.getResources().getString(R.string.larval_breeding_identified_date_test_text) + startDate);
             tvLarvicideDate.setText(activity.getResources().getString(R.string.larval_breeding_larvacide_date_test_text) + endDate);
             activity.findViewById(R.id.larval_breeding_card_view).setVisibility(View.VISIBLE);
