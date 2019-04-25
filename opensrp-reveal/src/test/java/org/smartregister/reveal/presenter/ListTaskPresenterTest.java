@@ -51,6 +51,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
@@ -312,7 +313,7 @@ public class ListTaskPresenterTest {
     }
 
     @Test
-    public void testFetchSprayDetailsIsCalledForChangeSprayStatus() {
+    public void testFetchInterventionDetailsIsCalledForChangeSprayStatus() {
         Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mock(Feature.class));
 
         doNothing().when(listTaskViewSpy).showProgressDialog(anyInt(), anyInt());
@@ -323,7 +324,7 @@ public class ListTaskPresenterTest {
     }
 
     @Test
-    public void testFetchMosquitoCollectionDetailsIsCalledForChangeMosquitoCollectionStatus() {
+    public void testFetchInterventionDetailsIsCalledForChangeMosquitoCollectionStatus() {
         Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mock(Feature.class));
 
         doNothing().when(listTaskViewSpy).showProgressDialog(anyInt(), anyInt());
@@ -331,6 +332,17 @@ public class ListTaskPresenterTest {
         listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
 
         verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION),AdditionalMatchers.or(anyString(), isNull()), eq(true));
+    }
+
+    @Test
+    public void testFetchInterventionDetailsIsCalledForRecordLarvalDipping() {
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mock(Feature.class));
+
+        doNothing().when(listTaskViewSpy).showProgressDialog(anyInt(), anyInt());
+
+        listTaskPresenter.onChangeInterventionStatus(LARVAL_DIPPING);
+
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(LARVAL_DIPPING),AdditionalMatchers.or(anyString(), isNull()), eq(true));
     }
 
     @Test
@@ -359,6 +371,8 @@ public class ListTaskPresenterTest {
 
         verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
+
+
 
     private void mockStaticMethods() {
         mockStatic(Utils.class);
