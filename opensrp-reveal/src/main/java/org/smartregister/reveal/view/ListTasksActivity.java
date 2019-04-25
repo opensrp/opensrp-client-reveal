@@ -49,6 +49,7 @@ import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
+import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -368,58 +369,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void openCardView(CardDetails cardDetails) {
+        CardDetailsUtil cardDetailsUtil = new CardDetailsUtil();
         if (cardDetails instanceof SprayCardDetails) {
-            populateSprayCardTextViews((SprayCardDetails) cardDetails);
+            cardDetailsUtil.populateSprayCardTextViews((SprayCardDetails) cardDetails, this);
             sprayCardView.setVisibility(View.VISIBLE);
         } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
-            populateAndOpenMosquitoHarvestCard((MosquitoHarvestCardDetails) cardDetails);
-        }
-    }
-
-    private void populateSprayCardTextViews(SprayCardDetails sprayCardDetails) {
-        try {
-            Integer color = sprayCardDetails.getStatusColor();
-            tvSprayStatus.setTextColor(color == null ? getResources().getColor(R.color.black) : getResources().getColor(color));
-
-            Integer status = sprayCardDetails.getStatusMessage();
-            tvSprayStatus.setText(status == null ? "" : getContext().getString(status));
-
-            String propertyType = sprayCardDetails.getPropertyType();
-            tvPropertyType.setText(propertyType == null ? "" : propertyType);
-
-            String sprayDate = sprayCardDetails.getSprayDate();
-            tvSprayDate.setText(sprayDate == null ? "" : sprayDate);
-
-            String sprayOperator = sprayCardDetails.getSprayOperator();
-            tvSprayOperator.setText(sprayOperator == null ? "" : sprayOperator);
-
-            String familyHead = sprayCardDetails.getFamilyHead();
-            tvFamilyHead.setText(familyHead == null ? "" : familyHead);
-
-            if (!TextUtils.isEmpty(sprayCardDetails.getReason())) {
-                tvReason.setVisibility(View.VISIBLE);
-                tvReason.setText(sprayCardDetails.getReason());
-            } else {
-                tvReason.setVisibility(View.GONE);
-            }
-        } catch (Resources.NotFoundException e) {
-            Log.e(TAG, e.getStackTrace().toString());
-        }
-    }
-
-    private void populateAndOpenMosquitoHarvestCard(MosquitoHarvestCardDetails mosquitoHarvestCardDetails) {
-        String interventionType = mosquitoHarvestCardDetails.getInterventionType();
-        String startDate = mosquitoHarvestCardDetails.getStartDate();
-        String endDate = mosquitoHarvestCardDetails.getEndDate();
-        if (MOSQUITO_COLLECTION.equals(interventionType)) {
-            tvMosquitoCollectionStatus.setText(mosquitoHarvestCardDetails.getStatus());
-            tvMosquitoTrapSetDate.setText(getResources().getString(R.string.mosquito_collection_trap_set_date) + startDate);
-            tvMosquitoTrapFollowUpDate.setText(getResources().getString(R.string.mosquito_collection_trap_follow_up_date) + endDate);
-            mosquitoCollectionCardView.setVisibility(View.VISIBLE);
-        } else if (LARVAL_DIPPING.equals(interventionType)) {
-            tvIdentifiedDate.setText(getResources().getString(R.string.larval_breeding_identified_date_test_text) + startDate);
-            tvLarvicideDate.setText(getResources().getString(R.string.larval_breeding_larvacide_date_test_text) + endDate);
-            larvalBreedingCardView.setVisibility(View.VISIBLE);
+            cardDetailsUtil.populateAndOpenMosquitoHarvestCard((MosquitoHarvestCardDetails) cardDetails, this);
         }
     }
 
