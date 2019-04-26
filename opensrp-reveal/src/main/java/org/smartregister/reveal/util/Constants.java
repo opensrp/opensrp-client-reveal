@@ -22,6 +22,8 @@ public interface Constants {
 
     String MOSQUITO_COLLECTION_EVENT = "mosquito_collection";
 
+    String LARVAL_DIPPING_EVENT = "larval_dipping";
+
     String BEDNET_DISTRIBUTION_EVENT = "bednet_distribution";
 
     String BLOOD_SCREENING_EVENT = "blood_screening";
@@ -94,6 +96,7 @@ public interface Constants {
 
     interface Intervention {
         String IRS = "IRS";
+
         String MDA = "MDA";
 
         String MOSQUITO_COLLECTION = "Mosquito Collection";
@@ -101,6 +104,7 @@ public interface Constants {
         String LARVAL_DIPPING = "Larval Dipping";
 
         String IRS_VISIT = "IRS Visit";
+
         String BCC = "BCC";
 
         String BEDNET_DISTRIBUTION = "Bednet Distribution";
@@ -153,6 +157,8 @@ public interface Constants {
         String SPRAY_FORM_NAMIBIA = "json.form/namibia_spray_form.json";
 
         String SPRAY_FORM_BOTSWANA = "json.form/botswana_spray_form.json";
+
+        String THAILAND_LARVAL_DIPPING_FORM = "json.form/thailand_larval_dipping_form.json";
 
         String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
 
