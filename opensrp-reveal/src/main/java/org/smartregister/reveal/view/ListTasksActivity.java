@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -16,7 +15,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -92,21 +90,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
 
     private CardView sprayCardView;
-    private TextView tvSprayStatus;
-    private TextView tvPropertyType;
-    private TextView tvSprayDate;
-    private TextView tvSprayOperator;
-    private TextView tvFamilyHead;
     private TextView tvReason;
 
     private CardView mosquitoCollectionCardView;
-    private TextView tvMosquitoCollectionStatus;
-    private TextView tvMosquitoTrapSetDate;
-    private TextView tvMosquitoTrapFollowUpDate;
-
     private CardView larvalBreedingCardView;
-    private TextView tvIdentifiedDate;
-    private TextView tvLarvicideDate;
+
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
 
@@ -164,19 +152,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.btn_collapse_spray_card_view).setOnClickListener(this);
 
-        tvSprayStatus = findViewById(R.id.spray_status);
-        tvPropertyType = findViewById(R.id.property_type);
-        tvSprayDate = findViewById(R.id.spray_date);
-        tvSprayOperator = findViewById(R.id.user_id);
-        tvFamilyHead = findViewById(R.id.family_head);
         tvReason = findViewById(R.id.reason);
-
-        tvMosquitoCollectionStatus = findViewById(R.id.trap_collection_status);
-        tvMosquitoTrapSetDate = findViewById(R.id.trap_set_date);
-        tvMosquitoTrapFollowUpDate = findViewById(R.id.trap_follow_up_date);
-
-        tvIdentifiedDate = findViewById(R.id.larval_identified_date);
-        tvLarvicideDate = findViewById(R.id.larvacide_date);
 
         findViewById(R.id.change_spray_status).setOnClickListener(this);
 

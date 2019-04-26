@@ -2,7 +2,6 @@ package org.smartregister.reveal.util;
 
 import android.app.Activity;
 import android.content.res.Resources;
-import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -69,18 +68,10 @@ public class CardDetailsUtil {
             Integer status = sprayCardDetails.getStatusMessage();
             tvSprayStatus.setText(status == null ? "" : activity.getString(status));
 
-            String propertyType = sprayCardDetails.getPropertyType();
-            tvPropertyType.setText(propertyType == null ? "" : propertyType);
-
-            String sprayDate = sprayCardDetails.getSprayDate();
-            tvSprayDate.setText(sprayDate == null ? "" : sprayDate);
-
-            String sprayOperator = sprayCardDetails.getSprayOperator();
-            tvSprayOperator.setText(sprayOperator == null ? "" : sprayOperator);
-
-            String familyHead = sprayCardDetails.getFamilyHead();
-            tvFamilyHead.setText(familyHead == null ? "" : familyHead);
-
+            tvPropertyType.setText(sprayCardDetails.getPropertyType());
+            tvSprayDate.setText(sprayCardDetails.getSprayDate());
+            tvSprayOperator.setText(sprayCardDetails.getSprayOperator());
+            tvFamilyHead.setText(sprayCardDetails.getFamilyHead());
             if (!TextUtils.isEmpty(sprayCardDetails.getReason())) {
                 tvReason.setVisibility(View.VISIBLE);
                 tvReason.setText(sprayCardDetails.getReason());

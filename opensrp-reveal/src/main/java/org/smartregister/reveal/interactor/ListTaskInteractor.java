@@ -43,6 +43,7 @@ import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS_VISIT;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
@@ -274,15 +275,15 @@ public class ListTaskInteractor extends BaseInteractor {
                     if (Constants.StructureType.RESIDENTIAL.equals(structureType)) {
                         task.setCode(IRS);
                         task.setDescription(applicationContext.getString(R.string.irs_task_description));
-                        task.setFocus(Constants.Intervention.IRS_VISIT);
+                        task.setFocus(IRS_VISIT);
                     } else if (Constants.StructureType.MOSQUITO_COLLECTION_POINT.equals(structureType)) {
-                        task.setCode(Constants.Intervention.MOSQUITO_COLLECTION);
+                        task.setCode(MOSQUITO_COLLECTION);
                         task.setDescription(applicationContext.getString(R.string.mosquito_collection_task_description));
-                        task.setFocus(Constants.Intervention.MOSQUITO_COLLECTION);
+                        task.setFocus(MOSQUITO_COLLECTION);
                     } else if (Constants.StructureType.LARVAL_BREEDING_SITE.equals(structureType)) {
-                        task.setCode(Constants.Intervention.LARVAL_DIPPING);
+                        task.setCode(LARVAL_DIPPING);
                         task.setDescription(applicationContext.getString(R.string.larval_dipping_task_description));
-                        task.setFocus(Constants.Intervention.LARVAL_DIPPING);
+                        task.setFocus(LARVAL_DIPPING);
                     }
                     task.setForEntity(structure.getId());
                     task.setExecutionStartDate(now);

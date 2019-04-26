@@ -130,7 +130,7 @@ public class CardDetailsUtilTest extends BaseUnitTest {
     }
 
     @Test
-    public void testPopulateAndOpenMosquitoHarvestCard() {
+    public void testPopulateAndOpenMosquitoHarvestCardShouldPopulateCorrectValuesAndOpenCardView() {
         final String TEST = "test ";
         final String START_DATE = "yesterday";
         final String END_DATE = "today";
