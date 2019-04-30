@@ -58,6 +58,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMI
 import static org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
+import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
@@ -395,6 +396,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             startForm(selectedFeature, null, BEDNET_DISTRIBUTION_EVENT);
         } else if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)) {
             listTaskView.registerFamily();
+        } else if (LARVAL_DIPPING.equals(selectedFeatureInterventionType)) {
+            // todo: add larval dipping card details check
+            startForm(selectedFeature, null, LARVAL_DIPPING_EVENT);
         }
     }
 
