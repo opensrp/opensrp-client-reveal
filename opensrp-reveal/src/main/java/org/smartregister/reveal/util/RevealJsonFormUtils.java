@@ -165,6 +165,7 @@ public class RevealJsonFormUtils {
         } else if (LARVAL_DIPPING_EVENT.equals(encounterType) || Intervention.LARVAL_DIPPING.equals(taskCode)) {
             formName = JsonForm.THAILAND_LARVAL_DIPPING_FORM;
         }
+
         return formName;
     }
 }

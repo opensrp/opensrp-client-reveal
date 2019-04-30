@@ -96,6 +96,7 @@ public interface Constants {
 
     interface Intervention {
         String IRS = "IRS";
+
         String MDA = "MDA";
 
         String MOSQUITO_COLLECTION = "Mosquito Collection";
@@ -103,6 +104,7 @@ public interface Constants {
         String LARVAL_DIPPING = "Larval Dipping";
 
         String IRS_VISIT = "IRS Visit";
+
         String BCC = "BCC";
 
         String BEDNET_DISTRIBUTION = "Bednet Distribution";

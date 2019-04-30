@@ -74,7 +74,11 @@
             "key": "Complete",
             "text": "Complete"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "Please specify the task status"
+        }
       },
       {
         "key": "occurred_date",
@@ -97,6 +101,10 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
+        "v_required": {
+          "value": true,
+          "err": "Please specify the # of dips"
+        },
         "value": [
           {
             "key": "larvae_total",
@@ -108,6 +116,10 @@
             "v_numeric_integer": {
               "value": "true",
               "err": "Must be a rounded number"
+            },
+            "v_required": {
+              "value": true,
+              "err": "Please specify the total # of larvae collected"
             }
           },
           {
@@ -185,7 +197,11 @@
                 "text": "Culex",
                 "value": false
               }
-            ]
+            ],
+            "v_required": {
+              "value": true,
+              "err": "Please specify the larvae species collected"
+            }
           },
           {
             "key": "An. gambiae",

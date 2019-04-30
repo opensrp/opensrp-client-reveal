@@ -17,6 +17,7 @@ import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
+import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.Constants.GeoJSON;
 import org.smartregister.reveal.util.GeoJsonUtils;
 import org.smartregister.reveal.util.Utils;
@@ -80,9 +81,9 @@ public class ListTaskInteractor extends BaseInteractor {
                     @Override
                     public void run() {
                         if (isForForm) {
-                            presenterCallBack.onInterventionFormDetailsFetched(CARD_DETAILS);
+                            ((ListTaskPresenter) presenterCallBack).onInterventionFormDetailsFetched(CARD_DETAILS);
                         } else {
-                            presenterCallBack.onCardDetailsFetched(CARD_DETAILS);
+                            ((ListTaskPresenter) presenterCallBack).onCardDetailsFetched(CARD_DETAILS);
                         }
                     }
                 });
