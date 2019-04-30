@@ -59,5 +59,9 @@ public interface ListTaskContract {
         void onStructureAdded(Feature feature, JSONArray featureCoordinates);
 
         void onFormSaveFailure(String eventType);
+
+        void onCardDetailsFetched(CardDetails cardDetails);
+
+        void onInterventionFormDetailsFetched(CardDetails finalCardDetails);
     }
 }

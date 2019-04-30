@@ -317,12 +317,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             }
         }
         listTaskView.setGeoJsonSource(featureCollection, null);
-
-        if (IRS.equals(interventionType)) {
-            listTaskInteractor.fetchInterventionDetails(IRS, structureId, false);
-        } else if (MOSQUITO_COLLECTION.equals(interventionType) || LARVAL_DIPPING.equals(interventionType)) {
-            listTaskInteractor.fetchInterventionDetails(interventionType, structureId, false);
-        }
+        listTaskInteractor.fetchInterventionDetails(interventionType, structureId, false);
     }
 
     @Override

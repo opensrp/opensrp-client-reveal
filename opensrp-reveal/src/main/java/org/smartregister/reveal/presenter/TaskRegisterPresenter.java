@@ -67,14 +67,4 @@ public class TaskRegisterPresenter implements TaskRegisterContract.Presenter, Ba
     public void onFormSaveFailure(String eventType) {
         view.hideProgressDialog();//register will refresh on resume
     }
-
-    @Override
-    public void onInterventionFormDetailsFetched(CardDetails finalCardDetails) {
-        // do nothing for now
-    }
-
-    @Override
-    public void onCardDetailsFetched(CardDetails cardDetails) {
-        // do nothing for now
-    }
 }

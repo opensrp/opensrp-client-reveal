@@ -21,9 +21,5 @@ public class BaseContract {
         void onStructureAdded(Feature feature, JSONArray featureCoordinates);
 
         void onFormSaveFailure(String eventType);
-
-        void onInterventionFormDetailsFetched(CardDetails finalCardDetails);
-
-        void onCardDetailsFetched(CardDetails cardDetails);
     }
 }
