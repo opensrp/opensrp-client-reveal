@@ -24,6 +24,7 @@ import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
+import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
@@ -161,7 +162,10 @@ public class RevealJsonFormUtils {
         } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)
                 || Intervention.MOSQUITO_COLLECTION.equals(taskCode)) {
             formName = JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM;
+        }  else if (LARVAL_DIPPING_EVENT.equals(encounterType) || Intervention.LARVAL_DIPPING.equals(taskCode)) {
+            formName = JsonForm.THAILAND_LARVAL_DIPPING_FORM;
         }
+
         return formName;
     }
 }
