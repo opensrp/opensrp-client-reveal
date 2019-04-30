@@ -41,7 +41,7 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
         FamilyProfileMemberFragment profileMemberFragment = FamilyProfileMemberFragment.newInstance(this.getIntent().getExtras());
         adapter.addFragment(profileMemberFragment, this.getString(R.string.residents).toUpperCase());
 
-        structureTasksFragment = StructureTasksFragment.newInstance(this.getIntent().getExtras());
+        structureTasksFragment = StructureTasksFragment.newInstance(this.getIntent().getExtras(), this);
         adapter.addFragment(structureTasksFragment, this.getString(R.string.tasks, 0).toUpperCase());
 
         viewPager.setAdapter(adapter);

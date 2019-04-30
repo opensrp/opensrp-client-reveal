@@ -1,5 +1,6 @@
 package org.smartregister.reveal.presenter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
@@ -32,14 +33,14 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     private PreferencesUtil prefsUtil;
 
 
-    public StructureTasksPresenter(StructureTasksContract.View view) {
-        this(view, null, PreferencesUtil.getInstance());
+    public StructureTasksPresenter(StructureTasksContract.View view, Context context) {
+        this(view, context, null, PreferencesUtil.getInstance());
         interactor = new StructureTasksInteractor(this);
     }
 
     @VisibleForTesting
-    public StructureTasksPresenter(StructureTasksContract.View view, Interactor interactor, PreferencesUtil prefsUtil) {
-        super(view, view.getContext());
+    public StructureTasksPresenter(StructureTasksContract.View view, Context context, Interactor interactor, PreferencesUtil prefsUtil) {
+        super(view, context);
         this.view = new WeakReference<>(view);
         this.interactor = interactor;
         this.prefsUtil = prefsUtil;

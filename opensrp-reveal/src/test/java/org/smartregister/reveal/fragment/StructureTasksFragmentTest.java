@@ -242,7 +242,7 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
     @Test
     public void testNewInstance() {
         Bundle bundle = new Bundle();
-        fragment = StructureTasksFragment.newInstance(bundle);
+        fragment = StructureTasksFragment.newInstance(bundle,context);
         assertNotNull(fragment);
         assertEquals(bundle, fragment.getArguments());
         assertNotNull(Whitebox.getInternalState(fragment, "presenter"));

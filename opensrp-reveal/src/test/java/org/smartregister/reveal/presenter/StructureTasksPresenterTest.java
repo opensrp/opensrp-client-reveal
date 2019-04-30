@@ -1,11 +1,14 @@
 package org.smartregister.reveal.presenter;
 
+import android.content.Context;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.robolectric.RuntimeEnvironment;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
@@ -44,12 +47,14 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
     @Mock
     private PreferencesUtil prefsUtil;
 
+    private Context context=RuntimeEnvironment.application;
+
     private StructureTasksPresenter presenter;
 
 
     @Before
     public void setUp() {
-        presenter = new StructureTasksPresenter(view, interactor, prefsUtil);
+        presenter = new StructureTasksPresenter(view,context, interactor, prefsUtil);
     }
 
     @Test
@@ -126,7 +131,6 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnStructureAdded() {
-        verify(view).getContext();//used in setup for the constructor
         verifyNoMoreInteractions(interactor);
         verifyNoMoreInteractions(view);
     }

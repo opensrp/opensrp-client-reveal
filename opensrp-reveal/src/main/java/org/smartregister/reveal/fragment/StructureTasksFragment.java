@@ -1,6 +1,7 @@
 package org.smartregister.reveal.fragment;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -57,11 +58,11 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
 
     private TabLayout tabLayout;
 
-    public static StructureTasksFragment newInstance(Bundle bundle) {
+    public static StructureTasksFragment newInstance(Bundle bundle, Context context) {
         StructureTasksFragment fragment = new StructureTasksFragment();
         if (bundle != null) {
             fragment.setArguments(bundle);
-            fragment.setPresenter(new StructureTasksPresenter(fragment));
+            fragment.setPresenter(new StructureTasksPresenter(fragment, context));
         }
         return fragment;
     }
