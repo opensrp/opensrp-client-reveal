@@ -16,7 +16,7 @@ import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
  */
 public class RevealJsonFormUtilsTest {
 
-    RevealJsonFormUtils revealJsonFormUtils;
+    private RevealJsonFormUtils revealJsonFormUtils;
 
     @Before
     public void setUp() {
