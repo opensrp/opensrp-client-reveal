@@ -149,7 +149,7 @@ public class RevealJsonFormUtils {
         }
     }
 
-    public static String getFormName(String encounterType, String taskCode) {
+    public String getFormName(String encounterType, String taskCode) {
         String formName = null;
         if (SPRAY_EVENT.equals(encounterType) || Intervention.IRS.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {

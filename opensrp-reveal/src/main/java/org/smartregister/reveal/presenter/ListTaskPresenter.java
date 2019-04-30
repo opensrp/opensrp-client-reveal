@@ -100,6 +100,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private BaseDrawerContract.Presenter drawerPresenter;
 
+    private RevealJsonFormUtils jsonFormUtils;
+
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
 
         this.listTaskView = listTaskView;
@@ -108,6 +110,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         passwordDialog = PasswordDialogUtils.initPasswordDialog(listTaskView.getContext(), this);
         locationPresenter = new ValidateUserLocationPresenter(listTaskView, this);
         prefsUtil = PreferencesUtil.getInstance();
+        jsonFormUtils = listTaskView.getJsonFormUtils();
     }
 
     @Override
@@ -275,7 +278,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     private void startForm(Feature feature, CardDetails cardDetails, String encounterType) {
-        String formName = RevealJsonFormUtils.getFormName(encounterType, null);
+        String formName = jsonFormUtils.getFormName(encounterType, null);
         String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();
         String familyHead = null;
         if (cardDetails instanceof SprayCardDetails) {
@@ -285,7 +288,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     private void startForm(String formName, Feature feature, String sprayStatus, String familyHead) {
-        JSONObject formJson = listTaskView.getJsonFormUtils().getFormJSON(listTaskView.getContext()
+        JSONObject formJson = jsonFormUtils.getFormJSON(listTaskView.getContext()
                 , formName, feature, sprayStatus, familyHead);
         listTaskView.startJsonForm(formJson);
     }

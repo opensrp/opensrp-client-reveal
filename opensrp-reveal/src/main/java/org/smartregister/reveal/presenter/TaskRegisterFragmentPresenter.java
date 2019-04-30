@@ -262,7 +262,7 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
 
     @Override
     public void onLocationValidated() {
-        String formName = RevealJsonFormUtils.getFormName(null, details.getTaskCode());
+        String formName = (new RevealJsonFormUtils()).getFormName(null, details.getTaskCode());
         JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), formName, details, structure);
         getView().startForm(formJSON);
         getView().hideProgressDialog();

@@ -110,12 +110,13 @@ public class ListTaskPresenterTest {
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", Constants.Intervention.IRS);
 
         RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
-        doReturn(formUtils).when(listTaskViewSpy).getJsonFormUtils();
+        Whitebox.setInternalState(listTaskPresenterSpy, "jsonFormUtils", formUtils);
+        doReturn(SPRAY_FORM).when(formUtils).getFormName(any(), any());
         doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
 
         listTaskPresenterSpy.onLocationValidated();
 
-        verify(formUtils, times(1)).getFormJSON(any(), eq(SPRAY_FORM), any(), any(), any());
+        verify(formUtils, times(1)).getFormJSON(any(), eq(SPRAY_FORM), eq(feature), any(), any());
 
         verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
     }
@@ -139,12 +140,13 @@ public class ListTaskPresenterTest {
         Whitebox.setInternalState(listTaskPresenterSpy, "changeInterventionStatus", true);
 
         RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
-        doReturn(formUtils).when(listTaskViewSpy).getJsonFormUtils();
+        Whitebox.setInternalState(listTaskPresenterSpy, "jsonFormUtils", formUtils);
+        doReturn(SPRAY_FORM).when(formUtils).getFormName(any(), any());
         doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
 
         listTaskPresenterSpy.onLocationValidated();
 
-        verify(formUtils, times(1)).getFormJSON(any(), eq(SPRAY_FORM), any(), any(), any());
+        verify(formUtils, times(1)).getFormJSON(any(), eq(SPRAY_FORM), eq(feature), any(), any());
         verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
     }
 
@@ -162,12 +164,12 @@ public class ListTaskPresenterTest {
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", MOSQUITO_COLLECTION);
 
         RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
-        doReturn(formUtils).when(listTaskViewSpy).getJsonFormUtils();
+        Whitebox.setInternalState(listTaskPresenterSpy, "jsonFormUtils", formUtils);
+        doReturn(THAILAND_MOSQUITO_COLLECTION_FORM).when(formUtils).getFormName(any(), any());
         doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
-
         listTaskPresenterSpy.onLocationValidated();
 
-        verify(formUtils, times(1)).getFormJSON(any(), eq(THAILAND_MOSQUITO_COLLECTION_FORM), any(), any(), any());
+        verify(formUtils, times(1)).getFormJSON(any(), eq(THAILAND_MOSQUITO_COLLECTION_FORM), eq(feature), any(), any());
 
         verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
     }
@@ -192,12 +194,13 @@ public class ListTaskPresenterTest {
         doNothing().when(listTaskViewSpy).startJsonForm(any(JSONObject.class));
 
         RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
-        doReturn(formUtils).when(listTaskViewSpy).getJsonFormUtils();
+        Whitebox.setInternalState(listTaskPresenterSpy, "jsonFormUtils", formUtils);
+        doReturn(THAILAND_MOSQUITO_COLLECTION_FORM).when(formUtils).getFormName(any(), any());
         doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
 
         listTaskPresenterSpy.onLocationValidated();
 
-        verify(formUtils, times(1)).getFormJSON(any(), eq(THAILAND_MOSQUITO_COLLECTION_FORM), any(), any(), any());
+        verify(formUtils, times(1)).getFormJSON(any(), eq(THAILAND_MOSQUITO_COLLECTION_FORM), eq(feature), any(), any());
 
         verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
     }
@@ -216,12 +219,13 @@ public class ListTaskPresenterTest {
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", LARVAL_DIPPING);
 
         RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
-        doReturn(formUtils).when(listTaskViewSpy).getJsonFormUtils();
+        Whitebox.setInternalState(listTaskPresenterSpy, "jsonFormUtils", formUtils);
+        doReturn(THAILAND_LARVAL_DIPPING_FORM).when(formUtils).getFormName(any(), any());
         doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
 
         listTaskPresenterSpy.onLocationValidated();
 
-        verify(formUtils, times(1)).getFormJSON(any(), eq(THAILAND_LARVAL_DIPPING_FORM), any(), any(), any());
+        verify(formUtils, times(1)).getFormJSON(any(), eq(THAILAND_LARVAL_DIPPING_FORM), eq(feature), any(), any());
 
         verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
     }
