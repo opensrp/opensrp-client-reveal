@@ -6,7 +6,6 @@ import com.mapbox.geojson.Feature;
 
 import org.json.JSONArray;
 import org.smartregister.domain.Task;
-import org.smartregister.reveal.model.CardDetails;
 
 /**
  * Created by samuelgithengi on 3/25/19.

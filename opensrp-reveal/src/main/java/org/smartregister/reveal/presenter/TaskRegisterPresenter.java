@@ -9,7 +9,6 @@ import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.TaskRegisterContract;
 import org.smartregister.reveal.interactor.TaskRegisterInteractor;
-import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.view.contract.BaseRegisterContract;
 
 import java.util.List;
