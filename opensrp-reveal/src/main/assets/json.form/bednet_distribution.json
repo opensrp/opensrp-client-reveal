@@ -172,7 +172,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many of these nets are LLINs or HLINs?",
+        "hint": "How many are LLINs or HLINs?",
         "edit_type": "number",
         "value": "0",
         "v_required": {
@@ -239,7 +239,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many LLINs or HLINs are between 1 and 2 years old?",
+        "hint": "How many LLINs or HLINs are 1 to 2 years old?",
         "edit_type": "number",
         "value": "0",
         "v_required": {
@@ -277,7 +277,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many LLINs or HLINs are between 2 and 3 years old?",
+        "hint": "How many LLINs or HLINs are 2 to 3 years old?",
         "edit_type": "number",
         "value": "0",
         "v_required": {
@@ -353,7 +353,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many of these nets are normal nets and have been dipped in the last 12 months?",
+        "hint": "How many are normal nets that were dipped in the last 6 months?",
         "edit_type": "number",
         "value": "0",
         "v_required": {
@@ -471,28 +471,6 @@
         }
       },
       {
-        "key": "redippedITNs",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Total number of redipped ITNs",
-        "edit_type": "number",
-        "value": "0",
-        "v_required": {
-          "value": true,
-          "err": "The total number of redipped ITNs is required"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": ""
-        },
-        "v_min": {
-          "value": "0",
-          "err": "There must be greater than or equal to 0"
-        }
-      },
-      {
         "key": "calcTotalNetsDistributed",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -521,16 +499,16 @@
         }
       },
       {
-        "key": "distributedRepellant",
+        "key": "distributedRepellent",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Number of personal repellant units distributed",
+        "hint": "Number of personal repellent units distributed",
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The total number of personal repellant units distributed is required"
+          "err": "The total number of personal repellent units distributed is required"
         },
         "v_numeric": {
           "value": "true",

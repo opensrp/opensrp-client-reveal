@@ -133,7 +133,15 @@
         "label_info_text": "What is their national identity number or their voter registration number?",
         "label_info_title": "National ID number",
         "type": "edit_text",
-        "hint": "National ID number"
+        "hint": "National ID number",
+        "v_numeric": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_regex": {
+          "value": "^$|[0-9]{13}",
+          "err": "Number must be 13 digits."
+        }
       },
       {
         "key": "surname",
@@ -271,7 +279,7 @@
         "hint": "Age",
         "v_numeric": {
           "value": "true",
-          "err": "Number must begin with 0 and must be a total of 3 digits in length"
+          "err": "Please enter a number"
         },
         "v_min": {
           "value": "5",
@@ -319,11 +327,27 @@
         "hint": "Phone number",
         "v_numeric": {
           "value": "true",
-          "err": "Number must be a total of 9 digits in length"
+          "err": "Please enter a number"
         },
         "v_regex": {
           "value": "^$|0[0-9]{8}",
           "err": "Number must be 9 digits and must start with 0."
+        }
+      },
+      {
+        "key": "sleeps_outdoors",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Dose this person sleep outdoors?",
+        "values": [
+          "Yes",
+          "No"
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Please select whether this prerson sleeps outdoors"
         }
       },
       {
