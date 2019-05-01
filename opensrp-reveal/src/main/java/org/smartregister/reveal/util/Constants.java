@@ -30,6 +30,8 @@ public interface Constants {
 
     String CASE_CONFIRMATION_EVENT = "case_confirmation";
 
+    String BEHAVIOUR_CHANGE_COMMUNICATION = "behaviour_change_communication";
+
     String STRUCTURE = "Structure";
 
     String START_DATE = "start_date";
@@ -167,6 +169,8 @@ public interface Constants {
         String BLOOD_SCREENING_FORM = "json.form/blood_screening.json";
 
         String CASE_CONFIRMATION_FORM = "json.form/case_confirmation.json";
+
+        String BEHAVIOUR_CHANGE_COMMUNICATION_FORM = "json.form/behaviour_change_communication.json";
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 
