@@ -109,7 +109,7 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", Constants.Intervention.IRS);
 
-        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
+        RevealJsonFormUtils formUtils = spy(new RevealJsonFormUtils());
         doReturn(formUtils).when(listTaskViewSpy).getJsonFormUtils();
         doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
 
@@ -138,7 +138,7 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenterSpy, "changeSprayStatus", true);
 
-        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
+        RevealJsonFormUtils formUtils = spy(new RevealJsonFormUtils());
         doReturn(formUtils).when(listTaskViewSpy).getJsonFormUtils();
         doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
 
@@ -161,7 +161,7 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", MOSQUITO_COLLECTION);
 
-        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
+        RevealJsonFormUtils formUtils = spy(new RevealJsonFormUtils());
         doReturn(formUtils).when(listTaskViewSpy).getJsonFormUtils();
         doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
 
@@ -191,7 +191,7 @@ public class ListTaskPresenterTest {
 
         doNothing().when(listTaskViewSpy).startJsonForm(any(JSONObject.class));
 
-        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
+        RevealJsonFormUtils formUtils = spy(new RevealJsonFormUtils());
         doReturn(formUtils).when(listTaskViewSpy).getJsonFormUtils();
         doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
 
@@ -215,7 +215,7 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", LARVAL_DIPPING);
 
-        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
+        RevealJsonFormUtils formUtils = spy(new RevealJsonFormUtils());
         doReturn(formUtils).when(listTaskViewSpy).getJsonFormUtils();
         doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
 
