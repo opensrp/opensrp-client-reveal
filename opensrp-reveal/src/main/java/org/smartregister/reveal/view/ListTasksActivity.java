@@ -114,6 +114,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_tasks);
 
+        jsonFormUtils = new RevealJsonFormUtils();
         drawerView = new DrawerMenuView(this);
 
         listTaskPresenter = new ListTaskPresenter(this, drawerView.getPresenter());
@@ -130,8 +131,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         initializeCardViews();
 
         syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
-
-        jsonFormUtils = new RevealJsonFormUtils();
     }
 
     private void initializeCardViews() {

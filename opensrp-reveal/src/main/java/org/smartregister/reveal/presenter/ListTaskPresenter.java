@@ -103,7 +103,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private RevealJsonFormUtils jsonFormUtils;
 
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
-
         this.listTaskView = listTaskView;
         this.drawerPresenter = drawerPresenter;
         listTaskInteractor = new ListTaskInteractor(this);
@@ -277,8 +276,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         CardDetailsUtil.formatCardDetails(sprayCardDetails);
     }
 
-    private void startForm(Feature feature, CardDetails cardDetails, String encounterType) {
-        String formName = jsonFormUtils.getFormName(encounterType, null);
+    private void startForm(Feature feature, CardDetails cardDetails, String interventionType) {
+        String formName = jsonFormUtils.getFormName(null, interventionType);
         String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();
         String familyHead = null;
         if (cardDetails instanceof SprayCardDetails) {
