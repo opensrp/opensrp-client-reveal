@@ -51,8 +51,8 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
         String action = null;
         boolean hasIcon = false;
         if (Constants.Intervention.IRS.equals(task.getTaskCode())) {
-            if (name == null) {//TODO remove setting structure name with serial numbers once its moved to server
-                name = task.getFamilyName() != null ? task.getFamilyName() : "Structure " + random.nextInt(100);
+            if (name == null) {
+                name = task.getFamilyName() != null ? task.getFamilyName() : context.getString(R.string.unenumerated_structure);
             }
             action = context.getString(R.string.record_status);
         } else if (Constants.Intervention.MOSQUITO_COLLECTION.equals(task.getTaskCode())) {
@@ -68,7 +68,7 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
             hasIcon = true;
         } else {
             if (name == null) {
-                name = task.getFamilyName() != null ? task.getFamilyName() : "Structure " + random.nextInt(100);
+                name = task.getFamilyName() != null ? task.getFamilyName() : context.getString(R.string.unenumerated_structure);
             }
             if (task.getBusinessStatus() != null) {
                 action = task.getBusinessStatus().replaceAll(" ", "\n");

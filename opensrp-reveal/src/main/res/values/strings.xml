@@ -140,4 +140,6 @@
     <string name="bednet_distribution_description">Visit the residential structure and provide nets</string>
     <string name="register_family_description">Visit the residential structure and register each family member</string>
     <string name="house">House</string>
+
+    <string name="unenumerated_structure">Unenumerated Structure</string>
 </resources>

@@ -89,7 +89,7 @@ public class TaskRegisterAdapterTest extends BaseUnitTest {
         taskDetails.setBusinessStatus(Constants.BusinessStatus.IN_PROGRESS);
         taskDetailsList.add(taskDetails);
         adapter.onBindViewHolder(holder, 1);
-        assertTrue(((TextView) holder.itemView.findViewById(R.id.task_name)).getText().toString().matches("Structure \\d{1,2}"));
+        assertEquals(context.getString(R.string.unenumerated_structure), ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
         assertEquals("In\nProgress", ((TextView) holder.itemView.findViewById(R.id.task_action)).getText());
         assertEquals(View.GONE, holder.itemView.findViewById(R.id.task_details).getVisibility());
         assertEquals(View.GONE, holder.itemView.findViewById(R.id.task_icon).getVisibility());
@@ -153,7 +153,7 @@ public class TaskRegisterAdapterTest extends BaseUnitTest {
         Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
         adapter.onBindViewHolder(holder, 0);
 
-        assertTrue(((TextView) holder.itemView.findViewById(R.id.task_name)).getText().toString().matches("Structure \\d{1,2}"));
+        assertEquals(context.getString(R.string.unenumerated_structure), ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
         assertEquals("26 m away", ((TextView) holder.itemView.findViewById(R.id.distance_from_structure)).getText());
         assertEquals("Not\nSprayed", ((TextView) holder.itemView.findViewById(R.id.task_action)).getText());
         assertEquals("Reason: Locked", ((TextView) holder.itemView.findViewById(R.id.task_details)).getText());
