@@ -52,7 +52,7 @@ public class TaskUtils {
                 R.string.bednet_distribution_description);
     }
 
-    private Task generateTask(Context context, String entityId, String businessStatus, String intervention, @StringRes int description) {
+    public Task generateTask(Context context, String entityId, String businessStatus, String intervention, @StringRes int description) {
         Task task = new Task();
         DateTime now = new DateTime();
         task.setIdentifier(UUID.randomUUID().toString());

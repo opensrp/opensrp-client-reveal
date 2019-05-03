@@ -35,7 +35,6 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.StructureType;
-import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.DateTimeTypeConverter;
@@ -205,51 +204,39 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
                     structure.setSyncStatus(BaseRepository.TYPE_Created);
                     structureRepository.addOrUpdate(structure);
                     Context applicationContext = RevealApplication.getInstance().getApplicationContext();
-                    Task task;
+                    Task task = null;
                     if (StructureType.RESIDENTIAL.equals(structureType) && Utils.getInterventionLabel() == R.string.focus_investigation) {
                         task = taskUtils.generateRegisterFamilyTask(applicationContext, structure.getId());
                     } else {
-                        task = new Task();
-                        task.setIdentifier(UUID.randomUUID().toString());
-                        task.setCampaignIdentifier(PreferencesUtil.getInstance().getCurrentCampaignId());
-                        task.setGroupIdentifier(operationalAreaId);
-                        task.setStatus(Task.TaskStatus.READY);
-                        task.setBusinessStatus(BusinessStatus.NOT_VISITED);
-                        task.setPriority(3);
                         if (StructureType.RESIDENTIAL.equals(structureType)) {
-                            task.setCode(Intervention.IRS);
-                            task.setDescription(applicationContext.getString(R.string.irs_task_description));
-                            task.setFocus(Intervention.IRS_VISIT);
+                            task = taskUtils.generateTask(applicationContext, structure.getId(),
+                                    BusinessStatus.NOT_VISITED, Intervention.IRS, R.string.irs_task_description);
                         } else if (StructureType.MOSQUITO_COLLECTION_POINT.equals(structureType)) {
-                            task.setCode(Intervention.MOSQUITO_COLLECTION);
-                            task.setDescription(applicationContext.getString(R.string.mosquito_collection_task_description));
-                            task.setFocus(Intervention.MOSQUITO_COLLECTION);
+                            task = taskUtils.generateTask(applicationContext, structure.getId(),
+                                    BusinessStatus.NOT_VISITED, Intervention.MOSQUITO_COLLECTION, R.string.mosquito_collection_task_description);
                         } else if (StructureType.LARVAL_BREEDING_SITE.equals(structureType)) {
-                            task.setCode(Intervention.LARVAL_DIPPING);
-                            task.setDescription(applicationContext.getString(R.string.larval_dipping_task_description));
-                            task.setFocus(Intervention.LARVAL_DIPPING);
+                            task = taskUtils.generateTask(applicationContext, structure.getId(),
+                                    BusinessStatus.NOT_VISITED, Intervention.LARVAL_DIPPING, R.string.larval_dipping_task_description);
                         }
-                        task.setForEntity(structure.getId());
-                        task.setExecutionStartDate(now);
-                        task.setAuthoredOn(now);
-                        task.setLastModified(now);
-                        task.setOwner(event.getProviderId());
-                        task.setSyncStatus(BaseRepository.TYPE_Created);
-                        taskRepository.addOrUpdate(task);
                     }
                     clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
+                    Task finalTask = task;
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override
                         public void run() {
                             Map<String, String> taskProperties = new HashMap<>();
-                            taskProperties.put(Properties.TASK_IDENTIFIER, task.getIdentifier());
-                            taskProperties.put(Properties.TASK_BUSINESS_STATUS, task.getBusinessStatus());
-                            taskProperties.put(Properties.TASK_STATUS, task.getStatus().name());
-                            taskProperties.put(Properties.TASK_CODE, task.getCode());
+                            if (finalTask != null) {
+
+                                taskProperties.put(Properties.TASK_IDENTIFIER, finalTask.getIdentifier());
+                                taskProperties.put(Properties.TASK_BUSINESS_STATUS, finalTask.getBusinessStatus());
+                                taskProperties.put(Properties.TASK_STATUS, finalTask.getStatus().name());
+                                taskProperties.put(Properties.TASK_CODE, finalTask.getCode());
+                            }
                             taskProperties.put(Properties.LOCATION_UUID, structure.getProperties().getUid());
                             taskProperties.put(Properties.LOCATION_VERSION, structure.getProperties().getVersion() + "");
                             taskProperties.put(Properties.LOCATION_TYPE, structure.getProperties().getType());
                             structure.getProperties().setCustomProperties(taskProperties);
+
                             presenterCallBack.onStructureAdded(Feature.fromJson(gson.toJson(structure)), featureCoordinates);
                         }
                     });
