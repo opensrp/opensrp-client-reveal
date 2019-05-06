@@ -44,7 +44,6 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
 
     @Override
     public void onBindViewHolder(@NonNull TaskRegisterViewHolder viewHolder, int position) {
-        Random random = new Random();
         TaskDetails task = taskDetails.get(position);
         Float distance = task.getDistanceFromUser();
         String name = task.getStructureName();
