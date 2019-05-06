@@ -188,7 +188,7 @@
           "err": "There must be greater than or equal to 0"
         },
         "v_cumulative_total": {
-          "value":"existingNets",
+          "value": "existingNets",
           "related_fields": [
             "existingITNs"
           ],
@@ -217,7 +217,7 @@
           "err": "There must be greater than or equal to 0"
         },
         "v_cumulative_total": {
-          "value":"existingLLINs",
+          "value": "existingLLINs",
           "related_fields": [
             "existingLLINs1yrTo2yr",
             "existingLLINs2yrTo3yr",
@@ -255,7 +255,7 @@
           "err": "There must be greater than or equal to 0"
         },
         "v_cumulative_total": {
-          "value":"existingLLINs",
+          "value": "existingLLINs",
           "related_fields": [
             "existingLLINsLessThan1yr",
             "existingLLINs2yrTo3yr",
@@ -293,7 +293,7 @@
           "err": "There must be greater than or equal to 0"
         },
         "v_cumulative_total": {
-          "value":"existingLLINs",
+          "value": "existingLLINs",
           "related_fields": [
             "existingLLINsLessThan1yr",
             "existingLLINs1yrTo2yr",
@@ -331,7 +331,7 @@
           "err": "There must be greater than or equal to 0"
         },
         "v_cumulative_total": {
-          "value":"existingLLINs",
+          "value": "existingLLINs",
           "related_fields": [
             "existingLLINsLessThan1yr",
             "existingLLINs1yrTo2yr",
@@ -353,7 +353,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many of these nets are normal nets and have been dipped in the last 12 months?",
+        "hint": "How many normal nets were dipped in the last 12 months?",
         "edit_type": "number",
         "value": "0",
         "v_required": {
@@ -369,7 +369,7 @@
           "err": "There must be greater than or equal to 0"
         },
         "v_cumulative_total": {
-          "value":"existingNets",
+          "value": "existingNets",
           "related_fields": [
             "existingLLINs"
           ],

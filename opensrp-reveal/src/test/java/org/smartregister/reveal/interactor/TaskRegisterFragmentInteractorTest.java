@@ -38,6 +38,7 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FAMILY_NAME;
@@ -50,6 +51,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.NOT_SRAYED_OT
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NOT_SRAYED_REASON;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 
 /**
  * Created by samuelgithengi on 3/27/19.
@@ -86,7 +88,7 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
 
     @Test
     public void testFindTasksWithNullParams() {
-        interactor.findTasks(null, null, null);
+        interactor.findTasks(null, null, null, "House");
         verify(presenter).onTasksFound(null, 0);
         verifyNoMoreInteractions(presenter);
         verifyNoMoreInteractions(database);
@@ -100,7 +102,7 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         center.setLatitude(-14.152197);
         center.setLongitude(32.643570);
         when(database.rawQuery(anyString(), any())).thenReturn(createCursor());
-        interactor.findTasks(pair, null, center);
+        interactor.findTasks(pair, null, center, "House");
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(anyString(), any());
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskListCaptor.capture(), structuresCaptor.capture());
         verifyNoMoreInteractions(presenter);
@@ -113,9 +115,9 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         assertEquals(-14.15191915, taskDetails.getLocation().getLatitude(), 0.00001);
         assertEquals(32.64302015, taskDetails.getLocation().getLongitude(), 0.00001);
         assertEquals("Structure 976", taskDetails.getStructureName());
-        assertEquals("Ali", taskDetails.getFamilyName());
+        assertEquals("Ali House", taskDetails.getFamilyName());
         assertEquals("Partial Spray", taskDetails.getSprayStatus());
-        assertEquals("Ali", taskDetails.getFamilyName());
+        assertEquals("Ali House", taskDetails.getFamilyName());
         assertEquals("Not Completed", taskDetails.getTaskDetails());
         assertEquals(66.850830078125, taskDetails.getDistanceFromUser(), 0.00001);
         assertEquals(1, structuresCaptor.getValue().intValue());
@@ -128,7 +130,7 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         userLocation.setLatitude(-14.987197);
         userLocation.setLongitude(32.076570);
         when(database.rawQuery(anyString(), any())).thenReturn(createCursor());
-        interactor.findTasks(pair, userLocation, null);
+        interactor.findTasks(pair, userLocation, null, "House");
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(anyString(), any());
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskListCaptor.capture(), structuresCaptor.capture());
         verifyNoMoreInteractions(presenter);
@@ -141,9 +143,9 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         assertEquals(-14.15191915, taskDetails.getLocation().getLatitude(), 0.00001);
         assertEquals(32.64302015, taskDetails.getLocation().getLongitude(), 0.00001);
         assertEquals("Structure 976", taskDetails.getStructureName());
-        assertEquals("Ali", taskDetails.getFamilyName());
+        assertEquals("Ali House", taskDetails.getFamilyName());
         assertEquals("Partial Spray", taskDetails.getSprayStatus());
-        assertEquals("Ali", taskDetails.getFamilyName());
+        assertEquals("Ali House", taskDetails.getFamilyName());
         assertEquals("Not Completed", taskDetails.getTaskDetails());
         assertEquals(110757.984375, taskDetails.getDistanceFromUser(), 0.00001);
         assertEquals(0, structuresCaptor.getValue().intValue());
@@ -190,9 +192,10 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
     @Test
     public void testGetStructure() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        taskDetails.setStructureId(UUID.randomUUID().toString());
         org.smartregister.domain.Location structure = new org.smartregister.domain.Location();
         structure.setId(UUID.randomUUID().toString());
-        when(structureRepository.getLocationById(taskDetails.getTaskEntity())).thenReturn(structure);
+        when(structureRepository.getLocationById(taskDetails.getStructureId())).thenReturn(structure);
         interactor.getStructure(taskDetails);
         verify(presenter, timeout(ASYNC_TIMEOUT)).onStructureFound(structure, taskDetails);
     }
@@ -210,7 +213,9 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
                 FAMILY_NAME,
                 SPRAY_STATUS,
                 NOT_SRAYED_REASON,
-                NOT_SRAYED_OTHER_REASON
+                NOT_SRAYED_OTHER_REASON,
+                STRUCTURE_ID,
+                FIRST_NAME
         });
         cursor.addRow(new Object[]{
                 "task_id_1",
@@ -224,7 +229,9 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
                 "Ali",
                 "Partial Spray",
                 "other",
-                "Not Completed"
+                "Not Completed",
+                434343,
+                null
         });
         return cursor;
     }

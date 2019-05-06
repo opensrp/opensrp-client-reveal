@@ -91,7 +91,7 @@ public class ListTaskPresenterTest {
     public void testOnMosquitoCollectionFormSavedHidesProgressDialog() throws Exception {
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
 
-        listTaskPresenter.onFormSaved(null, null, null, IRS);
+        listTaskPresenter.onFormSaved(null, null, null, null, IRS);
 
         verify(listTaskViewSpy).hideProgressDialog();
     }
@@ -109,7 +109,7 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", Constants.Intervention.IRS);
 
-        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
+        RevealJsonFormUtils formUtils = spy(new RevealJsonFormUtils());
         doReturn(formUtils).when(listTaskViewSpy).getJsonFormUtils();
         doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
 
@@ -138,7 +138,7 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenterSpy, "changeSprayStatus", true);
 
-        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
+        RevealJsonFormUtils formUtils = spy(new RevealJsonFormUtils());
         doReturn(formUtils).when(listTaskViewSpy).getJsonFormUtils();
         doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
 
@@ -161,7 +161,7 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", MOSQUITO_COLLECTION);
 
-        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
+        RevealJsonFormUtils formUtils = spy(new RevealJsonFormUtils());
         doReturn(formUtils).when(listTaskViewSpy).getJsonFormUtils();
         doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
 
@@ -191,7 +191,7 @@ public class ListTaskPresenterTest {
 
         doNothing().when(listTaskViewSpy).startJsonForm(any(JSONObject.class));
 
-        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
+        RevealJsonFormUtils formUtils = spy(new RevealJsonFormUtils());
         doReturn(formUtils).when(listTaskViewSpy).getJsonFormUtils();
         doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
 
@@ -215,7 +215,7 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", LARVAL_DIPPING);
 
-        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
+        RevealJsonFormUtils formUtils = spy(new RevealJsonFormUtils());
         doReturn(formUtils).when(listTaskViewSpy).getJsonFormUtils();
         doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
 
@@ -392,7 +392,7 @@ public class ListTaskPresenterTest {
         doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class));
         doNothing().when(listTaskInteractor).fetchSprayDetails(anyString(), anyBoolean());
 
-        listTaskPresenter.onFormSaved(null, null, null, IRS);
+        listTaskPresenter.onFormSaved(null, null, null, null, IRS);
 
         verify(listTaskInteractor, times(1)).fetchSprayDetails(AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
@@ -405,7 +405,7 @@ public class ListTaskPresenterTest {
         doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class));
         doNothing().when(listTaskInteractor).fetchMosquitoCollectionDetails(anyString(), anyBoolean());
 
-        listTaskPresenter.onFormSaved(null, null, null, MOSQUITO_COLLECTION);
+        listTaskPresenter.onFormSaved(null, null, null, null, MOSQUITO_COLLECTION);
 
         verify(listTaskInteractor, times(1)).fetchMosquitoCollectionDetails(AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }

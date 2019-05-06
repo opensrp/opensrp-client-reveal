@@ -14,23 +14,26 @@ import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
  * Created by Vincent Karuri on 25/04/2019
  */
 public class RevealJsonFormUtilsTest {
+
+    private RevealJsonFormUtils jsonFormUtils = new RevealJsonFormUtils();
+
     @Test
     public void testGetFormNameShouldReturnThailandLarvalDippingFormForLarvalDippingEvent() {
-        assertEquals(RevealJsonFormUtils.getFormName(LARVAL_DIPPING_EVENT, null), THAILAND_LARVAL_DIPPING_FORM);
+        assertEquals(jsonFormUtils.getFormName(LARVAL_DIPPING_EVENT, null), THAILAND_LARVAL_DIPPING_FORM);
     }
 
     @Test
     public void testGetFormNameShouldReturnThailandLarvalDippingFormForLarvalDippingIntervention() {
-        assertEquals(RevealJsonFormUtils.getFormName(null, LARVAL_DIPPING), THAILAND_LARVAL_DIPPING_FORM);
+        assertEquals(jsonFormUtils.getFormName(null, LARVAL_DIPPING), THAILAND_LARVAL_DIPPING_FORM);
     }
 
     @Test
     public void testGetFormNameShouldReturnThailandMosquitoCollectionFormForLarvalDippingEvent() {
-        assertEquals(RevealJsonFormUtils.getFormName(MOSQUITO_COLLECTION_EVENT, null), THAILAND_MOSQUITO_COLLECTION_FORM);
+        assertEquals(jsonFormUtils.getFormName(MOSQUITO_COLLECTION_EVENT, null), THAILAND_MOSQUITO_COLLECTION_FORM);
     }
 
     @Test
     public void testGetFormNameShouldReturnThailandMosquitoCollectionFormForLarvalDippingIntervention() {
-        assertEquals(RevealJsonFormUtils.getFormName(null, MOSQUITO_COLLECTION), THAILAND_MOSQUITO_COLLECTION_FORM);
+        assertEquals(jsonFormUtils.getFormName(null, MOSQUITO_COLLECTION), THAILAND_MOSQUITO_COLLECTION_FORM);
     }
 }

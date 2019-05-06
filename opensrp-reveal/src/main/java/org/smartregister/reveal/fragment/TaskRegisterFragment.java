@@ -1,25 +1,17 @@
 package org.smartregister.reveal.fragment;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 import org.json.JSONObject;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
@@ -45,8 +37,6 @@ import java.util.List;
 import java.util.Set;
 
 import io.ona.kujaku.utils.Constants;
-import io.ona.kujaku.utils.LocationSettingsHelper;
-import io.ona.kujaku.utils.LogUtil;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -57,13 +47,13 @@ import static org.smartregister.reveal.util.Constants.Action;
  */
 public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity {
 
-    private static final String TAG = TaskRegisterFragment.class.getName();
     private TaskRegisterAdapter taskAdapter;
 
     private BaseDrawerContract.View drawerView;
 
     private RevealJsonFormUtils jsonFormUtils;
     private ProgressDialog progressDialog;
+    private TextView interventionTypeTv;
 
     private LocationUtils locationUtils;
 
@@ -93,8 +83,9 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     public void setupViews(View view) {
         super.setupViews(view);
+        interventionTypeTv = view.findViewById(R.id.intervention_type);
         if (getActivity() != null) {
-            ((TextView) view.findViewById(R.id.intervention_type)).setText(
+            interventionTypeTv.setText(
                     getActivity().getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
         }
         view.findViewById(R.id.txt_map_label).setOnClickListener(v -> startMapActivity());
@@ -206,6 +197,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     public void onDrawerClosed() {
         getPresenter().onDrawerClosed();
+
     }
 
     @Override
@@ -219,10 +211,27 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     }
 
     @Override
+    public void requestUserLocation() {
+        hasRequestedLocation = true;
+        locationUtils.checkLocationSettingsAndStartLocationServices(getActivity(), getPresenter());
+    }
+
+    @Override
+    public void displayToast(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public LocationUtils getLocationUtils() {
+        return locationUtils;
+    }
+
+    @Override
     public void showProgressDialog(@StringRes int title, @StringRes int message) {
         if (progressDialog != null) {
             progressDialog.setTitle(title);
             progressDialog.setMessage(getString(message));
+            progressDialog.show();
         }
     }
 
@@ -234,57 +243,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     }
 
     @Override
-    public void requestUserLocation() {
-        hasRequestedLocation = true;
-        checkLocationSettingsAndStartLocationServices();
-    }
-
-    private void checkLocationSettingsAndStartLocationServices() {
-        if (getContext() instanceof Activity) {
-            Activity activity = (Activity) getContext();
-
-            LocationSettingsHelper.checkLocationEnabled(activity, new ResultCallback<LocationSettingsResult>() {
-                @Override
-                public void onResult(LocationSettingsResult result) {
-                    final Status status = result.getStatus();
-
-                    switch (status.getStatusCode()) {
-                        case LocationSettingsStatusCodes.SUCCESS:
-                            Log.i(TAG, "All location settings are satisfied.");
-                            locationUtils.requestLocationUpdates(getPresenter());
-                            break;
-                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                            Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings");
-
-                            try {
-                                status.startResolutionForResult(activity, Constants.RequestCode.LOCATION_SETTINGS);
-                            } catch (IntentSender.SendIntentException e) {
-                                Log.i(TAG, "PendingIntent unable to execute request.");
-                            }
-                            break;
-                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                            Log.e(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog cannot be created.");
-                            break;
-
-                        default:
-                            Log.e(TAG, "Unknown status code returned after checking location settings");
-                            break;
-                    }
-                }
-            });
-        } else {
-            LogUtil.e(TAG, "KujakuMapView is not started in an Activity and can therefore not start location services");
-        }
-    }
-
-    @Override
-    public void displayToast(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public LocationUtils getLocationUtils() {
-        return locationUtils;
+    public void setInventionType(int interventionLabel) {
+        interventionTypeTv.setText(getString(interventionLabel));
     }
 
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {

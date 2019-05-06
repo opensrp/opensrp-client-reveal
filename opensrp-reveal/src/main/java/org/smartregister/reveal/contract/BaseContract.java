@@ -10,15 +10,20 @@ import org.smartregister.domain.Task;
 /**
  * Created by samuelgithengi on 3/25/19.
  */
-public class BaseContract {
+public interface BaseContract {
 
-    public interface BasePresenter {
+    interface BasePresenter {
 
         void onFormSaved(@NonNull String structureId,
-                         @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType);
+                         String taskID, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType);
 
         void onStructureAdded(Feature feature, JSONArray featureCoordinates);
 
         void onFormSaveFailure(String eventType);
+    }
+
+    interface BaseInteractor {
+
+        void saveJsonForm(String json);
     }
 }

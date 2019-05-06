@@ -12,15 +12,15 @@ import java.util.List;
 /**
  * Created by samuelgithengi on 3/21/19.
  */
-public class BaseDrawerContract {
+public interface BaseDrawerContract {
 
-    public interface DrawerActivity {
+    interface DrawerActivity {
         void onDrawerClosed();
 
         Activity getActivity();
     }
 
-    public interface View {
+    interface View {
 
         Activity getContext();
 
@@ -57,7 +57,7 @@ public class BaseDrawerContract {
         void onResume();
     }
 
-    public interface Presenter {
+    interface Presenter {
 
         void onDrawerClosed();
 
@@ -80,7 +80,7 @@ public class BaseDrawerContract {
         void onViewResumed();
     }
 
-    public interface Interactor {
+    interface Interactor {
 
         void fetchCampaigns();
     }

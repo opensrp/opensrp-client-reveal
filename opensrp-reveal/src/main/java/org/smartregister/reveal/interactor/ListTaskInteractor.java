@@ -10,13 +10,18 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObject;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
+import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Constants.GeoJSON;
+import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import org.smartregister.reveal.util.GeoJsonUtils;
 import org.smartregister.reveal.util.Utils;
 
@@ -31,8 +36,12 @@ public class ListTaskInteractor extends BaseInteractor {
 
     private static final String TAG = ListTaskInteractor.class.getCanonicalName();
 
+
+    private SQLiteDatabase database;
+
     public ListTaskInteractor(ListTaskContract.Presenter presenter) {
         super(presenter);
+        database = RevealApplication.getInstance().getRepository().getReadableDatabase();
     }
 
 
@@ -43,8 +52,7 @@ public class ListTaskInteractor extends BaseInteractor {
             public void run() {
                 final String sql = "SELECT spray_status, not_sprayed_reason, not_sprayed_other_reason, property_type, spray_date," +
                         " spray_operator, family_head_name FROM sprayed_structures WHERE id=?";
-                SQLiteDatabase db = RevealApplication.getInstance().getRepository().getWritableDatabase();
-                Cursor cursor = db.rawQuery(sql, new String[]{structureId});
+                Cursor cursor = database.rawQuery(sql, new String[]{structureId});
                 SprayCardDetails sprayCardDetails = null;
                 try {
                     if (cursor.moveToFirst()) {
@@ -81,8 +89,7 @@ public class ListTaskInteractor extends BaseInteractor {
             @Override
             public void run() {
                 final String sql = "SELECT status, start_date, end_date FROM mosquito_interventions WHERE id=?";
-                SQLiteDatabase db = RevealApplication.getInstance().getRepository().getWritableDatabase();
-                Cursor cursor = db.rawQuery(sql, new String[]{mosquitoCollectionPointId});
+                Cursor cursor = database.rawQuery(sql, new String[]{mosquitoCollectionPointId});
 
                 MosquitoCollectionCardDetails mosquitoCollectionCardDetails = null;
                 try {
@@ -190,5 +197,33 @@ public class ListTaskInteractor extends BaseInteractor {
         return (ListTaskContract.Presenter) presenterCallBack;
     }
 
+
+    public void fetchFamilyDetails(String structureId) {
+        appExecutors.diskIO().execute(() -> {
+            Cursor cursor = null;
+            CommonPersonObjectClient family=null;
+            try {
+                cursor = database.rawQuery(String.format("SELECT %s FROM %S WHERE %s = ?",
+                        INTENT_KEY.BASE_ENTITY_ID, TABLE_NAME.FAMILY, DatabaseKeys.STRUCTURE_ID), new String[]{structureId});
+                if (cursor.moveToNext()) {
+                    String baseEntityId = cursor.getString(0);
+                    final CommonPersonObject personObject = org.smartregister.family.util.Utils.context().commonrepository(org.smartregister.family.util.Utils.metadata().familyRegister.tableName).findByBaseEntityId(baseEntityId);
+                    family = new CommonPersonObjectClient(personObject.getCaseId(),
+                            personObject.getDetails(), "");
+                    family.setColumnmaps(personObject.getColumnmaps());
+                }
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+            } finally {
+                if (cursor != null)
+                    cursor.close();
+            }
+
+            CommonPersonObjectClient finalFamily = family;
+            appExecutors.mainThread().execute(() -> {
+                getPresenter().onFamilyFound(finalFamily);
+            });
+        });
+    }
 
 }

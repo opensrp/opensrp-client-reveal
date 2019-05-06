@@ -10,6 +10,8 @@ public interface Constants {
 
     int REQUEST_CODE_GET_JSON = 3432;
 
+    int REQUEST_CODE_GET_JSON_FRAGMENT = 3439;
+
     String METADATA = "metadata";
 
     String DETAILS = "details";
@@ -85,6 +87,7 @@ public interface Constants {
         String LOCATION_VERSION = "locationVersion";
         String LOCATION_TYPE = "locationType";
         String LOCATION_PARENT = "locationParent";
+        String LOCATION_ID = "location_id";
     }
 
 
@@ -112,6 +115,8 @@ public interface Constants {
         String BLOOD_SCREENING = "Blood Screening";
 
         String CASE_CONFIRMATION = "Case Confirmation";
+
+        String REGISTER_FAMILY = "RACD Register Family";
     }
 
     interface BusinessStatus {
@@ -228,6 +233,8 @@ public interface Constants {
         String STRUCTURES_TABLE = "structure";
 
         String STRUCTURE_NAME = "structure_name";
+
+        String STRUCTURE_ID = "structure_id";
 
         String ID = "_id";
 

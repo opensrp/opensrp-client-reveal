@@ -6,17 +6,7 @@ import android.support.annotation.NonNull;
 /**
  * Created by samuelgithengi on 3/20/19.
  */
-public class TaskDetails implements Comparable<TaskDetails> {
-
-    private String taskId;
-
-    private String taskCode;
-
-    private String taskEntity;
-
-    private String businessStatus;
-
-    private String taskStatus;
+public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetails> {
 
     private Location location;
 
@@ -33,47 +23,7 @@ public class TaskDetails implements Comparable<TaskDetails> {
     private boolean distanceFromCenter;
 
     public TaskDetails(@NonNull String taskId) {
-        this.taskId = taskId;
-    }
-
-    public String getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(String taskId) {
-        this.taskId = taskId;
-    }
-
-    public String getTaskCode() {
-        return taskCode;
-    }
-
-    public void setTaskCode(String taskCode) {
-        this.taskCode = taskCode;
-    }
-
-    public String getTaskEntity() {
-        return taskEntity;
-    }
-
-    public void setTaskEntity(String taskEntity) {
-        this.taskEntity = taskEntity;
-    }
-
-    public String getBusinessStatus() {
-        return businessStatus;
-    }
-
-    public void setBusinessStatus(String businessStatus) {
-        this.businessStatus = businessStatus;
-    }
-
-    public String getTaskStatus() {
-        return taskStatus;
-    }
-
-    public void setTaskStatus(String taskStatus) {
-        this.taskStatus = taskStatus;
+        super(taskId);
     }
 
     public Location getLocation() {
@@ -135,13 +85,5 @@ public class TaskDetails implements Comparable<TaskDetails> {
     @Override
     public int compareTo(@NonNull TaskDetails other) {
         return Double.compare(distanceFromUser, other.getDistanceFromUser());
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof TaskDetails))
-            return false;
-        TaskDetails other = (TaskDetails) obj;
-        return taskId.equals(other.getTaskId());
     }
 }

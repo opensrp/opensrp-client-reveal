@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
+import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -21,6 +22,9 @@ import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.util.AssetHandler;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
+import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
+import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
+import static org.smartregister.reveal.util.Constants.CASE_CONFIRMATION_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
@@ -51,7 +55,7 @@ public class RevealJsonFormUtils {
 
         String formString = getFormString(context, formName, structureType);
         try {
-            JSONObject formJson = populateFormDetails(formString, structureId, taskIdentifier,
+            JSONObject formJson = populateFormDetails(formString, structureId, structureId, taskIdentifier,
                     taskBusinessStatus, taskStatus, structureUUID,
                     structureVersion == null ? null : Integer.valueOf(structureVersion));
 
@@ -63,23 +67,29 @@ public class RevealJsonFormUtils {
         return null;
     }
 
-    public JSONObject getFormJSON(Context context, String formName, TaskDetails task, Location structure) {
+    public JSONObject getFormJSON(Context context, String formName, BaseTaskDetails task, Location structure) {
 
         String taskBusinessStatus = task.getBusinessStatus();
         String taskIdentifier = task.getTaskId();
         String taskStatus = task.getTaskStatus();
 
+        String entityId = task.getTaskEntity();
         String structureId = structure.getId();
         String structureUUID = structure.getProperties().getUid();
         int structureVersion = structure.getProperties().getVersion();
         String structureType = structure.getProperties().getType();
 
-        String sprayStatus = task.getSprayStatus();
-        String familyHead = task.getFamilyName();
+        String sprayStatus = null;
+        String familyHead = null;
+
+        if (task instanceof TaskDetails) {
+            sprayStatus = ((TaskDetails) task).getSprayStatus();
+            familyHead = ((TaskDetails) task).getFamilyName();
+        }
 
         String formString = getFormString(context, formName, structureType);
         try {
-            JSONObject formJson = populateFormDetails(formString, structureId, taskIdentifier,
+            JSONObject formJson = populateFormDetails(formString, entityId, structureId, taskIdentifier,
                     taskBusinessStatus, taskStatus, structureUUID, structureVersion);
             populateFormFields(formJson, structureType, sprayStatus, familyHead);
             return formJson;
@@ -103,16 +113,17 @@ public class RevealJsonFormUtils {
     }
 
 
-    private JSONObject populateFormDetails(String formString, String structureId, String taskIdentifier,
+    private JSONObject populateFormDetails(String formString, String entityId, String structureId, String taskIdentifier,
                                            String taskBusinessStatus, String taskStatus, String structureUUID,
                                            Integer structureVersion) throws JSONException {
 
         JSONObject formJson = new JSONObject(formString);
-        formJson.put(ENTITY_ID, structureId);
+        formJson.put(ENTITY_ID, entityId);
         JSONObject formData = new JSONObject();
         formData.put(Properties.TASK_IDENTIFIER, taskIdentifier);
         formData.put(Properties.TASK_BUSINESS_STATUS, taskBusinessStatus);
         formData.put(Properties.TASK_STATUS, taskStatus);
+        formData.put(Properties.LOCATION_ID, structureId);
         formData.put(Properties.LOCATION_UUID, structureUUID);
         formData.put(Properties.LOCATION_VERSION, structureVersion);
         formJson.put(DETAILS, formData);
@@ -140,16 +151,20 @@ public class RevealJsonFormUtils {
 
 
     public void startJsonForm(JSONObject form, Activity context) {
-        Intent intent = new Intent(context.getApplicationContext(), RevealJsonFormActivity.class);
+        startJsonForm(form, context, REQUEST_CODE_GET_JSON);
+    }
+
+    public void startJsonForm(JSONObject form, Activity context, int requestCode) {
+        Intent intent = new Intent(context, RevealJsonFormActivity.class);
         try {
             intent.putExtra(JSON_FORM_PARAM_JSON, form.toString());
-            context.startActivityForResult(intent, REQUEST_CODE_GET_JSON);
+            context.startActivityForResult(intent, requestCode);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
     }
 
-    public static String getFormName(String encounterType, String taskCode) {
+    public String getFormName(String encounterType, String taskCode) {
         String formName = null;
         if (SPRAY_EVENT.equals(encounterType) || Intervention.IRS.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
@@ -162,6 +177,15 @@ public class RevealJsonFormUtils {
         } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)
                 || Intervention.MOSQUITO_COLLECTION.equals(taskCode)) {
             formName = JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM;
+        } else if (BEDNET_DISTRIBUTION_EVENT.equals(encounterType)
+                || Intervention.BEDNET_DISTRIBUTION.equals(taskCode)) {
+            formName = JsonForm.BEDNET_DISTRIBUTION_FORM;
+        } else if (CASE_CONFIRMATION_EVENT.equals(encounterType)
+                || Intervention.CASE_CONFIRMATION.equals(taskCode)) {
+            formName = JsonForm.CASE_CONFIRMATION_FORM;
+        } else if (BLOOD_SCREENING_EVENT.equals(encounterType)
+                || Intervention.BLOOD_SCREENING.equals(taskCode)) {
+            formName = JsonForm.BLOOD_SCREENING_FORM;
         }  else if (LARVAL_DIPPING_EVENT.equals(encounterType) || Intervention.LARVAL_DIPPING.equals(taskCode)) {
             formName = JsonForm.THAILAND_LARVAL_DIPPING_FORM;
         }

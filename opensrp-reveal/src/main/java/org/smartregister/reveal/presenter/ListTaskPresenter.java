@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -31,13 +32,13 @@ import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
 import java.util.List;
 
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
+import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
@@ -49,9 +50,11 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_XXX;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
@@ -213,7 +216,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             selectedFeatureInterventionType = code;
-            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code)) && NOT_VISITED.equals(businessStatus)) {
+            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || REGISTER_FAMILY.equals(code))
+                    && NOT_VISITED.equals(businessStatus)) {
                 if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
                     validateUserLocation();
                 } else {
@@ -226,6 +230,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
                     || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
                 listTaskInteractor.fetchMosquitoCollectionDetails(feature.id(), false);
+            } else if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.focus_investigation) {
+                listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
             }
         }
     }
@@ -287,7 +293,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     private void startForm(Feature feature, CardDetails cardDetails, String encounterType) {
-        String formName = RevealJsonFormUtils.getFormName(encounterType, null);
+        String formName = listTaskView.getJsonFormUtils().getFormName(encounterType, null);
         String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();
         String familyHead = null;
         if (cardDetails instanceof SprayCardDetails) {
@@ -318,7 +324,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
-    public void onFormSaved(@NonNull String structureId, @NonNull TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
+    public void onFormSaved(@NonNull String structureId, String taskID, @NonNull TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
         listTaskView.hideProgressDialog();
         for (Feature feature : featureCollection.features()) {
             if (structureId.equals(feature.id())) {
@@ -386,6 +392,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             } else {
                 startForm(selectedFeature, mosquitoCollectionCardDetails, MOSQUITO_COLLECTION_EVENT);
             }
+        } else if (BEDNET_DISTRIBUTION.equals(selectedFeatureInterventionType)) {
+            startForm(selectedFeature, null, BEDNET_DISTRIBUTION_EVENT);
+        } else if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)) {
+            listTaskView.registerFamily();
         } else if (LARVAL_DIPPING.equals(selectedFeatureInterventionType)) {
             // todo: add larval dipping card details check
             startForm(selectedFeature, null, LARVAL_DIPPING_EVENT);
@@ -412,5 +422,23 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public ValidateUserLocationPresenter getLocationPresenter() {
         return locationPresenter;
+    }
+
+    @Override
+    public Feature getSelectedFeature() {
+        return selectedFeature;
+    }
+
+    @Override
+    public int getInterventionLabel() {
+        return org.smartregister.reveal.util.Utils.getInterventionLabel();
+    }
+
+    @Override
+    public void onFamilyFound(CommonPersonObjectClient finalFamily) {
+        if (finalFamily == null)
+            listTaskView.displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
+        else
+            listTaskView.openStructureProfile(finalFamily);
     }
 }
