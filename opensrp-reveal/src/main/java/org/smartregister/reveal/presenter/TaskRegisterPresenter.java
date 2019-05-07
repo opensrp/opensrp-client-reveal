@@ -66,5 +66,4 @@ public class TaskRegisterPresenter implements TaskRegisterContract.Presenter, Ba
     public void onFormSaveFailure(String eventType) {
         view.hideProgressDialog();//register will refresh on resume
     }
-
 }

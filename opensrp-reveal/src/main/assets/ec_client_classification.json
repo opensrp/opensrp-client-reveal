@@ -37,7 +37,14 @@
             "field": "eventType",
             "field_value": "mosquito_collection",
             "creates_case": [
-              "mosquito_interventions"
+              "mosquito_collections"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "larval_dipping",
+            "creates_case": [
+              "larval_dippings"
             ]
           },
           {

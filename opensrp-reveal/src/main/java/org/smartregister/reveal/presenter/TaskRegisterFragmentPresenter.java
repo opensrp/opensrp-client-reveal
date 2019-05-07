@@ -212,5 +212,4 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     public int getInterventionLabel() {
         return Utils.getInterventionLabel();
     }
-
 }

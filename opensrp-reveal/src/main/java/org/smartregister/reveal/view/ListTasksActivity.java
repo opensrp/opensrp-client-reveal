@@ -15,7 +15,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -47,10 +46,11 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
-import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
+import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
+import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
@@ -64,6 +64,7 @@ import io.ona.kujaku.utils.Constants;
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.Map;
@@ -93,17 +94,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
 
     private CardView sprayCardView;
-    private TextView tvSprayStatus;
-    private TextView tvPropertyType;
-    private TextView tvSprayDate;
-    private TextView tvSprayOperator;
-    private TextView tvFamilyHead;
     private TextView tvReason;
 
     private CardView mosquitoCollectionCardView;
-    private TextView tvMosquitoCollectionStatus;
-    private TextView tvMosquitoTrapSetDate;
-    private TextView tvMosquitoTrapFollowUpDate;
+    private CardView larvalBreedingCardView;
+
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
 
@@ -123,6 +118,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_tasks);
 
+        jsonFormUtils = new RevealJsonFormUtils();
         drawerView = new DrawerMenuView(this);
 
         listTaskPresenter = new ListTaskPresenter(this, drawerView.getPresenter());
@@ -139,8 +135,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         initializeCardViews();
 
         syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
-
-        jsonFormUtils = new RevealJsonFormUtils();
     }
 
     private void initializeCardViews() {
@@ -155,25 +149,17 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         mosquitoCollectionCardView = findViewById(R.id.mosquito_collection_card_view);
 
+        larvalBreedingCardView = findViewById(R.id.larval_breeding_card_view);
+
         findViewById(R.id.btn_add_structure).setOnClickListener(this);
 
         findViewById(R.id.btn_collapse_spray_card_view).setOnClickListener(this);
 
-        tvSprayStatus = findViewById(R.id.spray_status);
-        tvPropertyType = findViewById(R.id.property_type);
-        tvSprayDate = findViewById(R.id.spray_date);
-        tvSprayOperator = findViewById(R.id.user_id);
-        tvFamilyHead = findViewById(R.id.family_head);
         tvReason = findViewById(R.id.reason);
-
-        tvMosquitoCollectionStatus = findViewById(R.id.trap_collection_status);
-        tvMosquitoTrapSetDate = findViewById(R.id.trap_set_date);
-        tvMosquitoTrapFollowUpDate = findViewById(R.id.trap_follow_up_date);
 
         findViewById(R.id.change_spray_status).setOnClickListener(this);
 
         findViewById(R.id.register_family).setOnClickListener(this);
-
 
         findViewById(R.id.task_register).setOnClickListener(this);
 
@@ -181,6 +167,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.btn_record_mosquito_collection).setOnClickListener(this);
 
+        findViewById(R.id.btn_collapse_larval_breeding_card_view).setOnClickListener(this);
+
+        findViewById(R.id.btn_record_larval_dipping).setOnClickListener(this);
     }
 
     @Override
@@ -189,7 +178,16 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             setViewVisibility(sprayCardView, false);
         } else if (id == R.id.btn_collapse_mosquito_collection_card_view) {
             setViewVisibility(mosquitoCollectionCardView, false);
+        } else if (id == R.id.btn_collapse_larval_breeding_card_view) {
+            setViewVisibility(larvalBreedingCardView, false);
         }
+    }
+
+    @Override
+    public void closeAllCardViews() {
+        setViewVisibility(sprayCardView, false);
+        setViewVisibility(mosquitoCollectionCardView, false);
+        setViewVisibility(larvalBreedingCardView, false);
     }
 
     private void setViewVisibility(View view, boolean isVisible) {
@@ -268,17 +266,20 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             listTaskPresenter.onChangeInterventionStatus(IRS);
         } else if (v.getId() == R.id.btn_record_mosquito_collection) {
             listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
+        } else if (v.getId() == R.id.btn_record_larval_dipping) {
+            listTaskPresenter.onChangeInterventionStatus(LARVAL_DIPPING);
         } else if (v.getId() == R.id.btn_collapse_spray_card_view) {
             setViewVisibility(tvReason, false);
             closeCardView(v.getId());
         } else if (v.getId() == R.id.register_family) {
             registerFamily();
+        } else if (v.getId() == R.id.btn_collapse_mosquito_collection_card_view
+                || v.getId() == R.id.btn_collapse_larval_breeding_card_view) {
+            closeCardView(v.getId());
         } else if (v.getId() == R.id.task_register) {
             openTaskRegister();
         } else if (v.getId() == R.id.drawerMenu) {
             drawerView.openDrawerLayout();
-        } else if (v.getId() == R.id.btn_collapse_mosquito_collection_card_view) {
-            closeCardView(v.getId());
         }
     }
 
@@ -374,34 +375,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void openCardView(CardDetails cardDetails) {
+        CardDetailsUtil cardDetailsUtil = new CardDetailsUtil();
         if (cardDetails instanceof SprayCardDetails) {
-            populateSprayCardTextViews((SprayCardDetails) cardDetails);
+            cardDetailsUtil.populateSprayCardTextViews((SprayCardDetails) cardDetails, this);
             sprayCardView.setVisibility(View.VISIBLE);
-        } else if (cardDetails instanceof MosquitoCollectionCardDetails) {
-            populateMosquitoCollectionCardTextViews((MosquitoCollectionCardDetails) cardDetails);
-            mosquitoCollectionCardView.setVisibility(View.VISIBLE);
+        } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
+            cardDetailsUtil.populateAndOpenMosquitoHarvestCard((MosquitoHarvestCardDetails) cardDetails, this);
         }
-    }
-
-    private void populateSprayCardTextViews(SprayCardDetails sprayCardDetails) {
-        tvSprayStatus.setTextColor(getResources().getColor(sprayCardDetails.getStatusColor()));
-        tvSprayStatus.setText(sprayCardDetails.getStatusMessage());
-        tvPropertyType.setText(sprayCardDetails.getPropertyType());
-        tvSprayDate.setText(sprayCardDetails.getSprayDate());
-        tvSprayOperator.setText(sprayCardDetails.getSprayOperator());
-        tvFamilyHead.setText(sprayCardDetails.getFamilyHead());
-        if (!TextUtils.isEmpty(sprayCardDetails.getReason())) {
-            tvReason.setVisibility(View.VISIBLE);
-            tvReason.setText(sprayCardDetails.getReason());
-        } else {
-            tvReason.setVisibility(View.GONE);
-        }
-    }
-
-    private void populateMosquitoCollectionCardTextViews(MosquitoCollectionCardDetails mosquitoCollectionCardDetails) {
-        tvMosquitoCollectionStatus.setText(mosquitoCollectionCardDetails.getStatus());
-        tvMosquitoTrapSetDate.setText(getResources().getString(R.string.mosquito_collection_trap_set_date) + mosquitoCollectionCardDetails.getTrapSetDate());
-        tvMosquitoTrapFollowUpDate.setText(getResources().getString(R.string.mosquito_collection_trap_follow_up_date) + mosquitoCollectionCardDetails.getTrapFollowUpDate());
     }
 
     @Override

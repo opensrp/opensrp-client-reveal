@@ -21,6 +21,7 @@ import org.smartregister.reveal.util.RevealJsonFormUtils;
 public interface ListTaskContract {
 
     interface ListTaskView extends UserLocationView, BaseDrawerContract.DrawerActivity {
+
         void showProgressDialog(@StringRes int title, @StringRes int message);
 
         void hideProgressDialog();
@@ -28,6 +29,8 @@ public interface ListTaskContract {
         Context getContext();
 
         void closeCardView(int id);
+
+        void closeAllCardViews();
 
         void openStructureProfile(CommonPersonObjectClient family);
 
@@ -56,13 +59,13 @@ public interface ListTaskContract {
 
         void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea);
 
-        void onCardDetailsFetched(CardDetails cardDetails);
-
         void onDrawerClosed();
 
         void onStructureAdded(Feature feature, JSONArray featureCoordinates);
 
         void onFormSaveFailure(String eventType);
+
+        void onCardDetailsFetched(CardDetails cardDetails);
 
         void onInterventionFormDetailsFetched(CardDetails finalCardDetails);
 
@@ -73,5 +76,4 @@ public interface ListTaskContract {
 
         void onFamilyFound(CommonPersonObjectClient finalFamily);
     }
-
 }

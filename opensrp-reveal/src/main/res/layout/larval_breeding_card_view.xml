@@ -15,7 +15,7 @@
         android:orientation="vertical">
 
         <ImageButton
-            android:id="@+id/btn_collapse_mosquito_collection_card_view"
+            android:id="@+id/btn_collapse_larval_breeding_card_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -23,7 +23,7 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/structure_info_card_scroll_layout_height">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -31,73 +31,63 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/mosquito_collection_card_view_title"
+                    android:id="@+id/larval_breeding_card_view_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/mosquito_collection_card_view_title_left_margin"
+                    android:drawableLeft="@drawable/ic_larval_breeding_point"
+                    android:drawablePadding="10dp"
+                    android:text="@string/mosquito_breeding_site"
                     android:textAllCaps="false"
                     android:textColor="#1B1B1B"
-                    android:drawableLeft="@drawable/ic_mosquito_collection_point"
-                    android:drawablePadding="10dp"
                     android:textSize="@dimen/mosquito_collection_card_view_title_text_size"
-                    android:text="@string/card_view_mosquito_collection_point"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <View
                     android:id="@+id/header_separator"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginTop="@dimen/drawer_margin_vertical"
                     android:layout_marginBottom="@dimen/drawer_separator_margin"
+                    android:layout_marginTop="@dimen/drawer_margin_vertical"
                     android:background="#DEDEDE" />
 
                 <TextView
-                    android:id="@+id/trap_collection_status"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/mosquito_collection_card_view_status_left_margin"
-                    android:textAllCaps="false"
-                    android:textColor="@color/text_black"
-                    android:textSize="@dimen/structure_info_card_text_size"
-                    android:text="@string/mosquito_collection_status_test_text"/>
-
-                <TextView
-                    android:id="@+id/trap_set_date"
+                    android:id="@+id/larval_identified_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:drawableLeft="@drawable/ic_outline_calendar"
                     android:gravity="center_vertical"
+                    android:text="@string/larval_breeding_identified_date_test_text"
                     android:textAllCaps="false"
                     android:textColor="@color/text_black"
-                    android:textSize="@dimen/structure_info_card_text_size"
-                    android:text="@string/mosquito_collection_trap_set_date_test_text"/>
+                    android:textSize="@dimen/structure_info_card_text_size" />
 
                 <TextView
-                    android:id="@+id/trap_follow_up_date"
+                    android:id="@+id/larvacide_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:drawableLeft="@drawable/ic_outline_calendar"
                     android:gravity="center_vertical"
+                    android:text="@string/larval_breeding_larvacide_date_test_text"
                     android:textAllCaps="false"
                     android:textColor="@color/text_black"
-                    android:textSize="@dimen/structure_info_card_text_size"
-                    android:text="@string/mosquito_collection_trap_follow_up_date_test_text"/>
+                    android:textSize="@dimen/structure_info_card_text_size" />
 
             </LinearLayout>
 
         </ScrollView>
 
         <Button
-            android:id="@+id/btn_record_mosquito_collection"
+            android:id="@+id/btn_record_larval_dipping"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|bottom"
-            android:layout_marginTop="5dp"
             android:layout_marginBottom="@dimen/change_spray_status_btn_bottom_margin"
+            android:layout_marginTop="5dp"
             android:background="@drawable/rounded_grey_outline"
-            android:text="@string/card_view_record_mosquito_collection"
+            android:text="@string/record_larval_dipping"
             android:textAllCaps="false"
             android:textColor="#BCBCBC"
             android:textSize="@dimen/structure_info_card_text_size" />
