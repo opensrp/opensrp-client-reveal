@@ -53,7 +53,7 @@ public class TaskRegisterPresenter implements TaskRegisterContract.Presenter, Ba
     }
 
     @Override
-    public void onFormSaved(@NonNull String structureId, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
+    public void onFormSaved(@NonNull String structureId, String taskID, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
         view.hideProgressDialog();//register will refresh on resume
     }
 

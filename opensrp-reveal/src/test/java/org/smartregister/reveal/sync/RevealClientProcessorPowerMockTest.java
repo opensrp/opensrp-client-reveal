@@ -104,7 +104,7 @@ public class RevealClientProcessorPowerMockTest {
         PowerMockito.doReturn(new ClientClassification()).when(clientProcessor, "assetJsonToJava", anyString(), any());
         clientProcessor.processClient(eventClients, true);
 
-        verifyPrivate(clientProcessor, times(1)).invoke("processMosquitoHarvestingEvent", eq(event), any(ClientClassification.class), anyBoolean());
+        verifyPrivate(clientProcessor, times(1)).invoke("processEvent", eq(event), any(ClientClassification.class), anyBoolean());
     }
 
     @Test

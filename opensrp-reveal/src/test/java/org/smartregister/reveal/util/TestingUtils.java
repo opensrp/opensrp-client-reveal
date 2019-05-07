@@ -6,11 +6,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.joda.time.DateTime;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.util.DateTimeTypeConverter;
 
+import java.util.HashMap;
 import java.util.UUID;
+
+import static org.smartregister.family.util.DBConstants.KEY;
 
 /**
  * Created by samuelgithengi on 3/27/19.
@@ -32,6 +37,29 @@ public class TestingUtils {
         taskDetails.setTaskEntity(UUID.randomUUID().toString());
         taskDetails.setLocation(new Location("Test"));
         return taskDetails;
+    }
+
+
+    public static StructureTaskDetails getStructureTaskDetails() {
+        StructureTaskDetails taskDetails = new StructureTaskDetails(UUID.randomUUID().toString());
+        taskDetails.setTaskStatus(Task.TaskStatus.READY.name());
+        taskDetails.setTaskCode(Constants.Intervention.REGISTER_FAMILY);
+        taskDetails.setBusinessStatus(Constants.BusinessStatus.NOT_VISITED);
+        taskDetails.setTaskEntity(UUID.randomUUID().toString());
+        taskDetails.setTaskAction("Register Family");
+        return taskDetails;
+    }
+
+
+    public static CommonPersonObjectClient getCommonPersonObjectClient() {
+        HashMap<String, String> map = new HashMap<>();
+        map.put(KEY.FIRST_NAME, "Charity");
+        map.put(KEY.LAST_NAME, "Otala");
+        map.put(KEY.DOB, "1982-01-01T03:00:00.000+03:00");
+        map.put(KEY.GENDER, "Female");
+        CommonPersonObjectClient smartRegisterClient = new CommonPersonObjectClient(UUID.randomUUID().toString(), null, null);
+        smartRegisterClient.setColumnmaps(map);
+        return smartRegisterClient;
     }
 
 }

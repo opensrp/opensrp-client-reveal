@@ -21,5 +21,7 @@
     <color name="toolbar_background">#007CD7</color>
     <color name="sort_bar_grey">#E5E5E5</color>
 
+    <color name="task_not_done">#FAAB00</color>
+
 
 </resources>

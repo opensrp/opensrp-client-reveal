@@ -30,6 +30,7 @@ public interface FamilyConstants {
         String FAMILY = "family";
         String FAMILY_HEAD = "family_head";
         String PRIMARY_CAREGIVER = "primary_caregiver";
+        String RESIDENCE = "residence";
 
     }
 

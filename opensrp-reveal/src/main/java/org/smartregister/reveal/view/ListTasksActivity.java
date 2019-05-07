@@ -36,7 +36,10 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.FetchStatus;
+import org.smartregister.family.util.DBConstants;
+import org.smartregister.family.util.Utils;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseDrawerContract;
@@ -49,6 +52,7 @@ import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Action;
+import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
@@ -281,16 +285,43 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private void openTaskRegister() {
         Intent intent = new Intent(this, TaskRegisterActivity.class);
-        intent.putExtra(TaskRegister.INTERVENTION_TYPE, getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
+        intent.putExtra(TaskRegister.INTERVENTION_TYPE, getString(listTaskPresenter.getInterventionLabel()));
         if (getUserCurrentLocation() != null) {
             intent.putExtra(TaskRegister.LAST_USER_LOCATION, getUserCurrentLocation());
         }
         startActivity(intent);
     }
 
-    private void registerFamily() {
+
+    @Override
+    public void openStructureProfile(CommonPersonObjectClient family) {
+
+        Intent intent = new Intent(getActivity(), Utils.metadata().profileActivity);
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID, family.getCaseId());
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_HEAD, Utils.getValue(family.getColumnmaps(), DBConstants.KEY.FAMILY_HEAD, false));
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.PRIMARY_CAREGIVER, Utils.getValue(family.getColumnmaps(), DBConstants.KEY.PRIMARY_CAREGIVER, false));
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.VILLAGE_TOWN, Utils.getValue(family.getColumnmaps(), DBConstants.KEY.VILLAGE_TOWN, false));
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_NAME, Utils.getValue(family.getColumnmaps(), DBConstants.KEY.FIRST_NAME, false));
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.GO_TO_DUE_PAGE, false);
+
+
+        intent.putExtra(Properties.LOCATION_UUID, listTaskPresenter.getSelectedFeature().id());
+        intent.putExtra(Properties.TASK_IDENTIFIER, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_IDENTIFIER));
+        intent.putExtra(Properties.TASK_BUSINESS_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_BUSINESS_STATUS));
+        intent.putExtra(Properties.TASK_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_STATUS));
+
+        startActivity(intent);
+    }
+
+
+    @Override
+    public void registerFamily() {
         Intent intent = new Intent(this, FamilyRegisterActivity.class);
         intent.putExtra(START_REGISTRATION, true);
+        intent.putExtra(Properties.LOCATION_UUID, listTaskPresenter.getSelectedFeature().id());
+        intent.putExtra(Properties.TASK_IDENTIFIER, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_IDENTIFIER));
+        intent.putExtra(Properties.TASK_BUSINESS_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_BUSINESS_STATUS));
+        intent.putExtra(Properties.TASK_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_STATUS));
         startActivity(intent);
     }
 
