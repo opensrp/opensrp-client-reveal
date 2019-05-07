@@ -17,7 +17,6 @@ import org.smartregister.reveal.viewholder.TaskRegisterViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by samuelgithengi on 3/20/19.
