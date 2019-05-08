@@ -16,6 +16,7 @@ import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
 
 import org.smartregister.domain.Location;
+import org.smartregister.job.PlanIntentServiceJob;
 import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
@@ -23,6 +24,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.job.RevealCampaignServiceJob;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Tags;
+import org.smartregister.sync.intent.PlanIntentService;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
 
@@ -88,6 +90,7 @@ public class Utils {
     public static void startImmediateSync() {
         RevealCampaignServiceJob.scheduleJobImmediately(RevealCampaignServiceJob.TAG);
         PullUniqueIdsServiceJob.scheduleJobImmediately(PullUniqueIdsServiceJob.TAG);
+        PlanIntentServiceJob.scheduleJobImmediately(PlanIntentServiceJob.TAG);
     }
 
 

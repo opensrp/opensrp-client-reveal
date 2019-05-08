@@ -1,5 +1,6 @@
 package org.smartregister.reveal.interactor;
 
+import org.smartregister.job.PlanIntentServiceJob;
 import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.job.SyncServiceJob;
 import org.smartregister.login.interactor.BaseLoginInteractor;
@@ -23,6 +24,9 @@ public class LoginInteractor extends BaseLoginInteractor implements BaseLoginCon
 
         PullUniqueIdsServiceJob.scheduleJob(SyncServiceJob.TAG, TimeUnit.MINUTES.toMillis(
                 BuildConfig.PULL_UNIQUE_IDS_MINUTES), getFlexValue(BuildConfig.PULL_UNIQUE_IDS_MINUTES));
+
+        PlanIntentServiceJob.scheduleJob(PlanIntentServiceJob.TAG, TimeUnit.MINUTES.toMillis(
+                BuildConfig.SYNC_INTERVAL_IN_MINUTES), getFlexValue(BuildConfig.SYNC_INTERVAL_IN_MINUTES));
     }
 
     @Override
