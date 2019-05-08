@@ -133,4 +133,9 @@ public class Utils {
         double metersPerPixel = mapboxMap.getProjection().getMetersPerPixelAtLatitude(latitude);
         return (float) (radius / metersPerPixel);
     }
+
+    public static String getAge(String dob) {
+        String dobString = org.smartregister.family.util.Utils.getDuration(dob);
+        return dobString.contains("y") ? dobString.substring(0, dobString.indexOf("y")) : dobString;
+    }
 }

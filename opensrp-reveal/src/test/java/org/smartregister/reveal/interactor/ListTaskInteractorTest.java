@@ -11,7 +11,7 @@ import org.mockito.Captor;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
-import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
+import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.AppExecutors;
 
@@ -26,12 +26,13 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
+import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 
 /**
  * @author Vincent Karuri
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ListTaskInteractor.class)
+@PrepareForTest({ListTaskInteractor.class})
 public class ListTaskInteractorTest {
 
     private ListTaskInteractor listTaskInteractor;
@@ -239,7 +240,7 @@ public class ListTaskInteractorTest {
 
         listTaskInteractorSpy.saveJsonForm(mosquitoCollectionForm);
 
-        verifyPrivate(listTaskInteractorSpy, times(1)).invoke("saveMosquitoCollectionForm", captor.capture());
+        verifyPrivate(listTaskInteractorSpy, times(1)).invoke("saveMosquitoInterventionForm", captor.capture());
         assertEquals(new JSONObject(mosquitoCollectionForm).toString(), captor.getValue().toString());
     }
 
@@ -258,11 +259,12 @@ public class ListTaskInteractorTest {
         when(cursor.getString(1)).thenReturn(START_DATE);
         when(cursor.getString(2)).thenReturn(END_DATE);
 
-        MosquitoCollectionCardDetails mosquitoCollectionCardDetails = Whitebox.invokeMethod(listTaskInteractor, "createMosquitoCollectionCardDetails", cursor);
+        MosquitoHarvestCardDetails mosquitoHarvestCardDetails = Whitebox.invokeMethod(listTaskInteractor, "createMosquitoHarvestCardDetails", cursor, MOSQUITO_COLLECTION);
 
-        assertEquals(mosquitoCollectionCardDetails.getStatus(), STATUS);
-        assertEquals(mosquitoCollectionCardDetails.getTrapSetDate(), START_DATE);
-        assertEquals(mosquitoCollectionCardDetails.getTrapFollowUpDate(), END_DATE);
+        assertEquals(mosquitoHarvestCardDetails.getStatus(), STATUS);
+        assertEquals(mosquitoHarvestCardDetails.getStartDate(), START_DATE);
+        assertEquals(mosquitoHarvestCardDetails.getEndDate(), END_DATE);
+        assertEquals(mosquitoHarvestCardDetails.getInterventionType(), MOSQUITO_COLLECTION);
     }
 
     @Test

@@ -10,6 +10,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -20,6 +21,7 @@ import org.smartregister.reveal.util.RevealJsonFormUtils;
 public interface ListTaskContract {
 
     interface ListTaskView extends UserLocationView, BaseDrawerContract.DrawerActivity {
+
         void showProgressDialog(@StringRes int title, @StringRes int message);
 
         void hideProgressDialog();
@@ -27,6 +29,12 @@ public interface ListTaskContract {
         Context getContext();
 
         void closeCardView(int id);
+
+        void closeAllCardViews();
+
+        void openStructureProfile(CommonPersonObjectClient family);
+
+        void registerFamily();
 
         void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea);
 
@@ -51,16 +59,21 @@ public interface ListTaskContract {
 
         void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea);
 
-        void onCardDetailsFetched(CardDetails cardDetails);
-
         void onDrawerClosed();
 
         void onStructureAdded(Feature feature, JSONArray featureCoordinates);
 
         void onFormSaveFailure(String eventType);
 
+        void onCardDetailsFetched(CardDetails cardDetails);
+
         void onInterventionFormDetailsFetched(CardDetails finalCardDetails);
 
-    }
+        Feature getSelectedFeature();
 
+        @StringRes
+        int getInterventionLabel();
+
+        void onFamilyFound(CommonPersonObjectClient finalFamily);
+    }
 }
