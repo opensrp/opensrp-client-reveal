@@ -47,6 +47,7 @@ import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
+import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.Constants.TaskRegister;
@@ -66,9 +67,6 @@ import static org.smartregister.reveal.util.Constants.Map;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
-import static org.smartregister.reveal.util.RevealMapHelper.addCaseIndexBoundary;
-import static org.smartregister.reveal.util.RevealMapHelper.getIndexCase;
-import static org.smartregister.reveal.util.RevealMapHelper.removeCaseIndexBoundary;
 import static org.smartregister.reveal.util.Utils.getInterventionLabel;
 
 /**
@@ -111,12 +109,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private Snackbar syncProgressSnackbar;
 
-
     private BaseDrawerContract.View drawerView;
 
     private RevealJsonFormUtils jsonFormUtils;
 
     private BoundaryLayer boundaryLayer;
+
+    private RevealMapHelper revealMapHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +123,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         setContentView(R.layout.activity_list_tasks);
 
         drawerView = new DrawerMenuView(this);
+
+        revealMapHelper = new RevealMapHelper();
 
         listTaskPresenter = new ListTaskPresenter(this, drawerView.getPresenter());
         rootView = findViewById(R.id.content_frame);
@@ -225,11 +226,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 mMapboxMap.addOnCameraMoveListener(new MapboxMap.OnCameraMoveListener() {
                     @Override
                     public void onCameraMove() {
-                        addCaseIndexBoundary(mMapboxMap, getContext());
+                        revealMapHelper.updateIndexCaseLayers(mMapboxMap);
                     }
                 });
-
-
                 mapboxMap.setMinZoomPreference(10);
                 mapboxMap.setMaxZoomPreference(21);
 
@@ -240,7 +239,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
 
                 listTaskPresenter.onMapReady();
-
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                     @Override
                     public boolean onMapClick(@NonNull LatLng point) {
@@ -248,7 +246,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         return false;
                     }
                 });
-
                 displayMyLocationAtButtom();
             }
         });
@@ -320,12 +317,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             if (operationalArea != null) {
                 CameraPosition cameraPosition = mMapboxMap.getCameraForGeometry(operationalArea.geometry());
                 if (getInterventionLabel() == R.string.focus_investigation) {
-                    Feature indexCase = getIndexCase(mMapboxMap.getStyle().getSourceAs(getContext().getString(R.string.reveal_datasource_name)));
+                    Feature indexCase = revealMapHelper.getIndexCase(mMapboxMap.getStyle().getSourceAs(getContext().getString(R.string.reveal_datasource_name)));
                     if (indexCase != null) {
-                        cameraPosition = mMapboxMap.getCameraForGeometry(indexCase.geometry());
+                        Location center = new RevealMappingHelper().getCenter(indexCase.geometry().toJson());
+                        cameraPosition = new CameraPosition.Builder()
+                                .target(new LatLng(center.getLatitude(), center.getLongitude())).zoom(14.5).build();
                     }
-                } else {
-                    removeCaseIndexBoundary(mMapboxMap.getStyle());
                 }
 
                 if (cameraPosition != null) {
@@ -340,7 +337,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 }
 
                 if (getInterventionLabel() == R.string.focus_investigation) {
-                    addCaseIndexBoundary(mMapboxMap, getContext());
+                    if (revealMapHelper.getIndexCaseCircleLayer() == null) {
+                        revealMapHelper.addIndexCaseLayers(mMapboxMap, getContext());
+                    } else {
+                        revealMapHelper.updateIndexCaseLayers(mMapboxMap);
+                    }
+                } else {
+                    revealMapHelper.removeIndexCaseLayers(mMapboxMap.getStyle());
                 }
             }
         }
@@ -510,9 +513,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (fetchStatus.equals(FetchStatus.fetched)
                 || fetchStatus.equals(FetchStatus.nothingFetched)) {
             Snackbar.make(rootView, org.smartregister.R.string.sync_complete, Snackbar.LENGTH_LONG).show();
-            if (getInterventionLabel() == R.string.focus_investigation) {
-                addCaseIndexBoundary(mMapboxMap, getContext());
-            }
         } else if (fetchStatus.equals(FetchStatus.noConnection)) {
             Snackbar.make(rootView, org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_LONG).show();
         }
