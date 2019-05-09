@@ -13,6 +13,8 @@ import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
+import org.smartregister.repository.PlanDefinitionRepository;
+import org.smartregister.repository.PlanDefinitionSearchRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.repository.SettingsRepository;
 import org.smartregister.repository.StructureRepository;
@@ -24,6 +26,7 @@ import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
+import org.smartregister.reveal.util.TestDataUtils;
 import org.smartregister.util.DatabaseMigrationUtils;
 
 import java.util.Arrays;
@@ -106,6 +109,9 @@ public class RevealRepository extends Repository {
         }, 5000);
 
         PullUniqueIdsServiceJob.scheduleJobImmediately(PullUniqueIdsServiceJob.TAG);
+
+        PlanDefinitionRepository.createTable(db);
+        PlanDefinitionSearchRepository.createTable(db);
     }
 
     @Override

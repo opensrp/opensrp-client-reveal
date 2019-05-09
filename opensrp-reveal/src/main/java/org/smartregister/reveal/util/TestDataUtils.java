@@ -12,9 +12,11 @@ import org.joda.time.LocalDate;
 import org.smartregister.domain.Campaign;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
+import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.LocationRepository;
+import org.smartregister.repository.PlanDefinitionRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
@@ -50,10 +52,7 @@ public class TestDataUtils {
     public void populateTestData() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RevealApplication.getInstance().getApplicationContext());
         if (!sharedPreferences.getBoolean(TEST_DATA_POPULATED, false)) {
-            createCampaigns();
-            createTasks();
-            createLocations();
-            createStructures();
+//            createPlanDefinition();
             sharedPreferences.edit().putBoolean(TEST_DATA_POPULATED, true).apply();
         }
     }
@@ -219,6 +218,24 @@ public class TestDataUtils {
                     e.printStackTrace();
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void createPlanDefinition() {
+
+        try {
+            Gson gson =  new GsonBuilder().registerTypeAdapter(DateTime.class, new DateTimeTypeConverter("yyyy-MM-dd HH:mm:ss.SSSZ"))
+                    .registerTypeAdapter(LocalDate.class, new DateTypeConverter())
+                    .disableHtmlEscaping()
+                    .create();
+
+            String planDefinitionJSON = "{\"identifier\":\"4708ca0a-d0d6-4199-bb1b-8701803c2d02\",\"version\":\"1\",\"name\":\"2019_IRS_Season\",\"title\":\"2019 IRS Operational Plan\",\"status\":\"active\",\"date\":\"2019-03-27\",\"effectivePeriod\":{\"start\":\"2019-04-01\",\"end\":\"2019-07-31\"},\"jurisdiction\":[{\"code\":\"3421\"},{\"code\":\"3429\"},{\"code\":\"3436\"},{\"code\":\"3439\"}],\"goal\":[{\"id\":\"BCC_complete\",\"description\":\"Complete BCC for the operational area\",\"priority\":\"medium-priority\",\"target\":[{\"measure\":\"Number of BCC communication activities that happened\",\"detail\":{\"detailQuantity\":{\"value\":1.0,\"comparator\":\">=\",\"unit\":\"each\"}},\"due\":\"2019-04-01\"}]},{\"id\":\"90_percent_of_structures_sprayed\",\"description\":\"Spray 90 % of structures in the operational area\",\"priority\":\"medium-priority\",\"target\":[{\"measure\":\"Percent of structures sprayed\",\"detail\":{\"detailQuantity\":{\"value\":90.0,\"comparator\":\">=\",\"unit\":\"percent\"}},\"due\":\"2019-05-31\"}]}],\"action\":[{\"identifier\":\"990af508-f1a9-4793-841f-49a7b6438827\",\"prefix\":1,\"title\":\"Perform BCC\",\"description\":\"Perform BCC for the operational area\",\"code\":\"BCC\",\"timingPeriod\":{\"start\":\"2019-04-01\",\"end\":\"2019-04-10\"},\"reason\":\"Routine\",\"goalId\":\"BCC_complete\",\"subjectCodableConcept\":{\"text\":\"Operational_Area\"},\"taskTemplate\":\"Action1_Perform_BCC\"},{\"identifier\":\"8276be06-97d3-4815-8d39-0bc158dc1d91\",\"prefix\":2,\"title\":\"Spray Structures\",\"description\":\"Visit each structure in the operational area and attempt to spray\",\"code\":\"IRS\",\"timingPeriod\":{\"start\":\"2019-04-10\",\"end\":\"2019-07-31\"},\"reason\":\"Routine\",\"goalId\":\"90_percent_of_structures_sprayed\",\"subjectCodableConcept\":{\"text\":\"Residential_Structure\"},\"taskTemplate\":\"Action2_Spray_Structures\"}]}";
+
+
+            PlanDefinition planDefinition = gson.fromJson(planDefinitionJSON, PlanDefinition.class);
+            RevealApplication.getInstance().getPlanDefinitionRepository().addOrUpdate(planDefinition);
         } catch (Exception e) {
             e.printStackTrace();
         }
