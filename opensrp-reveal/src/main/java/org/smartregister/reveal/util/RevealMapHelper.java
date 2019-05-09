@@ -120,48 +120,40 @@ public class RevealMapHelper {
         mMapboxMapStyle.addLayer(symbolLayer);
 
         // index case circle layer
-        try {
-            indexCaseCircleLayer = new CircleLayer(INDEX_CASE_CIRCLE_LAYER, INDEX_CASE_SOURCE);
-            revealSource = mMapboxMapStyle.getSourceAs(context.getString(R.string.reveal_datasource_name));
-            indexCaseCircleLayer.withProperties(
-                    circleOpacity(0f),
-                    circleColor(Color.parseColor("#ffffff")),
-                    circleStrokeColor("#ffffff"),
-                    circleStrokeWidth(2f),
-                    circleStrokeOpacity(1f)
-            );
-            mMapboxMapStyle.addLayer(indexCaseCircleLayer);
-            updateIndexCaseSource(revealSource, mapboxMap);
-        } catch (JSONException e) {
-            Log.e(TAG, e.getStackTrace().toString());
-        }
+        indexCaseCircleLayer = new CircleLayer(INDEX_CASE_CIRCLE_LAYER, INDEX_CASE_SOURCE);
+        revealSource = mMapboxMapStyle.getSourceAs(context.getString(R.string.reveal_datasource_name));
+        indexCaseCircleLayer.withProperties(
+                circleOpacity(0f),
+                circleColor(Color.parseColor("#ffffff")),
+                circleStrokeColor("#ffffff"),
+                circleStrokeWidth(2f),
+                circleStrokeOpacity(1f)
+        );
+        mMapboxMapStyle.addLayer(indexCaseCircleLayer);
+        updateIndexCaseLayers(mapboxMap);
     }
 
     public void updateIndexCaseLayers(MapboxMap mapboxMap) {
         try {
             if (revealSource != null) {
-                updateIndexCaseSource(revealSource, mapboxMap);
+                Feature indexCase = getIndexCase(revealSource);
+                if (indexCase != null) {
+                    // create index case point
+                    Location centre = (new RevealMappingHelper()).getCenter(indexCase.geometry().toJson());
+                    JSONObject feature = new JSONObject(indexCase.toJson());
+                    JSONObject geometry = new JSONObject();
+                    geometry.put("type", "Point");
+                    geometry.put("coordinates", new JSONArray(new Double[]{centre.getLongitude(), centre.getLatitude()}));
+                    feature.put("geometry", geometry);
+                    // update circle radius
+                    float radius = Float.valueOf(getGlobalConfig(INDEX_CASE_CIRCLE_RADIUS_IN_METRES, DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES.toString()));
+                    float circleRadius = calculateZoomLevelRadius(mapboxMap, centre.getLatitude(), radius);
+                    mapboxMap.getStyle().getLayer(INDEX_CASE_CIRCLE_LAYER).setProperties(circleRadius(circleRadius));
+                    indexCaseSource.setGeoJson(Feature.fromJson(feature.toString()));
+                }
             }
         } catch (JSONException e) {
             Log.e(TAG, e.getStackTrace().toString());
-        }
-    }
-
-    private void updateIndexCaseSource(GeoJsonSource revealSource, MapboxMap mapboxMap) throws JSONException {
-        Feature indexCase = getIndexCase(revealSource);
-        if (indexCase != null) {
-            // create index case point
-            Location centre = (new RevealMappingHelper()).getCenter(indexCase.geometry().toJson());
-            JSONObject feature = new JSONObject(indexCase.toJson());
-            JSONObject geometry = new JSONObject();
-            geometry.put("type", "Point");
-            geometry.put("coordinates", new JSONArray(new Double[]{centre.getLongitude(), centre.getLatitude()}));
-            feature.put("geometry", geometry);
-            // update circle radius
-            float radius = Float.valueOf(getGlobalConfig(INDEX_CASE_CIRCLE_RADIUS_IN_METRES, DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES.toString()));
-            float circleRadius = calculateZoomLevelRadius(mapboxMap, centre.getLatitude(), radius);
-            mapboxMap.getStyle().getLayer(INDEX_CASE_CIRCLE_LAYER).setProperties(circleRadius(circleRadius));
-            indexCaseSource.setGeoJson(Feature.fromJson(feature.toString()));
         }
     }
 
