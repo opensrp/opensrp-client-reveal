@@ -24,7 +24,6 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.job.RevealCampaignServiceJob;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Tags;
-import org.smartregister.sync.intent.PlanIntentService;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
 

@@ -1,5 +1,6 @@
 package org.smartregister.reveal.util;
 
+import org.smartregister.AllConstants;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.application.RevealApplication;
 
@@ -7,7 +8,6 @@ import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_CAMPAI
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_CAMPAIGN_ID;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_DISTRICT;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_FACILITY;
-import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Preferences.FACILITY_LEVEL;
 
 /**
@@ -40,11 +40,11 @@ public class PreferencesUtil {
     }
 
     public void setCurrentOperationalArea(String operationalArea) {
-        allSharedPreferences.savePreference(CURRENT_OPERATIONAL_AREA, operationalArea);
+        allSharedPreferences.savePreference(AllConstants.CURRENT_OPERATIONAL_AREA, operationalArea);
     }
 
     public String getCurrentOperationalArea() {
-        return allSharedPreferences.getPreference(CURRENT_OPERATIONAL_AREA);
+        return allSharedPreferences.getPreference(AllConstants.CURRENT_OPERATIONAL_AREA);
     }
 
     public void setCurrentDistrict(String district) {

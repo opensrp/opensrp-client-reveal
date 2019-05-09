@@ -60,7 +60,6 @@ public interface Constants {
     }
 
     interface Preferences {
-        String CURRENT_OPERATIONAL_AREA = "CURRENT_OPERATIONAL_AREA";
         String CURRENT_FACILITY = "CURRENT_FACILITY";
         String CURRENT_DISTRICT = "CURRENT_DISTRICT";
         String CURRENT_CAMPAIGN = "CURRENT_CAMPAIGN";
