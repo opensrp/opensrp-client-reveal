@@ -186,7 +186,7 @@ dependencies {
         exclude group: 'com.android.volley'
     }
 
-    implementation('org.smartregister:opensrp-client-core:1.6.22-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.6.23-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.guava', module: 'guava'
@@ -202,7 +202,7 @@ dependencies {
         exclude group: 'org.smartregister', module: 'opensrp-client-core'
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
-    implementation('org.smartregister:opensrp-client-native-form:1.5.10-PREVIEW-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:1.6.1-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'cardview-v7'
