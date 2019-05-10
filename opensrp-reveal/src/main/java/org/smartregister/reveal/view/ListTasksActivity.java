@@ -228,7 +228,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 mMapboxMap.addOnCameraMoveListener(new MapboxMap.OnCameraMoveListener() {
                     @Override
                     public void onCameraMove() {
-                        revealMapHelper.updateIndexCaseLayers(mMapboxMap);
+                        revealMapHelper.resizeIndexCaseCircle(mMapboxMap);
                     }
                 });
                 mapboxMap.setMinZoomPreference(10);
@@ -349,7 +349,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             if (operationalArea != null) {
                 CameraPosition cameraPosition = mMapboxMap.getCameraForGeometry(operationalArea.geometry());
                 if (getInterventionLabel() == R.string.focus_investigation) {
-                    Feature indexCase = revealMapHelper.getIndexCase(mMapboxMap.getStyle().getSourceAs(getContext().getString(R.string.reveal_datasource_name)));
+                    Feature indexCase = revealMapHelper.getIndexCase(featureCollection);
                     if (indexCase != null) {
                         Location center = new RevealMappingHelper().getCenter(indexCase.geometry().toJson());
                         cameraPosition = new CameraPosition.Builder()
@@ -368,14 +368,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     boundaryLayer.updateFeatures(FeatureCollection.fromFeature(operationalArea));
                 }
 
-                if (getInterventionLabel() == R.string.focus_investigation) {
-                    if (revealMapHelper.getIndexCaseCircleLayer() == null) {
-                        revealMapHelper.addIndexCaseLayers(mMapboxMap, getContext());
-                    } else {
-                        revealMapHelper.updateIndexCaseLayers(mMapboxMap);
-                    }
+                if (getInterventionLabel() == R.string.focus_investigation && revealMapHelper.getIndexCaseCircleLayer() == null) {
+                    revealMapHelper.addIndexCaseLayers(mMapboxMap, getContext(), featureCollection);
                 } else {
-                    revealMapHelper.removeIndexCaseLayers(mMapboxMap.getStyle());
+                    revealMapHelper.updateIndexCaseLayers(mMapboxMap, featureCollection);
                 }
             }
         }
