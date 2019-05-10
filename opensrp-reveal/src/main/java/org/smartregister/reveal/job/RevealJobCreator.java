@@ -8,7 +8,6 @@ import com.evernote.android.job.Job;
 import com.evernote.android.job.JobCreator;
 
 import org.smartregister.job.ExtendedSyncServiceJob;
-import org.smartregister.job.PlanIntentServiceJob;
 import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.job.SyncServiceJob;
 import org.smartregister.job.ValidateSyncDataServiceJob;
