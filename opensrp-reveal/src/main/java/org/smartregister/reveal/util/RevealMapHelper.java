@@ -64,7 +64,7 @@ public class RevealMapHelper {
 
     private static final String MOSQUITO_COLLECTION_LAYER = "mosquito-collection-layer";
 
-    private static final String INDEX_CASE_SYMBOL_LAYER = "index-case-symbol-layer";
+    public static final String INDEX_CASE_SYMBOL_LAYER = "index-case-symbol-layer";
 
     public static final String INDEX_CASE_CIRCLE_LAYER = "index-case-circle-layer";
 
