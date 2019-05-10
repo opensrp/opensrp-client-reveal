@@ -52,7 +52,7 @@ public class TestDataUtils {
     public void populateTestData() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RevealApplication.getInstance().getApplicationContext());
         if (!sharedPreferences.getBoolean(TEST_DATA_POPULATED, false)) {
-            createPlanDefinition();
+//            createPlanDefinition();
             sharedPreferences.edit().putBoolean(TEST_DATA_POPULATED, true).apply();
         }
     }

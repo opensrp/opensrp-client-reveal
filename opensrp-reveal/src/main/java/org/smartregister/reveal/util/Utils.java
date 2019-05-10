@@ -17,11 +17,11 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import org.smartregister.domain.Location;
+import org.smartregister.job.PlanIntentServiceJob;
 import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.job.RevealCampaignServiceJob;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.util.Cache;
@@ -87,7 +87,7 @@ public class Utils {
     }
 
     public static void startImmediateSync() {
-        RevealCampaignServiceJob.scheduleJobImmediately(RevealCampaignServiceJob.TAG);
+        PlanIntentServiceJob.scheduleJobImmediately(PlanIntentServiceJob.TAG);
         PullUniqueIdsServiceJob.scheduleJobImmediately(PullUniqueIdsServiceJob.TAG);
     }
 

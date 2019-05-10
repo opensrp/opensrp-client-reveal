@@ -26,7 +26,6 @@ import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
-import org.smartregister.reveal.util.TestDataUtils;
 import org.smartregister.util.DatabaseMigrationUtils;
 
 import java.util.Arrays;

@@ -7,11 +7,12 @@ import org.smartregister.reveal.job.LocationTaskServiceJob;
 import org.smartregister.reveal.job.RevealSyncSettingsServiceJob;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.sync.intent.CampaignIntentService;
+import org.smartregister.sync.intent.PlanIntentService;
 import org.smartregister.util.NetworkUtils;
 import org.smartregister.util.SyncUtils;
 import org.smartregister.util.Utils;
 
-public class RevealCampaignIntentService extends CampaignIntentService {
+public class RevealPlanIntentService extends PlanIntentService {
 
     private SyncUtils syncUtils;
 

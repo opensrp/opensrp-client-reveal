@@ -84,7 +84,7 @@
             android:screenOrientation="portrait" />
 
         <service android:name=".sync.RevealSyncIntentService" />
-        <service android:name=".sync.RevealCampaignIntentService" />
+        <service android:name=".sync.RevealPlanIntentService" />
         <service android:name=".sync.LocationTaskIntentService" />
         <service android:name=".sync.RevealSettingsSyncIntentService" />
         <service android:name="org.smartregister.sync.intent.PullUniqueIdsIntentService" />
