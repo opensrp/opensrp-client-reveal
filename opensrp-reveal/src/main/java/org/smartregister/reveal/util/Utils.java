@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import org.smartregister.domain.Location;
 import org.smartregister.job.PullUniqueIdsServiceJob;
@@ -121,6 +122,8 @@ public class Utils {
 
     public static int getInterventionLabel() {
         String campaignId = PreferencesUtil.getInstance().getCurrentPlanId();
+        if (!campaignId.contains("_"))
+            return R.string.irs;
         String intervention = campaignId.substring(0, campaignId.indexOf("_"));
         if (Constants.Intervention.IRS.equals(intervention))
             return R.string.irs;
@@ -128,6 +131,10 @@ public class Utils {
             return R.string.focus_investigation;
     }
 
+    public static float calculateZoomLevelRadius(@NonNull final MapboxMap mapboxMap, double latitude, float radius) {
+        double metersPerPixel = mapboxMap.getProjection().getMetersPerPixelAtLatitude(latitude);
+        return (float) (radius / metersPerPixel);
+    }
 
     public static String getAge(String dob) {
         String dobString = org.smartregister.family.util.Utils.getDuration(dob);

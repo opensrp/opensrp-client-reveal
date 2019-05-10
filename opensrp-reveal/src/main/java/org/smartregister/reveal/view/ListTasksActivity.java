@@ -49,6 +49,7 @@ import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
+import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Action;
@@ -71,6 +72,7 @@ import static org.smartregister.reveal.util.Constants.Map;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
+import static org.smartregister.reveal.util.Utils.getInterventionLabel;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -106,12 +108,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private Snackbar syncProgressSnackbar;
 
-
     private BaseDrawerContract.View drawerView;
 
     private RevealJsonFormUtils jsonFormUtils;
 
     private BoundaryLayer boundaryLayer;
+
+    private RevealMapHelper revealMapHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +123,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         jsonFormUtils = new RevealJsonFormUtils();
         drawerView = new DrawerMenuView(this);
+
+        revealMapHelper = new RevealMapHelper();
 
         listTaskPresenter = new ListTaskPresenter(this, drawerView.getPresenter());
         rootView = findViewById(R.id.content_frame);
@@ -215,12 +220,17 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         geoJsonSource = style.getSourceAs(getString(R.string.reveal_datasource_name));
 
                         selectedGeoJsonSource = style.getSourceAs(getString(R.string.selected_datasource_name));
-                        RevealMapHelper.addSymbolLayers(style, ListTasksActivity.this);
+                        RevealMapHelper.addCustomLayers(style, ListTasksActivity.this);
                     }
                 });
+
                 mMapboxMap = mapboxMap;
-
-
+                mMapboxMap.addOnCameraMoveListener(new MapboxMap.OnCameraMoveListener() {
+                    @Override
+                    public void onCameraMove() {
+                        revealMapHelper.resizeIndexCaseCircle(mMapboxMap);
+                    }
+                });
                 mapboxMap.setMinZoomPreference(10);
                 mapboxMap.setMaxZoomPreference(21);
 
@@ -231,7 +241,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
 
                 listTaskPresenter.onMapReady();
-
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                     @Override
                     public boolean onMapClick(@NonNull LatLng point) {
@@ -239,7 +248,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         return false;
                     }
                 });
-
                 displayMyLocationAtButtom();
             }
         });
@@ -340,15 +348,30 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             geoJsonSource.setGeoJson(featureCollection);
             if (operationalArea != null) {
                 CameraPosition cameraPosition = mMapboxMap.getCameraForGeometry(operationalArea.geometry());
+                if (getInterventionLabel() == R.string.focus_investigation) {
+                    Feature indexCase = revealMapHelper.getIndexCase(featureCollection);
+                    if (indexCase != null) {
+                        Location center = new RevealMappingHelper().getCenter(indexCase.geometry().toJson());
+                        cameraPosition = new CameraPosition.Builder()
+                                .target(new LatLng(center.getLatitude(), center.getLongitude())).zoom(14.5).build();
+                    }
+                }
+
                 if (cameraPosition != null) {
                     mMapboxMap.setCameraPosition(cameraPosition);
                 }
+
                 if (boundaryLayer == null) {
                     boundaryLayer = createBoundaryLayer(operationalArea);
                     kujakuMapView.addLayer(boundaryLayer);
-
                 } else {
                     boundaryLayer.updateFeatures(FeatureCollection.fromFeature(operationalArea));
+                }
+
+                if (getInterventionLabel() == R.string.focus_investigation && revealMapHelper.getIndexCaseCircleLayer() == null) {
+                    revealMapHelper.addIndexCaseLayers(mMapboxMap, getContext(), featureCollection);
+                } else {
+                    revealMapHelper.updateIndexCaseLayers(mMapboxMap, featureCollection);
                 }
             }
         }

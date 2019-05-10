@@ -129,6 +129,8 @@
     <string name="mosquito_collection_status_test_text">Status: Inactive</string>
     <string name="mosquito_collection_trap_set_date_test_text">Set Date: DD/MM/YY</string>
     <string name="mosquito_collection_trap_follow_up_date_test_text">Follow-up Date: DD/MM/YY</string>
+    <string name="mosquito_collection_trap_collected_date_test_text">Collected Date: DD/MM/YY</string>
+
     <string name="larval_breeding_identified_date_test_text">Identified Date:&#160;</string>
     <string name="larval_breeding_larvacide_date_test_text">Larvacide Date:&#160;</string>
     <string name="mosquito_collection_trap_set_date">Set Date:&#160;</string>

@@ -57,6 +57,8 @@ public interface Constants {
         String LOCATION_BUFFER_RADIUS_IN_METRES = "location_buffer_radius_in_metres";
         Float DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES = 25f;
         String UPDATE_LOCATION_BUFFER_RADIUS = "update_location_buffer_radius";
+        String INDEX_CASE_CIRCLE_RADIUS_IN_METRES = "index_case_circle_radius_in_metres";
+        Float DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES = 1000f;
     }
 
     interface Preferences {
@@ -95,6 +97,7 @@ public interface Constants {
         String TYPE = "type";
         String FEATURE_COLLECTION = "FeatureCollection";
         String FEATURES = "features";
+        String IS_INDEX_CASE = "is_index_case";
     }
 
     interface Intervention {

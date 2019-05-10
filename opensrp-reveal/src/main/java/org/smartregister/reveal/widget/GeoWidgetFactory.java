@@ -151,7 +151,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         if (geoJsonSource != null && StringUtils.isNotBlank(finalFeatureCollection)) {
                             geoJsonSource.setGeoJson(finalFeatureCollection);
                         }
-                        RevealMapHelper.addSymbolLayers(style, context);
+                        RevealMapHelper.addCustomLayers(style, context);
                         mapView.setMapboxMap(mapboxMap);
                     }
                 });
