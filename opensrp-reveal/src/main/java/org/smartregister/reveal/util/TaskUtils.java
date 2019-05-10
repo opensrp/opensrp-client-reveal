@@ -56,7 +56,7 @@ public class TaskUtils {
         Task task = new Task();
         DateTime now = new DateTime();
         task.setIdentifier(UUID.randomUUID().toString());
-        task.setCampaignIdentifier(prefsUtil.getCurrentCampaignId());
+        task.setPlanIdentifier(prefsUtil.getCurrentPlanId());
         task.setGroupIdentifier(Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId());
         task.setStatus(Task.TaskStatus.READY);
         task.setBusinessStatus(businessStatus);

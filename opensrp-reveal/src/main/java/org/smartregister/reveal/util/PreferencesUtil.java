@@ -3,11 +3,11 @@ package org.smartregister.reveal.util;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.application.RevealApplication;
 
-import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_CAMPAIGN;
-import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_CAMPAIGN_ID;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_DISTRICT;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_FACILITY;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_OPERATIONAL_AREA;
+import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PLAN;
+import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PLAN_ID;
 import static org.smartregister.reveal.util.Constants.Preferences.FACILITY_LEVEL;
 
 /**
@@ -55,22 +55,21 @@ public class PreferencesUtil {
         return allSharedPreferences.getPreference(CURRENT_DISTRICT);
     }
 
-    public void setCurrentCampaign(String campaign) {
-        allSharedPreferences.savePreference(CURRENT_CAMPAIGN, campaign);
+    public void setCurrentPlan(String campaign) {
+        allSharedPreferences.savePreference(CURRENT_PLAN, campaign);
     }
 
-    public String getCurrentCampaign() {
-        return allSharedPreferences.getPreference(CURRENT_CAMPAIGN);
+    public String getCurrentPlan() {
+        return allSharedPreferences.getPreference(CURRENT_PLAN);
     }
 
-    public void setCurrentCampaignId(String campaignId) {
-        allSharedPreferences.savePreference(CURRENT_CAMPAIGN_ID, campaignId);
+    public void setCurrentPlanId(String campaignId) {
+        allSharedPreferences.savePreference(CURRENT_PLAN_ID, campaignId);
     }
 
-    public String getCurrentCampaignId() {
-        return allSharedPreferences.getPreference(CURRENT_CAMPAIGN_ID);
+    public String getCurrentPlanId() {
+        return allSharedPreferences.getPreference(CURRENT_PLAN_ID);
     }
-
 
     public String getPreferenceValue(String key) {
         return allSharedPreferences.getPreference(key);

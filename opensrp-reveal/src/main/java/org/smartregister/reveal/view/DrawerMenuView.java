@@ -41,7 +41,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     private static final String TAG = "DrawerMenuView";
 
-    private TextView campaignTextView;
+    private TextView planTextView;
     private TextView operationalAreaTextView;
     private TextView districtTextView;
     private TextView facilityTextView;
@@ -116,7 +116,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
                 .format(new Date(BuildConfig.BUILD_TIMESTAMP));
         ((TextView) headerView.findViewById(R.id.application_updated)).setText(getContext().getString(R.string.app_updated, buildDate));
 
-        campaignTextView = headerView.findViewById(R.id.campaign_selector);
+        planTextView = headerView.findViewById(R.id.plan_selector);
         operationalAreaTextView = headerView.findViewById(R.id.operational_area_selector);
         districtTextView = headerView.findViewById(R.id.district_label);
         facilityTextView = headerView.findViewById(R.id.facility_label);
@@ -124,7 +124,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
         operationalAreaTextView.setOnClickListener(this);
 
-        campaignTextView.setOnClickListener(this);
+        planTextView.setOnClickListener(this);
 
         headerView.findViewById(R.id.logout_button).setOnClickListener(this);
         headerView.findViewById(R.id.sync_button).setOnClickListener(this);
@@ -132,8 +132,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     }
 
     @Override
-    public void setCampaign(String campaign) {
-        campaignTextView.setText(campaign);
+    public void setPlan(String campaign) {
+        planTextView.setText(campaign);
     }
 
     @Override
@@ -142,8 +142,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     }
 
     @Override
-    public String getCampaign() {
-        return campaignTextView.getText().toString();
+    public String getPlan() {
+        return planTextView.getText().toString();
     }
 
     @Override
@@ -206,7 +206,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
 
     @Override
-    public void showCampaignSelector(List<String> campaigns, String entireTreeString) {
+    public void showPlanSelector(List<String> campaigns, String entireTreeString) {
         try {
             TreeViewDialog treeViewDialog = new TreeViewDialog(getContext(),
                     R.style.AppTheme_WideDialog,
@@ -216,7 +216,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             treeViewDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    presenter.onCampaignSelectorClicked(treeViewDialog.getValue(), treeViewDialog.getName());
+                    presenter.onPlanSelectorClicked(treeViewDialog.getValue(), treeViewDialog.getName());
                 }
             });
             treeViewDialog.show();
@@ -251,8 +251,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     public void onClick(View v) {
         if (v.getId() == R.id.operational_area_selector)
             presenter.onShowOperationalAreaSelector();
-        else if (v.getId() == R.id.campaign_selector)
-            presenter.onShowCampaignSelector();
+        else if (v.getId() == R.id.plan_selector)
+            presenter.onShowPlanSelector();
         else if (v.getId() == R.id.logout_button)
             RevealApplication.getInstance().logoutCurrentUser();
         else if (v.getId() == R.id.sync_button) {
