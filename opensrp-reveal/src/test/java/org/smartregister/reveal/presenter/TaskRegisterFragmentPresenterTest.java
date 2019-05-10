@@ -144,7 +144,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void testInitializeQueriesUsesCorrectParams() {
         String campaignId = UUID.randomUUID().toString();
-        when(preferencesUtil.getCurrentCampaignId()).thenReturn(campaignId);
+        when(preferencesUtil.getCurrentPlanId()).thenReturn(campaignId);
         when(preferencesUtil.getCurrentOperationalArea()).thenReturn("MTI_84");
         String mainCondition = "group_id = ? AND campaign_id = ?";
         Whitebox.setInternalState(presenter, "visibleColumns", visibleColumns);
@@ -244,8 +244,8 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void testOnDrawerClosed() {
         String campaignId = "IRS_2019_season1";
-        PreferencesUtil.getInstance().setCurrentCampaignId(campaignId);
-        when(preferencesUtil.getCurrentCampaignId()).thenReturn(campaignId);
+        PreferencesUtil.getInstance().setCurrentPlanId(campaignId);
+        when(preferencesUtil.getCurrentPlanId()).thenReturn(campaignId);
         when(preferencesUtil.getCurrentOperationalArea()).thenReturn("MTI_84");
         presenter.onLocationChanged(location);
         presenter.onDrawerClosed();

@@ -61,10 +61,10 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
     public void testFindTasks() {
         String campaignId = UUID.randomUUID().toString();
         String structureId = UUID.randomUUID().toString();
-        when(prefsUtil.getCurrentCampaignId()).thenReturn(campaignId);
+        when(prefsUtil.getCurrentPlanId()).thenReturn(campaignId);
         presenter.findTasks(structureId);
         verify(interactor).findTasks(structureId, campaignId);
-        verify(prefsUtil).getCurrentCampaignId();
+        verify(prefsUtil).getCurrentPlanId();
     }
 
 

@@ -7,7 +7,7 @@ import android.util.Log;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
-import org.smartregister.domain.Campaign;
+import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.R;
@@ -21,6 +21,7 @@ import org.smartregister.util.Utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static org.smartregister.AllConstants.OPERATIONAL_AREAS;
 import static org.smartregister.reveal.util.Constants.Tags.CANTON;
@@ -87,20 +88,20 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             populateLocationsFromPreferences();
         }
 
-        view.setCampaign(prefsUtil.getCurrentCampaign());
+        view.setPlan(prefsUtil.getCurrentPlan());
 
     }
 
 
     @Override
-    public void onCampaignsFetched(List<Campaign> campaigns) {
+    public void onPlansFetched(Set<PlanDefinition> planDefinitions) {
         List<String> ids = new ArrayList<>();
         List<FormLocation> formLocations = new ArrayList<>();
-        for (Campaign campaign : campaigns) {
-            ids.add(campaign.getIdentifier());
+        for (PlanDefinition planDefinition : planDefinitions) {
+            ids.add(planDefinition.getIdentifier());
             FormLocation formLocation = new FormLocation();
-            formLocation.name = campaign.getTitle();
-            formLocation.key = campaign.getIdentifier();
+            formLocation.name = planDefinition.getTitle();
+            formLocation.key = planDefinition.getIdentifier();
             formLocation.level = "";
             formLocations.add(formLocation);
         }
@@ -108,7 +109,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         String entireTreeString = AssetHandler.javaToJsonString(formLocations,
                 new TypeToken<List<FormLocation>>() {
                 }.getType());
-        view.showCampaignSelector(ids, entireTreeString);
+        view.showPlanSelector(ids, entireTreeString);
     }
 
     private void populateLocationsFromPreferences() {
@@ -215,20 +216,20 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     }
 
     @Override
-    public void onShowCampaignSelector() {
-        interactor.fetchCampaigns();
+    public void onShowPlanSelector() {
+        interactor.fetchPlans();
     }
 
 
-    public void onCampaignSelectorClicked(ArrayList<String> value, ArrayList<String> name) {
+    public void onPlanSelectorClicked(ArrayList<String> value, ArrayList<String> name) {
         if (Utils.isEmptyCollection(name))
             return;
-        Log.d(TAG, "Selected Campaign : " + TextUtils.join(",", name));
-        Log.d(TAG, "Selected Campaign Ids: " + TextUtils.join(",", value));
+        Log.d(TAG, "Selected Plan : " + TextUtils.join(",", name));
+        Log.d(TAG, "Selected Plan Ids: " + TextUtils.join(",", value));
 
-        prefsUtil.setCurrentCampaign(name.get(0));
-        prefsUtil.setCurrentCampaignId(value.get(0));
-        view.setCampaign(name.get(0));
+        prefsUtil.setCurrentPlan(name.get(0));
+        prefsUtil.setCurrentPlanId(value.get(0));
+        view.setPlan(name.get(0));
         changedCurrentSelection = true;
         unlockDrawerLayout();
 
@@ -239,9 +240,9 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     }
 
     private void unlockDrawerLayout() {
-        String campaign = PreferencesUtil.getInstance().getCurrentCampaignId();
+        String planId = PreferencesUtil.getInstance().getCurrentPlanId();
         String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
-        if (StringUtils.isNotBlank(campaign) &&
+        if (StringUtils.isNotBlank(planId) &&
                 StringUtils.isNotBlank(operationalArea)) {
             view.unlockNavigationDrawer();
         }
@@ -265,7 +266,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     @Override
     public void onViewResumed() {
         if (viewInitialized) {
-            if (!prefsUtil.getCurrentCampaign().equals(view.getCampaign())
+            if (!prefsUtil.getCurrentPlan().equals(view.getPlan())
                     || !prefsUtil.getCurrentFacility().equals(view.getOperationalArea())) {
                 changedCurrentSelection = true;
                 onDrawerClosed();
