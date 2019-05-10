@@ -5,11 +5,10 @@ import android.support.annotation.NonNull;
 
 import org.smartregister.AllConstants;
 import org.smartregister.job.BaseJob;
+import org.smartregister.job.PlanIntentServiceJob;
 import org.smartregister.reveal.sync.RevealPlanIntentService;
 
-public class RevealPlanServiceJob extends BaseJob {
-
-    public static final String TAG = "RevealPlanServiceJob";
+public class RevealPlanServiceJob extends PlanIntentServiceJob {
 
     @NonNull
     @Override
