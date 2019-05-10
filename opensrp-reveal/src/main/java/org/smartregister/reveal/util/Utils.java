@@ -87,9 +87,8 @@ public class Utils {
     }
 
     public static void startImmediateSync() {
-        RevealCampaignServiceJob.scheduleJobImmediately(RevealCampaignServiceJob.TAG);
-        PullUniqueIdsServiceJob.scheduleJobImmediately(PullUniqueIdsServiceJob.TAG);
         PlanIntentServiceJob.scheduleJobImmediately(PlanIntentServiceJob.TAG);
+        PullUniqueIdsServiceJob.scheduleJobImmediately(PullUniqueIdsServiceJob.TAG);
     }
 
 

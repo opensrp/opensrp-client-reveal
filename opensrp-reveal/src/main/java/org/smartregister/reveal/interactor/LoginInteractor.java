@@ -20,14 +20,11 @@ public class LoginInteractor extends BaseLoginInteractor implements BaseLoginCon
 
     @Override
     protected void scheduleJobsPeriodically() {
-        RevealCampaignServiceJob.scheduleJob(RevealCampaignServiceJob.TAG, TimeUnit.MINUTES.toMillis(
+        PlanIntentServiceJob.scheduleJob(PlanIntentServiceJob.TAG, TimeUnit.MINUTES.toMillis(
                 BuildConfig.SYNC_INTERVAL_IN_MINUTES), getFlexValue(BuildConfig.SYNC_INTERVAL_IN_MINUTES));
 
         PullUniqueIdsServiceJob.scheduleJob(SyncServiceJob.TAG, TimeUnit.MINUTES.toMillis(
                 BuildConfig.PULL_UNIQUE_IDS_MINUTES), getFlexValue(BuildConfig.PULL_UNIQUE_IDS_MINUTES));
-
-        PlanIntentServiceJob.scheduleJob(PlanIntentServiceJob.TAG, TimeUnit.MINUTES.toMillis(
-                BuildConfig.SYNC_INTERVAL_IN_MINUTES), getFlexValue(BuildConfig.SYNC_INTERVAL_IN_MINUTES));
     }
 
     @Override
@@ -35,5 +32,4 @@ public class LoginInteractor extends BaseLoginInteractor implements BaseLoginCon
         new TestDataUtils().populateTestData();
         Utils.startImmediateSync();
     }
-
 }
