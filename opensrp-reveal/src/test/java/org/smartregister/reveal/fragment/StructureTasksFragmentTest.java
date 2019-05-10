@@ -102,7 +102,7 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
 
     @Test
     public void testOnCreateView() {
-        PreferencesUtil.getInstance().setCurrentCampaignId("IRS_2019_S1");
+        PreferencesUtil.getInstance().setCurrentPlanId("IRS_2019_S1");
         fragment.onCreateView(LayoutInflater.from(context), null, null);
         assertNotNull(Whitebox.getInternalState(fragment, "taskRecyclerView"));
         assertNotNull(Whitebox.getInternalState(fragment, "progressDialog"));
