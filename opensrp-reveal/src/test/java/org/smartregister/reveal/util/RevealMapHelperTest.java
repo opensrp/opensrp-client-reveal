@@ -43,7 +43,7 @@ import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_SYMBOL_LA
  * Created by Vincent Karuri on 08/05/2019
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({RevealMapHelper.class, Utils.class})
+@PrepareForTest({RevealMapHelper.class, Utils.class, MapboxMap.class})
 public class RevealMapHelperTest {
 
     private RevealMapHelper revealMapHelper = null;
