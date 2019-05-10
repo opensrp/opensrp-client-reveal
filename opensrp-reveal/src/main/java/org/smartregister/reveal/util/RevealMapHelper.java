@@ -58,7 +58,7 @@ public class RevealMapHelper {
 
     private static final String MOSQUITO_COLLECTION_ICON = "mosquito-collection-icon";
 
-    private static final String INDEX_CASE_TARGET_ICON =    "index-case-target-icon";
+    private static final String INDEX_CASE_TARGET_ICON = "index-case-target-icon";
 
     private static final String LARVAL_BREEDING_LAYER = "larval-breeding-layer";
 
@@ -76,7 +76,7 @@ public class RevealMapHelper {
 
     private GeoJsonSource indexCaseSource = new GeoJsonSource(INDEX_CASE_SOURCE);
 
-    public static void addCustomLayers(@NonNull  Style mMapboxMapStyle, Context context) {
+    public static void addCustomLayers(@NonNull Style mMapboxMapStyle, Context context) {
 
         Expression dynamicIconSize = interpolate(linear(), zoom(),
                 literal(13.98f), literal(0),
@@ -149,7 +149,7 @@ public class RevealMapHelper {
                     resizeIndexCaseCircle(mapboxMap);
                     indexCaseSource.setGeoJson(Feature.fromJson(feature.toString()));
                 } else {
-                    indexCaseSource.setGeoJson( FeatureCollection.fromFeatures(new ArrayList<>()));
+                    indexCaseSource.setGeoJson(FeatureCollection.fromFeatures(new ArrayList<>()));
                 }
             }
         } catch (JSONException e) {
@@ -157,8 +157,8 @@ public class RevealMapHelper {
         }
     }
 
-    public void resizeIndexCaseCircle(MapboxMap mapboxMap){
-        if (indexCaseLocation != null) {
+    public void resizeIndexCaseCircle(MapboxMap mapboxMap) {
+        if (indexCaseLocation != null && indexCaseCircleLayer != null) {
             float radius = Float.valueOf(getGlobalConfig(INDEX_CASE_CIRCLE_RADIUS_IN_METRES, DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES.toString()));
             float circleRadius = calculateZoomLevelRadius(mapboxMap, indexCaseLocation.getLatitude(), radius);
             indexCaseCircleLayer.setProperties(circleRadius(circleRadius));

@@ -118,13 +118,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void onDrawerClosed() {
         if (drawerPresenter.isChangedCurrentSelection()) {
             listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
-            listTaskInteractor.fetchLocations(prefsUtil.getCurrentCampaignId(), prefsUtil.getCurrentOperationalArea());
+            listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalArea());
         }
     }
 
     public void refreshStructures() {
         listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
-        listTaskInteractor.fetchLocations(prefsUtil.getCurrentCampaignId(), prefsUtil.getCurrentOperationalArea());
+        listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalArea());
     }
 
     @Override
@@ -153,7 +153,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     public void onMapReady() {
-        String campaign = PreferencesUtil.getInstance().getCurrentCampaignId();
+        String campaign = PreferencesUtil.getInstance().getCurrentPlanId();
         String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
         if (StringUtils.isNotBlank(campaign) &&
                 StringUtils.isNotBlank(operationalArea)) {

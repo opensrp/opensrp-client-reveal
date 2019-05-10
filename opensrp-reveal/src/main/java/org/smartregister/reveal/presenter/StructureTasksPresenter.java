@@ -48,7 +48,7 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
     @Override
     public void findTasks(String structureId) {
-        interactor.findTasks(structureId, prefsUtil.getCurrentCampaignId());
+        interactor.findTasks(structureId, prefsUtil.getCurrentPlanId());
     }
 
     @Override

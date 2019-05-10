@@ -100,7 +100,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void testOnRegistrationSavedForNewForms() {
         presenter = spy(presenter);
-        PreferencesUtil.getInstance().setCurrentCampaignId("FI_2019_TV01");
+        PreferencesUtil.getInstance().setCurrentPlanId("FI_2019_TV01");
         Whitebox.setInternalState(presenter, "structureId", structureId);
         String baseEntityId = UUID.randomUUID().toString();
         FamilyEventClient eventClient = new FamilyEventClient(new Client(), new Event().withBaseEntityId(baseEntityId));
