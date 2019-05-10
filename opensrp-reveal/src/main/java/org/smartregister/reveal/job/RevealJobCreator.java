@@ -24,8 +24,8 @@ public class RevealJobCreator implements JobCreator {
         switch (tag) {
             case SyncServiceJob.TAG:
                 return new SyncServiceJob(RevealSyncIntentService.class);
-            case RevealCampaignServiceJob.TAG:
-                return new RevealCampaignServiceJob();
+            case RevealPlanServiceJob.TAG:
+                return new RevealPlanServiceJob();
             case LocationTaskServiceJob.TAG:
                 return new LocationTaskServiceJob();
             case RevealSyncSettingsServiceJob.TAG:
@@ -36,8 +36,6 @@ public class RevealJobCreator implements JobCreator {
                 return new PullUniqueIdsServiceJob();
             case ValidateSyncDataServiceJob.TAG:
                 return new ValidateSyncDataServiceJob();
-            case PlanIntentServiceJob.TAG:
-                return new PlanIntentServiceJob();
             default:
                 Log.w(RevealJobCreator.class.getCanonicalName(), tag + " is not declared in RevealJobCreator Job Creator");
                 return null;

@@ -65,6 +65,7 @@ public interface Constants {
         String CURRENT_CAMPAIGN = "CURRENT_CAMPAIGN";
         String CURRENT_CAMPAIGN_ID = "CURRENT_CAMPAIGN_ID";
         String FACILITY_LEVEL = "FACILITY_LEVEL";
+        String CURRENT_OPERATIONAL_AREA = "CURRENT_OPERATIONAL_AREA";
     }
 
     interface Tags {
