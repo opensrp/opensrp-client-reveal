@@ -22,12 +22,12 @@ import static org.smartregister.reveal.util.Utils.getInterventionLabel;
  * Created by Vincent Karuri on 08/05/2019
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(PreferencesUtil.class)
+@PrepareForTest({PreferencesUtil.class, MapboxMap.class})
 public class UtilsTest {
 
     @Test
     public void testCalculateZoomLevelRadius() {
-        MapboxMap mapboxMap = mock(MapboxMap.class);
+        MapboxMap mapboxMap = PowerMockito.mock(MapboxMap.class);
         Projection projection = mock(Projection.class);
         doReturn(projection).when(mapboxMap).getProjection();
         doReturn(2.0).when(projection).getMetersPerPixelAtLatitude(anyDouble());
@@ -39,7 +39,7 @@ public class UtilsTest {
         PowerMockito.mockStatic(PreferencesUtil.class);
         PreferencesUtil preferencesUtil = mock(PreferencesUtil.class);
         PowerMockito.when(PreferencesUtil.class, "getInstance").thenReturn(preferencesUtil);
-        when(preferencesUtil.getCurrentCampaignId()).thenReturn("IRS_1");
+        when(preferencesUtil.getCurrentPlanId()).thenReturn("IRS_1");
         assertEquals(getInterventionLabel(), R.string.irs);
     }
 }
