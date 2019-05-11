@@ -23,6 +23,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.job.LocationTaskServiceJob;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
+import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
@@ -121,14 +122,13 @@ public class Utils {
     }
 
     public static int getInterventionLabel() {
-        String campaignId = PreferencesUtil.getInstance().getCurrentPlanId();
-        if (!campaignId.contains("_"))
-            return R.string.irs;
-        String intervention = campaignId.substring(0, campaignId.indexOf("_"));
-        if (Constants.Intervention.IRS.equals(intervention))
+        String plan = PreferencesUtil.getInstance().getCurrentPlan();
+        if (plan.toUpperCase().contains(Intervention.FOCUS))
+            return R.string.focus_investigation;
+        else if (plan.toUpperCase().contains(Intervention.IRS))
             return R.string.irs;
         else
-            return R.string.focus_investigation;
+            return R.string.irs;
     }
 
     public static float calculateZoomLevelRadius(@NonNull final MapboxMap mapboxMap, double latitude, float radius) {

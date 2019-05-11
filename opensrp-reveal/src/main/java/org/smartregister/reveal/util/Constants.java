@@ -103,6 +103,8 @@ public interface Constants {
     interface Intervention {
         String IRS = "IRS";
 
+        String FOCUS = "FOCUS";
+
         String MDA = "MDA";
 
         String MOSQUITO_COLLECTION = "Mosquito Collection";
