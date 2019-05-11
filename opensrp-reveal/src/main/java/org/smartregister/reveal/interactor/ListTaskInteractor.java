@@ -135,7 +135,7 @@ public class ListTaskInteractor extends BaseInteractor {
         );
     }
 
-    public void fetchLocations(String campaign, String operationalArea) {
+    public void fetchLocations(String plan, String operationalArea) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -143,7 +143,7 @@ public class ListTaskInteractor extends BaseInteractor {
                 Location operationalAreaLocation = Utils.getOperationalAreaLocation(operationalArea);
                 try {
                     if (operationalAreaLocation != null) {
-                        Map<String, Task> tasks = taskRepository.getTasksByCampaignAndGroup(campaign, operationalAreaLocation.getId());
+                        Map<String, Task> tasks = taskRepository.getTasksByPlanAndGroup(plan, operationalAreaLocation.getId());
                         List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
                         featureCollection.put(GeoJSON.FEATURES, new JSONArray(GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks)));
                         Log.d(TAG, "features:" + featureCollection.toString());

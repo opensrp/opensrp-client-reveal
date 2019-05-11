@@ -25,7 +25,7 @@ import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.LAST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.MIDDLE_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.CAMPAIGN_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
@@ -69,7 +69,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
             List<StructureTaskDetails> taskDetailsList = new ArrayList<>();
             Cursor cursor = null;
             try {
-                cursor = database.rawQuery(getStructureSelect(String.format("%s=? AND %s=?", FOR, CAMPAIGN_ID)),
+                cursor = database.rawQuery(getStructureSelect(String.format("%s=? AND %s=?", FOR, PLAN_ID)),
                         new String[]{structureId, campaignId});
                 while (cursor.moveToNext()) {
                     taskDetailsList.add(readTaskDetails(cursor));
@@ -77,7 +77,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
 
                 cursor.close();
                 cursor = database.rawQuery(getMembersSelect(String.format("%s.%s=? AND %s=?",
-                        STRUCTURES_TABLE, ID, CAMPAIGN_ID)), new String[]{structureId, campaignId});
+                        STRUCTURES_TABLE, ID, PLAN_ID)), new String[]{structureId, campaignId});
                 while (cursor.moveToNext()) {
                     taskDetailsList.add(readMemberTaskDetails(cursor));
                 }

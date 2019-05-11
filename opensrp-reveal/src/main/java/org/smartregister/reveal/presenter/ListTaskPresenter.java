@@ -153,11 +153,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     public void onMapReady() {
-        String campaign = PreferencesUtil.getInstance().getCurrentPlanId();
+        String planId = PreferencesUtil.getInstance().getCurrentPlanId();
         String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
-        if (StringUtils.isNotBlank(campaign) &&
+        if (StringUtils.isNotBlank(planId) &&
                 StringUtils.isNotBlank(operationalArea)) {
-            listTaskInteractor.fetchLocations(campaign, operationalArea);
+            listTaskInteractor.fetchLocations(planId, operationalArea);
         } else {
             listTaskView.displayNotification(R.string.select_campaign_operational_area_title, R.string.select_campaign_operational_area);
             drawerPresenter.getView().lockNavigationDrawerForSelection();

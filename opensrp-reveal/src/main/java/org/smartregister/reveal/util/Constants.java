@@ -266,7 +266,7 @@ public interface Constants {
 
         String GROUPID = "group_id";
 
-        String CAMPAIGN_ID = "campaign_id";
+        String PLAN_ID = "plan_id";
 
         String NOT_SRAYED_REASON = "not_sprayed_reason";
 
