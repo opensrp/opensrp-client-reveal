@@ -361,9 +361,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     mMapboxMap.setCameraPosition(cameraPosition);
                 }
 
+                Boolean drawOperationalAreaBoundaryAndLabel= org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel();
                 if (boundaryLayer == null) {
-                    boundaryLayer = createBoundaryLayer(operationalArea);
-                    kujakuMapView.addLayer(boundaryLayer);
+                    if (drawOperationalAreaBoundaryAndLabel) {
+                        boundaryLayer = createBoundaryLayer(operationalArea);
+                        kujakuMapView.addLayer(boundaryLayer);
+                    }
                 } else {
                     boundaryLayer.updateFeatures(FeatureCollection.fromFeature(operationalArea));
                 }

@@ -140,4 +140,8 @@ public class Utils {
         String dobString = org.smartregister.family.util.Utils.getDuration(dob);
         return dobString.contains("y") ? dobString.substring(0, dobString.indexOf("y")) : dobString;
     }
+
+    public static Boolean getDrawOperationalAreaBoundaryAndLabel() {
+        return Boolean.valueOf(getGlobalConfig(CONFIGURATION.DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL, CONFIGURATION.DEFAULT_DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL.toString()));
+    }
 }
