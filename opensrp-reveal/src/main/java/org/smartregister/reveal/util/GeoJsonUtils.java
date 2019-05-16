@@ -15,6 +15,8 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_S
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
+import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
 
 /**
  * Created by samuelgithengi on 1/7/19.
@@ -30,6 +32,11 @@ public class GeoJsonUtils {
                 taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
                 taskProperties.put(TASK_STATUS, task.getStatus().name());
                 taskProperties.put(TASK_CODE, task.getCode());
+
+                if (task.getCode().equals(CASE_CONFIRMATION)) {
+                    taskProperties.put(IS_INDEX_CASE, "true");
+                }
+
                 taskProperties.put(LOCATION_UUID, structure.getProperties().getUid());
                 taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
                 taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
