@@ -210,12 +210,7 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
     @Override
     public void onTaskSelected(TaskDetails details) {
         if (details != null) {
-            //TODO remove this condition once BCC and Larval dipping forms are implemented
-            if (BCC.equals(details.getTaskCode()) || LARVAL_DIPPING.equals(details.getTaskCode())) {
-                getView().displayToast(String.format("To open %s form for %s",
-                        details.getTaskCode(), details.getTaskId()));
-
-            } else if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
+            if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
                 //TODO implement functionality to link to structure details once its implemented
                 getView().displayToast(String.format("To open structure details view for %s",
                         details.getFamilyName()));
@@ -230,7 +225,8 @@ public class TaskRegisterFragmentPresenter extends BaseLocationListener implemen
     public void onStructureFound(Location structure, TaskDetails details) {
         this.structure = structure;
         this.details = details;
-        if ((IRS.equals(details.getTaskCode()) || MOSQUITO_COLLECTION.equals(details.getTaskCode()))) {
+        if ((IRS.equals(details.getTaskCode()) || MOSQUITO_COLLECTION.equals(details.getTaskCode())
+                || LARVAL_DIPPING.equals(details.getTaskCode()))) {
             if (validateFarStructures()) {
                 validateUserLocation();
             } else {
