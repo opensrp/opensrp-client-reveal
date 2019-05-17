@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.smartregister.reveal.interactor.ListTaskInteractor.gson;
+import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
@@ -15,15 +16,13 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_S
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
-import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
-import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
 
 /**
  * Created by samuelgithengi on 1/7/19.
  */
 public class GeoJsonUtils {
 
-    public static String getGeoJsonFromStructuresAndTasks(List<Location> structures, Map<String, Task> tasks) {
+    public static String getGeoJsonFromStructuresAndTasks(List<Location> structures, Map<String, Task> tasks, String indexCase) {
         for (Location structure : structures) {
             Task task = tasks.get(structure.getId());
             if (task != null) {
@@ -33,8 +32,10 @@ public class GeoJsonUtils {
                 taskProperties.put(TASK_STATUS, task.getStatus().name());
                 taskProperties.put(TASK_CODE, task.getCode());
 
-                if (task.getCode().equals(CASE_CONFIRMATION)) {
-                    taskProperties.put(IS_INDEX_CASE, "true");
+                if (indexCase != null && structure.getId().equals(indexCase)) {
+                    taskProperties.put(IS_INDEX_CASE, Boolean.TRUE.toString());
+                } else {
+                    taskProperties.put(IS_INDEX_CASE, Boolean.FALSE.toString());
                 }
 
                 taskProperties.put(LOCATION_UUID, structure.getProperties().getUid());
