@@ -30,6 +30,8 @@ import org.smartregister.reveal.util.Utils;
 import java.util.List;
 import java.util.Map;
 
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -145,7 +147,8 @@ public class ListTaskInteractor extends BaseInteractor {
                     if (operationalAreaLocation != null) {
                         Map<String, Task> tasks = taskRepository.getTasksByPlanAndGroup(plan, operationalAreaLocation.getId());
                         List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
-                        featureCollection.put(GeoJSON.FEATURES, new JSONArray(GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks)));
+                        String indexCase = getIndexCaseStructure(plan);
+                        featureCollection.put(GeoJSON.FEATURES, new JSONArray(GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, indexCase)));
                         Log.d(TAG, "features:" + featureCollection.toString());
 
                     }
@@ -170,6 +173,23 @@ public class ListTaskInteractor extends BaseInteractor {
         appExecutors.diskIO().execute(runnable);
     }
 
+    private String getIndexCaseStructure(String planId) {
+        Cursor cursor = null;
+        String structureId = null;
+        try {
+            cursor = database.rawQuery(getMembersSelect(String.format("%s=?",
+                    PLAN_ID), new String[]{STRUCTURE_ID}), new String[]{planId});
+            if (cursor.moveToNext()) {
+                structureId = cursor.getString(0);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return structureId;
+    }
+
     private JSONObject createFeatureCollection() {
         JSONObject featureCollection = new JSONObject();
         try {
@@ -188,7 +208,7 @@ public class ListTaskInteractor extends BaseInteractor {
     public void fetchFamilyDetails(String structureId) {
         appExecutors.diskIO().execute(() -> {
             Cursor cursor = null;
-            CommonPersonObjectClient family=null;
+            CommonPersonObjectClient family = null;
             try {
                 cursor = database.rawQuery(String.format("SELECT %s FROM %S WHERE %s = ?",
                         INTENT_KEY.BASE_ENTITY_ID, TABLE_NAME.FAMILY, DatabaseKeys.STRUCTURE_ID), new String[]{structureId});

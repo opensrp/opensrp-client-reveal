@@ -42,7 +42,7 @@ public class GeoJsonUtilsTest {
 
         tasks.put(structure.getId(), task);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks);
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, indexCase);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -70,7 +70,7 @@ public class GeoJsonUtilsTest {
 
         tasks.put(structure.getId(), task);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks);
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, indexCase);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
