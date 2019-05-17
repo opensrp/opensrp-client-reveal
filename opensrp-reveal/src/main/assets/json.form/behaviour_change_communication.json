@@ -1,0 +1,353 @@
+{
+  "count": "1",
+  "encounter_type": "behaviour_change_communication",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "BCC",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "bccCompleteYesNo",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Was the Behaviour Change Communication completed for this area?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "messagingChannelUsed",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "What type of messaging channel was used?",
+        "options": [
+          {
+            "key": "House-to-House",
+            "text": "House-to-House"
+          },
+          {
+            "key": "Radio",
+            "text": "Radio"
+          },
+          {
+            "key": "Phone",
+            "text": "Phone"
+          },
+          {
+            "key": "Meeting",
+            "text": "Meeting"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Please choose a messaging channel"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "otherMessagingChannelUsed",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "List other messaging channel",
+        "v_required": {
+          "value": true,
+          "err": "An other messaging channel is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "messagingChannelPreferred",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "What type of messaging channels are most acceptable to this community?",
+        "options": [
+          {
+            "key": "House-to-house",
+            "text": "House-to-house"
+          },
+          {
+            "key": "Radio",
+            "text": "Radio"
+          },
+          {
+            "key": "Phone",
+            "text": "Phone"
+          },
+          {
+            "key": "Meeting",
+            "text": "Meeting"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "otherMessagingChannelPreferred",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "List other preferred messaging channel",
+        "v_required": {
+          "value": true,
+          "err": "An other messaging channel is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "kindOfMessaging",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "What messages did the communication cover?",
+        "options": [
+          {
+            "key": "IRS",
+            "text": "IRS"
+          },
+          {
+            "key": "MDA",
+            "text": "MDA"
+          },
+          {
+            "key": "Symptom-Recognition",
+            "text": "Symptom Recognition"
+          },
+          {
+            "key": "Getting-Tested",
+            "text": "Getting Tested"
+          },
+          {
+            "key": "Treatment-Seeking",
+            "text": "Treatment Seeking"
+          },
+          {
+            "key": "Sleeping-Under-Nets",
+            "text": "Sleeping Under Nets"
+          },
+          {
+            "key": "Applying-Repellant",
+            "text": "Applying Repellant"
+          },
+          {
+            "key": "Taking-Full-Treatment-Regimen",
+            "text": "Taking Full Treatment Regimen"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "meetingAttendeeCount",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many people attended the activity?",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "The number of attendees is required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This entry must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "There must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "numPeopleReached",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many people were reached?",
+        "edit_type": "number",
+        "v_numeric": {
+          "value": "true",
+          "err": "This entry must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "There must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "usedBednetPreviousNight",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many people used an LLIN or ITN the previous night?",
+        "edit_type": "number",
+        "v_numeric": {
+          "value": "true",
+          "err": "This entry must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "There must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "communityLeaderName",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Who was the community leader giving the bcc?",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "value": "Complete"
+      }
+    ]
+  }
+}

@@ -23,6 +23,7 @@ import org.smartregister.util.AssetHandler;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
+import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.CASE_CONFIRMATION_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
@@ -33,6 +34,7 @@ import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
+
 
 /**
  * Created by samuelgithengi on 3/22/19.
@@ -188,6 +190,8 @@ public class RevealJsonFormUtils {
             formName = JsonForm.BLOOD_SCREENING_FORM;
         }  else if (LARVAL_DIPPING_EVENT.equals(encounterType) || Intervention.LARVAL_DIPPING.equals(taskCode)) {
             formName = JsonForm.THAILAND_LARVAL_DIPPING_FORM;
+        } else if (BEHAVIOUR_CHANGE_COMMUNICATION.equals(encounterType) || Intervention.BCC.equals(taskCode)) {
+            formName = JsonForm.BEHAVIOUR_CHANGE_COMMUNICATION_FORM;
         }
 
         return formName;

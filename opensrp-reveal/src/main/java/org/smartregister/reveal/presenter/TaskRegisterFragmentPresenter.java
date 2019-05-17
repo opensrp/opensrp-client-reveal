@@ -25,11 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
-import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 
 /**
  * Created by samuelgithengi on 3/11/19.
@@ -185,12 +183,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public void onTaskSelected(TaskDetails details) {
         if (details != null) {
-            //TODO remove this condition once BCC and Larval dipping forms are implemented
-            if (BCC.equals(details.getTaskCode()) || LARVAL_DIPPING.equals(details.getTaskCode())) {
-                getView().displayToast(String.format("To open %s form for %s",
-                        details.getTaskCode(), details.getTaskId()));
-
-            } else if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
+            if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
                 //TODO implement functionality to link to structure details once its implemented
                 getView().displayToast(String.format("To open structure details view for %s",
                         details.getFamilyName()));
