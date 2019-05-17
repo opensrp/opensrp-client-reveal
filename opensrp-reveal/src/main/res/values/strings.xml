@@ -140,9 +140,9 @@
     <string name="return_to_all_families">Return</string>
     <string name="tasks">TASKS (%1$d)</string>
     <string name="comma">,</string>
-    <string name="distribute_llin">Distribute LLIN</string>
-    <string name="record_llin">Record\nLLIN</string>
-    <string name="record_test">Record\nTest</string>
+    <string name="distribute_llin">Distribute Bednet</string>
+    <string name="record_llin">Record\nDistribution</string>
+    <string name="record_test">Record\nScreening</string>
     <string name="detect_case">Detect\nCase</string>
     <string name="fetch_family_failed">Fetch Family Failed</string>
     <string name="failed_to_find_family">Failed to get Family Details</string>
