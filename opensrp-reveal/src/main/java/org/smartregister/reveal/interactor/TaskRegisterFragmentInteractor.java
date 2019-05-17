@@ -11,6 +11,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.family.util.DBConstants;
+import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
@@ -40,6 +41,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_NAME;
+import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 
 /**
  * Created by samuelgithengi on 3/18/19.
@@ -47,6 +49,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_NAM
 public class TaskRegisterFragmentInteractor {
 
     private final StructureRepository structureRepository;
+    private final LocationRepository locationRepository;
     private SQLiteDatabase database;
     private final Float locationBuffer;
     private final AppExecutors appExecutors;
@@ -67,6 +70,7 @@ public class TaskRegisterFragmentInteractor {
         this.database = database;
         this.locationBuffer = locationBuffer;
         this.structureRepository = RevealApplication.getInstance().getStructureRepository();
+        locationRepository = RevealApplication.getInstance().getLocationRepository();
     }
 
     private String mainSelect(String mainCondition) {
@@ -143,7 +147,7 @@ public class TaskRegisterFragmentInteractor {
         location.setLatitude(cursor.getDouble(cursor.getColumnIndex(LATITUDE)));
         location.setLongitude(cursor.getDouble(cursor.getColumnIndex(LONGITUDE)));
         task.setLocation(location);
-        if (Constants.Intervention.BCC.equals(task.getTaskCode())) {
+        if (BCC.equals(task.getTaskCode())) {
             //set distance to -1 to always display on top of register
             task.setDistanceFromUser(-1);
         } else if (lastLocation != null) {
@@ -176,7 +180,7 @@ public class TaskRegisterFragmentInteractor {
         appExecutors.diskIO().execute(() -> {
             int structuresWithinBuffer = 0;
             for (TaskDetails taskDetails : tasks) {
-                if (!Constants.Intervention.BCC.equals(taskDetails.getTaskCode())) {
+                if (!BCC.equals(taskDetails.getTaskCode())) {
                     taskDetails.setDistanceFromUser(taskDetails.getLocation().distanceTo(location));
                     taskDetails.setDistanceFromCenter(false);
                 }
@@ -196,8 +200,11 @@ public class TaskRegisterFragmentInteractor {
 
     public void getStructure(TaskDetails taskDetails) {
         appExecutors.diskIO().execute(() -> {
-            org.smartregister.domain.Location structure =
-                    structureRepository.getLocationById(taskDetails.getTaskEntity());
+            org.smartregister.domain.Location structure;
+            if (BCC.equals(taskDetails.getTaskCode()))
+                structure = locationRepository.getLocationById(taskDetails.getTaskEntity());
+            else
+                structure = structureRepository.getLocationById(taskDetails.getTaskEntity());
             appExecutors.mainThread().execute(() -> {
                 presenter.onStructureFound(structure, taskDetails);
             });
