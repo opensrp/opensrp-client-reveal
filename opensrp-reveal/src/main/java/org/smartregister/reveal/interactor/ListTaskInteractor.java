@@ -30,8 +30,10 @@ import org.smartregister.reveal.util.Utils;
 import java.util.List;
 import java.util.Map;
 
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -177,8 +179,8 @@ public class ListTaskInteractor extends BaseInteractor {
         Cursor cursor = null;
         String structureId = null;
         try {
-            cursor = database.rawQuery(getMembersSelect(String.format("%s=?",
-                    PLAN_ID), new String[]{STRUCTURE_ID}), new String[]{planId});
+            cursor = database.rawQuery(getMembersSelect(String.format("%s=? AND %s=?",
+                    PLAN_ID, CODE), new String[]{STRUCTURE_ID}), new String[]{planId, CASE_CONFIRMATION});
             if (cursor.moveToNext()) {
                 structureId = cursor.getString(0);
             }
