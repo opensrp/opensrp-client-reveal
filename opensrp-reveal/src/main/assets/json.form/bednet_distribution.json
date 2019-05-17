@@ -152,7 +152,6 @@
         "type": "edit_text",
         "hint": "Total number of existing Nets",
         "edit_type": "number",
-        "value": "0",
         "v_required": {
           "value": true,
           "err": "The total number of existing nets is required"
@@ -174,7 +173,6 @@
         "type": "edit_text",
         "hint": "How many are LLINs or HLINs?",
         "edit_type": "number",
-        "value": "0",
         "v_required": {
           "value": true,
           "err": "The total number of existing LLINs is required"
@@ -203,7 +201,6 @@
         "type": "edit_text",
         "hint": "How many LLINs or HLINs are <1 year old?",
         "edit_type": "number",
-        "value": "0",
         "v_required": {
           "value": true,
           "err": "The total number of existing LLINs or HLINs is required"
@@ -241,7 +238,6 @@
         "type": "edit_text",
         "hint": "How many LLINs or HLINs are 1 to 2 years old?",
         "edit_type": "number",
-        "value": "0",
         "v_required": {
           "value": true,
           "err": "The total number of existing LLINs is required"
@@ -279,7 +275,6 @@
         "type": "edit_text",
         "hint": "How many LLINs or HLINs are 2 to 3 years old?",
         "edit_type": "number",
-        "value": "0",
         "v_required": {
           "value": true,
           "err": "The total number of existing LLINs is required"
@@ -317,7 +312,6 @@
         "type": "edit_text",
         "hint": "How many LLINs or HLINs are over 3 years old?",
         "edit_type": "number",
-        "value": "0",
         "v_required": {
           "value": true,
           "err": "The total number of existing LLINs is required"
@@ -355,7 +349,6 @@
         "type": "edit_text",
         "hint": "How many are normal nets that were dipped in the last 6 months?",
         "edit_type": "number",
-        "value": "0",
         "v_required": {
           "value": true,
           "err": "The total number of existing ITNs is required"

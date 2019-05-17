@@ -209,7 +209,7 @@
         "edit_type": "name",
         "v_required": {
           "value": "true",
-          "err": "Please enter the middle name"
+          "err": "Please enter the first name"
         },
         "v_regex": {
           "value": "[A-Za-z\\s.-]*",

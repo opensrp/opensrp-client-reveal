@@ -67,7 +67,6 @@
             "text": "No"
           }
         ],
-        "value": "No",
         "v_required": {
           "value": true,
           "err": "This field is required"
@@ -145,7 +144,6 @@
             "text": "RDT"
           }
         ],
-        "value": "Microscopy",
         "v_required": {
           "value": true,
           "err": "A test type is required"
