@@ -51,22 +51,12 @@
     "display_back_button": "true",
     "fields": [
       {
-        "key": "malePopulation_label",
-        "type": "label",
-        "label_text_style": "bold",
-        "text": "Number of males",
-        "text_color": "#000000",
-        "v_required": {
-          "value": "true",
-          "err": "The male population is required"
-        }
-      },
-      {
         "key": "malePopulation",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
+        "hint": "Number of males",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -79,17 +69,6 @@
         "v_min": {
           "value": "0",
           "err": "There must be greater than or equal to 0"
-        }
-      },
-      {
-        "key": "femalePopulation_label",
-        "type": "label",
-        "label_text_style": "bold",
-        "text": "Number of females",
-        "text_color": "#000000",
-        "v_required": {
-          "value": "true",
-          "err": "The female population is required"
         }
       },
       {
@@ -98,6 +77,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
+        "hint": "Number of females",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -113,22 +93,12 @@
         }
       },
       {
-        "key": "numBedSpaces_label",
-        "type": "label",
-        "label_text_style": "bold",
-        "text": "Number of bed spaces",
-        "text_color": "#000000",
-        "v_required": {
-          "value": "true",
-          "err": "The number of bed spaces is required"
-        }
-      },
-      {
         "key": "numBedSpaces",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
+        "hint": "Number of bed spaces",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -175,22 +145,12 @@
         }
       },
       {
-        "key": "existingNets_label",
-        "type": "label",
-        "label_text_style": "bold",
-        "text": "Total number of existing Nets",
-        "text_color": "#000000",
-        "v_required": {
-          "value": "true",
-          "err": "The total number of existing nets is required"
-        }
-      },
-      {
         "key": "existingNets",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
+        "hint": "Total number of existing nets",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -206,22 +166,12 @@
         }
       },
       {
-        "key": "existingLLINs_label",
-        "type": "label",
-        "label_text_style": "bold",
-        "text": "How many are LLINs or HLINs?",
-        "text_color": "#000000",
-        "v_required": {
-          "value": "true",
-          "err": "The total number of existing LLINs is required"
-        }
-      },
-      {
         "key": "existingLLINs",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
+        "hint": "How many are LLINs or HLINs?",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -244,22 +194,13 @@
         }
       },
       {
-        "key": "existingLLINsLessThan1yr_label",
-        "type": "label",
-        "label_text_style": "bold",
-        "text": "How many LLINs or HLINs are <1 year old?",
-        "text_color": "#000000",
-        "v_required": {
-          "value": "true",
-          "err": "The total number of existing LLINs or HLINs is required"
-        }
-      },
-      {
         "key": "existingLLINsLessThan1yr",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
+        "hint": "How many LLINs or HLINs are <1 year old?",
+        "shortened_hint": "LLINs/HLINS < 1 year old",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -288,17 +229,6 @@
               "rules-file": "bednet-distribution-relevance-rules.yml"
             }
           }
-        }
-      },
-      {
-        "key": "existingLLINs1yrTo2yr_label",
-        "type": "label",
-        "label_text_style": "bold",
-        "text": "How many LLINs or HLINs are 1 to 2 years old?",
-        "text_color": "#000000",
-        "v_required": {
-          "value": "true",
-          "err": "The total number of existing LLINs is required"
         }
       },
       {
@@ -307,6 +237,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
+        "hint": "How many LLINs or HLINs are 1 to 2 years old?",
+        "shortened_hint": "LLINs/HLINS 1-2 years old",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -338,22 +270,13 @@
         }
       },
       {
-        "key": "existingLLINs2yrTo3yr_label",
-        "type": "label",
-        "label_text_style": "bold",
-        "text": "How many LLINs or HLINs are 2 to 3 years old?",
-        "text_color": "#000000",
-        "v_required": {
-          "value": "true",
-          "err": "The total number of existing LLINs is required"
-        }
-      },
-      {
         "key": "existingLLINs2yrTo3yr",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
+        "hint": "How many LLINs or HLINs are 2 to 3 years old?",
+        "shortened_hint": "LLINs/HLINS 2-3 years old",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -385,22 +308,13 @@
         }
       },
       {
-        "key": "existingLLINsGreaterThan3yr_label",
-        "type": "label",
-        "label_text_style": "bold",
-        "text": "How many LLINs or HLINs are over 3 years old?",
-        "text_color": "#000000",
-        "v_required": {
-          "value": "true",
-          "err": "The total number of existing LLINs is required"
-        }
-      },
-      {
         "key": "existingLLINsGreaterThan3yr",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
+        "hint": "How many LLINs or HLINs are over 3 years old?",
+        "shortened_hint": "LLINs/HLINS < 3 years old",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -432,22 +346,13 @@
         }
       },
       {
-        "key": "existingITNs_label",
-        "type": "label",
-        "label_text_style": "bold",
-        "text": "How many are normal nets that were dipped in the last 6 months?",
-        "text_color": "#000000",
-        "v_required": {
-          "value": "true",
-          "err": "The total number of existing ITNs is required"
-        }
-      },
-      {
         "key": "existingITNs",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
+        "hint": "How many are normal nets that were dipped in the last 6 months?",
+        "shortened_hint": "Normal nets dipped < 6 months",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -501,22 +406,13 @@
         }
       },
       {
-        "key": "distributedLLINs_label",
-        "type": "label",
-        "label_text_style": "bold",
-        "text": "Total number of LLINs distributed",
-        "text_color": "#000000",
-        "v_required": {
-          "value": "true",
-          "err": "The total number of LLINs distributed is required"
-        }
-      },
-      {
         "key": "distributedLLINs",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
+        "hint": "Total number of LLINs distributed",
+        "shortened_hint": "Distributed LLINs",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -529,17 +425,6 @@
         "v_min": {
           "value": "0",
           "err": "There must be greater than or equal to 0"
-        }
-      },
-      {
-        "key": "distributedHLINs_label",
-        "type": "label",
-        "label_text_style": "bold",
-        "text": "Total number of HLINs distributed",
-        "text_color": "#000000",
-        "v_required": {
-          "value": "true",
-          "err": "The total number of HLINs distributed is required"
         }
       },
       {
@@ -548,6 +433,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
+        "hint": "Total number of HLINs distributed",
+        "shortened_hint": "Disributed HLINs",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -563,22 +450,13 @@
         }
       },
       {
-        "key": "distributedITNs_label",
-        "type": "label",
-        "label_text_style": "bold",
-        "text": "Total number of ITNs distributed",
-        "text_color": "#000000",
-        "v_required": {
-          "value": "true",
-          "err": "The total number of ITNs distributed is required"
-        }
-      },
-      {
         "key": "distributedITNs",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
+        "hint": "Total number of ITNs distributed",
+        "shortened_hint": "Distributed ITNs",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -622,22 +500,13 @@
         }
       },
       {
-        "key": "distributedRepellent_label",
-        "type": "label",
-        "label_text_style": "bold",
-        "text": "Number of personal repellent units distributed",
-        "text_color": "#000000",
-        "v_required": {
-          "value": "true",
-          "err": "The total number of personal repellent units distributed is required"
-        }
-      },
-      {
         "key": "distributedRepellent",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
+        "hint": "Number of personal repellent units distributed",
+        "shortened_hint": "Distributed repellent units",
         "edit_type": "number",
         "v_required": {
           "value": true,
