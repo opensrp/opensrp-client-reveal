@@ -4,33 +4,34 @@ import android.app.Activity;
 import android.support.annotation.StringRes;
 import android.support.v4.util.Pair;
 
-import org.smartregister.domain.Campaign;
+import org.smartregister.domain.PlanDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by samuelgithengi on 3/21/19.
  */
-public class BaseDrawerContract {
+public interface BaseDrawerContract {
 
-    public interface DrawerActivity {
+    interface DrawerActivity {
         void onDrawerClosed();
 
         Activity getActivity();
     }
 
-    public interface View {
+    interface View {
 
         Activity getContext();
 
         void initializeDrawerLayout();
 
-        void setCampaign(String campaign);
+        void setPlan(String campaign);
 
         void setOperationalArea(String operationalArea);
 
-        String getCampaign();
+        String getPlan();
 
         String getOperationalArea();
 
@@ -46,7 +47,7 @@ public class BaseDrawerContract {
 
         void showOperationalAreaSelector(Pair<String, ArrayList<String>> locationHierarchy);
 
-        void showCampaignSelector(List<String> campaigns, String entireTreeString);
+        void showPlanSelector(List<String> campaigns, String entireTreeString);
 
         void displayNotification(int title, @StringRes int message, Object... formatArgs);
 
@@ -57,7 +58,7 @@ public class BaseDrawerContract {
         void onResume();
     }
 
-    public interface Presenter {
+    interface Presenter {
 
         void onDrawerClosed();
 
@@ -65,11 +66,11 @@ public class BaseDrawerContract {
 
         void onOperationalAreaSelectorClicked(ArrayList<String> name);
 
-        void onShowCampaignSelector();
+        void onShowPlanSelector();
 
-        void onCampaignSelectorClicked(ArrayList<String> value, ArrayList<String> name);
+        void onPlanSelectorClicked(ArrayList<String> value, ArrayList<String> name);
 
-        void onCampaignsFetched(List<Campaign> campaigns);
+        void onPlansFetched(Set<PlanDefinition> planDefinitionSet);
 
         boolean isChangedCurrentSelection();
 
@@ -80,8 +81,8 @@ public class BaseDrawerContract {
         void onViewResumed();
     }
 
-    public interface Interactor {
+    interface Interactor {
 
-        void fetchCampaigns();
+        void fetchPlans();
     }
 }

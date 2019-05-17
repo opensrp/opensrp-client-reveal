@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
+import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.EventClient;
@@ -12,11 +13,15 @@ import org.smartregister.job.SyncServiceJob;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.job.RevealSyncSettingsServiceJob;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.helper.LocationServiceHelper;
+import org.smartregister.sync.helper.PlanIntentServiceHelper;
 import org.smartregister.sync.helper.TaskServiceHelper;
+import org.smartregister.util.NetworkUtils;
+import org.smartregister.util.SyncUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,23 +34,52 @@ public class LocationTaskIntentService extends IntentService {
 
     private static final String TAG = "LocationTaskIntentService";
 
+    private SyncUtils syncUtils;
+
     public LocationTaskIntentService() {
         super(TAG);
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        if (!NetworkUtils.isNetworkAvailable()) {
+            sendBroadcast(org.smartregister.util.Utils.completeSync(FetchStatus.noConnection));
+            return;
+        }
+        if (!syncUtils.verifyAuthorization()) {
+            syncUtils.logoutUser();
+            return;
+
+        }
+        sendBroadcast(org.smartregister.util.Utils.completeSync(FetchStatus.fetchStarted));
+
         doSync();
+
+        (new AppExecutors()).mainThread().execute(new Runnable() {
+            @Override
+            public void run() {
+                RevealSyncSettingsServiceJob.scheduleJobImmediately(RevealSyncSettingsServiceJob.TAG);
+            }
+        });
     }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        syncUtils = new SyncUtils(getBaseContext());
+        return super.onStartCommand(intent, flags, startId);
+    }
+
 
     private void doSync() {
         LocationServiceHelper locationServiceHelper = new LocationServiceHelper(
                 RevealApplication.getInstance().getLocationRepository(),
                 RevealApplication.getInstance().getStructureRepository());
         TaskServiceHelper taskServiceHelper = TaskServiceHelper.getInstance();
+        PlanIntentServiceHelper planServiceHelper = PlanIntentServiceHelper.getInstance();
 
 
         List<Location> syncedStructures = locationServiceHelper.fetchLocationsStructures();
+        planServiceHelper.syncPlans();
         List<Task> synchedTasks = taskServiceHelper.syncTasks();
 
         if (hasChangesInCurrentOperationalArea(syncedStructures, synchedTasks)) {

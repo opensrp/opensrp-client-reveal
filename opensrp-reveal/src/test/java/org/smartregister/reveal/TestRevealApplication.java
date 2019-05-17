@@ -4,10 +4,13 @@ package org.smartregister.reveal;
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
+import org.smartregister.repository.Repository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.AppExecutors;
 
 import java.util.concurrent.Executors;
+
+import static org.mockito.Mockito.mock;
 
 
 public class TestRevealApplication extends RevealApplication {
@@ -25,5 +28,10 @@ public class TestRevealApplication extends RevealApplication {
     @Override
     public AppExecutors getAppExecutors() {
         return new AppExecutors(Executors.newSingleThreadExecutor(), Executors.newSingleThreadExecutor(), Executors.newSingleThreadExecutor());
+    }
+
+    @Override
+    public Repository getRepository() {
+        return mock(Repository.class);
     }
 }

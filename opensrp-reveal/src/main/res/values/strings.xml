@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Actions -->
     <string name="action_logout">Logout</string>
     <!-- General -->
@@ -19,7 +19,7 @@
     <string name="prompt_username">Enter Username</string>
     <string name="reveal">Reveal</string>
     <string name="sync">Sync</string>
-    <string name="campaign">Campaign</string>
+    <string name="campaign">Plan</string>
     <string name="operational_area">Operational Area</string>
 
     <string name="app_version">Version %1$s</string>
@@ -32,10 +32,10 @@
     <string name="fetch_location_and_structures_failed">This operational area has not been defined in the system. Please try to sync your device. Please contact the system administrator if that doesn\'t solve the issue noting the operational area number %1$s.</string>
     <string name="fetch_structures_title">Loading failed</string>
     <string name="fetching_structures_title">Fetching Structures</string>
-    <string name="fetching_structures_message">Fetching Structures for Selected Operational Area and Campaign</string>
+    <string name="fetching_structures_message">Fetching Structures for Selected Operational Area and Plan</string>
 
-    <string name="select_campaign_operational_area_title">Campaign and Operational area set</string>
-    <string name="select_campaign_operational_area">Campaign and Operational area not set. Select from the hamburger menu</string>
+    <string name="select_campaign_operational_area_title">Plan and Operational area set</string>
+    <string name="select_campaign_operational_area">Plan and Operational area not set. Select from the hamburger menu</string>
 
     <string name="reveal_satellite_style">asset://reveal-streets-satellite.json</string>
     <string name="reveal_streets_style">asset://reveal-streets-satellite.json</string>
@@ -44,7 +44,7 @@
     <string name="reveal_layer_points">reveal-data-points</string>
 
 
-    <string name="task_not_found">This structure does not have a task assigned to it for the campaign %1s</string>
+    <string name="task_not_found">This structure does not have a task assigned to it for the Plan %1s</string>
 
     <string name="error_fetching_location_hierarchy_title">Error Processing Locations Hierarchy</string>
     <string name="error_fetching_location_hierarchy">Error Processing Location Hierarchy. Log off to download location hierarchy again</string>
@@ -73,13 +73,16 @@
     <string name="wrong_admin_password">Wrong admin password</string>
 
     <string name="saving_title">Saving</string>
-    <string name="saving_message">Saving form on Progress. Please wait</string>
+    <string name="saving_message">Saving form in Progress. Please wait</string>
 
     <string name="fetching_structure_title">Fetching Structure Details</string>
     <string name="fetching_structure_message">Fetching Structure Details. Please wait</string>
 
     <string name="fetching_mosquito_collection_points_title">Fetching Mosquito Collection Point Details</string>
     <string name="fetching_mosquito_collection_points_message">Fetching Mosquito Collection Point Details. Please wait</string>
+
+    <string name="fetching_larval_dipping_points_title">Fetching Larval Dipping Point Details</string>
+    <string name="fetching_larval_dipping_points_message">Fetching Larval Dipping Point Details. Please wait</string>
 
     <string name="narrowing_location_title">Calculating your location</string>
     <string name="narrowing_location_message">Calculating your location. Please wait</string>
@@ -106,9 +109,9 @@
     <string name="larval_breeding_site">Larval breeding site</string>
     <string name="record_larvacide">Record \nLarvacide</string>
     <string name="bcc">Behaviour Change communication</string>
-    <string name="record_bcc">Record\n BCC</string>
-    <string name="record_status">Record\n Status</string>
-    <string name="record_index">Record\n Index</string>
+    <string name="record_bcc">Record\nBCC</string>
+    <string name="record_status">Record\nStatus</string>
+    <string name="record_index">Record\nIndex</string>
     <string name="opening_form_title">Opening Form</string>
     <string name="opening_form_message">Please wait, Opening form</string>
     <string name="task_reason">Reason: %1s</string>
@@ -118,9 +121,37 @@
         <item quantity="other">%1d structures within %2.0f m (%3$d total)</item>
     </plurals>
 
+    <string name="card_view_record_mosquito_collection">Record mosquito collection</string>
+    <string name="record_larval_dipping">Record larval dipping</string>
+    <string name="card_view_mosquito_collection_point">Mosquito Collection Point</string>
+    <string name="mosquito_breeding_site">Mosquito Breeding Site</string>
+
     <string name="mosquito_collection_status_test_text">Status: Inactive</string>
     <string name="mosquito_collection_trap_set_date_test_text">Set Date: DD/MM/YY</string>
     <string name="mosquito_collection_trap_follow_up_date_test_text">Follow-up Date: DD/MM/YY</string>
+    <string name="mosquito_collection_trap_collected_date_test_text">Collected Date: DD/MM/YY</string>
+
+    <string name="larval_breeding_identified_date_test_text">Identified Date:&#160;</string>
+    <string name="larval_breeding_larvacide_date_test_text">Larvacide Date:&#160;</string>
     <string name="mosquito_collection_trap_set_date">Set Date:&#160;</string>
     <string name="mosquito_collection_trap_follow_up_date">Follow-up Date:&#160;</string>
+
+    <string name="residents">RESIDENTS</string>
+    <string name="return_to_all_families">Return</string>
+    <string name="tasks">TASKS (%1$d)</string>
+    <string name="comma">,</string>
+    <string name="distribute_llin">Distribute Bednet</string>
+    <string name="record_llin">Record\nDistribution</string>
+    <string name="record_test">Record\nScreening</string>
+    <string name="detect_case">Detect\nCase</string>
+    <string name="fetch_family_failed">Fetch Family Failed</string>
+    <string name="failed_to_find_family">Failed to get Family Details</string>
+    <string name="family_registration">Family Registration</string>
+
+    <string name="blood_screening_description">Perform blood screening on the family member</string>
+    <string name="bednet_distribution_description">Visit the residential structure and provide nets</string>
+    <string name="register_family_description">Visit the residential structure and register each family member</string>
+    <string name="house">House</string>
+
+    <string name="unenumerated_structure">Unenumerated Structure</string>
 </resources>

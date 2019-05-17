@@ -10,6 +10,8 @@ public interface Constants {
 
     int REQUEST_CODE_GET_JSON = 3432;
 
+    int REQUEST_CODE_GET_JSON_FRAGMENT = 3439;
+
     String METADATA = "metadata";
 
     String DETAILS = "details";
@@ -29,6 +31,8 @@ public interface Constants {
     String BLOOD_SCREENING_EVENT = "blood_screening";
 
     String CASE_CONFIRMATION_EVENT = "case_confirmation";
+
+    String BEHAVIOUR_CHANGE_COMMUNICATION = "behaviour_change_communication";
 
     String STRUCTURE = "Structure";
 
@@ -55,15 +59,19 @@ public interface Constants {
         String LOCATION_BUFFER_RADIUS_IN_METRES = "location_buffer_radius_in_metres";
         Float DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES = 25f;
         String UPDATE_LOCATION_BUFFER_RADIUS = "update_location_buffer_radius";
+        String INDEX_CASE_CIRCLE_RADIUS_IN_METRES = "index_case_circle_radius_in_metres";
+        Float DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES = 1000f;
+        String DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL = "draw_operational_area_boundary_and_label";
+        Boolean DEFAULT_DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL = true;
     }
 
     interface Preferences {
-        String CURRENT_OPERATIONAL_AREA = "CURRENT_OPERATIONAL_AREA";
         String CURRENT_FACILITY = "CURRENT_FACILITY";
         String CURRENT_DISTRICT = "CURRENT_DISTRICT";
-        String CURRENT_CAMPAIGN = "CURRENT_CAMPAIGN";
-        String CURRENT_CAMPAIGN_ID = "CURRENT_CAMPAIGN_ID";
+        String CURRENT_PLAN = "CURRENT_PLAN";
+        String CURRENT_PLAN_ID = "CURRENT_PLAN_ID";
         String FACILITY_LEVEL = "FACILITY_LEVEL";
+        String CURRENT_OPERATIONAL_AREA = "CURRENT_OPERATIONAL_AREA";
     }
 
     interface Tags {
@@ -85,6 +93,7 @@ public interface Constants {
         String LOCATION_VERSION = "locationVersion";
         String LOCATION_TYPE = "locationType";
         String LOCATION_PARENT = "locationParent";
+        String LOCATION_ID = "location_id";
     }
 
 
@@ -92,10 +101,13 @@ public interface Constants {
         String TYPE = "type";
         String FEATURE_COLLECTION = "FeatureCollection";
         String FEATURES = "features";
+        String IS_INDEX_CASE = "is_index_case";
     }
 
     interface Intervention {
         String IRS = "IRS";
+
+        String FOCUS = "FOCUS";
 
         String MDA = "MDA";
 
@@ -112,6 +124,13 @@ public interface Constants {
         String BLOOD_SCREENING = "Blood Screening";
 
         String CASE_CONFIRMATION = "Case Confirmation";
+
+        String REGISTER_FAMILY = "RACD Register Family";
+    }
+
+    interface Tables {
+        String MOSQUITO_COLLECTIONS_TABLE = "mosquito_collections";
+        String LARVAL_DIPPINGS_TABLE = "larval_dippings";
     }
 
     interface BusinessStatus {
@@ -167,6 +186,8 @@ public interface Constants {
         String BLOOD_SCREENING_FORM = "json.form/blood_screening.json";
 
         String CASE_CONFIRMATION_FORM = "json.form/case_confirmation.json";
+
+        String BEHAVIOUR_CHANGE_COMMUNICATION_FORM = "json.form/behaviour_change_communication.json";
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 
@@ -229,6 +250,8 @@ public interface Constants {
 
         String STRUCTURE_NAME = "structure_name";
 
+        String STRUCTURE_ID = "structure_id";
+
         String ID = "_id";
 
         String CODE = "code";
@@ -251,7 +274,7 @@ public interface Constants {
 
         String GROUPID = "group_id";
 
-        String CAMPAIGN_ID = "campaign_id";
+        String PLAN_ID = "plan_id";
 
         String NOT_SRAYED_REASON = "not_sprayed_reason";
 

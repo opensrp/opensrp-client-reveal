@@ -28,6 +28,8 @@ import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.AllSettings;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.LocationRepository;
+import org.smartregister.repository.PlanDefinitionRepository;
+import org.smartregister.repository.PlanDefinitionSearchRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskNotesRepository;
@@ -74,6 +76,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     private TaskRepository taskRepository;
     private StructureRepository structureRepository;
     private LocationRepository locationRepository;
+    private PlanDefinitionRepository planDefinitionRepository;
+    private PlanDefinitionSearchRepository planDefinitionSearchRepository;
 
     private Map<String, String> globalConfigs;
 
@@ -305,5 +309,19 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             appExecutors = new AppExecutors();
         }
         return appExecutors;
+    }
+
+    public PlanDefinitionRepository getPlanDefinitionRepository() {
+        if (planDefinitionRepository == null) {
+            planDefinitionRepository = new PlanDefinitionRepository(getRepository());
+        }
+        return planDefinitionRepository;
+    }
+
+    public PlanDefinitionSearchRepository getPlanDefinitionSearchRepository() {
+        if (planDefinitionSearchRepository == null) {
+            planDefinitionSearchRepository = new PlanDefinitionSearchRepository(getRepository());
+        }
+        return planDefinitionSearchRepository;
     }
 }

@@ -20,6 +20,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.StructureType;
+import org.smartregister.reveal.util.FamilyConstants.EventType;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.ClientProcessorForJava;
@@ -27,6 +28,9 @@ import org.smartregister.sync.ClientProcessorForJava;
 import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
+import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
+import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
+import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
@@ -40,6 +44,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
 
     private static final String TAG = RevealClientProcessor.class.getCanonicalName();
+
     private static RevealClientProcessor instance;
 
     private EventClientRepository eventClientRepository;
@@ -89,8 +94,10 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 String eventType = event.getEventType();
                 if (eventType.equals(SPRAY_EVENT)) {
                     operationalAreaId = processSprayEvent(event, clientClassification, localEvents);
-                } else if (eventType.equals(MOSQUITO_COLLECTION_EVENT)) {
-                    operationalAreaId = processMosquitoCollectionEvent(event, clientClassification, localEvents);
+                } else if (eventType.equals(MOSQUITO_COLLECTION_EVENT) || eventType.equals(LARVAL_DIPPING_EVENT)
+                        || eventType.equals(BEDNET_DISTRIBUTION_EVENT) ||
+                        eventType.equals(BEHAVIOUR_CHANGE_COMMUNICATION)) {
+                    operationalAreaId = processEvent(event, clientClassification, localEvents);
                 } else if (eventType.equals(REGISTER_STRUCTURE_EVENT)) {
                     operationalAreaId = processRegisterStructureEvent(event, clientClassification);
                 } else {
@@ -98,6 +105,9 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
                     if (client != null) {
                         try {
+                            if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
+                                updateTask(event, localEvents);
+                            }
                             processEvent(event, client, clientClassification);
                         } catch (Exception e) {
                             Log.d(TAG, e.getMessage());
@@ -159,7 +169,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         return operationalAreaId;
     }
 
-    private String processMosquitoCollectionEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
+    private String processEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
         String operationalAreaId = null;
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
             operationalAreaId = updateTask(event, localEvents);
@@ -197,6 +207,9 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     }
 
     public String calculateBusinessStatus(Event event) {
+        if (EventType.FAMILY_REGISTRATION.equals(event.getEventType()) || EventType.FAMILY_MEMBER_REGISTRATION.equals(event.getEventType())) {
+            return BusinessStatus.COMPLETE;
+        }
         Obs businessStatusObs = event.findObs(null, false, JsonForm.BUSINESS_STATUS);
         if (businessStatusObs != null) {
             return businessStatusObs.getValue().toString();

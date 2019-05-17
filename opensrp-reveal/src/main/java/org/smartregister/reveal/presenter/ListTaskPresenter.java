@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -26,7 +27,7 @@ import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
-import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
+import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.PasswordDialogUtils;
@@ -52,11 +53,10 @@ import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
-import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
-import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
@@ -96,37 +96,35 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private ValidateUserLocationPresenter locationPresenter;
 
-    private SprayCardDetails sprayCardDetails;
+    private CardDetails cardDetails;
 
-    private MosquitoCollectionCardDetails mosquitoCollectionCardDetails;
-
-    private boolean changeSprayStatus;
-
-    private boolean changeMosquitoCollectionStatus;
+    private boolean changeInterventionStatus;
 
     private BaseDrawerContract.Presenter drawerPresenter;
 
-    public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
+    private RevealJsonFormUtils jsonFormUtils;
 
+    public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
         this.drawerPresenter = drawerPresenter;
         listTaskInteractor = new ListTaskInteractor(this);
         passwordDialog = PasswordDialogUtils.initPasswordDialog(listTaskView.getContext(), this);
         locationPresenter = new ValidateUserLocationPresenter(listTaskView, this);
         prefsUtil = PreferencesUtil.getInstance();
+        jsonFormUtils = listTaskView.getJsonFormUtils();
     }
 
     @Override
     public void onDrawerClosed() {
         if (drawerPresenter.isChangedCurrentSelection()) {
             listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
-            listTaskInteractor.fetchLocations(prefsUtil.getCurrentCampaignId(), prefsUtil.getCurrentOperationalArea());
+            listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalArea());
         }
     }
 
     public void refreshStructures() {
         listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
-        listTaskInteractor.fetchLocations(prefsUtil.getCurrentCampaignId(), prefsUtil.getCurrentOperationalArea());
+        listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalArea());
     }
 
     @Override
@@ -154,13 +152,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
     }
 
-
     public void onMapReady() {
-        String campaign = PreferencesUtil.getInstance().getCurrentCampaignId();
+        String planId = PreferencesUtil.getInstance().getCurrentPlanId();
         String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
-        if (StringUtils.isNotBlank(campaign) &&
+        if (StringUtils.isNotBlank(planId) &&
                 StringUtils.isNotBlank(operationalArea)) {
-            listTaskInteractor.fetchLocations(campaign, operationalArea);
+            listTaskInteractor.fetchLocations(planId, operationalArea);
         } else {
             listTaskView.displayNotification(R.string.select_campaign_operational_area_title, R.string.select_campaign_operational_area);
             drawerPresenter.getView().lockNavigationDrawerForSelection();
@@ -202,10 +199,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private void onFeatureSelected(Feature feature) {
         this.selectedFeature = feature;
-        this.changeSprayStatus = false;
-        this.changeMosquitoCollectionStatus = false;
+        this.changeInterventionStatus = false;
 
-        listTaskView.closeCardView(R.id.btn_collapse_mosquito_collection_card_view);
+        listTaskView.closeAllCardViews();
         listTaskView.displaySelectedFeature(feature, clickedPoint);
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
@@ -213,7 +209,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             selectedFeatureInterventionType = code;
-            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code)) && NOT_VISITED.equals(businessStatus)) {
+            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || REGISTER_FAMILY.equals(code))
+                    && NOT_VISITED.equals(businessStatus)) {
                 if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
                     validateUserLocation();
                 } else {
@@ -221,11 +218,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 }
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus))) {
-                listTaskInteractor.fetchSprayDetails(feature.id(), false);
-            } else if (MOSQUITO_COLLECTION.equals(code)
+                listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
+            } else if ((MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code))
                     && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
                     || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
-                listTaskInteractor.fetchMosquitoCollectionDetails(feature.id(), false);
+                listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
+            } else if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.focus_investigation) {
+                listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
             }
         }
     }
@@ -242,13 +241,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onInterventionFormDetailsFetched(CardDetails cardDetails) {
-        if (cardDetails instanceof SprayCardDetails) {
-            this.sprayCardDetails = (SprayCardDetails) cardDetails;
-            this.changeSprayStatus = true;
-        } else if (cardDetails instanceof MosquitoCollectionCardDetails) {
-            this.mosquitoCollectionCardDetails = (MosquitoCollectionCardDetails) cardDetails;
-            this.changeMosquitoCollectionStatus = true;
-        }
+        this.cardDetails = cardDetails;
+        this.changeInterventionStatus = true;
         listTaskView.hideProgressDialog();
         validateUserLocation();
     }
@@ -261,7 +255,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             }
             formatSprayCardDetails((SprayCardDetails) cardDetails);
             listTaskView.openCardView(cardDetails);
-        } else if (cardDetails instanceof MosquitoCollectionCardDetails) {
+        } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
             listTaskView.openCardView(cardDetails);
         }
     }
@@ -286,8 +280,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         CardDetailsUtil.formatCardDetails(sprayCardDetails);
     }
 
-    private void startForm(Feature feature, CardDetails cardDetails, String encounterType) {
-        String formName = RevealJsonFormUtils.getFormName(encounterType, null);
+    private void startForm(Feature feature, CardDetails cardDetails, String interventionType) {
+        String formName = jsonFormUtils.getFormName(null, interventionType);
         String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();
         String familyHead = null;
         if (cardDetails instanceof SprayCardDetails) {
@@ -297,7 +291,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     private void startForm(String formName, Feature feature, String sprayStatus, String familyHead) {
-        JSONObject formJson = listTaskView.getJsonFormUtils().getFormJSON(listTaskView.getContext()
+        JSONObject formJson = jsonFormUtils.getFormJSON(listTaskView.getContext()
                 , formName, feature, sprayStatus, familyHead);
         listTaskView.startJsonForm(formJson);
     }
@@ -305,11 +299,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void onChangeInterventionStatus(String interventionType) {
         if (IRS.equals(interventionType)) {
             listTaskView.showProgressDialog(R.string.fetching_structure_title, R.string.fetching_structure_message);
-            listTaskInteractor.fetchSprayDetails(selectedFeature.id(), true);
         } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
             listTaskView.showProgressDialog(R.string.fetching_mosquito_collection_points_title, R.string.fetching_mosquito_collection_points_message);
-            listTaskInteractor.fetchMosquitoCollectionDetails(selectedFeature.id(), true);
+        } else if (LARVAL_DIPPING.equals(interventionType)) {
+            listTaskView.showProgressDialog(R.string.fetching_larval_dipping_points_title, R.string.fetching_larval_dipping_points_message);
         }
+        listTaskInteractor.fetchInterventionDetails(interventionType, selectedFeature.id(), true);
     }
 
     public void saveJsonForm(String json) {
@@ -318,7 +313,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
-    public void onFormSaved(@NonNull String structureId, @NonNull TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
+    public void onFormSaved(@NonNull String structureId, String taskID, @NonNull TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
         listTaskView.hideProgressDialog();
         for (Feature feature : featureCollection.features()) {
             if (structureId.equals(feature.id())) {
@@ -328,12 +323,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             }
         }
         listTaskView.setGeoJsonSource(featureCollection, null);
-
-        if (IRS.equals(interventionType)) {
-            listTaskInteractor.fetchSprayDetails(structureId, false);
-        } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
-            listTaskInteractor.fetchMosquitoCollectionDetails(structureId, false);
-        }
+        listTaskInteractor.fetchInterventionDetails(interventionType, structureId, false);
     }
 
     @Override
@@ -348,7 +338,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } catch (JSONException e) {
             Log.e(TAG, "error extracting coordinates of added structure", e);
         }
-
     }
 
     @Override
@@ -374,21 +363,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onLocationValidated() {
-        if (IRS.equals(selectedFeatureInterventionType)) {
-            if (sprayCardDetails == null || !changeSprayStatus) {
-                startForm(selectedFeature, null, SPRAY_EVENT);
-            } else {
-                startForm(selectedFeature, sprayCardDetails, SPRAY_EVENT);
-            }
-        } else if (MOSQUITO_COLLECTION.equals(selectedFeatureInterventionType)) {
-            if (mosquitoCollectionCardDetails == null || !changeMosquitoCollectionStatus) {
-                startForm(selectedFeature, null, MOSQUITO_COLLECTION_EVENT);
-            } else {
-                startForm(selectedFeature, mosquitoCollectionCardDetails, MOSQUITO_COLLECTION_EVENT);
-            }
-        } else if (LARVAL_DIPPING.equals(selectedFeatureInterventionType)) {
-            // todo: add larval dipping card details check
-            startForm(selectedFeature, null, LARVAL_DIPPING_EVENT);
+        if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)) {
+            listTaskView.registerFamily();
+        } else if (cardDetails == null || !changeInterventionStatus) {
+            startForm(selectedFeature, null, selectedFeatureInterventionType);
+        } else {
+            startForm(selectedFeature, cardDetails, selectedFeatureInterventionType);
         }
     }
 
@@ -412,5 +392,23 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public ValidateUserLocationPresenter getLocationPresenter() {
         return locationPresenter;
+    }
+
+    @Override
+    public Feature getSelectedFeature() {
+        return selectedFeature;
+    }
+
+    @Override
+    public int getInterventionLabel() {
+        return org.smartregister.reveal.util.Utils.getInterventionLabel();
+    }
+
+    @Override
+    public void onFamilyFound(CommonPersonObjectClient finalFamily) {
+        if (finalFamily == null)
+            listTaskView.displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
+        else
+            listTaskView.openStructureProfile(finalFamily);
     }
 }

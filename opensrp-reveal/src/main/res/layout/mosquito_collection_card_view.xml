@@ -40,7 +40,7 @@
                     android:drawableLeft="@drawable/ic_mosquito_collection_point"
                     android:drawablePadding="10dp"
                     android:textSize="@dimen/mosquito_collection_card_view_title_text_size"
-                    android:text="@string/mosquito_collection_point"
+                    android:text="@string/card_view_mosquito_collection_point"
                     android:textStyle="bold"/>
 
                 <View
@@ -83,7 +83,7 @@
                     android:textAllCaps="false"
                     android:textColor="@color/text_black"
                     android:textSize="@dimen/structure_info_card_text_size"
-                    android:text="@string/mosquito_collection_trap_follow_up_date_test_text"/>
+                    android:text="@string/mosquito_collection_trap_collected_date_test_text"/>
 
             </LinearLayout>
 
@@ -97,7 +97,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="@dimen/change_spray_status_btn_bottom_margin"
             android:background="@drawable/rounded_grey_outline"
-            android:text="@string/record_mosquito_collection"
+            android:text="@string/card_view_record_mosquito_collection"
             android:textAllCaps="false"
             android:textColor="#BCBCBC"
             android:textSize="@dimen/structure_info_card_text_size" />

@@ -15,7 +15,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -37,18 +36,24 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.FetchStatus;
+import org.smartregister.family.util.DBConstants;
+import org.smartregister.family.util.Utils;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
-import org.smartregister.reveal.model.MosquitoCollectionCardDetails;
+import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
+import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.AlertDialogUtils;
+import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Action;
+import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
@@ -60,12 +65,14 @@ import io.ona.kujaku.utils.Constants;
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.Map;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
+import static org.smartregister.reveal.util.Utils.getInterventionLabel;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -89,17 +96,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
 
     private CardView sprayCardView;
-    private TextView tvSprayStatus;
-    private TextView tvPropertyType;
-    private TextView tvSprayDate;
-    private TextView tvSprayOperator;
-    private TextView tvFamilyHead;
     private TextView tvReason;
 
     private CardView mosquitoCollectionCardView;
-    private TextView tvMosquitoCollectionStatus;
-    private TextView tvMosquitoTrapSetDate;
-    private TextView tvMosquitoTrapFollowUpDate;
+    private CardView larvalBreedingCardView;
+
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
 
@@ -107,19 +108,23 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private Snackbar syncProgressSnackbar;
 
-
     private BaseDrawerContract.View drawerView;
 
     private RevealJsonFormUtils jsonFormUtils;
 
     private BoundaryLayer boundaryLayer;
 
+    private RevealMapHelper revealMapHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_tasks);
 
+        jsonFormUtils = new RevealJsonFormUtils();
         drawerView = new DrawerMenuView(this);
+
+        revealMapHelper = new RevealMapHelper();
 
         listTaskPresenter = new ListTaskPresenter(this, drawerView.getPresenter());
         rootView = findViewById(R.id.content_frame);
@@ -135,8 +140,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         initializeCardViews();
 
         syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
-
-        jsonFormUtils = new RevealJsonFormUtils();
     }
 
     private void initializeCardViews() {
@@ -151,25 +154,17 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         mosquitoCollectionCardView = findViewById(R.id.mosquito_collection_card_view);
 
+        larvalBreedingCardView = findViewById(R.id.larval_breeding_card_view);
+
         findViewById(R.id.btn_add_structure).setOnClickListener(this);
 
         findViewById(R.id.btn_collapse_spray_card_view).setOnClickListener(this);
 
-        tvSprayStatus = findViewById(R.id.spray_status);
-        tvPropertyType = findViewById(R.id.property_type);
-        tvSprayDate = findViewById(R.id.spray_date);
-        tvSprayOperator = findViewById(R.id.user_id);
-        tvFamilyHead = findViewById(R.id.family_head);
         tvReason = findViewById(R.id.reason);
-
-        tvMosquitoCollectionStatus = findViewById(R.id.trap_collection_status);
-        tvMosquitoTrapSetDate = findViewById(R.id.trap_set_date);
-        tvMosquitoTrapFollowUpDate = findViewById(R.id.trap_follow_up_date);
 
         findViewById(R.id.change_spray_status).setOnClickListener(this);
 
         findViewById(R.id.register_family).setOnClickListener(this);
-
 
         findViewById(R.id.task_register).setOnClickListener(this);
 
@@ -177,6 +172,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.btn_record_mosquito_collection).setOnClickListener(this);
 
+        findViewById(R.id.btn_collapse_larval_breeding_card_view).setOnClickListener(this);
+
+        findViewById(R.id.btn_record_larval_dipping).setOnClickListener(this);
     }
 
     @Override
@@ -185,7 +183,16 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             setViewVisibility(sprayCardView, false);
         } else if (id == R.id.btn_collapse_mosquito_collection_card_view) {
             setViewVisibility(mosquitoCollectionCardView, false);
+        } else if (id == R.id.btn_collapse_larval_breeding_card_view) {
+            setViewVisibility(larvalBreedingCardView, false);
         }
+    }
+
+    @Override
+    public void closeAllCardViews() {
+        setViewVisibility(sprayCardView, false);
+        setViewVisibility(mosquitoCollectionCardView, false);
+        setViewVisibility(larvalBreedingCardView, false);
     }
 
     private void setViewVisibility(View view, boolean isVisible) {
@@ -213,12 +220,17 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         geoJsonSource = style.getSourceAs(getString(R.string.reveal_datasource_name));
 
                         selectedGeoJsonSource = style.getSourceAs(getString(R.string.selected_datasource_name));
-                        RevealMapHelper.addSymbolLayers(style, ListTasksActivity.this);
+                        RevealMapHelper.addCustomLayers(style, ListTasksActivity.this);
                     }
                 });
+
                 mMapboxMap = mapboxMap;
-
-
+                mMapboxMap.addOnCameraMoveListener(new MapboxMap.OnCameraMoveListener() {
+                    @Override
+                    public void onCameraMove() {
+                        revealMapHelper.resizeIndexCaseCircle(mMapboxMap);
+                    }
+                });
                 mapboxMap.setMinZoomPreference(10);
                 mapboxMap.setMaxZoomPreference(21);
 
@@ -229,7 +241,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
 
                 listTaskPresenter.onMapReady();
-
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                     @Override
                     public boolean onMapClick(@NonNull LatLng point) {
@@ -237,7 +248,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         return false;
                     }
                 });
-
                 displayMyLocationAtButtom();
             }
         });
@@ -264,32 +274,62 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             listTaskPresenter.onChangeInterventionStatus(IRS);
         } else if (v.getId() == R.id.btn_record_mosquito_collection) {
             listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
+        } else if (v.getId() == R.id.btn_record_larval_dipping) {
+            listTaskPresenter.onChangeInterventionStatus(LARVAL_DIPPING);
         } else if (v.getId() == R.id.btn_collapse_spray_card_view) {
             setViewVisibility(tvReason, false);
             closeCardView(v.getId());
         } else if (v.getId() == R.id.register_family) {
             registerFamily();
+        } else if (v.getId() == R.id.btn_collapse_mosquito_collection_card_view
+                || v.getId() == R.id.btn_collapse_larval_breeding_card_view) {
+            closeCardView(v.getId());
         } else if (v.getId() == R.id.task_register) {
             openTaskRegister();
         } else if (v.getId() == R.id.drawerMenu) {
             drawerView.openDrawerLayout();
-        } else if (v.getId() == R.id.btn_collapse_mosquito_collection_card_view) {
-            closeCardView(v.getId());
         }
     }
 
     private void openTaskRegister() {
         Intent intent = new Intent(this, TaskRegisterActivity.class);
-        intent.putExtra(TaskRegister.INTERVENTION_TYPE, getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
+        intent.putExtra(TaskRegister.INTERVENTION_TYPE, getString(listTaskPresenter.getInterventionLabel()));
         if (getUserCurrentLocation() != null) {
             intent.putExtra(TaskRegister.LAST_USER_LOCATION, getUserCurrentLocation());
         }
         startActivity(intent);
     }
 
-    private void registerFamily() {
+
+    @Override
+    public void openStructureProfile(CommonPersonObjectClient family) {
+
+        Intent intent = new Intent(getActivity(), Utils.metadata().profileActivity);
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID, family.getCaseId());
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_HEAD, Utils.getValue(family.getColumnmaps(), DBConstants.KEY.FAMILY_HEAD, false));
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.PRIMARY_CAREGIVER, Utils.getValue(family.getColumnmaps(), DBConstants.KEY.PRIMARY_CAREGIVER, false));
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.VILLAGE_TOWN, Utils.getValue(family.getColumnmaps(), DBConstants.KEY.VILLAGE_TOWN, false));
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_NAME, Utils.getValue(family.getColumnmaps(), DBConstants.KEY.FIRST_NAME, false));
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.GO_TO_DUE_PAGE, false);
+
+
+        intent.putExtra(Properties.LOCATION_UUID, listTaskPresenter.getSelectedFeature().id());
+        intent.putExtra(Properties.TASK_IDENTIFIER, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_IDENTIFIER));
+        intent.putExtra(Properties.TASK_BUSINESS_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_BUSINESS_STATUS));
+        intent.putExtra(Properties.TASK_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_STATUS));
+
+        startActivity(intent);
+    }
+
+
+    @Override
+    public void registerFamily() {
         Intent intent = new Intent(this, FamilyRegisterActivity.class);
         intent.putExtra(START_REGISTRATION, true);
+        intent.putExtra(Properties.LOCATION_UUID, listTaskPresenter.getSelectedFeature().id());
+        intent.putExtra(Properties.TASK_IDENTIFIER, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_IDENTIFIER));
+        intent.putExtra(Properties.TASK_BUSINESS_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_BUSINESS_STATUS));
+        intent.putExtra(Properties.TASK_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_STATUS));
         startActivity(intent);
     }
 
@@ -308,15 +348,33 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             geoJsonSource.setGeoJson(featureCollection);
             if (operationalArea != null) {
                 CameraPosition cameraPosition = mMapboxMap.getCameraForGeometry(operationalArea.geometry());
+                if (getInterventionLabel() == R.string.focus_investigation) {
+                    Feature indexCase = revealMapHelper.getIndexCase(featureCollection);
+                    if (indexCase != null) {
+                        Location center = new RevealMappingHelper().getCenter(indexCase.geometry().toJson());
+                        cameraPosition = new CameraPosition.Builder()
+                                .target(new LatLng(center.getLatitude(), center.getLongitude())).zoom(14.5).build();
+                    }
+                }
+
                 if (cameraPosition != null) {
                     mMapboxMap.setCameraPosition(cameraPosition);
                 }
-                if (boundaryLayer == null) {
-                    boundaryLayer = createBoundaryLayer(operationalArea);
-                    kujakuMapView.addLayer(boundaryLayer);
 
+                Boolean drawOperationalAreaBoundaryAndLabel = org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel();
+                if (drawOperationalAreaBoundaryAndLabel) {
+                    if (boundaryLayer == null) {
+                        boundaryLayer = createBoundaryLayer(operationalArea);
+                        kujakuMapView.addLayer(boundaryLayer);
+                    } else {
+                        boundaryLayer.updateFeatures(FeatureCollection.fromFeature(operationalArea));
+                    }
+                }
+
+                if (getInterventionLabel() == R.string.focus_investigation && revealMapHelper.getIndexCaseCircleLayer() == null) {
+                    revealMapHelper.addIndexCaseLayers(mMapboxMap, getContext(), featureCollection);
                 } else {
-                    boundaryLayer.updateFeatures(FeatureCollection.fromFeature(operationalArea));
+                    revealMapHelper.updateIndexCaseLayers(mMapboxMap, featureCollection);
                 }
             }
         }
@@ -343,34 +401,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void openCardView(CardDetails cardDetails) {
+        CardDetailsUtil cardDetailsUtil = new CardDetailsUtil();
         if (cardDetails instanceof SprayCardDetails) {
-            populateSprayCardTextViews((SprayCardDetails) cardDetails);
+            cardDetailsUtil.populateSprayCardTextViews((SprayCardDetails) cardDetails, this);
             sprayCardView.setVisibility(View.VISIBLE);
-        } else if (cardDetails instanceof MosquitoCollectionCardDetails) {
-            populateMosquitoCollectionCardTextViews((MosquitoCollectionCardDetails) cardDetails);
-            mosquitoCollectionCardView.setVisibility(View.VISIBLE);
+        } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
+            cardDetailsUtil.populateAndOpenMosquitoHarvestCard((MosquitoHarvestCardDetails) cardDetails, this);
         }
-    }
-
-    private void populateSprayCardTextViews(SprayCardDetails sprayCardDetails) {
-        tvSprayStatus.setTextColor(getResources().getColor(sprayCardDetails.getStatusColor()));
-        tvSprayStatus.setText(sprayCardDetails.getStatusMessage());
-        tvPropertyType.setText(sprayCardDetails.getPropertyType());
-        tvSprayDate.setText(sprayCardDetails.getSprayDate());
-        tvSprayOperator.setText(sprayCardDetails.getSprayOperator());
-        tvFamilyHead.setText(sprayCardDetails.getFamilyHead());
-        if (!TextUtils.isEmpty(sprayCardDetails.getReason())) {
-            tvReason.setVisibility(View.VISIBLE);
-            tvReason.setText(sprayCardDetails.getReason());
-        } else {
-            tvReason.setVisibility(View.GONE);
-        }
-    }
-
-    private void populateMosquitoCollectionCardTextViews(MosquitoCollectionCardDetails mosquitoCollectionCardDetails) {
-        tvMosquitoCollectionStatus.setText(mosquitoCollectionCardDetails.getStatus());
-        tvMosquitoTrapSetDate.setText(getResources().getString(R.string.mosquito_collection_trap_set_date) + mosquitoCollectionCardDetails.getTrapSetDate());
-        tvMosquitoTrapFollowUpDate.setText(getResources().getString(R.string.mosquito_collection_trap_follow_up_date) + mosquitoCollectionCardDetails.getTrapFollowUpDate());
     }
 
     @Override

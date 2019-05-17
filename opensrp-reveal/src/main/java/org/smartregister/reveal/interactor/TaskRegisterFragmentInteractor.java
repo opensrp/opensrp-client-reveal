@@ -11,6 +11,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.family.util.DBConstants;
+import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FAMILY_NAME;
@@ -39,7 +41,12 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUC
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TABLE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_NAME;
+
+import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
+
+import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 
 /**
  * Created by samuelgithengi on 3/18/19.
@@ -47,6 +54,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_NAM
 public class TaskRegisterFragmentInteractor {
 
     private final StructureRepository structureRepository;
+    private final LocationRepository locationRepository;
     private SQLiteDatabase database;
     private final Float locationBuffer;
     private final AppExecutors appExecutors;
@@ -67,6 +75,7 @@ public class TaskRegisterFragmentInteractor {
         this.database = database;
         this.locationBuffer = locationBuffer;
         this.structureRepository = RevealApplication.getInstance().getStructureRepository();
+        locationRepository = RevealApplication.getInstance().getLocationRepository();
     }
 
     private String mainSelect(String mainCondition) {
@@ -77,6 +86,8 @@ public class TaskRegisterFragmentInteractor {
                 STRUCTURES_TABLE, tableName, FOR, STRUCTURES_TABLE, ID));
         queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
                 SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
+        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
+                FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
         return queryBuilder.mainCondition(mainCondition);
     }
 
@@ -94,12 +105,14 @@ public class TaskRegisterFragmentInteractor {
                 SPRAYED_STRUCTURES + "." + FAMILY_NAME,
                 SPRAYED_STRUCTURES + "." + SPRAY_STATUS,
                 SPRAYED_STRUCTURES + "." + NOT_SRAYED_REASON,
-                SPRAYED_STRUCTURES + "." + NOT_SRAYED_OTHER_REASON
+                SPRAYED_STRUCTURES + "." + NOT_SRAYED_OTHER_REASON,
+                STRUCTURES_TABLE + "." + ID + " AS " + STRUCTURE_ID,
+                FAMILY + "." + FIRST_NAME
         };
     }
 
 
-    public void findTasks(Pair<String, String[]> mainCondition, Location lastLocation, Location operationalAreaCenter) {
+    public void findTasks(Pair<String, String[]> mainCondition, Location lastLocation, Location operationalAreaCenter, String houseLabel) {
         if (mainCondition == null || mainCondition.second == null || mainCondition.second.length != 2 || mainCondition.second[0] == null) {
             presenter.onTasksFound(null, 0);
             return;
@@ -112,7 +125,7 @@ public class TaskRegisterFragmentInteractor {
             try {
                 cursor = database.rawQuery(query, mainCondition.second);
                 while (cursor.moveToNext()) {
-                    TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter);
+                    TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel);
                     if (taskDetails.getDistanceFromUser() <= locationBuffer) {
                         structuresWithinBuffer += 1;
                     }
@@ -133,7 +146,7 @@ public class TaskRegisterFragmentInteractor {
     }
 
 
-    private TaskDetails readTaskDetails(Cursor cursor, Location lastLocation, Location operationalAreaCenter) {
+    private TaskDetails readTaskDetails(Cursor cursor, Location lastLocation, Location operationalAreaCenter, String houseLabel) {
         TaskDetails task = new TaskDetails(cursor.getString(cursor.getColumnIndex(ID)));
         task.setTaskCode(cursor.getString(cursor.getColumnIndex(CODE)));
         task.setTaskEntity(cursor.getString(cursor.getColumnIndex(FOR)));
@@ -143,7 +156,7 @@ public class TaskRegisterFragmentInteractor {
         location.setLatitude(cursor.getDouble(cursor.getColumnIndex(LATITUDE)));
         location.setLongitude(cursor.getDouble(cursor.getColumnIndex(LONGITUDE)));
         task.setLocation(location);
-        if (Constants.Intervention.BCC.equals(task.getTaskCode())) {
+        if (BCC.equals(task.getTaskCode())) {
             //set distance to -1 to always display on top of register
             task.setDistanceFromUser(-1);
         } else if (lastLocation != null) {
@@ -156,7 +169,15 @@ public class TaskRegisterFragmentInteractor {
         if (StringUtils.isBlank(task.getStructureName())) {
             task.setStructureName(cursor.getString(cursor.getColumnIndex(STRUCTURE_NAME)));
         }
-        task.setFamilyName(cursor.getString(cursor.getColumnIndex(FAMILY_NAME)));
+
+        task.setFamilyName(cursor.getString(cursor.getColumnIndex(FIRST_NAME)));
+        if (task.getFamilyName() == null) {
+            task.setFamilyName(cursor.getString(cursor.getColumnIndex(FAMILY_NAME)));
+        }
+
+        if (task.getFamilyName() != null)
+            task.setFamilyName(task.getFamilyName() + " " + houseLabel);
+
         task.setSprayStatus(cursor.getString(cursor.getColumnIndex(SPRAY_STATUS)));
 
         if (Constants.BusinessStatus.NOT_SPRAYED.equals(task.getBusinessStatus())) {
@@ -166,6 +187,7 @@ public class TaskRegisterFragmentInteractor {
             }
             task.setTaskDetails(reason);
         }
+        task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
         return task;
     }
 
@@ -176,7 +198,7 @@ public class TaskRegisterFragmentInteractor {
         appExecutors.diskIO().execute(() -> {
             int structuresWithinBuffer = 0;
             for (TaskDetails taskDetails : tasks) {
-                if (!Constants.Intervention.BCC.equals(taskDetails.getTaskCode())) {
+                if (!BCC.equals(taskDetails.getTaskCode())) {
                     taskDetails.setDistanceFromUser(taskDetails.getLocation().distanceTo(location));
                     taskDetails.setDistanceFromCenter(false);
                 }
@@ -196,8 +218,11 @@ public class TaskRegisterFragmentInteractor {
 
     public void getStructure(TaskDetails taskDetails) {
         appExecutors.diskIO().execute(() -> {
-            org.smartregister.domain.Location structure =
-                    structureRepository.getLocationById(taskDetails.getTaskEntity());
+            org.smartregister.domain.Location structure;
+            if (BCC.equals(taskDetails.getTaskCode()))
+                structure = locationRepository.getLocationById(taskDetails.getTaskEntity());
+            else
+                structure = structureRepository.getLocationById(taskDetails.getTaskEntity());
             appExecutors.mainThread().execute(() -> {
                 presenter.onStructureFound(structure, taskDetails);
             });
