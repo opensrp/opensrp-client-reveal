@@ -171,13 +171,13 @@ public interface Constants {
 
         String SPRAY_FORM = "json.form/spray_form.json";
 
-        String THAILAND_MOSQUITO_COLLECTION_FORM = "json.form/thailand_mosquito_collection_form.json";
+        String MOSQUITO_COLLECTION_FORM = "json.form/mosquito_collection_form.json";
 
         String SPRAY_FORM_NAMIBIA = "json.form/namibia_spray_form.json";
 
         String SPRAY_FORM_BOTSWANA = "json.form/botswana_spray_form.json";
 
-        String THAILAND_LARVAL_DIPPING_FORM = "json.form/thailand_larval_dipping_form.json";
+        String LARVAL_DIPPING_FORM = "json.form/larval_dipping_form.json";
 
         String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
 
@@ -188,6 +188,22 @@ public interface Constants {
         String CASE_CONFIRMATION_FORM = "json.form/case_confirmation.json";
 
         String BEHAVIOUR_CHANGE_COMMUNICATION_FORM = "json.form/behaviour_change_communication.json";
+
+        String THAILAND_LARVAL_DIPPING_FORM = "json.form/thailand_larval_dipping_form.json";
+
+        String THAILAND_MOSQUITO_COLLECTION_FORM = "json.form/thailand_mosquito_collection_form.json";
+
+        String THAILAND_SPRAY_FORM = "json.form/thailand_spray_form.json";
+
+        String THAILAND_ADD_STRUCTURE_FORM = "json.form/thailand_add_structure.json";
+
+        String THAILAND_BEDNET_DISTRIBUTION_FORM = "json.form/thailand_bednet_distribution.json";
+
+        String THAILAND_BLOOD_SCREENING_FORM = "json.form/thailand_blood_screening.json";
+
+        String THAILAND_CASE_CONFIRMATION_FORM = "json.form/thailand_case_confirmation.json";
+
+        String THAILAND_BEHAVIOUR_CHANGE_COMMUNICATION_FORM = "json.form/thailand_behaviour_change_communication.json";
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 
