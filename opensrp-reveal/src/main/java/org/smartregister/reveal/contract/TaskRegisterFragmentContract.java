@@ -4,6 +4,7 @@ package org.smartregister.reveal.contract;
 import android.location.Location;
 import android.support.annotation.StringRes;
 
+import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.view.contract.BaseRegisterFragmentContract;
@@ -48,6 +49,8 @@ public interface TaskRegisterFragmentContract {
         LocationUtils getLocationUtils();
 
         void setInventionType(int interventionLabel);
+
+        void registerFamily(BaseTaskDetails taskDetails);
     }
 
 }

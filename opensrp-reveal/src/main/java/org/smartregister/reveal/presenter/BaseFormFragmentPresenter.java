@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 
 import com.google.gson.Gson;
@@ -14,7 +15,11 @@ import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
+import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.Properties;
+import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.PasswordDialogUtils;
+import org.smartregister.reveal.view.FamilyRegisterActivity;
 import org.smartregister.util.DateTimeTypeConverter;
 
 import java.lang.ref.WeakReference;
@@ -29,6 +34,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 
 /**
  * Created by samuelgithengi on 4/18/19.
@@ -79,12 +85,13 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
 
     @Override
     public void onLocationValidated() {
-        String formName = getView().getJsonFormUtils().getFormName(null, taskDetails.getTaskCode());
-        JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(context, formName, taskDetails, structure);
-        getView().startForm(formJSON);
+        if (!Constants.Intervention.REGISTER_FAMILY.equals(taskDetails.getTaskCode())) {
+            String formName = getView().getJsonFormUtils().getFormName(null, taskDetails.getTaskCode());
+            JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(context, formName, taskDetails, structure);
+            getView().startForm(formJSON);
+        }
         getView().hideProgressDialog();
     }
-
 
     @Override
     public LatLng getTargetCoordinates() {
@@ -126,4 +133,7 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
         }
     }
 
+    public BaseTaskDetails getTaskDetails() {
+        return taskDetails;
+    }
 }
