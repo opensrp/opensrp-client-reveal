@@ -76,6 +76,8 @@ public class RevealMapHelper {
 
     private GeoJsonSource indexCaseSource = new GeoJsonSource(INDEX_CASE_SOURCE);
 
+    private float radius = Float.valueOf(getGlobalConfig(INDEX_CASE_CIRCLE_RADIUS_IN_METRES, DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES.toString()));
+
     public static void addCustomLayers(@NonNull Style mMapboxMapStyle, Context context) {
 
         Expression dynamicIconSize = interpolate(linear(), zoom(),
@@ -159,8 +161,7 @@ public class RevealMapHelper {
 
     public void resizeIndexCaseCircle(MapboxMap mapboxMap) {
         if (indexCaseLocation != null && indexCaseCircleLayer != null) {
-            float radius = Float.valueOf(getGlobalConfig(INDEX_CASE_CIRCLE_RADIUS_IN_METRES, DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES.toString()));
-            float circleRadius = calculateZoomLevelRadius(mapboxMap, indexCaseLocation.getLatitude(), radius);
+            float circleRadius = calculateZoomLevelRadius(mapboxMap, mapboxMap.getCameraPosition().target.getLatitude(), radius);
             indexCaseCircleLayer.setProperties(circleRadius(circleRadius));
         }
     }

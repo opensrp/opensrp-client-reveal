@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mapbox.android.core.permissions.PermissionsManager;
+import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -225,9 +226,17 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 });
 
                 mMapboxMap = mapboxMap;
-                mMapboxMap.addOnCameraMoveListener(new MapboxMap.OnCameraMoveListener() {
+                mMapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
                     @Override
-                    public void onCameraMove() {
+                    public void onMoveBegin(@NonNull MoveGestureDetector detector) {//do nothing
+                    }
+
+                    @Override
+                    public void onMove(@NonNull MoveGestureDetector detector) {//do nothing
+                    }
+
+                    @Override
+                    public void onMoveEnd(@NonNull MoveGestureDetector detector) {
                         revealMapHelper.resizeIndexCaseCircle(mMapboxMap);
                     }
                 });
