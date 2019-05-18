@@ -47,12 +47,12 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "Mosquito Collection Details",
+    "title": "จับยุง",
     "display_back_button": "true",
     "fields": [
       {
         "key": "task_business_status",
-        "label": "Status",
+        "label": "สถานะ",
         "type": "native_radio",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -60,21 +60,25 @@
         "options": [
           {
             "key": "In Progress",
-            "text": "In Progress"
+            "text": "กำลังดำเนินการ"
           },
           {
             "key": "Incomplete",
-            "text": "Incomplete"
+            "text": "ไม่สมบูรณ์"
           },
           {
             "key": "Not Eligible",
-            "text": "Not Eligible"
+            "text": "ไม่มีสิทธิ์"
           },
           {
             "key": "Complete",
-            "text": "Complete"
+            "text": "ดำเนินการแล้ว"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "Please specify the task status"
+        }
       },
       {
         "key": "trap_start",
@@ -82,7 +86,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "hint": "Date trap was set",
+        "hint": "วันที่",
         "max_date": "today",
         "relevance": {
           "rules-engine": {

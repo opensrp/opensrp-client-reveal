@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "larval_dipping",
+  "encounter_type": "Register_Structure",
   "entity_id": "",
   "metadata": {
     "start": {
@@ -47,51 +47,66 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "สำรวจลูกน้ำ",
-    "display_back_button": "true",
+    "title": "เพิ่มสถานที่",
+    "display_back_button": true,
+    "no_padding": true,
     "fields": [
       {
-        "key": "task_business_status",
-        "label": "สถานะ",
-        "type": "native_radio",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "options": [
-          {
-            "key": "In Progress",
-            "text": "กำลังดำเนินการ"
-          },
-          {
-            "key": "Incomplete",
-            "text": "ไม่สมบูรณ์"
-          },
-          {
-            "key": "Not Eligible",
-            "text": "ไม่มีสิทธิ์"
-          },
-          {
-            "key": "Complete",
-            "text": "ดำเนินการแล้ว"
-          }
-        ],
-        "v_required": {
-          "value": true,
-          "err": "Please specify the task status"
+        "key": "structure",
+        "type": "geowidget",
+        "v_zoom_max": {
+          "value": "16.5",
+          "err": "Please zoom in to add a point"
         }
       },
       {
-        "key": "occurred_date",
-        "type": "date_picker",
+        "key": "structureType",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "hint": "วันที่สำรวจลูกน้ำ",
-        "max_date": "today",
+        "type": "native_radio",
+        "label": "ชนิดสถานที่",
+        "options": [
+          {
+            "key": "Residential Structure",
+            "text": "บ้าน"
+          },
+          {
+            "key": "Mosquito Collection Point",
+            "text": "ตำแหน่งที่จับยุง"
+          },
+          {
+            "key": "Larval Breeding Site",
+            "text": "แหล่งเพาะพันธุ์ยุง"
+          }
+        ],
+        "value": "Residential Structure",
         "v_required": {
           "value": true,
-          "err": "Please specify the date larval dipping was done"
+          "err": "Please specify Type of structure"
         }
+      },
+      {
+        "key": "structureName",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "ชื่อสถานที่",
+        "edit_type": "name",
+        "relevance": {
+          "step1:structureType": {
+            "type": "string",
+            "ex": "equalTo(., \"Residential Structure\")"
+          }
+        }
+      },
+      {
+        "key": "zoom_level",
+        "type": "hidden",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
       }
     ]
   }

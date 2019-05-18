@@ -1,0 +1,252 @@
+{
+  "count": "1",
+  "encounter_type": "blood_screening",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "เจาะเลือด SCD",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "forestGoerYesNo",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this person a forest goer?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "ใช่"
+          },
+          {
+            "key": "No",
+            "text": "ไม่ใช่"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "caseTestingProtocol",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "label": "กิจกรรม",
+        "options": [
+          {
+            "key": "Investigation",
+            "text": "Investigation"
+          },
+          {
+            "key": "PCD",
+            "text": "Passive Case Detection"
+          },
+          {
+            "key": "ACD",
+            "text": "Active Case Detection"
+          },
+          {
+            "key": "SCD",
+            "text": "Special Case Detection"
+          },
+          {
+            "key": "Follow-up",
+            "text": "Follow-up"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
+          }
+        ],
+        "value": "Investigation",
+        "v_required": {
+          "value": "true",
+          "err": "Please choose a testing protocol"
+        }
+      },
+      {
+        "key": "caseNumberTrigger",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "label_info_text": "If this is a confirmed secondary case to the index case, the id of the index case should be filled out here. If this case is linked to another known index case, use that case id here. If Unknown leave blank.",
+        "hint": "รหัสผู้ป่วยที่เชื่อมโยงกับผู้ป่วยรายนี้",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-blood-screening-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "testType",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "ตรวจโดยวิธี",
+        "options": [
+          {
+            "key": "Microscopy",
+            "text": "กล้องจุลทรรศน์"
+          },
+          {
+            "key": "RDT",
+            "text": "RDT"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "A test type is required"
+        }
+      },
+      {
+        "key": "testResult",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Result",
+        "options": [
+          {
+            "key": "Negative",
+            "text": "ไม่พบเชื้อ"
+          },
+          {
+            "key": "Positive",
+            "text": "การติดเชื้อ"
+          },
+          {
+            "key": "PositiveFalciparum",
+            "text": "Pf"
+          },
+          {
+            "key": "PositiveVivax",
+            "text": "Pv"
+          },
+          {
+            "key": "PositiveMalariae",
+            "text": "Pm"
+          },
+          {
+            "key": "PositiveMixed",
+            "text": "Mix"
+          },
+          {
+            "key": "fg",
+            "text": "fg"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Please choose a result"
+        }
+      },
+      {
+        "key": "slideNumber",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "ลำดับฟิล์ม",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "The slide number is required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": ""
+        },
+        "v_min": {
+          "value": "0",
+          "err": "There must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-blood-screening-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "caseNumber",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "รหัสผู้ป่วย",
+        "v_required": {
+          "value": true,
+          "err": "A case number is required"
+        }
+      },
+      {
+        "key": "comment",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "รายละเอียดเพิ่มเติม"
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "value": "Complete"
+      }
+    ]
+  }
+}

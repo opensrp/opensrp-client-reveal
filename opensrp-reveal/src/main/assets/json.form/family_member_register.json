@@ -254,12 +254,21 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
         "openmrs_entity_id": "gender",
-        "type": "spinner",
-        "hint": "Sex",
-        "values": [
-          "Male",
-          "Female",
-          "Other"
+        "type": "native_radio",
+        "label": "Sex",
+        "options": [
+          {
+            "key": "Male",
+            "text": "Male"
+          },
+          {
+            "key": "Female",
+            "text": "Female"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
+          }
         ],
         "v_required": {
           "value": "true",
@@ -287,15 +296,21 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "Dose this person sleep outdoors?",
-        "values": [
-          "Yes",
-          "No"
+        "type": "native_radio",
+        "label": "Dose this person sleep outdoors?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
         ],
         "v_required": {
           "value": "true",
-          "err": "Please select whether this prerson sleeps outdoors"
+          "err": "Please select whether this person sleeps outdoors"
         }
       },
       {
@@ -318,16 +333,25 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "Citizenship",
-        "values": [
-          "Thai",
-          "Migrant 1",
-          "Migrant 2"
+        "type": "native_radio",
+        "label": "Citizenship",
+        "options": [
+          {
+            "key": "Thai",
+            "text": "Thai"
+          },
+          {
+            "key": "Migrant-1",
+            "text": "Migrant 1"
+          },
+          {
+            "key": "Migrant-2",
+            "text": "Migrant 2"
+          }
         ],
         "v_required": {
           "value": true,
-          "err": "Please specify the CitizenShip"
+          "err": "Please specify the Citizenship"
         }
       }
     ]

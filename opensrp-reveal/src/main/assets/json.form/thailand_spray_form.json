@@ -1,0 +1,352 @@
+{
+  "count": "1",
+  "encounter_type": "Spray",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "พ่นสารเคมี (IRS)",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "structureType",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "ชนิดสถานที่",
+        "options": [
+          {
+            "key": "Residential Structure",
+            "text": "บ้าน"
+          },
+          {
+            "key": "Non-Residential Structure",
+            "text": "กระท่อม"
+          },
+          {
+            "key": "Facility",
+            "text": "สิ่งอำนวยความสะดวก"
+          }
+        ],
+        "value": "[structure_type]",
+        "v_required": {
+          "value": "true",
+          "err": "Specify type of Structure"
+        }
+      },
+      {
+        "key": "sprayStatus",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "สถานที่นี้เคยได้รับการพ่นสารเคมีหรือไม่?",
+        "options": [
+          {
+            "key": "Sprayed",
+            "text": "ได้พ่น"
+          },
+          {
+            "key": "Not Sprayed",
+            "text": "ไม่ได้พ่น"
+          },
+          {
+            "key": "Not Sprayable",
+            "text": "ไม่มีสิทธิ์"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Specify Spray status"
+        },
+        "relevance": {
+          "step1:structureType": {
+            "type": "string",
+            "ex": "equalTo(., \"Residential Structure\")"
+          }
+        }
+      },
+      {
+        "key": "notSprayedReason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "เหตุผลที่ไม่ได้พ่นสารเคมี",
+        "options": [
+          {
+            "key": "No one home/Missed",
+            "text": "ไม่มีคนอยู่ในบ้าน"
+          },
+          {
+            "key": "Locked",
+            "text": "บ้านปิด"
+          },
+          {
+            "key": "Sick",
+            "text": "ป่วย"
+          },
+          {
+            "key": "Refused",
+            "text": "ปฏิเสธ"
+          },
+          {
+            "key": "other",
+            "text": "อื่น ๆ"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Specify Not Sprayed Reason"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "notSprayedOtherReason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "อื่นๆ : โปรดระบุเหตุผล",
+        "edit_type": "name",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify reason spray was not done"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "familyHeadName",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "ชื่อเจ้าบ้าน",
+        "edit_type": "name",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "familyHeadSex",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "เพศ",
+        "options": [
+          {
+            "key": "Male",
+            "text": "ชาย"
+          },
+          {
+            "key": "Female",
+            "text": "หญิง"
+          },
+          {
+            "key": "Not Applicable",
+            "text": "ไม่ระบุ"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Specify Sex of Household Head"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "roomsFound",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนห้องในบ้าน (พิมพ์ 99 หากไม่ทราบ)",
+        "text_size": "8sp",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify number of eligible rooms (Type 99 if unable to assess)"
+        },
+        "shortened_hint": "จำนวนห้องในบ้าน",
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sprayedRooms",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนห้องในบ้านที่ได้พ่นสารเคมี (พิมพ์ 99 หากไม่ทราบ)",
+        "text_size": "8sp",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify number of rooms sprayed (Type 99 if unable to assess)"
+        },
+        "shortened_hint": "จำนวนห้องในบ้านที่ได้พ่นสารเคมี",
+        "v_relative_max": {
+          "value": "roomsFound",
+          "exception": 99,
+          "err": "Number of rooms sprayed cannot be greater than number of rooms found"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Must be a rounded number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "netsFound",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้งที่ใช้งาน (พิมพ์ 99 หากไม่ทราบ)",
+        "text_size": "8sp",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify Total Number of Nets (Type 99 if unable to assess)"
+        },
+        "shortened_hint": "จำนวนมุ้งที่ใช้งาน",
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "mopUp",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "เป็นกิจกรรมเสริมหรือไม่",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "ใช่"
+          },
+          {
+            "key": "No",
+            "text": "ไม่ใช่"
+          }
+        ],
+        "value": "No",
+        "v_required": {
+          "value": "true",
+          "err": "Is this a mop-up activity?"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-spray-calculation-rules.yml"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
