@@ -52,7 +52,7 @@
     }
   },
   "step1": {
-    "title": "Family details",
+    "title": "เพิ่มครอบครัว",
     "next": "step2",
     "fields": [
       {
@@ -61,7 +61,7 @@
         "openmrs_entity": "person",
         "openmrs_entity_id": "first_name",
         "type": "edit_text",
-        "hint": "Family name",
+        "hint": "สกุลเจ้าบ้าน",
         "edit_type": "name",
         "v_required": {
           "value": "true",
@@ -78,7 +78,7 @@
         "openmrs_entity": "person_address",
         "openmrs_entity_id": "cityVillage",
         "type": "edit_text",
-        "hint": "Village/Town",
+        "hint": "หมู่",
         "v_required": {
           "value": "true",
           "err": "Please enter the village or town"
@@ -90,7 +90,7 @@
         "openmrs_entity": "person_address",
         "openmrs_entity_id": "address2",
         "type": "edit_text",
-        "hint": "House Number"
+        "hint": "เลขที่บ้าน"
       },
       {
         "key": "street",
@@ -98,7 +98,7 @@
         "openmrs_entity": "person_address",
         "openmrs_entity_id": "street",
         "type": "edit_text",
-        "hint": "Street"
+        "hint": "ถนน"
       },
       {
         "key": "landmark",
@@ -106,12 +106,12 @@
         "openmrs_entity": "person_address",
         "openmrs_entity_id": "landmark",
         "type": "edit_text",
-        "hint": "Landmark"
+        "hint": "สถานที่สำคัญใกล้บ้าน"
       }
     ]
   },
   "step2": {
-    "title": "Family head",
+    "title": "หัวหน้าครอบครัว",
     "fields": [
       {
         "key": "unique_id",
@@ -119,7 +119,7 @@
         "openmrs_entity": "person_identifier",
         "openmrs_entity_id": "opensrp_id",
         "type": "edit_text",
-        "hint": "ID",
+        "hint": "รหัสผู้ป่วย",
         "v_required": {
           "value": "true",
           "err": "Please enter the ID"
@@ -133,7 +133,7 @@
         "label_info_text": "What is their national identity number or their voter registration number?",
         "label_info_title": "National ID number",
         "type": "edit_text",
-        "hint": "National ID number",
+        "hint": "รหัสประชาชน",
         "v_numeric": {
           "value": "true",
           "err": "Please enter a number"
@@ -149,7 +149,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Surname",
+        "hint": "นามสกุล",
         "edit_type": "name",
         "v_required": {
           "value": "true",
@@ -177,7 +177,7 @@
         "options": [
           {
             "key": "same_as_fam_name",
-            "text": "Surname same as family name",
+            "text": "คลิกเลือกหากสกุลเดียวกับเจ้าบ้าน",
             "text_size": "18px",
             "value": "false"
           }
@@ -190,7 +190,7 @@
         "openmrs_entity_id": "last_name",
         "type": "edit_text",
         "hidden": true,
-        "hint": "Surname as Family name",
+        "hint": "คลิกเลือกหากนามสกุลเดียวกับเจ้าบ้าน",
         "calculation": {
           "rules-engine": {
             "ex-rules": {
@@ -205,7 +205,7 @@
         "openmrs_entity": "person",
         "openmrs_entity_id": "first_name",
         "type": "edit_text",
-        "hint": "First name",
+        "hint": "ชื่อ",
         "edit_type": "name",
         "v_required": {
           "value": "true",
@@ -222,7 +222,7 @@
         "openmrs_entity": "person",
         "openmrs_entity_id": "middle_name",
         "type": "edit_text",
-        "hint": "Middle name",
+        "hint": "ชื่อกลาง",
         "edit_type": "name",
         "v_regex": {
           "value": "[A-Za-z\\s.-]*",
@@ -235,7 +235,7 @@
         "openmrs_entity": "person",
         "openmrs_entity_id": "birthdate",
         "type": "date_picker",
-        "hint": "Date of birth (DOB)",
+        "hint": "วันเกิด",
         "expanded": false,
         "duration": {
           "label": "Age"
@@ -264,7 +264,7 @@
         "options": [
           {
             "key": "dob_unknown",
-            "text": "DOB unknown?",
+            "text": "คลิกเลือกหากไม่ทราบวันเกิด",
             "text_size": "18px",
             "value": "false"
           }
@@ -276,7 +276,7 @@
         "openmrs_entity": "person_attribute",
         "openmrs_entity_id": "age_entered",
         "type": "edit_text",
-        "hint": "Age",
+        "hint": "อายุ",
         "v_numeric": {
           "value": "true",
           "err": "Please enter a number"
@@ -305,17 +305,26 @@
         "key": "sex",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
-        "openmrs_entity_id": "sex",
-        "type": "spinner",
-        "hint": "Sex",
-        "values": [
-          "Male",
-          "Female",
-          "Other"
+        "openmrs_entity_id": "gender",
+        "type": "native_radio",
+        "label": "เพศ",
+        "options": [
+          {
+            "key": "Male",
+            "text": "ชาย"
+          },
+          {
+            "key": "Female",
+            "text": "หญิง"
+          },
+          {
+            "key": "Other",
+            "text": "อื่นๆ"
+          }
         ],
         "v_required": {
           "value": "true",
-          "err": "Please select the sex"
+          "err": "Please enter the sex"
         }
       },
       {
@@ -324,7 +333,7 @@
         "openmrs_entity": "concept",
         "openmrs_entity_id": "159635AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
         "type": "edit_text",
-        "hint": "Phone number",
+        "hint": "เบอร์โทรศัพท์",
         "v_numeric": {
           "value": "true",
           "err": "Please enter a number"
@@ -339,15 +348,21 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "Dose this person sleep outdoors?",
-        "values": [
-          "Yes",
-          "No"
+        "type": "native_radio",
+        "label": "เมื่อคืนได้ค้างแรมข้างบ้านหรือไม่",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "ใช่"
+          },
+          {
+            "key": "No",
+            "text": "ไม่ใช่"
+          }
         ],
         "v_required": {
           "value": "true",
-          "err": "Please select whether this prerson sleeps outdoors"
+          "err": "Please select whether this person sleeps outdoors"
         }
       },
       {
@@ -356,7 +371,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Person's Occupation",
+        "hint": "อาชีพ",
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -370,16 +385,25 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "Citizenship",
-        "values": [
-          "Thai",
-          "Migrant 1",
-          "Migrant 2"
+        "type": "native_radio",
+        "label": "ประเภทบุคคล",
+        "options": [
+          {
+            "key": "Thai",
+            "text": "ไทย"
+          },
+          {
+            "key": "Migrant-1",
+            "text": "ต.1"
+          },
+          {
+            "key": "Migrant-2",
+            "text": "ต.2"
+          }
         ],
         "v_required": {
           "value": true,
-          "err": "Please specify the CitizenShip"
+          "err": "Please specify the Citizenship"
         }
       }
     ]

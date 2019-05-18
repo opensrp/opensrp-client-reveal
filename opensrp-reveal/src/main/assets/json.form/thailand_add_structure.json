@@ -47,7 +47,7 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "Register Structure",
+    "title": "เพิ่มสถานที่",
     "display_back_button": true,
     "no_padding": true,
     "fields": [
@@ -65,19 +65,19 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Type of Structure",
+        "label": "ชนิดสถานที่",
         "options": [
           {
             "key": "Residential Structure",
-            "text": "Residential Structure"
+            "text": "บ้าน"
           },
           {
             "key": "Mosquito Collection Point",
-            "text": "Mosquito Collection Point"
+            "text": "ตำแหน่งที่จับยุง"
           },
           {
             "key": "Larval Breeding Site",
-            "text": "Larval Breeding Site"
+            "text": "แหล่งเพาะพันธุ์ยุง"
           }
         ],
         "value": "Residential Structure",
@@ -92,7 +92,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Name of structure",
+        "hint": "ชื่อสถานที่",
         "edit_type": "name",
         "relevance": {
           "step1:structureType": {

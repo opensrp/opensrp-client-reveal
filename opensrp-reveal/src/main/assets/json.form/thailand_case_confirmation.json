@@ -47,7 +47,7 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "Case Confirmation",
+    "title": "สอบประวัติผู้ป่วยซ้ำ",
     "display_back_button": "true",
     "fields": [
       {
@@ -56,7 +56,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Please enter the case number",
+        "hint": "กรอกรหัสผู้ป่วย",
         "v_required": {
           "value": true,
           "err": "A case number is required"
@@ -68,15 +68,15 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Is this the index case?",
+        "label": "ผู้ป่วยติดเชื้อในพื้นที่หรือไม่",
         "options": [
           {
             "key": "Yes",
-            "text": "Yes"
+            "text": "ใช่"
           },
           {
             "key": "No",
-            "text": "No"
+            "text": "ไม่ใช่"
           }
         ],
         "value": "Yes",
@@ -91,7 +91,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "date_picker",
-        "hint": "When was the case notified?",
+        "hint": "วันที่ลงรายงาน",
         "expanded": false,
         "min_date": "today-1y",
         "max_date": "today",
@@ -113,7 +113,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "date_picker",
-        "hint": "When was the case investigated?",
+        "hint": "วันที่สอบสวน",
         "expanded": false,
         "min_date": "today-1y",
         "max_date": "today",
@@ -139,11 +139,11 @@
         "options": [
           {
             "key": "Yes",
-            "text": "Yes"
+            "text": "ใช่"
           },
           {
             "key": "No",
-            "text": "No"
+            "text": "ไม่ใช่"
           }
         ],
         "value": "No"
@@ -154,15 +154,15 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Is this case linked to any other focus?",
+        "label": "เกี่ยวข้องกับแหล่งแพร่เชื้ออื่นหรือไม่",
         "options": [
           {
             "key": "Yes",
-            "text": "Yes"
+            "text": "ใช่"
           },
           {
             "key": "No",
-            "text": "No"
+            "text": "ไม่ใช่"
           }
         ],
         "value": "No"
@@ -174,7 +174,7 @@
         "openmrs_entity_id": "",
         "openmrs_data_type": "text",
         "type": "edit_text",
-        "hint": "Which focus?",
+        "hint": "แหล่งใด",
         "tree": [],
         "relevance": {
           "rules-engine": {
@@ -190,7 +190,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Please add a comment",
+        "hint": "รายละเอียดเพิ่มเติม",
         "relevance": {
           "rules-engine": {
             "ex-rules": {

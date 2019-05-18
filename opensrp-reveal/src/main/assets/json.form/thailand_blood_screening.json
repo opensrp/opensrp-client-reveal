@@ -47,7 +47,7 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "Blood Screening",
+    "title": "เจาะเลือด SCD",
     "display_back_button": "true",
     "fields": [
       {
@@ -60,11 +60,11 @@
         "options": [
           {
             "key": "Yes",
-            "text": "Yes"
+            "text": "ใช่"
           },
           {
             "key": "No",
-            "text": "No"
+            "text": "ไม่ใช่"
           }
         ],
         "v_required": {
@@ -78,7 +78,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "hidden",
-        "label": "Done by",
+        "label": "กิจกรรม",
         "options": [
           {
             "key": "Investigation",
@@ -118,7 +118,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "label_info_text": "If this is a confirmed secondary case to the index case, the id of the index case should be filled out here. If this case is linked to another known index case, use that case id here. If Unknown leave blank.",
-        "hint": "Case number of triggering case",
+        "hint": "รหัสผู้ป่วยที่เชื่อมโยงกับผู้ป่วยรายนี้",
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -133,11 +133,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Which type of test was used?",
+        "label": "ตรวจโดยวิธี",
         "options": [
           {
             "key": "Microscopy",
-            "text": "Microscopy"
+            "text": "กล้องจุลทรรศน์"
           },
           {
             "key": "RDT",
@@ -159,27 +159,27 @@
         "options": [
           {
             "key": "Negative",
-            "text": "Negative"
+            "text": "ไม่พบเชื้อ"
           },
           {
             "key": "Positive",
-            "text": "Positive"
+            "text": "การติดเชื้อ"
           },
           {
             "key": "PositiveFalciparum",
-            "text": "Positive - Falciparum"
+            "text": "Pf"
           },
           {
             "key": "PositiveVivax",
-            "text": "Positive - Vivax"
+            "text": "Pv"
           },
           {
             "key": "PositiveMalariae",
-            "text": "Positive - Malariae"
+            "text": "Pm"
           },
           {
             "key": "PositiveMixed",
-            "text": "Positive - Mixed"
+            "text": "Mix"
           },
           {
             "key": "fg",
@@ -197,7 +197,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Slide Number",
+        "hint": "ลำดับฟิล์ม",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -225,7 +225,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Please enter the case number",
+        "hint": "รหัสผู้ป่วย",
         "v_required": {
           "value": true,
           "err": "A case number is required"
@@ -237,7 +237,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Please add a comment"
+        "hint": "รายละเอียดเพิ่มเติม"
       },
       {
         "key": "business_status",

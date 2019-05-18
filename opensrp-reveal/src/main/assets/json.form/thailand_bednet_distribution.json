@@ -47,7 +47,7 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "Bednet Distribution",
+    "title": "การกระจายสุทธิ",
     "display_back_button": "true",
     "fields": [
       {
@@ -56,7 +56,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Number of males",
+        "hint": "จำนวนผู้ชาย",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -77,7 +77,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Number of females",
+        "hint": "จำนวนผู้หญิง",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -133,7 +133,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "{calcNumNetsNeeded} nets are needed",
+        "text": "{calcNumNetsNeeded} จำนวนมุ้งที่ต้องการ",
         "text_color": "#000000",
         "toaster_type": "info",
         "calculation": {
@@ -150,8 +150,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Total number of existing nets",
-        "shortened_hint": "Existing Nets",
+        "hint": "จำนวนมุ้งที่มีอยู่",
+        "shortened_hint": "จำนวนมุ้งที่มีอยู่",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -172,8 +172,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many are LLINs or HLINs?",
-        "shortened_hint": "Existing LLINs or HLINS",
+        "hint": "จำนวนมุ้ง LLIN หรือ LLIHN",
+        "shortened_hint": "จำนวนมุ้ง LLIN/LLIHN",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -201,8 +201,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many LLINs or HLINs are <1 year old?",
-        "shortened_hint": "LLINs/HLINS < 1 year old",
+        "hint": "จำนวนมุ้ง LLIN หรือ LLIHN อายุน้อยกว่า 1 ปี",
+        "shortened_hint": "LLIN หรือ LLIHN อายุน้อยกว่า 1 ปี",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -239,8 +239,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many LLINs or HLINs are 1 to 2 years old?",
-        "shortened_hint": "LLINs/HLINS 1-2 years old",
+        "hint": "จำนวนมุ้ง LLIN หรือ LLIHN อายุ 1-2 ปี",
+        "shortened_hint": "LLIN หรือ LLIHN อายุ 1-2 ปี",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -277,8 +277,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many LLINs or HLINs are 2 to 3 years old?",
-        "shortened_hint": "LLINs/HLINS 2-3 years old",
+        "hint": "จำนวนมุ้ง LLIN หรือ LLIHN อายุ 2-3 ปี",
+        "shortened_hint": "LLIN หรือ LLIHN อายุ 2-3 ปี",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -315,8 +315,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many LLINs or HLINs are over 3 years old?",
-        "shortened_hint": "LLINs/HLINS < 3 years old",
+        "hint": "จำนวนมุ้ง LLIN หรือ LLIHN อายุมากกว่า 3 ปี",
+        "shortened_hint": "LLIN หรือ LLIHN อายุมากกว่า 3 ปี",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -353,8 +353,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many are normal nets that were dipped in the last 6 months?",
-        "shortened_hint": "Normal nets dipped < 6 months",
+        "hint": "จำนวนมุ้งที่ได้รับการชุบภายใน 6 เดือน",
+        "shortened_hint": "จำนวนมุ้งที่ได้รับการชุบภายใน 6 เดือน",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -396,7 +396,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "{calcNumNetsToDistribute} nets are recommended",
+        "text": "{calcNumNetsToDistribute} จำนวนมุ้งที่ควรจะแจก",
         "text_color": "#000000",
         "toaster_type": "info",
         "calculation": {
@@ -413,8 +413,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Total number of LLINs distributed",
-        "shortened_hint": "Distributed LLINs",
+        "hint": "จำนวนมุ้ง LLIN ที่แจก",
+        "shortened_hint": "LLIN ที่แจก",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -435,8 +435,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Total number of HLINs distributed",
-        "shortened_hint": "Disributed HLINs",
+        "hint": "จำนวนมุ้ง LLIHN ที่แจก",
+        "shortened_hint": "LLIHN ที่แจก",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -457,8 +457,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Total number of ITNs distributed",
-        "shortened_hint": "Distributed ITNs",
+        "hint": "จำนวนมุ้งที่ชุบ",
+        "shortened_hint": "จำนวนมุ้งที่ชุบ",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -507,8 +507,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Number of personal repellent units distributed",
-        "shortened_hint": "Distributed repellent units",
+        "hint": "จำนวนยาทากันยุงที่แจก",
+        "shortened_hint": "จำนวนยาทากันยุงที่แจก",
         "edit_type": "number",
         "v_required": {
           "value": true,

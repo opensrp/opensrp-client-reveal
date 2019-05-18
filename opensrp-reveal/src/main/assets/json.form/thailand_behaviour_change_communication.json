@@ -47,7 +47,7 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "BCC",
+    "title": "สให้สุขศึกษา (BCC)",
     "display_back_button": "true",
     "fields": [
       {
@@ -56,15 +56,15 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Was the Behaviour Change Communication completed for this area?",
+        "label": "ในพื้นที่นี้ได้ให้สุขศึกษาครบหรือไม่",
         "options": [
           {
             "key": "Yes",
-            "text": "Yes"
+            "text": "ใช่"
           },
           {
             "key": "No",
-            "text": "No"
+            "text": "ไม่ใช่"
           }
         ],
         "v_required": {
@@ -78,27 +78,27 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "What type of messaging channel was used?",
+        "label": "ใช้ช่องทางใดในการให้สุขศึกษา",
         "options": [
           {
             "key": "House-to-House",
-            "text": "House-to-House"
+            "text": "เยี่ยมบ้าน"
           },
           {
             "key": "Radio",
-            "text": "Radio"
+            "text": "วิทยุ"
           },
           {
             "key": "Phone",
-            "text": "Phone"
+            "text": "โทรศัพท์"
           },
           {
             "key": "Meeting",
-            "text": "Meeting"
+            "text": "การประชุม"
           },
           {
             "key": "Other",
-            "text": "Other"
+            "text": "อื่นๆ"
           }
         ],
         "v_required": {
@@ -119,7 +119,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "List other messaging channel",
+        "hint": "อื่นๆ : โปรดระบุ",
         "v_required": {
           "value": true,
           "err": "An other messaging channel is required"
@@ -138,27 +138,27 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "check_box",
-        "label": "What type of messaging channels are most acceptable to this community?",
+        "label": "ช่องทางใดได้ผลที่สุด",
         "options": [
           {
-            "key": "House-to-house",
-            "text": "House-to-house"
+            "key": "House-to-House",
+            "text": "เยี่ยมบ้าน"
           },
           {
             "key": "Radio",
-            "text": "Radio"
+            "text": "วิทยุ"
           },
           {
             "key": "Phone",
-            "text": "Phone"
+            "text": "โทรศัพท์"
           },
           {
             "key": "Meeting",
-            "text": "Meeting"
+            "text": "การประชุม"
           },
           {
             "key": "Other",
-            "text": "Other"
+            "text": "อื่นๆ"
           }
         ],
         "v_required": {
@@ -179,7 +179,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "List other preferred messaging channel",
+        "hint": "อื่นๆ : โปรดระบุ",
         "v_required": {
           "value": true,
           "err": "An other messaging channel is required"
@@ -198,43 +198,43 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "check_box",
-        "label": "What messages did the communication cover?",
+        "label": "ให้สุขศึกษาเรื่องใดบ้าง",
         "options": [
           {
             "key": "IRS",
-            "text": "IRS"
+            "text": "การพ่นสารเคมี"
           },
           {
             "key": "MDA",
-            "text": "MDA"
+            "text": "การจ่ายยาแบบกลุ่ม"
           },
           {
             "key": "Symptom-Recognition",
-            "text": "Symptom Recognition"
+            "text": "อาการ"
           },
           {
             "key": "Getting-Tested",
-            "text": "Getting Tested"
+            "text": "การตรวจรักษา"
           },
           {
             "key": "Treatment-Seeking",
-            "text": "Treatment Seeking"
+            "text": "การรักษา"
           },
           {
             "key": "Sleeping-Under-Nets",
-            "text": "Sleeping Under Nets"
+            "text": "การนอนในมุ้ง"
           },
           {
             "key": "Applying-Repellant",
-            "text": "Applying Repellant"
+            "text": "การใช้ยาทากันยุง"
           },
           {
             "key": "Taking-Full-Treatment-Regimen",
-            "text": "Taking Full Treatment Regimen"
+            "text": "การกินยาให้ครบ"
           },
           {
             "key": "Other",
-            "text": "Other"
+            "text": "อื่นๆ"
           }
         ],
         "v_required": {
@@ -255,7 +255,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many people attended the activity?",
+        "hint": "จำนวนผู้ได้รับสุขศึกษา",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -283,7 +283,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many people were reached?",
+        "hint": "จำนวนผู้ได้รับสุขศึกษา",
         "edit_type": "number",
         "v_numeric": {
           "value": "true",
@@ -307,7 +307,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many people used an LLIN or ITN the previous night?",
+        "hint": "จำนวนคนที่ใช้มุ้ง LLIN หรือมุ้งชุบสารเคมีเมื่อคืนที่ผ่านมา",
         "edit_type": "number",
         "v_numeric": {
           "value": "true",
@@ -331,7 +331,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Who was the community leader giving the bcc?",
+        "hint": "ผู้ให้สุขศึกษา",
         "relevance": {
           "rules-engine": {
             "ex-rules": {

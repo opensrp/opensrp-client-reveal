@@ -47,7 +47,7 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "Record Spray Status",
+    "title": "พ่นสารเคมี (IRS)",
     "display_back_button": "true",
     "fields": [
       {
@@ -56,19 +56,19 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Type of Structure",
+        "label": "ชนิดสถานที่",
         "options": [
           {
             "key": "Residential Structure",
-            "text": "Residential Structure"
+            "text": "บ้าน"
           },
           {
             "key": "Non-Residential Structure",
-            "text": "Non-Residential Structure"
+            "text": "กระท่อม"
           },
           {
             "key": "Facility",
-            "text": "Facility"
+            "text": "สิ่งอำนวยความสะดวก"
           }
         ],
         "value": "[structure_type]",
@@ -83,19 +83,19 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Spray Status",
+        "label": "สถานที่นี้เคยได้รับการพ่นสารเคมีหรือไม่?",
         "options": [
           {
             "key": "Sprayed",
-            "text": "Sprayable, Sprayed"
+            "text": "ได้พ่น"
           },
           {
             "key": "Not Sprayed",
-            "text": "Sprayable, Not Sprayed"
+            "text": "ไม่ได้พ่น"
           },
           {
             "key": "Not Sprayable",
-            "text": "Not Eligible"
+            "text": "ไม่มีสิทธิ์"
           }
         ],
         "v_required": {
@@ -115,31 +115,27 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Not Sprayed Reason",
+        "label": "เหตุผลที่ไม่ได้พ่นสารเคมี",
         "options": [
           {
             "key": "No one home/Missed",
-            "text": "No one home/Missed"
+            "text": "ไม่มีคนอยู่ในบ้าน"
           },
           {
             "key": "Locked",
-            "text": "Locked"
+            "text": "บ้านปิด"
           },
           {
             "key": "Sick",
-            "text": "Sick"
+            "text": "ป่วย"
           },
           {
             "key": "Refused",
-            "text": "Refused"
-          },
-          {
-            "key": "Funeral",
-            "text": "Funeral"
+            "text": "ปฏิเสธ"
           },
           {
             "key": "other",
-            "text": "Other"
+            "text": "อื่น ๆ"
           }
         ],
         "v_required": {
@@ -160,7 +156,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Not Sprayed Other Reason",
+        "hint": "อื่นๆ : โปรดระบุเหตุผล",
         "edit_type": "name",
         "is_mandatory": true,
         "v_required": {
@@ -181,7 +177,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Head of Household name",
+        "hint": "ชื่อเจ้าบ้าน",
         "edit_type": "name",
         "relevance": {
           "rules-engine": {
@@ -197,19 +193,19 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Sex of Household Head",
+        "label": "เพศ",
         "options": [
           {
             "key": "Male",
-            "text": "Male"
+            "text": "ชาย"
           },
           {
             "key": "Female",
-            "text": "Female"
+            "text": "หญิง"
           },
           {
             "key": "Not Applicable",
-            "text": "Not Applicable"
+            "text": "ไม่ระบุ"
           }
         ],
         "v_required": {
@@ -230,14 +226,14 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Number of Eligible Rooms Found (Type 99 if unable to assess)",
+        "hint": "จำนวนห้องในบ้าน (พิมพ์ 99 หากไม่ทราบ)",
         "text_size": "8sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
           "err": "Please specify number of eligible rooms (Type 99 if unable to assess)"
         },
-        "shortened_hint": "Please specify number of eligible rooms",
+        "shortened_hint": "จำนวนห้องในบ้าน",
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
@@ -256,14 +252,14 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Number of Rooms Sprayed (Type 99 if unable to assess)",
+        "hint": "จำนวนห้องในบ้านที่ได้พ่นสารเคมี (พิมพ์ 99 หากไม่ทราบ)",
         "text_size": "8sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
           "err": "Please specify number of rooms sprayed (Type 99 if unable to assess)"
         },
-        "shortened_hint": "Please specify number of rooms sprayed",
+        "shortened_hint": "จำนวนห้องในบ้านที่ได้พ่นสารเคมี",
         "v_relative_max": {
           "value": "roomsFound",
           "exception": 99,
@@ -287,14 +283,14 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Total Number of Nets Hanging and in Use (Type 99 if unable to assess)",
+        "hint": "จำนวนมุ้งที่ใช้งาน (พิมพ์ 99 หากไม่ทราบ)",
         "text_size": "8sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
           "err": "Please specify Total Number of Nets (Type 99 if unable to assess)"
         },
-        "shortened_hint": "Number of Nets Hanging and in Use",
+        "shortened_hint": "จำนวนมุ้งที่ใช้งาน",
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
@@ -313,15 +309,15 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Is this a mop-up activity?",
+        "label": "เป็นกิจกรรมเสริมหรือไม่",
         "options": [
           {
             "key": "Yes",
-            "text": "Yes"
+            "text": "ใช่"
           },
           {
             "key": "No",
-            "text": "No"
+            "text": "ไม่ใช่"
           }
         ],
         "value": "No",
