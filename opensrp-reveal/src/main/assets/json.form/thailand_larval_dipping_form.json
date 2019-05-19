@@ -91,6 +91,13 @@
         "v_required": {
           "value": true,
           "err": "Please specify the date larval dipping was done"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-larval-dipping-relevance-rules.yml"
+            }
+          }
         }
       }
     ]
