@@ -232,12 +232,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
 
                     @Override
-                    public void onMove(@NonNull MoveGestureDetector detector) {//do nothing
+                    public void onMove(@NonNull MoveGestureDetector detector) {
+                        revealMapHelper.resizeIndexCaseCircle(mMapboxMap);
                     }
 
                     @Override
-                    public void onMoveEnd(@NonNull MoveGestureDetector detector) {
-                        revealMapHelper.resizeIndexCaseCircle(mMapboxMap);
+                    public void onMoveEnd(@NonNull MoveGestureDetector detector) {//do nothing
                     }
                 });
                 mapboxMap.setMinZoomPreference(10);
