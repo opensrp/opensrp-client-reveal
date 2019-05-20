@@ -59,6 +59,8 @@ public interface Constants {
         String UPDATE_LOCATION_BUFFER_RADIUS = "update_location_buffer_radius";
         String INDEX_CASE_CIRCLE_RADIUS_IN_METRES = "index_case_circle_radius_in_metres";
         Float DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES = 1000f;
+        String DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL = "draw_operational_area_boundary_and_label";
+        Boolean DEFAULT_DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL = true;
     }
 
     interface Preferences {
