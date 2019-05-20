@@ -105,6 +105,8 @@ public interface Constants {
     interface Intervention {
         String IRS = "IRS";
 
+        String FOCUS = "FOCUS";
+
         String MDA = "MDA";
 
         String MOSQUITO_COLLECTION = "Mosquito Collection";
@@ -268,7 +270,7 @@ public interface Constants {
 
         String GROUPID = "group_id";
 
-        String CAMPAIGN_ID = "campaign_id";
+        String PLAN_ID = "plan_id";
 
         String NOT_SRAYED_REASON = "not_sprayed_reason";
 
