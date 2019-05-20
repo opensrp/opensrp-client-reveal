@@ -101,7 +101,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         context.updateApplicationContext(getApplicationContext());
         context.updateCommonFtsObject(createCommonFtsObject());
         // Initialize Modules
-        Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
+        Fabric.with(this, new Crashlytics.Builder().build());
         CoreLibrary.init(context, new RevealSyncConfiguration());
         if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
             CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.NAMIBIA_EC_CLIENT_FIELDS);
