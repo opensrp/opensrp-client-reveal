@@ -77,7 +77,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
 
                 cursor.close();
                 cursor = database.rawQuery(getMembersSelect(String.format("%s.%s=? AND %s=?",
-                        STRUCTURES_TABLE, ID, PLAN_ID)), new String[]{structureId, campaignId});
+                        STRUCTURES_TABLE, ID, PLAN_ID), getMemberColumns()), new String[]{structureId, campaignId});
                 while (cursor.moveToNext()) {
                     taskDetailsList.add(readMemberTaskDetails(cursor));
                 }
@@ -118,16 +118,6 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
         return queryBuilder.mainCondition(mainCondition);
     }
 
-
-    private String getMembersSelect(String mainCondition) {
-        SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
-        queryBuilder.selectInitiateMainTable(STRUCTURES_TABLE, getMemberColumns(), ID);
-        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
-                FAMILY_MEMBER, FAMILY_MEMBER, STRUCTURE_ID, STRUCTURES_TABLE, ID));
-        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
-                TASK_TABLE, TASK_TABLE, FOR, FAMILY_MEMBER, BASE_ENTITY_ID));
-        return queryBuilder.mainCondition(mainCondition);
-    }
 
     private String[] getStructureColumns() {
         return new String[]{

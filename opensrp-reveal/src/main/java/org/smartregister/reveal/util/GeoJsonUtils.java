@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.smartregister.reveal.interactor.ListTaskInteractor.gson;
+import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
@@ -21,7 +22,7 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
  */
 public class GeoJsonUtils {
 
-    public static String getGeoJsonFromStructuresAndTasks(List<Location> structures, Map<String, Task> tasks) {
+    public static String getGeoJsonFromStructuresAndTasks(List<Location> structures, Map<String, Task> tasks, String indexCase) {
         for (Location structure : structures) {
             Task task = tasks.get(structure.getId());
             if (task != null) {
@@ -30,6 +31,13 @@ public class GeoJsonUtils {
                 taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
                 taskProperties.put(TASK_STATUS, task.getStatus().name());
                 taskProperties.put(TASK_CODE, task.getCode());
+
+                if (indexCase != null && structure.getId().equals(indexCase)) {
+                    taskProperties.put(IS_INDEX_CASE, Boolean.TRUE.toString());
+                } else {
+                    taskProperties.put(IS_INDEX_CASE, Boolean.FALSE.toString());
+                }
+
                 taskProperties.put(LOCATION_UUID, structure.getProperties().getUid());
                 taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
                 taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
