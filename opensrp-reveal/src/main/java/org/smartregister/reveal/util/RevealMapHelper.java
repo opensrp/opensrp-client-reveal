@@ -117,7 +117,7 @@ public class RevealMapHelper {
         mMapboxMapStyle.addImage(INDEX_CASE_TARGET_ICON, icon);
         SymbolLayer symbolLayer = new SymbolLayer(INDEX_CASE_SYMBOL_LAYER, context.getString(R.string.reveal_datasource_name));
         symbolLayer.setProperties(iconImage(INDEX_CASE_TARGET_ICON), iconSize(dynamicIconSize));
-        symbolLayer.setFilter(eq(get(IS_INDEX_CASE), true));
+        symbolLayer.setFilter(eq(get(IS_INDEX_CASE), Boolean.TRUE.toString()));
         mMapboxMapStyle.addLayer(symbolLayer);
 
         // index case circle layer
