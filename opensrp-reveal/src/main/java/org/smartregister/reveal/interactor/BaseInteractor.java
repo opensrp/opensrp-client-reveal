@@ -125,16 +125,15 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
             JSONObject jsonForm = new JSONObject(json);
             String encounterType = jsonForm.getString(JsonForm.ENCOUNTER_TYPE);
             if (SPRAY_EVENT.equals(encounterType) || MOSQUITO_COLLECTION_EVENT.equals(encounterType)
-                    || LARVAL_DIPPING_EVENT.equals(encounterType) || BEDNET_DISTRIBUTION_EVENT.equals(encounterType)) {
-                saveBCCForm(jsonForm);
+                    || LARVAL_DIPPING_EVENT.equals(encounterType) || BEDNET_DISTRIBUTION_EVENT.equals(encounterType)
+                    || BEHAVIOUR_CHANGE_COMMUNICATION.equals(encounterType)) {
+                saveStructureForm(jsonForm);
             } else if (REGISTER_STRUCTURE_EVENT.equals(encounterType)) {
                 saveRegisterStructureForm(jsonForm);
             } else if (BLOOD_SCREENING_EVENT.equals(encounterType)) {
                 saveMemberForm(jsonForm, encounterType, Intervention.BLOOD_SCREENING);
             } else if (CASE_CONFIRMATION_EVENT.equals(encounterType)) {
                 saveMemberForm(jsonForm, encounterType, Intervention.CASE_CONFIRMATION);
-            } else if (BEHAVIOUR_CHANGE_COMMUNICATION.equals(encounterType)) {
-                saveStructureForm(jsonForm, Intervention.BCC);
             }
         } catch (Exception e) {
             Log.e(TAG, "Error saving Json Form data", e);
@@ -158,12 +157,9 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
         return gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class);
     }
 
-    private void saveBCCForm(JSONObject jsonForm) {
-        saveStructureForm(jsonForm, BCC);
-    }
-
-    private void saveStructureForm(JSONObject jsonForm, String interventionType) {
+    private void saveStructureForm(JSONObject jsonForm) {
         String encounterType = null;
+        String interventionType = null;
         try {
             encounterType = jsonForm.getString(ENCOUNTER_TYPE);
             if (encounterType.equals(SPRAY_EVENT)) {
@@ -174,6 +170,8 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
                 interventionType = LARVAL_DIPPING;
             } else if (encounterType.equals(BEDNET_DISTRIBUTION_EVENT)) {
                 interventionType = BEDNET_DISTRIBUTION;
+            } else if (encounterType.equals(BEHAVIOUR_CHANGE_COMMUNICATION)) {
+                interventionType = BCC;
             }
         } catch (JSONException e) {
             Log.e(TAG, e.getStackTrace().toString());
