@@ -30,8 +30,8 @@ import org.smartregister.reveal.util.Utils;
 import java.util.List;
 import java.util.Map;
 
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.CAMPAIGN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
@@ -149,7 +149,7 @@ public class ListTaskInteractor extends BaseInteractor {
                     if (operationalAreaLocation != null) {
                         Map<String, Task> tasks = taskRepository.getTasksByPlanAndGroup(plan, operationalAreaLocation.getId());
                         List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
-                        String indexCase = getIndexCaseStructure(campaign);
+                        String indexCase = getIndexCaseStructure(plan);
                         featureCollection.put(GeoJSON.FEATURES, new JSONArray(GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, indexCase)));
                         Log.d(TAG, "features:" + featureCollection.toString());
 
@@ -180,7 +180,7 @@ public class ListTaskInteractor extends BaseInteractor {
         String structureId = null;
         try {
             cursor = database.rawQuery(getMembersSelect(String.format("%s=? AND %s=?",
-                    CAMPAIGN_ID, CODE), new String[]{STRUCTURE_ID}), new String[]{planId, CASE_CONFIRMATION});
+                    PLAN_ID, CODE), new String[]{STRUCTURE_ID}), new String[]{planId, CASE_CONFIRMATION});
             if (cursor.moveToNext()) {
                 structureId = cursor.getString(0);
             }
