@@ -23,8 +23,6 @@ public class RevealJobCreator implements JobCreator {
         switch (tag) {
             case SyncServiceJob.TAG:
                 return new SyncServiceJob(RevealSyncIntentService.class);
-            case RevealCampaignServiceJob.TAG:
-                return new RevealCampaignServiceJob();
             case LocationTaskServiceJob.TAG:
                 return new LocationTaskServiceJob();
             case RevealSyncSettingsServiceJob.TAG:

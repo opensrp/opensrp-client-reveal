@@ -1,21 +1,25 @@
 package org.smartregister.reveal.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
 import org.smartregister.family.activity.BaseFamilyRegisterActivity;
-import org.smartregister.family.model.BaseFamilyRegisterModel;
-import org.smartregister.family.presenter.BaseFamilyRegisterPresenter;
+import org.smartregister.family.util.Utils;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.contract.FamilyRegisterContract;
 import org.smartregister.reveal.fragment.FamilyRegisterFragment;
+import org.smartregister.reveal.model.FamilyRegisterModel;
+import org.smartregister.reveal.presenter.FamilyRegisterPresenter;
+import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
 /**
  * Created by samuelgithengi on 2/8/19.
  */
-public class FamilyRegisterActivity extends BaseFamilyRegisterActivity {
+public class FamilyRegisterActivity extends BaseFamilyRegisterActivity implements FamilyRegisterContract.View {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +31,11 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity {
 
     @Override
     protected void initializePresenter() {
-        presenter = new BaseFamilyRegisterPresenter(this, new BaseFamilyRegisterModel());
+        String structureId = getIntent().getStringExtra(Properties.LOCATION_UUID);
+        String taskId = getIntent().getStringExtra(Properties.TASK_IDENTIFIER);
+        String taskBusinessStatus = getIntent().getStringExtra(Properties.TASK_BUSINESS_STATUS);
+        String taskStatus = getIntent().getStringExtra(Properties.TASK_STATUS);
+        presenter = new FamilyRegisterPresenter(this, new FamilyRegisterModel(structureId, taskId, taskBusinessStatus, taskStatus));
     }
 
     @Override
@@ -52,6 +60,7 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity {
         bottomNavigationView.getMenu().removeItem(R.id.action_search);
         bottomNavigationView.getMenu().removeItem(R.id.action_library);
         bottomNavigationView.getMenu().removeItem(R.id.action_job_aids);
+        bottomNavigationView.getMenu().removeItem(R.id.action_register);
     }
 
     @Override
@@ -61,5 +70,18 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity {
             return;
         }
         super.switchToFragment(position);
+    }
+
+    @Override
+    public void startProfileActivity(String baseEntityId, String familyHead, String primaryCareGiver, String cityVillage, String firstName) {
+        Intent intent = new Intent(this, Utils.metadata().profileActivity);
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID, baseEntityId);
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_HEAD, familyHead);
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.PRIMARY_CAREGIVER, primaryCareGiver);
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.VILLAGE_TOWN, cityVillage);
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_NAME, firstName);
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.GO_TO_DUE_PAGE, false);
+
+        startActivity(intent);
     }
 }

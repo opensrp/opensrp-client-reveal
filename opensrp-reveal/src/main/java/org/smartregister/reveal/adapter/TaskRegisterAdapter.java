@@ -17,7 +17,6 @@ import org.smartregister.reveal.viewholder.TaskRegisterViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by samuelgithengi on 3/20/19.
@@ -44,15 +43,14 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
 
     @Override
     public void onBindViewHolder(@NonNull TaskRegisterViewHolder viewHolder, int position) {
-        Random random = new Random();
         TaskDetails task = taskDetails.get(position);
         Float distance = task.getDistanceFromUser();
         String name = task.getStructureName();
         String action = null;
         boolean hasIcon = false;
         if (Constants.Intervention.IRS.equals(task.getTaskCode())) {
-            if (name == null) {//TODO remove setting structure name with serial numbers once its moved to server
-                name = task.getFamilyName() != null ? task.getFamilyName() : "Structure " + random.nextInt(100);
+            if (name == null) {
+                name = task.getFamilyName() != null ? task.getFamilyName() : context.getString(R.string.unenumerated_structure);
             }
             action = context.getString(R.string.record_status);
         } else if (Constants.Intervention.MOSQUITO_COLLECTION.equals(task.getTaskCode())) {
@@ -66,6 +64,13 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
             name = context.getString(R.string.bcc);
             action = context.getString(R.string.record_bcc);
             hasIcon = true;
+        } else {
+            if (name == null) {
+                name = task.getFamilyName() != null ? task.getFamilyName() : context.getString(R.string.unenumerated_structure);
+            }
+            if (task.getBusinessStatus() != null) {
+                action = task.getBusinessStatus().replaceAll(" ", "\n");
+            }
         }
         viewHolder.setTaskName(name);
         CardDetails cardDetails = new CardDetails(task.getBusinessStatus());

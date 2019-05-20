@@ -13,6 +13,8 @@ import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
+import org.smartregister.repository.PlanDefinitionRepository;
+import org.smartregister.repository.PlanDefinitionSearchRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.repository.SettingsRepository;
 import org.smartregister.repository.StructureRepository;
@@ -106,6 +108,9 @@ public class RevealRepository extends Repository {
         }, 5000);
 
         PullUniqueIdsServiceJob.scheduleJobImmediately(PullUniqueIdsServiceJob.TAG);
+
+        PlanDefinitionRepository.createTable(db);
+        PlanDefinitionSearchRepository.createTable(db);
     }
 
     @Override

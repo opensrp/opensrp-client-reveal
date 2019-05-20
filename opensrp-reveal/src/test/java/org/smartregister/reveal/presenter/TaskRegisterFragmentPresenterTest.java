@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.robolectric.RuntimeEnvironment;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
 import org.smartregister.configurableviews.model.View;
 import org.smartregister.configurableviews.model.ViewConfiguration;
@@ -82,6 +83,9 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Captor
     private ArgumentCaptor<Location> operationalAreaCenterCaptor;
 
+    @Captor
+    private ArgumentCaptor<String> labelCaptor;
+
     private TaskRegisterFragmentPresenter presenter;
 
     private Set<View> visibleColumns;
@@ -92,6 +96,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
+        when(view.getContext()).thenReturn(RuntimeEnvironment.application);
         presenter = new TaskRegisterFragmentPresenter(view, TaskRegister.VIEW_IDENTIFIER, interactor);
         Whitebox.setInternalState(presenter, "viewsHelper", viewsHelper);
         Whitebox.setInternalState(presenter, "prefsUtil", preferencesUtil);
@@ -121,12 +126,12 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testInitializeQueries() {
-        String mainCondition = "group_id = ? AND campaign_id = ?";
+        String mainCondition = "group_id = ? AND plan_id = ?";
         Whitebox.setInternalState(presenter, "visibleColumns", visibleColumns);
         presenter.initializeQueries(mainCondition);
         verify(view).initializeAdapter(eq(visibleColumns));
         verify(view).showProgressView();
-        verify(interactor).findTasks(mainConditionCaptor.capture(), myLocationCaptor.capture(), operationalAreaCenterCaptor.capture());
+        verify(interactor).findTasks(mainConditionCaptor.capture(), myLocationCaptor.capture(), operationalAreaCenterCaptor.capture(), labelCaptor.capture());
         assertEquals(mainCondition, mainConditionCaptor.getValue().first);
         assertNull(mainConditionCaptor.getValue().second[0]);
         assertNull(mainConditionCaptor.getValue().second[1]);
@@ -139,14 +144,14 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void testInitializeQueriesUsesCorrectParams() {
         String campaignId = UUID.randomUUID().toString();
-        when(preferencesUtil.getCurrentCampaignId()).thenReturn(campaignId);
+        when(preferencesUtil.getCurrentPlanId()).thenReturn(campaignId);
         when(preferencesUtil.getCurrentOperationalArea()).thenReturn("MTI_84");
-        String mainCondition = "group_id = ? AND campaign_id = ?";
+        String mainCondition = "group_id = ? AND plan_id = ?";
         Whitebox.setInternalState(presenter, "visibleColumns", visibleColumns);
         presenter.initializeQueries(mainCondition);
         verify(view).initializeAdapter(eq(visibleColumns));
         verify(view).showProgressView();
-        verify(interactor).findTasks(mainConditionCaptor.capture(), myLocationCaptor.capture(), operationalAreaCenterCaptor.capture());
+        verify(interactor).findTasks(mainConditionCaptor.capture(), myLocationCaptor.capture(), operationalAreaCenterCaptor.capture(), labelCaptor.capture());
         assertEquals(mainCondition, mainConditionCaptor.getValue().first);
         assertEquals(operationalArea.getId(), mainConditionCaptor.getValue().second[0]);
         assertEquals(campaignId, mainConditionCaptor.getValue().second[1]);
@@ -238,14 +243,15 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnDrawerClosed() {
-        String campaignId = UUID.randomUUID().toString();
-        when(preferencesUtil.getCurrentCampaignId()).thenReturn(campaignId);
+        String campaignId = "IRS_2019_season1";
+        PreferencesUtil.getInstance().setCurrentPlanId(campaignId);
+        when(preferencesUtil.getCurrentPlanId()).thenReturn(campaignId);
         when(preferencesUtil.getCurrentOperationalArea()).thenReturn("MTI_84");
         presenter.onLocationChanged(location);
         presenter.onDrawerClosed();
         verify(view).showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
-        verify(interactor).findTasks(mainConditionCaptor.capture(), myLocationCaptor.capture(), operationalAreaCenterCaptor.capture());
-        assertEquals("group_id = ? AND campaign_id = ?", mainConditionCaptor.getValue().first);
+        verify(interactor).findTasks(mainConditionCaptor.capture(), myLocationCaptor.capture(), operationalAreaCenterCaptor.capture(), labelCaptor.capture());
+        assertEquals("group_id = ? AND plan_id = ?", mainConditionCaptor.getValue().first);
         assertEquals(operationalArea.getId(), mainConditionCaptor.getValue().second[0]);
         assertEquals(campaignId, mainConditionCaptor.getValue().second[1]);
 
@@ -262,7 +268,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         presenter.onTaskSelected(taskDetails);
         verify(view).displayToast("To open structure details view for Craig");
         verify(view).getContext();
-        verifyNoMoreInteractions(view);
+        verify(interactor).getStructure(taskDetails);
     }
 
     @Test
@@ -284,7 +290,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         presenter.onTaskSelected(taskDetails);
         verify(view).getContext();
         verify(view).displayToast("To open BCC form for " + taskDetails.getTaskId());
-        verifyNoMoreInteractions(view);
+        verify(interactor).getStructure(taskDetails);
     }
 
     @Test

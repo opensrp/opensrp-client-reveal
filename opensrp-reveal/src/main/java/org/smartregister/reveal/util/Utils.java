@@ -14,14 +14,16 @@ import android.widget.TextView;
 
 import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import org.smartregister.domain.Location;
 import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.job.RevealCampaignServiceJob;
+import org.smartregister.reveal.job.LocationTaskServiceJob;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
+import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
@@ -86,7 +88,7 @@ public class Utils {
     }
 
     public static void startImmediateSync() {
-        RevealCampaignServiceJob.scheduleJobImmediately(RevealCampaignServiceJob.TAG);
+        LocationTaskServiceJob.scheduleJobImmediately(LocationTaskServiceJob.TAG);
         PullUniqueIdsServiceJob.scheduleJobImmediately(PullUniqueIdsServiceJob.TAG);
     }
 
@@ -117,5 +119,29 @@ public class Utils {
 
     public static Float getLocationBuffer() {
         return Float.valueOf(getGlobalConfig(CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES, CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString()));
+    }
+
+    public static int getInterventionLabel() {
+        String plan = PreferencesUtil.getInstance().getCurrentPlan();
+        if (plan.toUpperCase().contains(Intervention.FOCUS))
+            return R.string.focus_investigation;
+        else if (plan.toUpperCase().contains(Intervention.IRS))
+            return R.string.irs;
+        else
+            return R.string.irs;
+    }
+
+    public static float calculateZoomLevelRadius(@NonNull final MapboxMap mapboxMap, double latitude, float radius) {
+        double metersPerPixel = mapboxMap.getProjection().getMetersPerPixelAtLatitude(latitude);
+        return (float) (radius / metersPerPixel);
+    }
+
+    public static String getAge(String dob) {
+        String dobString = org.smartregister.family.util.Utils.getDuration(dob);
+        return dobString.contains("y") ? dobString.substring(0, dobString.indexOf("y")) : dobString;
+    }
+
+    public static Boolean getDrawOperationalAreaBoundaryAndLabel() {
+        return Boolean.valueOf(getGlobalConfig(CONFIGURATION.DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL, CONFIGURATION.DEFAULT_DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL.toString()));
     }
 }

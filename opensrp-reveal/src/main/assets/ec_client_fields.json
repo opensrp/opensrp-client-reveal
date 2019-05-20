@@ -125,6 +125,13 @@
           }
         },
         {
+          "column_name": "structure_id",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.residence"
+          }
+        },
+        {
           "column_name": "unique_id",
           "type": "Client",
           "json_mapping": {
@@ -204,6 +211,13 @@
           "type": "Client",
           "json_mapping": {
             "field": "relationships.family"
+          }
+        },
+        {
+          "column_name": "structure_id",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.residence"
           }
         },
         {
@@ -303,7 +317,7 @@
       ]
     },
     {
-      "name": "mosquito_interventions",
+      "name": "mosquito_collections",
       "columns": [
         {
           "column_name": "base_entity_id",
@@ -369,6 +383,42 @@
           "json_mapping": {
             "field": "obs.fieldCode",
             "concept": "calcTotalNetsDistributed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "larval_dippings",
+      "columns": [
+        {
+          "column_name": "base_entity_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "baseEntityId"
+          }
+        },
+        {
+          "column_name": "status",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "business_status"
+          }
+        },
+        {
+          "column_name": "start_date",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "occurred_date"
+          }
+        },
+        {
+          "column_name": "end_date",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "occurred_date"
           }
         }
       ]

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/patient_column"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/register_list_item_margin"
+    android:layout_marginLeft="@dimen/register_list_item_margin"
+    android:layout_marginEnd="@dimen/register_list_item_end_margin"
+    android:layout_marginRight="@dimen/register_list_item_end_margin"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/register_list_max_padding"
+    android:paddingBottom="@dimen/register_list_max_padding">
+
+    <org.smartregister.view.customcontrols.CustomFontTextView
+        android:id="@+id/patient_name_age"
+        style="@style/CustomFontTextViewStyle.ClientList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingStart="0dp"
+        android:paddingLeft="0dp"
+        android:singleLine="true"
+        android:text="Patient Name, Age"
+        android:textColor="@color/text_black"
+        android:textSize="@dimen/register_list_title_size" />
+
+    <org.smartregister.view.customcontrols.CustomFontTextView
+        android:id="@+id/gender"
+        style="@style/CustomFontTextViewStyle.ClientList.Light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="0dp"
+        android:paddingTop="@dimen/register_list_top_bottom_padding"
+        android:textColor="@color/light_grey_text"
+        android:textSize="@dimen/register_list_desc_size" />
+
+
+</LinearLayout>
+
