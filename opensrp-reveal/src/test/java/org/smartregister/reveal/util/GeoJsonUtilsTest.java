@@ -21,6 +21,7 @@ import org.smartregister.util.PropertiesConverter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RunWith(PowerMockRunner.class)
 public class GeoJsonUtilsTest {
@@ -42,7 +43,7 @@ public class GeoJsonUtilsTest {
 
         tasks.put(structure.getId(), task);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, indexCase);
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, structure.getId());
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -70,7 +71,7 @@ public class GeoJsonUtilsTest {
 
         tasks.put(structure.getId(), task);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, indexCase);
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
