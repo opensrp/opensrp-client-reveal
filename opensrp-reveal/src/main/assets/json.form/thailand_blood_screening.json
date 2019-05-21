@@ -81,28 +81,32 @@
         "label": "กิจกรรม",
         "options": [
           {
-            "key": "Investigation",
-            "text": "Investigation"
+            "key": "CIS",
+            "text": "CIS"
           },
           {
             "key": "PCD",
-            "text": "Passive Case Detection"
+            "text": "PCD"
           },
           {
             "key": "ACD",
-            "text": "Active Case Detection"
+            "text": "ACD"
           },
           {
             "key": "SCD",
-            "text": "Special Case Detection"
+            "text": "SCD"
           },
           {
             "key": "Follow-up",
-            "text": "Follow-up"
+            "text": "FU"
+          },
+          {
+            "key": "MBS",
+            "text": "MBS"
           },
           {
             "key": "Other",
-            "text": "Other"
+            "text": "อื่นๆ"
           }
         ],
         "value": "Investigation",
@@ -180,6 +184,14 @@
           {
             "key": "PositiveMixed",
             "text": "Mix"
+          },
+          {
+            "key": "PO",
+            "text": "Po"
+          },
+          {
+            "key": "PK",
+            "text": "Pk"
           },
           {
             "key": "fg",
