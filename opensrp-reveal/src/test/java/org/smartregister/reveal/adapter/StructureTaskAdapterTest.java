@@ -76,8 +76,8 @@ public class StructureTaskAdapterTest extends BaseUnitTest {
         StructureTaskViewHolder holder = adapter.onCreateViewHolder(vg, 0);
         adapter.onBindViewHolder(holder, 0);
 
-        assertEquals("Distribute LLIN", ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
-        assertEquals("Record\nLLIN", ((TextView) holder.itemView.findViewById(R.id.task_action)).getText());
+        assertEquals(context.getString(R.string.distribute_llin), ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+        assertEquals(context.getString(R.string.record_llin), ((TextView) holder.itemView.findViewById(R.id.task_action)).getText());
     }
 
 
@@ -106,7 +106,7 @@ public class StructureTaskAdapterTest extends BaseUnitTest {
         adapter.onBindViewHolder(holder, 0);
 
         assertEquals("Ali Otala", ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
-        assertEquals("Record\nTest", ((TextView) holder.itemView.findViewById(R.id.task_action)).getText());
+        assertEquals(context.getString(R.string.record_test), ((TextView) holder.itemView.findViewById(R.id.task_action)).getText());
     }
 
 

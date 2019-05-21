@@ -74,6 +74,9 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Mock
     private PreferencesUtil preferencesUtil;
 
+    @Mock
+    private RevealJsonFormUtils jsonFormUtils;
+
     @Captor
     private ArgumentCaptor<Pair<String, String[]>> mainConditionCaptor;
 
@@ -268,7 +271,6 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         presenter.onTaskSelected(taskDetails);
         verify(view).displayToast("To open structure details view for Craig");
         verify(view).getContext();
-        verify(interactor).getStructure(taskDetails);
     }
 
     @Test
@@ -289,7 +291,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         taskDetails.setTaskCode(Constants.Intervention.BCC);
         presenter.onTaskSelected(taskDetails);
         verify(view).getContext();
-        verify(view).displayToast("To open BCC form for " + taskDetails.getTaskId());
+        verify(view).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
         verify(interactor).getStructure(taskDetails);
     }
 
@@ -306,8 +308,9 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnStructureFoundWithLocationValidationDisabled() {
-        when(view.getJsonFormUtils()).thenReturn(mock(RevealJsonFormUtils.class));
+        when(view.getJsonFormUtils()).thenReturn(jsonFormUtils);
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        when(jsonFormUtils.getFormName(null, taskDetails.getTaskCode())).thenReturn(Constants.JsonForm.SPRAY_FORM);
         presenter = spy(presenter);
         doReturn(false).when(presenter).validateFarStructures();
         presenter.onStructureFound(null, taskDetails);

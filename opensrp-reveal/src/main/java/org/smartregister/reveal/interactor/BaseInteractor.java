@@ -50,6 +50,7 @@ import java.util.UUID;
 import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
 import static org.smartregister.family.util.DBConstants.KEY.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
+import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.CASE_CONFIRMATION_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
@@ -58,6 +59,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
+import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -123,8 +125,9 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
             JSONObject jsonForm = new JSONObject(json);
             String encounterType = jsonForm.getString(JsonForm.ENCOUNTER_TYPE);
             if (SPRAY_EVENT.equals(encounterType) || MOSQUITO_COLLECTION_EVENT.equals(encounterType)
-                    || LARVAL_DIPPING_EVENT.equals(encounterType) || BEDNET_DISTRIBUTION_EVENT.equals(encounterType)) {
-                saveMosquitoInterventionForm(jsonForm);
+                    || LARVAL_DIPPING_EVENT.equals(encounterType) || BEDNET_DISTRIBUTION_EVENT.equals(encounterType)
+                    || BEHAVIOUR_CHANGE_COMMUNICATION.equals(encounterType)) {
+                saveLocationInterventionForm(jsonForm);
             } else if (REGISTER_STRUCTURE_EVENT.equals(encounterType)) {
                 saveRegisterStructureForm(jsonForm);
             } else if (BLOOD_SCREENING_EVENT.equals(encounterType)) {
@@ -154,9 +157,9 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
         return gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class);
     }
 
-    private void saveMosquitoInterventionForm(JSONObject jsonForm) {
-        String interventionType = null;
+    private void saveLocationInterventionForm(JSONObject jsonForm) {
         String encounterType = null;
+        String interventionType = null;
         try {
             encounterType = jsonForm.getString(ENCOUNTER_TYPE);
             if (encounterType.equals(SPRAY_EVENT)) {
@@ -167,6 +170,8 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
                 interventionType = LARVAL_DIPPING;
             } else if (encounterType.equals(BEDNET_DISTRIBUTION_EVENT)) {
                 interventionType = BEDNET_DISTRIBUTION;
+            } else if (encounterType.equals(BEHAVIOUR_CHANGE_COMMUNICATION)) {
+                interventionType = BCC;
             }
         } catch (JSONException e) {
             Log.e(TAG, e.getStackTrace().toString());

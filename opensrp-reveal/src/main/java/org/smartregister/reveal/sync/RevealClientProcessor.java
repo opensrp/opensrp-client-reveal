@@ -29,6 +29,7 @@ import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
+import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
@@ -93,7 +94,9 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 String eventType = event.getEventType();
                 if (eventType.equals(SPRAY_EVENT)) {
                     operationalAreaId = processSprayEvent(event, clientClassification, localEvents);
-                } else if (eventType.equals(MOSQUITO_COLLECTION_EVENT) || eventType.equals(LARVAL_DIPPING_EVENT) || eventType.equals(BEDNET_DISTRIBUTION_EVENT)) {
+                } else if (eventType.equals(MOSQUITO_COLLECTION_EVENT) || eventType.equals(LARVAL_DIPPING_EVENT)
+                        || eventType.equals(BEDNET_DISTRIBUTION_EVENT) ||
+                        eventType.equals(BEHAVIOUR_CHANGE_COMMUNICATION)) {
                     operationalAreaId = processEvent(event, clientClassification, localEvents);
                 } else if (eventType.equals(REGISTER_STRUCTURE_EVENT)) {
                     operationalAreaId = processRegisterStructureEvent(event, clientClassification);

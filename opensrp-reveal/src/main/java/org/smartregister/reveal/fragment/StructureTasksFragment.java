@@ -1,5 +1,6 @@
 package org.smartregister.reveal.fragment;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -159,6 +160,11 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     @Override
     public void startForm(JSONObject formJSON) {
         jsonFormUtils.startJsonForm(formJSON, getActivity(), REQUEST_CODE_GET_JSON_FRAGMENT);
+    }
+
+    @Override
+    public void displayError(int title, int message) {
+        new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(message).create().show();
     }
 
     @Override
