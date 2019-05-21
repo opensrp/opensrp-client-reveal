@@ -18,6 +18,7 @@ import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.TestingUtils;
 
@@ -71,6 +72,8 @@ public class FormFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnPasswordVerifiedStartsForm() {
+        taskDetails.setTaskCode(Constants.Intervention.BEDNET_DISTRIBUTION);
+        when(jsonFormUtils.getFormName(null, taskDetails.getTaskCode())).thenReturn(Constants.JsonForm.BEDNET_DISTRIBUTION_FORM);
         presenter.onPasswordVerified();
         verify(view).startForm(null);
 
