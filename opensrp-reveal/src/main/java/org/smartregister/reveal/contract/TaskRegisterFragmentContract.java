@@ -5,7 +5,6 @@ import android.location.Location;
 import android.support.annotation.StringRes;
 
 import org.smartregister.commonregistry.CommonPersonObjectClient;
-import org.smartregister.domain.Task;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.LocationUtils;

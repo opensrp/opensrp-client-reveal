@@ -35,7 +35,6 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
-import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
@@ -332,7 +331,7 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
             CommonPersonObjectClient family = null;
             try {
                 cursor = database.rawQuery(String.format("SELECT %s FROM %S WHERE %s = ?",
-                        INTENT_KEY.BASE_ENTITY_ID, TABLE_NAME.FAMILY, org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID), new String[]{structureId});
+                        INTENT_KEY.BASE_ENTITY_ID, TABLE_NAME.FAMILY, STRUCTURE_ID), new String[]{structureId});
                 if (cursor.moveToNext()) {
                     String baseEntityId = cursor.getString(0);
                     final CommonPersonObject personObject = org.smartregister.family.util.Utils.context().commonrepository(org.smartregister.family.util.Utils.metadata().familyRegister.tableName).findByBaseEntityId(baseEntityId);
