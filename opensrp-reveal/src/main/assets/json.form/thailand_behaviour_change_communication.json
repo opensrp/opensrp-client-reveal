@@ -133,66 +133,6 @@
         }
       },
       {
-        "key": "messagingChannelPreferred",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "check_box",
-        "label": "ช่องทางใดได้ผลที่สุด",
-        "options": [
-          {
-            "key": "House-to-House",
-            "text": "เยี่ยมบ้าน"
-          },
-          {
-            "key": "Radio",
-            "text": "วิทยุ"
-          },
-          {
-            "key": "Phone",
-            "text": "โทรศัพท์"
-          },
-          {
-            "key": "Meeting",
-            "text": "การประชุม"
-          },
-          {
-            "key": "Other",
-            "text": "อื่นๆ"
-          }
-        ],
-        "v_required": {
-          "value": true,
-          "err": "This field is required"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "thailand-behaviour-change-communication-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "otherMessagingChannelPreferred",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "อื่นๆ : โปรดระบุ",
-        "v_required": {
-          "value": true,
-          "err": "An other messaging channel is required"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "thailand-behaviour-change-communication-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "kindOfMessaging",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -240,34 +180,6 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "thailand-behaviour-change-communication-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "meetingAttendeeCount",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "จำนวนผู้ได้รับสุขศึกษา",
-        "edit_type": "number",
-        "v_required": {
-          "value": true,
-          "err": "The number of attendees is required"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "This entry must be a number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "There must be greater than or equal to 0"
         },
         "relevance": {
           "rules-engine": {
