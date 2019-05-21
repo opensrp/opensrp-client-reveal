@@ -77,8 +77,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
 
                 cursor.close();
                 cursor = database.rawQuery(getMembersSelect(String.format("%s.%s=? AND %s=?",
-                        STRUCTURES_TABLE, ID, PLAN_ID),getMemberColumns()), new String[]{structureId, campaignId});
-
+                        STRUCTURES_TABLE, ID, PLAN_ID), getMemberColumns()), new String[]{structureId, campaignId});
                 while (cursor.moveToNext()) {
                     taskDetailsList.add(readMemberTaskDetails(cursor));
                 }
