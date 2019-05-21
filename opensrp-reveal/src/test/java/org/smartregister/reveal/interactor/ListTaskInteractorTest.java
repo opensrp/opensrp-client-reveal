@@ -240,7 +240,7 @@ public class ListTaskInteractorTest {
 
         listTaskInteractorSpy.saveJsonForm(mosquitoCollectionForm);
 
-        verifyPrivate(listTaskInteractorSpy, times(1)).invoke("saveMosquitoInterventionForm", captor.capture());
+        verifyPrivate(listTaskInteractorSpy, times(1)).invoke("saveLocationInterventionForm", captor.capture());
         assertEquals(new JSONObject(mosquitoCollectionForm).toString(), captor.getValue().toString());
     }
 

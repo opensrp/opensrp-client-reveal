@@ -7,13 +7,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.util.DateTimeTypeConverter;
 
@@ -79,12 +82,17 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
 
     @Override
     public void onLocationValidated() {
-        String formName = getView().getJsonFormUtils().getFormName(null, taskDetails.getTaskCode());
-        JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(context, formName, taskDetails, structure);
-        getView().startForm(formJSON);
+        if (!Constants.Intervention.REGISTER_FAMILY.equals(getTaskDetails().getTaskCode())) {
+            String formName = getView().getJsonFormUtils().getFormName(null, taskDetails.getTaskCode());
+            if (StringUtils.isBlank(formName)) {
+                getView().displayError(R.string.opening_form_title, R.string.form_not_found);
+            } else {
+                JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(context, formName, taskDetails, structure);
+                getView().startForm(formJSON);
+            }
+        }
         getView().hideProgressDialog();
     }
-
 
     @Override
     public LatLng getTargetCoordinates() {
@@ -126,4 +134,7 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
         }
     }
 
+    public BaseTaskDetails getTaskDetails() {
+        return taskDetails;
+    }
 }

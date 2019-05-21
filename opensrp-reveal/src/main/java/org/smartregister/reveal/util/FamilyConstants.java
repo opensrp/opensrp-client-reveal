@@ -24,6 +24,9 @@ public interface FamilyConstants {
     interface JSON_FORM {
         String FAMILY_REGISTER = "family_register";
         String FAMILY_MEMBER_REGISTER = "family_member_register";
+
+        String THAILAND_FAMILY_REGISTER = "thailand_family_register";
+        String THAILAND_FAMILY_MEMBER_REGISTER = "thailand_family_member_register";
     }
 
     interface RELATIONSHIP {

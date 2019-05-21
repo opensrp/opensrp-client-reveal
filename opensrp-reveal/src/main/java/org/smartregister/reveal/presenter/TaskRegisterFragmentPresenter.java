@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
@@ -183,12 +184,11 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public void onTaskSelected(TaskDetails details) {
         if (details != null) {
-            if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
+            if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus()) && !BCC.equals(details.getTaskCode())) {
                 //TODO implement functionality to link to structure details once its implemented
                 getView().displayToast(String.format("To open structure details view for %s",
                         details.getFamilyName()));
-            }
-            if (CASE_CONFIRMATION.equals(details.getTaskCode()) ||
+            } else if (CASE_CONFIRMATION.equals(details.getTaskCode()) ||
                     BLOOD_SCREENING.equals(details.getTaskCode()) ||
                     BEDNET_DISTRIBUTION.equals(details.getTaskCode())) {
                 //TODO implement functionality to link to structure details once its implemented
@@ -204,5 +204,13 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public int getInterventionLabel() {
         return Utils.getInterventionLabel();
+    }
+
+    @Override
+    public void onLocationValidated() {
+        if (Constants.Intervention.REGISTER_FAMILY.equals(getTaskDetails().getTaskCode())) {
+            getView().registerFamily(getTaskDetails());
+        }
+        super.onLocationValidated();
     }
 }
