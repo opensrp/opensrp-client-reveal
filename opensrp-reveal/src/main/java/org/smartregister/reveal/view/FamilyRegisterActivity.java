@@ -83,5 +83,6 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity implement
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.GO_TO_DUE_PAGE, false);
 
         startActivity(intent);
+        finish();
     }
 }

@@ -5,6 +5,8 @@ import android.location.Location;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.layers.CircleLayer;
@@ -34,6 +36,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_CIRCLE_LAYER;
@@ -55,6 +58,8 @@ public class RevealMapHelperTest {
     @Captor
     private ArgumentCaptor<Layer> layerArgumentCaptor;
 
+    private CameraPosition cameraPosition;
+
     @Before
     public void setUp() throws Exception {
         GeoJsonSource source = mock(GeoJsonSource.class);
@@ -65,6 +70,8 @@ public class RevealMapHelperTest {
         CircleLayer circleLayer = mock(CircleLayer.class);
         doReturn(INDEX_CASE_CIRCLE_LAYER).when(circleLayer).getId();
         whenNew(CircleLayer.class).withAnyArguments().thenReturn(circleLayer);
+        mockStatic(Utils.class);
+        PowerMockito.doReturn("12").when(Utils.class, "getGlobalConfig", any(), any());
         revealMapHelper = new RevealMapHelper();
     }
 
@@ -77,12 +84,13 @@ public class RevealMapHelperTest {
 
     @Test
     public void testResizeIndexCaseCircle() throws Exception {
-        mockStatic(Utils.class);
+        PowerMockito.mockStatic(Utils.class);
         MapboxMap mapboxMap = mock(MapboxMap.class);
+        cameraPosition = new CameraPosition.Builder().target(new LatLng()).build();
+        when(mapboxMap.getCameraPosition()).thenReturn(cameraPosition);
         CircleLayer circleLayer = mock(CircleLayer.class);
         Whitebox.setInternalState(revealMapHelper, "indexCaseCircleLayer", circleLayer);
         Whitebox.setInternalState(revealMapHelper, "indexCaseLocation", mock(Location.class));
-        PowerMockito.doReturn("12").when(Utils.class, "getGlobalConfig", any(), any());
         PowerMockito.doReturn(12f).when(Utils.class, "calculateZoomLevelRadius", any(MapboxMap.class), anyDouble(), anyFloat());
         revealMapHelper.resizeIndexCaseCircle(mapboxMap);
         verify(circleLayer).setProperties(any(PropertyValue.class));
@@ -96,13 +104,14 @@ public class RevealMapHelperTest {
 
     @Test
     public void testUpdateIndexCaseLayers() throws Exception {
-        mockStatic(Utils.class);
+        PowerMockito.mockStatic(Utils.class);
         GeoJsonSource source = mock(GeoJsonSource.class);
         Whitebox.setInternalState(revealMapHelper, "indexCaseSource", source);
         Whitebox.setInternalState(revealMapHelper, "indexCaseCircleLayer", mock(CircleLayer.class));
         FeatureCollection featureCollection = FeatureCollection.fromFeature(Feature.fromJson(feature));
         MapboxMap mapboxMap = mock(MapboxMap.class);
-        PowerMockito.doReturn("12").when(Utils.class, "getGlobalConfig", any(), any());
+        cameraPosition = new CameraPosition.Builder().target(new LatLng()).build();
+        when(mapboxMap.getCameraPosition()).thenReturn(cameraPosition);
         PowerMockito.doReturn(12f).when(Utils.class, "calculateZoomLevelRadius", any(MapboxMap.class), anyDouble(), anyFloat());
         revealMapHelper.updateIndexCaseLayers(mapboxMap, featureCollection);
         verify(source).setGeoJson(featureArgumentCaptor.capture());

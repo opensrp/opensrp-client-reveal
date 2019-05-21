@@ -20,6 +20,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.TaskRegisterAdapter;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
+import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
@@ -251,6 +252,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     public void setInventionType(int interventionLabel) {
         interventionTypeTv.setText(getString(interventionLabel));
+    }
+
+    @Override
+    public void registerFamily(BaseTaskDetails taskDetails) {
+        ((TaskRegisterActivity) getActivity()).startFamilyRegistration(taskDetails);
     }
 
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {

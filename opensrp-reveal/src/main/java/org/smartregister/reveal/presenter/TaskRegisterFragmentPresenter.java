@@ -205,4 +205,12 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     public int getInterventionLabel() {
         return Utils.getInterventionLabel();
     }
+
+    @Override
+    public void onLocationValidated() {
+        if (Constants.Intervention.REGISTER_FAMILY.equals(getTaskDetails().getTaskCode())) {
+            getView().registerFamily(getTaskDetails());
+        }
+        super.onLocationValidated();
+    }
 }

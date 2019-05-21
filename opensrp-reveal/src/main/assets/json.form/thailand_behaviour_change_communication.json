@@ -1,0 +1,353 @@
+{
+  "count": "1",
+  "encounter_type": "behaviour_change_communication",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "สให้สุขศึกษา (BCC)",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "bccCompleteYesNo",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "ในพื้นที่นี้ได้ให้สุขศึกษาครบหรือไม่",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "ใช่"
+          },
+          {
+            "key": "No",
+            "text": "ไม่ใช่"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "messagingChannelUsed",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "ใช้ช่องทางใดในการให้สุขศึกษา",
+        "options": [
+          {
+            "key": "House-to-House",
+            "text": "เยี่ยมบ้าน"
+          },
+          {
+            "key": "Radio",
+            "text": "วิทยุ"
+          },
+          {
+            "key": "Phone",
+            "text": "โทรศัพท์"
+          },
+          {
+            "key": "Meeting",
+            "text": "การประชุม"
+          },
+          {
+            "key": "Other",
+            "text": "อื่นๆ"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Please choose a messaging channel"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "otherMessagingChannelUsed",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "อื่นๆ : โปรดระบุ",
+        "v_required": {
+          "value": true,
+          "err": "An other messaging channel is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "messagingChannelPreferred",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "ช่องทางใดได้ผลที่สุด",
+        "options": [
+          {
+            "key": "House-to-House",
+            "text": "เยี่ยมบ้าน"
+          },
+          {
+            "key": "Radio",
+            "text": "วิทยุ"
+          },
+          {
+            "key": "Phone",
+            "text": "โทรศัพท์"
+          },
+          {
+            "key": "Meeting",
+            "text": "การประชุม"
+          },
+          {
+            "key": "Other",
+            "text": "อื่นๆ"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "otherMessagingChannelPreferred",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "อื่นๆ : โปรดระบุ",
+        "v_required": {
+          "value": true,
+          "err": "An other messaging channel is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "kindOfMessaging",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "ให้สุขศึกษาเรื่องใดบ้าง",
+        "options": [
+          {
+            "key": "IRS",
+            "text": "การพ่นสารเคมี"
+          },
+          {
+            "key": "MDA",
+            "text": "การจ่ายยาแบบกลุ่ม"
+          },
+          {
+            "key": "Symptom-Recognition",
+            "text": "อาการ"
+          },
+          {
+            "key": "Getting-Tested",
+            "text": "การตรวจรักษา"
+          },
+          {
+            "key": "Treatment-Seeking",
+            "text": "การรักษา"
+          },
+          {
+            "key": "Sleeping-Under-Nets",
+            "text": "การนอนในมุ้ง"
+          },
+          {
+            "key": "Applying-Repellant",
+            "text": "การใช้ยาทากันยุง"
+          },
+          {
+            "key": "Taking-Full-Treatment-Regimen",
+            "text": "การกินยาให้ครบ"
+          },
+          {
+            "key": "Other",
+            "text": "อื่นๆ"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "meetingAttendeeCount",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนผู้ได้รับสุขศึกษา",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "The number of attendees is required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This entry must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "There must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "numPeopleReached",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนผู้ได้รับสุขศึกษา",
+        "edit_type": "number",
+        "v_numeric": {
+          "value": "true",
+          "err": "This entry must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "There must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "usedBednetPreviousNight",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนคนที่ใช้มุ้ง LLIN หรือมุ้งชุบสารเคมีเมื่อคืนที่ผ่านมา",
+        "edit_type": "number",
+        "v_numeric": {
+          "value": "true",
+          "err": "This entry must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "There must be greater than or equal to 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "communityLeaderName",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "ผู้ให้สุขศึกษา",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-behaviour-change-communication-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "value": "Complete"
+      }
+    ]
+  }
+}

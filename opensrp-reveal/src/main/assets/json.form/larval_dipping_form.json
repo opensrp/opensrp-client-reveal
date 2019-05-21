@@ -47,12 +47,12 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "สำรวจลูกน้ำ",
+    "title": "Larval Dipping Details",
     "display_back_button": "true",
     "fields": [
       {
         "key": "task_business_status",
-        "label": "สถานะ",
+        "label": "Status",
         "type": "native_radio",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -60,19 +60,19 @@
         "options": [
           {
             "key": "In Progress",
-            "text": "กำลังดำเนินการ"
+            "text": "In Progress"
           },
           {
             "key": "Incomplete",
-            "text": "ไม่สมบูรณ์"
+            "text": "Incomplete"
           },
           {
             "key": "Not Eligible",
-            "text": "ไม่มีสิทธิ์"
+            "text": "Not Eligible"
           },
           {
             "key": "Complete",
-            "text": "ดำเนินการแล้ว"
+            "text": "Complete"
           }
         ],
         "v_required": {
@@ -86,7 +86,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "hint": "วันที่สำรวจลูกน้ำ",
+        "hint": "Date larval dipping was done",
         "max_date": "today",
         "v_required": {
           "value": true,
@@ -95,7 +95,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "thailand-larval-dipping-relevance-rules.yml"
+              "rules-file": "larval-dipping-relevance-rules.yml"
             }
           }
         }

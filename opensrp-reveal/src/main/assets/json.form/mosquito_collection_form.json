@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "larval_dipping",
+  "encounter_type": "mosquito_collection",
   "entity_id": "",
   "metadata": {
     "start": {
@@ -47,12 +47,12 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "สำรวจลูกน้ำ",
+    "title": "Mosquito Collection Details",
     "display_back_button": "true",
     "fields": [
       {
         "key": "task_business_status",
-        "label": "สถานะ",
+        "label": "Status",
         "type": "native_radio",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -60,42 +60,48 @@
         "options": [
           {
             "key": "In Progress",
-            "text": "กำลังดำเนินการ"
+            "text": "In Progress"
           },
           {
             "key": "Incomplete",
-            "text": "ไม่สมบูรณ์"
+            "text": "Incomplete"
           },
           {
             "key": "Not Eligible",
-            "text": "ไม่มีสิทธิ์"
+            "text": "Not Eligible"
           },
           {
             "key": "Complete",
-            "text": "ดำเนินการแล้ว"
+            "text": "Complete"
           }
-        ],
-        "v_required": {
-          "value": true,
-          "err": "Please specify the task status"
-        }
+        ]
       },
       {
-        "key": "occurred_date",
+        "key": "trap_start",
         "type": "date_picker",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "hint": "วันที่สำรวจลูกน้ำ",
+        "hint": "Date trap was set",
         "max_date": "today",
-        "v_required": {
-          "value": true,
-          "err": "Please specify the date larval dipping was done"
-        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "thailand-larval-dipping-relevance-rules.yml"
+              "rules-file": "mosquito-collection-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "mosquito-collection-calculation-rules.yml"
             }
           }
         }
