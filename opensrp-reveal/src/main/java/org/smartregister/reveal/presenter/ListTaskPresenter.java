@@ -370,7 +370,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else {
             startForm(selectedFeature, cardDetails, selectedFeatureInterventionType);
         }
-
     }
 
     @Override

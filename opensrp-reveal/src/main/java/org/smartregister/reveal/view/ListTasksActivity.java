@@ -179,6 +179,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void closeCardView(int id) {
+        clearSelectedFeature();
         if (id == R.id.btn_collapse_spray_card_view) {
             setViewVisibility(sprayCardView, false);
         } else if (id == R.id.btn_collapse_mosquito_collection_card_view) {
@@ -404,7 +405,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void openCardView(CardDetails cardDetails) {
-        clearSelectedFeature();
         CardDetailsUtil cardDetailsUtil = new CardDetailsUtil();
         if (cardDetails instanceof SprayCardDetails) {
             cardDetailsUtil.populateSprayCardTextViews((SprayCardDetails) cardDetails, this);
