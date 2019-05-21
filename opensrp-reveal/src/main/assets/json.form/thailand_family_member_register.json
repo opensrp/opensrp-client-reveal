@@ -92,10 +92,6 @@
         "type": "edit_text",
         "hint": "นามสกุล",
         "edit_type": "name",
-        "v_regex": {
-          "value": "[A-Za-z\\s.-]*",
-          "err": "Please enter a valid name"
-        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -158,10 +154,6 @@
         "v_required": {
           "value": "true",
           "err": "Please enter the first name"
-        },
-        "v_regex": {
-          "value": "[A-Za-z\\s.-]*",
-          "err": "Please enter a valid name"
         }
       },
       {
@@ -171,11 +163,7 @@
         "openmrs_entity_id": "middle_name",
         "type": "edit_text",
         "hint": "ชื่อกลาง",
-        "edit_type": "name",
-        "v_regex": {
-          "value": "[A-Za-z\\s.-]*",
-          "err": "Please enter a valid name"
-        }
+        "edit_type": "name"
       },
       {
         "key": "dob",
