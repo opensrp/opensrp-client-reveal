@@ -15,7 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
+import org.smartregister.family.util.DBConstants;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.TaskRegisterAdapter;
 import org.smartregister.reveal.contract.BaseDrawerContract;
@@ -24,6 +26,7 @@ import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
+import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -257,6 +260,26 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     public void registerFamily(BaseTaskDetails taskDetails) {
         ((TaskRegisterActivity) getActivity()).startFamilyRegistration(taskDetails);
+    }
+
+    @Override
+    public void openFamilyProfile(CommonPersonObjectClient family, BaseTaskDetails taskDetails) {
+        Intent intent = new Intent(getContext(), org.smartregister.family.util.Utils.metadata().profileActivity);
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID, family.getCaseId());
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_HEAD, org.smartregister.family.util.Utils.getValue(family.getColumnmaps(), DBConstants.KEY.FAMILY_HEAD, false));
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.PRIMARY_CAREGIVER, org.smartregister.family.util.Utils.getValue(family.getColumnmaps(), DBConstants.KEY.PRIMARY_CAREGIVER, false));
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.VILLAGE_TOWN, org.smartregister.family.util.Utils.getValue(family.getColumnmaps(), DBConstants.KEY.VILLAGE_TOWN, false));
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_NAME, org.smartregister.family.util.Utils.getValue(family.getColumnmaps(), DBConstants.KEY.FIRST_NAME, false));
+        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.GO_TO_DUE_PAGE, false);
+
+
+        intent.putExtra(Properties.LOCATION_UUID, taskDetails.getStructureId());
+        intent.putExtra(Properties.TASK_IDENTIFIER, taskDetails.getTaskId());
+        intent.putExtra(Properties.TASK_BUSINESS_STATUS, taskDetails.getBusinessStatus());
+        intent.putExtra(Properties.TASK_STATUS, taskDetails.getTaskStatus());
+
+        startActivity(intent);
+
     }
 
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {

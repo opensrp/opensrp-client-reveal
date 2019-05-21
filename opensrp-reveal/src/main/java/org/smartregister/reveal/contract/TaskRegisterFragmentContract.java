@@ -4,6 +4,8 @@ package org.smartregister.reveal.contract;
 import android.location.Location;
 import android.support.annotation.StringRes;
 
+import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.LocationUtils;
@@ -17,7 +19,7 @@ import java.util.Set;
  */
 public interface TaskRegisterFragmentContract {
 
-    interface Presenter extends BaseRegisterFragmentContract.Presenter, BaseFormFragmentContract.Presenter {
+    interface Presenter extends BaseRegisterFragmentContract.Presenter, BaseFormFragmentContract.Presenter, BaseContract.BasePresenter {
         void onTasksFound(List<TaskDetails> tasks, int structuresWithinBuffer);
 
         void onDestroy();
@@ -51,6 +53,8 @@ public interface TaskRegisterFragmentContract {
         void setInventionType(int interventionLabel);
 
         void registerFamily(BaseTaskDetails taskDetails);
+
+        void openFamilyProfile(CommonPersonObjectClient family, BaseTaskDetails taskDetails);
     }
 
 }

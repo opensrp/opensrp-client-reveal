@@ -8,11 +8,16 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.mapbox.geojson.Feature;
 
+import net.sqlcipher.Cursor;
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.Event;
+import org.smartregister.commonregistry.CommonPersonObject;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
@@ -20,6 +25,7 @@ import org.smartregister.domain.Task;
 import org.smartregister.domain.db.Client;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.tag.FormTag;
+import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
@@ -29,6 +35,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
+import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
@@ -36,6 +43,7 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.StructureType;
+import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.DateTimeTypeConverter;
@@ -107,6 +115,8 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
 
     private TaskUtils taskUtils;
 
+    private SQLiteDatabase database;
+
 
     public BaseInteractor(BasePresenter presenterCallBack) {
         this.presenterCallBack = presenterCallBack;
@@ -117,6 +127,7 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
         clientProcessor = RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext());
         sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
         taskUtils = TaskUtils.getInstance();
+        database = RevealApplication.getInstance().getRepository().getReadableDatabase();
     }
 
     @Override
@@ -315,5 +326,35 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
         return queryBuilder.mainCondition(mainCondition);
     }
 
+    public void fetchFamilyDetails(String structureId) {
+        appExecutors.diskIO().execute(() -> {
+            Cursor cursor = null;
+            CommonPersonObjectClient family = null;
+            try {
+                cursor = database.rawQuery(String.format("SELECT %s FROM %S WHERE %s = ?",
+                        INTENT_KEY.BASE_ENTITY_ID, TABLE_NAME.FAMILY, org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID), new String[]{structureId});
+                if (cursor.moveToNext()) {
+                    String baseEntityId = cursor.getString(0);
+                    final CommonPersonObject personObject = org.smartregister.family.util.Utils.context().commonrepository(org.smartregister.family.util.Utils.metadata().familyRegister.tableName).findByBaseEntityId(baseEntityId);
+                    family = new CommonPersonObjectClient(personObject.getCaseId(),
+                            personObject.getDetails(), "");
+                    family.setColumnmaps(personObject.getColumnmaps());
+                }
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+            } finally {
+                if (cursor != null)
+                    cursor.close();
+            }
 
+            CommonPersonObjectClient finalFamily = family;
+            appExecutors.mainThread().execute(() -> {
+                presenterCallBack.onFamilyFound(finalFamily);
+            });
+        });
+    }
+
+    public SQLiteDatabase getDatabase() {
+        return database;
+    }
 }
