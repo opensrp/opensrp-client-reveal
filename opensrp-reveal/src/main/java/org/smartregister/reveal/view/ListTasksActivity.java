@@ -304,6 +304,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void openStructureProfile(CommonPersonObjectClient family) {
 
+        clearSelectedFeature();
         Intent intent = new Intent(getActivity(), Utils.metadata().profileActivity);
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID, family.getCaseId());
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_HEAD, Utils.getValue(family.getColumnmaps(), DBConstants.KEY.FAMILY_HEAD, false));
@@ -324,6 +325,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void registerFamily() {
+        clearSelectedFeature();
         Intent intent = new Intent(this, FamilyRegisterActivity.class);
         intent.putExtra(START_REGISTRATION, true);
         intent.putExtra(Properties.LOCATION_UUID, listTaskPresenter.getSelectedFeature().id());
@@ -331,6 +333,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         intent.putExtra(Properties.TASK_BUSINESS_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_BUSINESS_STATUS));
         intent.putExtra(Properties.TASK_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_STATUS));
         startActivity(intent);
+
     }
 
     @Override
@@ -401,6 +404,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void openCardView(CardDetails cardDetails) {
+        clearSelectedFeature();
         CardDetailsUtil cardDetailsUtil = new CardDetailsUtil();
         if (cardDetails instanceof SprayCardDetails) {
             cardDetailsUtil.populateSprayCardTextViews((SprayCardDetails) cardDetails, this);
@@ -412,6 +416,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void startJsonForm(JSONObject form) {
+        clearSelectedFeature();
         jsonFormUtils.startJsonForm(form, this);
     }
 
