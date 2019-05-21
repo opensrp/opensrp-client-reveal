@@ -13,31 +13,10 @@ condition: "step1_bccCompleteYesNo == 'Yes' && step1_messagingChannelUsed == 'Ot
 actions:
   - "isRelevant = true"
 ---
-name: step1_messagingChannelPreferred
-description: Display field if bccCompleteYesNo is yes
-priority: 1
-condition: "step1_bccCompleteYesNo == 'Yes'"
-actions:
-  - "isRelevant = true"
----
-name: step1_otherMessagingChannelPreferred
-description: Display field if bccCompleteYesNo is yes and messagingChannelPreferred has Other checked
-priority: 1
-condition: "step1_bccCompleteYesNo == 'Yes' && step1_messagingChannelPreferred.contains('Other')"
-actions:
-  - "isRelevant = true"
----
 name: step1_kindOfMessaging
 description:
 priority: 1
 condition: "step1_bccCompleteYesNo == 'Yes'"
-actions:
-  - "isRelevant = true"
----
-name: step1_meetingAttendeeCount
-description:
-priority: 1
-condition: "step1_bccCompleteYesNo == 'Yes' && step1_messagingChannelUsed == 'Meeting'"
 actions:
   - "isRelevant = true"
 ---
