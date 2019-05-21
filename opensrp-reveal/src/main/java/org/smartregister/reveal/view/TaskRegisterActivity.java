@@ -11,7 +11,6 @@ import org.smartregister.reveal.contract.TaskRegisterContract;
 import org.smartregister.reveal.fragment.TaskRegisterFragment;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterPresenter;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.view.activity.BaseRegisterActivity;

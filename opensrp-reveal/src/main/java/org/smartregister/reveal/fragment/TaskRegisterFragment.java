@@ -24,13 +24,11 @@ import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
-import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.DrawerMenuView;
-import org.smartregister.reveal.view.FamilyRegisterActivity;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.reveal.view.TaskRegisterActivity;
 import org.smartregister.view.activity.BaseRegisterActivity;
@@ -45,7 +43,6 @@ import io.ona.kujaku.utils.Constants;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static org.smartregister.reveal.util.Constants.Action;
-import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 
 /**
  * Created by samuelgithengi on 3/11/19.
