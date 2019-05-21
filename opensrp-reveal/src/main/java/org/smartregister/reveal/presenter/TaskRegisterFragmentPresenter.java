@@ -191,8 +191,8 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())
                     && (CASE_CONFIRMATION.equals(details.getTaskCode()) ||
                     BLOOD_SCREENING.equals(details.getTaskCode()) ||
-                    BEDNET_DISTRIBUTION.equals(details.getTaskCode())) ||
-                    REGISTER_FAMILY.equals(details.getTaskCode())) {
+                    BEDNET_DISTRIBUTION.equals(details.getTaskCode()) ||
+                    REGISTER_FAMILY.equals(details.getTaskCode()))) {
                 setTaskDetails(details);
                 interactor.fetchFamilyDetails(details.getStructureId());
             } else {
@@ -232,6 +232,9 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
 
     @Override
     public void onFamilyFound(CommonPersonObjectClient family) {
-        getView().openFamilyProfile(family, getTaskDetails());
+        if (family == null)
+            getView().displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
+        else
+            getView().openFamilyProfile(family, getTaskDetails());
     }
 }
