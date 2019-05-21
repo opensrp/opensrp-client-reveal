@@ -31,6 +31,7 @@ import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
+import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
@@ -101,7 +102,7 @@ public class RevealJsonFormUtils {
         return null;
     }
 
-    private String getFormString(Context context, String formName, String structureType) {
+    public String getFormString(Context context, String formName, String structureType) {
         String formString = AssetHandler.readFileFromAssetsFolder(formName, context);
         if ((JsonForm.SPRAY_FORM.equals(formName) || JsonForm.SPRAY_FORM_BOTSWANA.equals(formName)
                 || JsonForm.SPRAY_FORM_NAMIBIA.equals(formName))) {
@@ -175,6 +176,8 @@ public class RevealJsonFormUtils {
                 formName = JsonForm.SPRAY_FORM_BOTSWANA;
             } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
                 formName = JsonForm.SPRAY_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
+                formName = JsonForm.THAILAND_SPRAY_FORM;
             }
         } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)
                 || Intervention.MOSQUITO_COLLECTION.equals(taskCode)) {
@@ -216,8 +219,17 @@ public class RevealJsonFormUtils {
             } else {
                 formName = JsonForm.BEHAVIOUR_CHANGE_COMMUNICATION_FORM;
             }
+        } else if (REGISTER_STRUCTURE_EVENT.equals(encounterType)) {
+            if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
+                formName = JsonForm.THAILAND_ADD_STRUCTURE_FORM;
+            } else {
+                formName = JsonForm.ADD_STRUCTURE_FORM;
+            }
         }
-
         return formName;
+    }
+
+    public String getFormName(String encounterType) {
+        return getFormName(encounterType, null);
     }
 }
