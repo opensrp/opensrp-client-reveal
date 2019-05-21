@@ -222,7 +222,7 @@ public class TaskRegisterFragmentInteractor {
             if (BCC.equals(taskDetails.getTaskCode()))
                 structure = locationRepository.getLocationById(taskDetails.getTaskEntity());
             else
-                structure = structureRepository.getLocationById(taskDetails.getTaskEntity());
+                structure = structureRepository.getLocationById(taskDetails.getStructureId());
             appExecutors.mainThread().execute(() -> {
                 presenter.onStructureFound(structure, taskDetails);
             });

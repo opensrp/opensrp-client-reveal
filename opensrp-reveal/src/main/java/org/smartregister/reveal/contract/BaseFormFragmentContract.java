@@ -22,5 +22,7 @@ public interface BaseFormFragmentContract {
         RevealJsonFormUtils getJsonFormUtils();
 
         void startForm(JSONObject formJSON);
+
+        void displayError(int title, int message);
     }
 }

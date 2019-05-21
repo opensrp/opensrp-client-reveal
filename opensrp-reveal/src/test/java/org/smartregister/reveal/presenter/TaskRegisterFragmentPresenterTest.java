@@ -289,7 +289,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         taskDetails.setTaskCode(Constants.Intervention.BCC);
         presenter.onTaskSelected(taskDetails);
         verify(view).getContext();
-        verify(view).displayToast("To open BCC form for " + taskDetails.getTaskId());
+        verify(view).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
         verify(interactor).getStructure(taskDetails);
     }
 

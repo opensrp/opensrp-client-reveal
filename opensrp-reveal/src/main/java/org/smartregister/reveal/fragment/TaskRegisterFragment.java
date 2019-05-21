@@ -1,5 +1,6 @@
 package org.smartregister.reveal.fragment;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -186,6 +187,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     public void startForm(JSONObject formName) {
         ((TaskRegisterActivity) getActivity()).startFormActivity(formName);
+    }
+
+    @Override
+    public void displayError(int title, int message) {
+        new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(message).create().show();
     }
 
     @Override

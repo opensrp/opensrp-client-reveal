@@ -127,7 +127,7 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
             if (SPRAY_EVENT.equals(encounterType) || MOSQUITO_COLLECTION_EVENT.equals(encounterType)
                     || LARVAL_DIPPING_EVENT.equals(encounterType) || BEDNET_DISTRIBUTION_EVENT.equals(encounterType)
                     || BEHAVIOUR_CHANGE_COMMUNICATION.equals(encounterType)) {
-                saveStructureForm(jsonForm);
+                saveLocationInterventionForm(jsonForm);
             } else if (REGISTER_STRUCTURE_EVENT.equals(encounterType)) {
                 saveRegisterStructureForm(jsonForm);
             } else if (BLOOD_SCREENING_EVENT.equals(encounterType)) {
@@ -157,7 +157,7 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
         return gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class);
     }
 
-    private void saveStructureForm(JSONObject jsonForm) {
+    private void saveLocationInterventionForm(JSONObject jsonForm) {
         String encounterType = null;
         String interventionType = null;
         try {
