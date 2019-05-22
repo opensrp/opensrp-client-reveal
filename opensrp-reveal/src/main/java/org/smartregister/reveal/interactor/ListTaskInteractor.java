@@ -5,14 +5,12 @@ import android.util.Log;
 import com.mapbox.geojson.Feature;
 
 import net.sqlcipher.Cursor;
-import net.sqlcipher.database.SQLiteDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
@@ -63,8 +61,7 @@ public class ListTaskInteractor extends BaseInteractor {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                SQLiteDatabase db = RevealApplication.getInstance().getRepository().getWritableDatabase();
-                Cursor cursor = db.rawQuery(SQL, new String[]{featureId});
+                Cursor cursor = getDatabase().rawQuery(SQL, new String[]{featureId});
 
                 CardDetails cardDetails = null;
                 try {

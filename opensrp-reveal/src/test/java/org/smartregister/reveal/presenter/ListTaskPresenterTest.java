@@ -44,7 +44,7 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
-import static org.smartregister.reveal.interactor.ListTaskInteractorTest.mosquitoCollectionForm;
+import static org.smartregister.reveal.interactor.ListTaskInteractorPowerMockTest.mosquitoCollectionForm;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;

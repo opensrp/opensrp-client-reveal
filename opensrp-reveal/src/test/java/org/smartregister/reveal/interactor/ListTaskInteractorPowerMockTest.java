@@ -33,7 +33,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLL
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ListTaskInteractor.class})
-public class ListTaskInteractorTest {
+public class ListTaskInteractorPowerMockTest {
 
     private ListTaskInteractor listTaskInteractor;
 
