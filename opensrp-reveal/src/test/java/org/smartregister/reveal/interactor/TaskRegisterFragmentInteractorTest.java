@@ -21,7 +21,6 @@ import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
-import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.TestingUtils;
@@ -29,7 +28,6 @@ import org.smartregister.reveal.util.TestingUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Executors;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -80,10 +78,9 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        AppExecutors appExecutors = new AppExecutors(Executors.newSingleThreadExecutor(),
-                Executors.newSingleThreadExecutor(), Executors.newSingleThreadExecutor());
-        interactor = new TaskRegisterFragmentInteractor(presenter, database, appExecutors, 70f);
+        interactor = new TaskRegisterFragmentInteractor(presenter, 70f);
         Whitebox.setInternalState(interactor, "structureRepository", structureRepository);
+        Whitebox.setInternalState(interactor, "database", database);
     }
 
     @Test

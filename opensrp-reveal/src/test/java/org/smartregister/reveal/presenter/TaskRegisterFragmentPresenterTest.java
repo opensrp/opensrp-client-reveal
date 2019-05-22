@@ -267,10 +267,9 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void testOnTaskSelectedForCompletedTasks() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
-        taskDetails.setFamilyName("Craig");
         presenter.onTaskSelected(taskDetails);
-        verify(view).displayToast("To open structure details view for Craig");
-        verify(view).getContext();
+        verify(view).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
+        verify(interactor).getStructure(taskDetails);
     }
 
     @Test
