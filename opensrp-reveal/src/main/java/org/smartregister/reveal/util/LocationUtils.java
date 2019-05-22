@@ -30,6 +30,10 @@ public class LocationUtils {
         locationClient = new GoogleLocationClient(context);
     }
 
+    public LocationUtils(ILocationClient locationClient) {
+        this.locationClient = locationClient;
+    }
+
     public void requestLocationUpdates(BaseLocationListener locationListener) {
         locationClient.requestLocationUpdates(locationListener);
     }
