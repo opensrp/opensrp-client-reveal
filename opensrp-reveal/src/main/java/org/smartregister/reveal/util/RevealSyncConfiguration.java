@@ -14,9 +14,7 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     private AllSharedPreferences sharedPreferences;
 
     public RevealSyncConfiguration() {
-        sharedPreferences = RevealApplication.getInstance().getContext().userService().getAllSharedPreferences();
     }
-
 
     public RevealSyncConfiguration(AllSharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
@@ -34,6 +32,9 @@ public class RevealSyncConfiguration extends SyncConfiguration {
 
     @Override
     public String getSyncFilterValue() {
+        if (sharedPreferences == null) {
+            sharedPreferences = RevealApplication.getInstance().getContext().userService().getAllSharedPreferences();
+        }
         return sharedPreferences.fetchDefaultTeamId(sharedPreferences.fetchRegisteredANM());
     }
 

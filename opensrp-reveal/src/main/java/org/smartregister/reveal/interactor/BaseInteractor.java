@@ -1,6 +1,7 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -18,6 +19,7 @@ import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
@@ -32,7 +34,6 @@ import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.sync.RevealClientProcessor;
@@ -56,6 +57,8 @@ import java.util.UUID;
 
 import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
 import static org.smartregister.family.util.DBConstants.KEY.BASE_ENTITY_ID;
+import static org.smartregister.family.util.Utils.metadata;
+import static org.smartregister.reveal.application.RevealApplication.getInstance;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
@@ -87,14 +90,13 @@ import static org.smartregister.util.JsonFormUtils.getString;
 /**
  * Created by samuelgithengi on 3/25/19.
  */
-public abstract class BaseInteractor implements BaseContract.BaseInteractor {
+public class BaseInteractor implements BaseContract.BaseInteractor {
 
     private static final String TAG = BaseInteractor.class.getCanonicalName();
 
     public static final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
             .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
             .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
-
 
     protected TaskRepository taskRepository;
 
@@ -116,17 +118,24 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
 
     private SQLiteDatabase database;
 
+    private CommonRepository commonRepository;
 
     public BaseInteractor(BasePresenter presenterCallBack) {
         this.presenterCallBack = presenterCallBack;
-        appExecutors = RevealApplication.getInstance().getAppExecutors();
-        taskRepository = RevealApplication.getInstance().getTaskRepository();
-        structureRepository = RevealApplication.getInstance().getStructureRepository();
-        eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
-        clientProcessor = RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext());
-        sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
+        appExecutors = getInstance().getAppExecutors();
+        taskRepository = getInstance().getTaskRepository();
+        structureRepository = getInstance().getStructureRepository();
+        eventClientRepository = getInstance().getContext().getEventClientRepository();
+        clientProcessor = RevealClientProcessor.getInstance(getInstance().getApplicationContext());
+        sharedPreferences = getInstance().getContext().allSharedPreferences();
         taskUtils = TaskUtils.getInstance();
-        database = RevealApplication.getInstance().getRepository().getReadableDatabase();
+        database = getInstance().getRepository().getReadableDatabase();
+    }
+
+    @VisibleForTesting
+    public BaseInteractor(BasePresenter presenterCallBack, CommonRepository commonRepository) {
+        this(presenterCallBack);
+        this.commonRepository = commonRepository;
     }
 
     @Override
@@ -244,7 +253,7 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
                     structure.setProperties(properties);
                     structure.setSyncStatus(BaseRepository.TYPE_Created);
                     structureRepository.addOrUpdate(structure);
-                    Context applicationContext = RevealApplication.getInstance().getApplicationContext();
+                    Context applicationContext = getInstance().getApplicationContext();
                     Task task = null;
                     if (StructureType.RESIDENTIAL.equals(structureType) && Utils.getInterventionLabel() == R.string.focus_investigation) {
                         task = taskUtils.generateRegisterFamilyTask(applicationContext, structure.getId());
@@ -334,7 +343,8 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
                         INTENT_KEY.BASE_ENTITY_ID, TABLE_NAME.FAMILY, STRUCTURE_ID), new String[]{structureId});
                 if (cursor.moveToNext()) {
                     String baseEntityId = cursor.getString(0);
-                    final CommonPersonObject personObject = org.smartregister.family.util.Utils.context().commonrepository(org.smartregister.family.util.Utils.metadata().familyRegister.tableName).findByBaseEntityId(baseEntityId);
+                    setCommonRepository();
+                    final CommonPersonObject personObject = commonRepository.findByBaseEntityId(baseEntityId);
                     family = new CommonPersonObjectClient(personObject.getCaseId(),
                             personObject.getDetails(), "");
                     family.setColumnmaps(personObject.getColumnmaps());
@@ -355,5 +365,12 @@ public abstract class BaseInteractor implements BaseContract.BaseInteractor {
 
     public SQLiteDatabase getDatabase() {
         return database;
+    }
+
+    public void setCommonRepository() {
+        if (commonRepository == null) {
+            commonRepository = getInstance().getContext().commonrepository(metadata().familyRegister.tableName);
+
+        }
     }
 }
