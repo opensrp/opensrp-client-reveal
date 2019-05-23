@@ -132,9 +132,10 @@ public class ListTaskInteractor extends BaseInteractor {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final JSONObject featureCollection = createFeatureCollection();
+                JSONObject featureCollection = null;
                 Location operationalAreaLocation = Utils.getOperationalAreaLocation(operationalArea);
                 try {
+                    featureCollection = createFeatureCollection();
                     if (operationalAreaLocation != null) {
                         Map<String, Task> tasks = taskRepository.getTasksByPlanAndGroup(plan, operationalAreaLocation.getId());
                         List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
@@ -146,15 +147,16 @@ public class ListTaskInteractor extends BaseInteractor {
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage(), e);
                 }
+                JSONObject finalFeatureCollection = featureCollection;
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
                         if (operationalAreaLocation != null) {
                             operationalAreaId = operationalAreaLocation.getId();
                             Feature operationalAreaFeature = Feature.fromJson(gson.toJson(operationalAreaLocation));
-                            getPresenter().onStructuresFetched(featureCollection, operationalAreaFeature);
+                            getPresenter().onStructuresFetched(finalFeatureCollection, operationalAreaFeature);
                         } else {
-                            getPresenter().onStructuresFetched(featureCollection, null);
+                            getPresenter().onStructuresFetched(finalFeatureCollection, null);
                         }
                     }
                 });
@@ -173,6 +175,8 @@ public class ListTaskInteractor extends BaseInteractor {
             if (cursor.moveToNext()) {
                 structureId = cursor.getString(0);
             }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -181,14 +185,9 @@ public class ListTaskInteractor extends BaseInteractor {
         return structureId;
     }
 
-    private JSONObject createFeatureCollection() {
+    private JSONObject createFeatureCollection() throws JSONException {
         JSONObject featureCollection = new JSONObject();
-        try {
-            featureCollection.put(GeoJSON.TYPE, GeoJSON.FEATURE_COLLECTION);
-        } catch (JSONException e) {
-            Log.e(TAG, "Error creating feature collection");
-            return null;
-        }
+        featureCollection.put(GeoJSON.TYPE, GeoJSON.FEATURE_COLLECTION);
         return featureCollection;
     }
 

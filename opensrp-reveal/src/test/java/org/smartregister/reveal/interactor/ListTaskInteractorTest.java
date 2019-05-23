@@ -1,6 +1,7 @@
 package org.smartregister.reveal.interactor;
 
 import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.MatrixCursor;
@@ -17,6 +18,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.Task;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BaseUnitTest;
@@ -24,20 +26,30 @@ import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestDataUtils;
+import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.Cache;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 
 /**
  * Created by samuelgithengi on 5/22/19.
@@ -69,6 +81,12 @@ public class ListTaskInteractorTest extends BaseUnitTest {
     private ArgumentCaptor<Feature> featureArgumentCaptor;
 
     private ListTaskInteractor listTaskInteractor;
+
+    private Location operationArea = TestDataUtils.gson.fromJson(TestingUtils.operationalAreaGeoJSON, Location.class);
+
+    private Location structure = TestingUtils.gson.fromJson(TestingUtils.structureJSON, Location.class);
+
+    private Task task = TestingUtils.getTask(structure.getId());
 
     @Before
     public void setUp() {
@@ -151,49 +169,81 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals(Intervention.LARVAL_DIPPING, cardDetails.getInterventionType());
     }
 
-    @Test
-    public void testFetchLocations() {
-        String plan = UUID.randomUUID().toString();
-        Location operationArea = TestDataUtils.gson.fromJson(TestDataUtils.locationJSon, Location.class);
+    private void setOperationArea(String plan) {
         String operationAreaId = operationArea.getId();
         PreferencesUtil.getInstance().setCurrentOperationalArea(operationAreaId);
         Cache<Location> cache = new Cache<>();
         cache.get(operationAreaId, () -> operationArea);
         Whitebox.setInternalState(Utils.class, "cache", cache);
+        Map<String, Task> taskMap = new HashMap<>();
+        taskMap.put(structure.getId(), task);
+        when(taskRepository.getTasksByPlanAndGroup(plan, operationAreaId)).thenReturn(taskMap);
+        when(structureRepository.getLocationsByParentId(operationAreaId)).thenReturn(Collections.singletonList(structure));
+    }
+
+    @Test
+    public void testFetchLocations() {
+        String plan = UUID.randomUUID().toString();
+        String operationAreaId = operationArea.getId();
+        setOperationArea(plan);
         listTaskInteractor.fetchLocations(plan, operationAreaId);
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).getTasksByPlanAndGroup(plan, operationAreaId);
         verify(structureRepository, timeout(ASYNC_TIMEOUT)).getLocationsByParentId(operationAreaId);
         verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(jsonArgumentCaptor.capture(), featureArgumentCaptor.capture());
         assertEquals(operationAreaId, featureArgumentCaptor.getValue().id());
-        assertEquals("{\"type\":\"FeatureCollection\"}", jsonArgumentCaptor.getValue().toString());
+        FeatureCollection featureCollection = FeatureCollection.fromJson(jsonArgumentCaptor.getValue().toString());
+        assertEquals("FeatureCollection", featureCollection.type());
+        assertEquals(1, featureCollection.features().size());
+        Feature feature = featureCollection.features().get(0);
+        assertEquals(structure.getId(), feature.id());
+        assertEquals(task.getIdentifier(), feature.getStringProperty(Properties.TASK_IDENTIFIER));
+        assertEquals(task.getBusinessStatus(), feature.getStringProperty(Properties.TASK_BUSINESS_STATUS));
+        assertEquals(task.getStatus().name(), feature.getStringProperty(Properties.TASK_STATUS));
+        assertEquals(task.getCode(), feature.getStringProperty(Properties.TASK_CODE));
+        assertEquals(Boolean.FALSE.toString(), feature.getStringProperty(Constants.GeoJSON.IS_INDEX_CASE));
     }
 
 
     @Test
     public void testGetIndexCaseStructure() {
         String plan = UUID.randomUUID().toString();
-        Location operationArea = TestDataUtils.gson.fromJson(TestDataUtils.locationJSon, Location.class);
         String operationAreaId = operationArea.getId();
-        PreferencesUtil.getInstance().setCurrentOperationalArea(operationAreaId);
-        Cache<Location> cache = new Cache<>();
-        cache.get(operationAreaId, () -> operationArea);
-        Whitebox.setInternalState(Utils.class, "cache", cache);
+        setOperationArea(plan);
+        when(database.rawQuery(anyString(), eq(new String[]{plan, CASE_CONFIRMATION}))).thenReturn(createIndexCaseCursor());
         listTaskInteractor.fetchLocations(plan, operationAreaId);
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).getTasksByPlanAndGroup(plan, operationAreaId);
         verify(structureRepository, timeout(ASYNC_TIMEOUT)).getLocationsByParentId(operationAreaId);
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(any(), any());
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(jsonArgumentCaptor.capture(), featureArgumentCaptor.capture());
+        verify(database).rawQuery(anyString(), eq(new String[]{plan, CASE_CONFIRMATION}));
+        assertEquals(operationAreaId, featureArgumentCaptor.getValue().id());
+        FeatureCollection featureCollection = FeatureCollection.fromJson(jsonArgumentCaptor.getValue().toString());
+        assertEquals("FeatureCollection", featureCollection.type());
+        assertEquals(1, featureCollection.features().size());
+        Feature feature = featureCollection.features().get(0);
+        assertEquals(structure.getId(), feature.id());
+        assertEquals(task.getIdentifier(), feature.getStringProperty(Properties.TASK_IDENTIFIER));
+        assertEquals(task.getBusinessStatus(), feature.getStringProperty(Properties.TASK_BUSINESS_STATUS));
+        assertEquals(task.getStatus().name(), feature.getStringProperty(Properties.TASK_STATUS));
+        assertEquals(task.getCode(), feature.getStringProperty(Properties.TASK_CODE));
+        assertEquals(Boolean.TRUE.toString(), feature.getStringProperty(Constants.GeoJSON.IS_INDEX_CASE));
     }
 
     private Cursor createSprayCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{"spray_status", "not_sprayed_reason",
                 "not_sprayed_other_reason", "property_type", "spray_date", "spray_operator", "family_head_name"});
-        cursor.addRow(new Object[]{"Not Sprayed", "Locked", null, "Residential", "11/03/1977", "John Doe", "Doe John"});
+        cursor.addRow(new Object[]{"Not Sprayed", "other", "Locked", "Residential", "11/03/1977", "John Doe", "Doe John"});
         return cursor;
     }
 
     private Cursor createMosquitoLarvalCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{"status", "start_date", "end_date"});
         cursor.addRow(new Object[]{"active", "11/02/1977", "11/02/1977"});
+        return cursor;
+    }
+
+    private Cursor createIndexCaseCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{STRUCTURE_ID});
+        cursor.addRow(new Object[]{structure.getId()});
         return cursor;
     }
 
