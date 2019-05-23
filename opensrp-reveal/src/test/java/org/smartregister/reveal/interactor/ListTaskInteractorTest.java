@@ -113,7 +113,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         when(database.rawQuery(any(), any())).thenReturn(createSprayCursor());
         listTaskInteractor.fetchInterventionDetails(Intervention.IRS, feature, true);
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery("SELECT spray_status, not_sprayed_reason, not_sprayed_other_reason, property_type, spray_date, spray_operator, family_head_name FROM sprayed_structures WHERE id=?", new String[]{feature});
-        verify(presenter).onInterventionFormDetailsFetched(cardDetailsCaptor.capture());
+        verify(presenter,timeout(ASYNC_TIMEOUT)).onInterventionFormDetailsFetched(cardDetailsCaptor.capture());
         SprayCardDetails cardDetails = (SprayCardDetails) cardDetailsCaptor.getValue();
         assertEquals("Locked", cardDetails.getReason());
         assertEquals("Not Sprayed", cardDetails.getStatus());
@@ -130,7 +130,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         when(database.rawQuery(any(), any())).thenReturn(createMosquitoLarvalCursor());
         listTaskInteractor.fetchInterventionDetails(Intervention.MOSQUITO_COLLECTION, feature, false);
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery("SELECT status, start_date, end_date FROM mosquito_collections WHERE id=?", new String[]{feature});
-        verify(presenter).onCardDetailsFetched(cardDetailsCaptor.capture());
+        verify(presenter,timeout(ASYNC_TIMEOUT)).onCardDetailsFetched(cardDetailsCaptor.capture());
         assertNotNull(cardDetailsCaptor.getValue());
         MosquitoHarvestCardDetails cardDetails = (MosquitoHarvestCardDetails) cardDetailsCaptor.getValue();
         assertEquals("active", cardDetails.getStatus());
@@ -145,7 +145,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         when(database.rawQuery(any(), any())).thenReturn(createMosquitoLarvalCursor());
         listTaskInteractor.fetchInterventionDetails(Intervention.MOSQUITO_COLLECTION, feature, true);
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery("SELECT status, start_date, end_date FROM mosquito_collections WHERE id=?", new String[]{feature});
-        verify(presenter).onInterventionFormDetailsFetched(cardDetailsCaptor.capture());
+        verify(presenter,timeout(ASYNC_TIMEOUT)).onInterventionFormDetailsFetched(cardDetailsCaptor.capture());
         assertNotNull(cardDetailsCaptor.getValue());
         MosquitoHarvestCardDetails cardDetails = (MosquitoHarvestCardDetails) cardDetailsCaptor.getValue();
         assertEquals("active", cardDetails.getStatus());
@@ -160,7 +160,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         when(database.rawQuery(any(), any())).thenReturn(createMosquitoLarvalCursor());
         listTaskInteractor.fetchInterventionDetails(Intervention.LARVAL_DIPPING, feature, false);
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery("SELECT status, start_date, end_date FROM larval_dippings WHERE id=?", new String[]{feature});
-        verify(presenter).onCardDetailsFetched(cardDetailsCaptor.capture());
+        verify(presenter,timeout(ASYNC_TIMEOUT)).onCardDetailsFetched(cardDetailsCaptor.capture());
         assertNotNull(cardDetailsCaptor.getValue());
         MosquitoHarvestCardDetails cardDetails = (MosquitoHarvestCardDetails) cardDetailsCaptor.getValue();
         assertEquals("active", cardDetails.getStatus());
