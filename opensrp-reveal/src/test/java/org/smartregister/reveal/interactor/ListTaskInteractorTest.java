@@ -1,9 +1,12 @@
 package org.smartregister.reveal.interactor;
 
+import com.mapbox.geojson.Feature;
+
 import net.sqlcipher.Cursor;
 import net.sqlcipher.MatrixCursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -59,10 +62,16 @@ public class ListTaskInteractorTest extends BaseUnitTest {
     @Captor
     private ArgumentCaptor<CardDetails> cardDetailsCaptor;
 
+    @Captor
+    private ArgumentCaptor<JSONObject> jsonArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Feature> featureArgumentCaptor;
+
     private ListTaskInteractor listTaskInteractor;
 
     @Before
-    public void setup() {
+    public void setUp() {
         listTaskInteractor = new ListTaskInteractor(presenter);
         Whitebox.setInternalState(listTaskInteractor, "database", database);
         Whitebox.setInternalState(listTaskInteractor, "taskRepository", taskRepository);
@@ -75,7 +84,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         when(database.rawQuery(any(), any())).thenReturn(createSprayCursor());
         listTaskInteractor.fetchInterventionDetails(Intervention.IRS, feature, false);
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery("SELECT spray_status, not_sprayed_reason, not_sprayed_other_reason, property_type, spray_date, spray_operator, family_head_name FROM sprayed_structures WHERE id=?", new String[]{feature});
-        verify(presenter).onCardDetailsFetched(cardDetailsCaptor.capture());
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onCardDetailsFetched(cardDetailsCaptor.capture());
         assertEquals("Locked", cardDetailsCaptor.getValue().getReason());
         assertEquals("Not Sprayed", cardDetailsCaptor.getValue().getStatus());
     }
@@ -144,6 +153,24 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
     @Test
     public void testFetchLocations() {
+        String plan = UUID.randomUUID().toString();
+        Location operationArea = TestDataUtils.gson.fromJson(TestDataUtils.locationJSon, Location.class);
+        String operationAreaId = operationArea.getId();
+        PreferencesUtil.getInstance().setCurrentOperationalArea(operationAreaId);
+        Cache<Location> cache = new Cache<>();
+        cache.get(operationAreaId, () -> operationArea);
+        Whitebox.setInternalState(Utils.class, "cache", cache);
+        listTaskInteractor.fetchLocations(plan, operationAreaId);
+        verify(taskRepository, timeout(ASYNC_TIMEOUT)).getTasksByPlanAndGroup(plan, operationAreaId);
+        verify(structureRepository, timeout(ASYNC_TIMEOUT)).getLocationsByParentId(operationAreaId);
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(jsonArgumentCaptor.capture(), featureArgumentCaptor.capture());
+        assertEquals(operationAreaId, featureArgumentCaptor.getValue().id());
+        assertEquals("{\"type\":\"FeatureCollection\"}", jsonArgumentCaptor.getValue().toString());
+    }
+
+
+    @Test
+    public void testGetIndexCaseStructure() {
         String plan = UUID.randomUUID().toString();
         Location operationArea = TestDataUtils.gson.fromJson(TestDataUtils.locationJSon, Location.class);
         String operationAreaId = operationArea.getId();

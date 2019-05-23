@@ -1,6 +1,5 @@
 package org.smartregister.reveal.util;
 
-import android.content.Context;
 import android.location.Location;
 
 import org.junit.Before;
@@ -11,7 +10,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
-import org.robolectric.RuntimeEnvironment;
 
 import io.ona.kujaku.interfaces.ILocationClient;
 import io.ona.kujaku.listeners.BaseLocationListener;
@@ -33,8 +31,6 @@ public class LocationUtilsTest {
 
     @Mock
     private ILocationClient locationClient;
-
-    private Context context = RuntimeEnvironment.application;
 
     @Before
     public void setUp() {

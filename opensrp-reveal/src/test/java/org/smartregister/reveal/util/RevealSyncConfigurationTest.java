@@ -26,7 +26,7 @@ public class RevealSyncConfigurationTest {
     private RevealSyncConfiguration syncConfiguration;
 
     @Before
-    public void setup() {
+    public void setUp() {
         syncConfiguration = new RevealSyncConfiguration(allSharedPreferences);
     }
 
