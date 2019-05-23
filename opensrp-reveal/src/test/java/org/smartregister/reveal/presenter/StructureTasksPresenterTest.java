@@ -95,13 +95,12 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
     }
 
     @Test
-    public void testOnTaskSelectedBCCTaskDisplayMessage() {
+    public void testOnTaskSelectedBCCTaskGetStructureDetails() {
         StructureTaskDetails task = TestingUtils.getStructureTaskDetails();
         task.setTaskCode(Intervention.BCC);
         presenter.onTaskSelected(task);
-        verify(interactor, never()).getStructure(task);
-        verify(view, never()).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
-        verify(view).displayToast(anyString());
+        verify(interactor).getStructure(task);
+        verify(view).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
     }
 
 

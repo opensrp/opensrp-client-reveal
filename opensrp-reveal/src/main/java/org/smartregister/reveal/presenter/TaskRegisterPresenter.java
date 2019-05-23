@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.mapbox.geojson.Feature;
 
 import org.json.JSONArray;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.TaskRegisterContract;
@@ -50,6 +51,10 @@ public class TaskRegisterPresenter implements TaskRegisterContract.Presenter, Ba
     public void saveJsonForm(String json) {
         view.showProgressDialog(R.string.saving_dialog_title);
         taskRegisterInteractor.saveJsonForm(json);
+    }
+
+    @Override
+    public void onFamilyFound(CommonPersonObjectClient finalFamily) {//not used
     }
 
     @Override

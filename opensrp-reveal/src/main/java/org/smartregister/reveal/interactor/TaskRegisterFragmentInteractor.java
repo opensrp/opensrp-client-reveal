@@ -6,17 +6,14 @@ import android.support.v4.util.Pair;
 import com.google.common.annotations.VisibleForTesting;
 
 import net.sqlcipher.Cursor;
-import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.repository.LocationRepository;
-import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
-import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Utils;
@@ -43,38 +40,26 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_NAME;
-
-import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
-
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
+import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
 
 /**
  * Created by samuelgithengi on 3/18/19.
  */
-public class TaskRegisterFragmentInteractor {
+public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
-    private final StructureRepository structureRepository;
     private final LocationRepository locationRepository;
-    private SQLiteDatabase database;
     private final Float locationBuffer;
-    private final AppExecutors appExecutors;
-
-    private TaskRegisterFragmentContract.Presenter presenter;
 
     public TaskRegisterFragmentInteractor(TaskRegisterFragmentContract.Presenter presenter) {
-        this(presenter, RevealApplication.getInstance().getRepository().getReadableDatabase(),
-                RevealApplication.getInstance().getAppExecutors(), Utils.getLocationBuffer());
+        this(presenter, Utils.getLocationBuffer());
     }
 
     @VisibleForTesting
     public TaskRegisterFragmentInteractor(TaskRegisterFragmentContract.Presenter presenter,
-                                          SQLiteDatabase database, AppExecutors appExecutors,
                                           Float locationBuffer) {
-        this.presenter = presenter;
-        this.appExecutors = appExecutors;
-        this.database = database;
+        super(presenter);
         this.locationBuffer = locationBuffer;
-        this.structureRepository = RevealApplication.getInstance().getStructureRepository();
         locationRepository = RevealApplication.getInstance().getLocationRepository();
     }
 
@@ -82,7 +67,8 @@ public class TaskRegisterFragmentInteractor {
         String tableName = DatabaseKeys.TASK_TABLE;
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
         queryBuilder.selectInitiateMainTable(tableName, mainColumns(tableName), ID);
-        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
+        //todo implement grouping of tasks in FI https://github.com/OpenSRP/opensrp-client-reveal/issues/152
+        queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
                 STRUCTURES_TABLE, tableName, FOR, STRUCTURES_TABLE, ID));
         queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
                 SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
@@ -114,7 +100,7 @@ public class TaskRegisterFragmentInteractor {
 
     public void findTasks(Pair<String, String[]> mainCondition, Location lastLocation, Location operationalAreaCenter, String houseLabel) {
         if (mainCondition == null || mainCondition.second == null || mainCondition.second.length != 2 || mainCondition.second[0] == null) {
-            presenter.onTasksFound(null, 0);
+            getPresenter().onTasksFound(null, 0);
             return;
         }
         appExecutors.diskIO().execute(() -> {
@@ -123,7 +109,7 @@ public class TaskRegisterFragmentInteractor {
             String query = mainSelect(mainCondition.first);
             Cursor cursor = null;
             try {
-                cursor = database.rawQuery(query, mainCondition.second);
+                cursor = getDatabase().rawQuery(query, mainCondition.second);
                 while (cursor.moveToNext()) {
                     TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel);
                     if (taskDetails.getDistanceFromUser() <= locationBuffer) {
@@ -139,7 +125,7 @@ public class TaskRegisterFragmentInteractor {
             int finalStructuresWithinBuffer = structuresWithinBuffer;
             appExecutors.mainThread().execute(() -> {
                 Collections.sort(tasks);
-                presenter.onTasksFound(tasks, finalStructuresWithinBuffer);
+                getPresenter().onTasksFound(tasks, finalStructuresWithinBuffer);
             });
         });
 
@@ -209,7 +195,7 @@ public class TaskRegisterFragmentInteractor {
             Collections.sort(tasks);
             int finalStructuresWithinBuffer = structuresWithinBuffer;
             appExecutors.mainThread().execute(() -> {
-                presenter.onTasksFound(tasks, finalStructuresWithinBuffer);
+                getPresenter().onTasksFound(tasks, finalStructuresWithinBuffer);
             });
         });
 
@@ -224,9 +210,13 @@ public class TaskRegisterFragmentInteractor {
             else
                 structure = structureRepository.getLocationById(taskDetails.getStructureId());
             appExecutors.mainThread().execute(() -> {
-                presenter.onStructureFound(structure, taskDetails);
+                getPresenter().onStructureFound(structure, taskDetails);
             });
         });
+    }
+
+    private TaskRegisterFragmentContract.Presenter getPresenter() {
+        return (TaskRegisterFragmentContract.Presenter) presenterCallBack;
     }
 
 }

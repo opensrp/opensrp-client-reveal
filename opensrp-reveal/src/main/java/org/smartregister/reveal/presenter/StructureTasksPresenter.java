@@ -7,6 +7,7 @@ import android.support.annotation.VisibleForTesting;
 import com.mapbox.geojson.Feature;
 
 import org.json.JSONArray;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.StructureTasksContract;
@@ -19,7 +20,6 @@ import java.util.List;
 
 import static org.smartregister.reveal.contract.StructureTasksContract.Interactor;
 import static org.smartregister.reveal.contract.StructureTasksContract.Presenter;
-import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 
 /**
  * Created by samuelgithengi on 4/12/19.
@@ -59,12 +59,7 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     @Override
     public void onTaskSelected(StructureTaskDetails details) {
         if (details != null) {
-            //TODO remove this condition once BCC
-            if (BCC.equals(details.getTaskCode())) {
-                getView().displayToast(String.format("To open %s form for %s",
-                        details.getTaskCode(), details.getTaskId()));
-
-            } else if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
+            if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
                 getView().displayToast("Task Completed");
             } else {
                 getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
@@ -96,5 +91,9 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     @Override
     public void onFormSaveFailure(String eventType) {
         getView().hideProgressDialog();//register will refresh on resume
+    }
+
+    @Override
+    public void onFamilyFound(CommonPersonObjectClient finalFamily) {//not used
     }
 }

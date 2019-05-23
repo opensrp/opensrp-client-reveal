@@ -11,11 +11,11 @@ import org.powermock.reflect.Whitebox;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.contract.TaskRegisterContract;
 import org.smartregister.reveal.interactor.TaskRegisterInteractor;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.FamilyConstants;
-import org.smartregister.view.contract.BaseRegisterContract;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +34,7 @@ public class TaskRegisterPresenterTest extends BaseUnitTest {
     public MockitoRule rule = MockitoJUnit.rule();
 
     @Mock
-    private BaseRegisterContract.View view;
+    private TaskRegisterContract.View view;
 
     @Mock
     private TaskRegisterInteractor interactor;

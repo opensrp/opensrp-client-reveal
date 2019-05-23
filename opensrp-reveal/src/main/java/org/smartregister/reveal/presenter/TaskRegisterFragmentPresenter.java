@@ -1,10 +1,14 @@
 package org.smartregister.reveal.presenter;
 
+import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.mapbox.geojson.Feature;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
 import org.smartregister.configurableviews.model.View;
@@ -25,10 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
+import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 
 /**
  * Created by samuelgithengi on 3/11/19.
@@ -184,16 +188,13 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public void onTaskSelected(TaskDetails details) {
         if (details != null) {
-            if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus()) && !BCC.equals(details.getTaskCode())) {
-                //TODO implement functionality to link to structure details once its implemented
-                getView().displayToast(String.format("To open structure details view for %s",
-                        details.getFamilyName()));
-            } else if (CASE_CONFIRMATION.equals(details.getTaskCode()) ||
+            if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())
+                    && (CASE_CONFIRMATION.equals(details.getTaskCode()) ||
                     BLOOD_SCREENING.equals(details.getTaskCode()) ||
-                    BEDNET_DISTRIBUTION.equals(details.getTaskCode())) {
-                //TODO implement functionality to link to structure details once its implemented
-                getView().displayToast(String.format("To open family view for %s",
-                        details.getFamilyName()));
+                    BEDNET_DISTRIBUTION.equals(details.getTaskCode()) ||
+                    REGISTER_FAMILY.equals(details.getTaskCode()))) {
+                setTaskDetails(details);
+                interactor.fetchFamilyDetails(details.getStructureId());
             } else {
                 getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
                 interactor.getStructure(details);
@@ -212,5 +213,28 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             getView().registerFamily(getTaskDetails());
         }
         super.onLocationValidated();
+    }
+
+    @Override
+    public void onFormSaved(@NonNull String structureId, String taskID, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
+        getView().hideProgressDialog();
+    }
+
+    @Override
+    public void onStructureAdded(Feature feature, JSONArray featureCoordinates) {
+        //not used
+    }
+
+    @Override
+    public void onFormSaveFailure(String eventType) {
+        getView().hideProgressDialog();
+    }
+
+    @Override
+    public void onFamilyFound(CommonPersonObjectClient family) {
+        if (family == null)
+            getView().displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
+        else
+            getView().openFamilyProfile(family, getTaskDetails());
     }
 }

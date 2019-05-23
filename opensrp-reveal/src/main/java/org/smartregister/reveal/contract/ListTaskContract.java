@@ -73,7 +73,5 @@ public interface ListTaskContract {
 
         @StringRes
         int getInterventionLabel();
-
-        void onFamilyFound(CommonPersonObjectClient finalFamily);
     }
 }

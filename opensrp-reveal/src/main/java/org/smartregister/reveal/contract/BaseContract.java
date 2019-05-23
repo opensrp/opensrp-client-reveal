@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.mapbox.geojson.Feature;
 
 import org.json.JSONArray;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
 
 /**
@@ -20,6 +21,8 @@ public interface BaseContract {
         void onStructureAdded(Feature feature, JSONArray featureCoordinates);
 
         void onFormSaveFailure(String eventType);
+
+        void onFamilyFound(CommonPersonObjectClient finalFamily);
     }
 
     interface BaseInteractor {
