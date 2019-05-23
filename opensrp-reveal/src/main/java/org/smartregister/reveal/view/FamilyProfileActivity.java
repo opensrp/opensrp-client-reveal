@@ -2,6 +2,8 @@ package org.smartregister.reveal.view;
 
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import org.smartregister.family.activity.BaseFamilyProfileActivity;
 import org.smartregister.family.adapter.ViewPagerAdapter;
@@ -72,5 +74,11 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = this.getMenuInflater();
+        inflater.inflate(R.menu.profile_menu, menu);
+        return true;
     }
 }
