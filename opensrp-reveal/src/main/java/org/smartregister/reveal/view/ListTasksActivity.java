@@ -356,7 +356,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea) {
+    public void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea, boolean maintainUsersCurrentMapCameraPosition) {
         if (geoJsonSource != null) {
             geoJsonSource.setGeoJson(featureCollection);
             if (operationalArea != null) {
@@ -370,10 +370,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 }
 
-                if (cameraPosition != null && !listTaskPresenter.getMaintainUsersCurrentMapCameraPosition()) {
+                if (cameraPosition != null && !maintainUsersCurrentMapCameraPosition) {
                     mMapboxMap.setCameraPosition(cameraPosition);
                 }
-                listTaskPresenter.setMaintainUsersCurrentMapCameraPosition(false); // reset flag
 
                 Boolean drawOperationalAreaBoundaryAndLabel = org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel();
                 if (drawOperationalAreaBoundaryAndLabel) {
@@ -467,7 +466,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
             String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
             Log.d(TAG, json);
-            listTaskPresenter.setMaintainUsersCurrentMapCameraPosition(true);
             listTaskPresenter.saveJsonForm(json);
         } else if (requestCode == Constants.RequestCode.LOCATION_SETTINGS && hasRequestedLocation) {
             if (resultCode == RESULT_OK) {

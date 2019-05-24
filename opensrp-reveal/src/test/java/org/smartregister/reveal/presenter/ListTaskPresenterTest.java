@@ -410,7 +410,7 @@ public class ListTaskPresenterTest {
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
 
         doNothing().when(listTaskViewSpy).hideProgressDialog();
-        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class));
+        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class), anyBoolean());
         doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(IRS), anyString(), anyBoolean());
 
 
@@ -424,7 +424,7 @@ public class ListTaskPresenterTest {
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
 
         doNothing().when(listTaskViewSpy).hideProgressDialog();
-        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class));
+        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class), anyBoolean());
         doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION),anyString(), anyBoolean());
 
         listTaskPresenter.onFormSaved(null, null, null, null, MOSQUITO_COLLECTION);

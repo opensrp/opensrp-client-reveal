@@ -135,7 +135,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         drawerPresenter.setChangedCurrentSelection(false);
         if (structuresGeoJson.has(FEATURES)) {
             featureCollection = FeatureCollection.fromJson(structuresGeoJson.toString());
-            listTaskView.setGeoJsonSource(featureCollection, operationalArea);
+            listTaskView.setGeoJsonSource(featureCollection, operationalArea, this.maintainUsersCurrentMapCameraPosition);
+            setMaintainUsersCurrentMapCameraPosition(false);
             this.operationalArea = operationalArea;
             if (Utils.isEmptyCollection(featureCollection.features())) {
                 listTaskView.displayNotification(R.string.fetching_structures_title, R.string.no_structures_found);
@@ -145,7 +146,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     R.string.fetch_location_and_structures_failed, prefsUtil.getCurrentOperationalArea());
             try {
                 structuresGeoJson.put(FEATURES, new JSONArray());
-                listTaskView.setGeoJsonSource(FeatureCollection.fromJson(structuresGeoJson.toString()), operationalArea);
+                listTaskView.setGeoJsonSource(FeatureCollection.fromJson(structuresGeoJson.toString()), operationalArea, this.maintainUsersCurrentMapCameraPosition);
+                setMaintainUsersCurrentMapCameraPosition(false);
                 listTaskView.clearSelectedFeature();
                 listTaskView.closeCardView(R.id.btn_collapse_spray_card_view);
             } catch (JSONException e) {
@@ -325,7 +327,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 break;
             }
         }
-        listTaskView.setGeoJsonSource(featureCollection, null);
+        listTaskView.setGeoJsonSource(featureCollection, null, this.maintainUsersCurrentMapCameraPosition);
+        setMaintainUsersCurrentMapCameraPosition(false);
         listTaskInteractor.fetchInterventionDetails(interventionType, structureId, false);
     }
 
@@ -333,7 +336,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void onStructureAdded(Feature feature, JSONArray featureCoordinates) {
         listTaskView.hideProgressDialog();
         featureCollection.features().add(feature);
-        listTaskView.setGeoJsonSource(featureCollection, null);
+        listTaskView.setGeoJsonSource(featureCollection, null, this.maintainUsersCurrentMapCameraPosition);
         setMaintainUsersCurrentMapCameraPosition(true);
         try {
             clickedPoint = new LatLng(featureCoordinates.getDouble(1), featureCoordinates.getDouble(0));
