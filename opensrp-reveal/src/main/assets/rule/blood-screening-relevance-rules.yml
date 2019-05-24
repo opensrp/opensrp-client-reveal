@@ -19,10 +19,10 @@ priority: 1
 condition: "step1_testType == 'Microscopy'"
 actions:
   - "isRelevant = true"
-  ---
-  name: step1_caseNum
-  description: Display if test result is known (Not negative or fg)
-  priority: 1
-  condition: "step1_testResult == 'Positive' || step1_testResult == 'PositiveFalciparum' || step1_testResult == 'PositiveVivax' || step1_testResult == 'PositiveMalariae' || step1_testResult == 'PositiveMixed'"
-  actions:
-    - "isRelevant = true"
+---
+name: step1_caseNumber
+description: Display if test result is known (Not negative or fg)
+priority: 1
+condition: "step1_testResult == 'Positive' || step1_testResult == 'PositiveFalciparum' || step1_testResult == 'PositiveVivax' || step1_testResult == 'PositiveMalariae' || step1_testResult == 'PositiveMixed'"
+actions:
+  - "isRelevant = true"
