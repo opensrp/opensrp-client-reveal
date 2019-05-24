@@ -370,7 +370,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 }
 
-                if (cameraPosition != null) {
+                if (cameraPosition != null && !listTaskPresenter.getMaintainUsersCurrentMapCameraPosition()) {
                     mMapboxMap.setCameraPosition(cameraPosition);
                 }
 
@@ -466,6 +466,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
             String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
             Log.d(TAG, json);
+            listTaskPresenter.setMaintainUsersCurrentMapCameraPosition(true);
             listTaskPresenter.saveJsonForm(json);
         } else if (requestCode == Constants.RequestCode.LOCATION_SETTINGS && hasRequestedLocation) {
             if (resultCode == RESULT_OK) {
@@ -537,6 +538,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (fetchStatus.equals(FetchStatus.fetched)
                 || fetchStatus.equals(FetchStatus.nothingFetched)) {
             Snackbar.make(rootView, org.smartregister.R.string.sync_complete, Snackbar.LENGTH_LONG).show();
+            listTaskPresenter.setMaintainUsersCurrentMapCameraPosition(false); //reset flag
         } else if (fetchStatus.equals(FetchStatus.noConnection)) {
             Snackbar.make(rootView, org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_LONG).show();
         }

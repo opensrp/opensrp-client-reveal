@@ -103,6 +103,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private RevealJsonFormUtils jsonFormUtils;
 
+    private boolean maintainUsersCurrentMapCameraPosition;
+
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
         this.drawerPresenter = drawerPresenter;
@@ -111,6 +113,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         locationPresenter = new ValidateUserLocationPresenter(listTaskView, this);
         prefsUtil = PreferencesUtil.getInstance();
         jsonFormUtils = listTaskView.getJsonFormUtils();
+        setMaintainUsersCurrentMapCameraPosition(false);
     }
 
     @Override
@@ -199,6 +202,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private void onFeatureSelected(Feature feature) {
         this.selectedFeature = feature;
         this.changeInterventionStatus = false;
+        setMaintainUsersCurrentMapCameraPosition(true);
 
         listTaskView.closeAllCardViews();
         listTaskView.displaySelectedFeature(feature, clickedPoint);
@@ -330,6 +334,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         listTaskView.hideProgressDialog();
         featureCollection.features().add(feature);
         listTaskView.setGeoJsonSource(featureCollection, null);
+        setMaintainUsersCurrentMapCameraPosition(true);
         try {
             clickedPoint = new LatLng(featureCoordinates.getDouble(1), featureCoordinates.getDouble(0));
             listTaskView.displaySelectedFeature(feature, clickedPoint);
@@ -409,5 +414,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
         else
             listTaskView.openStructureProfile(finalFamily);
+    }
+
+    public boolean getMaintainUsersCurrentMapCameraPosition() {
+        return maintainUsersCurrentMapCameraPosition;
+    }
+
+    public void setMaintainUsersCurrentMapCameraPosition(boolean maintainUsersCurrentMapCameraPosition) {
+        this.maintainUsersCurrentMapCameraPosition = maintainUsersCurrentMapCameraPosition;
     }
 }
