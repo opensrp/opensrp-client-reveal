@@ -64,6 +64,7 @@ import io.ona.kujaku.layers.BoundaryLayer;
 import io.ona.kujaku.utils.Constants;
 
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -537,7 +538,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (fetchStatus.equals(FetchStatus.fetched)
                 || fetchStatus.equals(FetchStatus.nothingFetched)) {
             Snackbar.make(rootView, org.smartregister.R.string.sync_complete, Snackbar.LENGTH_LONG).show();
-            listTaskPresenter.setMaintainUsersCurrentMapCameraPosition(false); //reset flag
         } else if (fetchStatus.equals(FetchStatus.noConnection)) {
             Snackbar.make(rootView, org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_LONG).show();
         }
@@ -583,11 +583,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle extras = intent.getExtras();
+            boolean localSyncDone;
             if (extras != null && extras.getBoolean(UPDATE_LOCATION_BUFFER_RADIUS)) {
                 float bufferRadius = org.smartregister.reveal.util.Utils.getLocationBuffer();
                 kujakuMapView.setLocationBufferRadius(bufferRadius);
             } else {
-                listTaskPresenter.refreshStructures();
+                localSyncDone = extras != null ? extras.getBoolean(LOCAL_SYNC_DONE) : false;
+                listTaskPresenter.refreshStructures(localSyncDone);
             }
         }
     }

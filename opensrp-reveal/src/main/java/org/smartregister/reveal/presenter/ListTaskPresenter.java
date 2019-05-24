@@ -124,7 +124,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
     }
 
-    public void refreshStructures() {
+    public void refreshStructures(boolean localSyncDone) {
+        if (localSyncDone){
+            setMaintainUsersCurrentMapCameraPosition(true);
+        } else {
+            setMaintainUsersCurrentMapCameraPosition(false);
+        }
         listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
         listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalArea());
     }
@@ -136,7 +141,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         if (structuresGeoJson.has(FEATURES)) {
             featureCollection = FeatureCollection.fromJson(structuresGeoJson.toString());
             listTaskView.setGeoJsonSource(featureCollection, operationalArea, this.maintainUsersCurrentMapCameraPosition);
-            setMaintainUsersCurrentMapCameraPosition(false);
             this.operationalArea = operationalArea;
             if (Utils.isEmptyCollection(featureCollection.features())) {
                 listTaskView.displayNotification(R.string.fetching_structures_title, R.string.no_structures_found);
@@ -147,7 +151,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             try {
                 structuresGeoJson.put(FEATURES, new JSONArray());
                 listTaskView.setGeoJsonSource(FeatureCollection.fromJson(structuresGeoJson.toString()), operationalArea, this.maintainUsersCurrentMapCameraPosition);
-                setMaintainUsersCurrentMapCameraPosition(false);
                 listTaskView.clearSelectedFeature();
                 listTaskView.closeCardView(R.id.btn_collapse_spray_card_view);
             } catch (JSONException e) {
@@ -328,7 +331,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             }
         }
         listTaskView.setGeoJsonSource(featureCollection, null, this.maintainUsersCurrentMapCameraPosition);
-        setMaintainUsersCurrentMapCameraPosition(false);
         listTaskInteractor.fetchInterventionDetails(interventionType, structureId, false);
     }
 
@@ -426,4 +428,5 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void setMaintainUsersCurrentMapCameraPosition(boolean maintainUsersCurrentMapCameraPosition) {
         this.maintainUsersCurrentMapCameraPosition = maintainUsersCurrentMapCameraPosition;
     }
+
 }
