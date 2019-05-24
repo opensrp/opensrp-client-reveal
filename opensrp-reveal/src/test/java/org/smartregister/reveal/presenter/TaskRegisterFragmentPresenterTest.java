@@ -13,6 +13,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
 import org.smartregister.configurableviews.model.View;
 import org.smartregister.configurableviews.model.ViewConfiguration;
@@ -267,10 +268,9 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void testOnTaskSelectedForCompletedTasks() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
-        taskDetails.setFamilyName("Craig");
         presenter.onTaskSelected(taskDetails);
-        verify(view).displayToast("To open structure details view for Craig");
-        verify(view).getContext();
+        verify(view).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
+        verify(interactor).getStructure(taskDetails);
     }
 
     @Test
@@ -322,6 +322,58 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     public void testSearchGloballyDoesNothing() {
         presenter.searchGlobally("");
         verify(view).getContext();
+        verifyNoMoreInteractions(view);
+        verifyNoMoreInteractions(interactor);
+
+    }
+
+    @Test
+    public void testOnFormSaved() {
+        presenter.onFormSaved(null, null, null, null, null);
+        verify(view).getContext();
+        verify(view).hideProgressDialog();
+        verifyNoMoreInteractions(view);
+        verifyNoMoreInteractions(interactor);
+
+    }
+
+
+    @Test
+    public void testOnStructureAdded() {
+        presenter.onStructureAdded(null, null);
+        verify(view).getContext();
+        verifyNoMoreInteractions(view);
+        verifyNoMoreInteractions(interactor);
+
+    }
+
+
+    @Test
+    public void testOnFormSaveFailure() {
+        presenter.onFormSaveFailure(null);
+        verify(view).getContext();
+        verify(view).hideProgressDialog();
+        verifyNoMoreInteractions(view);
+        verifyNoMoreInteractions(interactor);
+
+    }
+
+    @Test
+    public void testOnFamilyNotFound() {
+        presenter.onFamilyFound(null);
+        verify(view).getContext();
+        verify(view).displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
+        verifyNoMoreInteractions(view);
+        verifyNoMoreInteractions(interactor);
+
+    }
+
+    @Test
+    public void testOnFamilyFound() {
+        CommonPersonObjectClient family = new CommonPersonObjectClient(UUID.randomUUID().toString(), null, null);
+        presenter.onFamilyFound(family);
+        verify(view).getContext();
+        verify(view).openFamilyProfile(family, null);
         verifyNoMoreInteractions(view);
         verifyNoMoreInteractions(interactor);
 

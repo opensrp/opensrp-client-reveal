@@ -1,295 +1,251 @@
 package org.smartregister.reveal.interactor;
 
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
+
 import net.sqlcipher.Cursor;
+import net.sqlcipher.MatrixCursor;
+import net.sqlcipher.database.SQLiteDatabase;
 
 import org.json.JSONObject;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.domain.Location;
+import org.smartregister.domain.Task;
+import org.smartregister.repository.StructureRepository;
+import org.smartregister.repository.TaskRepository;
+import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
-import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.presenter.ListTaskPresenter;
+import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.reveal.util.Constants.Properties;
+import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.TestDataUtils;
+import org.smartregister.reveal.util.TestingUtils;
+import org.smartregister.reveal.util.Utils;
+import org.smartregister.util.Cache;
 
-import java.util.concurrent.Executor;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
-import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 
 /**
- * @author Vincent Karuri
+ * Created by samuelgithengi on 5/22/19.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ListTaskInteractor.class})
-public class ListTaskInteractorTest {
+public class ListTaskInteractorTest extends BaseUnitTest {
+
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
+
+    @Mock
+    private ListTaskPresenter presenter;
+
+    @Mock
+    private SQLiteDatabase database;
+
+    @Mock
+    private TaskRepository taskRepository;
+
+    @Mock
+    private StructureRepository structureRepository;
+
+    @Captor
+    private ArgumentCaptor<CardDetails> cardDetailsCaptor;
+
+    @Captor
+    private ArgumentCaptor<JSONObject> jsonArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Feature> featureArgumentCaptor;
 
     private ListTaskInteractor listTaskInteractor;
 
-    public static final String mosquitoCollectionForm = "{\n" +
-            "  \"baseEntityId\": \"227ce82f-d688-467a-97d7-bdad30290cea\",\n" +
-            "  \"duration\": 0,\n" +
-            "  \"entityType\": \"Structure\",\n" +
-            "  \"encounter_type\": \"mosquito_collection\",\n" +
-            "  \"eventDate\": \"2019-03-18T00:00:00.000+0000\",\n" +
-            "  \"eventType\": \"mosquito_collection\",\n" +
-            "  \"formSubmissionId\": \"cfd96619-5850-4277-b2b9-f30b0f2c0944\",\n" +
-            "  \"locationId\": \"18e9f800-55c7-4261-907a-d804d6081f93\",\n" +
-            "  \"obs\": [\n" +
-            "    {\n" +
-            "      \"fieldCode\": \"structure_type\",\n" +
-            "      \"fieldDataType\": \"text\",\n" +
-            "      \"fieldType\": \"formsubmissionField\",\n" +
-            "      \"formSubmissionField\": \"structure_type\",\n" +
-            "      \"humanReadableValues\": [],\n" +
-            "      \"parentCode\": \"\",\n" +
-            "      \"values\": [\n" +
-            "        \"Facility\"\n" +
-            "      ]\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"fieldCode\": \"trap_location\",\n" +
-            "      \"fieldDataType\": \"text\",\n" +
-            "      \"fieldType\": \"formsubmissionField\",\n" +
-            "      \"formSubmissionField\": \"trap_location\",\n" +
-            "      \"humanReadableValues\": [],\n" +
-            "      \"parentCode\": \"\",\n" +
-            "      \"values\": [\n" +
-            "        \"Indoor\"\n" +
-            "      ]\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"fieldCode\": \"trap_start\",\n" +
-            "      \"fieldDataType\": \"text\",\n" +
-            "      \"fieldType\": \"formsubmissionField\",\n" +
-            "      \"formSubmissionField\": \"trap_start\",\n" +
-            "      \"humanReadableValues\": [],\n" +
-            "      \"parentCode\": \"\",\n" +
-            "      \"values\": [\n" +
-            "        \"18-03-2019\"\n" +
-            "      ]\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"fieldCode\": \"trap_end\",\n" +
-            "      \"fieldDataType\": \"text\",\n" +
-            "      \"fieldType\": \"formsubmissionField\",\n" +
-            "      \"formSubmissionField\": \"trap_end\",\n" +
-            "      \"humanReadableValues\": [],\n" +
-            "      \"parentCode\": \"\",\n" +
-            "      \"values\": [\n" +
-            "        \"18-03-2019\"\n" +
-            "      ]\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"fieldCode\": \"trap_temp\",\n" +
-            "      \"fieldDataType\": \"text\",\n" +
-            "      \"fieldType\": \"formsubmissionField\",\n" +
-            "      \"formSubmissionField\": \"trap_temp\",\n" +
-            "      \"humanReadableValues\": [],\n" +
-            "      \"parentCode\": \"\",\n" +
-            "      \"values\": [\n" +
-            "        \"36\"\n" +
-            "      ]\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"fieldCode\": \"trap_RH\",\n" +
-            "      \"fieldDataType\": \"text\",\n" +
-            "      \"fieldType\": \"formsubmissionField\",\n" +
-            "      \"formSubmissionField\": \"trap_RH\",\n" +
-            "      \"humanReadableValues\": [],\n" +
-            "      \"parentCode\": \"\",\n" +
-            "      \"values\": [\n" +
-            "        \"69.5\"\n" +
-            "      ]\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"fieldCode\": \"An. funestus\",\n" +
-            "      \"fieldDataType\": \"text\",\n" +
-            "      \"fieldType\": \"formsubmissionField\",\n" +
-            "      \"formSubmissionField\": \"An. funestus\",\n" +
-            "      \"humanReadableValues\": [],\n" +
-            "      \"parentCode\": \"\",\n" +
-            "      \"values\": [\n" +
-            "        \"45\"\n" +
-            "      ]\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"fieldCode\": \"An. dirus\",\n" +
-            "      \"fieldDataType\": \"text\",\n" +
-            "      \"fieldType\": \"formsubmissionField\",\n" +
-            "      \"formSubmissionField\": \"An. dirus\",\n" +
-            "      \"humanReadableValues\": [],\n" +
-            "      \"parentCode\": \"\",\n" +
-            "      \"values\": [\n" +
-            "        \"63\"\n" +
-            "      ]\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"fieldCode\": \"163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\n" +
-            "      \"fieldDataType\": \"start\",\n" +
-            "      \"fieldType\": \"concept\",\n" +
-            "      \"formSubmissionField\": \"start\",\n" +
-            "      \"humanReadableValues\": [],\n" +
-            "      \"parentCode\": \"\",\n" +
-            "      \"values\": [\n" +
-            "        \"2019-03-18 09:23:30\"\n" +
-            "      ]\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"fieldCode\": \"163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\n" +
-            "      \"fieldDataType\": \"end\",\n" +
-            "      \"fieldType\": \"concept\",\n" +
-            "      \"formSubmissionField\": \"end\",\n" +
-            "      \"humanReadableValues\": [],\n" +
-            "      \"parentCode\": \"\",\n" +
-            "      \"values\": [\n" +
-            "        \"2019-03-18 09:24:04\"\n" +
-            "      ]\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"fieldCode\": \"163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\n" +
-            "      \"fieldDataType\": \"deviceid\",\n" +
-            "      \"fieldType\": \"concept\",\n" +
-            "      \"formSubmissionField\": \"deviceid\",\n" +
-            "      \"humanReadableValues\": [],\n" +
-            "      \"parentCode\": \"\",\n" +
-            "      \"values\": [\n" +
-            "        \"000000000000000\"\n" +
-            "      ]\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"fieldCode\": \"163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\n" +
-            "      \"fieldDataType\": \"subscriberid\",\n" +
-            "      \"fieldType\": \"concept\",\n" +
-            "      \"formSubmissionField\": \"subscriberid\",\n" +
-            "      \"humanReadableValues\": [],\n" +
-            "      \"parentCode\": \"\",\n" +
-            "      \"values\": [\n" +
-            "        \"310260000000000\"\n" +
-            "      ]\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"fieldCode\": \"163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\n" +
-            "      \"fieldDataType\": \"simserial\",\n" +
-            "      \"fieldType\": \"concept\",\n" +
-            "      \"formSubmissionField\": \"simserial\",\n" +
-            "      \"humanReadableValues\": [],\n" +
-            "      \"parentCode\": \"\",\n" +
-            "      \"values\": [\n" +
-            "        \"89014103211118510720\"\n" +
-            "      ]\n" +
-            "    },\n" +
-            "    {\n" +
-            "      \"fieldCode\": \"163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\n" +
-            "      \"fieldDataType\": \"phonenumber\",\n" +
-            "      \"fieldType\": \"concept\",\n" +
-            "      \"formSubmissionField\": \"phonenumber\",\n" +
-            "      \"humanReadableValues\": [],\n" +
-            "      \"parentCode\": \"\",\n" +
-            "      \"values\": [\n" +
-            "        \"15555215554\"\n" +
-            "      ]\n" +
-            "    }\n" +
-            "  ],\n" +
-            "  \"providerId\": \"demomti\",\n" +
-            "  \"team\": \"Miti\",\n" +
-            "  \"teamId\": \"7e104eee-ec8a-4733-bcf7-c02c51cf43f4\",\n" +
-            "  \"version\": 1552901044526,\n" +
-            "  \"dateCreated\": \"2019-03-18T09:24:04.527+0000\",\n" +
-            "  \"type\": \"Event\",\n" +
-            "  \"details\": {\n" +
-            "    \"taskIdentifier\": \"804833dc-5120-4290-9e3e-6bffd7075c64\",\n" +
-            "    \"taskBusinessStatus\": \"Not Visited\",\n" +
-            "    \"taskStatus\": \"READY\",\n" +
-            "    \"locationUUID\": \"1bff00f6-0408-49e5-b53e-9dedeeb3b04e\",\n" +
-            "    \"locationVersion\": \"0\"\n" +
-            "  }\n" +
-            "}";
+    private Location operationArea = TestDataUtils.gson.fromJson(TestingUtils.operationalAreaGeoJSON, Location.class);
 
-    @Captor
-    private ArgumentCaptor<JSONObject> captor;
+    private Location structure = TestingUtils.gson.fromJson(TestingUtils.structureJSON, Location.class);
 
+    private Task task = TestingUtils.getTask(structure.getId());
 
     @Before
     public void setUp() {
-        listTaskInteractor = spy(Whitebox.newInstance(ListTaskInteractor.class));
+        listTaskInteractor = new ListTaskInteractor(presenter);
+        Whitebox.setInternalState(listTaskInteractor, "database", database);
+        Whitebox.setInternalState(listTaskInteractor, "taskRepository", taskRepository);
+        Whitebox.setInternalState(listTaskInteractor, "structureRepository", structureRepository);
     }
 
     @Test
-    public void testSaveJsonFormShouldSaveMosquitoCollectionForm() throws Exception {
-        ListTaskInteractor listTaskInteractorSpy = spy(listTaskInteractor);
-
-        AppExecutors appExecutors = mock(AppExecutors.class);
-        Whitebox.setInternalState(listTaskInteractorSpy, "appExecutors", appExecutors);
-
-        Executor executor = mock(Executor.class);
-
-        doReturn(executor).when(appExecutors).diskIO();
-        doNothing().when(executor).execute(any(Runnable.class));
-
-        listTaskInteractorSpy.saveJsonForm(mosquitoCollectionForm);
-
-        verifyPrivate(listTaskInteractorSpy, times(1)).invoke("saveLocationInterventionForm", captor.capture());
-        assertEquals(new JSONObject(mosquitoCollectionForm).toString(), captor.getValue().toString());
+    public void testFetchIRSCardDetails() {
+        String feature = UUID.randomUUID().toString();
+        when(database.rawQuery(any(), any())).thenReturn(createSprayCursor());
+        listTaskInteractor.fetchInterventionDetails(Intervention.IRS, feature, false);
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery("SELECT spray_status, not_sprayed_reason, not_sprayed_other_reason, property_type, spray_date, spray_operator, family_head_name FROM sprayed_structures WHERE id=?", new String[]{feature});
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onCardDetailsFetched(cardDetailsCaptor.capture());
+        assertEquals("Locked", cardDetailsCaptor.getValue().getReason());
+        assertEquals("Not Sprayed", cardDetailsCaptor.getValue().getStatus());
     }
 
     @Test
-    public void testCreateMosquitoCollectionCardDetailsShouldPopulateCorrectCardDetails() throws Exception {
-        final String STATUS = "active";
-        final String START_DATE = "11/02/1977";
-        final String END_DATE = "23/04/1990";
+    public void testFetchIRSFormDetails() {
+        String feature = UUID.randomUUID().toString();
+        when(database.rawQuery(any(), any())).thenReturn(createSprayCursor());
+        listTaskInteractor.fetchInterventionDetails(Intervention.IRS, feature, true);
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery("SELECT spray_status, not_sprayed_reason, not_sprayed_other_reason, property_type, spray_date, spray_operator, family_head_name FROM sprayed_structures WHERE id=?", new String[]{feature});
+        verify(presenter,timeout(ASYNC_TIMEOUT)).onInterventionFormDetailsFetched(cardDetailsCaptor.capture());
+        SprayCardDetails cardDetails = (SprayCardDetails) cardDetailsCaptor.getValue();
+        assertEquals("Locked", cardDetails.getReason());
+        assertEquals("Not Sprayed", cardDetails.getStatus());
+        assertEquals("Doe John", cardDetails.getFamilyHead());
+        assertEquals("11/03/1977", cardDetails.getSprayDate());
+        assertEquals("John Doe", cardDetails.getSprayOperator());
+        assertEquals("Residential", cardDetails.getPropertyType());
+    }
 
-        Cursor cursor = mock(Cursor.class);
-        when(cursor.getColumnIndex("status")).thenReturn(0);
-        when(cursor.getColumnIndex("start_date")).thenReturn(1);
-        when(cursor.getColumnIndex("end_date")).thenReturn(2);
 
-        when(cursor.getString(0)).thenReturn(STATUS);
-        when(cursor.getString(1)).thenReturn(START_DATE);
-        when(cursor.getString(2)).thenReturn(END_DATE);
-
-        MosquitoHarvestCardDetails mosquitoHarvestCardDetails = Whitebox.invokeMethod(listTaskInteractor, "createMosquitoHarvestCardDetails", cursor, MOSQUITO_COLLECTION);
-
-        assertEquals(mosquitoHarvestCardDetails.getStatus(), STATUS);
-        assertEquals(mosquitoHarvestCardDetails.getStartDate(), START_DATE);
-        assertEquals(mosquitoHarvestCardDetails.getEndDate(), END_DATE);
-        assertEquals(mosquitoHarvestCardDetails.getInterventionType(), MOSQUITO_COLLECTION);
+    @Test
+    public void testFetchMosquitoCardDetails() {
+        String feature = UUID.randomUUID().toString();
+        when(database.rawQuery(any(), any())).thenReturn(createMosquitoLarvalCursor());
+        listTaskInteractor.fetchInterventionDetails(Intervention.MOSQUITO_COLLECTION, feature, false);
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery("SELECT status, start_date, end_date FROM mosquito_collections WHERE id=?", new String[]{feature});
+        verify(presenter,timeout(ASYNC_TIMEOUT)).onCardDetailsFetched(cardDetailsCaptor.capture());
+        assertNotNull(cardDetailsCaptor.getValue());
+        MosquitoHarvestCardDetails cardDetails = (MosquitoHarvestCardDetails) cardDetailsCaptor.getValue();
+        assertEquals("active", cardDetails.getStatus());
+        assertEquals("11/02/1977", cardDetails.getStartDate());
+        assertEquals("11/02/1977", cardDetails.getEndDate());
+        assertEquals(Intervention.MOSQUITO_COLLECTION, cardDetails.getInterventionType());
     }
 
     @Test
-    public void testCreateSprayCardDetailsShouldPopulateCorrectCardDetails() throws Exception {
-        final String PROPERTY_TYPE = "Residential";
-        final String SPRAY_DATE = "11/02/1977";
-        final String SPRAY_OPERATOR = "John Doe";
-        final String FAMILY_HEAD = "Doe John";
-
-        Cursor cursor = mock(Cursor.class);
-        when(cursor.getColumnIndex("property_type")).thenReturn(0);
-        when(cursor.getColumnIndex("spray_date")).thenReturn(1);
-        when(cursor.getColumnIndex("spray_operator")).thenReturn(2);
-        when(cursor.getColumnIndex("family_head_name")).thenReturn(3);
-
-        when(cursor.getString(0)).thenReturn(PROPERTY_TYPE);
-        when(cursor.getString(1)).thenReturn(SPRAY_DATE);
-        when(cursor.getString(2)).thenReturn(SPRAY_OPERATOR);
-        when(cursor.getString(3)).thenReturn(FAMILY_HEAD);
-
-        SprayCardDetails sprayCardDetails = Whitebox.invokeMethod(listTaskInteractor, "createSprayCardDetails", cursor);
-
-        assertEquals(sprayCardDetails.getPropertyType(), PROPERTY_TYPE);
-        assertEquals(sprayCardDetails.getSprayDate(), SPRAY_DATE);
-        assertEquals(sprayCardDetails.getSprayOperator(), SPRAY_OPERATOR);
-        assertEquals(sprayCardDetails.getFamilyHead(), FAMILY_HEAD);
+    public void testFetchMosquitoFormDetails() {
+        String feature = UUID.randomUUID().toString();
+        when(database.rawQuery(any(), any())).thenReturn(createMosquitoLarvalCursor());
+        listTaskInteractor.fetchInterventionDetails(Intervention.MOSQUITO_COLLECTION, feature, true);
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery("SELECT status, start_date, end_date FROM mosquito_collections WHERE id=?", new String[]{feature});
+        verify(presenter,timeout(ASYNC_TIMEOUT)).onInterventionFormDetailsFetched(cardDetailsCaptor.capture());
+        assertNotNull(cardDetailsCaptor.getValue());
+        MosquitoHarvestCardDetails cardDetails = (MosquitoHarvestCardDetails) cardDetailsCaptor.getValue();
+        assertEquals("active", cardDetails.getStatus());
+        assertEquals("11/02/1977", cardDetails.getStartDate());
+        assertEquals("11/02/1977", cardDetails.getEndDate());
+        assertEquals(Intervention.MOSQUITO_COLLECTION, cardDetails.getInterventionType());
     }
+
+    @Test
+    public void testFetchLarvalCardDetails() {
+        String feature = UUID.randomUUID().toString();
+        when(database.rawQuery(any(), any())).thenReturn(createMosquitoLarvalCursor());
+        listTaskInteractor.fetchInterventionDetails(Intervention.LARVAL_DIPPING, feature, false);
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery("SELECT status, start_date, end_date FROM larval_dippings WHERE id=?", new String[]{feature});
+        verify(presenter,timeout(ASYNC_TIMEOUT)).onCardDetailsFetched(cardDetailsCaptor.capture());
+        assertNotNull(cardDetailsCaptor.getValue());
+        MosquitoHarvestCardDetails cardDetails = (MosquitoHarvestCardDetails) cardDetailsCaptor.getValue();
+        assertEquals("active", cardDetails.getStatus());
+        assertEquals("11/02/1977", cardDetails.getStartDate());
+        assertEquals("11/02/1977", cardDetails.getEndDate());
+        assertEquals(Intervention.LARVAL_DIPPING, cardDetails.getInterventionType());
+    }
+
+    private void setOperationArea(String plan) {
+        String operationAreaId = operationArea.getId();
+        PreferencesUtil.getInstance().setCurrentOperationalArea(operationAreaId);
+        Cache<Location> cache = new Cache<>();
+        cache.get(operationAreaId, () -> operationArea);
+        Whitebox.setInternalState(Utils.class, "cache", cache);
+        Map<String, Task> taskMap = new HashMap<>();
+        taskMap.put(structure.getId(), task);
+        when(taskRepository.getTasksByPlanAndGroup(plan, operationAreaId)).thenReturn(taskMap);
+        when(structureRepository.getLocationsByParentId(operationAreaId)).thenReturn(Collections.singletonList(structure));
+    }
+
+    @Test
+    public void testFetchLocations() {
+        String plan = UUID.randomUUID().toString();
+        String operationAreaId = operationArea.getId();
+        setOperationArea(plan);
+        listTaskInteractor.fetchLocations(plan, operationAreaId);
+        verify(taskRepository, timeout(ASYNC_TIMEOUT)).getTasksByPlanAndGroup(plan, operationAreaId);
+        verify(structureRepository, timeout(ASYNC_TIMEOUT)).getLocationsByParentId(operationAreaId);
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(jsonArgumentCaptor.capture(), featureArgumentCaptor.capture());
+        assertEquals(operationAreaId, featureArgumentCaptor.getValue().id());
+        FeatureCollection featureCollection = FeatureCollection.fromJson(jsonArgumentCaptor.getValue().toString());
+        assertEquals("FeatureCollection", featureCollection.type());
+        assertEquals(1, featureCollection.features().size());
+        Feature feature = featureCollection.features().get(0);
+        assertEquals(structure.getId(), feature.id());
+        assertEquals(task.getIdentifier(), feature.getStringProperty(Properties.TASK_IDENTIFIER));
+        assertEquals(task.getBusinessStatus(), feature.getStringProperty(Properties.TASK_BUSINESS_STATUS));
+        assertEquals(task.getStatus().name(), feature.getStringProperty(Properties.TASK_STATUS));
+        assertEquals(task.getCode(), feature.getStringProperty(Properties.TASK_CODE));
+        assertEquals(Boolean.FALSE.toString(), feature.getStringProperty(Constants.GeoJSON.IS_INDEX_CASE));
+    }
+
+
+    @Test
+    public void testGetIndexCaseStructure() {
+        String plan = UUID.randomUUID().toString();
+        String operationAreaId = operationArea.getId();
+        setOperationArea(plan);
+        when(database.rawQuery(anyString(), eq(new String[]{plan, CASE_CONFIRMATION}))).thenReturn(createIndexCaseCursor());
+        listTaskInteractor.fetchLocations(plan, operationAreaId);
+        verify(taskRepository, timeout(ASYNC_TIMEOUT)).getTasksByPlanAndGroup(plan, operationAreaId);
+        verify(structureRepository, timeout(ASYNC_TIMEOUT)).getLocationsByParentId(operationAreaId);
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(jsonArgumentCaptor.capture(), featureArgumentCaptor.capture());
+        verify(database).rawQuery(anyString(), eq(new String[]{plan, CASE_CONFIRMATION}));
+        assertEquals(operationAreaId, featureArgumentCaptor.getValue().id());
+        FeatureCollection featureCollection = FeatureCollection.fromJson(jsonArgumentCaptor.getValue().toString());
+        assertEquals("FeatureCollection", featureCollection.type());
+        assertEquals(1, featureCollection.features().size());
+        Feature feature = featureCollection.features().get(0);
+        assertEquals(structure.getId(), feature.id());
+        assertEquals(task.getIdentifier(), feature.getStringProperty(Properties.TASK_IDENTIFIER));
+        assertEquals(task.getBusinessStatus(), feature.getStringProperty(Properties.TASK_BUSINESS_STATUS));
+        assertEquals(task.getStatus().name(), feature.getStringProperty(Properties.TASK_STATUS));
+        assertEquals(task.getCode(), feature.getStringProperty(Properties.TASK_CODE));
+        assertEquals(Boolean.TRUE.toString(), feature.getStringProperty(Constants.GeoJSON.IS_INDEX_CASE));
+    }
+
+    private Cursor createSprayCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{"spray_status", "not_sprayed_reason",
+                "not_sprayed_other_reason", "property_type", "spray_date", "spray_operator", "family_head_name"});
+        cursor.addRow(new Object[]{"Not Sprayed", "other", "Locked", "Residential", "11/03/1977", "John Doe", "Doe John"});
+        return cursor;
+    }
+
+    private Cursor createMosquitoLarvalCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{"status", "start_date", "end_date"});
+        cursor.addRow(new Object[]{"active", "11/02/1977", "11/02/1977"});
+        return cursor;
+    }
+
+    private Cursor createIndexCaseCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{STRUCTURE_ID});
+        cursor.addRow(new Object[]{structure.getId()});
+        return cursor;
+    }
+
+
 }

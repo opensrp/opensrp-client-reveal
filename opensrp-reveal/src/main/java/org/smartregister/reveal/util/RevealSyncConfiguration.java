@@ -10,6 +10,16 @@ import org.smartregister.reveal.application.RevealApplication;
  * Created by samuelgithengi on 11/29/18.
  */
 public class RevealSyncConfiguration extends SyncConfiguration {
+
+    private AllSharedPreferences sharedPreferences;
+
+    public RevealSyncConfiguration() {
+    }
+
+    public RevealSyncConfiguration(AllSharedPreferences sharedPreferences) {
+        this.sharedPreferences = sharedPreferences;
+    }
+
     @Override
     public int getSyncMaxRetries() {
         return BuildConfig.MAX_SYNC_RETRIES;
@@ -22,7 +32,9 @@ public class RevealSyncConfiguration extends SyncConfiguration {
 
     @Override
     public String getSyncFilterValue() {
-        AllSharedPreferences sharedPreferences = RevealApplication.getInstance().getContext().userService().getAllSharedPreferences();
+        if (sharedPreferences == null) {
+            sharedPreferences = RevealApplication.getInstance().getContext().userService().getAllSharedPreferences();
+        }
         return sharedPreferences.fetchDefaultTeamId(sharedPreferences.fetchRegisteredANM());
     }
 
