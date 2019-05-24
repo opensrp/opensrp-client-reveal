@@ -42,10 +42,7 @@ import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
  */
 public class RevealClientProcessor extends ClientProcessorForJava {
 
-
     private static final String TAG = RevealClientProcessor.class.getCanonicalName();
-
-    private static RevealClientProcessor instance;
 
     private EventClientRepository eventClientRepository;
 
@@ -66,7 +63,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             instance = new RevealClientProcessor(context);
         }
 
-        return instance;
+        return (RevealClientProcessor) instance;
     }
 
     @Override
