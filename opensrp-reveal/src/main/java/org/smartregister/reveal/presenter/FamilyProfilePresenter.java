@@ -8,12 +8,14 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.presenter.BaseFamilyProfilePresenter;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.interactor.RevealFamilyProfileInteractor;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -110,7 +112,8 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
     @Override
     public void startFormForEdit(CommonPersonObjectClient client) {
-        JSONObject form = FamilyJsonFormUtils.getAutoPopulatedJsonEditFormString(JSON_FORM.FAMILY_UPDATE,
+        String formName = BuildConfig.BUILD_COUNTRY == Country.THAILAND ? JSON_FORM.THAILAND_FAMILY_UPDATE : JSON_FORM.FAMILY_UPDATE;
+        JSONObject form = FamilyJsonFormUtils.getAutoPopulatedJsonEditFormString(formName,
                 getView().getApplicationContext(), client, metadata().familyRegister.updateEventType);
         try {
             getView().startFormActivity(form);

@@ -27,8 +27,6 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
             JSONObject form = FormUtils.getInstance(context).getFormJson(formName);
             LocationPickerView lpv = new LocationPickerView(context);
             lpv.init();
-            // JsonFormUtils.addWomanRegisterHierarchyQuestions(form);
-            Log.d(TAG, "Form is " + form.toString());
             if (form != null) {
                 form.put(ENTITY_ID, client.getCaseId());
                 form.put(ENCOUNTER_TYPE, eventType);
@@ -49,8 +47,6 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                     processPopulatableFields(client, jsonObject);
 
                 }
-
-                addLocHierarchyQuestions(form);
 
                 return form;
             }
