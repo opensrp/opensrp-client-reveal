@@ -137,7 +137,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea) {
         listTaskView.hideProgressDialog();
-        setChangeMapPosition(drawerPresenter.isChangedCurrentSelection() && changeMapPosition);
+        setChangeMapPosition(drawerPresenter.isChangedCurrentSelection() || (drawerPresenter.isChangedCurrentSelection()  && changeMapPosition) );
         drawerPresenter.setChangedCurrentSelection(false);
         if (structuresGeoJson.has(FEATURES)) {
             featureCollection = FeatureCollection.fromJson(structuresGeoJson.toString());
@@ -208,7 +208,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private void onFeatureSelected(Feature feature) {
         this.selectedFeature = feature;
         this.changeInterventionStatus = false;
-        setChangeMapPosition(false);
 
         listTaskView.closeAllCardViews();
         listTaskView.displaySelectedFeature(feature, clickedPoint);
@@ -324,6 +323,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public void onFormSaved(@NonNull String structureId, String taskID, @NonNull TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
         listTaskView.hideProgressDialog();
+        setChangeMapPosition(false);
         for (Feature feature : featureCollection.features()) {
             if (structureId.equals(feature.id())) {
                 feature.addStringProperty(TASK_BUSINESS_STATUS, businessStatus);

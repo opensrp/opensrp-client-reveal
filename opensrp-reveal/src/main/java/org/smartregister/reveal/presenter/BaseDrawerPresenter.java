@@ -267,7 +267,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     public void onViewResumed() {
         if (viewInitialized) {
             if (!prefsUtil.getCurrentPlan().equals(view.getPlan())
-                    || !prefsUtil.getCurrentFacility().equals(view.getOperationalArea())) {
+                    || !prefsUtil.getCurrentOperationalArea().equals(view.getOperationalArea())) {
                 changedCurrentSelection = true;
                 onDrawerClosed();
             }

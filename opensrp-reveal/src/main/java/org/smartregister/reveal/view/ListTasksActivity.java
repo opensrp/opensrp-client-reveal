@@ -371,7 +371,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 }
 
-                if (cameraPosition != null  && isChangeMapPosition ) {
+                if (cameraPosition != null  && (boundaryLayer ==null || isChangeMapPosition) ) {
                     mMapboxMap.setCameraPosition(cameraPosition);
                 }
 
