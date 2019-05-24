@@ -86,8 +86,8 @@
       {
         "key": "house_number",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "person_address",
-        "openmrs_entity_id": "address2",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "เลขที่บ้าน"
       },
