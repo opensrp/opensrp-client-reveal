@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
@@ -92,7 +94,6 @@ public class ListTaskPresenterTest {
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
 
         listTaskPresenter.onFormSaved(null, null, null, null, IRS);
-
         verify(listTaskViewSpy).hideProgressDialog();
     }
 
@@ -431,7 +432,26 @@ public class ListTaskPresenterTest {
         verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
 
+    @Test
+    public void testMaintainUsersCurrentMapCameraPositionIsSetToFalseWhenPresenterIsInitialized() throws Exception {
 
+        Assert.assertFalse(listTaskPresenter.getMaintainUsersCurrentMapCameraPosition());
+    }
+
+    @Test
+    public void testMaintainUsersCurrentMapCameraPositionIsSetToTrueOnStructureAddedIscalled() throws Exception {
+
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
+        Whitebox.setInternalState(listTaskPresenter, "clickedPoint", mock(LatLng.class));
+
+        JSONArray featureCoordinates = new JSONArray("[32.64555352892119, -14.15491759447286]");
+
+        Assert.assertFalse(listTaskPresenter.getMaintainUsersCurrentMapCameraPosition());
+
+        listTaskPresenter.onStructureAdded(null, featureCoordinates);
+
+        Assert.assertTrue(listTaskPresenter.getMaintainUsersCurrentMapCameraPosition());
+    }
 
     private void mockStaticMethods() {
         mockStatic(Utils.class);
