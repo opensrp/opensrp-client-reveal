@@ -236,6 +236,13 @@
         "v_required": {
           "value": true,
           "err": "A case number is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "blood-screening-relevance-rules.yml"
+            }
+          }
         }
       },
       {
