@@ -100,7 +100,6 @@
           }
         }
       },
-      ,
       {
         "key": "business_status",
         "openmrs_entity_parent": "",
