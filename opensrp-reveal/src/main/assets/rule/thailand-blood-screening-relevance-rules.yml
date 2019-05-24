@@ -7,9 +7,9 @@ actions:
   - "isRelevant = true"
 ---
 name: step1_testResult
-description: Display if test type is Microscopy
+description: Display if test type is RDT
 priority: 1
-condition: "step1_testType == 'Microscopy'"
+condition: "step1_testType == 'RDT'"
 actions:
   - "isRelevant = true"
 ---
