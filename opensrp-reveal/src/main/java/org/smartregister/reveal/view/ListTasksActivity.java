@@ -373,6 +373,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 if (cameraPosition != null && !listTaskPresenter.getMaintainUsersCurrentMapCameraPosition()) {
                     mMapboxMap.setCameraPosition(cameraPosition);
                 }
+                listTaskPresenter.setMaintainUsersCurrentMapCameraPosition(false); // reset flag
 
                 Boolean drawOperationalAreaBoundaryAndLabel = org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel();
                 if (drawOperationalAreaBoundaryAndLabel) {
