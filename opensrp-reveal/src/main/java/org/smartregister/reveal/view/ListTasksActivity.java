@@ -357,7 +357,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea, boolean maintainUsersCurrentMapCameraPosition) {
+    public void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea, boolean isChangeMapPosition) {
         if (geoJsonSource != null) {
             geoJsonSource.setGeoJson(featureCollection);
             if (operationalArea != null) {
@@ -371,7 +371,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 }
 
-                if (cameraPosition != null && !maintainUsersCurrentMapCameraPosition) {
+                if (cameraPosition != null  && isChangeMapPosition ) {
                     mMapboxMap.setCameraPosition(cameraPosition);
                 }
 
