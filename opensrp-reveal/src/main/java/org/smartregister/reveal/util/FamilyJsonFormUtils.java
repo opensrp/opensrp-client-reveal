@@ -80,7 +80,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                 break;
             default:
                 JsonFormUtils.processPopulatableFields(client, jsonObject);
-
+                break;
         }
     }
 }

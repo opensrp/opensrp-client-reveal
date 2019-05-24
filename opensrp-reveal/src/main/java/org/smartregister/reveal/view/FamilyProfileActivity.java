@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import org.smartregister.family.activity.BaseFamilyProfileActivity;
 import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.family.util.Constants;
-import org.smartregister.family.util.Utils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.fragment.FamilyProfileMemberFragment;
