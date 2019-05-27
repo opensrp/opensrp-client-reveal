@@ -460,8 +460,6 @@ public class ListTaskPresenterTest {
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
         Whitebox.setInternalState(listTaskPresenter, "clickedPoint", mock(LatLng.class));
 
-        JSONArray featureCoordinates = new JSONArray("[32.64555352892119, -14.15491759447286]");
-
         Assert.assertTrue(listTaskPresenter.isChangeMapPosition());
 
         listTaskPresenter.onFormSaved("1", null, Task.TaskStatus.COMPLETED, COMPLETE, null);
