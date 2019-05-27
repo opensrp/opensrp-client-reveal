@@ -21,6 +21,7 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
@@ -409,5 +410,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
         else
             listTaskView.openStructureProfile(finalFamily);
+    }
+
+    public void onResume() {
+        if (RevealApplication.getInstance().isFamilyAdded()) {
+            refreshStructures();//todo change to refreshStructures(true); once https://github.com/OpenSRP/opensrp-client-reveal/pull/191 is merged
+            RevealApplication.getInstance().setFamilyAdded(false);
+        }
     }
 }

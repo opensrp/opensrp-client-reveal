@@ -554,6 +554,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         IntentFilter filter = new IntentFilter(Action.STRUCTURE_TASK_SYNCED);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(refreshGeowidgetReceiver, filter);
         drawerView.onResume();
+        listTaskPresenter.onResume();
     }
 
     @Override
