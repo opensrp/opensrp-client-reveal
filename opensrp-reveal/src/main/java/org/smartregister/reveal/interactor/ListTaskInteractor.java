@@ -22,6 +22,7 @@ import org.smartregister.reveal.util.Utils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
@@ -137,7 +138,7 @@ public class ListTaskInteractor extends BaseInteractor {
                 try {
                     featureCollection = createFeatureCollection();
                     if (operationalAreaLocation != null) {
-                        Map<String, Task> tasks = taskRepository.getTasksByPlanAndGroup(plan, operationalAreaLocation.getId());
+                        Map<String, Set<Task>> tasks = taskRepository.getTasksByPlanAndGroup(plan, operationalAreaLocation.getId());
                         List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
                         String indexCase = getIndexCaseStructure(plan);
                         featureCollection.put(GeoJSON.FEATURES, new JSONArray(GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, indexCase)));
