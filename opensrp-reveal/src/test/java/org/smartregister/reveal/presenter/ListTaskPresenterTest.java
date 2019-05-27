@@ -435,7 +435,7 @@ public class ListTaskPresenterTest {
     @Test
     public void testMaintainUsersCurrentMapCameraPositionIsSetToFalseWhenPresenterIsInitialized() throws Exception {
 
-        Assert.assertFalse(listTaskPresenter.isChangeMapPosition());
+        Assert.assertTrue(listTaskPresenter.isChangeMapPosition());
     }
 
     @Test
@@ -446,11 +446,11 @@ public class ListTaskPresenterTest {
 
         JSONArray featureCoordinates = new JSONArray("[32.64555352892119, -14.15491759447286]");
 
-        Assert.assertFalse(listTaskPresenter.isChangeMapPosition());
+        Assert.assertTrue(listTaskPresenter.isChangeMapPosition());
 
         listTaskPresenter.onStructureAdded(null, featureCoordinates);
 
-        Assert.assertTrue(listTaskPresenter.isChangeMapPosition());
+        Assert.assertFalse(listTaskPresenter.isChangeMapPosition());
     }
 
     private void mockStaticMethods() {
