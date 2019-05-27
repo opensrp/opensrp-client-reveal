@@ -339,8 +339,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void onStructureAdded(Feature feature, JSONArray featureCoordinates) {
         listTaskView.hideProgressDialog();
         featureCollection.features().add(feature);
-        listTaskView.setGeoJsonSource(featureCollection, null, isChangeMapPosition());
         setChangeMapPosition(false);
+        listTaskView.setGeoJsonSource(featureCollection, null, isChangeMapPosition());
         try {
             clickedPoint = new LatLng(featureCoordinates.getDouble(1), featureCoordinates.getDouble(0));
             listTaskView.displaySelectedFeature(feature, clickedPoint);
