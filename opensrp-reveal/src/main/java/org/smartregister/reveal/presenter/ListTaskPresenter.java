@@ -209,7 +209,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             String code = getPropertyValue(feature, TASK_CODE);
             selectedFeatureInterventionType = code;
             if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || REGISTER_FAMILY.equals(code))
-                    && NOT_VISITED.equals(businessStatus)) {
+                    && (NOT_VISITED.equals(businessStatus) || businessStatus == null)) {
                 if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
                     validateUserLocation();
                 } else {
