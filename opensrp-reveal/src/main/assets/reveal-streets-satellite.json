@@ -85,6 +85,16 @@
         "type": "FeatureCollection",
         "features": []
       }
+    },
+    "mapbox://ona.65ebjahc": {
+        "url": "mapbox://ona.65ebjahc",
+        "type": "raster",
+        "tileSize": 256
+    },
+    "mapbox://ona.9yx4phdp": {
+        "url": "mapbox://ona.9yx4phdp",
+        "type": "raster",
+        "tileSize": 256
     }
   },
   "sprite": "mapbox://sprites/ona/cjp461odq3oq22sp60oxq1qwz",
@@ -104,6 +114,22 @@
       "source": "mapbox://mapbox.satellite",
       "layout": {},
       "paint": {}
+    },
+    {
+        "id": "Thailand 1",
+        "type": "raster",
+        "metadata": {},
+        "source": "mapbox://ona.65ebjahc",
+        "layout": {},
+        "paint": {}
+    },
+    {
+        "id": "Thailand 2",
+        "type": "raster",
+        "metadata": {},
+        "source": "mapbox://ona.9yx4phdp",
+        "layout": {},
+        "paint": {}
     },
     {
       "id": "ona-aami3tqv",
