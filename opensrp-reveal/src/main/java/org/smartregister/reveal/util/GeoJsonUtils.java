@@ -2,10 +2,12 @@ package org.smartregister.reveal.util;
 
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.R;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.smartregister.reveal.interactor.ListTaskInteractor.gson;
 import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
@@ -22,10 +24,17 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
  */
 public class GeoJsonUtils {
 
-    public static String getGeoJsonFromStructuresAndTasks(List<Location> structures, Map<String, Task> tasks, String indexCase) {
+    public static String getGeoJsonFromStructuresAndTasks(List<Location> structures, Map<String, Set<Task>> tasks, String indexCase) {
         for (Location structure : structures) {
-            Task task = tasks.get(structure.getId());
-            if (task != null) {
+            Set<Task> taskSet = tasks.get(structure.getId());
+            if (taskSet == null)
+                continue;
+            for (Task task : taskSet) {
+                if (R.string.focus_investigation == Utils.getInterventionLabel()
+                        && !Constants.Intervention.REGISTER_FAMILY.equals(task.getCode())
+                        && structure.getProperties().getCustomProperties() != null) {
+                    continue;
+                }
                 HashMap<String, String> taskProperties = new HashMap<>();
                 taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
                 taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
