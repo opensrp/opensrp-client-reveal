@@ -10,18 +10,22 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.util.PropertiesConverter;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 
 public class GeoJsonUtilsTest extends BaseUnitTest {
 
@@ -65,7 +69,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
         Map<String, Set<Task>> tasks = new HashMap<>();
 
         Task task = initTestTask();
-        task.setCode(Constants.Intervention.BEDNET_DISTRIBUTION); // Value set to another code that
+        task.setCode(Intervention.BEDNET_DISTRIBUTION); // Value set to another code that
         // is not "Case Confirmation"
 
         tasks.put(structure.getId(), Collections.singleton(task));
@@ -81,12 +85,45 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
     }
 
+
+    @Test
+    public void testRegisterFamilyTaskTakesPreference() throws Exception {
+
+        PreferencesUtil.getInstance().setCurrentPlan("Focus 1");
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task task = initTestTask();
+        task.setCode(Intervention.BEDNET_DISTRIBUTION);
+        taskSet.add(task);
+
+        Task task2 = initTestTask();
+        task2.setCode(Intervention.REGISTER_FAMILY);
+        taskSet.add(task2);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(Intervention.REGISTER_FAMILY, feature.getStringProperty(TASK_CODE));
+
+    }
+
     private Task initTestTask() {
         Task task = new Task();
         task.setIdentifier("ARCHIVE_2019-04");
         task.setBusinessStatus("In Progress");
         task.setStatus(Task.TaskStatus.IN_PROGRESS);
-        task.setCode(Constants.Intervention.CASE_CONFIRMATION);
+        task.setCode(Intervention.CASE_CONFIRMATION);
         return task;
     }
 
