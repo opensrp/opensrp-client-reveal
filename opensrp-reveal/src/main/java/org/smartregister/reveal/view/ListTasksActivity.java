@@ -235,7 +235,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
                     @Override
                     public void onMove(@NonNull MoveGestureDetector detector) {
-                        revealMapHelper.resizeIndexCaseCircle(mMapboxMap);
+                        revealMapHelper.resizeIndexCaseCircle(mMapboxMap, ListTasksActivity.this);
                     }
 
                     @Override
@@ -388,7 +388,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 if (getInterventionLabel() == R.string.focus_investigation && revealMapHelper.getIndexCaseCircleLayer() == null) {
                     revealMapHelper.addIndexCaseLayers(mMapboxMap, getContext(), featureCollection);
                 } else {
-                    revealMapHelper.updateIndexCaseLayers(mMapboxMap, featureCollection);
+                    revealMapHelper.updateIndexCaseLayers(mMapboxMap, featureCollection, this);
                 }
             }
         }

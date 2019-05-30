@@ -16,11 +16,8 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.mockito.ArgumentMatchers.anyDouble;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.smartregister.reveal.util.Utils.calculateZoomLevelRadius;
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
 import static org.smartregister.reveal.util.Utils.getInterventionLabel;
 
@@ -30,15 +27,6 @@ import static org.smartregister.reveal.util.Utils.getInterventionLabel;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({PreferencesUtil.class, MapboxMap.class, RevealApplication.class})
 public class UtilsTest {
-
-    @Test
-    public void testCalculateZoomLevelRadius() {
-        MapboxMap mapboxMap = PowerMockito.mock(MapboxMap.class);
-        Projection projection = mock(Projection.class);
-        doReturn(projection).when(mapboxMap).getProjection();
-        doReturn(2.0).when(projection).getMetersPerPixelAtLatitude(anyDouble());
-        assertEquals(calculateZoomLevelRadius(mapboxMap, 2, 2), 1, 0.00001);
-    }
 
     @Test
     public void testGetInterventionLabel() throws Exception {

@@ -1,5 +1,6 @@
 package org.smartregister.reveal.util;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -10,10 +11,12 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.widget.TextView;
 
 import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import org.smartregister.domain.Location;
@@ -131,8 +134,22 @@ public class Utils {
             return R.string.irs;
     }
 
-    public static float calculateZoomLevelRadius(@NonNull final MapboxMap mapboxMap, double latitude, float radius) {
-        double metersPerPixel = mapboxMap.getProjection().getMetersPerPixelAtLatitude(latitude);
+    public static float calculateZoomLevelRadius(@NonNull final MapboxMap mapboxMap, double latitude, float radius, Context context) {
+        double metersPerDip = mapboxMap.getProjection().getMetersPerPixelAtLatitude(latitude);
+        double metersPerPixel;
+
+        float dip = 1.0f;
+        Resources r = context.getResources();
+        float dpToPixelRatio = TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                dip,
+                r.getDisplayMetrics()
+        );
+
+        // Apparently from https://github.com/mapbox/mapbox-gl-native/issues/8990 seems like the getMetersPerPixelAtLatitude()
+        // function returns meters per dip hence we have to factor that in when calculating the zoom level radius
+        metersPerPixel = metersPerDip * dpToPixelRatio;
+
         return (float) (radius / metersPerPixel);
     }
 

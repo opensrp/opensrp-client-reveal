@@ -133,10 +133,10 @@ public class RevealMapHelper {
                 circleStrokeOpacity(1f)
         );
         mMapboxMapStyle.addLayer(indexCaseCircleLayer);
-        updateIndexCaseLayers(mapboxMap, featureCollection);
+        updateIndexCaseLayers(mapboxMap, featureCollection,context);
     }
 
-    public void updateIndexCaseLayers(MapboxMap mapboxMap, FeatureCollection featureCollection) {
+    public void updateIndexCaseLayers(MapboxMap mapboxMap, FeatureCollection featureCollection, Context context) {
         try {
             if (featureCollection != null) {
                 Feature indexCase = getIndexCase(featureCollection);
@@ -148,7 +148,7 @@ public class RevealMapHelper {
                     geometry.put("type", "Point");
                     geometry.put("coordinates", new JSONArray(new Double[]{indexCaseLocation.getLongitude(), indexCaseLocation.getLatitude()}));
                     feature.put("geometry", geometry);
-                    resizeIndexCaseCircle(mapboxMap);
+                    resizeIndexCaseCircle(mapboxMap, context);
                     indexCaseSource.setGeoJson(Feature.fromJson(feature.toString()));
                 } else {
                     indexCaseSource.setGeoJson(FeatureCollection.fromFeatures(new ArrayList<>()));
@@ -159,9 +159,9 @@ public class RevealMapHelper {
         }
     }
 
-    public void resizeIndexCaseCircle(MapboxMap mapboxMap) {
+    public void resizeIndexCaseCircle(MapboxMap mapboxMap, Context context) {
         if (indexCaseLocation != null && indexCaseCircleLayer != null) {
-            float circleRadius = calculateZoomLevelRadius(mapboxMap, mapboxMap.getCameraPosition().target.getLatitude(), radius);
+            float circleRadius = calculateZoomLevelRadius(mapboxMap, mapboxMap.getCameraPosition().target.getLatitude(), radius, context);
             indexCaseCircleLayer.setProperties(circleRadius(circleRadius));
         }
     }

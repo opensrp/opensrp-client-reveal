@@ -24,6 +24,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
+import org.robolectric.RuntimeEnvironment;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -60,6 +61,8 @@ public class RevealMapHelperTest {
 
     private CameraPosition cameraPosition;
 
+    private Context context = RuntimeEnvironment.application;
+
     @Before
     public void setUp() throws Exception {
         GeoJsonSource source = mock(GeoJsonSource.class);
@@ -91,8 +94,8 @@ public class RevealMapHelperTest {
         CircleLayer circleLayer = mock(CircleLayer.class);
         Whitebox.setInternalState(revealMapHelper, "indexCaseCircleLayer", circleLayer);
         Whitebox.setInternalState(revealMapHelper, "indexCaseLocation", mock(Location.class));
-        PowerMockito.doReturn(12f).when(Utils.class, "calculateZoomLevelRadius", any(MapboxMap.class), anyDouble(), anyFloat());
-        revealMapHelper.resizeIndexCaseCircle(mapboxMap);
+        PowerMockito.doReturn(12f).when(Utils.class, "calculateZoomLevelRadius", any(MapboxMap.class), anyDouble(), anyFloat(), any());
+        revealMapHelper.resizeIndexCaseCircle(mapboxMap, context);
         verify(circleLayer).setProperties(any(PropertyValue.class));
     }
 
@@ -112,8 +115,8 @@ public class RevealMapHelperTest {
         MapboxMap mapboxMap = mock(MapboxMap.class);
         cameraPosition = new CameraPosition.Builder().target(new LatLng()).build();
         when(mapboxMap.getCameraPosition()).thenReturn(cameraPosition);
-        PowerMockito.doReturn(12f).when(Utils.class, "calculateZoomLevelRadius", any(MapboxMap.class), anyDouble(), anyFloat());
-        revealMapHelper.updateIndexCaseLayers(mapboxMap, featureCollection);
+        PowerMockito.doReturn(12f).when(Utils.class, "calculateZoomLevelRadius", any(MapboxMap.class), anyDouble(), anyFloat(), any());
+        revealMapHelper.updateIndexCaseLayers(mapboxMap, featureCollection, context);
         verify(source).setGeoJson(featureArgumentCaptor.capture());
         assertEquals(featureArgumentCaptor.getValue().getStringProperty("taskIdentifier"), "c987a804-2525-43bd-99b1-e1910fffbc1a");
     }
@@ -126,7 +129,7 @@ public class RevealMapHelperTest {
         FeatureCollection featureCollection = mock(FeatureCollection.class);
         Style style = mock(Style.class);
         doReturn(style).when(mapboxMap).getStyle();
-        doNothing().when(revealMapHelper).updateIndexCaseLayers(any(), any());
+        doNothing().when(revealMapHelper).updateIndexCaseLayers(any(), any(), any());
         revealMapHelper.addIndexCaseLayers(mapboxMap, context, featureCollection);
         verify(style, times(2)).addLayer(layerArgumentCaptor.capture());
         assertEquals(layerArgumentCaptor.getAllValues().get(0).getId(), INDEX_CASE_SYMBOL_LAYER);
