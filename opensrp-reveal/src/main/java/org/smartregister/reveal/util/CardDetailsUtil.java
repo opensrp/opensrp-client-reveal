@@ -85,8 +85,8 @@ public class CardDetailsUtil {
 
     public void populateAndOpenMosquitoHarvestCard(MosquitoHarvestCardDetails mosquitoHarvestCardDetails, Activity activity) {
         String interventionType = mosquitoHarvestCardDetails.getInterventionType();
-        String startDate = mosquitoHarvestCardDetails.getStartDate();
-        String endDate = mosquitoHarvestCardDetails.getEndDate();
+        String startDate = mosquitoHarvestCardDetails.getStartDate() != null ? mosquitoHarvestCardDetails.getStartDate() : "";
+        String endDate = mosquitoHarvestCardDetails.getEndDate() != null ? mosquitoHarvestCardDetails.getEndDate() : "";
         if (MOSQUITO_COLLECTION.equals(interventionType)) {
             TextView tvMosquitoCollectionStatus = activity.findViewById(R.id.trap_collection_status);
             TextView tvMosquitoTrapSetDate = activity.findViewById(R.id.trap_set_date);
