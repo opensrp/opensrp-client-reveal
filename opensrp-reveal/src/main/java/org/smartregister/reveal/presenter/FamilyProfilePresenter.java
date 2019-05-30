@@ -43,7 +43,11 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         preferencesUtil = PreferencesUtil.getInstance();
         getStructureId(familyBaseEntityId);
         setInteractor(new RevealFamilyProfileInteractor(this));
-        familyJsonFormUtils = new FamilyJsonFormUtils();
+        try {
+            familyJsonFormUtils = new FamilyJsonFormUtils(getView().getApplicationContext());
+        } catch (Exception e) {
+            Log.e(TAG, "error Intitializing FamilyJsonFormUtils ");
+        }
     }
 
     @Override
