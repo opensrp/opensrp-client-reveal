@@ -104,6 +104,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private RevealJsonFormUtils jsonFormUtils;
 
+    private boolean changeMapPosition;
+
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
         this.drawerPresenter = drawerPresenter;
@@ -112,6 +114,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         locationPresenter = new ValidateUserLocationPresenter(listTaskView, this);
         prefsUtil = PreferencesUtil.getInstance();
         jsonFormUtils = listTaskView.getJsonFormUtils();
+        setChangeMapPosition(true);
     }
 
     @Override
@@ -122,7 +125,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
     }
 
-    public void refreshStructures() {
+    public void refreshStructures(boolean localSyncDone) {
+        if (localSyncDone) {
+            setChangeMapPosition(false);
+        } else {
+            setChangeMapPosition(true);
+        }
         listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
         listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalArea());
     }
@@ -130,10 +138,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea) {
         listTaskView.hideProgressDialog();
+        setChangeMapPosition(drawerPresenter.isChangedCurrentSelection() || (drawerPresenter.isChangedCurrentSelection() && changeMapPosition));
         drawerPresenter.setChangedCurrentSelection(false);
         if (structuresGeoJson.has(FEATURES)) {
             featureCollection = FeatureCollection.fromJson(structuresGeoJson.toString());
-            listTaskView.setGeoJsonSource(featureCollection, operationalArea);
+            listTaskView.setGeoJsonSource(featureCollection, operationalArea, isChangeMapPosition());
             this.operationalArea = operationalArea;
             if (Utils.isEmptyCollection(featureCollection.features())) {
                 listTaskView.displayNotification(R.string.fetching_structures_title, R.string.no_structures_found);
@@ -143,7 +152,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     R.string.fetch_location_and_structures_failed, prefsUtil.getCurrentOperationalArea());
             try {
                 structuresGeoJson.put(FEATURES, new JSONArray());
-                listTaskView.setGeoJsonSource(FeatureCollection.fromJson(structuresGeoJson.toString()), operationalArea);
+                listTaskView.setGeoJsonSource(FeatureCollection.fromJson(structuresGeoJson.toString()), operationalArea, isChangeMapPosition());
                 listTaskView.clearSelectedFeature();
                 listTaskView.closeCardView(R.id.btn_collapse_spray_card_view);
             } catch (JSONException e) {
@@ -315,6 +324,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public void onFormSaved(@NonNull String structureId, String taskID, @NonNull TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
         listTaskView.hideProgressDialog();
+        setChangeMapPosition(false);
         for (Feature feature : featureCollection.features()) {
             if (structureId.equals(feature.id())) {
                 feature.addStringProperty(TASK_BUSINESS_STATUS, businessStatus);
@@ -322,7 +332,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 break;
             }
         }
-        listTaskView.setGeoJsonSource(featureCollection, null);
+        listTaskView.setGeoJsonSource(featureCollection, null, isChangeMapPosition());
         listTaskInteractor.fetchInterventionDetails(interventionType, structureId, false);
     }
 
@@ -330,7 +340,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void onStructureAdded(Feature feature, JSONArray featureCoordinates) {
         listTaskView.hideProgressDialog();
         featureCollection.features().add(feature);
-        listTaskView.setGeoJsonSource(featureCollection, null);
+        setChangeMapPosition(false);
+        listTaskView.setGeoJsonSource(featureCollection, null, isChangeMapPosition());
         try {
             clickedPoint = new LatLng(featureCoordinates.getDouble(1), featureCoordinates.getDouble(0));
             listTaskView.displaySelectedFeature(feature, clickedPoint);
@@ -412,10 +423,20 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.openStructureProfile(finalFamily);
     }
 
+
     public void onResume() {
         if (RevealApplication.getInstance().isFamilyAdded()) {
-            refreshStructures();//todo change to refreshStructures(true); once https://github.com/OpenSRP/opensrp-client-reveal/pull/191 is merged
+            refreshStructures(true);
             RevealApplication.getInstance().setFamilyAdded(false);
         }
     }
+
+    public boolean isChangeMapPosition() {
+        return changeMapPosition;
+    }
+
+    public void setChangeMapPosition(boolean changeMapPosition) {
+        this.changeMapPosition = changeMapPosition;
+    }
+
 }

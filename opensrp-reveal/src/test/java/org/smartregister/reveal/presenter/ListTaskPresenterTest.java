@@ -4,7 +4,9 @@ import android.content.Context;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,6 +18,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
@@ -92,7 +95,6 @@ public class ListTaskPresenterTest {
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
 
         listTaskPresenter.onFormSaved(null, null, null, null, IRS);
-
         verify(listTaskViewSpy).hideProgressDialog();
     }
 
@@ -409,7 +411,7 @@ public class ListTaskPresenterTest {
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
 
         doNothing().when(listTaskViewSpy).hideProgressDialog();
-        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class));
+        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class), anyBoolean());
         doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(IRS), anyString(), anyBoolean());
 
 
@@ -423,7 +425,7 @@ public class ListTaskPresenterTest {
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
 
         doNothing().when(listTaskViewSpy).hideProgressDialog();
-        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class));
+        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class), anyBoolean());
         doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION),anyString(), anyBoolean());
 
         listTaskPresenter.onFormSaved(null, null, null, null, MOSQUITO_COLLECTION);
@@ -431,6 +433,60 @@ public class ListTaskPresenterTest {
         verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
 
+    @Test
+    public void testChangeMapPositionIsSetToTrueWhenPresenterIsInitialized() throws Exception {
+
+        Assert.assertTrue(listTaskPresenter.isChangeMapPosition());
+    }
+
+    @Test
+    public void testChangeMapPositionIsSetToFalseOnStructureAddedIscalled() throws Exception {
+
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
+        Whitebox.setInternalState(listTaskPresenter, "clickedPoint", mock(LatLng.class));
+
+        JSONArray featureCoordinates = new JSONArray("[32.64555352892119, -14.15491759447286]");
+
+        Assert.assertTrue(listTaskPresenter.isChangeMapPosition());
+
+        listTaskPresenter.onStructureAdded(null, featureCoordinates);
+
+        Assert.assertFalse(listTaskPresenter.isChangeMapPosition());
+    }
+
+    @Test
+    public void testChangeMapPositionIsSetToFalseOnFormSavedIscalled() throws Exception {
+
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
+        Whitebox.setInternalState(listTaskPresenter, "clickedPoint", mock(LatLng.class));
+
+        Assert.assertTrue(listTaskPresenter.isChangeMapPosition());
+
+        listTaskPresenter.onFormSaved("1", null, Task.TaskStatus.COMPLETED, COMPLETE, null);
+
+        Assert.assertFalse(listTaskPresenter.isChangeMapPosition());
+    }
+
+    @Test
+    public void testChangeMapPositionIsSetToTrueWhenNonLocalSyncIsDone() throws Exception {
+
+        listTaskPresenter.setChangeMapPosition(false);
+        Assert.assertFalse(listTaskPresenter.isChangeMapPosition());
+
+        listTaskPresenter.refreshStructures(false);
+
+        Assert.assertTrue(listTaskPresenter.isChangeMapPosition());
+    }
+
+    @Test
+    public void testChangeMapPositionIsSetToFalseWhenLocalSyncIsDone() throws Exception {
+
+        Assert.assertTrue(listTaskPresenter.isChangeMapPosition());
+
+        listTaskPresenter.refreshStructures(true);
+
+        Assert.assertFalse(listTaskPresenter.isChangeMapPosition());
+    }
 
 
     private void mockStaticMethods() {

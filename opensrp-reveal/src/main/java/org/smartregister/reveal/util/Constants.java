@@ -63,6 +63,7 @@ public interface Constants {
         Float DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES = 1000f;
         String DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL = "draw_operational_area_boundary_and_label";
         Boolean DEFAULT_DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL = true;
+        String LOCAL_SYNC_DONE = "local_sync_done";
     }
 
     interface Preferences {

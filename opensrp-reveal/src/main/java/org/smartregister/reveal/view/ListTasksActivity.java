@@ -64,6 +64,7 @@ import io.ona.kujaku.layers.BoundaryLayer;
 import io.ona.kujaku.utils.Constants;
 
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -356,7 +357,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea) {
+    public void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea, boolean isChangeMapPosition) {
         if (geoJsonSource != null) {
             geoJsonSource.setGeoJson(featureCollection);
             if (operationalArea != null) {
@@ -370,7 +371,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 }
 
-                if (cameraPosition != null) {
+                if (cameraPosition != null  && (boundaryLayer ==null || isChangeMapPosition) ) {
                     mMapboxMap.setCameraPosition(cameraPosition);
                 }
 
@@ -583,11 +584,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle extras = intent.getExtras();
+            boolean localSyncDone;
             if (extras != null && extras.getBoolean(UPDATE_LOCATION_BUFFER_RADIUS)) {
                 float bufferRadius = org.smartregister.reveal.util.Utils.getLocationBuffer();
                 kujakuMapView.setLocationBufferRadius(bufferRadius);
             } else {
-                listTaskPresenter.refreshStructures();
+                localSyncDone = extras != null ? extras.getBoolean(LOCAL_SYNC_DONE) : false;
+                listTaskPresenter.refreshStructures(localSyncDone);
             }
         }
     }

@@ -36,7 +36,7 @@ public interface ListTaskContract {
 
         void registerFamily();
 
-        void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea);
+        void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea,  boolean maintainUsersCurrentMapCameraPosition);
 
         void displayNotification(int title, @StringRes int message, Object... formatArgs);
 
