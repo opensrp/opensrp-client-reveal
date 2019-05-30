@@ -30,6 +30,7 @@ import java.util.List;
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
@@ -121,6 +122,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
         if (hasSyncedEventsInTarget) {
             Intent intent = new Intent(STRUCTURE_TASK_SYNCED);
+            intent.putExtra(LOCAL_SYNC_DONE, localEvents);
             LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
         }
     }
