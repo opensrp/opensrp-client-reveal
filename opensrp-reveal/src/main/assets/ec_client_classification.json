@@ -35,6 +35,20 @@
           },
           {
             "field": "eventType",
+            "field_value": "Update Family Registration",
+            "creates_case": [
+              "ec_family"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "Update Family Member Registration",
+            "creates_case": [
+              "ec_family_member"
+            ]
+          },
+          {
+            "field": "eventType",
             "field_value": "mosquito_collection",
             "creates_case": [
               "mosquito_collections"

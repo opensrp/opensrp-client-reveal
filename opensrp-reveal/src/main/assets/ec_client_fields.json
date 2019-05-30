@@ -160,6 +160,27 @@
           }
         },
         {
+          "column_name": "street",
+          "type": "Client",
+          "json_mapping": {
+            "field": "addresses.street"
+          }
+        },
+        {
+          "column_name": "landmark",
+          "type": "Client",
+          "json_mapping": {
+            "field": "addresses.landmark"
+          }
+        },
+        {
+          "column_name": "house_number",
+          "type": "Client",
+          "json_mapping": {
+            "field": "addresses.address2"
+          }
+        },
+        {
           "column_name": "family_head",
           "type": "Client",
           "json_mapping": {
