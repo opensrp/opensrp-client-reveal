@@ -14,6 +14,7 @@ import org.smartregister.cloudant.models.Client;
 import org.smartregister.cloudant.models.Event;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyRegisterContract;
 import org.smartregister.reveal.model.FamilyRegisterModel;
 import org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -97,5 +99,6 @@ public class FamilyRegisterPresenterTest extends BaseUnitTest {
         presenter.onTasksGenerated();
         verify(view).hideProgressDialog();
         verify(view).startProfileActivity(baseEntityId, familyHead, careGiver, "vl1", "Otala");
+        assertTrue(RevealApplication.getInstance().isFamilyAdded());
     }
 }

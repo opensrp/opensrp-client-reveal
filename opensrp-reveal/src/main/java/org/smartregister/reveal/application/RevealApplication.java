@@ -85,6 +85,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     private AppExecutors appExecutors;
 
+    private boolean familyAdded;
+
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
     }
@@ -328,5 +330,13 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             planDefinitionSearchRepository = new PlanDefinitionSearchRepository(getRepository());
         }
         return planDefinitionSearchRepository;
+    }
+
+    public boolean isFamilyAdded() {
+        return familyAdded;
+    }
+
+    public void setFamilyAdded(boolean familyAdded) {
+        this.familyAdded = familyAdded;
     }
 }
