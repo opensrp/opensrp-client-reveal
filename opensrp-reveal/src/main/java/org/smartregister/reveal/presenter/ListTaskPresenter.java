@@ -106,6 +106,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private boolean changeMapPosition;
 
+    private RevealApplication revealApplication;
+
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
         this.drawerPresenter = drawerPresenter;
@@ -115,6 +117,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         prefsUtil = PreferencesUtil.getInstance();
         jsonFormUtils = listTaskView.getJsonFormUtils();
         setChangeMapPosition(true);
+        revealApplication = RevealApplication.getInstance();
     }
 
     @Override
@@ -425,9 +428,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
 
     public void onResume() {
-        if (RevealApplication.getInstance().isFamilyAdded()) {
+        if (revealApplication.isFamilyAdded()) {
             refreshStructures(true);
-            RevealApplication.getInstance().setFamilyAdded(false);
+            revealApplication.setFamilyAdded(false);
         }
     }
 
