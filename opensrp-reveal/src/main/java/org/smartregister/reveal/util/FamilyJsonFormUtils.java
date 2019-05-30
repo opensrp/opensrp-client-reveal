@@ -22,7 +22,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
     private static final String TAG = FamilyJsonFormUtils.class.getName();
 
-    public static JSONObject getAutoPopulatedJsonEditFormString(String formName, Context context, CommonPersonObjectClient client, String eventType) {
+    public JSONObject getAutoPopulatedJsonEditFormString(String formName, Context context, CommonPersonObjectClient client, String eventType) {
         try {
             JSONObject form = FormUtils.getInstance(context).getFormJson(formName);
             LocationPickerView lpv = new LocationPickerView(context);

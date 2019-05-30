@@ -22,7 +22,6 @@ import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
 import static org.smartregister.family.util.Constants.INTENT_KEY.BASE_ENTITY_ID;
-import static org.smartregister.family.util.Utils.metadata;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
 
@@ -35,6 +34,8 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
     private String structureId;
     private PreferencesUtil preferencesUtil;
 
+    private FamilyJsonFormUtils familyJsonFormUtils;
+
     public FamilyProfilePresenter(FamilyProfileContract.View view, FamilyProfileContract.Model model, String familyBaseEntityId, String familyHead, String primaryCaregiver, String familyName) {
         super(view, model, familyBaseEntityId, familyHead, primaryCaregiver, familyName);
         appExecutors = RevealApplication.getInstance().getAppExecutors();
@@ -42,6 +43,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         preferencesUtil = PreferencesUtil.getInstance();
         getStructureId(familyBaseEntityId);
         setInteractor(new RevealFamilyProfileInteractor(this));
+        familyJsonFormUtils = new FamilyJsonFormUtils();
     }
 
     @Override
@@ -113,8 +115,8 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
     @Override
     public void startFormForEdit(CommonPersonObjectClient client) {
         String formName = BuildConfig.BUILD_COUNTRY == Country.THAILAND ? JSON_FORM.THAILAND_FAMILY_UPDATE : JSON_FORM.FAMILY_UPDATE;
-        JSONObject form = FamilyJsonFormUtils.getAutoPopulatedJsonEditFormString(formName,
-                getView().getApplicationContext(), client, metadata().familyRegister.updateEventType);
+        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditFormString(formName,
+                getView().getApplicationContext(), client, RevealApplication.getInstance().getMetadata().familyRegister.updateEventType);
         try {
             getView().startFormActivity(form);
 
