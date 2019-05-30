@@ -21,6 +21,7 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
@@ -105,6 +106,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private boolean changeMapPosition;
 
+    private RevealApplication revealApplication;
+
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
         this.drawerPresenter = drawerPresenter;
@@ -114,6 +117,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         prefsUtil = PreferencesUtil.getInstance();
         jsonFormUtils = listTaskView.getJsonFormUtils();
         setChangeMapPosition(true);
+        revealApplication = RevealApplication.getInstance();
     }
 
     @Override
@@ -125,7 +129,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     public void refreshStructures(boolean localSyncDone) {
-        if (localSyncDone){
+        if (localSyncDone) {
             setChangeMapPosition(false);
         } else {
             setChangeMapPosition(true);
@@ -137,7 +141,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea) {
         listTaskView.hideProgressDialog();
-        setChangeMapPosition(drawerPresenter.isChangedCurrentSelection() || (drawerPresenter.isChangedCurrentSelection()  && changeMapPosition) );
+        setChangeMapPosition(drawerPresenter.isChangedCurrentSelection() || (drawerPresenter.isChangedCurrentSelection() && changeMapPosition));
         drawerPresenter.setChangedCurrentSelection(false);
         if (structuresGeoJson.has(FEATURES)) {
             featureCollection = FeatureCollection.fromJson(structuresGeoJson.toString());
@@ -420,6 +424,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
         else
             listTaskView.openStructureProfile(finalFamily);
+    }
+
+
+    public void onResume() {
+        if (revealApplication.isFamilyAdded()) {
+            refreshStructures(true);
+            revealApplication.setFamilyAdded(false);
+        }
     }
 
     public boolean isChangeMapPosition() {
