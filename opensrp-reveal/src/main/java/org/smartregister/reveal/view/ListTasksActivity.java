@@ -43,6 +43,7 @@ import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
@@ -52,6 +53,7 @@ import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.AlertDialogUtils;
+import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.Constants.Properties;
@@ -118,10 +120,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private RevealMapHelper revealMapHelper;
 
+    private AppExecutors appExecutors;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_tasks);
+
+        appExecutors = RevealApplication.getInstance().getAppExecutors();
 
         jsonFormUtils = new RevealJsonFormUtils();
         drawerView = new DrawerMenuView(this);
@@ -239,7 +245,18 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
 
                     @Override
-                    public void onMoveEnd(@NonNull MoveGestureDetector detector) {//do nothing
+                    public void onMoveEnd(@NonNull MoveGestureDetector detector) {// call resizeIndexCaseCircle
+                        // after a short period to update circle radius
+                        new java.util.Timer().schedule(
+                                new java.util.TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        appExecutors.mainThread().execute(() -> revealMapHelper
+                                                .resizeIndexCaseCircle(mMapboxMap, ListTasksActivity.this));
+                                    }
+                                },
+                                200
+                        );
                     }
                 });
                 mapboxMap.setMinZoomPreference(10);
