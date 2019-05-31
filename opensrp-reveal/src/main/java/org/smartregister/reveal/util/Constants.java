@@ -217,6 +217,8 @@ public interface Constants {
         String SHORTENED_HINT = "shortened_hint";
 
         String HINT = "hint";
+
+        String TITLE = "title";
     }
 
     interface DateFormat {
