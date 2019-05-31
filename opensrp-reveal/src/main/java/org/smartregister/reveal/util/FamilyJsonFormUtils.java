@@ -3,15 +3,13 @@ package org.smartregister.reveal.util;
 import android.content.Context;
 import android.support.annotation.StringRes;
 import android.util.Log;
-import android.util.Pair;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.clientandeventmodel.Client;
-import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.family.util.Constants.JSON_FORM_KEY;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
@@ -129,37 +127,35 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         try {
 
             // get the event and the client from ec model
-            Pair<Event, Client> eventClientPair = Pair.create(null, null);
 
             JSONObject form = formUtils.getFormJson(formName);
             if (form != null) {
-                form.put(org.smartregister.family.util.JsonFormUtils.ENTITY_ID, client.getCaseId());
-                form.put(org.smartregister.family.util.JsonFormUtils.ENCOUNTER_TYPE, updateEventType);
+                form.put(ENTITY_ID, client.getCaseId());
+                form.put(ENCOUNTER_TYPE, updateEventType);
 
-                JSONObject metadata = form.getJSONObject(org.smartregister.family.util.JsonFormUtils.METADATA);
+                JSONObject metadata = form.getJSONObject(METADATA);
                 String lastLocationId = LocationHelper.getInstance().getOpenMrsLocationId(locationPickerView.getSelectedItem());
 
-                metadata.put(org.smartregister.family.util.JsonFormUtils.ENCOUNTER_LOCATION, lastLocationId);
+                metadata.put(ENCOUNTER_LOCATION, lastLocationId);
 
-                form.put(org.smartregister.family.util.JsonFormUtils.CURRENT_OPENSRP_ID, Utils.getValue(client.getColumnmaps(), DBConstants.KEY.UNIQUE_ID, false));
+                form.put(CURRENT_OPENSRP_ID, Utils.getValue(client.getColumnmaps(), DBConstants.KEY.UNIQUE_ID, false));
 
                 //inject opensrp id into the form
-                JSONObject stepOne = form.getJSONObject(org.smartregister.family.util.JsonFormUtils.STEP1);
+                JSONObject stepOne = form.getJSONObject(STEP1);
 
 
                 stepOne.put(Constants.JsonForm.TITLE, context.getString(formTitle));
 
 
-                JSONArray jsonArray = stepOne.getJSONArray(org.smartregister.family.util.JsonFormUtils.FIELDS);
+                JSONArray jsonArray = stepOne.getJSONArray(FIELDS);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
 
                     try {
-                        processFieldsForMemberEdit(client, jsonObject, jsonArray, familyName, eventClientPair.first, eventClientPair.second);
+                        processFieldsForMemberEdit(client, jsonObject, jsonArray, familyName);
                     } catch (Exception e) {
                         Timber.e(Log.getStackTraceString(e));
                     }
-
                 }
 
                 return form;
@@ -172,11 +168,12 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
     }
 
 
-    private void processFieldsForMemberEdit(CommonPersonObjectClient client, JSONObject jsonObject, JSONArray jsonArray, String familyName, Event ecEvent, Client ecClient) throws JSONException {
+    private void processFieldsForMemberEdit(CommonPersonObjectClient client, JSONObject jsonObject,
+                                            JSONArray jsonArray, String familyName) throws JSONException {
 
 
-        switch (jsonObject.getString(org.smartregister.family.util.JsonFormUtils.KEY).toLowerCase()) {
-            case org.smartregister.family.util.Constants.JSON_FORM_KEY.DOB_UNKNOWN:
+        switch (jsonObject.getString(KEY).toLowerCase()) {
+            case JSON_FORM_KEY.DOB_UNKNOWN:
                 computeDOBUnknown(jsonObject, client);
                 break;
 
@@ -197,13 +194,12 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                 break;
 
             default:
-                String db_key = jsonDbMap.get(jsonObject.getString(org.smartregister.family.util.JsonFormUtils.KEY).toLowerCase());
+                String db_key = jsonDbMap.get(jsonObject.getString(KEY).toLowerCase());
                 if (StringUtils.isNotBlank(db_key)) {
-                    jsonObject.put(org.smartregister.family.util.JsonFormUtils.VALUE, Utils.getValue(client.getColumnmaps(), db_key, false));
+                    jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), db_key, false));
                 } else {
-                    jsonObject.put(org.smartregister.family.util.JsonFormUtils.VALUE, Utils.getValue(client.getColumnmaps(), jsonObject.getString(org.smartregister.family.util.JsonFormUtils.KEY), false));
+                    jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), jsonObject.getString(KEY), false));
                 }
-
                 break;
 
         }
@@ -211,20 +207,20 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
     private void computeID(JSONObject jsonObject, CommonPersonObjectClient client) throws JSONException {
         String uniqueId = Utils.getValue(client.getColumnmaps(), DBConstants.KEY.UNIQUE_ID, false);
-        jsonObject.put(org.smartregister.family.util.JsonFormUtils.VALUE, uniqueId.replace("-", ""));
+        jsonObject.put(VALUE, uniqueId.replace("-", ""));
     }
 
     private void computeAge(JSONObject jsonObject, CommonPersonObjectClient client) throws JSONException {
         String dobString = Utils.getValue(client.getColumnmaps(), DBConstants.KEY.DOB, false);
-        dobString = org.smartregister.family.util.Utils.getDuration(dobString);
+        dobString = Utils.getDuration(dobString);
         dobString = dobString.contains("y") ? dobString.substring(0, dobString.indexOf("y")) : "0";
-        jsonObject.put(org.smartregister.family.util.JsonFormUtils.VALUE, Integer.valueOf(dobString));
+        jsonObject.put(VALUE, Integer.valueOf(dobString));
     }
 
     private void computeDOBUnknown(JSONObject jsonObject, CommonPersonObjectClient client) throws JSONException {
-        jsonObject.put(org.smartregister.family.util.JsonFormUtils.READ_ONLY, false);
-        JSONObject optionsObject = jsonObject.getJSONArray(org.smartregister.family.util.Constants.JSON_FORM_KEY.OPTIONS).getJSONObject(0);
-        optionsObject.put(org.smartregister.family.util.JsonFormUtils.VALUE, Utils.getValue(client.getColumnmaps(), org.smartregister.family.util.Constants.JSON_FORM_KEY.DOB_UNKNOWN, false));
+        jsonObject.put(READ_ONLY, false);
+        JSONObject optionsObject = jsonObject.getJSONArray(JSON_FORM_KEY.OPTIONS).getJSONObject(0);
+        optionsObject.put(VALUE, Utils.getValue(client.getColumnmaps(), JSON_FORM_KEY.DOB_UNKNOWN, false));
     }
 
     private void computeDOB(JSONObject jsonObject, CommonPersonObjectClient client) throws JSONException {
@@ -232,7 +228,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         if (StringUtils.isNotBlank(dobString)) {
             Date dob = Utils.dobStringToDate(dobString);
             if (dob != null) {
-                jsonObject.put(org.smartregister.family.util.JsonFormUtils.VALUE, JsonFormUtils.dd_MM_yyyy.format(dob));
+                jsonObject.put(VALUE, dd_MM_yyyy.format(dob));
             }
         }
     }
@@ -242,24 +238,24 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         final String SAME_AS_FAM_NAME = "same_as_fam_name";
         final String SURNAME = "surname";
 
-        jsonObject.put(org.smartregister.family.util.JsonFormUtils.VALUE, familyName);
+        jsonObject.put(VALUE, familyName);
 
         String lastName = Utils.getValue(client.getColumnmaps(), DBConstants.KEY.LAST_NAME, false);
 
         JSONObject sameAsFamName = getFieldJSONObject(jsonArray, SAME_AS_FAM_NAME);
-        JSONObject sameOptions = sameAsFamName.getJSONArray(org.smartregister.family.util.Constants.JSON_FORM_KEY.OPTIONS).getJSONObject(0);
+        JSONObject sameOptions = sameAsFamName.getJSONArray(JSON_FORM_KEY.OPTIONS).getJSONObject(0);
 
         if (familyName.equals(lastName)) {
-            sameOptions.put(org.smartregister.family.util.JsonFormUtils.VALUE, true);
+            sameOptions.put(VALUE, true);
         } else {
-            sameOptions.put(org.smartregister.family.util.JsonFormUtils.VALUE, false);
+            sameOptions.put(VALUE, false);
         }
 
         JSONObject surname = getFieldJSONObject(jsonArray, SURNAME);
         if (!familyName.equals(lastName)) {
-            surname.put(org.smartregister.family.util.JsonFormUtils.VALUE, lastName);
+            surname.put(VALUE, lastName);
         } else {
-            surname.put(org.smartregister.family.util.JsonFormUtils.VALUE, "");
+            surname.put(VALUE, "");
         }
     }
 
