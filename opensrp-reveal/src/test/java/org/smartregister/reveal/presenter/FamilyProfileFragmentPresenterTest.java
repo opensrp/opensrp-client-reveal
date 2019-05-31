@@ -1,5 +1,7 @@
 package org.smartregister.reveal.presenter;
 
+import android.content.Context;
+
 import net.sqlcipher.Cursor;
 import net.sqlcipher.MatrixCursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -11,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.robolectric.RuntimeEnvironment;
 import org.smartregister.cloudant.models.Client;
 import org.smartregister.cloudant.models.Event;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -18,6 +21,9 @@ import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.model.FamilyProfileModel;
+import org.smartregister.reveal.util.FamilyConstants.EventType;
+import org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
+import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestingUtils;
 
@@ -54,6 +60,11 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
     @Mock
     private FamilyProfileContract.Interactor interactor;
 
+    @Mock
+    private FamilyJsonFormUtils familyJsonFormUtils;
+
+    private Context context = RuntimeEnvironment.application;
+
     private FamilyProfilePresenter presenter;
 
     private String familyId = UUID.randomUUID().toString();
@@ -66,6 +77,9 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         Whitebox.setInternalState(presenter, "preferencesUtil", preferencesUtil);
         Whitebox.setInternalState(presenter, "database", database);
         Whitebox.setInternalState(presenter, "interactor", interactor);
+        Whitebox.setInternalState(presenter, "familyJsonFormUtils", familyJsonFormUtils);
+        when(view.getApplicationContext()).thenReturn(context);
+
     }
 
     @Test
@@ -124,6 +138,15 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
     public void testOnTasksGenerated() {
         presenter.onTasksGenerated();
         verify(view).refreshTasks(null);
+    }
+
+
+    @Test
+    public void testStartFormForEdit() {
+        CommonPersonObjectClient client = TestingUtils.getCommonPersonObjectClient();
+        presenter.startFormForEdit(client);
+        verify(familyJsonFormUtils).getAutoPopulatedJsonEditFormString(JSON_FORM.FAMILY_UPDATE, context, client, EventType.UPDATE_FAMILY_REGISTRATION);
+        verify(view).startFormActivity(null);
     }
 
 

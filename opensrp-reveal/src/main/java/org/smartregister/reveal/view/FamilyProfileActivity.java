@@ -2,6 +2,9 @@ package org.smartregister.reveal.view;
 
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import org.smartregister.family.activity.BaseFamilyProfileActivity;
 import org.smartregister.family.adapter.ViewPagerAdapter;
@@ -22,10 +25,12 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
 
     private StructureTasksFragment structureTasksFragment;
 
+    private String familyBaseEntityId;
+
 
     @Override
     protected void initializePresenter() {
-        String familyBaseEntityId = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID);
+        familyBaseEntityId = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID);
         String familyHead = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_HEAD);
         String primaryCaregiver = getIntent().getStringExtra(Constants.INTENT_KEY.PRIMARY_CAREGIVER);
         String familyName = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_NAME);
@@ -71,6 +76,27 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
             structureTasksFragment.onActivityResult(requestCode, resultCode, data);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = this.getMenuInflater();
+        inflater.inflate(R.menu.profile_menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (R.id.edit_family == item.getItemId()) {
+            startFormForEdit();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void startFormForEdit() {
+        if (familyBaseEntityId != null) {
+            presenter().fetchProfileData();
         }
     }
 }

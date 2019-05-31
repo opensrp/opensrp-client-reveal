@@ -23,9 +23,11 @@ public interface FamilyConstants {
 
     interface JSON_FORM {
         String FAMILY_REGISTER = "family_register";
+        String FAMILY_UPDATE = "family_update";
         String FAMILY_MEMBER_REGISTER = "family_member_register";
 
         String THAILAND_FAMILY_REGISTER = "thailand_family_register";
+        String THAILAND_FAMILY_UPDATE = "thailand_family_update";
         String THAILAND_FAMILY_MEMBER_REGISTER = "thailand_family_member_register";
     }
 
@@ -44,6 +46,11 @@ public interface FamilyConstants {
 
     interface Intent {
         String START_REGISTRATION = "START_REGISTRATION";
+    }
+
+    interface DatabaseKeys {
+        String FAMILY_NAME = "fam_name";
+        String HOUSE_NUMBER = "house_number";
     }
 
 

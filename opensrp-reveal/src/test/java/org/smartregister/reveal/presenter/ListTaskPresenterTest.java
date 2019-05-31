@@ -19,6 +19,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
@@ -32,6 +34,7 @@ import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.AssetHandler;
 
+import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -239,14 +242,14 @@ public class ListTaskPresenterTest {
 
     @Test
     public void testOnInterventionFormDetailsFetchedShouldSetChangeSprayStatusToTrueForSprayCard() {
-        Assert.assertFalse(Whitebox.getInternalState(listTaskPresenter, "changeInterventionStatus"));
+        assertFalse(Whitebox.getInternalState(listTaskPresenter, "changeInterventionStatus"));
         listTaskPresenter.onInterventionFormDetailsFetched(mock(SprayCardDetails.class));
         Assert.assertTrue(Whitebox.getInternalState(listTaskPresenter, "changeInterventionStatus"));
     }
 
     @Test
     public void testOnInterventionFormDetailsFetchedShouldSetChangeMosquitoCollectionStatusToTrueForMosquitoCollectionCard() {
-        Assert.assertFalse(Whitebox.getInternalState(listTaskPresenter, "changeInterventionStatus"));
+        assertFalse(Whitebox.getInternalState(listTaskPresenter, "changeInterventionStatus"));
         listTaskPresenter.onInterventionFormDetailsFetched(mock(MosquitoHarvestCardDetails.class));
         Assert.assertTrue(Whitebox.getInternalState(listTaskPresenter, "changeInterventionStatus"));
     }
@@ -273,7 +276,7 @@ public class ListTaskPresenterTest {
 
     @Test
     public void testfetchMosquitoCollectionDetailsIsCalledForCompleteMosquitoCollectionTask() throws Exception {
-        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION),anyString(), anyBoolean());
+        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), anyString(), anyBoolean());
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(COMPLETE);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
 
@@ -282,12 +285,12 @@ public class ListTaskPresenterTest {
 
         Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
 
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION),AdditionalMatchers.or(anyString(), isNull()), eq(false));
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
 
     @Test
     public void testfetchMosquitoCollectionDetailsIsCalledForInCompleteMosquitoCollectionTask() throws Exception {
-        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION),anyString(), anyBoolean());
+        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), anyString(), anyBoolean());
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(INCOMPLETE);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
 
@@ -296,12 +299,12 @@ public class ListTaskPresenterTest {
 
         Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
 
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION),AdditionalMatchers.or(anyString(), isNull()), eq(false));
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
 
     @Test
     public void testfetchMosquitoCollectionDetailsIsCalledForInProgressMosquitoCollectionTask() throws Exception {
-        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION),anyString(), anyBoolean());
+        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), anyString(), anyBoolean());
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(IN_PROGRESS);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
 
@@ -310,12 +313,12 @@ public class ListTaskPresenterTest {
 
         Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
 
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION),AdditionalMatchers.or(anyString(), isNull()), eq(false));
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
 
     @Test
     public void testfetchMosquitoCollectionDetailsIsCalledForNotEligibleMosquitoCollectionTask() throws Exception {
-        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION),anyString(), anyBoolean());
+        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), anyString(), anyBoolean());
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(NOT_ELIGIBLE);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
 
@@ -324,7 +327,7 @@ public class ListTaskPresenterTest {
 
         Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
 
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION),AdditionalMatchers.or(anyString(), isNull()), eq(false));
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
 
     @Test
@@ -335,7 +338,7 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenter, "listTaskInteractor", listTaskInteractor);
 
-        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(IRS),anyString(), anyBoolean());
+        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(IRS), anyString(), anyBoolean());
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(NOT_VISITED);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
         doReturn(mock(android.location.Location.class)).when(listTaskViewSpy).getUserCurrentLocation();
@@ -392,7 +395,7 @@ public class ListTaskPresenterTest {
 
         listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
 
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION),AdditionalMatchers.or(anyString(), isNull()), eq(true));
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(true));
     }
 
     @Test
@@ -403,7 +406,7 @@ public class ListTaskPresenterTest {
 
         listTaskPresenter.onChangeInterventionStatus(LARVAL_DIPPING);
 
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(LARVAL_DIPPING),AdditionalMatchers.or(anyString(), isNull()), eq(true));
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(LARVAL_DIPPING), AdditionalMatchers.or(anyString(), isNull()), eq(true));
     }
 
     @Test
@@ -426,7 +429,7 @@ public class ListTaskPresenterTest {
 
         doNothing().when(listTaskViewSpy).hideProgressDialog();
         doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class), anyBoolean());
-        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION),anyString(), anyBoolean());
+        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), anyString(), anyBoolean());
 
         listTaskPresenter.onFormSaved(null, null, null, null, MOSQUITO_COLLECTION);
 
@@ -451,7 +454,7 @@ public class ListTaskPresenterTest {
 
         listTaskPresenter.onStructureAdded(null, featureCoordinates);
 
-        Assert.assertFalse(listTaskPresenter.isChangeMapPosition());
+        assertFalse(listTaskPresenter.isChangeMapPosition());
     }
 
     @Test
@@ -464,14 +467,14 @@ public class ListTaskPresenterTest {
 
         listTaskPresenter.onFormSaved("1", null, Task.TaskStatus.COMPLETED, COMPLETE, null);
 
-        Assert.assertFalse(listTaskPresenter.isChangeMapPosition());
+        assertFalse(listTaskPresenter.isChangeMapPosition());
     }
 
     @Test
     public void testChangeMapPositionIsSetToTrueWhenNonLocalSyncIsDone() throws Exception {
 
         listTaskPresenter.setChangeMapPosition(false);
-        Assert.assertFalse(listTaskPresenter.isChangeMapPosition());
+        assertFalse(listTaskPresenter.isChangeMapPosition());
 
         listTaskPresenter.refreshStructures(false);
 
@@ -485,9 +488,21 @@ public class ListTaskPresenterTest {
 
         listTaskPresenter.refreshStructures(true);
 
-        Assert.assertFalse(listTaskPresenter.isChangeMapPosition());
+        assertFalse(listTaskPresenter.isChangeMapPosition());
     }
 
+    @Test
+    public void testOnResume() {
+
+        RevealApplication revealApplication = mock(RevealApplication.class);
+        when(revealApplication.isFamilyAdded()).thenReturn(true);
+        Whitebox.setInternalState(listTaskPresenter, "revealApplication", revealApplication);
+        listTaskPresenter.onResume();
+        assertFalse(listTaskPresenter.isChangeMapPosition());
+
+        verify(listTaskViewSpy).showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
+        verify(listTaskInteractor).fetchLocations(anyString(),anyString());
+    }
 
     private void mockStaticMethods() {
         mockStatic(Utils.class);
@@ -500,7 +515,10 @@ public class ListTaskPresenterTest {
         PreferencesUtil preferencesUtil = mock(PreferencesUtil.class);
         PowerMockito.when(preferencesUtil.getCurrentOperationalArea()).thenReturn(new JSONObject().toString());
         PowerMockito.when(PreferencesUtil.getInstance()).thenReturn(preferencesUtil);
+        PowerMockito.when(preferencesUtil.getCurrentPlanId()).thenReturn(new JSONObject().toString());
 
         PowerMockito.when(Utils.getOperationalAreaLocation(anyString())).thenReturn(new Location());
     }
+
+
 }
