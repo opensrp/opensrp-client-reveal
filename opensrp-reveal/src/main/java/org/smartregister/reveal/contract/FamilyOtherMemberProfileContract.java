@@ -21,5 +21,7 @@ public interface FamilyOtherMemberProfileContract {
         void startFormActivity(JSONObject jsonForm);
 
         Context getContext();
+
+        void refreshList();
     }
 }

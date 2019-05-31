@@ -2,6 +2,9 @@ package org.smartregister.reveal.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
@@ -21,18 +24,20 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.fragment.FamilyOtherMemberProfileFragment;
 import org.smartregister.reveal.presenter.FamilyOtherMemberPresenter;
+import org.smartregister.view.fragment.BaseRegisterFragment;
 
 public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfileActivity implements FamilyOtherMemberProfileContract.View {
 
     @Override
     protected void initializePresenter() {
         String baseEntityId = getIntent().getStringExtra(Constants.INTENT_KEY.BASE_ENTITY_ID);
+        String familyBaseEntityId = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID);
         String familyHead = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_HEAD);
         String primaryCaregiver = getIntent().getStringExtra(Constants.INTENT_KEY.PRIMARY_CAREGIVER);
         String villageTown = getIntent().getStringExtra(Constants.INTENT_KEY.VILLAGE_TOWN);
         String familyName = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_NAME);
         presenter = new FamilyOtherMemberPresenter(this, new BaseFamilyOtherMemberProfileActivityModel(),
-                null, baseEntityId, familyHead, primaryCaregiver, villageTown, familyName);
+                null, familyBaseEntityId, baseEntityId, familyHead, primaryCaregiver, villageTown, familyName);
     }
 
     @Override
@@ -90,6 +95,34 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
     @Override
     public Context getContext() {
         return this;
+    }
+
+    @Override
+    public void refreshList() {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            for (int i = 0; i < adapter.getCount(); i++) {
+                refreshList(adapter.getItem(i));
+            }
+        } else {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                public void run() {
+                    for (int i = 0; i < adapter.getCount(); i++) {
+                        refreshList(adapter.getItem(i));
+                    }
+                }
+            });
+        }
+
+    }
+
+    private void refreshList(Fragment fragment) {
+        if (fragment instanceof BaseRegisterFragment && fragment instanceof FamilyOtherMemberProfileFragment) {
+            FamilyOtherMemberProfileFragment familyOtherMemberProfileFragment = ((FamilyOtherMemberProfileFragment) fragment);
+            if (familyOtherMemberProfileFragment.presenter() != null) {
+                familyOtherMemberProfileFragment.refreshListView();
+            }
+        }
     }
 
     @Override
