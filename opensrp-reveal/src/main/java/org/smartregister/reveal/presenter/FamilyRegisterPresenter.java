@@ -4,6 +4,7 @@ package org.smartregister.reveal.presenter;
 import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.presenter.BaseFamilyRegisterPresenter;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyRegisterContract;
 import org.smartregister.reveal.interactor.RevealFamilyRegisterInteractor;
 import org.smartregister.reveal.model.FamilyRegisterModel;
@@ -36,6 +37,7 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter impleme
     public void onTasksGenerated() {
         view.hideProgressDialog();
         openProfileActivity();
+        RevealApplication.getInstance().setFamilyAdded(true);
     }
 
     private void openProfileActivity() {

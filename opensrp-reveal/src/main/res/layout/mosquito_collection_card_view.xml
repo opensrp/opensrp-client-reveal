@@ -23,7 +23,7 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/structure_info_card_scroll_layout_height">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -83,6 +83,7 @@
                     android:textAllCaps="false"
                     android:textColor="@color/text_black"
                     android:textSize="@dimen/structure_info_card_text_size"
+                    android:visibility="gone"
                     android:text="@string/mosquito_collection_trap_collected_date_test_text"/>
 
             </LinearLayout>

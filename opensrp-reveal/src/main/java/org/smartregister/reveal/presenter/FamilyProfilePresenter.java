@@ -8,19 +8,20 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.presenter.BaseFamilyProfilePresenter;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.interactor.RevealFamilyProfileInteractor;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
 import static org.smartregister.family.util.Constants.INTENT_KEY.BASE_ENTITY_ID;
-import static org.smartregister.family.util.Utils.metadata;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
 
@@ -33,6 +34,8 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
     private String structureId;
     private PreferencesUtil preferencesUtil;
 
+    private FamilyJsonFormUtils familyJsonFormUtils;
+
     public FamilyProfilePresenter(FamilyProfileContract.View view, FamilyProfileContract.Model model, String familyBaseEntityId, String familyHead, String primaryCaregiver, String familyName) {
         super(view, model, familyBaseEntityId, familyHead, primaryCaregiver, familyName);
         appExecutors = RevealApplication.getInstance().getAppExecutors();
@@ -40,6 +43,11 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         preferencesUtil = PreferencesUtil.getInstance();
         getStructureId(familyBaseEntityId);
         setInteractor(new RevealFamilyProfileInteractor(this));
+        try {
+            familyJsonFormUtils = new FamilyJsonFormUtils(getView().getApplicationContext());
+        } catch (Exception e) {
+            Log.e(TAG, "error Intitializing FamilyJsonFormUtils ");
+        }
     }
 
     @Override
@@ -110,8 +118,9 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
     @Override
     public void startFormForEdit(CommonPersonObjectClient client) {
-        JSONObject form = FamilyJsonFormUtils.getAutoPopulatedJsonEditFormString(JSON_FORM.FAMILY_UPDATE,
-                getView().getApplicationContext(), client, metadata().familyRegister.updateEventType);
+        String formName = BuildConfig.BUILD_COUNTRY == Country.THAILAND ? JSON_FORM.THAILAND_FAMILY_UPDATE : JSON_FORM.FAMILY_UPDATE;
+        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditFormString(formName,
+                getView().getApplicationContext(), client, RevealApplication.getInstance().getMetadata().familyRegister.updateEventType);
         try {
             getView().startFormActivity(form);
 

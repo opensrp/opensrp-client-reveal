@@ -22,19 +22,33 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
     private static final String TAG = FamilyJsonFormUtils.class.getName();
 
-    public static JSONObject getAutoPopulatedJsonEditFormString(String formName, Context context, CommonPersonObjectClient client, String eventType) {
+
+    private LocationPickerView locationPickerView;
+
+    private FormUtils formUtils;
+
+    private LocationHelper locationHelper;
+
+    public FamilyJsonFormUtils(LocationPickerView locationPickerView, FormUtils formUtils, LocationHelper locationHelper) {
+        this.locationPickerView = locationPickerView;
+        this.formUtils = formUtils;
+        this.locationHelper = locationHelper;
+        locationPickerView.init();
+    }
+
+    public FamilyJsonFormUtils(Context context) throws Exception {
+        this(new LocationPickerView(context), FormUtils.getInstance(context), LocationHelper.getInstance());
+    }
+
+    public JSONObject getAutoPopulatedJsonEditFormString(String formName, Context context, CommonPersonObjectClient client, String eventType) {
         try {
-            JSONObject form = FormUtils.getInstance(context).getFormJson(formName);
-            LocationPickerView lpv = new LocationPickerView(context);
-            lpv.init();
-            // JsonFormUtils.addWomanRegisterHierarchyQuestions(form);
-            Log.d(TAG, "Form is " + form.toString());
+            JSONObject form = formUtils.getFormJson(formName);
             if (form != null) {
                 form.put(ENTITY_ID, client.getCaseId());
                 form.put(ENCOUNTER_TYPE, eventType);
 
                 JSONObject metadata = form.getJSONObject(METADATA);
-                String lastLocationId = LocationHelper.getInstance().getOpenMrsLocationId(lpv.getSelectedItem());
+                String lastLocationId = locationHelper.getOpenMrsLocationId(locationPickerView.getSelectedItem());
 
                 metadata.put(ENCOUNTER_LOCATION, lastLocationId);
 
@@ -49,8 +63,6 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                     processPopulatableFields(client, jsonObject);
 
                 }
-
-                addLocHierarchyQuestions(form);
 
                 return form;
             }
