@@ -1,7 +1,6 @@
 package org.smartregister.reveal.util;
 
 import com.mapbox.mapboxsdk.maps.MapboxMap;
-import com.mapbox.mapboxsdk.maps.Projection;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
