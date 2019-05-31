@@ -53,7 +53,7 @@ android {
         buildConfigField "String", "SYNC_TYPE", '"teamId"'
         buildConfigField "int", "MAX_SYNC_RETRIES", '3'
         buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
-        resValue "string", 'opensrp_url', '"http://10.20.25.82:8181/opensrp/"'
+        resValue "string", 'opensrp_url', '"https://reveal.smartregister.org/opensrp/"'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
@@ -76,7 +76,7 @@ android {
             minifyEnabled false
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            resValue "string", 'opensrp_url', '"http://10.20.25.82:8181/opensrp/"'
+            resValue "string", 'opensrp_url', '"https://reveal-stage.smartregister.org/opensrp/"'
             buildConfigField "int", "DATABASE_VERSION", '2'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
@@ -106,7 +106,7 @@ android {
         }
 
         debug {
-            resValue "string", 'opensrp_url', '"http://10.20.25.82:8181/opensrp/"'
+            resValue "string", 'opensrp_url', '"https://reveal-stage.smartregister.org/opensrp/"'
             buildConfigField "int", "DATABASE_VERSION", '2'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
