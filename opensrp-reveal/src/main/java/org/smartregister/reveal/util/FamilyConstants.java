@@ -61,6 +61,8 @@ public interface FamilyConstants {
 
     interface FormKeys {
         String SEX = "sex";
+        String SAME_AS_FAM_NAME = "same_as_fam_name";
+        String SURNAME = "surname";
     }
 
 

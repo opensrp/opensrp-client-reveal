@@ -134,7 +134,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                 form.put(ENCOUNTER_TYPE, updateEventType);
 
                 JSONObject metadata = form.getJSONObject(METADATA);
-                String lastLocationId = LocationHelper.getInstance().getOpenMrsLocationId(locationPickerView.getSelectedItem());
+                String lastLocationId = locationHelper.getOpenMrsLocationId(locationPickerView.getSelectedItem());
 
                 metadata.put(ENCOUNTER_LOCATION, lastLocationId);
 
@@ -235,14 +235,12 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
 
     private void computeFamName(CommonPersonObjectClient client, JSONObject jsonObject, JSONArray jsonArray, String familyName) throws JSONException {
-        final String SAME_AS_FAM_NAME = "same_as_fam_name";
-        final String SURNAME = "surname";
 
         jsonObject.put(VALUE, familyName);
 
         String lastName = Utils.getValue(client.getColumnmaps(), DBConstants.KEY.LAST_NAME, false);
 
-        JSONObject sameAsFamName = getFieldJSONObject(jsonArray, SAME_AS_FAM_NAME);
+        JSONObject sameAsFamName = getFieldJSONObject(jsonArray, FormKeys.SAME_AS_FAM_NAME);
         JSONObject sameOptions = sameAsFamName.getJSONArray(JSON_FORM_KEY.OPTIONS).getJSONObject(0);
 
         if (familyName.equals(lastName)) {
@@ -251,7 +249,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
             sameOptions.put(VALUE, false);
         }
 
-        JSONObject surname = getFieldJSONObject(jsonArray, SURNAME);
+        JSONObject surname = getFieldJSONObject(jsonArray, FormKeys.SURNAME);
         if (!familyName.equals(lastName)) {
             surname.put(VALUE, lastName);
         } else {
