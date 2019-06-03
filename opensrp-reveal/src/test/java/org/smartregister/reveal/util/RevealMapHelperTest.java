@@ -24,6 +24,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
+import org.robolectric.RuntimeEnvironment;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -41,6 +42,9 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_CIRCLE_LAYER;
 import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_SYMBOL_LAYER;
+import static org.smartregister.reveal.util.RevealMapHelper.MOSQUITO_COLLECTION_LAYER;
+import static org.smartregister.reveal.util.RevealMapHelper.LARVAL_BREEDING_LAYER;
+
 
 /**
  * Created by Vincent Karuri on 08/05/2019
@@ -59,6 +63,8 @@ public class RevealMapHelperTest {
     private ArgumentCaptor<Layer> layerArgumentCaptor;
 
     private CameraPosition cameraPosition;
+
+    private Context context = RuntimeEnvironment.application;
 
     @Before
     public void setUp() throws Exception {
@@ -91,8 +97,8 @@ public class RevealMapHelperTest {
         CircleLayer circleLayer = mock(CircleLayer.class);
         Whitebox.setInternalState(revealMapHelper, "indexCaseCircleLayer", circleLayer);
         Whitebox.setInternalState(revealMapHelper, "indexCaseLocation", mock(Location.class));
-        PowerMockito.doReturn(12f).when(Utils.class, "calculateZoomLevelRadius", any(MapboxMap.class), anyDouble(), anyFloat());
-        revealMapHelper.resizeIndexCaseCircle(mapboxMap);
+        PowerMockito.doReturn(12f).when(Utils.class, "calculateZoomLevelRadius", any(MapboxMap.class), anyDouble(), anyFloat(), any());
+        revealMapHelper.resizeIndexCaseCircle(mapboxMap, context);
         verify(circleLayer).setProperties(any(PropertyValue.class));
     }
 
@@ -112,8 +118,8 @@ public class RevealMapHelperTest {
         MapboxMap mapboxMap = mock(MapboxMap.class);
         cameraPosition = new CameraPosition.Builder().target(new LatLng()).build();
         when(mapboxMap.getCameraPosition()).thenReturn(cameraPosition);
-        PowerMockito.doReturn(12f).when(Utils.class, "calculateZoomLevelRadius", any(MapboxMap.class), anyDouble(), anyFloat());
-        revealMapHelper.updateIndexCaseLayers(mapboxMap, featureCollection);
+        PowerMockito.doReturn(12f).when(Utils.class, "calculateZoomLevelRadius", any(MapboxMap.class), anyDouble(), anyFloat(), any());
+        revealMapHelper.updateIndexCaseLayers(mapboxMap, featureCollection, context);
         verify(source).setGeoJson(featureArgumentCaptor.capture());
         assertEquals(featureArgumentCaptor.getValue().getStringProperty("taskIdentifier"), "c987a804-2525-43bd-99b1-e1910fffbc1a");
     }
@@ -126,10 +132,29 @@ public class RevealMapHelperTest {
         FeatureCollection featureCollection = mock(FeatureCollection.class);
         Style style = mock(Style.class);
         doReturn(style).when(mapboxMap).getStyle();
-        doNothing().when(revealMapHelper).updateIndexCaseLayers(any(), any());
+        doNothing().when(revealMapHelper).updateIndexCaseLayers(any(), any(), any());
         revealMapHelper.addIndexCaseLayers(mapboxMap, context, featureCollection);
         verify(style, times(2)).addLayer(layerArgumentCaptor.capture());
         assertEquals(layerArgumentCaptor.getAllValues().get(0).getId(), INDEX_CASE_SYMBOL_LAYER);
         assertEquals(layerArgumentCaptor.getAllValues().get(1).getId(), INDEX_CASE_CIRCLE_LAYER);
+    }
+
+    @Test
+    public void testAddCustomLayers() throws Exception{
+
+        RevealMapHelper revealMapHelper = spy(this.revealMapHelper);
+        Context context = mock(Context.class);
+        Style style = mock(Style.class);
+        SymbolLayer symbolLayer = mock(SymbolLayer.class);
+        whenNew(SymbolLayer.class).withAnyArguments()
+                .thenReturn(symbolLayer);
+        when(symbolLayer.getId())
+                .thenReturn(MOSQUITO_COLLECTION_LAYER)
+                .thenReturn(LARVAL_BREEDING_LAYER);
+        revealMapHelper.addCustomLayers(style, context);
+        verify(style, times(2)).addLayer(layerArgumentCaptor.capture());
+        assertEquals(layerArgumentCaptor.getAllValues().get(0).getId(), MOSQUITO_COLLECTION_LAYER);
+        assertEquals(layerArgumentCaptor.getAllValues().get(1).getId(), LARVAL_BREEDING_LAYER);
+
     }
 }
