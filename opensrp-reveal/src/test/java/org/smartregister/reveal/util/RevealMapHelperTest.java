@@ -42,6 +42,9 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_CIRCLE_LAYER;
 import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_SYMBOL_LAYER;
+import static org.smartregister.reveal.util.RevealMapHelper.MOSQUITO_COLLECTION_LAYER;
+import static org.smartregister.reveal.util.RevealMapHelper.LARVAL_BREEDING_LAYER;
+
 
 /**
  * Created by Vincent Karuri on 08/05/2019
@@ -134,5 +137,24 @@ public class RevealMapHelperTest {
         verify(style, times(2)).addLayer(layerArgumentCaptor.capture());
         assertEquals(layerArgumentCaptor.getAllValues().get(0).getId(), INDEX_CASE_SYMBOL_LAYER);
         assertEquals(layerArgumentCaptor.getAllValues().get(1).getId(), INDEX_CASE_CIRCLE_LAYER);
+    }
+
+    @Test
+    public void testAddCustomLayers() throws Exception{
+
+        RevealMapHelper revealMapHelper = spy(this.revealMapHelper);
+        Context context = mock(Context.class);
+        Style style = mock(Style.class);
+        SymbolLayer symbolLayer = mock(SymbolLayer.class);
+        whenNew(SymbolLayer.class).withAnyArguments()
+                .thenReturn(symbolLayer);
+        when(symbolLayer.getId())
+                .thenReturn(MOSQUITO_COLLECTION_LAYER)
+                .thenReturn(LARVAL_BREEDING_LAYER);
+        revealMapHelper.addCustomLayers(style, context);
+        verify(style, times(2)).addLayer(layerArgumentCaptor.capture());
+        assertEquals(layerArgumentCaptor.getAllValues().get(0).getId(), MOSQUITO_COLLECTION_LAYER);
+        assertEquals(layerArgumentCaptor.getAllValues().get(1).getId(), LARVAL_BREEDING_LAYER);
+
     }
 }

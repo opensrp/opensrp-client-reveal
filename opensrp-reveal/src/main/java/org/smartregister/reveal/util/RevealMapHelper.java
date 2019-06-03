@@ -60,9 +60,9 @@ public class RevealMapHelper {
 
     private static final String INDEX_CASE_TARGET_ICON = "index-case-target-icon";
 
-    private static final String LARVAL_BREEDING_LAYER = "larval-breeding-layer";
+    public static final String LARVAL_BREEDING_LAYER = "larval-breeding-layer";
 
-    private static final String MOSQUITO_COLLECTION_LAYER = "mosquito-collection-layer";
+    public static final String MOSQUITO_COLLECTION_LAYER = "mosquito-collection-layer";
 
     public static final String INDEX_CASE_SYMBOL_LAYER = "index-case-symbol-layer";
 
