@@ -64,6 +64,7 @@ public class TestingUtils {
         map.put(KEY.LAST_NAME, "Otala");
         map.put(KEY.DOB, "1982-01-01T03:00:00.000+03:00");
         map.put(KEY.GENDER, "Female");
+        map.put(KEY.UNIQUE_ID, "12987632");
         CommonPersonObjectClient smartRegisterClient = new CommonPersonObjectClient(UUID.randomUUID().toString(), null, null);
         smartRegisterClient.setColumnmaps(map);
         return smartRegisterClient;

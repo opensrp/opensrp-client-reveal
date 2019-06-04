@@ -42,6 +42,8 @@ public interface Constants {
 
     String STATUS = "status";
 
+    String FOCUS = "FOCUS";
+
     double MY_LOCATION_ZOOM_LEVEL = 17.5; // modifying this will also necessitate modifying the VERTICAL_OFFSET
 
     double VERTICAL_OFFSET = -0.0003;
@@ -108,15 +110,9 @@ public interface Constants {
     interface Intervention {
         String IRS = "IRS";
 
-        String FOCUS = "FOCUS";
-
-        String MDA = "MDA";
-
         String MOSQUITO_COLLECTION = "Mosquito Collection";
 
         String LARVAL_DIPPING = "Larval Dipping";
-
-        String IRS_VISIT = "IRS Visit";
 
         String BCC = "BCC";
 
@@ -217,6 +213,8 @@ public interface Constants {
         String SHORTENED_HINT = "shortened_hint";
 
         String HINT = "hint";
+
+        String TITLE = "title";
     }
 
     interface DateFormat {
