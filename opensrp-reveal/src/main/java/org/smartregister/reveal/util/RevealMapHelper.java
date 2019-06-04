@@ -38,6 +38,8 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleRadius;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeColor;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeOpacity;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeWidth;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES;
@@ -111,14 +113,15 @@ public class RevealMapHelper {
 
         // index case symbol layer
         Expression dynamicIconSize = interpolate(linear(), zoom(),
-                literal(13.98f), literal(1),
+                literal(11.98f), literal(1),
                 literal(17.79f), literal(3f),
                 literal(18.8f), literal(4));
 
         Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_index_case_target_icon);
         mMapboxMapStyle.addImage(INDEX_CASE_TARGET_ICON, icon);
         SymbolLayer symbolLayer = new SymbolLayer(INDEX_CASE_SYMBOL_LAYER, context.getString(R.string.reveal_datasource_name));
-        symbolLayer.setProperties(iconImage(INDEX_CASE_TARGET_ICON), iconSize(dynamicIconSize));
+        symbolLayer.setProperties(iconImage(INDEX_CASE_TARGET_ICON), iconSize(dynamicIconSize),
+                iconIgnorePlacement(true), iconAllowOverlap(true));
         symbolLayer.setFilter(eq(get(IS_INDEX_CASE), Boolean.TRUE.toString()));
         mMapboxMapStyle.addLayer(symbolLayer);
 
