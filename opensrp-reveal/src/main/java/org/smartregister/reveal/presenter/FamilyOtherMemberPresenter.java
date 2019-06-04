@@ -17,8 +17,6 @@ import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 
-import timber.log.Timber;
-
 /**
  * Created by samuelgithengi on 5/31/19.
  */
@@ -48,7 +46,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
         try {
             familyJsonFormUtils = new FamilyJsonFormUtils(view.getContext());
         } catch (Exception e) {
-            Timber.e("error starting FamilyJsonFormUtils");
+            Log.e(TAG, "error starting FamilyJsonFormUtils");
         }
     }
 
