@@ -21,6 +21,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import org.smartregister.domain.Location;
 import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.job.LocationTaskServiceJob;
@@ -121,7 +122,7 @@ public class Utils {
     }
 
     public static Float getLocationBuffer() {
-        return Float.valueOf(getGlobalConfig(CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES, CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString()));
+        return Float.valueOf(getGlobalConfig(CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES, BuildConfig.MY_LOCATION_BUFFER + ""));
     }
 
     public static int getInterventionLabel() {
