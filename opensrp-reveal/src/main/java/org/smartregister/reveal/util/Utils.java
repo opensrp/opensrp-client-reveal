@@ -125,6 +125,15 @@ public class Utils {
         return Float.valueOf(getGlobalConfig(CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES, BuildConfig.MY_LOCATION_BUFFER + ""));
     }
 
+
+    public static Float getPixelsPerDPI(Resources resources) {
+        return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                1,
+                resources.getDisplayMetrics()
+        );
+    }
+
     public static int getInterventionLabel() {
         String plan = PreferencesUtil.getInstance().getCurrentPlan();
         if (plan.toUpperCase().contains(FOCUS))
