@@ -15,9 +15,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.layers.CircleLayer;
-import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
-import com.mapbox.mapboxsdk.style.layers.PropertyFactory;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
@@ -31,12 +29,10 @@ import org.smartregister.reveal.util.Constants.StructureType;
 import java.util.ArrayList;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.eq;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.geometryType;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.linear;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
-import static com.mapbox.mapboxsdk.style.expressions.Expression.typeOf;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleColor;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleOpacity;
@@ -44,8 +40,6 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleRadius;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeColor;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeOpacity;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeWidth;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillOpacity;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
@@ -149,7 +143,6 @@ public class RevealMapHelper {
                 circleStrokeWidth(2f),
                 circleStrokeOpacity(1f)
         );
-        //mMapboxMapStyle.addLayer(indexCaseCircleLayer);
 
         GeoJsonSource polygonSource = null;
         Feature indexCase = getIndexCase(featureCollection);
@@ -157,18 +150,15 @@ public class RevealMapHelper {
 
         FeatureCollection circleFeatureCollection;
         try {
-            //mapboxMap.getStyle().addSource("polygon", createGeoJSONCircle(new LatLng(indexCaseLocation.getLongitude(), indexCaseLocation.getLatitude()), 1, null ), 0.5); //createGeoJSONCircle()
             circleFeatureCollection = createGeoJSONCircle(new LatLng(indexCaseLocation.getLatitude(), indexCaseLocation.getLongitude()), 1, null );
             polygonSource = new GeoJsonSource("polygon", circleFeatureCollection);
             mapboxMap.getStyle().addSource(polygonSource);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (JSONException e) {
+            Log.e(TAG, e.getStackTrace().toString());
         }
 
         lineLayer = new LineLayer("polygon", polygonSource.getId());
         lineLayer.withProperties(
-                //fillColor("blue"),
-                //fillOpacity(0.6f),
                 lineWidth(2f),
                 lineColor("#ffffff"),
                 lineJoin("round")

@@ -16,8 +16,13 @@ import android.widget.TextView;
 
 import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.AllSharedPreferences;
@@ -29,13 +34,13 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_GEO_JSON_CIRCLE_SIDES;
 import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
 import static org.smartregister.reveal.util.Constants.FOCUS;
 
@@ -160,5 +165,62 @@ public class Utils {
 
     public static Boolean getDrawOperationalAreaBoundaryAndLabel() {
         return Boolean.valueOf(getGlobalConfig(CONFIGURATION.DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL, CONFIGURATION.DEFAULT_DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL.toString()));
+    }
+
+    /**
+     * Creates a circle using a GeoJSON polygon.
+     * It's not strictly a circle but by increasing the number of sides on the polygon you can get pretty close to one.
+     *
+     * @param center  - Coordinates for the center of the circle
+     * @param radiusInKm - Radius of the circle in Kilometers
+     * @param points - Since this is a GeoJSON polygon, we need to have a large number of sides
+     *               so that it gets as close as possible to being a circle
+     * @return
+     * @throws Exception
+     */
+
+    public static FeatureCollection createGeoJSONCircle(LatLng center, Integer radiusInKm, Float points) throws JSONException {
+        if (points == null) {
+            points = DEFAULT_GEO_JSON_CIRCLE_SIDES;
+        }
+
+        JSONArray coordinates = new JSONArray();
+        JSONArray coordinate = new JSONArray();
+        JSONArray bufferArray = new JSONArray();
+        double distanceX = radiusInKm/(111.320 * Math.cos(center.getLatitude() * Math.PI/180));
+        double distanceY = radiusInKm/110.574;
+
+        double theta, x, y;
+        for (int i=0; i < points; i++) {
+            theta = (i / points) * (2 * Math.PI);
+            x = distanceX*Math.cos(theta);
+            y = distanceY*Math.sin(theta);
+
+            Double longitude = center.getLongitude() + x;
+            Double latitude = center.getLatitude() + y;
+            coordinate.put(longitude);
+            coordinate.put(latitude);
+            bufferArray.put(coordinate);
+            coordinate  = new JSONArray();
+        }
+
+        coordinates.put(bufferArray);
+
+        JSONObject featureCollection = new JSONObject();
+        featureCollection.put("type", "FeatureCollection");
+
+        JSONArray features = new JSONArray();
+        JSONObject feature = new JSONObject();
+        feature.put("type", "Feature");
+        JSONObject geometry = new JSONObject();
+
+        geometry.put("type", "Polygon");
+        geometry.put("coordinates", coordinates);
+        feature.put("geometry", geometry);
+
+        features.put(feature);
+        featureCollection.put("features", features);
+
+        return FeatureCollection.fromJson(featureCollection.toString());
     }
 }

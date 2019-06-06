@@ -66,6 +66,7 @@ public interface Constants {
         String DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL = "draw_operational_area_boundary_and_label";
         Boolean DEFAULT_DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL = true;
         String LOCAL_SYNC_DONE = "local_sync_done";
+        Float DEFAULT_GEO_JSON_CIRCLE_SIDES = 120F;
     }
 
     interface Preferences {
