@@ -8,8 +8,8 @@ import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.style.layers.CircleLayer;
 import com.mapbox.mapboxsdk.style.layers.Layer;
+import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
@@ -27,6 +27,7 @@ import org.robolectric.RuntimeEnvironment;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -69,9 +70,9 @@ public class RevealMapHelperTest {
         SymbolLayer symbolLayer = mock(SymbolLayer.class);
         doReturn(INDEX_CASE_SYMBOL_LAYER).when(symbolLayer).getId();
         whenNew(SymbolLayer.class).withAnyArguments().thenReturn(symbolLayer);
-        CircleLayer circleLayer = mock(CircleLayer.class);
-        doReturn(INDEX_CASE_LINE_LAYER).when(circleLayer).getId();
-        whenNew(CircleLayer.class).withAnyArguments().thenReturn(circleLayer);
+        LineLayer lineLayer = mock(LineLayer.class);
+        doReturn(INDEX_CASE_LINE_LAYER).when(lineLayer).getId();
+        whenNew(LineLayer.class).withAnyArguments().thenReturn(lineLayer);
         mockStatic(Utils.class);
         PowerMockito.doReturn("12").when(Utils.class, "getGlobalConfig", any(), any());
         revealMapHelper = new RevealMapHelper();
@@ -92,6 +93,7 @@ public class RevealMapHelperTest {
         MapboxMap mapboxMap = mock(MapboxMap.class);
         cameraPosition = new CameraPosition.Builder().target(new LatLng()).build();
         when(mapboxMap.getCameraPosition()).thenReturn(cameraPosition);
+        when(Utils.createCircleFeature(any(), anyFloat(), anyFloat())).thenReturn(Feature.fromJson(feature));
         revealMapHelper.updateIndexCaseLayers(mapboxMap, featureCollection, context);
         verify(source).setGeoJson(featureArgumentCaptor.capture());
         assertEquals(featureArgumentCaptor.getValue().getStringProperty("taskIdentifier"), "c987a804-2525-43bd-99b1-e1910fffbc1a");
