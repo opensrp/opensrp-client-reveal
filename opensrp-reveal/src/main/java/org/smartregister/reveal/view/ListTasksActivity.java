@@ -25,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mapbox.android.core.permissions.PermissionsManager;
-import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -234,20 +233,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 });
 
                 mMapboxMap = mapboxMap;
-                mMapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
-                    @Override
-                    public void onMoveBegin(@NonNull MoveGestureDetector detector) {//do nothing
-                    }
-
-                    @Override
-                    public void onMove(@NonNull MoveGestureDetector detector) {//do nothing
-                    }
-
-                    @Override
-                    public void onMoveEnd(@NonNull MoveGestureDetector detector) {//do nothing
-
-                    }
-                });
                 mapboxMap.setMinZoomPreference(10);
                 mapboxMap.setMaxZoomPreference(21);
 
@@ -391,7 +376,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 }
 
-                if (getInterventionLabel() == R.string.focus_investigation) {
+                if (getInterventionLabel() == R.string.focus_investigation && revealMapHelper.getIndexCaseLineLayer() == null) {
                     revealMapHelper.addIndexCaseLayers(mMapboxMap, getContext(), featureCollection);
                 } else {
                     revealMapHelper.updateIndexCaseLayers(mMapboxMap, featureCollection, this);

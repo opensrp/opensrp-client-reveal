@@ -36,7 +36,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
-import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_CIRCLE_LAYER;
+import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_LINE_LAYER;
 import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_SYMBOL_LAYER;
 import static org.smartregister.reveal.util.RevealMapHelper.MOSQUITO_COLLECTION_LAYER;
 import static org.smartregister.reveal.util.RevealMapHelper.LARVAL_BREEDING_LAYER;
@@ -70,7 +70,7 @@ public class RevealMapHelperTest {
         doReturn(INDEX_CASE_SYMBOL_LAYER).when(symbolLayer).getId();
         whenNew(SymbolLayer.class).withAnyArguments().thenReturn(symbolLayer);
         CircleLayer circleLayer = mock(CircleLayer.class);
-        doReturn(INDEX_CASE_CIRCLE_LAYER).when(circleLayer).getId();
+        doReturn(INDEX_CASE_LINE_LAYER).when(circleLayer).getId();
         whenNew(CircleLayer.class).withAnyArguments().thenReturn(circleLayer);
         mockStatic(Utils.class);
         PowerMockito.doReturn("12").when(Utils.class, "getGlobalConfig", any(), any());

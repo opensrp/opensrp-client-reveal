@@ -1,6 +1,5 @@
 package org.smartregister.reveal.util;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -11,14 +10,11 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.widget.TextView;
 
 import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -165,7 +161,7 @@ public class Utils {
      * @throws Exception
      */
 
-    public static FeatureCollection createGeoJSONCircle(LatLng center, Float radius, Float points) throws JSONException {
+    public static Feature createCircleFeature(LatLng center, Float radius, Float points) throws JSONException {
         Float radiusInKm = radius / METERS_PER_KILOMETER;
 
         JSONArray coordinates = new JSONArray();
@@ -192,10 +188,6 @@ public class Utils {
 
         coordinates.put(bufferArray);
 
-        JSONObject featureCollection = new JSONObject();
-        featureCollection.put("type", "FeatureCollection");
-
-        JSONArray features = new JSONArray();
         JSONObject feature = new JSONObject();
         feature.put("type", "Feature");
         JSONObject geometry = new JSONObject();
@@ -204,9 +196,6 @@ public class Utils {
         geometry.put("coordinates", coordinates);
         feature.put("geometry", geometry);
 
-        features.put(feature);
-        featureCollection.put("features", features);
-
-        return FeatureCollection.fromJson(featureCollection.toString());
+        return Feature.fromJson(feature.toString());
     }
 }
