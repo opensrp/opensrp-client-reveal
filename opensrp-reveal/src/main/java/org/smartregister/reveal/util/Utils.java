@@ -142,25 +142,6 @@ public class Utils {
             return R.string.irs;
     }
 
-    public static float calculateZoomLevelRadius(@NonNull final MapboxMap mapboxMap, double latitude, float radius, Context context) {
-        double metersPerDip = mapboxMap.getProjection().getMetersPerPixelAtLatitude(latitude);
-        double metersPerPixel;
-
-        float dip = 1.0f;
-        Resources r = context.getResources();
-        float dpToPixelRatio = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dip,
-                r.getDisplayMetrics()
-        );
-
-        // Apparently from https://github.com/mapbox/mapbox-gl-native/issues/8990 seems like the getMetersPerPixelAtLatitude()
-        // function returns meters per dip hence we have to factor that in when calculating the zoom level radius
-        metersPerPixel = metersPerDip * dpToPixelRatio;
-
-        return (float) (radius / metersPerPixel);
-    }
-
     public static String getAge(String dob) {
         String dobString = org.smartregister.family.util.Utils.getDuration(dob);
         return dobString.contains("y") ? dobString.substring(0, dobString.indexOf("y")) : dobString;
