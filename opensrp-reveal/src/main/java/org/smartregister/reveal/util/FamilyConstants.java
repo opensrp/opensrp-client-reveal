@@ -51,6 +51,18 @@ public interface FamilyConstants {
     interface DatabaseKeys {
         String FAMILY_NAME = "fam_name";
         String HOUSE_NUMBER = "house_number";
+        String AGE = "age";
+        String NATIONAL_ID = "national_id";
+        String CITIZENSHIP = "citizenship";
+        String OCCUPATION = "occupation";
+        String SLEEPS_OUTDOORS = "sleeps_outdoors";
+        String PHONE_NUMBER = "phone_number";
+    }
+
+    interface FormKeys {
+        String SEX = "sex";
+        String SAME_AS_FAM_NAME = "same_as_fam_name";
+        String SURNAME = "surname";
     }
 
 
