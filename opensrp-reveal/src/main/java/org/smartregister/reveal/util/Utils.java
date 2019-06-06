@@ -34,13 +34,16 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_GEO_JSON_CIRCLE_SIDES;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LATITUDE_AT_EQUITOR;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LONGITUDE_AT_EQUITOR;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.METERS_PER_KILOMETER;
 import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
 import static org.smartregister.reveal.util.Constants.FOCUS;
 
@@ -171,37 +174,39 @@ public class Utils {
      * Creates a circle using a GeoJSON polygon.
      * It's not strictly a circle but by increasing the number of sides on the polygon you can get pretty close to one.
      *
-     * @param center  - Coordinates for the center of the circle
-     * @param radiusInKm - Radius of the circle in Kilometers
+     * Adapted from https://stackoverflow.com/questions/37599561/drawing-a-circle-with-the-radius-in-miles-meters-with-mapbox-gl-js/39006388#39006388
+     *
+     * @param center - Coordinates for the center of the circle
+     * @param radius - Radius of the circle in meters
      * @param points - Since this is a GeoJSON polygon, we need to have a large number of sides
      *               so that it gets as close as possible to being a circle
      * @return
      * @throws Exception
      */
 
-    public static FeatureCollection createGeoJSONCircle(LatLng center, Integer radiusInKm, Float points) throws JSONException {
-        if (points == null) {
-            points = DEFAULT_GEO_JSON_CIRCLE_SIDES;
-        }
+    public static FeatureCollection createGeoJSONCircle(LatLng center, Float radius, Float points) throws JSONException {
+        Float radiusInKm = radius / METERS_PER_KILOMETER;
 
         JSONArray coordinates = new JSONArray();
         JSONArray coordinate = new JSONArray();
         JSONArray bufferArray = new JSONArray();
-        double distanceX = radiusInKm/(111.320 * Math.cos(center.getLatitude() * Math.PI/180));
-        double distanceY = radiusInKm/110.574;
+        double distanceX = radiusInKm / (KILOMETERS_PER_DEGREE_OF_LONGITUDE_AT_EQUITOR * Math.cos(center.getLatitude() * Math.PI / 180));
+        double distanceY = radiusInKm / KILOMETERS_PER_DEGREE_OF_LATITUDE_AT_EQUITOR;
 
-        double theta, x, y;
-        for (int i=0; i < points; i++) {
+        double theta;
+        double x;
+        double y;
+        for (int i = 0; i < points; i++) {
             theta = (i / points) * (2 * Math.PI);
-            x = distanceX*Math.cos(theta);
-            y = distanceY*Math.sin(theta);
+            x = distanceX * Math.cos(theta);
+            y = distanceY * Math.sin(theta);
 
             Double longitude = center.getLongitude() + x;
             Double latitude = center.getLatitude() + y;
             coordinate.put(longitude);
             coordinate.put(latitude);
             bufferArray.put(coordinate);
-            coordinate  = new JSONArray();
+            coordinate = new JSONArray();
         }
 
         coordinates.put(bufferArray);

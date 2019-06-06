@@ -240,23 +240,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
 
                     @Override
-                    public void onMove(@NonNull MoveGestureDetector detector) {
-                        revealMapHelper.resizeIndexCaseCircle(mMapboxMap, ListTasksActivity.this);
+                    public void onMove(@NonNull MoveGestureDetector detector) {//do nothing
                     }
 
                     @Override
-                    public void onMoveEnd(@NonNull MoveGestureDetector detector) {// call resizeIndexCaseCircle
-                        // after a short period to update circle radius
-                        new java.util.Timer().schedule(
-                                new java.util.TimerTask() {
-                                    @Override
-                                    public void run() {
-                                        appExecutors.mainThread().execute(() -> revealMapHelper
-                                                .resizeIndexCaseCircle(mMapboxMap, ListTasksActivity.this));
-                                    }
-                                },
-                                200
-                        );
+                    public void onMoveEnd(@NonNull MoveGestureDetector detector) {//do nothing
+
                     }
                 });
                 mapboxMap.setMinZoomPreference(10);
@@ -402,7 +391,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 }
 
-                if (getInterventionLabel() == R.string.focus_investigation && revealMapHelper.getIndexCaseCircleLayer() == null) {
+                if (getInterventionLabel() == R.string.focus_investigation) {
                     revealMapHelper.addIndexCaseLayers(mMapboxMap, getContext(), featureCollection);
                 } else {
                     revealMapHelper.updateIndexCaseLayers(mMapboxMap, featureCollection, this);

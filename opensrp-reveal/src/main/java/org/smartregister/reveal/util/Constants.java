@@ -67,6 +67,9 @@ public interface Constants {
         Boolean DEFAULT_DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL = true;
         String LOCAL_SYNC_DONE = "local_sync_done";
         Float DEFAULT_GEO_JSON_CIRCLE_SIDES = 120F;
+        Float METERS_PER_KILOMETER = 1000f;
+        Float KILOMETERS_PER_DEGREE_OF_LONGITUDE_AT_EQUITOR = 111.320f;
+        Float KILOMETERS_PER_DEGREE_OF_LATITUDE_AT_EQUITOR = 110.574f;
     }
 
     interface Preferences {
