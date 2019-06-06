@@ -79,7 +79,7 @@ public class RevealMapHelper {
 
     private LineLayer indexCaseLineLayer;
 
-    Feature circleFeature;
+    private Feature circleFeature;
 
     public static void addCustomLayers(@NonNull Style mMapboxMapStyle, Context context) {
 
@@ -165,7 +165,7 @@ public class RevealMapHelper {
                     feature.put("geometry", geometry);
                     circleFeature = createCircleFeature(new LatLng(indexCaseLocation.getLatitude(), indexCaseLocation.getLongitude()), radius, DEFAULT_GEO_JSON_CIRCLE_SIDES );
                     indexCaseSource.setGeoJson(circleFeature);
-                } else { // Clear circle is there is no index case
+                } else { // Clear outer circle if there is no index case
                     indexCaseSource.setGeoJson(FeatureCollection.fromFeatures(new ArrayList<>()));
                 }
             }
