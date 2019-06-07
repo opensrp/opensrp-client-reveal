@@ -13,6 +13,7 @@ import org.smartregister.reveal.contract.UserLocationContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.Utils;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -48,7 +49,7 @@ public class ValidateUserLocationPresenter implements UserLocationContract.UserL
         locationView.hideProgressDialog();
         double offset = callback.getTargetCoordinates().distanceTo(
                 new LatLng(location.getLatitude(), location.getLongitude()));
-        if (offset > BuildConfig.MY_LOCATION_BUFFER) {
+        if (offset > Utils.getLocationBuffer()) {
             callback.requestUserPassword();
         } else {
             callback.onLocationValidated();
