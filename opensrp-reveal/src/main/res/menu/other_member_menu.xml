@@ -3,12 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/add_member"
-        android:icon="@drawable/icon_plus_add_fp"
-        android:title="@string/add_member" />
-
-    <item
-        android:id="@+id/edit_family"
+        android:id="@+id/action_registration"
         android:enabled="true"
         android:title="@string/registration_info"
         app:showAsAction="never" />

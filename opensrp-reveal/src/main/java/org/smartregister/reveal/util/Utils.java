@@ -37,6 +37,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
+import static org.smartregister.reveal.util.Constants.FOCUS;
 
 public class Utils {
 
@@ -125,7 +126,7 @@ public class Utils {
 
     public static int getInterventionLabel() {
         String plan = PreferencesUtil.getInstance().getCurrentPlan();
-        if (plan.toUpperCase().contains(Intervention.FOCUS))
+        if (plan.toUpperCase().contains(FOCUS))
             return R.string.focus_investigation;
         else if (plan.toUpperCase().contains(Intervention.IRS))
             return R.string.irs;
