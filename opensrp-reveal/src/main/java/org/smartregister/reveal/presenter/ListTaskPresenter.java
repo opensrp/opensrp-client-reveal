@@ -30,6 +30,7 @@ import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
+import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -108,6 +109,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private RevealApplication revealApplication;
 
+    private RevealMappingHelper mappingHelper;
+
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
         this.drawerPresenter = drawerPresenter;
@@ -118,6 +121,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         jsonFormUtils = listTaskView.getJsonFormUtils();
         setChangeMapPosition(true);
         revealApplication = RevealApplication.getInstance();
+        mappingHelper = new RevealMappingHelper();
     }
 
     @Override
@@ -393,7 +397,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public LatLng getTargetCoordinates() {
-        return clickedPoint;
+        android.location.Location center = mappingHelper.getCenter(selectedFeature.geometry().toJson());
+        return new LatLng(center.getLatitude(), center.getLongitude());
     }
 
     @Override
