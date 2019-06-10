@@ -1,7 +1,6 @@
 package org.smartregister.reveal.util;
 
 import android.content.Context;
-import android.location.Location;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -9,9 +8,8 @@ import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
-import com.mapbox.mapboxsdk.style.layers.CircleLayer;
 import com.mapbox.mapboxsdk.style.layers.Layer;
-import com.mapbox.mapboxsdk.style.layers.PropertyValue;
+import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
@@ -29,7 +27,6 @@ import org.robolectric.RuntimeEnvironment;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyDouble;
 import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -40,7 +37,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
-import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_CIRCLE_LAYER;
+import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_LINE_LAYER;
 import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_SYMBOL_LAYER;
 import static org.smartregister.reveal.util.RevealMapHelper.MOSQUITO_COLLECTION_LAYER;
 import static org.smartregister.reveal.util.RevealMapHelper.LARVAL_BREEDING_LAYER;
@@ -73,33 +70,12 @@ public class RevealMapHelperTest {
         SymbolLayer symbolLayer = mock(SymbolLayer.class);
         doReturn(INDEX_CASE_SYMBOL_LAYER).when(symbolLayer).getId();
         whenNew(SymbolLayer.class).withAnyArguments().thenReturn(symbolLayer);
-        CircleLayer circleLayer = mock(CircleLayer.class);
-        doReturn(INDEX_CASE_CIRCLE_LAYER).when(circleLayer).getId();
-        whenNew(CircleLayer.class).withAnyArguments().thenReturn(circleLayer);
+        LineLayer lineLayer = mock(LineLayer.class);
+        doReturn(INDEX_CASE_LINE_LAYER).when(lineLayer).getId();
+        whenNew(LineLayer.class).withAnyArguments().thenReturn(lineLayer);
         mockStatic(Utils.class);
         PowerMockito.doReturn("12").when(Utils.class, "getGlobalConfig", any(), any());
         revealMapHelper = new RevealMapHelper();
-    }
-
-    @Test
-    public void testGetIndexCaseCircleLayer() {
-        CircleLayer circleLayer = mock(CircleLayer.class);
-        Whitebox.setInternalState(revealMapHelper, "indexCaseCircleLayer", circleLayer);
-        assertEquals(circleLayer, revealMapHelper.getIndexCaseCircleLayer());
-    }
-
-    @Test
-    public void testResizeIndexCaseCircle() throws Exception {
-        PowerMockito.mockStatic(Utils.class);
-        MapboxMap mapboxMap = mock(MapboxMap.class);
-        cameraPosition = new CameraPosition.Builder().target(new LatLng()).build();
-        when(mapboxMap.getCameraPosition()).thenReturn(cameraPosition);
-        CircleLayer circleLayer = mock(CircleLayer.class);
-        Whitebox.setInternalState(revealMapHelper, "indexCaseCircleLayer", circleLayer);
-        Whitebox.setInternalState(revealMapHelper, "indexCaseLocation", mock(Location.class));
-        PowerMockito.doReturn(12f).when(Utils.class, "calculateZoomLevelRadius", any(MapboxMap.class), anyDouble(), anyFloat(), any());
-        revealMapHelper.resizeIndexCaseCircle(mapboxMap, context);
-        verify(circleLayer).setProperties(any(PropertyValue.class));
     }
 
     @Test
@@ -113,12 +89,11 @@ public class RevealMapHelperTest {
         PowerMockito.mockStatic(Utils.class);
         GeoJsonSource source = mock(GeoJsonSource.class);
         Whitebox.setInternalState(revealMapHelper, "indexCaseSource", source);
-        Whitebox.setInternalState(revealMapHelper, "indexCaseCircleLayer", mock(CircleLayer.class));
         FeatureCollection featureCollection = FeatureCollection.fromFeature(Feature.fromJson(feature));
         MapboxMap mapboxMap = mock(MapboxMap.class);
         cameraPosition = new CameraPosition.Builder().target(new LatLng()).build();
         when(mapboxMap.getCameraPosition()).thenReturn(cameraPosition);
-        PowerMockito.doReturn(12f).when(Utils.class, "calculateZoomLevelRadius", any(MapboxMap.class), anyDouble(), anyFloat(), any());
+        when(Utils.createCircleFeature(any(), anyFloat(), anyFloat())).thenReturn(Feature.fromJson(feature));
         revealMapHelper.updateIndexCaseLayers(mapboxMap, featureCollection, context);
         verify(source).setGeoJson(featureArgumentCaptor.capture());
         assertEquals(featureArgumentCaptor.getValue().getStringProperty("taskIdentifier"), "c987a804-2525-43bd-99b1-e1910fffbc1a");
@@ -131,16 +106,17 @@ public class RevealMapHelperTest {
         Context context = mock(Context.class);
         FeatureCollection featureCollection = mock(FeatureCollection.class);
         Style style = mock(Style.class);
+        GeoJsonSource source = mock(GeoJsonSource.class);
         doReturn(style).when(mapboxMap).getStyle();
         doNothing().when(revealMapHelper).updateIndexCaseLayers(any(), any(), any());
+        Whitebox.setInternalState(revealMapHelper, "indexCaseSource", source);
         revealMapHelper.addIndexCaseLayers(mapboxMap, context, featureCollection);
-        verify(style, times(2)).addLayer(layerArgumentCaptor.capture());
+        verify(style, times(1)).addLayer(layerArgumentCaptor.capture());
         assertEquals(layerArgumentCaptor.getAllValues().get(0).getId(), INDEX_CASE_SYMBOL_LAYER);
-        assertEquals(layerArgumentCaptor.getAllValues().get(1).getId(), INDEX_CASE_CIRCLE_LAYER);
     }
 
     @Test
-    public void testAddCustomLayers() throws Exception{
+    public void testAddCustomLayers() throws Exception {
 
         RevealMapHelper revealMapHelper = spy(this.revealMapHelper);
         Context context = mock(Context.class);

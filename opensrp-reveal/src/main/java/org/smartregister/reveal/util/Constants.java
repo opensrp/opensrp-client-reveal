@@ -59,13 +59,16 @@ public interface Constants {
         String VALUE = "value";
         String SETTINGS = "settings";
         String LOCATION_BUFFER_RADIUS_IN_METRES = "location_buffer_radius_in_metres";
-        Float DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES = 25f;
         String UPDATE_LOCATION_BUFFER_RADIUS = "update_location_buffer_radius";
         String INDEX_CASE_CIRCLE_RADIUS_IN_METRES = "index_case_circle_radius_in_metres";
         Float DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES = 1000f;
         String DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL = "draw_operational_area_boundary_and_label";
         Boolean DEFAULT_DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL = true;
         String LOCAL_SYNC_DONE = "local_sync_done";
+        Float DEFAULT_GEO_JSON_CIRCLE_SIDES = 120F;
+        Float METERS_PER_KILOMETER = 1000f;
+        Float KILOMETERS_PER_DEGREE_OF_LONGITUDE_AT_EQUITOR = 111.320f;
+        Float KILOMETERS_PER_DEGREE_OF_LATITUDE_AT_EQUITOR = 110.574f;
     }
 
     interface Preferences {

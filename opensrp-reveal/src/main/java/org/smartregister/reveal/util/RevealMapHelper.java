@@ -3,17 +3,18 @@ package org.smartregister.reveal.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
-import com.mapbox.mapboxsdk.style.layers.CircleLayer;
+import com.mapbox.mapboxsdk.style.layers.LineLayer;
+import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
@@ -32,19 +33,19 @@ import static com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.linear;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleOpacity;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleRadius;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeColor;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeOpacity;
-import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.circleStrokeWidth;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconSize;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineJoin;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_GEO_JSON_CIRCLE_SIDES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.INDEX_CASE_CIRCLE_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
 import static org.smartregister.reveal.util.Constants.GeoJSON.TYPE;
-import static org.smartregister.reveal.util.Utils.calculateZoomLevelRadius;
+import static org.smartregister.reveal.util.Utils.createCircleFeature;
 import static org.smartregister.reveal.util.Utils.getGlobalConfig;
 
 /**
@@ -66,17 +67,19 @@ public class RevealMapHelper {
 
     public static final String INDEX_CASE_SYMBOL_LAYER = "index-case-symbol-layer";
 
-    public static final String INDEX_CASE_CIRCLE_LAYER = "index-case-circle-layer";
+    public static final String INDEX_CASE_LINE_LAYER = "index-case-line-layer";
 
     private static final String INDEX_CASE_SOURCE = "index_case_source";
-
-    private CircleLayer indexCaseCircleLayer = null;
 
     private Location indexCaseLocation = null;
 
     private GeoJsonSource indexCaseSource = new GeoJsonSource(INDEX_CASE_SOURCE);
 
     private float radius = Float.valueOf(getGlobalConfig(INDEX_CASE_CIRCLE_RADIUS_IN_METRES, DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES.toString()));
+
+    private LineLayer indexCaseLineLayer;
+
+    private Feature circleFeature;
 
     public static void addCustomLayers(@NonNull Style mMapboxMapStyle, Context context) {
 
@@ -111,28 +114,40 @@ public class RevealMapHelper {
 
         // index case symbol layer
         Expression dynamicIconSize = interpolate(linear(), zoom(),
-                literal(13.98f), literal(1),
+                literal(11.98f), literal(1),
                 literal(17.79f), literal(3f),
                 literal(18.8f), literal(4));
 
         Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_index_case_target_icon);
         mMapboxMapStyle.addImage(INDEX_CASE_TARGET_ICON, icon);
         SymbolLayer symbolLayer = new SymbolLayer(INDEX_CASE_SYMBOL_LAYER, context.getString(R.string.reveal_datasource_name));
-        symbolLayer.setProperties(iconImage(INDEX_CASE_TARGET_ICON), iconSize(dynamicIconSize));
+        symbolLayer.setProperties(iconImage(INDEX_CASE_TARGET_ICON), iconSize(dynamicIconSize),
+                iconIgnorePlacement(true), iconAllowOverlap(true));
         symbolLayer.setFilter(eq(get(IS_INDEX_CASE), Boolean.TRUE.toString()));
         mMapboxMapStyle.addLayer(symbolLayer);
 
         // index case circle layer
-        mapboxMap.getStyle().addSource(indexCaseSource);
-        indexCaseCircleLayer = new CircleLayer(INDEX_CASE_CIRCLE_LAYER, INDEX_CASE_SOURCE);
-        indexCaseCircleLayer.withProperties(
-                circleOpacity(0f),
-                circleColor(Color.parseColor("#ffffff")),
-                circleStrokeColor("#ffffff"),
-                circleStrokeWidth(2f),
-                circleStrokeOpacity(1f)
-        );
-        mMapboxMapStyle.addLayer(indexCaseCircleLayer);
+        Feature indexCase = getIndexCase(featureCollection);
+        if (indexCase != null) {
+            indexCaseLocation = (new RevealMappingHelper()).getCenter(indexCase.geometry().toJson());
+
+            try {
+                circleFeature = createCircleFeature(new LatLng(indexCaseLocation.getLatitude(), indexCaseLocation.getLongitude()), radius, DEFAULT_GEO_JSON_CIRCLE_SIDES );
+                indexCaseSource = new GeoJsonSource(INDEX_CASE_SOURCE, circleFeature);
+                mapboxMap.getStyle().addSource(indexCaseSource);
+            } catch (JSONException e) {
+                Log.e(TAG, e.getStackTrace().toString());
+            }
+
+            indexCaseLineLayer = new LineLayer(INDEX_CASE_LINE_LAYER, indexCaseSource.getId());
+            indexCaseLineLayer.withProperties(
+                    lineWidth(2f),
+                    lineColor("#ffffff"),
+                    lineJoin(Property.LINE_JOIN_ROUND)
+            );
+            mMapboxMapStyle.addLayer(indexCaseLineLayer);
+        }
+
         updateIndexCaseLayers(mapboxMap, featureCollection,context);
     }
 
@@ -148,21 +163,14 @@ public class RevealMapHelper {
                     geometry.put("type", "Point");
                     geometry.put("coordinates", new JSONArray(new Double[]{indexCaseLocation.getLongitude(), indexCaseLocation.getLatitude()}));
                     feature.put("geometry", geometry);
-                    resizeIndexCaseCircle(mapboxMap, context);
-                    indexCaseSource.setGeoJson(Feature.fromJson(feature.toString()));
-                } else {
+                    circleFeature = createCircleFeature(new LatLng(indexCaseLocation.getLatitude(), indexCaseLocation.getLongitude()), radius, DEFAULT_GEO_JSON_CIRCLE_SIDES );
+                    indexCaseSource.setGeoJson(circleFeature);
+                } else { // Clear outer circle if there is no index case
                     indexCaseSource.setGeoJson(FeatureCollection.fromFeatures(new ArrayList<>()));
                 }
             }
         } catch (JSONException e) {
             Log.e(TAG, e.getStackTrace().toString());
-        }
-    }
-
-    public void resizeIndexCaseCircle(MapboxMap mapboxMap, Context context) {
-        if (indexCaseLocation != null && indexCaseCircleLayer != null) {
-            float circleRadius = calculateZoomLevelRadius(mapboxMap, mapboxMap.getCameraPosition().target.getLatitude(), radius, context);
-            indexCaseCircleLayer.setProperties(circleRadius(circleRadius));
         }
     }
 
@@ -176,7 +184,7 @@ public class RevealMapHelper {
         return indexCase;
     }
 
-    public CircleLayer getIndexCaseCircleLayer() {
-        return indexCaseCircleLayer;
+    public LineLayer getIndexCaseLineLayer() {
+        return indexCaseLineLayer;
     }
 }

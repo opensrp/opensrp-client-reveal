@@ -25,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mapbox.android.core.permissions.PermissionsManager;
-import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -76,7 +75,10 @@ import static org.smartregister.reveal.util.Constants.Map;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
+import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
 import static org.smartregister.reveal.util.Utils.getInterventionLabel;
+import static org.smartregister.reveal.util.Utils.getLocationBuffer;
+import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -217,8 +219,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         kujakuMapView.showCurrentLocationBtn(true);
 
-        Float locationBufferRadius = org.smartregister.reveal.util.Utils.getLocationBuffer();
-        kujakuMapView.setLocationBufferRadius(locationBufferRadius);
+        Float locationBufferRadius = getLocationBuffer();
+
+        kujakuMapView.setLocationBufferRadius(locationBufferRadius / getPixelsPerDPI(getResources()));
 
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -234,31 +237,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 });
 
                 mMapboxMap = mapboxMap;
-                mMapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
-                    @Override
-                    public void onMoveBegin(@NonNull MoveGestureDetector detector) {//do nothing
-                    }
-
-                    @Override
-                    public void onMove(@NonNull MoveGestureDetector detector) {
-                        revealMapHelper.resizeIndexCaseCircle(mMapboxMap, ListTasksActivity.this);
-                    }
-
-                    @Override
-                    public void onMoveEnd(@NonNull MoveGestureDetector detector) {// call resizeIndexCaseCircle
-                        // after a short period to update circle radius
-                        new java.util.Timer().schedule(
-                                new java.util.TimerTask() {
-                                    @Override
-                                    public void run() {
-                                        appExecutors.mainThread().execute(() -> revealMapHelper
-                                                .resizeIndexCaseCircle(mMapboxMap, ListTasksActivity.this));
-                                    }
-                                },
-                                200
-                        );
-                    }
-                });
                 mapboxMap.setMinZoomPreference(10);
                 mapboxMap.setMaxZoomPreference(21);
 
@@ -388,11 +366,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 }
 
-                if (cameraPosition != null  && (boundaryLayer ==null || isChangeMapPosition) ) {
+                if (cameraPosition != null && (boundaryLayer == null || isChangeMapPosition)) {
                     mMapboxMap.setCameraPosition(cameraPosition);
                 }
 
-                Boolean drawOperationalAreaBoundaryAndLabel = org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel();
+                Boolean drawOperationalAreaBoundaryAndLabel = getDrawOperationalAreaBoundaryAndLabel();
                 if (drawOperationalAreaBoundaryAndLabel) {
                     if (boundaryLayer == null) {
                         boundaryLayer = createBoundaryLayer(operationalArea);
@@ -402,7 +380,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 }
 
-                if (getInterventionLabel() == R.string.focus_investigation && revealMapHelper.getIndexCaseCircleLayer() == null) {
+                if (getInterventionLabel() == R.string.focus_investigation && revealMapHelper.getIndexCaseLineLayer() == null) {
                     revealMapHelper.addIndexCaseLayers(mMapboxMap, getContext(), featureCollection);
                 } else {
                     revealMapHelper.updateIndexCaseLayers(mMapboxMap, featureCollection, this);
@@ -603,7 +581,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             Bundle extras = intent.getExtras();
             boolean localSyncDone;
             if (extras != null && extras.getBoolean(UPDATE_LOCATION_BUFFER_RADIUS)) {
-                float bufferRadius = org.smartregister.reveal.util.Utils.getLocationBuffer();
+                float bufferRadius = getLocationBuffer() / getPixelsPerDPI(getResources());
                 kujakuMapView.setLocationBufferRadius(bufferRadius);
             } else {
                 localSyncDone = extras != null ? extras.getBoolean(LOCAL_SYNC_DONE) : false;

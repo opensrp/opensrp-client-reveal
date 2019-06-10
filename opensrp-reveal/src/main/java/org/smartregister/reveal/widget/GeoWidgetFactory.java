@@ -54,6 +54,8 @@ import io.ona.kujaku.layers.BoundaryLayer;
 
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
+import static org.smartregister.reveal.util.Utils.getLocationBuffer;
+import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
 
 /**
  * Created by samuelgithengi on 12/13/18.
@@ -159,7 +161,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
 
                 mapView.setMapboxMap(mapboxMap);
-                float bufferRadius = org.smartregister.reveal.util.Utils.getLocationBuffer();
+                float bufferRadius = getLocationBuffer()/getPixelsPerDPI(context.getResources());
                 mapView.setLocationBufferRadius(bufferRadius);
                 if (finalOperationalAreaFeature != null) {
                     CameraPosition cameraPosition = mapboxMap.getCameraForGeometry(finalOperationalAreaFeature.geometry());

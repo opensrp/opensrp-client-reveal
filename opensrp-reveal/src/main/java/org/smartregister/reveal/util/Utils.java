@@ -1,6 +1,5 @@
 package org.smartregister.reveal.util;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -16,11 +15,15 @@ import android.widget.TextView;
 
 import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
-import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.job.LocationTaskServiceJob;
@@ -36,6 +39,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LATITUDE_AT_EQUITOR;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LONGITUDE_AT_EQUITOR;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.METERS_PER_KILOMETER;
 import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
 import static org.smartregister.reveal.util.Constants.FOCUS;
 
@@ -121,7 +127,16 @@ public class Utils {
     }
 
     public static Float getLocationBuffer() {
-        return Float.valueOf(getGlobalConfig(CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES, CONFIGURATION.DEFAULT_LOCATION_BUFFER_RADIUS_IN_METRES.toString()));
+        return Float.valueOf(getGlobalConfig(CONFIGURATION.LOCATION_BUFFER_RADIUS_IN_METRES, BuildConfig.MY_LOCATION_BUFFER + ""));
+    }
+
+
+    public static Float getPixelsPerDPI(Resources resources) {
+        return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                1,
+                resources.getDisplayMetrics()
+        );
     }
 
     public static int getInterventionLabel() {
@@ -134,25 +149,6 @@ public class Utils {
             return R.string.irs;
     }
 
-    public static float calculateZoomLevelRadius(@NonNull final MapboxMap mapboxMap, double latitude, float radius, Context context) {
-        double metersPerDip = mapboxMap.getProjection().getMetersPerPixelAtLatitude(latitude);
-        double metersPerPixel;
-
-        float dip = 1.0f;
-        Resources r = context.getResources();
-        float dpToPixelRatio = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dip,
-                r.getDisplayMetrics()
-        );
-
-        // Apparently from https://github.com/mapbox/mapbox-gl-native/issues/8990 seems like the getMetersPerPixelAtLatitude()
-        // function returns meters per dip hence we have to factor that in when calculating the zoom level radius
-        metersPerPixel = metersPerDip * dpToPixelRatio;
-
-        return (float) (radius / metersPerPixel);
-    }
-
     public static String getAge(String dob) {
         String dobString = org.smartregister.family.util.Utils.getDuration(dob);
         return dobString.contains("y") ? dobString.substring(0, dobString.indexOf("y")) : dobString;
@@ -160,5 +156,57 @@ public class Utils {
 
     public static Boolean getDrawOperationalAreaBoundaryAndLabel() {
         return Boolean.valueOf(getGlobalConfig(CONFIGURATION.DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL, CONFIGURATION.DEFAULT_DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL.toString()));
+    }
+
+    /**
+     * Creates a circle using a GeoJSON polygon.
+     * It's not strictly a circle but by increasing the number of sides on the polygon you can get pretty close to one.
+     *
+     * Adapted from https://stackoverflow.com/questions/37599561/drawing-a-circle-with-the-radius-in-miles-meters-with-mapbox-gl-js/39006388#39006388
+     *
+     * @param center - Coordinates for the center of the circle
+     * @param radius - Radius of the circle in meters
+     * @param points - Since this is a GeoJSON polygon, we need to have a large number of sides
+     *               so that it gets as close as possible to being a circle
+     * @return
+     * @throws Exception
+     */
+
+    public static Feature createCircleFeature(LatLng center, Float radius, Float points) throws JSONException {
+        Float radiusInKm = radius / METERS_PER_KILOMETER;
+
+        JSONArray coordinates = new JSONArray();
+        JSONArray coordinate = new JSONArray();
+        JSONArray bufferArray = new JSONArray();
+        double distanceX = radiusInKm / (KILOMETERS_PER_DEGREE_OF_LONGITUDE_AT_EQUITOR * Math.cos(center.getLatitude() * Math.PI / 180));
+        double distanceY = radiusInKm / KILOMETERS_PER_DEGREE_OF_LATITUDE_AT_EQUITOR;
+
+        double theta;
+        double x;
+        double y;
+        for (int i = 0; i < points; i++) {
+            theta = (i / points) * (2 * Math.PI);
+            x = distanceX * Math.cos(theta);
+            y = distanceY * Math.sin(theta);
+
+            Double longitude = center.getLongitude() + x;
+            Double latitude = center.getLatitude() + y;
+            coordinate.put(longitude);
+            coordinate.put(latitude);
+            bufferArray.put(coordinate);
+            coordinate = new JSONArray();
+        }
+
+        coordinates.put(bufferArray);
+
+        JSONObject feature = new JSONObject();
+        feature.put("type", "Feature");
+        JSONObject geometry = new JSONObject();
+
+        geometry.put("type", "Polygon");
+        geometry.put("coordinates", coordinates);
+        feature.put("geometry", geometry);
+
+        return Feature.fromJson(feature.toString());
     }
 }
