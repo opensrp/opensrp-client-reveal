@@ -39,12 +39,14 @@ import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.job.RevealJobCreator;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.repository.RevealRepository;
+import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealSyncConfiguration;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.FamilyProfileActivity;
+import org.smartregister.sync.ClientProcessorForJava;
 import org.smartregister.sync.DrishtiSyncScheduler;
 import org.smartregister.view.activity.DrishtiApplication;
 import org.smartregister.view.receiver.TimeChangedBroadcastReceiver;
@@ -338,5 +340,11 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     public void setFamilyAdded(boolean familyAdded) {
         this.familyAdded = familyAdded;
+    }
+
+    @NonNull
+    @Override
+    public ClientProcessorForJava getClientProcessor() {
+        return RevealClientProcessor.getInstance(this);
     }
 }
