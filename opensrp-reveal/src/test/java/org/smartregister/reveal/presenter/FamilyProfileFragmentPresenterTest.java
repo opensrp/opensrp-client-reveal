@@ -19,6 +19,7 @@ import org.smartregister.cloudant.models.Event;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
@@ -89,6 +90,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         String district = "Chadiza";
         when(preferencesUtil.getCurrentOperationalArea()).thenReturn(oAname);
         when(preferencesUtil.getCurrentDistrict()).thenReturn(district);
+        when(view.getString(R.string.family_title)).thenReturn(context.getString(R.string.family_title));
         presenter.refreshProfileTopSection(client);
         verify(view).setProfileDetailOne(oAname);
         verify(view).setProfileDetailTwo(district);
