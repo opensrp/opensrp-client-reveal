@@ -1,6 +1,8 @@
 package org.smartregister.reveal.application;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -26,6 +28,7 @@ import org.smartregister.family.util.DBConstants;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.AllSettings;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.PlanDefinitionRepository;
@@ -52,6 +55,7 @@ import org.smartregister.view.activity.DrishtiApplication;
 import org.smartregister.view.receiver.TimeChangedBroadcastReceiver;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
@@ -132,6 +136,30 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
         //init Job Manager
         JobManager.create(this).addJobCreator(new RevealJobCreator());
+
+        if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
+            updateResources(this, "th");
+        }
+
+    }
+
+
+    private boolean updateResources(android.content.Context context, String language) {
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        AllSharedPreferences allSharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
+        allSharedPreferences.saveLanguagePreference(language);
+
+        return true;
+
 
     }
 
