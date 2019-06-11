@@ -107,12 +107,14 @@ public class RevealMapHelperTest {
         FeatureCollection featureCollection = mock(FeatureCollection.class);
         Style style = mock(Style.class);
         GeoJsonSource source = mock(GeoJsonSource.class);
+        doReturn(Feature.fromJson(feature)).when(revealMapHelper).getIndexCase(featureCollection);
         doReturn(style).when(mapboxMap).getStyle();
         doNothing().when(revealMapHelper).updateIndexCaseLayers(any(), any(), any());
         Whitebox.setInternalState(revealMapHelper, "indexCaseSource", source);
         revealMapHelper.addIndexCaseLayers(mapboxMap, context, featureCollection);
-        verify(style, times(1)).addLayer(layerArgumentCaptor.capture());
+        verify(style, times(2)).addLayer(layerArgumentCaptor.capture());
         assertEquals(layerArgumentCaptor.getAllValues().get(0).getId(), INDEX_CASE_SYMBOL_LAYER);
+        assertEquals(layerArgumentCaptor.getAllValues().get(1).getId(), INDEX_CASE_LINE_LAYER);
     }
 
     @Test
