@@ -102,6 +102,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
     protected static void processPopulatableFields(CommonPersonObjectClient client, JSONObject jsonObject) throws JSONException {
         switch (jsonObject.getString(KEY)) {
             case DatabaseKeys.FAMILY_NAME:
+            case DatabaseKeys.OLD_FAMILY_NAME:
                 jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), DBConstants.KEY.FIRST_NAME, false));
                 break;
             case DBConstants.KEY.VILLAGE_TOWN:

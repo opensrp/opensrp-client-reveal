@@ -50,6 +50,7 @@ public interface FamilyConstants {
 
     interface DatabaseKeys {
         String FAMILY_NAME = "fam_name";
+        String OLD_FAMILY_NAME = "old_fam_name";
         String HOUSE_NUMBER = "house_number";
         String AGE = "age";
         String NATIONAL_ID = "national_id";
