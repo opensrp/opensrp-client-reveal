@@ -23,8 +23,11 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.COMPLETED_TASK_COUNT;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.FAMILY_MEMBER_TASK_ALIAS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FAMILY_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
@@ -40,8 +43,11 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_NAME;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_COUNT;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
+import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 
 /**
  * Created by samuelgithengi on 3/18/19.
@@ -66,18 +72,40 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
     private String mainSelect(String mainCondition) {
         String tableName = DatabaseKeys.TASK_TABLE;
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
-        queryBuilder.selectInitiateMainTable(tableName, mainColumns(tableName), ID);
-        //todo implement grouping of tasks in FI https://github.com/OpenSRP/opensrp-client-reveal/issues/152
+        queryBuilder.selectInitiateMainTable(tableName, mainColumns(tableName, false), ID);
         queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
                 STRUCTURES_TABLE, tableName, FOR, STRUCTURES_TABLE, ID));
         queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
                 SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
         queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
                 FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
-        return queryBuilder.mainCondition(mainCondition);
+        queryBuilder.mainCondition(mainCondition);
+        return queryBuilder.addCondition(" AND ec_family.structure_id IS NULL");
     }
 
-    private String[] mainColumns(String tableName) {
+    private String groupedRegisteredStructureSelect(String mainCondition) {
+        String tableName = DatabaseKeys.TASK_TABLE;
+        SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
+        queryBuilder.selectInitiateMainTable(tableName, mainColumns(tableName, true), ID);
+        queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
+                STRUCTURES_TABLE, tableName, FOR, STRUCTURES_TABLE, ID));
+        queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
+                FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
+        queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
+                FAMILY_MEMBER, STRUCTURES_TABLE, ID, FAMILY_MEMBER, STRUCTURE_ID));
+        queryBuilder.customJoin(String.format(" JOIN %s %s ON %s.%s = %s.%s ",
+                TASK_TABLE, FAMILY_MEMBER_TASK_ALIAS, FAMILY_MEMBER_TASK_ALIAS, FOR, FAMILY_MEMBER, BASE_ENTITY_ID));
+        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
+                SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
+        queryBuilder.mainCondition(mainCondition);
+        return queryBuilder.addCondition("GROUP BY structure._id ");
+    }
+
+    private String[] mainColumns(String tableName, boolean isGroupSelect) {
+        String taskCountClause="";
+        if(isGroupSelect) {
+            taskCountClause = taskCountClause + " ," + " SUM(CASE WHEN task.status='COMPLETED' THEN 1 ELSE 0 END) AS " + COMPLETED_TASK_COUNT + ", COUNT(task._id) AS " + TASK_COUNT;
+        }
         return new String[]{
                 tableName + "." + ID,
                 tableName + "." + CODE,
@@ -94,6 +122,8 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 SPRAYED_STRUCTURES + "." + NOT_SRAYED_OTHER_REASON,
                 STRUCTURES_TABLE + "." + ID + " AS " + STRUCTURE_ID,
                 FAMILY + "." + FIRST_NAME
+                + taskCountClause
+
         };
     }
 
@@ -103,15 +133,17 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             getPresenter().onTasksFound(null, 0);
             return;
         }
+        // Fetch grouped tasks
+        List<TaskDetails> tasks = new ArrayList<>();
         appExecutors.diskIO().execute(() -> {
-            List<TaskDetails> tasks = new ArrayList<>();
+            //List<TaskDetails> tasks = new ArrayList<>();
             int structuresWithinBuffer = 0;
-            String query = mainSelect(mainCondition.first);
+            String query = groupedRegisteredStructureSelect(mainCondition.first); //mainSelect(mainCondition.first);
             Cursor cursor = null;
             try {
                 cursor = getDatabase().rawQuery(query, mainCondition.second);
                 while (cursor.moveToNext()) {
-                    TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel);
+                    TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, true);
                     if (taskDetails.getDistanceFromUser() <= locationBuffer) {
                         structuresWithinBuffer += 1;
                     }
@@ -125,6 +157,34 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             int finalStructuresWithinBuffer = structuresWithinBuffer;
             appExecutors.mainThread().execute(() -> {
                 Collections.sort(tasks);
+                //getPresenter().onTasksFound(tasks, finalStructuresWithinBuffer);
+            });
+        });
+
+        // Fetch non-grouped tasks
+        appExecutors.diskIO().execute(() -> {
+            List<TaskDetails> nonGroupedTasks = new ArrayList<>();
+            int structuresWithinBuffer = 0;
+            String query = mainSelect(mainCondition.first);
+            Cursor cursor = null;
+            try {
+                cursor = getDatabase().rawQuery(query, mainCondition.second);
+                while (cursor.moveToNext()) {
+                    TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, false);
+                    if (taskDetails.getDistanceFromUser() <= locationBuffer) {
+                        structuresWithinBuffer += 1;
+                    }
+                    nonGroupedTasks.add(taskDetails);
+                }
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+            int finalStructuresWithinBuffer = structuresWithinBuffer;
+            appExecutors.mainThread().execute(() -> {
+                Collections.sort(nonGroupedTasks);
+                tasks.addAll(nonGroupedTasks);
                 getPresenter().onTasksFound(tasks, finalStructuresWithinBuffer);
             });
         });
@@ -132,12 +192,16 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
     }
 
 
-    private TaskDetails readTaskDetails(Cursor cursor, Location lastLocation, Location operationalAreaCenter, String houseLabel) {
+    private TaskDetails readTaskDetails(Cursor cursor, Location lastLocation, Location operationalAreaCenter, String houseLabel, boolean isGroupedTasks) {
         TaskDetails task = new TaskDetails(cursor.getString(cursor.getColumnIndex(ID)));
         task.setTaskCode(cursor.getString(cursor.getColumnIndex(CODE)));
         task.setTaskEntity(cursor.getString(cursor.getColumnIndex(FOR)));
         task.setBusinessStatus(cursor.getString(cursor.getColumnIndex(BUSINESS_STATUS)));
         task.setTaskStatus(cursor.getString(cursor.getColumnIndex(STATUS)));
+        if (isGroupedTasks) {
+            task.setTaskCount(cursor.getInt(cursor.getColumnIndex(TASK_COUNT)));
+            task.setCompleteTaskCount(cursor.getInt(cursor.getColumnIndex(COMPLETED_TASK_COUNT)));
+        }
         Location location = new Location((String) null);
         location.setLatitude(cursor.getDouble(cursor.getColumnIndex(LATITUDE)));
         location.setLongitude(cursor.getDouble(cursor.getColumnIndex(LONGITUDE)));

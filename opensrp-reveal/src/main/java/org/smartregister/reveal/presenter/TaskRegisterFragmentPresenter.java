@@ -124,7 +124,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
      */
     private Pair<String, String[]> getMainCondition() {
         Location operationalArea = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
-        String whereClause = String.format("%s = ? AND %s = ?", DatabaseKeys.GROUPID, DatabaseKeys.PLAN_ID);
+        String whereClause = String.format("%s.%s = ? AND %s.%s = ?", DatabaseKeys.TASK_TABLE, DatabaseKeys.GROUPID, DatabaseKeys.TASK_TABLE, DatabaseKeys.PLAN_ID);
         return new Pair<>(whereClause, new String[]{operationalArea == null ?
                 null : operationalArea.getId(), prefsUtil.getCurrentPlanId()});
     }

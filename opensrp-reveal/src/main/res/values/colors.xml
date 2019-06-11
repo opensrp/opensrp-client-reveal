@@ -23,5 +23,8 @@
 
     <color name="task_not_done">#FAAB00</color>
 
+    <color name="structure_tasks_due">#FFFF00</color>
+    <color name="no_structure_tasks_due">#00FF00</color>
+
 
 </resources>
