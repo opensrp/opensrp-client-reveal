@@ -15,7 +15,6 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.ArrayList;
@@ -56,6 +55,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
     private final LocationRepository locationRepository;
     private final Float locationBuffer;
+    int globalStructuresWithinBuffer;
 
     public TaskRegisterFragmentInteractor(TaskRegisterFragmentContract.Presenter presenter) {
         this(presenter, Utils.getLocationBuffer());
@@ -69,8 +69,8 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         locationRepository = RevealApplication.getInstance().getLocationRepository();
     }
 
-    private String mainSelect(String mainCondition) {
-        String tableName = DatabaseKeys.TASK_TABLE;
+    private String nonRegisteredStructureTasksSelect(String mainCondition) {
+        String tableName = TASK_TABLE;
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
         queryBuilder.selectInitiateMainTable(tableName, mainColumns(tableName, false), ID);
         queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
@@ -83,8 +83,8 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         return queryBuilder.addCondition(" AND ec_family.structure_id IS NULL");
     }
 
-    private String groupedRegisteredStructureSelect(String mainCondition) {
-        String tableName = DatabaseKeys.TASK_TABLE;
+    private String groupedRegisteredStructureTasksSelect(String mainCondition) {
+        String tableName = TASK_TABLE;
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
         queryBuilder.selectInitiateMainTable(tableName, mainColumns(tableName, true), ID);
         queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
@@ -136,9 +136,8 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         // Fetch grouped tasks
         List<TaskDetails> tasks = new ArrayList<>();
         appExecutors.diskIO().execute(() -> {
-            //List<TaskDetails> tasks = new ArrayList<>();
             int structuresWithinBuffer = 0;
-            String query = groupedRegisteredStructureSelect(mainCondition.first); //mainSelect(mainCondition.first);
+            String query = groupedRegisteredStructureTasksSelect(mainCondition.first); //mainSelect(mainCondition.first);
             Cursor cursor = null;
             try {
                 cursor = getDatabase().rawQuery(query, mainCondition.second);
@@ -155,6 +154,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 }
             }
             int finalStructuresWithinBuffer = structuresWithinBuffer;
+            setGlobalStructuresWithinBuffer(structuresWithinBuffer);
             appExecutors.mainThread().execute(() -> {
                 Collections.sort(tasks);
                 //getPresenter().onTasksFound(tasks, finalStructuresWithinBuffer);
@@ -163,9 +163,9 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
         // Fetch non-grouped tasks
         appExecutors.diskIO().execute(() -> {
-            List<TaskDetails> nonGroupedTasks = new ArrayList<>();
             int structuresWithinBuffer = 0;
-            String query = mainSelect(mainCondition.first);
+            List<TaskDetails> nonGroupedTasks = new ArrayList<>();
+            String query = nonRegisteredStructureTasksSelect(mainCondition.first);
             Cursor cursor = null;
             try {
                 cursor = getDatabase().rawQuery(query, mainCondition.second);
@@ -182,10 +182,11 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 }
             }
             int finalStructuresWithinBuffer = structuresWithinBuffer;
+            setGlobalStructuresWithinBuffer(getGlobalStructuresWithinBuffer() + structuresWithinBuffer);
             appExecutors.mainThread().execute(() -> {
                 Collections.sort(nonGroupedTasks);
                 tasks.addAll(nonGroupedTasks);
-                getPresenter().onTasksFound(tasks, finalStructuresWithinBuffer);
+                getPresenter().onTasksFound(tasks, getGlobalStructuresWithinBuffer());
             });
         });
 
@@ -283,4 +284,11 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         return (TaskRegisterFragmentContract.Presenter) presenterCallBack;
     }
 
+    public int getGlobalStructuresWithinBuffer() {
+        return globalStructuresWithinBuffer;
+    }
+
+    public void setGlobalStructuresWithinBuffer(int globalStructuresWithinBuffer) {
+        this.globalStructuresWithinBuffer = globalStructuresWithinBuffer;
+    }
 }
