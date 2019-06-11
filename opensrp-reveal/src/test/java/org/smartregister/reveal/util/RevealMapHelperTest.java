@@ -26,6 +26,7 @@ import org.robolectric.RuntimeEnvironment;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyFloat;
 import static org.mockito.Mockito.doNothing;
@@ -115,6 +116,22 @@ public class RevealMapHelperTest {
         verify(style, times(2)).addLayer(layerArgumentCaptor.capture());
         assertEquals(layerArgumentCaptor.getAllValues().get(0).getId(), INDEX_CASE_SYMBOL_LAYER);
         assertEquals(layerArgumentCaptor.getAllValues().get(1).getId(), INDEX_CASE_LINE_LAYER);
+    }
+
+    @Test
+    public void testIndexCaseLayersNotAddedWhenIndexCaseIsNull() throws Exception {
+        RevealMapHelper revealMapHelper = spy(this.revealMapHelper);
+        MapboxMap mapboxMap = mock(MapboxMap.class);
+        Context context = mock(Context.class);
+        FeatureCollection featureCollection = mock(FeatureCollection.class);
+        Style style = mock(Style.class);
+        GeoJsonSource source = mock(GeoJsonSource.class);
+        doReturn(null).when(revealMapHelper).getIndexCase(featureCollection);
+        doReturn(style).when(mapboxMap).getStyle();
+        Whitebox.setInternalState(revealMapHelper, "indexCaseSource", source);
+        revealMapHelper.addIndexCaseLayers(mapboxMap, context, featureCollection);
+        verify(style, times(0)).addLayer(layerArgumentCaptor.capture());
+        assertNull(revealMapHelper.getIndexCaseLineLayer());
     }
 
     @Test
