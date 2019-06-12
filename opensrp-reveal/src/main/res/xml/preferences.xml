@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="Server">
         <EditTextPreference
-            android:defaultValue="@string/opensrp_url"
+            android:defaultValue="@string/opensrp_base_url"
             android:dialogMessage="Enter Base Server Url"
             android:dialogTitle="OpenSRP base URL"
             android:key="DRISHTI_BASE_URL"
