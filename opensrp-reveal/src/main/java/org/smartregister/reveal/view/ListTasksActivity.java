@@ -219,6 +219,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         kujakuMapView.showCurrentLocationBtn(true);
 
+        kujakuMapView.setDisableMyLocationOnMapMove(true);
+
         Float locationBufferRadius = getLocationBuffer();
 
         kujakuMapView.setLocationBufferRadius(locationBufferRadius / getPixelsPerDPI(getResources()));
