@@ -15,6 +15,7 @@ import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.family.interactor.FamilyProfileInteractor;
 import org.smartregister.family.util.DBConstants.KEY;
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyProfileContract;
@@ -27,6 +28,7 @@ import org.smartregister.sync.ClientProcessorForJava;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.smartregister.repository.EventClientRepository.client_column.syncStatus;
 import static org.smartregister.util.JsonFormUtils.gson;
 
 
@@ -73,7 +75,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
         appExecutors.diskIO().execute(() -> {
             CommonRepository commonRepository = getCommonRepository(familyMetadata.familyMemberRegister.tableName);
             JSONArray familyMembers = new JSONArray();
-            List<Event> updateSurnameEvents = new ArrayList<>();
+            JSONArray updateSurnameEvents = new JSONArray();
             List<String> formSubmissionIds = new ArrayList<>();
             for (CommonPersonObject commonPersonObject : commonRepository.findByRelational_IDs(family.getBaseEntityId())) {
                 String lastName = commonPersonObject.getColumnmaps().get(KEY.LAST_NAME);
@@ -81,9 +83,12 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
                     JSONObject client = eventClientRepository.getClientByBaseEntityId(commonPersonObject.getCaseId());
                     try {
                         client.put("lastName", family.getFirstName());
+                        client.put(syncStatus.name(), BaseRepository.TYPE_Unsynced);
                         familyMembers.put(client);
                         Event updateEvent = FamilyJsonFormUtils.createUpdateMemberSurnameEvent(commonPersonObject.getCaseId(), event);
-                        updateSurnameEvents.add(updateEvent);
+                        JSONObject eventJson = eventClientRepository.convertToJson(updateEvent);
+                        eventJson.put(syncStatus.name(), BaseRepository.TYPE_Unsynced);
+                        updateSurnameEvents.put(eventJson);
                         formSubmissionIds.add(updateEvent.getFormSubmissionId());
 
                     } catch (JSONException e) {
@@ -95,11 +100,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
             //update the client documents
             eventClientRepository.batchInsertClients(familyMembers);
             //generate the events for updating the members surname
-            try {
-                eventClientRepository.batchInsertEvents(new JSONArray(gson.toJson(updateSurnameEvents)), 0);
-            } catch (JSONException e) {
-                Log.e(TAG, "Error Saving Update Member Event", e);
-            }
+            eventClientRepository.batchInsertEvents(updateSurnameEvents, 0);
 
             //Client Process
             clientProcessor.processClient(eventClientRepository.fetchEventClients(formSubmissionIds), true);
