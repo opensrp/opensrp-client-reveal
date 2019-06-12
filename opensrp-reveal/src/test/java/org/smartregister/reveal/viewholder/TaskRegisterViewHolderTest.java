@@ -131,13 +131,15 @@ public class TaskRegisterViewHolderTest extends BaseUnitTest {
     @Test
     public void testSetTaskActionWithCardDetails() {
         when(cardDetails.getStatusColor()).thenReturn(R.color.sprayed);
+        when(taskDetails.getTaskCount()).thenReturn(null);
         viewHolder.setTaskAction("Record\n Status", taskDetails, cardDetails, onClickListener);
         TextView taskDetails = viewHolder.itemView.findViewById(R.id.task_action);
         assertEquals(View.VISIBLE, taskDetails.getVisibility());
         assertEquals("Record\n Status", taskDetails.getText());
-        //assertEquals(context.getColor(R.color.sprayed), taskDetails.getCurrentTextColor());
+        assertEquals(context.getColor(R.color.sprayed), taskDetails.getCurrentTextColor());
         taskDetails.performClick();
         verify(onClickListener).onClick(taskDetails);
 
     }
+
 }
