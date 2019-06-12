@@ -8,12 +8,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.family.util.Constants.JSON_FORM_KEY;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
 import org.smartregister.location.helper.LocationHelper;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.FamilyConstants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.FormKeys;
 import org.smartregister.util.FormUtils;
@@ -21,6 +24,7 @@ import org.smartregister.view.LocationPickerView;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 
 import timber.log.Timber;
 
@@ -256,6 +260,17 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         } else {
             surname.put(VALUE, "");
         }
+    }
+
+    public static Event createUpdateMemberSurnameEvent(String baseEntityId, Event updateFamilyEvent) {
+        FamilyMetadata familyMetadata = RevealApplication.getInstance().getMetadata();
+        Event updateMemberSurnameEvent =
+                (Event) new Event().withBaseEntityId(baseEntityId).withEventDate(new Date()).withEventType(familyMetadata.familyMemberRegister.updateEventType)
+                        .withLocationId(updateFamilyEvent.getLocationId()).withProviderId(updateFamilyEvent.getProviderId()).withEntityType(familyMetadata.familyMemberRegister.tableName)
+                        .withFormSubmissionId(UUID.randomUUID().toString()).withDateCreated(new Date());
+        tagSyncMetadata(RevealApplication.getInstance().getContext().allSharedPreferences(), updateMemberSurnameEvent);
+        updateMemberSurnameEvent.setDetails(updateFamilyEvent.getDetails());
+        return updateMemberSurnameEvent;
     }
 
 
