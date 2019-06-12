@@ -74,11 +74,11 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
             if (task.getTaskCount() > 1 ) {
                 if (task.getTaskCount() != task.getCompleteTaskCount()) {
                     actionView.setBackground(context.getResources().getDrawable(R.drawable.view_tasks_bg));
-                    actionView.setTextColor(context.getResources().getColor(cardDetails.getStatusColor()));
+                    actionView.setTextColor(context.getResources().getColor(R.color.text_black));
                     actionView.setText(context.getText(R.string.view_tasks));
                 } else if (task.getTaskCount() == task.getCompleteTaskCount()){
                     actionView.setBackground(context.getResources().getDrawable(R.drawable.tasks_complete_bg));
-                    actionView.setTextColor(context.getResources().getColor(cardDetails.getStatusColor()));
+                    actionView.setTextColor(context.getResources().getColor(R.color.text_black));
                     actionView.setText(context.getText(R.string.tasks_complete));
                 }
             }

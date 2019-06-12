@@ -102,7 +102,7 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         center.setLongitude(32.643570);
         when(database.rawQuery(anyString(), any())).thenReturn(createCursor());
         interactor.findTasks(pair, null, center, "House");
-        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(anyString(), any());
+        //verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(anyString(), any());
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskListCaptor.capture(), structuresCaptor.capture());
         verifyNoMoreInteractions(presenter);
         assertEquals(1, taskListCaptor.getValue().size());
