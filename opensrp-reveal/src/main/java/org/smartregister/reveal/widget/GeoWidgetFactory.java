@@ -123,6 +123,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
         mapView.setId(canvasId);
         mapView.onCreate(null);
+        mapView.setDisableMyLocationOnMapMove(true);
         mapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
 
         com.mapbox.geojson.Feature operationalAreaFeature = null;

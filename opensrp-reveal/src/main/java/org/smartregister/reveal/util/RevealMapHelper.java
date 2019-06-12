@@ -110,6 +110,11 @@ public class RevealMapHelper {
     }
 
     public void addIndexCaseLayers(MapboxMap mapboxMap, Context context, FeatureCollection featureCollection) {
+        Feature indexCase = getIndexCase(featureCollection);
+        if (indexCase == null) {
+            return; // no need to continue if index case does not exist
+        }
+
         Style mMapboxMapStyle = mapboxMap.getStyle();
 
         // index case symbol layer
@@ -127,28 +132,26 @@ public class RevealMapHelper {
         mMapboxMapStyle.addLayer(symbolLayer);
 
         // index case circle layer
-        Feature indexCase = getIndexCase(featureCollection);
-        if (indexCase != null) {
-            indexCaseLocation = (new RevealMappingHelper()).getCenter(indexCase.geometry().toJson());
+        indexCaseLocation = (new RevealMappingHelper()).getCenter(indexCase.geometry().toJson());
 
-            try {
-                circleFeature = createCircleFeature(new LatLng(indexCaseLocation.getLatitude(), indexCaseLocation.getLongitude()), radius, DEFAULT_GEO_JSON_CIRCLE_SIDES );
-                indexCaseSource = new GeoJsonSource(INDEX_CASE_SOURCE, circleFeature);
-                mapboxMap.getStyle().addSource(indexCaseSource);
-            } catch (JSONException e) {
-                Log.e(TAG, e.getStackTrace().toString());
-            }
-
-            indexCaseLineLayer = new LineLayer(INDEX_CASE_LINE_LAYER, indexCaseSource.getId());
-            indexCaseLineLayer.withProperties(
-                    lineWidth(2f),
-                    lineColor("#ffffff"),
-                    lineJoin(Property.LINE_JOIN_ROUND)
-            );
-            mMapboxMapStyle.addLayer(indexCaseLineLayer);
+        try {
+            circleFeature = createCircleFeature(new LatLng(indexCaseLocation.getLatitude(), indexCaseLocation.getLongitude()), radius, DEFAULT_GEO_JSON_CIRCLE_SIDES);
+            indexCaseSource = new GeoJsonSource(INDEX_CASE_SOURCE, circleFeature);
+            mapboxMap.getStyle().addSource(indexCaseSource);
+        } catch (JSONException e) {
+            Log.e(TAG, e.getStackTrace().toString());
         }
 
-        updateIndexCaseLayers(mapboxMap, featureCollection,context);
+        indexCaseLineLayer = new LineLayer(INDEX_CASE_LINE_LAYER, indexCaseSource.getId());
+        indexCaseLineLayer.withProperties(
+                lineWidth(2f),
+                lineColor("#ffffff"),
+                lineJoin(Property.LINE_JOIN_ROUND)
+        );
+        mMapboxMapStyle.addLayer(indexCaseLineLayer);
+
+
+        updateIndexCaseLayers(mapboxMap, featureCollection, context);
     }
 
     public void updateIndexCaseLayers(MapboxMap mapboxMap, FeatureCollection featureCollection, Context context) {
@@ -163,7 +166,7 @@ public class RevealMapHelper {
                     geometry.put("type", "Point");
                     geometry.put("coordinates", new JSONArray(new Double[]{indexCaseLocation.getLongitude(), indexCaseLocation.getLatitude()}));
                     feature.put("geometry", geometry);
-                    circleFeature = createCircleFeature(new LatLng(indexCaseLocation.getLatitude(), indexCaseLocation.getLongitude()), radius, DEFAULT_GEO_JSON_CIRCLE_SIDES );
+                    circleFeature = createCircleFeature(new LatLng(indexCaseLocation.getLatitude(), indexCaseLocation.getLongitude()), radius, DEFAULT_GEO_JSON_CIRCLE_SIDES);
                     indexCaseSource.setGeoJson(circleFeature);
                 } else { // Clear outer circle if there is no index case
                     indexCaseSource.setGeoJson(FeatureCollection.fromFeatures(new ArrayList<>()));
@@ -179,6 +182,7 @@ public class RevealMapHelper {
         for (Feature feature : featureCollection.features()) {
             if (feature.hasProperty(IS_INDEX_CASE) && feature.getBooleanProperty(IS_INDEX_CASE)) {
                 indexCase = feature;
+                break; // index case already found, no need to proceed
             }
         }
         return indexCase;
