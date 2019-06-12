@@ -55,7 +55,6 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
     private final LocationRepository locationRepository;
     private final Float locationBuffer;
-    int globalStructuresWithinBuffer;
 
     public TaskRegisterFragmentInteractor(TaskRegisterFragmentContract.Presenter presenter) {
         this(presenter, Utils.getLocationBuffer());
@@ -80,7 +79,8 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
                 FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
         queryBuilder.mainCondition(mainCondition);
-        return queryBuilder.addCondition(" AND ec_family.structure_id IS NULL");
+        return queryBuilder.addCondition(String.format(" AND %s.%s IS NULL",
+                      FAMILY, STRUCTURE_ID));
     }
 
     private String groupedRegisteredStructureTasksSelect(String mainCondition) {
@@ -98,13 +98,15 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
                 SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
         queryBuilder.mainCondition(mainCondition);
-        return queryBuilder.addCondition("GROUP BY structure._id ");
+        return queryBuilder.addCondition(String.format("GROUP BY %s.%s ",
+                STRUCTURES_TABLE, ID));
     }
 
     private String[] mainColumns(String tableName, boolean isGroupSelect) {
         String taskCountClause="";
         if(isGroupSelect) {
-            taskCountClause = taskCountClause + " ," + " SUM(CASE WHEN task.status='COMPLETED' THEN 1 ELSE 0 END) AS " + COMPLETED_TASK_COUNT + ", COUNT(task._id) AS " + TASK_COUNT;
+            taskCountClause = taskCountClause + " ," + String.format(" SUM(CASE WHEN %s.status='COMPLETED' THEN 1 ELSE 0 END) AS %s , COUNT(%s._id) AS %s",
+                    TASK_TABLE, COMPLETED_TASK_COUNT, TASK_TABLE, TASK_COUNT);
         }
         return new String[]{
                 tableName + "." + ID,
@@ -137,10 +139,10 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         List<TaskDetails> tasks = new ArrayList<>();
         appExecutors.diskIO().execute(() -> {
             int structuresWithinBuffer = 0;
-            String query = groupedRegisteredStructureTasksSelect(mainCondition.first); //mainSelect(mainCondition.first);
+            String groupedRegisteredStructureTasksQuery = groupedRegisteredStructureTasksSelect(mainCondition.first);
             Cursor cursor = null;
             try {
-                cursor = getDatabase().rawQuery(query, mainCondition.second);
+                cursor = getDatabase().rawQuery(groupedRegisteredStructureTasksQuery, mainCondition.second);
                 while (cursor.moveToNext()) {
                     TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, true);
                     if (taskDetails.getDistanceFromUser() <= locationBuffer) {
@@ -153,41 +155,29 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                     cursor.close();
                 }
             }
-            int finalStructuresWithinBuffer = structuresWithinBuffer;
-            setGlobalStructuresWithinBuffer(structuresWithinBuffer);
-            appExecutors.mainThread().execute(() -> {
-                Collections.sort(tasks);
-                //getPresenter().onTasksFound(tasks, finalStructuresWithinBuffer);
-            });
-        });
 
-        // Fetch non-grouped tasks
-        appExecutors.diskIO().execute(() -> {
-            int structuresWithinBuffer = 0;
-            List<TaskDetails> nonGroupedTasks = new ArrayList<>();
-            String query = nonRegisteredStructureTasksSelect(mainCondition.first);
-            Cursor cursor = null;
+            String nonRegisteredStructureTasksQuery = nonRegisteredStructureTasksSelect(mainCondition.first);
+            cursor = null; //reset cursor
             try {
-                cursor = getDatabase().rawQuery(query, mainCondition.second);
+                cursor = getDatabase().rawQuery(nonRegisteredStructureTasksQuery, mainCondition.second);
                 while (cursor.moveToNext()) {
                     TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, false);
                     if (taskDetails.getDistanceFromUser() <= locationBuffer) {
                         structuresWithinBuffer += 1;
                     }
-                    nonGroupedTasks.add(taskDetails);
+                    tasks.add(taskDetails);
                 }
             } finally {
                 if (cursor != null) {
                     cursor.close();
                 }
             }
-            int finalStructuresWithinBuffer = structuresWithinBuffer;
-            setGlobalStructuresWithinBuffer(getGlobalStructuresWithinBuffer() + structuresWithinBuffer);
+            int finalStructureWithinBuffer = structuresWithinBuffer;
+            Collections.sort(tasks);
             appExecutors.mainThread().execute(() -> {
-                Collections.sort(nonGroupedTasks);
-                tasks.addAll(nonGroupedTasks);
-                getPresenter().onTasksFound(tasks, getGlobalStructuresWithinBuffer());
+                getPresenter().onTasksFound(tasks, finalStructureWithinBuffer);
             });
+
         });
 
     }
@@ -284,11 +274,4 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         return (TaskRegisterFragmentContract.Presenter) presenterCallBack;
     }
 
-    public int getGlobalStructuresWithinBuffer() {
-        return globalStructuresWithinBuffer;
-    }
-
-    public void setGlobalStructuresWithinBuffer(int globalStructuresWithinBuffer) {
-        this.globalStructuresWithinBuffer = globalStructuresWithinBuffer;
-    }
 }
