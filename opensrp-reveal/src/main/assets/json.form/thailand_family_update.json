@@ -60,27 +60,24 @@
         "openmrs_entity": "person",
         "openmrs_entity_id": "first_name",
         "type": "edit_text",
+        "hint": "ชื่อเจ้าบ้าน",
+        "edit_type": "name",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter first name of Head of Household"
+        }
+      },
+      {
+        "key": "surname",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "",
+        "type": "",
         "hint": "สกุลเจ้าบ้าน",
         "edit_type": "name",
         "v_required": {
           "value": "true",
-          "err": "Please enter the family name"
-        },
-        "v_regex": {
-          "value": "[A-Za-z\\s.-]*",
-          "err": "Please enter a valid name"
-        }
-      },
-      {
-        "key": "village_town",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person_address",
-        "openmrs_entity_id": "cityVillage",
-        "type": "edit_text",
-        "hint": "หมู่",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the village or town"
+          "err": "Please enter family surname"
         }
       },
       {

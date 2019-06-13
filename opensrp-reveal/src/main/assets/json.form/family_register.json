@@ -61,23 +61,24 @@
         "openmrs_entity": "person",
         "openmrs_entity_id": "first_name",
         "type": "edit_text",
-        "hint": "Family name",
+        "hint": "First name of Head of Household",
         "edit_type": "name",
         "v_required": {
           "value": "true",
-          "err": "Please enter the family name"
+          "err": "Please enter first name of Head of Household"
         }
       },
       {
-        "key": "village_town",
+        "key": "surname",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "person_address",
-        "openmrs_entity_id": "cityVillage",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Village/Town",
+        "hint": "Family surname",
+        "edit_type": "name",
         "v_required": {
           "value": "true",
-          "err": "Please enter the village or town"
+          "err": "Please enter family surname"
         }
       },
       {
