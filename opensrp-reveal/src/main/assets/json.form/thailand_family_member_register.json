@@ -225,10 +225,6 @@
           {
             "key": "Female",
             "text": "หญิง"
-          },
-          {
-            "key": "Other",
-            "text": "อื่นๆ"
           }
         ],
         "v_required": {
@@ -258,7 +254,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "เมื่อคืนได้ค้างแรมข้างบ้านหรือไม่",
+        "label": "ค้างแรม/ทำงานนอกบ้านในเวลากลางคืนเป็นประจำหรือไม่?",
         "options": [
           {
             "key": "Yes",

@@ -225,10 +225,6 @@
           {
             "key": "Female",
             "text": "Female"
-          },
-          {
-            "key": "Other",
-            "text": "Other"
           }
         ],
         "v_required": {
@@ -258,7 +254,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Dose this person sleep outdoors?",
+        "label": "Does this person spend the night outdoors?",
         "options": [
           {
             "key": "Yes",
@@ -271,7 +267,7 @@
         ],
         "v_required": {
           "value": "true",
-          "err": "Please select whether this person sleeps outdoors"
+          "err": "Please select whether this person spends the night outdoors"
         }
       },
       {
