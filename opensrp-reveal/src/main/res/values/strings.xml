@@ -2,7 +2,7 @@
     <!-- Actions -->
     <string name="action_logout">Logout</string>
     <!-- General -->
-    <string name="app_name">Reveal</string>
+    <string name="app_name" translatable="false">Reveal</string>
     <!--Temp -->
     <string name="unauthorized">Please check the credentials</string>
     <string name="unauthorized_group">Your user group is not allowed to access this device</string>
@@ -37,11 +37,11 @@
     <string name="select_campaign_operational_area_title">Plan and Operational area set</string>
     <string name="select_campaign_operational_area">Plan and Operational area not set. Select from the hamburger menu</string>
 
-    <string name="reveal_satellite_style">asset://reveal-streets-satellite.json</string>
-    <string name="reveal_streets_style">asset://reveal-streets-satellite.json</string>
-    <string name="reveal_datasource_name">reveal-data-set</string>
-    <string name="reveal_layer_polygons">reveal-data-polygons</string>
-    <string name="reveal_layer_points">reveal-data-points</string>
+    <string name="reveal_satellite_style" translatable="false">asset://reveal-streets-satellite.json</string>
+    <string name="reveal_streets_style" translatable="false">asset://reveal-streets-satellite.json</string>
+    <string name="reveal_datasource_name" translatable="false">reveal-data-set</string>
+    <string name="reveal_layer_polygons" translatable="false">reveal-data-polygons</string>
+    <string name="reveal_layer_points" translatable="false">reveal-data-points</string>
 
 
     <string name="task_not_found">This structure does not have a task assigned to it for the Plan %1s</string>
@@ -49,7 +49,7 @@
     <string name="error_fetching_location_hierarchy_title">Error Processing Locations Hierarchy</string>
     <string name="error_fetching_location_hierarchy">Error Processing Location Hierarchy. Log off to download location hierarchy again</string>
 
-    <string name="selected_datasource_name">select-data</string>
+    <string name="selected_datasource_name" translatable="false">select-data</string>
 
     <string name="irs_task_description"> Visit the structure, assess and perform spray activities.</string>
 
@@ -159,4 +159,5 @@
 
     <string name="view_tasks">View \nTasks</string>
     <string name="tasks_complete">Tasks Complete</string>
+    <string name="opensrp_url" translatable="false">@string/opensrp_base_url</string>
 </resources>
