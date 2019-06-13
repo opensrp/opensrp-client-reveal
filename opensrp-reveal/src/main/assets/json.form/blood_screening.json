@@ -51,39 +51,13 @@
     "display_back_button": "true",
     "fields": [
       {
-        "key": "forestGoerYesNo",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Is this person a forest goer?",
-        "options": [
-          {
-            "key": "Yes",
-            "text": "Yes"
-          },
-          {
-            "key": "No",
-            "text": "No"
-          }
-        ],
-        "v_required": {
-          "value": true,
-          "err": "This field is required"
-        }
-      },
-      {
         "key": "caseTestingProtocol",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "hidden",
-        "label": "Done by",
+        "type": "native_radio",
+        "label": "Type of blood screening",
         "options": [
-          {
-            "key": "Investigation",
-            "text": "Investigation"
-          },
           {
             "key": "PCD",
             "text": "Passive Case Detection"
@@ -105,25 +79,96 @@
             "text": "Other"
           }
         ],
-        "value": "Investigation",
         "v_required": {
           "value": "true",
-          "err": "Please choose a testing protocol"
+          "err": "Please type of blood screening"
         }
       },
       {
-        "key": "caseNumberTrigger",
+        "key": "forestGoerYesNo",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
-        "label_info_text": "If this is a confirmed secondary case to the index case, the id of the index case should be filled out here. If this case is linked to another known index case, use that case id here. If Unknown leave blank.",
-        "hint": "Case number of triggering case",
+        "type": "native_radio",
+        "label": "Has this person spent the night outside within the past two weeks?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "personTested",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Was this person tested?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "notTestedReason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Reason this person was not tested?",
+        "options": [
+          {
+            "key": "Not present",
+            "text": "Not present"
+          },
+          {
+            "key": "Refused",
+            "text": "Refused"
+          },
+          {
+            "key": "Sick",
+            "text": "Sick"
+          },
+          {
+            "key": "Tested within past week",
+            "text": "Tested within past week"
+          },
+          {
+            "key": "Index case - not test necessary",
+            "text": "Index case - not test necessary"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "Enter reason person was not tested"
+        },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "blood-screening-relevance-rules.yml"
-            }
+          "step1:personTested": {
+            "type": "string",
+            "ex": "equalTo(., \"No\")"
           }
         }
       },
@@ -144,58 +189,10 @@
             "text": "RDT"
           }
         ],
+        "value": "Microscopy",
         "v_required": {
           "value": true,
           "err": "A test type is required"
-        }
-      },
-      {
-        "key": "testResult",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Result",
-        "options": [
-          {
-            "key": "Negative",
-            "text": "Negative"
-          },
-          {
-            "key": "Positive",
-            "text": "Positive"
-          },
-          {
-            "key": "PositiveFalciparum",
-            "text": "Positive - Falciparum"
-          },
-          {
-            "key": "PositiveVivax",
-            "text": "Positive - Vivax"
-          },
-          {
-            "key": "PositiveMalariae",
-            "text": "Positive - Malariae"
-          },
-          {
-            "key": "PositiveMixed",
-            "text": "Positive - Mixed"
-          },
-          {
-            "key": "fg",
-            "text": "fg"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Please choose a result"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "blood-screening-relevance-rules.yml"
-            }
-          }
         }
       },
       {
@@ -212,36 +209,100 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Enter a number"
         },
         "v_min": {
           "value": "0",
           "err": "There must be greater than or equal to 0"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "blood-screening-relevance-rules.yml"
-            }
+          "step1:testType": {
+            "type": "string",
+            "ex": "equalTo(., \"Microscopy\")"
           }
         }
       },
       {
-        "key": "caseNumber",
+        "key": "testRdtResult",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Please enter the case number",
+        "type": "native_radio",
+        "label": "RDT Result",
+        "options": [
+          {
+            "key": "Negative",
+            "text": "Negative"
+          },
+          {
+            "key": "PositiveFalciparum",
+            "text": "Positive - Falciparum"
+          },
+          {
+            "key": "PositiveVivax",
+            "text": "Positive - Vivax"
+          },
+          {
+            "key": "PositiveMixed",
+            "text": "Positive - Mixed"
+          },
+          {
+            "key": "Inconclusive",
+            "text": "Inconclusive"
+          }
+        ],
         "v_required": {
-          "value": true,
-          "err": "A case number is required"
+          "value": "true",
+          "err": "Please select RDT result"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "blood-screening-relevance-rules.yml"
-            }
+          "step1:testType": {
+            "type": "string",
+            "ex": "equalTo(., \"RDT\")"
+          }
+        }
+      },
+      {
+        "key": "testMicrosResult",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "Microscopy Result",
+        "options": [
+          {
+            "key": "Negative",
+            "text": "Negative"
+          },
+          {
+            "key": "PositiveFalciparum",
+            "text": "Positive - Falciparum"
+          },
+          {
+            "key": "PositiveVivax",
+            "text": "Positive - Vivax"
+          },
+          {
+            "key": "PositiveMalariae",
+            "text": "Positive - Malariae"
+          },
+          {
+            "key": "PositiveOvalae",
+            "text": "Positive - Ovalae"
+          },
+          {
+            "key": "PositiveKnowelsi",
+            "text": "Positive - Knowelsi"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Please select Microscopy results"
+        },
+        "relevance": {
+          "step1:testType": {
+            "type": "string",
+            "ex": "equalTo(., \"Microscopy\")"
           }
         }
       },
