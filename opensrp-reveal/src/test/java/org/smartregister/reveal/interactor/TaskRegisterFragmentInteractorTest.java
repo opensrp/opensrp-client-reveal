@@ -23,6 +23,7 @@ import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestingUtils;
 
 import java.util.ArrayList;
@@ -101,6 +102,7 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
 
     @Test
     public void testFindTasksWithOperationalAreaLocation() {
+        PreferencesUtil.getInstance().setCurrentPlan("FI_2019_TV01_IRS");
         Pair<String, String[]> pair = new Pair<>("task.group_id = ? AND task.plan_id = ?", new String[]{groupId, planId});
         Location center = new Location("Test");
         center.setLatitude(-14.152197);
@@ -129,6 +131,7 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
 
     @Test
     public void testFindTasksWithUserLocation() {
+        PreferencesUtil.getInstance().setCurrentPlan("FI_2019_TV01_IRS");
         Pair<String, String[]> pair = new Pair<>("task.group_id = ? AND task.plan_id = ?", new String[]{groupId, planId});
         Location userLocation = new Location("Test");
         userLocation.setLatitude(-14.987197);
