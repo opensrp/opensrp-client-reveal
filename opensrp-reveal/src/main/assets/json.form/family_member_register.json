@@ -67,24 +67,6 @@
         }
       },
       {
-        "key": "national_id",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "concept",
-        "openmrs_entity_id": "163084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        "label_info_text": "What is their national identity number or their voter registration number?",
-        "label_info_title": "National ID number",
-        "type": "edit_text",
-        "hint": "National ID number",
-        "v_numeric": {
-          "value": "true",
-          "err": "Please enter a number"
-        },
-        "v_regex": {
-          "value": "^$|[0-9]{13}",
-          "err": "Number must be 13 digits."
-        }
-      },
-      {
         "key": "surname",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -331,6 +313,30 @@
         "v_required": {
           "value": true,
           "err": "Please specify the Citizenship"
+        }
+      },
+      {
+        "key": "national_id",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "163084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "label_info_text": "What is their national identity number or their voter registration number?",
+        "label_info_title": "National ID number",
+        "type": "edit_text",
+        "hint": "National ID number",
+        "v_numeric": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_regex": {
+          "value": "^$|[0-9]{13}",
+          "err": "Number must be 13 digits."
+        },
+        "relevance": {
+          "step1:citizenship": {
+            "type": "string",
+            "ex": "equalTo(., \"Thai\")"
+          }
         }
       }
     ]
