@@ -157,15 +157,6 @@
         }
       },
       {
-        "key": "middle_name",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "middle_name",
-        "type": "hidden",
-        "hint": "ชื่อกลาง",
-        "edit_type": "name"
-      },
-      {
         "key": "dob",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
