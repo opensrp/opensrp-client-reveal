@@ -13,6 +13,7 @@ import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.Utils;
 
 /**
  * Created by samuelgithengi on 3/12/19.
@@ -70,7 +71,7 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         actionView.setText(actionLabel);
 
         // registered family with multiple tasks
-        if (cardDetails != null && task.getTaskCount() != null) {
+        if (cardDetails != null && task.getTaskCount() != null && Utils.getInterventionLabel() == R.string.focus_investigation) { // task grouping only for FI
             if (task.getTaskCount() > 1 ) {
                 if (task.getTaskCount() != task.getCompleteTaskCount()) {
                     actionView.setBackground(context.getResources().getDrawable(R.drawable.view_tasks_bg));

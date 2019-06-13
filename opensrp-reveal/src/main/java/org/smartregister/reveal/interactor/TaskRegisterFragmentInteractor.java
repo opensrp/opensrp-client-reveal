@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.repository.LocationRepository;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
@@ -68,6 +69,19 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         locationRepository = RevealApplication.getInstance().getLocationRepository();
     }
 
+    private String mainSelect(String mainCondition) {
+        String tableName = Constants.DatabaseKeys.TASK_TABLE;
+        SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
+        queryBuilder.selectInitiateMainTable(tableName, mainColumns(tableName, false), ID);
+        queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
+                STRUCTURES_TABLE, tableName, FOR, STRUCTURES_TABLE, ID));
+        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
+                SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
+        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
+                FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
+        return queryBuilder.mainCondition(mainCondition);
+    }
+
     private String nonRegisteredStructureTasksSelect(String mainCondition) {
         String tableName = TASK_TABLE;
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
@@ -80,7 +94,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
         queryBuilder.mainCondition(mainCondition);
         return queryBuilder.addCondition(String.format(" AND %s.%s IS NULL",
-                      FAMILY, STRUCTURE_ID));
+                FAMILY, STRUCTURE_ID));
     }
 
     private String groupedRegisteredStructureTasksSelect(String mainCondition) {
@@ -103,8 +117,8 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
     }
 
     private String[] mainColumns(String tableName, boolean isGroupSelect) {
-        String taskCountClause="";
-        if(isGroupSelect) {
+        String taskCountClause = "";
+        if (isGroupSelect) {
             taskCountClause = taskCountClause + " ," + String.format(" SUM(CASE WHEN %s.status='COMPLETED' THEN 1 ELSE 0 END) AS %s , COUNT(%s._id) AS %s",
                     TASK_TABLE, COMPLETED_TASK_COUNT, TASK_TABLE, TASK_COUNT);
         }
@@ -124,7 +138,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 SPRAYED_STRUCTURES + "." + NOT_SRAYED_OTHER_REASON,
                 STRUCTURES_TABLE + "." + ID + " AS " + STRUCTURE_ID,
                 FAMILY + "." + FIRST_NAME
-                + taskCountClause
+                        + taskCountClause
 
         };
     }
@@ -139,37 +153,56 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         List<TaskDetails> tasks = new ArrayList<>();
         appExecutors.diskIO().execute(() -> {
             int structuresWithinBuffer = 0;
-            String groupedRegisteredStructureTasksQuery = groupedRegisteredStructureTasksSelect(mainCondition.first);
-            Cursor cursor = null;
-            try {
-                cursor = getDatabase().rawQuery(groupedRegisteredStructureTasksQuery, mainCondition.second);
-                while (cursor.moveToNext()) {
-                    TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, true);
-                    if (taskDetails.getDistanceFromUser() <= locationBuffer) {
-                        structuresWithinBuffer += 1;
+            if (Utils.getInterventionLabel() == R.string.focus_investigation) { // perform task grouping
+                String groupedRegisteredStructureTasksQuery = groupedRegisteredStructureTasksSelect(mainCondition.first);
+                Cursor cursor = null;
+                try {
+                    cursor = getDatabase().rawQuery(groupedRegisteredStructureTasksQuery, mainCondition.second);
+                    while (cursor.moveToNext()) {
+                        TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, true);
+                        if (taskDetails.getDistanceFromUser() <= locationBuffer) {
+                            structuresWithinBuffer += 1;
+                        }
+                        tasks.add(taskDetails);
                     }
-                    tasks.add(taskDetails);
+                } finally {
+                    if (cursor != null) {
+                        cursor.close();
+                    }
                 }
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
-            }
 
-            String nonRegisteredStructureTasksQuery = nonRegisteredStructureTasksSelect(mainCondition.first);
-            cursor = null; //reset cursor
-            try {
-                cursor = getDatabase().rawQuery(nonRegisteredStructureTasksQuery, mainCondition.second);
-                while (cursor.moveToNext()) {
-                    TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, false);
-                    if (taskDetails.getDistanceFromUser() <= locationBuffer) {
-                        structuresWithinBuffer += 1;
+                String nonRegisteredStructureTasksQuery = nonRegisteredStructureTasksSelect(mainCondition.first);
+                cursor = null; //reset cursor
+                try {
+                    cursor = getDatabase().rawQuery(nonRegisteredStructureTasksQuery, mainCondition.second);
+                    while (cursor.moveToNext()) {
+                        TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, false);
+                        if (taskDetails.getDistanceFromUser() <= locationBuffer) {
+                            structuresWithinBuffer += 1;
+                        }
+                        tasks.add(taskDetails);
                     }
-                    tasks.add(taskDetails);
+                } finally {
+                    if (cursor != null) {
+                        cursor.close();
+                    }
                 }
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
+            } else {
+                String mainSelectQuery = mainSelect(mainCondition.first);
+                Cursor cursor = null;
+                try {
+                    cursor = getDatabase().rawQuery(mainSelectQuery, mainCondition.second);
+                    while (cursor.moveToNext()) {
+                        TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, false);
+                        if (taskDetails.getDistanceFromUser() <= locationBuffer) {
+                            structuresWithinBuffer += 1;
+                        }
+                        tasks.add(taskDetails);
+                    }
+                } finally {
+                    if (cursor != null) {
+                        cursor.close();
+                    }
                 }
             }
             int finalStructureWithinBuffer = structuresWithinBuffer;
