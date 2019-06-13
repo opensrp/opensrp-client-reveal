@@ -28,6 +28,7 @@ import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestingUtils;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -129,11 +130,14 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnRegistrationSavedForEditedForms() {
-        presenter = spy(presenter);
         Whitebox.setInternalState(presenter, "structureId", structureId);
+        String entityId = UUID.randomUUID().toString();
+        FamilyEventClient eventClient = new FamilyEventClient((Client) new Client().withBaseEntityId(entityId), new Event()
+                .withBaseEntityId(entityId).withObs(new ArrayList<>()));
+        when(model.getEventClient()).thenReturn(eventClient);
         presenter.onRegistrationSaved(true);
-        verify(presenter).onTasksGenerated();
-        verify(view).refreshTasks(structureId);
+        verify(interactor, never()).updateFamilyMemberSurname(eventClient.getClient(), eventClient.getEvent(), null);
+        verify(view, never()).refreshTasks(structureId);
     }
 
     @Test

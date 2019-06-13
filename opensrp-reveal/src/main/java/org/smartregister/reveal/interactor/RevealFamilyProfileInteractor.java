@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.smartregister.repository.EventClientRepository.client_column.syncStatus;
-import static org.smartregister.util.JsonFormUtils.gson;
 
 
 /**
