@@ -241,11 +241,11 @@
         "hint": "เบอร์โทรศัพท์",
         "v_numeric": {
           "value": "true",
-          "err": "Number must be a total of 9 digits in length"
+          "err": "Please enter a number"
         },
         "v_regex": {
-          "value": "^$|0[0-9]{8}",
-          "err": "Number must be 9 digits and must start with 0."
+          "value": "^$|0[0-9]{8,9}",
+          "err": "Number must be 9-10 digits and must start with 0."
         }
       },
       {

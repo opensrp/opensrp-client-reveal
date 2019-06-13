@@ -293,7 +293,7 @@
           "err": "Please enter a number"
         },
         "v_regex": {
-          "value": "^$|0[0-9]{8}",
+          "value": "^$|0[0-9]{8,9}",
           "err": "Number must be 9 digits and must start with 0."
         }
       },
