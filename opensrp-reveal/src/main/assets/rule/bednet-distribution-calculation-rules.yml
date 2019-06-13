@@ -1,24 +1,31 @@
 ---
+name: step1_calcExistingNets
+description: Number of existinf nets needed
+priority: 1
+condition: "true"
+actions:
+- "calculation = helper.ifNull(step1_existingLLINs + step1_existingHLINs + step1_existingITNs,0)"
+---
 name: step1_calcNumNetsNeeded
 description: Number of nets needed
 priority: 1
 condition: "true"
 actions:
-- "calculation = Math.ceil(helper.ifNull(step1_malePopulation + step1_femalePopulation,0)/2.0)"
+- "calculation = step1_totPopulation"
 ---
 name: step1_calcNumNetsToDistribute
 description: Number of nets to give
 priority: 1
 condition: "true"
 actions:
-- "calculation = helper.ifNull(step1_calcNumNetsNeeded - step1_existingNets,0)"
+- "calculation = helper.ifNull(step1_calcNumNetsNeeded - step1_calcExistingNets,0)"
 ---
 name: step1_calcDistributedRecommendation
 description: Did they distribute the recommended number of nets
 priority: 1
 condition: "true"
 actions:
-- "calculation = helper.ifNull(step1_calcNumNetsToDistribute,0) == helper.ifNull(step1_distributedITNs + step1_distributedLLINs + step1_distributedHLINs,0) ? 'Exact' : helper.ifNull(step1_calcNumNetsToDistribute,0) < helper.ifNull(step1_distributedITNs + step1_distributedLLINs + step1_distributedHLINs,0) ? 'More' : 'Fewer'"
+- "calculation = helper.ifNull(step1_calcNumNetsToDistribute,0) == helper.ifNull(step1_calcTotalNetsDistributed,0) ? 'Exact' : helper.ifNull(step1_calcNumNetsToDistribute,0) < helper.ifNull(step1_calcTotalNetsDistributed,0) ? 'More' : 'Fewer'"
 ---
 name: step1_calcTotalNetsDistributed
 description: The total number of nets distributed
@@ -40,3 +47,18 @@ priority: 1
 condition: "true"
 actions:
 - "calculation = ['calcNumNetsToDistribute' : step1_calcNumNetsToDistribute]"
+---
+name: step1_displayCalcExistingNets
+description: Display Calculated number of nets needed
+priority: 1
+condition: "true"
+actions:
+- "calculation = ['calcExistingNets' : step1_calcExistingNets]"
+---
+name: step1_calcNumNetsToRedip
+description: Display Calculated number of nets eligible for dipping
+priority: 1
+condition: "true"
+actions:
+- "calculation = helper.ifNull(step1_existingLLINsGreaterThan3yr + step1_existingHLINsGreaterThan3yr + step1_existingITNs step1_existingITNDipped,0)"
+---
