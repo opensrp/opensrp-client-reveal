@@ -60,7 +60,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The number of people living in this structure is required"
+          "err": "ต้องใส่จำนวนประชากรทั้งหมดที่อาศัยอยู่ในสิ่งปลูกสร้างนี้"
         },
         "v_numeric": {
           "value": "true",
@@ -68,7 +68,7 @@
         },
         "v_min": {
           "value": "1",
-          "err": "There must be greater than or equal to 1"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 1"
         },
         "v_max": {
           "value": "[num_fam_members]",
@@ -85,7 +85,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The total number of existing LLINs is required"
+          "err": "ต้องใส่จำนวนมุ้ง LLIN ที่มีอยู่ทั้งหมด"
         },
         "v_numeric": {
           "value": "true",
@@ -93,7 +93,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_cumulative_total": {
           "value": "existingNets",
@@ -101,7 +101,7 @@
             "existingITNs",
             "existingLLINs"
           ],
-          "err": "The total number of existing nets should be equal to the sum of LLINs, HLINs and ITNs"
+          "err": "จำนวนมุ้งที่มีอยู่ทั้งหมดควรเท่ากับผลรวมของจำนวนมุ้ง LLIN, มุ้ง HLIN และมุ้งธรรมดา"
         }
       },
       {
@@ -122,7 +122,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_cumulative_total": {
           "value": "existingLLINs",
@@ -131,7 +131,7 @@
             "existingLLINs2yrTo3yr",
             "existingLLINsGreaterThan3yr"
           ],
-          "err": "The sum of the 1-3 year old fields of existing LLINs should equal the number of existing LLINs"
+          "err": "ผลรวมของจำนวนมุ้ง LLIN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง LLIN ที่มีอยู่ทั้งหมด"
         },
         "relevance": {
           "rules-engine": {
@@ -159,7 +159,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_cumulative_total": {
           "value": "existingLLINs",
@@ -168,7 +168,7 @@
             "existingLLINs2yrTo3yr",
             "existingLLINsGreaterThan3yr"
           ],
-          "err": "The sum of the 1-3 year old fields of existing LLINs should equal the number of existing LLINs"
+          "err": "ผลรวมของจำนวนมุ้ง LLIN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง LLIN ที่มีอยู่ทั้งหมด"
         },
         "relevance": {
           "rules-engine": {
@@ -196,7 +196,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_cumulative_total": {
           "value": "existingLLINs",
@@ -205,7 +205,7 @@
             "existingLLINs1yrTo2yr",
             "existingLLINsGreaterThan3yr"
           ],
-          "err": "The sum of the 1-3 year old fields of existing LLINs should equal the number of existing LLINs"
+          "err": "ผลรวมของจำนวนมุ้ง LLIN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง LLIN ที่มีอยู่ทั้งหมด"
         },
         "relevance": {
           "rules-engine": {
@@ -233,7 +233,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_cumulative_total": {
           "value": "existingLLINs",
@@ -242,7 +242,7 @@
             "existingLLINs1yrTo2yr",
             "existingLLINs2yrTo3yr"
           ],
-          "err": "The sum of the 1-3 year old fields of existing LLINs or HLINs should equal the number of existing LLINs"
+          "err": "ผลรวมของจำนวนมุ้ง LLIN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง LLIN ที่มีอยู่ทั้งหมด"
         },
         "relevance": {
           "rules-engine": {
@@ -262,7 +262,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The total number of existing HLINs is required"
+          "err": "ต้องใส่จำนวนมุ้ง HLIN ที่มีอยู่ทั้งหมด"
         },
         "v_numeric": {
           "value": "true",
@@ -270,7 +270,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_cumulative_total": {
           "value": "existingNets",
@@ -278,7 +278,7 @@
             "existingITNs",
             "existingLLINs"
           ],
-          "err": "The total number of existing nets should be equal to the sum of LLINs, HLINs and ITNs"
+          "err": "จำนวนมุ้งที่มีอยู่ทั้งหมดควรเท่ากับผลรวมของจำนวนมุ้ง LLIN, มุ้ง HLIN และมุ้งธรรมดา"
         }
       },
       {
@@ -299,7 +299,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_cumulative_total": {
           "value": "existingHLINs",
@@ -308,7 +308,7 @@
             "existingHLINs2yrTo3yr",
             "existingHLINsGreaterThan3yr"
           ],
-          "err": "The sum of the 1-3 year old fields of existing HLINs should equal the number of existing HLINs"
+          "err": "ผลรวมของจำนวนมุ้ง HLIN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง HLIN ที่มีอยู่ทั้งหมด"
         },
         "relevance": {
           "rules-engine": {
@@ -336,7 +336,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_cumulative_total": {
           "value": "existingHLINs",
@@ -345,7 +345,7 @@
             "existingHLINs2yrTo3yr",
             "existingHLINsGreaterThan3yr"
           ],
-          "err": "The sum of the 1-3 year old fields of existing HLINs should equal the number of existing HLINs"
+          "err": "ผลรวมของจำนวนมุ้ง HLIN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง HLIN ที่มีอยู่ทั้งหมด"
         },
         "relevance": {
           "rules-engine": {
@@ -373,7 +373,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_cumulative_total": {
           "value": "existingHLINs",
@@ -382,7 +382,7 @@
             "existingHLINs1yrTo2yr",
             "existingHLINsGreaterThan3yr"
           ],
-          "err": "The sum of the 1-3 year old fields of existing HLINs should equal the number of existing HLINs"
+          "err": "ผลรวมของจำนวนมุ้ง HLIN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง HLIN ที่มีอยู่ทั้งหมด"
         },
         "relevance": {
           "rules-engine": {
@@ -410,7 +410,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_cumulative_total": {
           "value": "existingHLINs",
@@ -419,7 +419,7 @@
             "existingHLINs1yrTo2yr",
             "existingHLINs2yrTo3yr"
           ],
-          "err": "The sum of the 1-3 year old fields of existing HLINs or HLINs should equal the number of existing HLINs"
+          "err": "ผลรวมของจำนวนมุ้ง HLIN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง HLIN ที่มีอยู่ทั้งหมด"
         },
         "relevance": {
           "rules-engine": {
@@ -440,7 +440,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The number of existing normal (conventional) nets is required"
+          "err": "ต้องใส่จำนวนมุ้งธรรมดาที่มีอยู่ทั้งหมด"
         },
         "v_numeric": {
           "value": "true",
@@ -448,7 +448,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_cumulative_total": {
           "value": "existingNets",
@@ -456,7 +456,7 @@
             "existingLLINs",
             "existingHLINs"
           ],
-          "err": "The total number of existing nets should be equal to the sum of LLINs and ITNs"
+          "err": "จำนวนมุ้งที่มีอยู่ทั้งหมดควรเท่ากับผลรวมของจำนวนมุ้ง LLIN, มุ้ง HLIN และมุ้งธรรมดา"
         }
       },
       {
@@ -478,7 +478,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_relative_max": {
           "value": "existingITNs",
@@ -535,7 +535,7 @@
         ],
         "v_required": {
           "value": true,
-          "err": "This field is required"
+          "err": "ต้องใส่ข้อมูลในช่องนี้"
         }
       },
       {
@@ -611,7 +611,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The total number of LLINs distributed is required"
+          "err": "ต้องใส่จำนวนมุ้ง LLIN ทั้งหมดที่แจกไป"
         },
         "v_numeric": {
           "value": "true",
@@ -623,7 +623,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "relevance": {
           "rules-engine": {
@@ -644,7 +644,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The total number of HLINs distributed is required"
+          "err": "ต้องใส่จำนวนมุ้ง HLIN ทั้งหมดที่แจกไป"
         },
         "v_numeric": {
           "value": "true",
@@ -652,7 +652,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_max": {
           "value": "1",
@@ -677,7 +677,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The total number of ITNs distributed is required"
+          "err": "ต้องใส่จำนวนมุ้งธรรมดาทั้งหมดที่แจกไป"
         },
         "v_numeric": {
           "value": "true",
@@ -685,7 +685,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "relevance": {
           "rules-engine": {
@@ -764,7 +764,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The number of nets redipped required"
+          "err": "ต้องใส่จำนวนมุ้งทั้งหมดที่ทำการชุบน้ำยาซ้ำ"
         },
         "v_numeric": {
           "value": "true",
@@ -772,7 +772,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_relative_max": {
           "value": "calcNumNetsToRedip",
@@ -790,7 +790,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The number of personal repellent units distributed is required"
+          "err": "ต้องใส่จำนวนยากันยุงทั้งหมดที่แจกให้แก่แต่ละบุคคล"
         },
         "v_numeric": {
           "value": "true",
@@ -798,7 +798,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         }
       },
       {
