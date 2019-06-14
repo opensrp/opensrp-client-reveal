@@ -78,7 +78,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
             List<String> formSubmissionIds = new ArrayList<>();
             for (CommonPersonObject commonPersonObject : commonRepository.findByRelational_IDs(family.getBaseEntityId())) {
                 String lastName = commonPersonObject.getColumnmaps().get(KEY.LAST_NAME);
-                if (oldSurname.equals(lastName)) {//surname same as the edited family name
+                if (oldSurname.equalsIgnoreCase(lastName)) {//surname same as the edited family name
                     JSONObject client = eventClientRepository.getClientByBaseEntityId(commonPersonObject.getCaseId());
                     try {
                         client.put("lastName", family.getFirstName());
