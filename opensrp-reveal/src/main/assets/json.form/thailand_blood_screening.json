@@ -51,12 +51,38 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "caseTestingProtocol",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "ประเภทกิจกรรมการเจาะเลือด",
+        "options": [
+          {
+            "key": "RACD/CIS",
+            "text": "RACD/CIS"
+          },
+          {
+            "key": "SCD",
+            "text": "SCD"
+          },
+          {
+            "key": "MBS",
+            "text": "MBS"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "กรุณาเลือกวิธีทดสอบ"
+        }
+      },
+      {
         "key": "forestGoerYesNo",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Is this person a forest goer?",
+        "label": "เมื่อสองอาทิตย์ที่ผ่านมาได้ค้างแรม/ทำงานนอกบ้านในเวลากลางคืนหรือไม่?",
         "options": [
           {
             "key": "Yes",
@@ -69,65 +95,72 @@
         ],
         "v_required": {
           "value": true,
-          "err": "This field is required"
+          "err": "ต้องใส่ข้อมูลในช่องนี้"
         }
       },
       {
-        "key": "caseTestingProtocol",
+        "key": "personTested",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "hidden",
-        "label": "กิจกรรม",
+        "type": "native_radio",
+        "label": "เคยได้รับการเจาะโลหิตหรือไม่?",
         "options": [
           {
-            "key": "CIS",
-            "text": "CIS"
+            "key": "Yes",
+            "text": "ใช่"
           },
           {
-            "key": "PCD",
-            "text": "PCD"
+            "key": "No",
+            "text": "ไม่ใช่"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "ต้องใส่ข้อมูลในช่องนี้"
+        }
+      },
+      {
+        "key": "notTestedReason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "หากไม่เคย โปรดระบุเหตุผล",
+        "options": [
+          {
+            "key": "Not present",
+            "text": "ไม่พบตัว"
           },
           {
-            "key": "ACD",
-            "text": "ACD"
+            "key": "Refused",
+            "text": "ปฏิเสธ"
           },
           {
-            "key": "SCD",
-            "text": "SCD"
+            "key": "Sick",
+            "text": "ป่วย"
           },
           {
-            "key": "Follow-up",
-            "text": "FU"
+            "key": "Tested within past week",
+            "text": "เคยเจาะแล้วเมื่ออาทิตย์ที่ผ่านมา"
           },
           {
-            "key": "MBS",
-            "text": "MBS"
+            "key": "Index case - not test necessary",
+            "text": "เป็น index case ไม่ต้องเจาะ"
           },
           {
             "key": "Other",
             "text": "อื่นๆ"
           }
         ],
-        "value": "Investigation",
         "v_required": {
-          "value": "true",
-          "err": "Please choose a testing protocol"
-        }
-      },
-      {
-        "key": "caseNumberTrigger",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "label_info_text": "If this is a confirmed secondary case to the index case, the id of the index case should be filled out here. If this case is linked to another known index case, use that case id here. If Unknown leave blank.",
-        "hint": "รหัสผู้ป่วยที่เชื่อมโยงกับผู้ป่วยรายนี้",
+          "value": true,
+          "err": "Enter reason person was not tested"
+        },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "thailand-blood-screening-relevance-rules.yml"
-            }
+          "step1:personTested": {
+            "type": "string",
+            "ex": "equalTo(., \"No\")"
           }
         }
       },
@@ -148,66 +181,10 @@
             "text": "RDT"
           }
         ],
+        "value": "Microscopy",
         "v_required": {
           "value": true,
-          "err": "A test type is required"
-        }
-      },
-      {
-        "key": "testResult",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Result",
-        "options": [
-          {
-            "key": "Negative",
-            "text": "ไม่พบเชื้อ"
-          },
-          {
-            "key": "Positive",
-            "text": "การติดเชื้อ"
-          },
-          {
-            "key": "PositiveFalciparum",
-            "text": "Pf"
-          },
-          {
-            "key": "PositiveVivax",
-            "text": "Pv"
-          },
-          {
-            "key": "PositiveMalariae",
-            "text": "Pm"
-          },
-          {
-            "key": "PositiveMixed",
-            "text": "Mix"
-          },
-          {
-            "key": "PO",
-            "text": "Po"
-          },
-          {
-            "key": "PK",
-            "text": "Pk"
-          },
-          {
-            "key": "fg",
-            "text": "fg"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Please choose a result"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "thailand-blood-screening-relevance-rules.yml"
-            }
-          }
+          "err": "ต้องใส่ประเภทการทดสอบ"
         }
       },
       {
@@ -220,40 +197,108 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The slide number is required"
+          "err": "ต้องใส่หมายเลขสไลด์"
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Enter a number"
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "thailand-blood-screening-relevance-rules.yml"
-            }
+          "step1:testType": {
+            "type": "string",
+            "ex": "equalTo(., \"Microscopy\")"
           }
         }
       },
       {
-        "key": "caseNumber",
+        "key": "testRdtResult",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "รหัสผู้ป่วย",
+        "type": "native_radio",
+        "label": "ผลตรวจจาก RDT",
+        "options": [
+          {
+            "key": "Negative",
+            "text": "ไม่พบเชื้อ"
+          },
+          {
+            "key": "PositiveFalciparum",
+            "text": "Pf"
+          },
+          {
+            "key": "PositiveVivax",
+            "text": "Pv"
+          },
+          {
+            "key": "PositiveMixed",
+            "text": "Positive - Mixed"
+          },
+          {
+            "key": "Inconclusive",
+            "text": "Inconclusive"
+          }
+        ],
         "v_required": {
-          "value": true,
-          "err": "A case number is required"
+          "value": "true",
+          "err": "กรุณาเลือกผลการทดสอบ"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "thailand-blood-screening-relevance-rules.yml"
-            }
+          "step1:testType": {
+            "type": "string",
+            "ex": "equalTo(., \"RDT\")"
+          }
+        }
+      },
+      {
+        "key": "testMicrosResult",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "ผลตรวจจากกล้องจุลทรรศน์",
+        "options": [
+          {
+            "key": "Negative",
+            "text": "ไม่พบเชื้อ"
+          },
+          {
+            "key": "PositiveFalciparum",
+            "text": "Pv"
+          },
+          {
+            "key": "PositiveVivax",
+            "text": "Pv"
+          },
+          {
+            "key": "PositiveMalariae",
+            "text": "Pm"
+          },
+          {
+            "key": "PositiveOvalae",
+            "text": "Po"
+          },
+          {
+            "key": "PositiveKnowelsi",
+            "text": "Pk"
+          },
+          {
+            "key": "Fg",
+            "text": "Fg"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "กรุณาเลือกผลการทดสอบ"
+        },
+        "relevance": {
+          "step1:testType": {
+            "type": "string",
+            "ex": "equalTo(., \"Microscopy\")"
           }
         }
       },

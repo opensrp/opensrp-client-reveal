@@ -1,7 +1,0 @@
----
-name: step1_business_status
-description: Task business status
-priority: 1
-condition: "true"
-actions:
-- "calculation = 'Complete'"
