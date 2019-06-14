@@ -114,7 +114,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 FAMILY_MEMBER, TASK_TABLE, FOR, FAMILY_MEMBER, BASE_ENTITY_ID));
         familyMemberTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
                 STRUCTURES_TABLE, STRUCTURES_TABLE, ID, FAMILY_MEMBER, STRUCTURE_ID));
-        familyMemberTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
+        familyMemberTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s  COLLATE NOCASE",
                 FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
         familyMemberTasksQueryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
                 SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
