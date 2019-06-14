@@ -20,13 +20,6 @@ condition: "step1_structureType.equals('Residential Structure') && (step1_sprayS
 actions:
   - "isRelevant = true"
 ---
-name: step1_familyHeadSex
-description: Family Head type
-priority: 1
-condition: "step1_structureType.equals('Residential Structure') && (step1_sprayStatus.equals('Sprayed') || step1_sprayStatus.equals('Not Sprayed'))"
-actions:
-  - "isRelevant = true"
----
 name: step1_roomsFound
 description: Rooms Found
 priority: 1
