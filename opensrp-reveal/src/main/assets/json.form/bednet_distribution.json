@@ -482,12 +482,26 @@
         }
       },
       {
+        "key": "calcExistingNets",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "displayCalcExistingNets",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "Confirm that this house has [calcExistingNets] existing nets",
+        "text": "Confirm that this house has {calcExistingNets} existing nets",
         "text_color": "#000000",
         "toaster_type": "info",
         "calculation": {
@@ -499,7 +513,7 @@
         }
       },
       {
-        "key": "ConfirmCalcExistingNets",
+        "key": "confirmCalcExistingNets",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -540,7 +554,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "{calcNumNetsNeeded} nets are needed",
+        "text": "{calcNumNetsNeeded} nets are recommended",
         "text_color": "#000000",
         "toaster_type": "info",
         "calculation": {
@@ -721,7 +735,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The total number of nets redipped required"
+          "err": "The number of nets redipped required"
         },
         "v_numeric": {
           "value": "true",
@@ -747,7 +761,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The total number of personal repellent units distributed is required"
+          "err": "The number of personal repellent units distributed is required"
         },
         "v_numeric": {
           "value": "true",

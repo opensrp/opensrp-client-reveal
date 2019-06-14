@@ -11,7 +11,7 @@ description: Number of nets needed
 priority: 1
 condition: "true"
 actions:
-- "calculation = step1_totPopulation"
+- "calculation =  Math.ceil(helper.ifNull(step1_totPopulation,0),2)"
 ---
 name: step1_calcNumNetsToDistribute
 description: Number of nets to give
@@ -60,5 +60,4 @@ description: Display Calculated number of nets eligible for dipping
 priority: 1
 condition: "true"
 actions:
-- "calculation = helper.ifNull(step1_existingLLINsGreaterThan3yr + step1_existingHLINsGreaterThan3yr + step1_existingITNs step1_existingITNDipped,0)"
----
+- "calculation = helper.ifNull(step1_existingLLINsGreaterThan3yr + step1_existingHLINsGreaterThan3yr + step1_existingITNs - step1_existingITNDipped,0)"
