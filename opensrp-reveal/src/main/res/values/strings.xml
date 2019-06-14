@@ -157,5 +157,7 @@
     <string name="form_not_found">Form not Found</string>
     <string name="edit_member_form_title">Edit Family Member</string>
 
+    <string name="view_tasks">View \nTasks</string>
+    <string name="tasks_complete">Tasks Complete</string>
     <string name="opensrp_url" translatable="false">@string/opensrp_base_url</string>
 </resources>

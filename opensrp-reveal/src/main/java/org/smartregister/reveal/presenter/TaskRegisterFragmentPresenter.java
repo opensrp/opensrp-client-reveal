@@ -124,7 +124,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
      */
     private Pair<String, String[]> getMainCondition() {
         Location operationalArea = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
-        String whereClause = String.format("%s = ? AND %s = ?", DatabaseKeys.GROUPID, DatabaseKeys.PLAN_ID);
+        String whereClause = String.format("%s.%s = ? AND %s.%s = ?", DatabaseKeys.TASK_TABLE, DatabaseKeys.GROUPID, DatabaseKeys.TASK_TABLE, DatabaseKeys.PLAN_ID);
         return new Pair<>(whereClause, new String[]{operationalArea == null ?
                 null : operationalArea.getId(), prefsUtil.getCurrentPlanId()});
     }
@@ -192,7 +192,8 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                     && (CASE_CONFIRMATION.equals(details.getTaskCode()) ||
                     BLOOD_SCREENING.equals(details.getTaskCode()) ||
                     BEDNET_DISTRIBUTION.equals(details.getTaskCode()) ||
-                    REGISTER_FAMILY.equals(details.getTaskCode()))) {
+                    REGISTER_FAMILY.equals(details.getTaskCode())) ||
+                    (details.getTaskCount() != null && details.getTaskCount() > 1 )) { // structures with grouped tasks should display the family profile
                 setTaskDetails(details);
                 interactor.fetchFamilyDetails(details.getStructureId());
             } else {
