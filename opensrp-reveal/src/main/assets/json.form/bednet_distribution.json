@@ -64,11 +64,15 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
-          "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "value": "1",
+          "err": "There must be greater than or equal to 1"
+        },
+        "v_man": {
+          "value": "[num_fam_members]",
+          "err": "Cannot be more than number of registered members"
         }
       },
       {
@@ -85,7 +89,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
           "value": "0",
@@ -114,7 +118,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
           "value": "0",
@@ -151,7 +155,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
           "value": "0",
@@ -188,7 +192,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
           "value": "0",
@@ -225,7 +229,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
           "value": "0",
@@ -262,7 +266,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
           "value": "0",
@@ -291,7 +295,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
           "value": "0",
@@ -328,7 +332,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
           "value": "0",
@@ -365,7 +369,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
           "value": "0",
@@ -402,7 +406,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
           "value": "0",
@@ -440,7 +444,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
           "value": "0",
@@ -470,7 +474,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
           "value": "0",
@@ -611,7 +615,11 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "totPopulation",
+          "err": "Cannot be more than number of people in the house"
         },
         "v_min": {
           "value": "0",
@@ -640,11 +648,15 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
           "value": "0",
           "err": "There must be greater than or equal to 0"
+        },
+        "v_max": {
+          "value": "1",
+          "err": "Cannot be greater than 1"
         },
         "relevance": {
           "rules-engine": {
@@ -669,7 +681,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
           "value": "0",
@@ -726,6 +738,23 @@
         }
       },
       {
+        "key": "displayNumNetsToRedip",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "{calcNumNetsToRedip} nets eligible to be redipped",
+        "text_color": "#000000",
+        "toaster_type": "info",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "redippedITNs",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -739,7 +768,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
           "value": "0",
@@ -765,7 +794,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": ""
+          "err": "Must be a number"
         },
         "v_min": {
           "value": "0",
@@ -774,7 +803,7 @@
       },
       {
         "key": "comment",
-        "label_info_text" :"Reasons why more or less nets were distributed, or other comments",
+        "label_info_text": "Reasons why more or less nets were distributed, or other comments",
         "label_info_title": "Comments",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
