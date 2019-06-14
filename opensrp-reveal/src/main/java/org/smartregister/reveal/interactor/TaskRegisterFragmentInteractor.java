@@ -36,6 +36,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NOT_SRAYED_OTHER_REASON;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NOT_SRAYED_REASON;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.OTHER;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
@@ -126,6 +127,12 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
     }
 
+    private String bccSelect() {
+        return String.format("SELECT * FROM %s WHERE %s.%s = ? AND %s.%s = ? AND %s.%s = '%s'",
+                TASK_TABLE, TASK_TABLE, FOR, TASK_TABLE, PLAN_ID, TASK_TABLE, CODE, BCC);
+    }
+
+
     private String[] mainColumns(String tableName) {
         return new String[]{
                 tableName + "." + ID,
@@ -211,6 +218,25 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                     }
                 }
             }
+
+            // Query BCC tasks
+            String bccSelectQuery = bccSelect();
+            Cursor cursor = null;
+            try {
+                cursor = getDatabase().rawQuery(bccSelectQuery, mainCondition.second);
+                while (cursor.moveToNext()) {
+                    TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, false);
+                    if (taskDetails.getDistanceFromUser() <= locationBuffer) {
+                        structuresWithinBuffer += 1;
+                    }
+                    tasks.add(taskDetails);
+                }
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+
             int finalStructureWithinBuffer = structuresWithinBuffer;
             Collections.sort(tasks);
             appExecutors.mainThread().execute(() -> {
@@ -233,9 +259,11 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             task.setCompleteTaskCount(cursor.getInt(cursor.getColumnIndex(COMPLETED_TASK_COUNT)));
         }
         Location location = new Location((String) null);
-        location.setLatitude(cursor.getDouble(cursor.getColumnIndex(LATITUDE)));
-        location.setLongitude(cursor.getDouble(cursor.getColumnIndex(LONGITUDE)));
-        task.setLocation(location);
+        if (!BCC.equals(task.getTaskCode())) {
+            location.setLatitude(cursor.getDouble(cursor.getColumnIndex(LATITUDE)));
+            location.setLongitude(cursor.getDouble(cursor.getColumnIndex(LONGITUDE)));
+            task.setLocation(location);
+        }
         if (BCC.equals(task.getTaskCode())) {
             //set distance to -1 to always display on top of register
             task.setDistanceFromUser(-1);
@@ -245,29 +273,32 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             task.setDistanceFromUser(location.distanceTo(operationalAreaCenter));
             task.setDistanceFromCenter(true);
         }
-        task.setStructureName(cursor.getString(cursor.getColumnIndex(NAME)));
-        if (StringUtils.isBlank(task.getStructureName())) {
-            task.setStructureName(cursor.getString(cursor.getColumnIndex(STRUCTURE_NAME)));
-        }
 
-        task.setFamilyName(cursor.getString(cursor.getColumnIndex(FIRST_NAME)));
-        if (task.getFamilyName() == null) {
-            task.setFamilyName(cursor.getString(cursor.getColumnIndex(FAMILY_NAME)));
-        }
-
-        if (task.getFamilyName() != null)
-            task.setFamilyName(task.getFamilyName() + " " + houseLabel);
-
-        task.setSprayStatus(cursor.getString(cursor.getColumnIndex(SPRAY_STATUS)));
-
-        if (Constants.BusinessStatus.NOT_SPRAYED.equals(task.getBusinessStatus())) {
-            String reason = cursor.getString(cursor.getColumnIndex(NOT_SRAYED_REASON));
-            if (OTHER.equals(reason)) {
-                reason = cursor.getString(cursor.getColumnIndex(NOT_SRAYED_OTHER_REASON));
+        if (!BCC.equals(task.getTaskCode())) {
+            task.setStructureName(cursor.getString(cursor.getColumnIndex(NAME)));
+            if (StringUtils.isBlank(task.getStructureName())) {
+                task.setStructureName(cursor.getString(cursor.getColumnIndex(STRUCTURE_NAME)));
             }
-            task.setTaskDetails(reason);
+
+            task.setFamilyName(cursor.getString(cursor.getColumnIndex(FIRST_NAME)));
+            if (task.getFamilyName() == null) {
+                task.setFamilyName(cursor.getString(cursor.getColumnIndex(FAMILY_NAME)));
+            }
+
+            if (task.getFamilyName() != null)
+                task.setFamilyName(task.getFamilyName() + " " + houseLabel);
+
+            task.setSprayStatus(cursor.getString(cursor.getColumnIndex(SPRAY_STATUS)));
+
+            if (Constants.BusinessStatus.NOT_SPRAYED.equals(task.getBusinessStatus())) {
+                String reason = cursor.getString(cursor.getColumnIndex(NOT_SRAYED_REASON));
+                if (OTHER.equals(reason)) {
+                    reason = cursor.getString(cursor.getColumnIndex(NOT_SRAYED_OTHER_REASON));
+                }
+                task.setTaskDetails(reason);
+            }
+            task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
         }
-        task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
         return task;
     }
 

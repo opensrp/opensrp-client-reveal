@@ -34,6 +34,10 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
+import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
+import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 import static org.smartregister.util.DatabaseMigrationUtils.isColumnExists;
 
 
@@ -75,6 +79,9 @@ public class RevealRepository extends Repository {
                 case 2:
                     upgradeToVersion2(db);
                     break;
+                case 3:
+                    upgradeToVersion3(db);
+                    break;
                 default:
                     break;
             }
@@ -111,6 +118,19 @@ public class RevealRepository extends Repository {
 
         PlanDefinitionRepository.createTable(db);
         PlanDefinitionSearchRepository.createTable(db);
+    }
+
+    private void upgradeToVersion3(SQLiteDatabase db) {
+        String createFamilyMemberIndex = String.format("CREATE INDEX family_member_index ON %s (\n" +
+                "    %s COLLATE NOCASE, %s COLLATE NOCASE\n" +
+                ");", FAMILY_MEMBER, STRUCTURE_ID, BASE_ENTITY_ID);
+
+        String createFamilyResidenceIndex = String.format("CREATE INDEX family_residence_index ON %s (\n" +
+                "    %s COLLATE NOCASE \n" +
+                ");", FAMILY, STRUCTURE_ID);
+
+        db.execSQL(createFamilyMemberIndex);
+        db.execSQL(createFamilyResidenceIndex);
     }
 
     @Override
