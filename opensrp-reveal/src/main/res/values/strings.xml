@@ -25,7 +25,7 @@
     <string name="app_version">Version %1$s</string>
     <string name="app_updated">Updated %1$s</string>
     <string name="district">District:</string>
-    <string name="facility">Facility:</string>
+    <string name="facility">Location:</string>
     <string name="canton">Canton:</string>
     <string name="operator">Spray Operator:</string>
 

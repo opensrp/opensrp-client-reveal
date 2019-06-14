@@ -188,39 +188,6 @@
         }
       },
       {
-        "key": "familyHeadSex",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "เพศ",
-        "options": [
-          {
-            "key": "Male",
-            "text": "ชาย"
-          },
-          {
-            "key": "Female",
-            "text": "หญิง"
-          },
-          {
-            "key": "Not Applicable",
-            "text": "ไม่ระบุ"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Specify Sex of Household Head"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "thailand-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "roomsFound",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",

@@ -1,18 +1,16 @@
 <resources>
     <!-- Actions -->
     <string name="action_logout">ออกจากระบบ</string>
-    <!-- General -->
-    <string name="app_name">Reveal</string>
     <!--Temp -->
-    <string name="unauthorized">โปรดตรวจสอบเอกสารรับรอง</string>
+    <string name="unauthorized">โปรดตรวจสอบข้อมูลการเข้าสู่ระบบ</string>
     <string name="unauthorized_group">กลุ่มผู้ใช้ของท่านไม่ได้รับอนุญาตให้เข้าถึงอุปกรณ์นี้</string>
     <string name="unknown_response">เข้าสู่ระบบไม่สำเร็จ โปรดลองใหม่ในภายหลัง</string>
-    <string name="no_internet_connectivity">ไม่พบการเชื่อมต่ออินเตอร์เน็ต โปรดตรวจสอบการเชื่อมต่อ</string>
+    <string name="no_internet_connectivity">ไม่พบการเชื่อมต่ออินเทอร์เน็ต โปรดตรวจสอบการเชื่อมต่อ</string>
     <string name="login_text">เข้าสู่ระบบ</string>
     <string name="show_password_text">แสดงรหัสผ่าน</string>
     <string name="url_separator">/</string>
 
-    <string name="device_timezone_changed">มีการเปลี่ยนเขตเวลาบนอุปกรณ์ โปรดเข้าสู่ระบบอีกครั้งหนึ่ง</string>
+    <string name="device_timezone_changed">มีการเปลี่ยนเขตเวลา-Timezone บนอุปกรณ์ โปรดเข้าสู่ระบบอีกครั้งหนึ่ง</string>
     <string name="device_time_changed">มีการเปลี่ยนเวลาบนอุปกรณ์ โปรดเข้าสู่ระบบอีกครั้งหนึ่ง</string>
 
     <string name="prompt_password">กรุณาป้อนรหัสผ่าน</string>
@@ -23,54 +21,45 @@
     <string name="operational_area">พื้นที่ปฏิบัติงาน</string>
 
     <string name="app_version">เวอร์ชั่น %1$s</string>
-    <string name="app_updated">อัพเดท %1$s</string>
+    <string name="app_updated">อัพเดทเมื่อ %1$s</string>
     <string name="district">อำเภอ</string>
-    <string name="facility">สถานพยาบาล:</string>
+    <string name="facility">ที่ตั้ง:</string>
     <string name="canton">ตำบล:</string>
     <string name="operator">ผู้ปฏิบัติการพ่นสารเคมี</string>
 
-    <string name="fetch_location_and_structures_failed">ตรวจไม่พบพื้นที่ปฏิบัติงานนี้ในระบบ โปรดทำการซิงค์อุปกรณ์ของท่าน หากยังตรวจไม่พบหมายเลขพื้นที่ปฏิบัติงาน โปรดติดต่อผู้ดูแลระบบ %1$s</string>
+    <string name="fetch_location_and_structures_failed">ตรวจไม่พบพื้นที่ปฏิบัติงานนี้ในระบบ โปรดลองทำการซิงค์อุปกรณ์ของท่าน หากยังตรวจไม่พบหมายเลขพื้นที่ปฏิบัติงาน โปรดติดต่อแอดมินฯผู้ดูแลระบบ %1$s</string>
     <string name="fetch_structures_title">ทำการโหลดไม่สำเร็จ</string>
     <string name="fetching_structures_title">กำลังดึงข้อมูลสิ่งปลูกสร้าง</string>
-    <string name="fetching_structures_message">กำลังดึงข้อมูลสิ่งปลูกสร้างในพื้นที่ปฏิบัติงานที่เลือกและวางแผน</string>
+    <string name="fetching_structures_message">กำลังดึงข้อมูลสิ่งปลูกสร้างในพื้นที่ปฏิบัติงานที่เลือกและแผนงาน</string>
 
-    <string name="select_campaign_operational_area_title">แผนงานและพื้นที่ปฏิบัติงานที่ได้รับการกำหนดแล้ว</string>
-    <string name="select_campaign_operational_area">แผนงานและพื้นที่ปฏิบัติงานยังไม่ได้รับการกำหนด ให้เลือกจากเมนูแฮมเบอเกอร์</string>
-
-    <string name="reveal_satellite_style">asset://reveal-streets-satellite.json</string>
-    <string name="reveal_streets_style">asset://reveal-streets-satellite.json</string>
-    <string name="reveal_datasource_name">reveal-data-set</string>
-    <string name="reveal_layer_polygons">reveal-data-polygons</string>
-    <string name="reveal_layer_points">reveal-data-points</string>
-
+    <string name="select_campaign_operational_area_title">มีการกำหนดแผนงานและพื้นที่ปฏิบัติงานเรียบร้อยแล้ว</string>
+    <string name="select_campaign_operational_area">ยังไม่ได้กำหนดแผนงานและพื้นที่ปฏิบัติงาน ให้เลือกจากเมนูหลัก-เมนูแฮมเบอเกอร์</string>
 
     <string name="task_not_found">ไม่มีการกำหนดงานใดๆ บริเวณสิ่งปลูกสร้างนี้ในแผนงาน %1s</string>
 
     <string name="error_fetching_location_hierarchy_title">เกิดความผิดพลาดในการจัดลำดับประมวลผลตำแหน่ง</string>
     <string name="error_fetching_location_hierarchy">เกิดความผิดพลาดในการจัดลำดับประมวลผลตำแหน่ง โปรดออกจากระบบเพื่อดาวน์โหลดการจัดลำดับตำแหน่งอีกครั้งหนึ่ง</string>
 
-    <string name="selected_datasource_name">select-data</string>
-
     <string name="irs_task_description">เข้าเยี่ยมพื้นที่สิ่งปลูกสร้าง, ประเมิน และทำกิจกรรมพ่นสารเคมี</string>
 
     <string name="form_save_failure_title">เกิดความผิดพลาดในการบันทึกแบบฟอร์ม</string>
     <string name="spray_form_save_failure">เกิดความผิดพลาดในการบันทึกแบบฟอร์มพ่นสารเคมี</string>
     <string name="add_structure_form_save_failure">เกิดความผิดพลาดในการบันทึกแบบฟอร์มสิ่งปลูกสร้าง</string>
-    <string name="zoom_in_to_select">ขยายเข้าเพื่อเลือกสิ่งปลูกสร้าง</string>
+    <string name="zoom_in_to_select">ซูมขยายเข้าเพื่อเลือกสิ่งปลูกสร้าง</string>
 
 
     <string name="details_sprayed">สามารถพ่นสารเคมีได้, ได้ทำการพ่นสารเคมีแล้ว</string>
     <string name="details_not_sprayed">สามารถพ่นสารเคมีได้ แต่ยังไม่ได้พ่นสารเคมี</string>
     <string name="details_not_sprayable">ไม่สามารถพ่นสารเคมีได้</string>
-    <string name="no_structures_found">ไม่มีแผนที่สิ่งปลูกสร้างในพื้นที่ปฏิบัติงานนี้ โปรดทำการเพิ่มตำแหน่งเพื่อเริ่มการทำงาน</string>
+    <string name="no_structures_found">ไม่มีแผนที่ตำแหน่งสิ่งปลูกสร้างในพื้นที่ปฏิบัติงานนี้ โปรดทำการเพิ่มตำแหน่งเพื่อเริ่มการทำงาน</string>
     <string name="change_spray_status">เปลี่ยนสถานะการพ่นสารเคมี</string>
     <string name="reveal_icon">ไอคอน Reveal</string>
 
     <string name="attribution_text">ดำเนินการโดย OpenSRP\nBuilt on mSpray and DiSARM</string>
 
     <string name="request_password_title">คุณยังไม่อยู่ใกล้สิ่งปลูกสร้างเป้าหมาย</string>
-    <string name="enter_admin_password">กรุณาป้อนรหัสแอดมินผู้ดูแลระบบ</string>
-    <string name="wrong_admin_password">รหัสแอดมินผู้ดูแลระบบไม่ถูกต้อง</string>
+    <string name="enter_admin_password">กรุณาป้อนรหัสแอดมินฯผู้ดูแลระบบ</string>
+    <string name="wrong_admin_password">รหัสแอดมินฯผู้ดูแลระบบไม่ถูกต้อง</string>
 
     <string name="saving_title">กำลังบันทึก</string>
     <string name="saving_message">กำลังดำเนินการบันทึก โปรดรอสักครู่</string>
@@ -87,9 +76,9 @@
     <string name="narrowing_location_title">กำลังคำนวณตำแหน่งของท่าน</string>
     <string name="narrowing_location_message">กำลังคำนวณตำแหน่งของท่าน โปรดรอสักครู่</string>
 
-    <string name="location_services_disabled">บริการตำแหน่งถูกปิด</string>
-    <string name="location_services_disabled_spray">คุณปฏิเสธที่จะเปิดใช้บริการตำแหน่งเพื่อค้นหาตำแหน่งปัจจุบันของคุณ คุณจะต้องป้อนรหัสแอดมินเพื่อทำการพ่นสารเคมีในบริเวณสิ่งปลูกสร้าง</string>
-    <string name="location_services_disabled_add">คุณปฏิเสธที่จะเปิดใช้บริการตำแหน่งเพื่อค้นหาตำแหน่งปัจจุบันของคุณ คุณจะต้องใส่รหัสแอดมินเพื่อเพิ่มสิ่งปลูกสร้าง</string>
+    <string name="location_services_disabled">การบริการแสดงตำแหน่งถูกปิด</string>
+    <string name="location_services_disabled_spray">คุณปฏิเสธที่จะเปิดใช้บริการตำแหน่งเพื่อค้นหาตำแหน่งปัจจุบันของคุณ คุณจะต้องป้อนรหัสแอดมินฯเพื่อทำการพ่นสารเคมีในบริเวณสิ่งปลูกสร้าง</string>
+    <string name="location_services_disabled_add">คุณปฏิเสธที่จะเปิดใช้บริการตำแหน่งเพื่อค้นหาตำแหน่งปัจจุบันของคุณ คุณจะต้องใส่รหัสแอดมินฯเพื่อเพิ่มสิ่งปลูกสร้าง</string>
 
     <string name="mosquito_collection_task_description">กำหนดสถานที่เก็บตัวอย่างยุง และการบันทึกผล</string>
     <string name="larval_dipping_task_description">ทำ Larval dipping, จำแนกชนิด และควบคุม</string>
@@ -97,9 +86,9 @@
     <string name="register_family">ลงทะเบียนครอบครัว</string>
     <string name="list">บัญชีรายการ</string>
     <string name="map">แผนที่</string>
-    <string name="hamburger_menu">เมนูแฮมเบอร์เกอร์</string>
+    <string name="hamburger_menu">เมนูหลัก-เมนูแฮมเบอร์เกอร์</string>
     <string name="focus_investigation">การสอบสวนแหล่งแพร่เชื้อ Focus</string>
-    <string name="irs">การพ่นเคมีชนิดมีฤทธิ์ตกค้าง IRS</string>
+    <string name="irs">IRS การพ่นเคมีชนิดมีฤทธิ์ตกค้าง</string>
     <string name="task_icon">ไอคอนงาน</string>
     <string name="distance_from_structure">ห่างออกไป %1.0f ม.</string>
     <string name="distance_from_center">%1.0f ม. จากใจกลาง %2s </string>
@@ -108,7 +97,7 @@
     <string name="record_mosquito_collection">บันทึก\nCollection</string>
     <string name="larval_breeding_site">แหล่งเพาะพันธุ์ตัวอ่อนยุง</string>
     <string name="record_larvacide">บันทึก\nDipping</string>
-    <string name="bcc">การสื่อสารเพื่อปรับเปลี่ยนพฤติกรรม BCC</string>
+    <string name="bcc">BCC การสื่อสารเพื่อปรับเปลี่ยนพฤติกรรม</string>
     <string name="record_bcc">บันทึก\nBCC</string>
     <string name="record_status">บันทึก\nStatus</string>
     <string name="record_index">บันทึก\nIndex</string>
@@ -121,7 +110,7 @@
     </plurals>
 
     <string name="card_view_record_mosquito_collection">บันทึกการเก็บตัวอย่างยุง</string>
-    <string name="record_larval_dipping">บันทึกการทำ Larval dipping</string>
+    <string name="record_larval_dipping">บันทึกการเก็บลูกน้ำโดยวิธี Larval dipping</string>
     <string name="card_view_mosquito_collection_point">ตำแหน่งที่ทำการเก็บตัวอย่างยุง</string>
     <string name="mosquito_breeding_site">แหล่งเพาะพันธุ์ยุง</string>
 
@@ -130,7 +119,7 @@
     <string name="mosquito_collection_trap_follow_up_date_test_text">วันที่ติดตาม: วว/ดด/ปป</string>
     <string name="mosquito_collection_trap_collected_date_test_text">วันที่เก็บรวบรวม: วว/ดด/ปป</string>
 
-    <string name="larval_breeding_identified_date_test_text">วันที่ชันสูตร:&#160;</string>
+    <string name="larval_breeding_identified_date_test_text">วันที่ตรวจชันสูตร:&#160;</string>
     <string name="larval_breeding_larvacide_date_test_text">วันที่กำจัดลูกน้ำยุง:&#160;</string>
     <string name="mosquito_collection_trap_set_date">กำหนดวันที่:&#160;</string>
     <string name="mosquito_collection_trap_follow_up_date">วันที่ติดตาม:&#160;</string>
@@ -148,11 +137,12 @@
     <string name="family_registration">การลงทะเบียนครอบครัว</string>
 
     <string name="blood_screening_description">ทำการตรวจคัดครองเลือดของสมาชิกในครอบครัว</string>
-    <string name="bednet_distribution_description">เยี่ยมบ้านพักอาศัยและแจกมุ้ง</string>
-    <string name="register_family_description">เยี่ยมบ้านพักอาศัยและลงทะเบียนสมาชิกในครอบครัวเป็นรายบุคคล</string>
+    <string name="bednet_distribution_description">เยี่ยมที่พักอาศัยและแจกมุ้ง</string>
+    <string name="register_family_description">เยี่ยมที่พักอาศัยและลงทะเบียนสมาชิกในครอบครัวเป็นรายบุคคล</string>
     <string name="house">บ้าน</string>
 
-    <string name="unenumerated_structure">สิ่งปลูกสร้างที่ไม่มีการระบุไว้</string>
+    <string name="unenumerated_structure">สิ่งปลูกสร้างที่ไม่ได้ถูกระบุไว้</string>
     <string name="form_not_found">ไม่พบแบบฟอร์ม</string>
-    <string name="edit_family">แก้ไขข้อมูลครอบครัว</string>
-</resources>
+    <string name="edit_member_form_title">แก้ไขข้อมูลสมาชิกในครัวเรือน</string>
+
+    </resources>
