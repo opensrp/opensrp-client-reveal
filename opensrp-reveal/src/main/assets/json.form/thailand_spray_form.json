@@ -74,7 +74,7 @@
         "value": "[structure_type]",
         "v_required": {
           "value": "true",
-          "err": "Specify type of Structure"
+          "err": "ระบุประเภทของสิ่งปลูกสร้าง"
         }
       },
       {
@@ -100,7 +100,7 @@
         ],
         "v_required": {
           "value": "true",
-          "err": "Specify Spray status"
+          "err": "ระบุสถานะสเปรย์"
         },
         "relevance": {
           "step1:structureType": {
@@ -140,7 +140,7 @@
         ],
         "v_required": {
           "value": "true",
-          "err": "Specify Not Sprayed Reason"
+          "err": "ระบุเหตุผลที่ไม่ได้ทำการฉีดพ่นสารเคมี"
         },
         "relevance": {
           "rules-engine": {
@@ -161,7 +161,7 @@
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Please specify reason spray was not done"
+          "err": "โปรดระบุเหตุผลที่ไม่ได้ทำการฉีดพ่นสารเคมี"
         },
         "relevance": {
           "rules-engine": {
@@ -198,12 +198,12 @@
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Please specify number of eligible rooms (Type 99 if unable to assess)"
+          "err": "กรุณาระบุจำนวนห้อง (ให้ใส่เลข 99 หากไม่สามารถประเมินได้)"
         },
         "shortened_hint": "จำนวนห้องในบ้าน",
         "v_numeric": {
           "value": "true",
-          "err": "Must be a number"
+          "err": "ต้องเป็นตัวเลขเท่านั้น"
         },
         "relevance": {
           "rules-engine": {
@@ -224,17 +224,17 @@
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Please specify number of rooms sprayed (Type 99 if unable to assess)"
+          "err": "กรุณาระบุจำนวนห้องที่ได้ฉีดพ่นสารเคมีไปแล้ว (ให้ใส่เลข 99 หากไม่สามารถประเมินได้)"
         },
         "shortened_hint": "จำนวนห้องในบ้านที่ได้พ่นสารเคมี",
         "v_relative_max": {
           "value": "roomsFound",
           "exception": 99,
-          "err": "Number of rooms sprayed cannot be greater than number of rooms found"
+          "err": "จำนวนห้องที่ได้ฉีดพ่นสารเคมีไปแล้วต้องไม่เกินจำนวนห้องที่มีอยู่"
         },
         "v_numeric_integer": {
           "value": "true",
-          "err": "Must be a rounded number"
+          "err": "ต้องเป็นตัวเลขจำนวนเต็ม"
         },
         "relevance": {
           "rules-engine": {
@@ -255,12 +255,12 @@
         "is_mandatory": true,
         "v_required": {
           "value": true,
-          "err": "Please specify Total Number of Nets (Type 99 if unable to assess)"
+          "err": "กรุณาระบุจำนวนมุ้งทั้งหมด (ให้ใส่เลข 99 หากไม่สามารถประเมินได้)"
         },
         "shortened_hint": "จำนวนมุ้งที่ใช้งาน",
         "v_numeric": {
           "value": "true",
-          "err": "Must be a number"
+          "err": "ต้องเป็นตัวเลขเท่านั้น"
         },
         "relevance": {
           "rules-engine": {
