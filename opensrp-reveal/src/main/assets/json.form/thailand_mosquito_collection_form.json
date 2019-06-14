@@ -77,7 +77,7 @@
         ],
         "v_required": {
           "value": true,
-          "err": "Please specify the task status"
+          "err": "กรุณาระบุสถานะงาน"
         }
       },
       {
