@@ -11,7 +11,7 @@ description: Number of nets needed
 priority: 1
 condition: "true"
 actions:
-- "calculation =  Math.ceil(helper.ifNull(step1_totPopulation,0),2)"
+- "calculation =  Math.ceil(helper.ifNull(step1_totPopulation,0)/2.0)"
 ---
 name: step1_calcNumNetsToDistribute
 description: Number of nets to give
