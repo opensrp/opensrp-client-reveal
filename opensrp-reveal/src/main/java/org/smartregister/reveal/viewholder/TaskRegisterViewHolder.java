@@ -13,6 +13,7 @@ import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.Utils;
 
 /**
  * Created by samuelgithengi on 3/12/19.
@@ -68,7 +69,22 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
 
     public void setTaskAction(String actionLabel, TaskDetails task, CardDetails cardDetails, View.OnClickListener onClickListener) {
         actionView.setText(actionLabel);
-        if (cardDetails != null && cardDetails.getStatusColor() != null) {
+
+        // registered family with multiple tasks
+        if (cardDetails != null && task.getTaskCount() != null && Utils.getInterventionLabel() == R.string.focus_investigation) { // task grouping only for FI
+            if (task.getTaskCount() > 1 ) {
+                if (task.getTaskCount() != task.getCompleteTaskCount()) {
+                    actionView.setBackground(context.getResources().getDrawable(R.drawable.view_tasks_bg));
+                    actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                    actionView.setText(context.getText(R.string.view_tasks));
+                } else if (task.getTaskCount() == task.getCompleteTaskCount()){
+                    actionView.setBackground(context.getResources().getDrawable(R.drawable.tasks_complete_bg));
+                    actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                    actionView.setText(context.getText(R.string.tasks_complete));
+                }
+            }
+
+        } else if (cardDetails != null && cardDetails.getStatusColor() != null) {
             actionView.setBackground(null);
             actionView.setTextColor(context.getResources().getColor(cardDetails.getStatusColor()));
         } else {

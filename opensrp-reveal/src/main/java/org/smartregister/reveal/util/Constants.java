@@ -300,6 +300,14 @@ public interface Constants {
 
         String OTHER = "other";
 
+        String COMPLETED_TASK_COUNT = "completed_task_count";
+
+        String TASK_COUNT = "task_count";
+
+        String BASE_ENTITY_ID = "base_entity_id";
+
+        String FAMILY_MEMBER_TASK_ALIAS = "fmt";
+
 
     }
 
