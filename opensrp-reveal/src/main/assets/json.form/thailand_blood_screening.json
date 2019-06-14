@@ -73,7 +73,7 @@
         ],
         "v_required": {
           "value": "true",
-          "err": "Please type of blood screening"
+          "err": "กรุณาเลือกวิธีทดสอบ"
         }
       },
       {
@@ -95,7 +95,7 @@
         ],
         "v_required": {
           "value": true,
-          "err": "This field is required"
+          "err": "ต้องใส่ข้อมูลในช่องนี้"
         }
       },
       {
@@ -117,7 +117,7 @@
         ],
         "v_required": {
           "value": true,
-          "err": "This field is required"
+          "err": "ต้องใส่ข้อมูลในช่องนี้"
         }
       },
       {
@@ -184,7 +184,7 @@
         "value": "Microscopy",
         "v_required": {
           "value": true,
-          "err": "A test type is required"
+          "err": "ต้องใส่ประเภทการทดสอบ"
         }
       },
       {
@@ -197,7 +197,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The slide number is required"
+          "err": "ต้องใส่หมายเลขสไลด์ (use this if you mean to \"Slide code number\") or ต้องใส่จำนวนสไลด์ (if you mean to \"how many slides\")"
         },
         "v_numeric": {
           "value": "true",
@@ -205,7 +205,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "There must be greater than or equal to 0"
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "relevance": {
           "step1:testType": {
@@ -245,7 +245,7 @@
         ],
         "v_required": {
           "value": "true",
-          "err": "Please select RDT result"
+          "err": "กรุณาเลือกผลการทดสอบ"
         },
         "relevance": {
           "step1:testType": {
@@ -293,7 +293,7 @@
         ],
         "v_required": {
           "value": "true",
-          "err": "Please select Microscopy results"
+          "err": "กรุณาเลือกผลการทดสอบ"
         },
         "relevance": {
           "step1:testType": {
