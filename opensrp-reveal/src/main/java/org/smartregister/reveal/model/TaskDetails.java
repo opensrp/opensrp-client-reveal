@@ -22,6 +22,10 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
     private boolean distanceFromCenter;
 
+    private Integer taskCount;
+
+    private Integer completeTaskCount;
+
     public TaskDetails(@NonNull String taskId) {
         super(taskId);
     }
@@ -80,6 +84,22 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
     public void setDistanceFromCenter(boolean distanceFromCenter) {
         this.distanceFromCenter = distanceFromCenter;
+    }
+
+    public void setTaskCount(Integer taskCount) {
+        this.taskCount = taskCount;
+    }
+
+    public Integer getCompleteTaskCount() {
+        return completeTaskCount;
+    }
+
+    public void setCompleteTaskCount(Integer completeTaskCount) {
+        this.completeTaskCount = completeTaskCount;
+    }
+
+    public Integer getTaskCount() {
+        return taskCount;
     }
 
     @Override
