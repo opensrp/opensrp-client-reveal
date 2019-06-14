@@ -65,7 +65,7 @@
         "edit_type": "name",
         "v_required": {
           "value": "true",
-          "err": "Please enter first name of Head of Household"
+          "err": "กรุณาใส่ชื่อหัวหน้าครอบครัว"
         }
       },
       {
@@ -78,7 +78,7 @@
         "edit_type": "name",
         "v_required": {
           "value": "true",
-          "err": "Please enter family surname"
+          "err": "กรุณาใส่นามสกุลของครอบครัว"
         }
       },
       {
@@ -119,7 +119,7 @@
         "hint": "รหัสผู้ป่วย",
         "v_required": {
           "value": "true",
-          "err": "Please enter the ID"
+          "err": "กรุณากรอกหมายเลขประจำตัว"
         }
       },
       {
@@ -132,7 +132,7 @@
         "edit_type": "name",
         "v_required": {
           "value": "true",
-          "err": "Please enter the surname"
+          "err": "กรุณาใส่นามสกุลของครอบครัว"
         },
         "relevance": {
           "rules-engine": {
@@ -184,7 +184,7 @@
         "edit_type": "name",
         "v_required": {
           "value": "true",
-          "err": "Please enter the first name"
+          "err": "กรุณาใส่ชื่อจริง"
         }
       },
       {
@@ -202,7 +202,7 @@
         "max_date": "today-5y",
         "v_required": {
           "value": "true",
-          "err": "Please enter the date of birth"
+          "err": "กรุณาใส่วันเกิด"
         },
         "relevance": {
           "rules-engine": {
@@ -237,15 +237,15 @@
         "hint": "อายุ",
         "v_numeric": {
           "value": "true",
-          "err": "Please enter a number"
+          "err": "กรุณาใส่เป็นตัวเลข"
         },
         "v_min": {
           "value": "5",
-          "err": "Age must be equal or greater than 5"
+          "err": "อายุต้องเท่ากับหรือมากกว่า 5"
         },
         "v_max": {
           "value": "120",
-          "err": "Age must be equal or less than 120"
+          "err": "อายุต้องเท่ากับหรือน้อยกว่า 120"
         },
         "relevance": {
           "rules-engine": {
@@ -256,7 +256,7 @@
         },
         "v_required": {
           "value": true,
-          "err": "Please enter the age"
+          "err": "กรุณากรอกอายุ"
         }
       },
       {
@@ -278,7 +278,7 @@
         ],
         "v_required": {
           "value": "true",
-          "err": "Please enter the sex"
+          "err": "กรุณากรอกเพศ"
         }
       },
       {
@@ -290,11 +290,11 @@
         "hint": "เบอร์โทรศัพท์",
         "v_numeric": {
           "value": "true",
-          "err": "Please enter a number"
+          "err": "กรุณาใส่เป็นตัวเลข"
         },
         "v_regex": {
           "value": "^$|0[0-9]{8,9}",
-          "err": "Number must be 9 digits and must start with 0."
+          "err": "หมายเลขต้องประกอบด้วยตัวเลข 9 หลัก และ ต้องเริ่มต้นด้วยตัวเลข 0"
         }
       },
       {
@@ -316,7 +316,7 @@
         ],
         "v_required": {
           "value": "true",
-          "err": "Please select whether this person sleeps outdoors"
+          "err": "กรุณาเลือกว่า บุคคลนี้ค้างคืนนอกบ้านหรือไม่"
         }
       },
       {
@@ -357,7 +357,7 @@
         ],
         "v_required": {
           "value": true,
-          "err": "Please specify the Citizenship"
+          "err": "กรุณาระบุสัญชาติ"
         }
       },
       {
@@ -371,11 +371,11 @@
         "hint": "รหัสประชาชน",
         "v_numeric": {
           "value": "true",
-          "err": "Please enter a number"
+          "err": "กรุณาใส่เป็นตัวเลข"
         },
         "v_regex": {
           "value": "^$|[0-9]{13}",
-          "err": "Number must be 13 digits."
+          "err": "ตัวเลขต้องประกอบด้วย 13 หลัก"
         },
         "relevance": {
           "step2:citizenship": {

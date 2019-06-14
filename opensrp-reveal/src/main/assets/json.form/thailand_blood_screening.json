@@ -197,7 +197,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "ต้องใส่หมายเลขสไลด์ (use this if you mean to \"Slide code number\") or ต้องใส่จำนวนสไลด์ (if you mean to \"how many slides\")"
+          "err": "ต้องใส่หมายเลขสไลด์"
         },
         "v_numeric": {
           "value": "true",

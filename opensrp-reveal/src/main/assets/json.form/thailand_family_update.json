@@ -64,7 +64,7 @@
         "edit_type": "name",
         "v_required": {
           "value": "true",
-          "err": "Please enter first name of Head of Household"
+          "err": "กรุณาใส่ชื่อหัวหน้าครอบครัว"
         }
       },
       {
@@ -77,7 +77,7 @@
         "edit_type": "name",
         "v_required": {
           "value": "true",
-          "err": "Please enter family surname"
+          "err": "กรุณาใส่นามสกุลของครอบครัว"
         }
       },
       {
