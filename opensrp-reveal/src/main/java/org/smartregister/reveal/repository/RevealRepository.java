@@ -25,7 +25,6 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
-import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import org.smartregister.util.DatabaseMigrationUtils;
 
 import java.util.Arrays;
@@ -99,7 +98,7 @@ public class RevealRepository extends Repository {
         }
 
         DatabaseMigrationUtils.createAddedECTables(db,
-                new HashSet<>(Arrays.asList(TABLE_NAME.FAMILY, TABLE_NAME.FAMILY_MEMBER)),
+                new HashSet<>(Arrays.asList(FAMILY, FAMILY_MEMBER)),
                 RevealApplication.createCommonFtsObject());
 
         //client process family events after 5 seconds so that get calls to getDatabase return
