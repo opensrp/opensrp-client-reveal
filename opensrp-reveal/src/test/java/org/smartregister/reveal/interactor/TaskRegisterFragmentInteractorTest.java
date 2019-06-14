@@ -80,6 +80,8 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
     private String groupId;
     private String planId;
     private String mainSelectQuery;
+    private String nonRegisteredStructureTasksQuery;
+    private String groupedRegisteredStructureTasksSelectQuery;
 
     @Before
     public void setUp() {
@@ -89,6 +91,10 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         groupId = UUID.randomUUID().toString();
         planId = UUID.randomUUID().toString();
         mainSelectQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? ";
+        groupId = UUID.randomUUID().toString();
+        planId = UUID.randomUUID().toString();
+        nonRegisteredStructureTasksQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ?   AND ec_family.structure_id IS NULL";
+        groupedRegisteredStructureTasksSelectQuery = " SELECT tasks.*, SUM(CASE WHEN tasks.status='COMPLETED' THEN 1 ELSE 0 END) AS completed_task_count , COUNT(tasks._id) AS task_count FROM ( Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name FROM task  JOIN structure ON task.for = structure._id   JOIN ec_family ON structure._id = ec_family.structure_id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id  WHERE task.group_id = ? AND task.plan_id = ?  UNION Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name FROM task  JOIN ec_family_member ON task.for = ec_family_member.base_entity_id   JOIN structure ON structure._id = ec_family_member.structure_id   JOIN ec_family ON structure._id = ec_family.structure_id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id  WHERE task.group_id = ? AND task.plan_id = ?  ) AS tasks GROUP BY tasks.structure_id ";
     }
 
     @Test
@@ -194,6 +200,37 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         assertEquals(0, orderedTasks.indexOf(task2));
         verifyNoMoreInteractions(presenter);
 
+    }
+
+    @Test
+    public void testFindTasksWithTaskGrouping() {
+        PreferencesUtil.getInstance().setCurrentPlan("FI_2019_TV01_Focus");
+        Pair<String, String[]> pair = new Pair<>("task.group_id = ? AND task.plan_id = ?", new String[]{groupId, planId});
+        Location userLocation = new Location("Test");
+        userLocation.setLatitude(-14.987197);
+        userLocation.setLongitude(32.076570);
+        when(database.rawQuery(groupedRegisteredStructureTasksSelectQuery, new String[]{groupId, planId, groupId, planId})).thenReturn(createCursor());
+        when(database.rawQuery(nonRegisteredStructureTasksQuery, new String[]{groupId, planId})).thenReturn(createCursor());
+        interactor.findTasks(pair, userLocation, null, "House");
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(groupedRegisteredStructureTasksSelectQuery, new String[]{groupId, planId, groupId, planId});
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(nonRegisteredStructureTasksQuery, new String[]{groupId, planId});
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskListCaptor.capture(), structuresCaptor.capture());
+        verifyNoMoreInteractions(presenter);
+        assertEquals(2, taskListCaptor.getValue().size());
+        TaskDetails taskDetails = taskListCaptor.getValue().get(0);
+        assertEquals("task_id_1", taskDetails.getTaskId());
+        assertEquals(Intervention.IRS, taskDetails.getTaskCode());
+        assertEquals(BusinessStatus.NOT_SPRAYED, taskDetails.getBusinessStatus());
+        assertEquals(Task.TaskStatus.COMPLETED.name(), taskDetails.getTaskStatus());
+        assertEquals(-14.15191915, taskDetails.getLocation().getLatitude(), 0.00001);
+        assertEquals(32.64302015, taskDetails.getLocation().getLongitude(), 0.00001);
+        assertEquals("Structure 976", taskDetails.getStructureName());
+        assertEquals("Ali House", taskDetails.getFamilyName());
+        assertEquals("Partial Spray", taskDetails.getSprayStatus());
+        assertEquals("Ali House", taskDetails.getFamilyName());
+        assertEquals("Not Completed", taskDetails.getTaskDetails());
+        assertEquals(110757.984375, taskDetails.getDistanceFromUser(), 0.00001);
+        assertEquals(0, structuresCaptor.getValue().intValue());
     }
 
     @Test
