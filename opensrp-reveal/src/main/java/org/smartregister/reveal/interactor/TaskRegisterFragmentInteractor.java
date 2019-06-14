@@ -259,22 +259,11 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             task.setCompleteTaskCount(cursor.getInt(cursor.getColumnIndex(COMPLETED_TASK_COUNT)));
         }
         Location location = new Location((String) null);
+
         if (!BCC.equals(task.getTaskCode())) {
             location.setLatitude(cursor.getDouble(cursor.getColumnIndex(LATITUDE)));
             location.setLongitude(cursor.getDouble(cursor.getColumnIndex(LONGITUDE)));
             task.setLocation(location);
-        }
-        if (BCC.equals(task.getTaskCode())) {
-            //set distance to -1 to always display on top of register
-            task.setDistanceFromUser(-1);
-        } else if (lastLocation != null) {
-            task.setDistanceFromUser(location.distanceTo(lastLocation));
-        } else {
-            task.setDistanceFromUser(location.distanceTo(operationalAreaCenter));
-            task.setDistanceFromCenter(true);
-        }
-
-        if (!BCC.equals(task.getTaskCode())) {
             task.setStructureName(cursor.getString(cursor.getColumnIndex(NAME)));
             if (StringUtils.isBlank(task.getStructureName())) {
                 task.setStructureName(cursor.getString(cursor.getColumnIndex(STRUCTURE_NAME)));
@@ -298,6 +287,15 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 task.setTaskDetails(reason);
             }
             task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
+        }
+        if (BCC.equals(task.getTaskCode())) {
+            //set distance to -1 to always display on top of register
+            task.setDistanceFromUser(-1);
+        } else if (lastLocation != null) {
+            task.setDistanceFromUser(location.distanceTo(lastLocation));
+        } else {
+            task.setDistanceFromUser(location.distanceTo(operationalAreaCenter));
+            task.setDistanceFromCenter(true);
         }
         return task;
     }

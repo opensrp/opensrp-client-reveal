@@ -192,7 +192,8 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                     && (CASE_CONFIRMATION.equals(details.getTaskCode()) ||
                     BLOOD_SCREENING.equals(details.getTaskCode()) ||
                     BEDNET_DISTRIBUTION.equals(details.getTaskCode()) ||
-                    REGISTER_FAMILY.equals(details.getTaskCode()))) {
+                    REGISTER_FAMILY.equals(details.getTaskCode())) ||
+                    (details.getTaskCount() != null && details.getTaskCount() > 1 )) { // structures with grouped tasks should display the family profile
                 setTaskDetails(details);
                 interactor.fetchFamilyDetails(details.getStructureId());
             } else {
