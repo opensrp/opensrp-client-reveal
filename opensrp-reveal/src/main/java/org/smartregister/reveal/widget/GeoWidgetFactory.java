@@ -20,6 +20,8 @@ import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.location.LocationComponent;
+import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
@@ -162,7 +164,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 mapboxMap.getUiSettings().setRotateGesturesEnabled(false);
 
                 mapView.setMapboxMap(mapboxMap);
-                float bufferRadius = getLocationBuffer()/getPixelsPerDPI(context.getResources());
+                float bufferRadius = getLocationBuffer() / getPixelsPerDPI(context.getResources());
                 mapView.setLocationBufferRadius(bufferRadius);
                 if (finalOperationalAreaFeature != null) {
                     CameraPosition cameraPosition = mapboxMap.getCameraForGeometry(finalOperationalAreaFeature.geometry());
@@ -270,9 +272,10 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
     @Override
     public void onLocationComponentInitialized() {
         if (PermissionsManager.areLocationPermissionsGranted(mapView.getContext())) {
-            mapView.getMapboxLocationComponentWrapper()
-                    .getLocationComponent()
-                    .applyStyle(mapView.getContext(), R.style.LocationComponentStyling);
+            LocationComponent locationComponent = mapView.getMapboxLocationComponentWrapper()
+                    .getLocationComponent();
+            locationComponent.applyStyle(mapView.getContext(), R.style.LocationComponentStyling);
+            locationComponent.setRenderMode(RenderMode.COMPASS);
         }
     }
 
