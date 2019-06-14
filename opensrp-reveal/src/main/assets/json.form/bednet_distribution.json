@@ -774,11 +774,13 @@
       },
       {
         "key": "comment",
+        "label_info_text" :"Reasons why more or less nets were distributed, or other comments",
+        "label_info_title": "Comments",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Please add a comment"
+        "hint": "Comment"
       },
       {
         "key": "business_status",
