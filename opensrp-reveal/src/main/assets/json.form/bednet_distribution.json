@@ -70,7 +70,7 @@
           "value": "1",
           "err": "There must be greater than or equal to 1"
         },
-        "v_man": {
+        "v_max": {
           "value": "[num_fam_members]",
           "err": "Cannot be more than number of registered members"
         }

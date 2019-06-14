@@ -2,6 +2,7 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,14 +10,17 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
+import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
-import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.util.DateTimeTypeConverter;
 
@@ -51,6 +55,8 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
 
     private Context context;
 
+    private BaseFormFragmentInteractor interactor;
+
     protected Gson gson = new GsonBuilder().setDateFormat(EVENT_DATE_FORMAT_Z)
             .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
 
@@ -60,6 +66,7 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
         passwordDialog = PasswordDialogUtils.initPasswordDialog(context, this);
         locationPresenter = new ValidateUserLocationPresenter(view, this);
         mappingHelper = new RevealMappingHelper();
+        interactor = new BaseFormFragmentInteractor(this);
     }
 
     protected boolean validateFarStructures() {
@@ -82,13 +89,18 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
 
     @Override
     public void onLocationValidated() {
-        if (!Constants.Intervention.REGISTER_FAMILY.equals(getTaskDetails().getTaskCode())) {
+        if (!Intervention.REGISTER_FAMILY.equals(getTaskDetails().getTaskCode())) {
             String formName = getView().getJsonFormUtils().getFormName(null, taskDetails.getTaskCode());
             if (StringUtils.isBlank(formName)) {
                 getView().displayError(R.string.opening_form_title, R.string.form_not_found);
             } else {
                 JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(context, formName, taskDetails, structure);
-                getView().startForm(formJSON);
+                if (Intervention.BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode())) {
+                    interactor.findNumberOfMembers(taskDetails.getTaskEntity(), formJSON);
+                    return;
+                } else {
+                    getView().startForm(formJSON);
+                }
             }
         }
         getView().hideProgressDialog();
@@ -132,6 +144,17 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
         } else {
             onLocationValidated();
         }
+    }
+
+    @Override
+    public void onFoundMembersCount(int numberOfMembers, JSONObject formJSON) {
+        try {
+            getView().startForm(new JSONObject(formJSON.toString().replace(JsonForm.NUMBER_OF_FAMILY_MEMBERS, numberOfMembers + "")));
+        } catch (JSONException e) {
+            Log.e(getClass().getName(), "Error updating Number of members");
+            getView().startForm(formJSON);
+        }
+        getView().hideProgressDialog();
     }
 
     public BaseTaskDetails getTaskDetails() {
