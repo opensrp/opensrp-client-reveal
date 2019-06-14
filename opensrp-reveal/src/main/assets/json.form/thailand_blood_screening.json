@@ -59,24 +59,16 @@
         "label": "ประเภทกิจกรรมการเจาะเลือด",
         "options": [
           {
-            "key": "PCD",
-            "text": "Passive Case Detection"
-          },
-          {
-            "key": "ACD",
-            "text": "Active Case Detection"
+            "key": "RACD/CIS",
+            "text": "RACD/CIS"
           },
           {
             "key": "SCD",
-            "text": "Special Case Detection"
+            "text": "SCD"
           },
           {
-            "key": "Follow-up",
-            "text": "Follow-up"
-          },
-          {
-            "key": "Other",
-            "text": "Other"
+            "key": "MBS",
+            "text": "MBS"
           }
         ],
         "v_required": {
@@ -232,15 +224,15 @@
         "options": [
           {
             "key": "Negative",
-            "text": "Negative"
+            "text": "ไม่พบเชื้อ"
           },
           {
             "key": "PositiveFalciparum",
-            "text": "Positive - Falciparum"
+            "text": "Pf"
           },
           {
             "key": "PositiveVivax",
-            "text": "Positive - Vivax"
+            "text": "Pv"
           },
           {
             "key": "PositiveMixed",
@@ -272,27 +264,31 @@
         "options": [
           {
             "key": "Negative",
-            "text": "Negative"
+            "text": "ไม่พบเชื้อ"
           },
           {
             "key": "PositiveFalciparum",
-            "text": "Positive - Falciparum"
+            "text": "Pv"
           },
           {
             "key": "PositiveVivax",
-            "text": "Positive - Vivax"
+            "text": "Pv"
           },
           {
             "key": "PositiveMalariae",
-            "text": "Positive - Malariae"
+            "text": "Pm"
           },
           {
             "key": "PositiveOvalae",
-            "text": "Positive - Ovalae"
+            "text": "Po"
           },
           {
             "key": "PositiveKnowelsi",
-            "text": "Positive - Knowelsi"
+            "text": "Pk"
+          },
+          {
+            "key": "Fg",
+            "text": "Fg"
           }
         ],
         "v_required": {

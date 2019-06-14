@@ -59,24 +59,16 @@
         "label": "Type of blood screening",
         "options": [
           {
-            "key": "PCD",
-            "text": "Passive Case Detection"
-          },
-          {
-            "key": "ACD",
-            "text": "Active Case Detection"
+            "key": "RACD/CIS",
+            "text": "Reactive Case Detection / Case Investigation Screening"
           },
           {
             "key": "SCD",
             "text": "Special Case Detection"
           },
           {
-            "key": "Follow-up",
-            "text": "Follow-up"
-          },
-          {
-            "key": "Other",
-            "text": "Other"
+            "key": "MBS",
+            "text": "Mass Blood Screening"
           }
         ],
         "v_required": {
@@ -293,6 +285,10 @@
           {
             "key": "PositiveKnowelsi",
             "text": "Positive - Knowelsi"
+          },
+          {
+            "key": "Fg",
+            "text": "Fg"
           }
         ],
         "v_required": {
