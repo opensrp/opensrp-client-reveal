@@ -29,6 +29,8 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.location.LocationComponent;
+import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
@@ -347,9 +349,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void onLocationComponentInitialized() {
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
-            kujakuMapView.getMapboxLocationComponentWrapper()
-                    .getLocationComponent()
-                    .applyStyle(getApplicationContext(), R.style.LocationComponentStyling);
+            LocationComponent locationComponent = kujakuMapView.getMapboxLocationComponentWrapper()
+                    .getLocationComponent();
+            locationComponent.applyStyle(getApplicationContext(), R.style.LocationComponentStyling);
+            locationComponent.setRenderMode(RenderMode.COMPASS);
         }
     }
 
