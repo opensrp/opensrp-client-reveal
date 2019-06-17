@@ -10,12 +10,15 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.robolectric.RuntimeEnvironment;
+import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.util.Constants;
 import org.smartregister.family.util.DBConstants.KEY;
 import org.smartregister.location.helper.LocationHelper;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.FamilyConstants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.FormKeys;
 import org.smartregister.util.AssetHandler;
@@ -40,6 +43,7 @@ import static org.smartregister.reveal.util.FamilyConstants.EventType.UPDATE_FAM
 import static org.smartregister.reveal.util.FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION;
 import static org.smartregister.reveal.util.FamilyConstants.JSON_FORM.FAMILY_MEMBER_REGISTER;
 import static org.smartregister.reveal.util.FamilyConstants.JSON_FORM.FAMILY_UPDATE;
+import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 import static org.smartregister.util.JsonFormUtils.VALUE;
 
 /**
@@ -213,6 +217,24 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
         client.getColumnmaps().put(DatabaseKeys.CITIZENSHIP, "Thai");
         JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, citizenship);
         assertEquals(citizenship, JsonFormUtils.getFieldValue(form.toString(), DatabaseKeys.CITIZENSHIP));
+    }
+
+    @Test
+    public void testCreateUpdateMemberSurnameEvent() {
+        String baseEntityId = UUID.randomUUID().toString();
+        Event updateFamilyEvent = new Event().withEventType(UPDATE_FAMILY_MEMBER_REGISTRATION);
+        AllSharedPreferences allSharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
+        allSharedPreferences.updateANMUserName("user1132");
+        allSharedPreferences.saveDefaultTeam("user1132", "Ateam");
+        allSharedPreferences.saveDefaultTeamId("user1132", "2342fsdfds99");
+        allSharedPreferences.saveDefaultLocalityId("user1132", "13k083-jhnf33");
+        Event event = FamilyJsonFormUtils.createUpdateMemberSurnameEvent(baseEntityId, updateFamilyEvent);
+        assertEquals("13k083-jhnf33", event.getLocationId());
+        assertEquals("user1132", event.getProviderId());
+        assertEquals("2342fsdfds99", event.getTeamId());
+        assertEquals("Ateam", event.getTeam());
+        assertEquals(UPDATE_FAMILY_MEMBER_REGISTRATION, event.getEventType());
+        assertEquals(FAMILY_MEMBER, event.getEntityType());
     }
 
 }

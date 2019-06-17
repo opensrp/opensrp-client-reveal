@@ -68,6 +68,10 @@
         }
       },
       {
+        "key": "old_fam_name",
+        "type": "hidden"
+      },
+      {
         "key": "surname",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
