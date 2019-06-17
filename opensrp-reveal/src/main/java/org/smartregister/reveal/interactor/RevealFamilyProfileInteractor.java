@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.CoreLibrary;
 import org.smartregister.clientandeventmodel.Client;
@@ -42,7 +41,6 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     private AppExecutors appExecutors;
     private FamilyProfileContract.Presenter presenter;
     private EventClientRepository eventClientRepository;
-    private FamilyMetadata familyMetadata;
     private RevealClientProcessor clientProcessor;
     private CommonRepository commonRepository;
 
@@ -51,7 +49,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
         taskUtils = TaskUtils.getInstance();
         appExecutors = RevealApplication.getInstance().getAppExecutors();
         eventClientRepository = CoreLibrary.getInstance().context().getEventClientRepository();
-        familyMetadata = RevealApplication.getInstance().getMetadata();
+        FamilyMetadata familyMetadata = RevealApplication.getInstance().getMetadata();
         clientProcessor = (RevealClientProcessor) RevealApplication.getInstance().getClientProcessor();
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(familyMetadata.familyMemberRegister.tableName);
     }
