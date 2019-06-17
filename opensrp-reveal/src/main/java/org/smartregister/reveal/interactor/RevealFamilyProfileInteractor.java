@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.CoreLibrary;
 import org.smartregister.clientandeventmodel.Client;
@@ -24,6 +23,7 @@ import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.sync.ClientProcessorForJava;
+import org.smartregister.util.JsonFormUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,16 +41,17 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     private AppExecutors appExecutors;
     private FamilyProfileContract.Presenter presenter;
     private EventClientRepository eventClientRepository;
-    private FamilyMetadata familyMetadata;
     private RevealClientProcessor clientProcessor;
+    private CommonRepository commonRepository;
 
     public RevealFamilyProfileInteractor(FamilyProfileContract.Presenter presenter) {
         this.presenter = presenter;
         taskUtils = TaskUtils.getInstance();
         appExecutors = RevealApplication.getInstance().getAppExecutors();
         eventClientRepository = CoreLibrary.getInstance().context().getEventClientRepository();
-        familyMetadata = RevealApplication.getInstance().getMetadata();
+        FamilyMetadata familyMetadata = RevealApplication.getInstance().getMetadata();
         clientProcessor = (RevealClientProcessor) RevealApplication.getInstance().getClientProcessor();
+        commonRepository = RevealApplication.getInstance().getContext().commonrepository(familyMetadata.familyMemberRegister.tableName);
     }
 
     @Override
@@ -72,7 +73,6 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     @Override
     public void updateFamilyMemberSurname(@NonNull Client family, Event event, @NonNull String oldSurname) {
         appExecutors.diskIO().execute(() -> {
-            CommonRepository commonRepository = getCommonRepository(familyMetadata.familyMemberRegister.tableName);
             JSONArray familyMembers = new JSONArray();
             JSONArray updateSurnameEvents = new JSONArray();
             List<String> formSubmissionIds = new ArrayList<>();
@@ -85,12 +85,12 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
                         client.put(syncStatus.name(), BaseRepository.TYPE_Unsynced);
                         familyMembers.put(client);
                         Event updateEvent = FamilyJsonFormUtils.createUpdateMemberSurnameEvent(commonPersonObject.getCaseId(), event);
-                        JSONObject eventJson = eventClientRepository.convertToJson(updateEvent);
+                        JSONObject eventJson = new JSONObject(JsonFormUtils.gson.toJson(updateEvent));
                         eventJson.put(syncStatus.name(), BaseRepository.TYPE_Unsynced);
                         updateSurnameEvents.put(eventJson);
                         formSubmissionIds.add(updateEvent.getFormSubmissionId());
 
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         Log.e(TAG, "Error updating Family Surname", e);
                     }
                 }
@@ -109,4 +109,5 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
             });
         });
     }
+
 }

@@ -73,12 +73,11 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity implement
     }
 
     @Override
-    public void startProfileActivity(String baseEntityId, String familyHead, String primaryCareGiver, String cityVillage, String firstName) {
+    public void startProfileActivity(String baseEntityId, String familyHead, String primaryCareGiver, String firstName) {
         Intent intent = new Intent(this, Utils.metadata().profileActivity);
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID, baseEntityId);
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_HEAD, familyHead);
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.PRIMARY_CAREGIVER, primaryCareGiver);
-        intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.VILLAGE_TOWN, cityVillage);
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_NAME, firstName);
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.GO_TO_DUE_PAGE, false);
 

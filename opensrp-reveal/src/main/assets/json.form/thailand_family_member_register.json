@@ -67,6 +67,19 @@
         }
       },
       {
+        "key": "first_name",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "first_name",
+        "type": "edit_text",
+        "hint": "ชื่อ",
+        "edit_type": "name",
+        "v_required": {
+          "value": "true",
+          "err": "กรุณาใส่ชื่อจริง"
+        }
+      },
+      {
         "key": "surname",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -123,19 +136,6 @@
               "rules-file": "thailand-family-member-calculation.yml"
             }
           }
-        }
-      },
-      {
-        "key": "first_name",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "first_name",
-        "type": "edit_text",
-        "hint": "ชื่อ",
-        "edit_type": "name",
-        "v_required": {
-          "value": "true",
-          "err": "กรุณาใส่ชื่อจริง"
         }
       },
       {

@@ -266,7 +266,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         FamilyMetadata familyMetadata = RevealApplication.getInstance().getMetadata();
         Event updateMemberSurnameEvent =
                 (Event) new Event().withBaseEntityId(baseEntityId).withEventDate(new Date()).withEventType(familyMetadata.familyMemberRegister.updateEventType)
-                        .withLocationId(updateFamilyEvent.getLocationId()).withProviderId(updateFamilyEvent.getProviderId()).withEntityType(familyMetadata.familyMemberRegister.tableName)
+                        .withLocationId(updateFamilyEvent.getLocationId()).withEntityType(familyMetadata.familyMemberRegister.tableName)
                         .withFormSubmissionId(UUID.randomUUID().toString()).withDateCreated(new Date());
         tagSyncMetadata(RevealApplication.getInstance().getContext().allSharedPreferences(), updateMemberSurnameEvent);
         updateMemberSurnameEvent.setDetails(updateFamilyEvent.getDetails());
