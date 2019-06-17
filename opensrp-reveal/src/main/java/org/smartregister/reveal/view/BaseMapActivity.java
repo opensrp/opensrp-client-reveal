@@ -3,10 +3,12 @@ package org.smartregister.reveal.view;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import org.smartregister.view.activity.MultiLanguageActivity;
+
 /**
  * Created by samuelgithengi on 11/20/18.
  */
-public abstract class BaseMapActivity extends AppCompatActivity {
+public abstract class BaseMapActivity extends MultiLanguageActivity {
 
     protected RevealMapView kujakuMapView;
 

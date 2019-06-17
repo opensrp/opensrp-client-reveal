@@ -51,6 +51,7 @@ import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.FamilyProfileActivity;
 import org.smartregister.sync.ClientProcessorForJava;
 import org.smartregister.sync.DrishtiSyncScheduler;
+import org.smartregister.util.LangUtils;
 import org.smartregister.view.activity.DrishtiApplication;
 import org.smartregister.view.receiver.TimeChangedBroadcastReceiver;
 
@@ -128,17 +129,13 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
         Mapbox.getInstance(getApplicationContext(), BuildConfig.MAPBOX_SDK_ACCESS_TOKEN);
 
-        try {
-            Utils.saveLanguage("en");
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        }
-
         //init Job Manager
         JobManager.create(this).addJobCreator(new RevealJobCreator());
 
         if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
-            updateResources(this, "th");
+            LangUtils.saveLanguage(getApplicationContext(), "th");
+        }else{
+            LangUtils.saveLanguage(getApplicationContext(), "en");
         }
 
     }
