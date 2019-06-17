@@ -500,45 +500,6 @@
         }
       },
       {
-        "key": "displayCalcExistingNets",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "toaster_notes",
-        "text": "{calcExistingNets} จำนวนมุ้งทั้งหมดในบ้านหลังนี้",
-        "text_color": "#000000",
-        "toaster_type": "info",
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "bednet-distribution-calculation-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "confirmCalcExistingNets",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "",
-        "options": [
-          {
-            "key": "Yes",
-            "text": "Yes"
-          },
-          {
-            "key": "No",
-            "text": "No"
-          }
-        ],
-        "v_required": {
-          "value": true,
-          "err": "ต้องใส่ข้อมูลในช่องนี้"
-        }
-      },
-      {
         "key": "calcNumNetsNeeded",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -559,37 +520,6 @@
         "openmrs_entity_id": "",
         "type": "toaster_notes",
         "text": "{calcNumNetsNeeded} จำนวนมุ้งที่ต้องการ",
-        "text_color": "#000000",
-        "toaster_type": "info",
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "bednet-distribution-calculation-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "calcNumNetsToDistribute",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "hidden",
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "bednet-distribution-calculation-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "displayRecommendedNumNetsToDistribute",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "toaster_notes",
-        "text": "{calcNumNetsToDistribute} ควรมีการแจกจ่ายอวน",
         "text_color": "#000000",
         "toaster_type": "info",
         "calculation": {
