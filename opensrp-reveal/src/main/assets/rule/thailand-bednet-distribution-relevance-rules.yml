@@ -58,20 +58,20 @@ actions:
 name: step1_distributedLLINs
 description: Display if number of nets existing is different from number of people
 priority: 1
-condition: "step1_calcExistingNets != step1_totPopulation"
+condition: "step1_calcExistingNets < step1_totPopulation"
 actions:
 - "isRelevant = true"
 ---
 name: step1_distributedHLINs
 description: Display if number of nets existing is different from number of people
 priority: 1
-condition: "step1_calcExistingNets != step1_totPopulation"
+condition: "step1_calcExistingNets < step1_totPopulation"
 actions:
 - "isRelevant = true"
 ---
 name: step1_distributedITNs
 description: Display if number of nets existing is different from number of people
 priority: 1
-condition: "step1_calcExistingNets != step1_totPopulation"
+condition: "step1_calcExistingNets < step1_totPopulation"
 actions:
 - "isRelevant = true"
