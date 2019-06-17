@@ -68,3 +68,10 @@ priority: 1
 condition: "true"
 actions:
 - "calculation = ['calcNumNetsToRedip' : step1_calcNumNetsToRedip]"
+---
+name: step1_calcPopulationMinusExistingNets
+description: Population minus existing notes
+priority: 1
+condition: "true"
+actions:
+- "calculation = helper.ifNull(step1_totPopulation-step1_calcExistingNets,0)"

@@ -687,10 +687,28 @@
           "value": "0",
           "err": "Must be greater than or equal to 0"
         },
+        "v_relative_max": {
+          "value": "calcPopulationMinusExistingNets",
+          "err": "Cannot be more than total Population subtract existing nets"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
               "rules-file": "bednet-distribution-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "calcPopulationMinusExistingNets",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
             }
           }
         }
