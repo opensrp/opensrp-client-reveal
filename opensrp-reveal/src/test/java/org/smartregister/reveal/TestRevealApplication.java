@@ -4,6 +4,7 @@ package org.smartregister.reveal;
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
+import org.smartregister.family.FamilyLibrary;
 import org.smartregister.repository.Repository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.AppExecutors;
@@ -21,6 +22,8 @@ public class TestRevealApplication extends RevealApplication {
         context.updateApplicationContext(getApplicationContext());
         CoreLibrary.init(context);
         ConfigurableViewsLibrary.init(context, getRepository());
+
+        FamilyLibrary.init(context, getRepository(), getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
 
         setTheme(R.style.Theme_AppCompat); //or just R.style.Theme_AppCompat
     }

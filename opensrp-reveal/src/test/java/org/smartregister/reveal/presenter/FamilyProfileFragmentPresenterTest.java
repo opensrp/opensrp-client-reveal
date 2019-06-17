@@ -14,20 +14,24 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
+import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.cloudant.models.Client;
 import org.smartregister.cloudant.models.Event;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.FetchStatus;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.model.FamilyProfileModel;
+import org.smartregister.reveal.util.FamilyConstants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
 import org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestingUtils;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -129,16 +133,52 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnRegistrationSavedForEditedForms() {
-        presenter = spy(presenter);
         Whitebox.setInternalState(presenter, "structureId", structureId);
+        String entityId = UUID.randomUUID().toString();
+        FamilyEventClient eventClient = new FamilyEventClient((Client) new Client().withBaseEntityId(entityId), new Event()
+                .withBaseEntityId(entityId).withObs(new ArrayList<>()));
+        when(model.getEventClient()).thenReturn(eventClient);
         presenter.onRegistrationSaved(true);
-        verify(presenter).onTasksGenerated();
-        verify(view).refreshTasks(structureId);
+        verify(interactor, never()).updateFamilyMemberSurname(eventClient.getClient(), eventClient.getEvent(), null);
+        verify(view, never()).refreshTasks(structureId);
+    }
+
+    @Test
+    public void testOnRegistrationSavedForEditedFormsUpdatesMembers() {
+        Whitebox.setInternalState(presenter, "structureId", structureId);
+        String entityId = UUID.randomUUID().toString();
+        FamilyEventClient eventClient = new FamilyEventClient((Client) new Client().withFirstName("Victor").withBaseEntityId(entityId), new Event()
+                .withBaseEntityId(entityId).withObs(new Obs().withValue("Victoria").withFieldCode(DatabaseKeys.OLD_FAMILY_NAME)));
+        when(model.getEventClient()).thenReturn(eventClient);
+        presenter.onRegistrationSaved(true);
+        verify(interactor).updateFamilyMemberSurname(eventClient.getClient(), eventClient.getEvent(), "Victoria");
+        verify(view, never()).hideProgressDialog();
+        verify(view, never()).refreshMemberList(FetchStatus.fetched);
+    }
+
+
+    @Test
+    public void testOnRegistrationSavedForEditedFormsNeverUpdatesMembers() {
+        Whitebox.setInternalState(presenter, "structureId", structureId);
+        String entityId = UUID.randomUUID().toString();
+        FamilyEventClient eventClient = new FamilyEventClient((Client) new Client().withFirstName("Victor").withBaseEntityId(entityId), new Event()
+                .withBaseEntityId(entityId).withObs(new Obs().withValue("Victor").withFieldCode(DatabaseKeys.OLD_FAMILY_NAME)));
+        when(model.getEventClient()).thenReturn(eventClient);
+        presenter.onRegistrationSaved(true);
+        verify(interactor, never()).updateFamilyMemberSurname(eventClient.getClient(), eventClient.getEvent(), "Victoria");
+        verify(view).hideProgressDialog();
+        verify(view).refreshMemberList(FetchStatus.fetched);
     }
 
     @Test
     public void testOnTasksGenerated() {
         presenter.onTasksGenerated();
+        verify(view).refreshTasks(null);
+    }
+
+    @Test
+    public void onMembersUpdated() {
+        presenter.onMembersUpdated();
         verify(view).refreshTasks(null);
     }
 
