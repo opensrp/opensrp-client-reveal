@@ -72,6 +72,10 @@
         }
       },
       {
+        "key": "old_fam_name",
+        "type": "hidden"
+      },
+      {
         "key": "village_town",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_address",

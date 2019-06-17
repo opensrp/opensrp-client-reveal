@@ -31,6 +31,7 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
         eventClient = super.processFamilyRegistrationForm(jsonString, familyBaseEntityId);
         if (structureId != null)
             eventClient.getClient().addAttribute(RESIDENCE, structureId);
+
         return eventClient;
     }
 

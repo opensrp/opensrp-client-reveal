@@ -6,7 +6,9 @@ import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.json.JSONObject;
+import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.presenter.BaseFamilyProfilePresenter;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -16,6 +18,7 @@ import org.smartregister.reveal.interactor.RevealFamilyProfileInteractor;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.util.FamilyConstants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -100,9 +103,20 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         if (!isEdit && Utils.getInterventionLabel() == R.string.focus_investigation) {
             getInteractor().generateTasks(getView().getApplicationContext(),
                     getModel().getEventClient().getEvent().getBaseEntityId());
+            return;
         } else {
-            onTasksGenerated();
+            FamilyEventClient eventClient = getModel().getEventClient();
+            for (Obs obs : eventClient.getEvent().getObs()) {
+                if (obs.getFieldCode().equals(DatabaseKeys.OLD_FAMILY_NAME)) {
+                    String oldSurname = obs.getValue().toString();
+                    if (!eventClient.getClient().getFirstName().equals(oldSurname)) {  //family name was changed
+                        getInteractor().updateFamilyMemberSurname(eventClient.getClient(), eventClient.getEvent(), oldSurname);
+                        return;
+                    }
+                }
+            }
         }
+        super.onRegistrationSaved(isEdit);
     }
 
     @Override
@@ -110,6 +124,11 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         super.onRegistrationSaved(false);
         getView().refreshTasks(structureId);
 
+    }
+
+    @Override
+    public void onMembersUpdated() {
+        onTasksGenerated();
     }
 
     private FamilyProfileContract.Interactor getInteractor() {
