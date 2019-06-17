@@ -185,6 +185,12 @@
         "v_required": {
           "value": true,
           "err": "A test type is required"
+        },
+        "relevance": {
+          "step1:personTested": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {

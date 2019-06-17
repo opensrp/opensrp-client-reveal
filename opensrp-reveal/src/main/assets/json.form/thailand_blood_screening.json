@@ -185,6 +185,12 @@
         "v_required": {
           "value": true,
           "err": "ต้องใส่ประเภทการทดสอบ"
+        },
+        "relevance": {
+          "step1:personTested": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
