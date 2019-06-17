@@ -44,7 +44,6 @@ import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
@@ -54,7 +53,6 @@ import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.AlertDialogUtils;
-import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.Constants.Properties;
@@ -124,14 +122,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private RevealMapHelper revealMapHelper;
 
-    private AppExecutors appExecutors;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_tasks);
-
-        appExecutors = RevealApplication.getInstance().getAppExecutors();
 
         jsonFormUtils = new RevealJsonFormUtils();
         drawerView = new DrawerMenuView(this);
