@@ -21,9 +21,11 @@ import org.smartregister.family.util.Constants;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.fragment.FamilyOtherMemberProfileFragment;
 import org.smartregister.reveal.presenter.FamilyOtherMemberPresenter;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
 public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfileActivity implements FamilyOtherMemberProfileContract.View {
@@ -34,10 +36,10 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
         String familyBaseEntityId = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID);
         String familyHead = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_HEAD);
         String primaryCaregiver = getIntent().getStringExtra(Constants.INTENT_KEY.PRIMARY_CAREGIVER);
-        String villageTown = getIntent().getStringExtra(Constants.INTENT_KEY.VILLAGE_TOWN);
+        String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
         String familyName = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_NAME);
         presenter = new FamilyOtherMemberPresenter(this, new BaseFamilyOtherMemberProfileActivityModel(),
-                null, familyBaseEntityId, baseEntityId, familyHead, primaryCaregiver, villageTown, familyName);
+                null, familyBaseEntityId, baseEntityId, familyHead, primaryCaregiver, operationalArea, familyName);
     }
 
     @Override
