@@ -602,7 +602,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Total number of ITNs distributed",
+        "hint": "Total normal nets distributed",
         "shortened_hint": "Distributed ITNs",
         "edit_type": "number",
         "v_required": {
