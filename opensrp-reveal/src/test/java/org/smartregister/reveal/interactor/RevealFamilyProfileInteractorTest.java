@@ -67,4 +67,10 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksGenerated();
     }
 
+
+    @Test
+    public void testUpdateFamilyMemberSurname() {
+
+    }
+
 }
