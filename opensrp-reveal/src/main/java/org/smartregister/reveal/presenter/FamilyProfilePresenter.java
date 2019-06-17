@@ -103,6 +103,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         if (!isEdit && Utils.getInterventionLabel() == R.string.focus_investigation) {
             getInteractor().generateTasks(getView().getApplicationContext(),
                     getModel().getEventClient().getEvent().getBaseEntityId());
+            return;
         } else {
             FamilyEventClient eventClient = getModel().getEventClient();
             for (Obs obs : eventClient.getEvent().getObs()) {
@@ -110,10 +111,12 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                     String oldSurname = obs.getValue().toString();
                     if (!eventClient.getClient().getFirstName().equals(oldSurname)) {  //family name was changed
                         getInteractor().updateFamilyMemberSurname(eventClient.getClient(), eventClient.getEvent(), oldSurname);
+                        return;
                     }
                 }
             }
         }
+        super.onRegistrationSaved(isEdit);
     }
 
     @Override
