@@ -223,7 +223,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
         } else {
-            String businessStatus =  getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);//getPropertyValue(feature, TASK_BUSINESS_STATUS);
+            String businessStatus =  getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             selectedFeatureInterventionType = code;
             if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || REGISTER_FAMILY.equals(code))
