@@ -38,8 +38,9 @@ public class RevealEditTextFactory extends EditTextFactory {
     }
 
     @Override
-    protected void attachLayout(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, MaterialEditText editText, ImageView editButton) throws Exception {
-        super.attachLayout(stepName, context, formFragment, jsonObject, editText, editButton);
+    protected GenericTextWatcher attachLayout(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, MaterialEditText editText, ImageView editButton) throws Exception {
+        GenericTextWatcher textWatcher = super.attachLayout(stepName, context, formFragment, jsonObject, editText, editButton);
+        editText.removeTextChangedListener(textWatcher);
         Configuration config = context.getResources().getConfiguration();
         int textSize = FormUtils.getValueFromSpOrDpOrPx(jsonObject.optString("text_size", String.valueOf(context.getResources().getDimension(com.vijay.jsonwizard.R
                 .dimen.default_text_size))), context);
@@ -56,7 +57,7 @@ public class RevealEditTextFactory extends EditTextFactory {
         // truncate hint when typing
         String shortenedHintStr = jsonObject.optString(SHORTENED_HINT);
         final String shortenedHint = "".equals(shortenedHintStr) ? jsonObject.optString(HINT) : shortenedHintStr;
-        editText.addTextChangedListener(new GenericTextWatcher(stepName, formFragment, editText) {
+        textWatcher = new GenericTextWatcher(stepName, formFragment, editText) {
             @Override
             public synchronized void afterTextChanged(Editable editable) {
                 super.afterTextChanged(editable);
@@ -65,7 +66,9 @@ public class RevealEditTextFactory extends EditTextFactory {
                     editText.setFloatingLabelText(shortenedHint);
                 }
             }
-        });
+        };
+        editText.addTextChangedListener(textWatcher);
+        return textWatcher;
     }
 
     @Override
