@@ -72,8 +72,8 @@ public class FormFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnPasswordVerifiedStartsForm() {
-        taskDetails.setTaskCode(Constants.Intervention.BEDNET_DISTRIBUTION);
-        when(jsonFormUtils.getFormName(null, taskDetails.getTaskCode())).thenReturn(Constants.JsonForm.BEDNET_DISTRIBUTION_FORM);
+        taskDetails.setTaskCode(Constants.Intervention.BLOOD_SCREENING);
+        when(jsonFormUtils.getFormName(null, taskDetails.getTaskCode())).thenReturn(Constants.JsonForm.BLOOD_SCREENING_FORM);
         presenter.onPasswordVerified();
         verify(view).startForm(null);
 
