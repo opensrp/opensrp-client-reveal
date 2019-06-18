@@ -54,3 +54,17 @@ priority: 1
 condition: "true"
 actions:
 - "calculation = helper.ifNull(step1_totPopulation-step1_calcExistingNets,0)"
+---
+name: step1_calcNumNetsToDistribute
+description: Number of nets to give
+priority: 1
+condition: "true"
+actions:
+- "calculation = helper.ifNull(step1_calcNumNetsNeeded - step1_calcExistingNets,0)"
+---
+name: step1_displayRecommendedNumNetsToDistribute
+description: Display Calculated number of nets to distribute
+priority: 1
+condition: "true"
+actions:
+- "calculation = ['calcNumNetsToDistribute' : step1_calcNumNetsToDistribute]"

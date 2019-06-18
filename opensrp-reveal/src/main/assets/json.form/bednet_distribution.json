@@ -531,12 +531,26 @@
         }
       },
       {
-        "key": "displayRecommendedNumNets",
+        "key": "calcNumNetsToDistribute",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "displayRecommendedNumNetsToDistribute",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "{calcNumNetsNeeded} nets are recommended",
+        "text": "{calcNumNetsToDistribute} nets should be distributed",
         "text_color": "#000000",
         "toaster_type": "info",
         "calculation": {
