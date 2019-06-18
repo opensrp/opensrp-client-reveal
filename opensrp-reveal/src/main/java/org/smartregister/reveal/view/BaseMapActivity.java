@@ -1,7 +1,6 @@
 package org.smartregister.reveal.view;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import org.smartregister.view.activity.MultiLanguageActivity;
 

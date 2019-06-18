@@ -21,7 +21,6 @@ import org.smartregister.family.util.Constants;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.fragment.FamilyOtherMemberProfileFragment;
 import org.smartregister.reveal.presenter.FamilyOtherMemberPresenter;
