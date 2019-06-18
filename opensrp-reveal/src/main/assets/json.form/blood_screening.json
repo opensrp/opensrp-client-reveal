@@ -297,10 +297,6 @@
             "text": "Fg"
           }
         ],
-        "v_required": {
-          "value": "true",
-          "err": "Please select Microscopy results"
-        },
         "relevance": {
           "step1:testType": {
             "type": "string",

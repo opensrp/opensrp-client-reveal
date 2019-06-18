@@ -297,10 +297,6 @@
             "text": "Fg"
           }
         ],
-        "v_required": {
-          "value": "true",
-          "err": "กรุณาเลือกผลการทดสอบ"
-        },
         "relevance": {
           "step1:testType": {
             "type": "string",
