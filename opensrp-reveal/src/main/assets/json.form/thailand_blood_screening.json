@@ -104,7 +104,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "เคยได้รับการเจาะโลหิตหรือไม่?",
+        "label": "ได้รับการเจาะโลหิตหรือไม่?",
         "options": [
           {
             "key": "Yes",
