@@ -500,6 +500,23 @@
         }
       },
       {
+        "key": "displayCalcExistingNets",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "The house has {calcExistingNets} total nets",
+        "text_color": "#000000",
+        "toaster_type": "info",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "calcNumNetsNeeded",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
