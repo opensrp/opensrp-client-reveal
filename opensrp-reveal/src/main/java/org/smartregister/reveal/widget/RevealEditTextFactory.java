@@ -38,9 +38,8 @@ public class RevealEditTextFactory extends EditTextFactory {
     }
 
     @Override
-    protected GenericTextWatcher attachLayout(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, MaterialEditText editText, ImageView editButton) throws Exception {
-        GenericTextWatcher textWatcher = super.attachLayout(stepName, context, formFragment, jsonObject, editText, editButton);
-        editText.removeTextChangedListener(textWatcher);
+    protected void attachLayout(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, MaterialEditText editText, ImageView editButton) throws Exception {
+        super.attachLayout(stepName, context, formFragment, jsonObject, editText, editButton);
         Configuration config = context.getResources().getConfiguration();
         int textSize = FormUtils.getValueFromSpOrDpOrPx(jsonObject.optString("text_size", String.valueOf(context.getResources().getDimension(com.vijay.jsonwizard.R
                 .dimen.default_text_size))), context);
@@ -52,23 +51,19 @@ public class RevealEditTextFactory extends EditTextFactory {
             editText.setTextSize(textSize * 2);
         }
         editText.setGravity(Gravity.START);
-        editText.setSingleLine(false);
 
         // truncate hint when typing
         String shortenedHintStr = jsonObject.optString(SHORTENED_HINT);
         final String shortenedHint = "".equals(shortenedHintStr) ? jsonObject.optString(HINT) : shortenedHintStr;
-        textWatcher = new GenericTextWatcher(stepName, formFragment, editText) {
+        editText.addTextChangedListener(new GenericTextWatcher(stepName, formFragment, editText) {
             @Override
             public synchronized void afterTextChanged(Editable editable) {
-                super.afterTextChanged(editable);
                 String text = editable.toString();
                 if (!StringUtils.isEmpty(text)) {
                     editText.setFloatingLabelText(shortenedHint);
                 }
             }
-        };
-        editText.addTextChangedListener(textWatcher);
-        return textWatcher;
+        });
     }
 
     @Override
