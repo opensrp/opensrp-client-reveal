@@ -68,6 +68,21 @@
       "type": "raster",
       "tileSize": 256
     },
+    "mapbox://ona.a2uoxui8": {
+      "url": "mapbox://ona.a2uoxui8",
+      "type": "raster",
+      "tileSize": 256
+    },
+    "mapbox://ona.bk777sq9": {
+      "url": "mapbox://ona.bk777sq9",
+      "type": "raster",
+      "tileSize": 256
+    },
+    "mapbox://ona.4qva92zo": {
+      "url": "mapbox://ona.4qva92zo",
+      "type": "raster",
+      "tileSize": 256
+    },
     "composite": {
       "url": "mapbox://ona.4gyv3btm,ona.4iwmjsgl,ona.ded4dg6g",
       "type": "vector"
@@ -87,14 +102,14 @@
       }
     },
     "mapbox://ona.65ebjahc": {
-        "url": "mapbox://ona.65ebjahc",
-        "type": "raster",
-        "tileSize": 256
+      "url": "mapbox://ona.65ebjahc",
+      "type": "raster",
+      "tileSize": 256
     },
     "mapbox://ona.9yx4phdp": {
-        "url": "mapbox://ona.9yx4phdp",
-        "type": "raster",
-        "tileSize": 256
+      "url": "mapbox://ona.9yx4phdp",
+      "type": "raster",
+      "tileSize": 256
     }
   },
   "sprite": "mapbox://sprites/ona/cjp461odq3oq22sp60oxq1qwz",
@@ -116,20 +131,44 @@
       "paint": {}
     },
     {
-        "id": "Thailand 1",
-        "type": "raster",
-        "metadata": {},
-        "source": "mapbox://ona.65ebjahc",
-        "layout": {},
-        "paint": {}
+      "id": "Thailand 1",
+      "type": "raster",
+      "metadata": {},
+      "source": "mapbox://ona.65ebjahc",
+      "layout": {},
+      "paint": {}
     },
     {
-        "id": "Thailand 2",
-        "type": "raster",
-        "metadata": {},
-        "source": "mapbox://ona.9yx4phdp",
-        "layout": {},
-        "paint": {}
+      "id": "Thailand 2",
+      "type": "raster",
+      "metadata": {},
+      "source": "mapbox://ona.9yx4phdp",
+      "layout": {},
+      "paint": {}
+    },
+    {
+      "id": "Thailand 2 - Batch 2-1",
+      "type": "raster",
+      "metadata": {},
+      "source": "mapbox://ona.a2uoxui8",
+      "layout": {},
+      "paint": {}
+    },
+    {
+      "id": "Thailand 2 - Batch 2-3",
+      "type": "raster",
+      "metadata": {},
+      "source": "mapbox://ona.4qva92zo",
+      "layout": {},
+      "paint": {}
+    },
+    {
+      "id": "Thailand 2 - Batch 2-2",
+      "type": "raster",
+      "metadata": {},
+      "source": "mapbox://ona.bk777sq9",
+      "layout": {},
+      "paint": {}
     },
     {
       "id": "ona-aami3tqv",
