@@ -25,6 +25,7 @@ import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.ClientProcessorForJava;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
@@ -34,6 +35,7 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_D
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
+import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
@@ -78,6 +80,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             return;
         }
 
+        ArrayList<Client> clients = new ArrayList<>();
         Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
         String operationalAreaLocationId = operationalArea == null ? null : operationalArea.getId();
         boolean hasSyncedEventsInTarget = false;
@@ -102,6 +105,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     Client client = eventClient.getClient();
 
                     if (client != null) {
+                        clients.add(client);
                         try {
                             if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
                                 updateTask(event, localEvents);
@@ -119,6 +123,8 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 }
             }
         }
+
+        taskRepository.updateTaskStructureIdFromClient(clients, RESIDENCE);
 
         if (hasSyncedEventsInTarget) {
             Intent intent = new Intent(STRUCTURE_TASK_SYNCED);
