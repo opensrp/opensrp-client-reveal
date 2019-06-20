@@ -146,6 +146,22 @@
       "layout": {},
       "paint": {}
     },
+        {
+            "id": "Thailand 2 - Batch 1.1",
+            "type": "raster",
+            "metadata": {},
+            "source": "mapbox://ona.112jl4ev",
+            "layout": {},
+            "paint": {}
+        },
+        {
+            "id": "Thailand 2 - Batch 1.2",
+            "type": "raster",
+            "metadata": {},
+            "source": "mapbox://ona.96vmjf75",
+            "layout": {},
+            "paint": {}
+        },
     {
       "id": "Thailand 2 - Batch 2-1",
       "type": "raster",
@@ -170,6 +186,14 @@
       "layout": {},
       "paint": {}
     },
+        {
+            "id": "Thailand 2 - Batch 2-4",
+            "type": "raster",
+            "metadata": {},
+            "source": "mapbox://ona.d3vt74e1",
+            "layout": {},
+            "paint": {}
+        },
     {
       "id": "ona-aami3tqv",
       "type": "raster",
