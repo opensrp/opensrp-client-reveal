@@ -109,8 +109,8 @@
         <item quantity="other">%1dสิ่งปลูกสร้าง ภายใน %2.0f ม. (รวม %3$d)</item>
     </plurals>
 
-    <string name="card_view_record_mosquito_collection">บันทึกการเก็บตัวอย่างยุง</string>
-    <string name="record_larval_dipping">บันทึกการเก็บลูกน้ำโดยวิธี Larval dipping</string>
+    <string name="card_view_record_mosquito_collection">แก้ไขข้อมูล</string>
+    <string name="record_larval_dipping">บแก้ไขข้อมูล</string>
     <string name="card_view_mosquito_collection_point">ตำแหน่งที่ทำการเก็บตัวอย่างยุง</string>
     <string name="mosquito_breeding_site">แหล่งเพาะพันธุ์ยุง</string>
 
