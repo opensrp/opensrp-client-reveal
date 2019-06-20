@@ -128,8 +128,8 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
     }
 
     private String bccSelect() {
-        return String.format("SELECT * FROM %s WHERE %s.%s = ? AND %s.%s = ? AND %s.%s = ? AND %s != ?",
-                TASK_TABLE, TASK_TABLE, FOR, TASK_TABLE, PLAN_ID, TASK_TABLE, CODE, STATUS);
+        return String.format("SELECT * FROM %s WHERE %s = ? AND %s = ? AND %s != ? AND %s ='%s'",
+                TASK_TABLE, FOR, PLAN_ID, STATUS, CODE, BCC);
     }
 
 
