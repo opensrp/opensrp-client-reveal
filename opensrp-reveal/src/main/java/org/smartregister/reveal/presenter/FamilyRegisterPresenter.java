@@ -47,7 +47,6 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter impleme
                 view.startProfileActivity(family.getBaseEntityId(),
                         family.findRelatives(FamilyConstants.RELATIONSHIP.FAMILY_HEAD).get(0),
                         family.findRelatives(FamilyConstants.RELATIONSHIP.PRIMARY_CAREGIVER).get(0),
-                        family.getAddress("").getCityVillage(),
                         family.getFirstName());
                 break;
             }

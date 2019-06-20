@@ -51,7 +51,6 @@ public class RevealEditTextFactory extends EditTextFactory {
             editText.setTextSize(textSize * 2);
         }
         editText.setGravity(Gravity.START);
-        editText.setSingleLine(false);
 
         // truncate hint when typing
         String shortenedHintStr = jsonObject.optString(SHORTENED_HINT);
@@ -59,7 +58,6 @@ public class RevealEditTextFactory extends EditTextFactory {
         editText.addTextChangedListener(new GenericTextWatcher(stepName, formFragment, editText) {
             @Override
             public synchronized void afterTextChanged(Editable editable) {
-                super.afterTextChanged(editable);
                 String text = editable.toString();
                 if (!StringUtils.isEmpty(text)) {
                     editText.setFloatingLabelText(shortenedHint);

@@ -169,6 +169,8 @@ public interface Constants {
 
         String STRUCTURE_PROPERTIES_TYPE = "[structure_type]";
 
+        String NUMBER_OF_FAMILY_MEMBERS = "[num_fam_members]";
+
         String SPRAY_FORM = "json.form/spray_form.json";
 
         String MOSQUITO_COLLECTION_FORM = "json.form/mosquito_collection_form.json";

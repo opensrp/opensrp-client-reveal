@@ -14,6 +14,7 @@ public interface BaseFormFragmentContract {
 
         void onStructureFound(Location structure, BaseTaskDetails details);
 
+        void onFoundMembersCount(int numberOfMembers, JSONObject formJSON);
     }
 
     interface View extends UserLocationContract.UserLocationView {
@@ -24,5 +25,10 @@ public interface BaseFormFragmentContract {
         void startForm(JSONObject formJSON);
 
         void displayError(int title, int message);
+    }
+
+    interface Interactor {
+
+        void findNumberOfMembers(String structureId, JSONObject formJSON);
     }
 }
