@@ -9,6 +9,7 @@ import net.sqlcipher.Cursor;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
+import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.R;
@@ -46,6 +47,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_NAM
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_COUNT;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 
@@ -132,6 +134,11 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 TASK_TABLE, FOR, PLAN_ID, STATUS, CODE, BCC);
     }
 
+    private String indexCaseSelect() {
+        return String.format("SELECT * FROM %s WHERE %s = ? AND %s != ? AND %s = ?",
+                TASK_TABLE, PLAN_ID, STATUS, CODE);
+    }
+
 
     private String[] mainColumns(String tableName) {
         return new String[]{
@@ -182,9 +189,14 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
             }
 
-            // Query BCC tasks
-
+            // Query BCC task
             tasks.addAll(queryTaskDetails(bccSelect(), mainCondition.second, lastLocation,
+                    operationalAreaCenter, houseLabel, structuresWithinBuffer, false));
+
+
+            // Query Case Confirmation task
+            tasks.addAll(queryTaskDetails(indexCaseSelect(), new String[]{planId, TaskStatus.CANCELLED.name(),
+                            CASE_CONFIRMATION}, lastLocation,
                     operationalAreaCenter, houseLabel, structuresWithinBuffer, false));
 
             Collections.sort(tasks);
@@ -231,7 +243,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         }
         Location location = new Location((String) null);
 
-        if (!BCC.equals(task.getTaskCode())) {
+        if (!BCC.equals(task.getTaskCode()) && !CASE_CONFIRMATION.equals(task.getTaskCode())) {
             location.setLatitude(cursor.getDouble(cursor.getColumnIndex(LATITUDE)));
             location.setLongitude(cursor.getDouble(cursor.getColumnIndex(LONGITUDE)));
             task.setLocation(location);
@@ -260,7 +272,10 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
         }
         if (BCC.equals(task.getTaskCode())) {
-            //set distance to -1 to always display on top of register
+            //set distance to -2 to always display on top of register
+            task.setDistanceFromUser(-2);
+        } else if (CASE_CONFIRMATION.equals(task.getTaskCode())) {
+            //set distance to -1 to always display on top of register and below BCC
             task.setDistanceFromUser(-1);
         } else if (lastLocation != null) {
             task.setDistanceFromUser(location.distanceTo(lastLocation));
