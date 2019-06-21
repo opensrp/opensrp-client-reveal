@@ -51,18 +51,6 @@
     "display_back_button": "true",
     "fields": [
       {
-        "key": "caseNumber",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Please enter the case number",
-        "v_required": {
-          "value": true,
-          "err": "A case number is required"
-        }
-      },
-      {
         "key": "indexYesNo",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -86,105 +74,6 @@
         }
       },
       {
-        "key": "caseNotificationDate",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "date_picker",
-        "hint": "When was the case notified?",
-        "expanded": false,
-        "min_date": "today-1y",
-        "max_date": "today",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the case notification date"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "case-confirmation-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "caseInvestigationDate",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "date_picker",
-        "hint": "When was the case investigated?",
-        "expanded": false,
-        "min_date": "today-1y",
-        "max_date": "today",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the case investigation date"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "case-confirmation-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "forestGoerYesNo",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Is this person a forest goer?",
-        "options": [
-          {
-            "key": "Yes",
-            "text": "Yes"
-          },
-          {
-            "key": "No",
-            "text": "No"
-          }
-        ],
-        "value": "No"
-      },
-      {
-        "key": "otherFocusYesNo",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Is this case linked to any other focus?",
-        "options": [
-          {
-            "key": "Yes",
-            "text": "Yes"
-          },
-          {
-            "key": "No",
-            "text": "No"
-          }
-        ],
-        "value": "No"
-      },
-      {
-        "key": "otherFocusValue",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "openmrs_data_type": "text",
-        "type": "edit_text",
-        "hint": "Which focus?",
-        "tree": [],
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "case-confirmation-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "comment",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -192,10 +81,9 @@
         "type": "edit_text",
         "hint": "Please add a comment",
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "case-confirmation-relevance-rules.yml"
-            }
+          "step1:indexYesNo": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },

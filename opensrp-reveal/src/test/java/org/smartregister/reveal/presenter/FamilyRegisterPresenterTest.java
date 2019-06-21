@@ -98,7 +98,7 @@ public class FamilyRegisterPresenterTest extends BaseUnitTest {
     public void testOnTasksGenerated() {
         presenter.onTasksGenerated();
         verify(view).hideProgressDialog();
-        verify(view).startProfileActivity(baseEntityId, familyHead, careGiver, "vl1", "Otala");
+        verify(view).startProfileActivity(baseEntityId, familyHead, careGiver, "Otala");
         assertTrue(RevealApplication.getInstance().isFamilyAdded());
     }
 }

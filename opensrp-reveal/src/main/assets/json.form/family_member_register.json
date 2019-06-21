@@ -67,21 +67,16 @@
         }
       },
       {
-        "key": "national_id",
+        "key": "first_name",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "concept",
-        "openmrs_entity_id": "163084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        "label_info_text": "What is their national identity number or their voter registration number?",
-        "label_info_title": "National ID number",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "first_name",
         "type": "edit_text",
-        "hint": "National ID number",
-        "v_numeric": {
+        "hint": "First name",
+        "edit_type": "name",
+        "v_required": {
           "value": "true",
-          "err": "Please enter a number"
-        },
-        "v_regex": {
-          "value": "^$|[0-9]{13}",
-          "err": "Number must be 13 digits."
+          "err": "Please enter the first name"
         }
       },
       {
@@ -142,28 +137,6 @@
             }
           }
         }
-      },
-      {
-        "key": "first_name",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "first_name",
-        "type": "edit_text",
-        "hint": "First name",
-        "edit_type": "name",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the first name"
-        }
-      },
-      {
-        "key": "middle_name",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "middle_name",
-        "type": "edit_text",
-        "hint": "Middle name",
-        "edit_type": "name"
       },
       {
         "key": "dob",
@@ -252,10 +225,6 @@
           {
             "key": "Female",
             "text": "Female"
-          },
-          {
-            "key": "Other",
-            "text": "Other"
           }
         ],
         "v_required": {
@@ -272,11 +241,11 @@
         "hint": "Phone number",
         "v_numeric": {
           "value": "true",
-          "err": "Number must be a total of 9 digits in length"
+          "err": "Please enter a number"
         },
         "v_regex": {
-          "value": "^$|0[0-9]{8}",
-          "err": "Number must be 9 digits and must start with 0."
+          "value": "^$|0[0-9]{8,9}",
+          "err": "Number must be 9-10 digits and must start with 0."
         }
       },
       {
@@ -285,7 +254,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Dose this person sleep outdoors?",
+        "label": "Does this person spend the night outdoors?",
         "options": [
           {
             "key": "Yes",
@@ -298,7 +267,7 @@
         ],
         "v_required": {
           "value": "true",
-          "err": "Please select whether this person sleeps outdoors"
+          "err": "Please select whether this person spends the night outdoors"
         }
       },
       {
@@ -340,6 +309,30 @@
         "v_required": {
           "value": true,
           "err": "Please specify the Citizenship"
+        }
+      },
+      {
+        "key": "national_id",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "163084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "label_info_text": "What is their national identity number or their voter registration number?",
+        "label_info_title": "National ID number",
+        "type": "edit_text",
+        "hint": "National ID number",
+        "v_numeric": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_regex": {
+          "value": "^$|[0-9]{13}",
+          "err": "Number must be 13 digits."
+        },
+        "relevance": {
+          "step1:citizenship": {
+            "type": "string",
+            "ex": "equalTo(., \"Thai\")"
+          }
         }
       }
     ]
