@@ -116,8 +116,8 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
     }
 
     private String bccSelect() {
-        return String.format("SELECT * FROM %s WHERE %s.%s = ? AND %s.%s = ? AND %s.%s = '%s'",
-                TASK_TABLE, TASK_TABLE, FOR, TASK_TABLE, PLAN_ID, TASK_TABLE, CODE, BCC);
+        return String.format("SELECT * FROM %s WHERE %s = ? AND %s = ? AND %s != ? AND %s ='%s'",
+                TASK_TABLE, FOR, PLAN_ID, STATUS, CODE, BCC);
     }
 
 
@@ -144,7 +144,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
 
     public void findTasks(Pair<String, String[]> mainCondition, Location lastLocation, Location operationalAreaCenter, String houseLabel) {
-        if (mainCondition == null || mainCondition.second == null || mainCondition.second.length != 2 || mainCondition.second[0] == null) {
+        if (mainCondition == null || mainCondition.second == null || mainCondition.second.length != 3 || mainCondition.second[0] == null) {
             getPresenter().onTasksFound(null, 0);
             return;
         }
