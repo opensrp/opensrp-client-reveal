@@ -33,6 +33,7 @@ import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.TestingUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -242,6 +243,7 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
     @Test
     public void testNewInstance() {
         Bundle bundle = new Bundle();
+        org.smartregister.Context.bindtypes = new ArrayList<>();
         fragment = StructureTasksFragment.newInstance(bundle,context);
         assertNotNull(fragment);
         assertEquals(bundle, fragment.getArguments());

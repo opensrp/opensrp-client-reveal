@@ -52,6 +52,8 @@ public interface Constants {
 
     int ANIMATE_TO_LOCATION_DURATION = 1000;
 
+    String DIGITAL_GLOBE_CONNECT_ID = "DG_CONNECT_ID";
+
     interface CONFIGURATION {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";
@@ -168,6 +170,8 @@ public interface Constants {
         String HEAD_OF_HOUSEHOLD = "familyHeadName";
 
         String STRUCTURE_PROPERTIES_TYPE = "[structure_type]";
+
+        String NUMBER_OF_FAMILY_MEMBERS = "[num_fam_members]";
 
         String SPRAY_FORM = "json.form/spray_form.json";
 

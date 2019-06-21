@@ -46,7 +46,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 28
         versionCode 3
-        versionName "2.0.7"
+        versionName "2.1.0"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -59,6 +59,30 @@ android {
             annotationProcessorOptions {
                 arguments = [eventBusIndex: 'org.smartregister.reveal.RevelEventBusIndex']
             }
+        }
+
+        if (project.rootProject.file("local.properties").exists()) {
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file("local.properties").newDataInputStream())
+            if (properties != null &&
+                    properties.containsKey("mapbox.sdk.token")) {
+                buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", properties["mapbox.sdk.token"]
+            } else {
+                println("Mapbox key config variables is not set in your local.properties")
+                buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
+            }
+
+            if (properties != null &&
+                    properties.containsKey("digital.globe.connectId")) {
+                buildConfigField "String", "DG_CONNECT_ID", properties["digital.globe.connectId"]
+            } else {
+                println("Digital Globe config variables is not set in your local.properties")
+                buildConfigField "String", "DG_CONNECT_ID", "\"sample_key\""
+            }
+        } else {
+            println("local.properties does not exist")
+            buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
+            buildConfigField "String", "DG_CONNECT_ID", "\"sample_key\""
         }
     }
     dexOptions {
@@ -81,27 +105,13 @@ android {
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
             buildConfigField "int", "SYNC_INTERVAL_IN_MINUTES", '2'
-            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.ZAMBIA"
+            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.THAILAND"
             buildConfigField "int", "PULL_UNIQUE_IDS_MINUTES", '10'
             buildConfigField "String", "ADMIN_PASSWORD_NOT_NEAR_STRUCTURES", '"AdminPass1"'
             buildConfigField "float", "MY_LOCATION_BUFFER", '25'
             buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '90'
 
-            if (project.rootProject.file("local.properties").exists()) {
-                Properties properties = new Properties()
-                properties.load(project.rootProject.file("local.properties").newDataInputStream())
-                if (properties != null &&
-                        properties.containsKey("mapbox.sdk.token")) {
-                    buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", properties["mapbox.sdk.token"]
-                } else {
-                    println("One of the required config variables is not set in your local.properties")
-                    buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
-                }
-            } else {
-                println("local.properties does not exist")
-                buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
-            }
         }
 
         debug {
@@ -119,20 +129,6 @@ android {
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '60'
 
             testCoverageEnabled true
-            if (project.rootProject.file("local.properties").exists()) {
-                Properties properties = new Properties()
-                properties.load(project.rootProject.file("local.properties").newDataInputStream())
-                if (properties != null &&
-                        properties.containsKey("mapbox.sdk.token")) {
-                    buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", properties["mapbox.sdk.token"]
-                } else {
-                    println("One of the required config variables is not set in your local.properties")
-                    buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
-                }
-            } else {
-                println("local.properties does not exist")
-                buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
-            }
         }
 
 
@@ -185,7 +181,7 @@ dependencies {
         exclude group: 'com.android.volley'
     }
 
-    implementation('org.smartregister:opensrp-client-core:1.6.32-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.6.35-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.guava', module: 'guava'
@@ -202,7 +198,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:1.6.10-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:1.6.14-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'cardview-v7'

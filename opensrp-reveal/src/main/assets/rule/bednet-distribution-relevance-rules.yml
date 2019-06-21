@@ -26,3 +26,52 @@ priority: 1
 condition: "step1_existingLLINs > 0"
 actions:
 - "isRelevant = true"
+---
+name: step1_existingHLINsLessThan1yr
+description: Display if existingLLIN is greater than 0
+priority: 1
+condition: "step1_existingHLINs > 0"
+actions:
+- "isRelevant = true"
+---
+name: step1_existingHLINs1yrTo2yr
+description: Display if existingLLIN is greater than 0
+priority: 1
+condition: "step1_existingHLINs > 0"
+actions:
+- "isRelevant = true"
+---
+name: step1_existingHLINs2yrTo3yr
+description: Display if existingLLIN is greater than 0
+priority: 1
+condition: "step1_existingHLINs > 0"
+actions:
+- "isRelevant = true"
+---
+name: step1_existingHLINsGreaterThan3yr
+description: Display if existingLLIN is greater than 0
+priority: 1
+condition: "step1_existingHLINs > 0"
+actions:
+- "isRelevant = true"
+---
+name: step1_distributedLLINs
+description: Display if number of nets existing is different from number of people
+priority: 1
+condition: "step1_calcExistingNets < step1_totPopulation"
+actions:
+- "isRelevant = true"
+---
+name: step1_distributedHLINs
+description: Display if number of nets existing is different from number of people
+priority: 1
+condition: "step1_calcExistingNets < step1_totPopulation"
+actions:
+- "isRelevant = true"
+---
+name: step1_distributedITNs
+description: Display if number of nets existing is different from number of people
+priority: 1
+condition: "step1_calcExistingNets < step1_totPopulation"
+actions:
+- "isRelevant = true"

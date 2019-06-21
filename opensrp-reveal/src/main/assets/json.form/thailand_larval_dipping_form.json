@@ -77,7 +77,7 @@
         ],
         "v_required": {
           "value": true,
-          "err": "Please specify the task status"
+          "err": "กรุณาระบุสถานะงาน"
         }
       },
       {
@@ -90,7 +90,7 @@
         "max_date": "today",
         "v_required": {
           "value": true,
-          "err": "Please specify the date larval dipping was done"
+          "err": "กรุณาระบุวันที่ทำการเก็บลูกน้ำเสร็จ"
         },
         "relevance": {
           "rules-engine": {

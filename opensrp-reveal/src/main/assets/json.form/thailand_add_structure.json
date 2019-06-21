@@ -56,7 +56,7 @@
         "type": "geowidget",
         "v_zoom_max": {
           "value": "16.5",
-          "err": "Please zoom in to add a point"
+          "err": "กรุณาซูมหรือขยายเข้าเพื่อเพิ่มตำแหน่ง"
         }
       },
       {
@@ -83,7 +83,7 @@
         "value": "Residential Structure",
         "v_required": {
           "value": true,
-          "err": "Please specify Type of structure"
+          "err": "กรุณาระบุประเภทของสิ่งปลูกสร้าง"
         }
       },
       {
