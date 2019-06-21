@@ -60,6 +60,30 @@ android {
                 arguments = [eventBusIndex: 'org.smartregister.reveal.RevelEventBusIndex']
             }
         }
+
+        if (project.rootProject.file("local.properties").exists()) {
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file("local.properties").newDataInputStream())
+            if (properties != null &&
+                    properties.containsKey("mapbox.sdk.token")) {
+                buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", properties["mapbox.sdk.token"]
+            } else {
+                println("Mapbox key config variables is not set in your local.properties")
+                buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
+            }
+
+            if (properties != null &&
+                    properties.containsKey("digital.globe.connectId")) {
+                buildConfigField "String", "DG_CONNECT_ID", properties["digital.globe.connectId"]
+            } else {
+                println("Digital Globe config variables is not set in your local.properties")
+                buildConfigField "String", "DG_CONNECT_ID", "\"sample_key\""
+            }
+        } else {
+            println("local.properties does not exist")
+            buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
+            buildConfigField "String", "DG_CONNECT_ID", "\"sample_key\""
+        }
     }
     dexOptions {
         javaMaxHeapSize "4g"
@@ -88,20 +112,6 @@ android {
             buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '90'
 
-            if (project.rootProject.file("local.properties").exists()) {
-                Properties properties = new Properties()
-                properties.load(project.rootProject.file("local.properties").newDataInputStream())
-                if (properties != null &&
-                        properties.containsKey("mapbox.sdk.token")) {
-                    buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", properties["mapbox.sdk.token"]
-                } else {
-                    println("One of the required config variables is not set in your local.properties")
-                    buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
-                }
-            } else {
-                println("local.properties does not exist")
-                buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
-            }
         }
 
         debug {
@@ -119,20 +129,6 @@ android {
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '60'
 
             testCoverageEnabled true
-            if (project.rootProject.file("local.properties").exists()) {
-                Properties properties = new Properties()
-                properties.load(project.rootProject.file("local.properties").newDataInputStream())
-                if (properties != null &&
-                        properties.containsKey("mapbox.sdk.token")) {
-                    buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", properties["mapbox.sdk.token"]
-                } else {
-                    println("One of the required config variables is not set in your local.properties")
-                    buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
-                }
-            } else {
-                println("local.properties does not exist")
-                buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
-            }
         }
 
 
