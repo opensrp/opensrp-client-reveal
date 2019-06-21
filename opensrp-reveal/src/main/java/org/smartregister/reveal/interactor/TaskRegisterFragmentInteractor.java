@@ -47,7 +47,6 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_COUNT;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
-import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 
 /**
  * Created by samuelgithengi on 3/18/19.
