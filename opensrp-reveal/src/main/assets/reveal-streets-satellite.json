@@ -110,6 +110,14 @@
       "url": "mapbox://ona.9yx4phdp",
       "type": "raster",
       "tileSize": 256
+    },
+    "diimagery": {
+      "type": "raster",
+      "scheme": "tms",
+      "tiles": [
+        "https://earthwatch.digitalglobe.com/earthservice/tmsaccess/tms/1.0.0/DigitalGlobe:ImageryTileService@EPSG:3857@png/{z}/{x}/{y}.png?connectId=DG_CONNECT_ID"
+      ],
+      "tileSize": 256
     }
   },
   "sprite": "mapbox://sprites/ona/cjp461odq3oq22sp60oxq1qwz",
@@ -131,66 +139,10 @@
       "paint": {}
     },
     {
-      "id": "Thailand 1",
+      "id": "Thailand EarthWatch Imagery",
       "type": "raster",
       "metadata": {},
-      "source": "mapbox://ona.65ebjahc",
-      "layout": {},
-      "paint": {}
-    },
-    {
-      "id": "Thailand 2",
-      "type": "raster",
-      "metadata": {},
-      "source": "mapbox://ona.9yx4phdp",
-      "layout": {},
-      "paint": {}
-    },
-    {
-      "id": "Thailand 2 - Batch 1.1",
-      "type": "raster",
-      "metadata": {},
-      "source": "mapbox://ona.112jl4ev",
-      "layout": {},
-      "paint": {}
-    },
-    {
-      "id": "Thailand 2 - Batch 1.2",
-      "type": "raster",
-      "metadata": {},
-      "source": "mapbox://ona.96vmjf75",
-      "layout": {},
-      "paint": {}
-    },
-    {
-      "id": "Thailand 2 - Batch 2-1",
-      "type": "raster",
-      "metadata": {},
-      "source": "mapbox://ona.a2uoxui8",
-      "layout": {},
-      "paint": {}
-    },
-    {
-      "id": "Thailand 2 - Batch 2-3",
-      "type": "raster",
-      "metadata": {},
-      "source": "mapbox://ona.4qva92zo",
-      "layout": {},
-      "paint": {}
-    },
-    {
-      "id": "Thailand 2 - Batch 2-2",
-      "type": "raster",
-      "metadata": {},
-      "source": "mapbox://ona.bk777sq9",
-      "layout": {},
-      "paint": {}
-    },
-    {
-      "id": "Thailand 2 - Batch 2-4",
-      "type": "raster",
-      "metadata": {},
-      "source": "mapbox://ona.d3vt74e1",
+      "source": "diimagery",
       "layout": {},
       "paint": {}
     },
@@ -358,15 +310,15 @@
           [
             "Not Visited"
           ],
-          1,
+          0.7,
           [
             "Not Sprayed"
           ],
-          1,
+          0.7,
           [
             "Sprayed"
           ],
-          1,
+          0.7,
           [
             "Not Sprayable"
           ],
@@ -430,7 +382,8 @@
           "hsl(0, 0%, 9%)",
           "hsl(0, 0%, 78%)"
         ],
-        "circle-stroke-width": 1
+        "circle-stroke-width": 1,
+        "fill-opacity": 0.7
       }
     },
     {
