@@ -383,7 +383,7 @@
           "hsl(0, 0%, 78%)"
         ],
         "circle-stroke-width": 1,
-        "fill-opacity": 0.7
+        "circle-opacity": 0.5
       }
     },
     {
