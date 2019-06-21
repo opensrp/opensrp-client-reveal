@@ -167,84 +167,55 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             String groupId = mainCondition.second[0];
             String planId = mainCondition.second[1];
             if (Utils.getInterventionLabel() == R.string.focus_investigation) { // perform task grouping
-                String groupedRegisteredStructureTasksQuery = groupedRegisteredStructureTasksSelect(mainCondition.first);
-                Cursor cursor = null;
-                try {
-                    cursor = getDatabase().rawQuery(groupedRegisteredStructureTasksQuery, new String[]{groupId, planId, groupId, planId});
-                    while (cursor.moveToNext()) {
-                        TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, true);
-                        if (taskDetails.getDistanceFromUser() <= locationBuffer) {
-                            structuresWithinBuffer += 1;
-                        }
-                        tasks.add(taskDetails);
-                    }
-                } finally {
-                    if (cursor != null) {
-                        cursor.close();
-                    }
-                }
 
-                String nonRegisteredStructureTasksQuery = nonRegisteredStructureTasksSelect(mainCondition.first);
-                cursor = null; //reset cursor
-                try {
-                    cursor = getDatabase().rawQuery(nonRegisteredStructureTasksQuery, mainCondition.second);
-                    while (cursor.moveToNext()) {
-                        TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, false);
-                        if (taskDetails.getDistanceFromUser() <= locationBuffer) {
-                            structuresWithinBuffer += 1;
-                        }
-                        tasks.add(taskDetails);
-                    }
-                } finally {
-                    if (cursor != null) {
-                        cursor.close();
-                    }
-                }
+                tasks.addAll(queryTaskDetails(groupedRegisteredStructureTasksSelect(mainCondition.first),
+                        new String[]{groupId, planId, groupId, planId}, lastLocation, operationalAreaCenter, houseLabel, structuresWithinBuffer, true));
+
+
+                tasks.addAll(queryTaskDetails(nonRegisteredStructureTasksSelect(mainCondition.first),
+                        mainCondition.second, lastLocation, operationalAreaCenter, houseLabel, structuresWithinBuffer, false));
+
             } else {
-                String mainSelectQuery = mainSelect(mainCondition.first);
-                Cursor cursor = null;
-                try {
-                    cursor = getDatabase().rawQuery(mainSelectQuery, mainCondition.second);
-                    while (cursor.moveToNext()) {
-                        TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, false);
-                        if (taskDetails.getDistanceFromUser() <= locationBuffer) {
-                            structuresWithinBuffer += 1;
-                        }
-                        tasks.add(taskDetails);
-                    }
-                } finally {
-                    if (cursor != null) {
-                        cursor.close();
-                    }
-                }
+
+                tasks.addAll(queryTaskDetails(mainSelect(mainCondition.first), mainCondition.second,
+                        lastLocation, operationalAreaCenter, houseLabel, structuresWithinBuffer, false));
+
             }
 
             // Query BCC tasks
-            String bccSelectQuery = bccSelect();
-            Cursor cursor = null;
-            try {
-                cursor = getDatabase().rawQuery(bccSelectQuery, mainCondition.second);
-                while (cursor.moveToNext()) {
-                    TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, false);
-                    if (taskDetails.getDistanceFromUser() <= locationBuffer) {
-                        structuresWithinBuffer += 1;
-                    }
-                    tasks.add(taskDetails);
-                }
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
-            }
 
-            int finalStructureWithinBuffer = structuresWithinBuffer;
+            tasks.addAll(queryTaskDetails(bccSelect(), mainCondition.second, lastLocation,
+                    operationalAreaCenter, houseLabel, structuresWithinBuffer, false));
+
             Collections.sort(tasks);
             appExecutors.mainThread().execute(() -> {
-                getPresenter().onTasksFound(tasks, finalStructureWithinBuffer);
+                getPresenter().onTasksFound(tasks, structuresWithinBuffer);
             });
 
         });
 
+    }
+
+    private List<TaskDetails> queryTaskDetails(String query, String[] params, Location lastLocation,
+                                               Location operationalAreaCenter, String houseLabel, Integer structuresWithinBuffer, boolean groupedTasks) {
+        List<TaskDetails> tasks = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = getDatabase().rawQuery(query, params);
+
+            while (cursor.moveToNext()) {
+                TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, groupedTasks);
+                if (taskDetails.getDistanceFromUser() <= locationBuffer) {
+                    structuresWithinBuffer += 1;
+                }
+                tasks.add(taskDetails);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return tasks;
     }
 
 
