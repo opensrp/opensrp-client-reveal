@@ -37,8 +37,8 @@
     <string name="select_campaign_operational_area_title">Plan and Operational area set</string>
     <string name="select_campaign_operational_area">Plan and Operational area not set. Select from the hamburger menu</string>
 
-    <string name="reveal_satellite_style" translatable="false">asset://reveal-streets-satellite.json</string>
-    <string name="reveal_streets_style" translatable="false">asset://reveal-streets-satellite.json</string>
+    <string name="reveal_satellite_style" translatable="false">reveal-streets-satellite.json</string>
+    <string name="reveal_streets_style" translatable="false">reveal-streets-style.json</string>
     <string name="reveal_datasource_name" translatable="false">reveal-data-set</string>
     <string name="reveal_layer_polygons" translatable="false">reveal-data-polygons</string>
     <string name="reveal_layer_points" translatable="false">reveal-data-points</string>

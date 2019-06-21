@@ -52,6 +52,8 @@ public interface Constants {
 
     int ANIMATE_TO_LOCATION_DURATION = 1000;
 
+    String DIGITAL_GLOBE_CONNECT_ID = "DG_CONNECT_ID";
+
     interface CONFIGURATION {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";
