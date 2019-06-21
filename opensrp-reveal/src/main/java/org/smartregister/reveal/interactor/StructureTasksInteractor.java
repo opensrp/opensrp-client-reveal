@@ -134,7 +134,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
         String[] otherColumns = new String[]{
                 "printf('%s %s %s'," + FIRST_NAME + "," + MIDDLE_NAME + "," + LAST_NAME + ") AS " + NAME,
                 DOB,
-                STRUCTURE_ID
+                FAMILY_MEMBER + "." + STRUCTURE_ID
         };
         return ArrayUtils.addAll(columns, otherColumns);
     }

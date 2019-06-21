@@ -102,28 +102,16 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         SmartRegisterQueryBuilder structureTasksQueryBuilder = new SmartRegisterQueryBuilder();
         structureTasksQueryBuilder.selectInitiateMainTable(tableName, mainColumns(tableName), ID);
         structureTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
-                STRUCTURES_TABLE, tableName, FOR, STRUCTURES_TABLE, ID));
+                STRUCTURES_TABLE, tableName, STRUCTURE_ID, STRUCTURES_TABLE, ID));
         structureTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s  COLLATE NOCASE",
                 FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
         structureTasksQueryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
                 SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
         structureTasksQueryBuilder.mainCondition(mainCondition);
 
-        SmartRegisterQueryBuilder familyMemberTasksQueryBuilder = new SmartRegisterQueryBuilder();
-        familyMemberTasksQueryBuilder.selectInitiateMainTable(tableName, mainColumns(tableName), ID);
-        familyMemberTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
-                FAMILY_MEMBER, TASK_TABLE, FOR, FAMILY_MEMBER, BASE_ENTITY_ID));
-        familyMemberTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
-                STRUCTURES_TABLE, STRUCTURES_TABLE, ID, FAMILY_MEMBER, STRUCTURE_ID));
-        familyMemberTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s  COLLATE NOCASE",
-                FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
-        familyMemberTasksQueryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
-                SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
-        familyMemberTasksQueryBuilder.mainCondition(mainCondition);
-
         return String.format(" SELECT %s.*, SUM(CASE WHEN %s.status='COMPLETED' THEN 1 ELSE 0 END) AS %s , COUNT(%s._id) AS %s FROM ( ",
                 "tasks", "tasks", COMPLETED_TASK_COUNT, "tasks", TASK_COUNT) + structureTasksQueryBuilder +
-                " UNION " + familyMemberTasksQueryBuilder + " ) AS tasks GROUP BY tasks.structure_id ";
+                " ) AS tasks GROUP BY tasks.structure_id ";
 
     }
 
@@ -164,13 +152,11 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         List<TaskDetails> tasks = new ArrayList<>();
         appExecutors.diskIO().execute(() -> {
             int structuresWithinBuffer = 0;
-            String groupId = mainCondition.second[0];
-            String planId = mainCondition.second[1];
             if (Utils.getInterventionLabel() == R.string.focus_investigation) { // perform task grouping
                 String groupedRegisteredStructureTasksQuery = groupedRegisteredStructureTasksSelect(mainCondition.first);
                 Cursor cursor = null;
                 try {
-                    cursor = getDatabase().rawQuery(groupedRegisteredStructureTasksQuery, new String[]{groupId, planId, groupId, planId});
+                    cursor = getDatabase().rawQuery(groupedRegisteredStructureTasksQuery, mainCondition.second);
                     while (cursor.moveToNext()) {
                         TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, true);
                         if (taskDetails.getDistanceFromUser() <= locationBuffer) {
