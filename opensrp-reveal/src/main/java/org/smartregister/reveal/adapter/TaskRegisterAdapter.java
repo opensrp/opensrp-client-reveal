@@ -12,7 +12,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.CardDetailsUtil;
-import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.viewholder.TaskRegisterViewHolder;
 
 import java.util.ArrayList;
@@ -48,21 +48,26 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
         String name = task.getStructureName();
         String action = null;
         boolean hasIcon = false;
-        if (Constants.Intervention.IRS.equals(task.getTaskCode())) {
+        if (Intervention.IRS.equals(task.getTaskCode())) {
             if (name == null) {
                 name = task.getFamilyName() != null ? task.getFamilyName() : context.getString(R.string.unenumerated_structure);
             }
             action = context.getString(R.string.record_status);
-        } else if (Constants.Intervention.MOSQUITO_COLLECTION.equals(task.getTaskCode())) {
+        } else if (Intervention.MOSQUITO_COLLECTION.equals(task.getTaskCode())) {
             name = context.getString(R.string.mosquito_collection_point);
             action = context.getString(R.string.record_mosquito_collection);
-        } else if (Constants.Intervention.LARVAL_DIPPING.equals(task.getTaskCode())) {
+        } else if (Intervention.LARVAL_DIPPING.equals(task.getTaskCode())) {
             name = context.getString(R.string.larval_breeding_site);
             action = context.getString(R.string.record_larvacide);
-        } else if (Constants.Intervention.BCC.equals(task.getTaskCode())) {
+        } else if (Intervention.BCC.equals(task.getTaskCode())) {
             viewHolder.setIcon(R.drawable.ic_bcc);
             name = context.getString(R.string.bcc);
             action = context.getString(R.string.record_bcc);
+            hasIcon = true;
+        } else if (Intervention.CASE_CONFIRMATION.equals(task.getTaskCode())) {
+            viewHolder.setIcon(R.drawable.ic_classification_details);
+            name = context.getString(R.string.classification_details);
+            action = context.getString(R.string.view);
             hasIcon = true;
         } else {
             if (name == null) {
