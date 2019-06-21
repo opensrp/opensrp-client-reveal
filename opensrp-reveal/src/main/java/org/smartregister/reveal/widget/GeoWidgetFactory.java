@@ -41,11 +41,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.util.Constants.Map;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.reveal.validators.MinZoomValidator;
 import org.smartregister.reveal.view.RevealMapView;
+import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
@@ -54,6 +56,7 @@ import java.util.List;
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
 
+import static org.smartregister.reveal.util.Constants.DIGITAL_GLOBE_CONNECT_ID;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
@@ -148,7 +151,10 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
 
-                mapboxMap.setStyle(context.getString(R.string.reveal_satellite_style), new Style.OnStyleLoaded() {
+                String mapBoxStyle = AssetHandler.readFileFromAssetsFolder(context.getString(R.string.reveal_satellite_style), context);
+                Style.Builder builder = new Style.Builder().fromJson(mapBoxStyle.replace(DIGITAL_GLOBE_CONNECT_ID, BuildConfig.DG_CONNECT_ID));
+
+                mapboxMap.setStyle(builder, new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
                         GeoJsonSource geoJsonSource = style.getSourceAs(context.getString(R.string.reveal_datasource_name));
