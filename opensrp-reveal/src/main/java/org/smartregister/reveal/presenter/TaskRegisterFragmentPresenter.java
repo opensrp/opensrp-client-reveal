@@ -190,11 +190,13 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public void onTaskSelected(TaskDetails details) {
         if (details != null) {
-            if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())
-                    && (CASE_CONFIRMATION.equals(details.getTaskCode()) ||
-                    BLOOD_SCREENING.equals(details.getTaskCode()) ||
-                    BEDNET_DISTRIBUTION.equals(details.getTaskCode()) ||
-                    REGISTER_FAMILY.equals(details.getTaskCode())) ||
+            if (CASE_CONFIRMATION.equals(details.getTaskCode())) {
+                interactor.getIndexCaseDetails(details.getStructureId(), Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()), prefsUtil.getCurrentPlanId());
+            } else if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())
+                    &&
+                    (BLOOD_SCREENING.equals(details.getTaskCode()) ||
+                            BEDNET_DISTRIBUTION.equals(details.getTaskCode()) ||
+                            REGISTER_FAMILY.equals(details.getTaskCode())) ||
                     (details.getTaskCount() != null && details.getTaskCount() > 1)) { // structures with grouped tasks should display the family profile
                 setTaskDetails(details);
                 interactor.fetchFamilyDetails(details.getStructureId());

@@ -2,15 +2,18 @@ package org.smartregister.reveal.interactor;
 
 import android.location.Location;
 import android.support.v4.util.Pair;
+import android.util.Log;
 
 import com.google.common.annotations.VisibleForTesting;
 
 import net.sqlcipher.Cursor;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.family.util.DBConstants;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -328,4 +331,40 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         return (TaskRegisterFragmentContract.Presenter) presenterCallBack;
     }
 
+    public void getIndexCaseDetails(String structureId, String operationalArea, String currentPlanId) {
+        appExecutors.diskIO().execute(() -> {
+            if (StringUtils.isBlank(structureId) && StringUtils.isBlank(operationalArea)) {
+                return;
+            }
+            JSONObject jsonEvent = null;
+            Cursor cursor = null;
+            try {
+                cursor = getDatabase().rawQuery("SELECT json FROM "
+                                + EventClientRepository.Table.event.name()
+                                + " WHERE "
+                                + EventClientRepository.event_column.baseEntityId.name()
+                                + " IN( ?, ?) AND " + EventClientRepository.event_column.eventType.name() + "= ? ",
+                        new String[]{structureId, operationalArea, currentPlanId});
+                if (cursor.moveToNext()) {
+                    String jsonEventStr = cursor.getString(0);
+
+                    jsonEventStr = jsonEventStr.replaceAll("'", "");
+
+                    jsonEvent = new JSONObject(jsonEventStr);
+                }
+            } catch (Exception e) {
+                Log.e(getClass().getName(), "Exception", e);
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+
+            JSONObject finalJsonEvent = jsonEvent;
+            appExecutors.mainThread().execute(() -> {
+                presenterCallBack.onIndexCaseFound(finalJsonEvent);
+            });
+        });
+
+    }
 }
