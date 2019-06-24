@@ -8,6 +8,7 @@ import android.view.View;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.TaskRegisterContract;
+import org.smartregister.reveal.fragment.CaseClassificationFragment;
 import org.smartregister.reveal.fragment.TaskRegisterFragment;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterPresenter;
@@ -47,7 +48,7 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
 
     @Override
     protected Fragment[] getOtherFragments() {
-        return new Fragment[0];
+        return new Fragment[]{new CaseClassificationFragment()};
     }
 
     @Override
@@ -97,5 +98,9 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
         intent.putExtra(Properties.TASK_BUSINESS_STATUS, taskDetails.getBusinessStatus());
         intent.putExtra(Properties.TASK_STATUS, taskDetails.getTaskStatus());
         startActivity(intent);
+    }
+
+    public void displayIndexCaseFragment(JSONObject indexCase) {
+        switchToFragment(1);
     }
 }

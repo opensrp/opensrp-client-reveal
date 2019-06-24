@@ -164,4 +164,10 @@
 
     <string name="classification_details">Classification Details</string>
     <string name="view">View</string>
+    <string name="family_details">Family Details</string>
+    <string name="family_name_format">Family name: %1s</string>
+    <string name="village_town_format">Village Town:</string>
+    <string name="quarter_clan_format">Quarter/Clan:</string>
+    <string name="street_format">Street</string>
+    <string name="landmark_format">Landmark :</string>
 </resources>

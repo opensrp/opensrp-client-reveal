@@ -362,7 +362,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
             JSONObject finalJsonEvent = jsonEvent;
             appExecutors.mainThread().execute(() -> {
-                presenterCallBack.onIndexCaseFound(finalJsonEvent);
+                getPresenter().onIndexCaseFound(finalJsonEvent);
             });
         });
 

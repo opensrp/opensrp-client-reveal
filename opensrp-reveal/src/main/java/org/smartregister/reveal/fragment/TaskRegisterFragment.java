@@ -281,6 +281,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     }
 
+    @Override
+    public void displayIndexCaseDetails(JSONObject indexCase) {
+        ((TaskRegisterActivity) getActivity()).displayIndexCaseFragment(indexCase);
+    }
+
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {
         this.jsonFormUtils = jsonFormUtils;
     }

@@ -8,6 +8,7 @@ import com.mapbox.geojson.Feature;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
@@ -191,7 +192,8 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     public void onTaskSelected(TaskDetails details) {
         if (details != null) {
             if (CASE_CONFIRMATION.equals(details.getTaskCode())) {
-                interactor.getIndexCaseDetails(details.getStructureId(), Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()), prefsUtil.getCurrentPlanId());
+                interactor.getIndexCaseDetails(details.getStructureId(),
+                        Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(), prefsUtil.getCurrentPlanId());
             } else if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())
                     &&
                     (BLOOD_SCREENING.equals(details.getTaskCode()) ||
@@ -210,6 +212,16 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public int getInterventionLabel() {
         return Utils.getInterventionLabel();
+    }
+
+    /**
+     * Called by interactor when the event has been queried
+     *
+     * @param indexCase
+     */
+    @Override
+    public void onIndexCaseFound(JSONObject indexCase) {
+        getView().displayIndexCaseDetails(indexCase);
     }
 
     @Override
