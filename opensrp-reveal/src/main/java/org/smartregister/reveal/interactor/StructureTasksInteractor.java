@@ -19,22 +19,21 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.smartregister.family.util.DBConstants.KEY.BASE_ENTITY_ID;
+import static org.smartregister.domain.Task.TaskStatus.CANCELLED;
 import static org.smartregister.family.util.DBConstants.KEY.DOB;
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.LAST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.MIDDLE_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
-import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 
 /**
  * Created by samuelgithengi on 4/12/19.
@@ -69,15 +68,17 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
             List<StructureTaskDetails> taskDetailsList = new ArrayList<>();
             Cursor cursor = null;
             try {
-                cursor = database.rawQuery(getStructureSelect(String.format("%s=? AND %s=?", FOR, PLAN_ID)),
-                        new String[]{structureId, campaignId});
+                cursor = database.rawQuery(getStructureSelect(String.format(
+                        "%s=? AND %s=? AND %s != ?", FOR, PLAN_ID, STATUS)),
+                        new String[]{structureId, campaignId, CANCELLED.name()});
                 while (cursor.moveToNext()) {
                     taskDetailsList.add(readTaskDetails(cursor));
                 }
 
                 cursor.close();
-                cursor = database.rawQuery(getMembersSelect(String.format("%s.%s=? AND %s=?",
-                        STRUCTURES_TABLE, ID, PLAN_ID), getMemberColumns()), new String[]{structureId, campaignId});
+                cursor = database.rawQuery(getMembersSelect(String.format("%s.%s=? AND %s=? AND %s != ?",
+                        STRUCTURES_TABLE, ID, PLAN_ID, STATUS), getMemberColumns()),
+                        new String[]{structureId, campaignId, CANCELLED.name()});
                 while (cursor.moveToNext()) {
                     taskDetailsList.add(readMemberTaskDetails(cursor));
                 }
