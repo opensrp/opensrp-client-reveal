@@ -33,7 +33,8 @@
             android:layout_height="wrap_content"
             android:text="@string/classification_details"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <!-- family Details-->
         <TextView

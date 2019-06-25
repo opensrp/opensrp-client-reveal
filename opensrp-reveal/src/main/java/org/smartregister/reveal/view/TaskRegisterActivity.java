@@ -7,6 +7,7 @@ import android.view.View;
 
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.contract.CaseClassificationContract;
 import org.smartregister.reveal.contract.TaskRegisterContract;
 import org.smartregister.reveal.fragment.CaseClassificationFragment;
 import org.smartregister.reveal.fragment.TaskRegisterFragment;
@@ -33,6 +34,8 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
 
     private RevealJsonFormUtils jsonFormUtils;
 
+    private CaseClassificationFragment caseClassificationFragment = new CaseClassificationFragment();
+
     @Override
     protected void initializePresenter() {
         presenter = new TaskRegisterPresenter(this);
@@ -48,7 +51,7 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
 
     @Override
     protected Fragment[] getOtherFragments() {
-        return new Fragment[]{new CaseClassificationFragment()};
+        return new Fragment[]{caseClassificationFragment};
     }
 
     @Override
@@ -101,6 +104,7 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
     }
 
     public void displayIndexCaseFragment(JSONObject indexCase) {
+        ((CaseClassificationContract.View) caseClassificationFragment).displayIndexCase(indexCase);
         switchToFragment(1);
     }
 
