@@ -29,6 +29,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.COMPLETED_TASK_COUNT;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FAMILY_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPED_STRUCTURE_TASK_CODE_AND_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LATITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LONGITUDE;
@@ -121,7 +122,8 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
         familyMemberTasksQueryBuilder.mainCondition(mainCondition);
 
-        return String.format(" SELECT %s.*, SUM(CASE WHEN %s.status='COMPLETED' THEN 1 ELSE 0 END) AS %s , COUNT(%s._id) AS %s FROM ( ",
+        return String.format(" SELECT %s.*, SUM(CASE WHEN %s.status='COMPLETED' THEN 1 ELSE 0 END) AS %s , COUNT(%s._id) AS %s, " +
+                        "GROUP_CONCAT(tasks.code || \"-\" || tasks.business_status) AS grouped_structure_task_code_and_status FROM ( ",
                 "tasks", "tasks", COMPLETED_TASK_COUNT, "tasks", TASK_COUNT) + structureTasksQueryBuilder +
                 " UNION " + familyMemberTasksQueryBuilder + " ) AS tasks GROUP BY tasks.structure_id ";
 
@@ -257,6 +259,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         if (isGroupedTasks) {
             task.setTaskCount(cursor.getInt(cursor.getColumnIndex(TASK_COUNT)));
             task.setCompleteTaskCount(cursor.getInt(cursor.getColumnIndex(COMPLETED_TASK_COUNT)));
+            task.setGroupedTaskCodeStatus(cursor.getString(cursor.getColumnIndex(GROUPED_STRUCTURE_TASK_CODE_AND_STATUS)));
         }
         Location location = new Location((String) null);
 

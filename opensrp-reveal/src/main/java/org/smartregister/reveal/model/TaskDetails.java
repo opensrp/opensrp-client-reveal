@@ -3,6 +3,13 @@ package org.smartregister.reveal.model;
 import android.location.Location;
 import android.support.annotation.NonNull;
 
+import org.apache.commons.lang3.StringUtils;
+import org.smartregister.reveal.util.Constants;
+
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
+import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+
 /**
  * Created by samuelgithengi on 3/20/19.
  */
@@ -25,6 +32,12 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
     private Integer taskCount;
 
     private Integer completeTaskCount;
+
+    private boolean familyRegistered;
+
+    private boolean bednetDistributed;
+
+    private boolean allBloodScreeningDone;
 
     public TaskDetails(@NonNull String taskId) {
         super(taskId);
@@ -100,6 +113,50 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
     public Integer getTaskCount() {
         return taskCount;
+    }
+
+    public boolean isFamilyRegistered() {
+        return familyRegistered;
+    }
+
+    public void setFamilyRegistered(boolean familyRegistered) {
+        this.familyRegistered = familyRegistered;
+    }
+
+    public boolean isBednetDistributed() {
+        return bednetDistributed;
+    }
+
+    public void setBednetDistributed(boolean bednetDistributed) {
+        this.bednetDistributed = bednetDistributed;
+    }
+
+    public boolean isAllBloodScreeningDone() {
+        return allBloodScreeningDone;
+    }
+
+    public void setAllBloodScreeningDone(boolean allBloodScreeningDone) {
+        this.allBloodScreeningDone = allBloodScreeningDone;
+    }
+
+    public void setGroupedTaskCodeStatus(String groupedTaskCodeStatusString) {
+        setFamilyRegistered(false);
+        setBednetDistributed(false);
+        setAllBloodScreeningDone(true);
+        if (StringUtils.isEmpty(groupedTaskCodeStatusString)) {
+            return;
+        }
+        String[] groupedTaskCodeStatusArray = groupedTaskCodeStatusString.split(",");
+        for (int i = 0; i < groupedTaskCodeStatusArray.length; i++) {
+            String[] taskCodeStatusArray = groupedTaskCodeStatusArray[i].split("-");
+            if (taskCodeStatusArray[0].equals(REGISTER_FAMILY) && taskCodeStatusArray[1].equals(Constants.BusinessStatus.COMPLETE)) {
+                setFamilyRegistered(true);
+            } else if (taskCodeStatusArray[0].equals(BEDNET_DISTRIBUTION) && taskCodeStatusArray[1].equals(Constants.BusinessStatus.COMPLETE)) {
+                setBednetDistributed(true);
+            } else if (taskCodeStatusArray[0].equals(BLOOD_SCREENING) && !taskCodeStatusArray[1].equals(Constants.BusinessStatus.COMPLETE)) {
+                setAllBloodScreeningDone(false);
+            }
+        }
     }
 
     @Override

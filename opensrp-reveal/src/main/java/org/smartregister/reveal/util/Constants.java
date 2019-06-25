@@ -311,7 +311,7 @@ public interface Constants {
 
         String BASE_ENTITY_ID = "base_entity_id";
 
-        String FAMILY_MEMBER_TASK_ALIAS = "fmt";
+        String GROUPED_STRUCTURE_TASK_CODE_AND_STATUS = "grouped_structure_task_code_and_status";
 
 
     }
