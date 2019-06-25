@@ -166,8 +166,19 @@
     <string name="view">View</string>
     <string name="family_details">Family Details</string>
     <string name="family_name_format">Family name: %1s</string>
-    <string name="village_town_format">Village Town:</string>
-    <string name="quarter_clan_format">Quarter/Clan:</string>
-    <string name="street_format">Street</string>
-    <string name="landmark_format">Landmark :</string>
+    <string name="village_town_format">Village Town: %1s</string>
+    <string name="quarter_clan_format">Quarter/Clan: %1s</string>
+    <string name="street_format">Street: %1s</string>
+    <string name="landmark_format">Landmark : %1s</string>
+    <string name="family_member_data">Family Member Data</string>
+    <string name="surname_format">Surname : %1s</string>
+    <string name="first_name_format">First Name: %1s</string>
+    <string name="middle_name_format">Middle Name: %1s</string>
+    <string name="dob_format">Date of Birth(DOB) : %1s</string>
+    <string name="case_classification_data">Case Classification Data</string>
+    <string name="case_number_format">Case Number: %1s</string>
+    <string name="case_classification_format">Case Classification: %1s</string>
+    <string name="focus_reason_format">Focus Reason: %1s</string>
+    <string name="focus_status_format">Focus Status: %1s</string>
+    <string name="return_to_register">Return</string>
 </resources>
