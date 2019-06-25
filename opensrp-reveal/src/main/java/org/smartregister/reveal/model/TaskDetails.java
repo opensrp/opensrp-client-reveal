@@ -9,6 +9,9 @@ import org.smartregister.reveal.util.Constants;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.COMMA;
+import static org.smartregister.reveal.util.Constants.HYPHEN;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 
 /**
  * Created by samuelgithengi on 3/20/19.
@@ -146,14 +149,14 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         if (StringUtils.isEmpty(groupedTaskCodeStatusString)) {
             return;
         }
-        String[] groupedTaskCodeStatusArray = groupedTaskCodeStatusString.split(",");
+        String[] groupedTaskCodeStatusArray = groupedTaskCodeStatusString.split(COMMA);
         for (int i = 0; i < groupedTaskCodeStatusArray.length; i++) {
-            String[] taskCodeStatusArray = groupedTaskCodeStatusArray[i].split("-");
-            if (taskCodeStatusArray[0].equals(REGISTER_FAMILY) && taskCodeStatusArray[1].equals(Constants.BusinessStatus.COMPLETE)) {
+            String[] taskCodeStatusArray = groupedTaskCodeStatusArray[i].split(HYPHEN);
+            if (taskCodeStatusArray[0].equals(REGISTER_FAMILY) && taskCodeStatusArray[1].equals(COMPLETE)) {
                 setFamilyRegistered(true);
-            } else if (taskCodeStatusArray[0].equals(BEDNET_DISTRIBUTION) && taskCodeStatusArray[1].equals(Constants.BusinessStatus.COMPLETE)) {
+            } else if (taskCodeStatusArray[0].equals(BEDNET_DISTRIBUTION) && taskCodeStatusArray[1].equals(COMPLETE)) {
                 setBednetDistributed(true);
-            } else if (taskCodeStatusArray[0].equals(BLOOD_SCREENING) && !taskCodeStatusArray[1].equals(Constants.BusinessStatus.COMPLETE)) {
+            } else if (taskCodeStatusArray[0].equals(BLOOD_SCREENING) && !taskCodeStatusArray[1].equals(COMPLETE)) {
                 setAllBloodScreeningDone(false);
             }
         }

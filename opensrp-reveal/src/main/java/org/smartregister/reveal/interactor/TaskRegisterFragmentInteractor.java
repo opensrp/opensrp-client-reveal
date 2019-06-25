@@ -23,13 +23,13 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.COMPLETED_TASK_COUNT;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FAMILY_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPED_STRUCTURE_TASK_CODE_AND_STATUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPED_TASKS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LATITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LONGITUDE;
@@ -46,6 +46,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_COUNT;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
+import static org.smartregister.reveal.util.Constants.HYPHEN;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
 
@@ -109,9 +110,10 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
         structureTasksQueryBuilder.mainCondition(mainCondition);
 
-        return String.format(" SELECT %s.*, SUM(CASE WHEN %s.status='COMPLETED' THEN 1 ELSE 0 END) AS %s , COUNT(%s._id) AS %s FROM ( ",
-                "tasks", "tasks", COMPLETED_TASK_COUNT, "tasks", TASK_COUNT) + structureTasksQueryBuilder +
-                " ) AS tasks GROUP BY tasks.structure_id ";
+        return String.format(" SELECT %s.*, SUM(CASE WHEN %s.status='COMPLETED' THEN 1 ELSE 0 END) AS %s , COUNT(%s._id) AS %s, " +
+                        "GROUP_CONCAT(%s.%s || \"%s\" || %s.%s) AS %s FROM ( ",
+                GROUPED_TASKS, GROUPED_TASKS, COMPLETED_TASK_COUNT, GROUPED_TASKS, TASK_COUNT, GROUPED_TASKS, CODE, HYPHEN, GROUPED_TASKS, BUSINESS_STATUS, GROUPED_STRUCTURE_TASK_CODE_AND_STATUS) + structureTasksQueryBuilder +
+                String.format(" ) AS %s GROUP BY %s.%s ", GROUPED_TASKS, GROUPED_TASKS, STRUCTURE_ID);
 
     }
 

@@ -70,6 +70,19 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         distanceView.setVisibility(View.GONE);
     }
 
+
+    /**
+     * Method that handles the populating of action view information on each row of the
+     * task register.
+     *
+     * It handles the text and color displayed on an Action View. Also attaches a clickListener
+     * which handles clicks on the action view.
+     *
+     * @param actionLabel Text that shows what action to take when action view is clicked
+     * @param task TaskDetails object used to populate info in a particular row
+     * @param cardDetails Object that contains status, status message and status color
+     * @param onClickListener Click listener that handles clicks events on the Task Action
+     */
     public void setTaskAction(String actionLabel, TaskDetails task, CardDetails cardDetails, View.OnClickListener onClickListener) {
         actionView.setText(actionLabel);
 
@@ -81,21 +94,20 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
                     actionView.setTextColor(context.getResources().getColor(R.color.text_black));
                     //choose different color coding only applicable to Thailand at the moment
                     if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
-                        if (task.isFamilyRegistered() && !task.isBednetDistributed()) {
-                            // show pink
+                        if (task.isFamilyRegistered() && !task.isBednetDistributed() && !task.isAllBloodScreeningDone()) {
                             actionView.setBackground(context.getResources().getDrawable(R.drawable.family_registered_bg));
                             actionView.setTextColor(context.getResources().getColor(R.color.text_black));
-                        } else if (task.isBednetDistributed() && !task.isFamilyRegistered()) {
-                            // Blue
+                        } else if (task.isBednetDistributed() && task.isFamilyRegistered()) {
                             actionView.setBackground(context.getResources().getDrawable(R.drawable.bednet_distributed_bg));
                             actionView.setTextColor(context.getResources().getColor(R.color.text_black));
                         } else if (task.isAllBloodScreeningDone()) {
-                            // show yellow
-                            actionView.setBackground(context.getResources().getDrawable(R.drawable.no_task_complete_bg));
+                            actionView.setBackground(context.getResources().getDrawable(R.drawable.blood_screening_complete_bg));
                             actionView.setTextColor(context.getResources().getColor(R.color.text_black));
                         } else if (task.getCompleteTaskCount() == 0) {
-                           // show purple
                             actionView.setBackground(context.getResources().getDrawable(R.drawable.blood_screening_complete_bg));
+                            actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                        } else {
+                            actionView.setBackground(context.getResources().getDrawable(R.drawable.no_task_complete_bg));
                             actionView.setTextColor(context.getResources().getColor(R.color.text_black));
                         }
                     }
