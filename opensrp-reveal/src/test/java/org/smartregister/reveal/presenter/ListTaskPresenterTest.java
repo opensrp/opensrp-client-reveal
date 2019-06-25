@@ -62,6 +62,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLL
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.THAILAND_LARVAL_DIPPING_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM;
+import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
@@ -277,7 +278,7 @@ public class ListTaskPresenterTest {
     @Test
     public void testfetchMosquitoCollectionDetailsIsCalledForCompleteMosquitoCollectionTask() throws Exception {
         doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), anyString(), anyBoolean());
-        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(COMPLETE);
+        when(Utils.getPropertyValue(any(Feature.class), eq(FEATURE_SELECT_TASK_BUSINESS_STATUS))).thenReturn(COMPLETE);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
 
         Feature feature = mock(Feature.class);
@@ -291,7 +292,7 @@ public class ListTaskPresenterTest {
     @Test
     public void testfetchMosquitoCollectionDetailsIsCalledForInCompleteMosquitoCollectionTask() throws Exception {
         doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), anyString(), anyBoolean());
-        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(INCOMPLETE);
+        when(Utils.getPropertyValue(any(Feature.class), eq(FEATURE_SELECT_TASK_BUSINESS_STATUS))).thenReturn(INCOMPLETE);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
 
         Feature feature = mock(Feature.class);
@@ -305,7 +306,7 @@ public class ListTaskPresenterTest {
     @Test
     public void testfetchMosquitoCollectionDetailsIsCalledForInProgressMosquitoCollectionTask() throws Exception {
         doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), anyString(), anyBoolean());
-        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(IN_PROGRESS);
+        when(Utils.getPropertyValue(any(Feature.class), eq(FEATURE_SELECT_TASK_BUSINESS_STATUS))).thenReturn(IN_PROGRESS);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
 
         Feature feature = mock(Feature.class);
@@ -319,7 +320,7 @@ public class ListTaskPresenterTest {
     @Test
     public void testfetchMosquitoCollectionDetailsIsCalledForNotEligibleMosquitoCollectionTask() throws Exception {
         doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), anyString(), anyBoolean());
-        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(NOT_ELIGIBLE);
+        when(Utils.getPropertyValue(any(Feature.class), eq(FEATURE_SELECT_TASK_BUSINESS_STATUS))).thenReturn(NOT_ELIGIBLE);
         when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
 
         Feature feature = mock(Feature.class);

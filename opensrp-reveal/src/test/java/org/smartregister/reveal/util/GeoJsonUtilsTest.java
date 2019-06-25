@@ -87,7 +87,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
 
     @Test
-    public void testRegisterFamilyTaskTakesPreference() throws Exception {
+    public void testRegisterFamilyTaskIsPopulatedCorrectly() throws Exception {
 
         PreferencesUtil.getInstance().setCurrentPlan("Focus 1");
         Location structure = initTestStructure();
@@ -99,12 +99,8 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         Set<Task> taskSet = new HashSet<>();
         Task task = initTestTask();
-        task.setCode(Intervention.BEDNET_DISTRIBUTION);
+        task.setCode(Intervention.REGISTER_FAMILY);
         taskSet.add(task);
-
-        Task task2 = initTestTask();
-        task2.setCode(Intervention.REGISTER_FAMILY);
-        taskSet.add(task2);
 
         tasks.put(structure.getId(), taskSet);
 

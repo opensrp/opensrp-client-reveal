@@ -198,7 +198,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         Feature feature = featureCollection.features().get(0);
         assertEquals(structure.getId(), feature.id());
         assertEquals(task.getIdentifier(), feature.getStringProperty(Properties.TASK_IDENTIFIER));
-        assertEquals(task.getBusinessStatus(), feature.getStringProperty(Properties.TASK_BUSINESS_STATUS));
+        assertEquals(task.getBusinessStatus(), feature.getStringProperty(Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS));
         assertEquals(task.getStatus().name(), feature.getStringProperty(Properties.TASK_STATUS));
         assertEquals(task.getCode(), feature.getStringProperty(Properties.TASK_CODE));
         assertEquals(Boolean.FALSE.toString(), feature.getStringProperty(Constants.GeoJSON.IS_INDEX_CASE));
@@ -223,7 +223,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         Feature feature = featureCollection.features().get(0);
         assertEquals(structure.getId(), feature.id());
         assertEquals(task.getIdentifier(), feature.getStringProperty(Properties.TASK_IDENTIFIER));
-        assertEquals(task.getBusinessStatus(), feature.getStringProperty(Properties.TASK_BUSINESS_STATUS));
+        assertEquals(task.getBusinessStatus(), feature.getStringProperty(Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS));
         assertEquals(task.getStatus().name(), feature.getStringProperty(Properties.TASK_STATUS));
         assertEquals(task.getCode(), feature.getStringProperty(Properties.TASK_CODE));
         assertEquals(Boolean.TRUE.toString(), feature.getStringProperty(Constants.GeoJSON.IS_INDEX_CASE));
