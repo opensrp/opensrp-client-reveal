@@ -347,12 +347,16 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                                 + EventClientRepository.event_column.baseEntityId.name()
                                 + " IN( ?) AND " + EventClientRepository.event_column.eventType.name() + "= ? ",
                         new String[]{id, EventType.CASE_DETAILS_EVENT});
-                if (cursor.moveToNext()) {
+                while (cursor.moveToNext()) {
                     String jsonEventStr = cursor.getString(0);
 
                     jsonEventStr = jsonEventStr.replaceAll("'", "");
 
                     jsonEvent = new JSONObject(jsonEventStr);
+
+                    if (cursor.getCount() == 1 || currentPlanId.equals(jsonEvent.optJSONObject(Constants.DETAILS).optString("plan_id"))) {
+                        break;
+                    }
                 }
             } catch (Exception e) {
                 Log.e(getClass().getName(), "Exception", e);
