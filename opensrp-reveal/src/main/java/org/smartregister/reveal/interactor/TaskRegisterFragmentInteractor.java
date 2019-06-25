@@ -20,6 +20,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.ArrayList;
@@ -339,12 +340,13 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             JSONObject jsonEvent = new JSONObject();
             Cursor cursor = null;
             try {
+                String id = structureId != null ? structureId : operationalArea;
                 cursor = getDatabase().rawQuery("SELECT json FROM "
                                 + EventClientRepository.Table.event.name()
                                 + " WHERE "
                                 + EventClientRepository.event_column.baseEntityId.name()
-                                + " IN( ?, ?) AND " + EventClientRepository.event_column.eventType.name() + "= ? ",
-                        new String[]{structureId, operationalArea, currentPlanId});
+                                + " IN( ?) AND " + EventClientRepository.event_column.eventType.name() + "= ? ",
+                        new String[]{id, EventType.CASE_DETAILS_EVENT});
                 if (cursor.moveToNext()) {
                     String jsonEventStr = cursor.getString(0);
 

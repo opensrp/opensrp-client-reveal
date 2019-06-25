@@ -30,8 +30,6 @@ public interface Constants {
 
     String BLOOD_SCREENING_EVENT = "blood_screening";
 
-    String CASE_CONFIRMATION_EVENT = "case_confirmation";
-
     String BEHAVIOUR_CHANGE_COMMUNICATION = "behaviour_change_communication";
 
     String STRUCTURE = "Structure";
@@ -128,6 +126,14 @@ public interface Constants {
         String CASE_CONFIRMATION = "Case Confirmation";
 
         String REGISTER_FAMILY = "RACD Register Family";
+    }
+
+
+    interface EventType {
+
+        String CASE_CONFIRMATION_EVENT = "case_confirmation";
+
+        String CASE_DETAILS_EVENT = "Case Details";
     }
 
     interface Tables {
