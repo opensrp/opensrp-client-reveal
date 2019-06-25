@@ -30,11 +30,13 @@ public class GeoJsonUtils {
         for (Location structure : structures) {
             Set<Task> taskSet = tasks.get(structure.getId());
             String groupedStructureTasksBusinessStatus = COMPLETE;
+            boolean incompleteResidentialTaskFound = false;
             if (taskSet == null)
                 continue;
             for (Task task : taskSet) {
                 if (Utils.isResidentialStructure(task.getCode()) && !COMPLETE.equals(task.getBusinessStatus())) {
                     groupedStructureTasksBusinessStatus = NOT_VISITED; // so as to display the residential structure in yellow
+                    incompleteResidentialTaskFound = true;
                 }
                 HashMap<String, String> taskProperties = new HashMap<>();
                 taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
@@ -57,6 +59,9 @@ public class GeoJsonUtils {
                 taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
                 taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
                 structure.getProperties().setCustomProperties(taskProperties);
+                if (incompleteResidentialTaskFound) {
+                    break;
+                }
             }
         }
         return gson.toJson(structures);
