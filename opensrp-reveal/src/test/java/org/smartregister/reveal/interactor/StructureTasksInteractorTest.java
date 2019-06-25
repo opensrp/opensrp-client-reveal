@@ -75,7 +75,7 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
         String campaign = UUID.randomUUID().toString();
         String structure = UUID.randomUUID().toString();
         String taskQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status FROM task WHERE for=? AND plan_id=? AND status != ? ";
-        String memberQuery = "Select structure._id as _id , task._id , task.code , task.for , task.business_status , task.status , printf('%s %s %s',first_name,middle_name,last_name) AS name , dob , structure_id FROM structure  LEFT JOIN ec_family_member ON ec_family_member.structure_id = structure._id   LEFT JOIN task ON task.for = ec_family_member.base_entity_id  WHERE structure._id=? AND plan_id=? AND status != ? ";
+        String memberQuery = "Select structure._id as _id , task._id , task.code , task.for , task.business_status , task.status , printf('%s %s %s',first_name,middle_name,last_name) AS name , dob , ec_family_member.structure_id FROM structure  LEFT JOIN ec_family_member ON ec_family_member.structure_id = structure._id   LEFT JOIN task ON task.for = ec_family_member.base_entity_id  WHERE structure._id=? AND plan_id=? AND status != ? ";
         when(database.rawQuery(taskQuery, new String[]{structure, campaign, CANCELLED.name()})).thenReturn(createCursor());
         when(database.rawQuery(memberQuery, new String[]{structure, campaign, CANCELLED.name()})).thenReturn(createMemberCursor());
 
