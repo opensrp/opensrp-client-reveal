@@ -103,4 +103,10 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
     public void displayIndexCaseFragment(JSONObject indexCase) {
         switchToFragment(1);
     }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        switchToBaseFragment();
+        return true;
+    }
 }
