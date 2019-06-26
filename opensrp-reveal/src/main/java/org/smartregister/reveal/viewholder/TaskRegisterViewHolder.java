@@ -34,8 +34,11 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
 
     private PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
 
+    private View itemView;
+
     public TaskRegisterViewHolder(@NonNull View itemView) {
         super(itemView);
+        this.itemView = itemView;
         context = itemView.getContext();
         iconView = itemView.findViewById(R.id.task_icon);
         nameView = itemView.findViewById(R.id.task_name);
@@ -72,12 +75,12 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
 
         // registered family with multiple tasks
         if (cardDetails != null && task.getTaskCount() != null && Utils.getInterventionLabel() == R.string.focus_investigation) { // task grouping only for FI
-            if (task.getTaskCount() > 1 ) {
+            if (task.getTaskCount() > 1) {
                 if (task.getTaskCount() != task.getCompleteTaskCount()) {
                     actionView.setBackground(context.getResources().getDrawable(R.drawable.view_tasks_bg));
                     actionView.setTextColor(context.getResources().getColor(R.color.text_black));
                     actionView.setText(context.getText(R.string.view_tasks));
-                } else if (task.getTaskCount() == task.getCompleteTaskCount()){
+                } else if (task.getTaskCount() == task.getCompleteTaskCount()) {
                     actionView.setBackground(context.getResources().getDrawable(R.drawable.tasks_complete_bg));
                     actionView.setTextColor(context.getResources().getColor(R.color.text_black));
                     actionView.setText(context.getText(R.string.tasks_complete));
@@ -93,6 +96,11 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         }
         actionView.setOnClickListener(onClickListener);
         actionView.setTag(R.id.task_details, task);
+    }
+
+    public void setItemViewListener(TaskDetails task, View.OnClickListener onClickListener) {
+        itemView.setOnClickListener(onClickListener);
+        itemView.setTag(R.id.task_details, task);
     }
 
     public void setTaskDetails(String businessStatus, String taskDetails) {
