@@ -17,6 +17,7 @@ import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +45,8 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_P
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.METERS_PER_KILOMETER;
 import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
 import static org.smartregister.reveal.util.Constants.FOCUS;
+import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
+import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 
 public class Utils {
 
@@ -208,5 +211,18 @@ public class Utils {
         feature.put("geometry", geometry);
 
         return Feature.fromJson(feature.toString());
+    }
+
+    /**
+     *
+     * Determines whether a structure is a residence based on the Task Code value
+     * @param taskCode
+     * @return isResidentialStructure
+     */
+    public static boolean isResidentialStructure(String taskCode) {
+        if (StringUtils.isEmpty(taskCode)) {
+            return false;
+        }
+        return !(MOSQUITO_COLLECTION.equals(taskCode) || LARVAL_DIPPING.equals(taskCode));
     }
 }

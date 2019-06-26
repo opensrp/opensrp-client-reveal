@@ -18,6 +18,7 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_GEO_JSON_CIRCLE_SIDES;
@@ -25,6 +26,12 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_INDE
 import static org.smartregister.reveal.util.Utils.createCircleFeature;
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
 import static org.smartregister.reveal.util.Utils.getInterventionLabel;
+import static org.smartregister.reveal.util.Utils.isResidentialStructure;
+import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
+import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 
 /**
  * Created by Vincent Karuri on 08/05/2019
@@ -88,6 +95,18 @@ public class UtilsTest {
         assertNotNull(actualFeature.geometry());
         assertEquals(expectedFeature.geometry().type(), actualFeature.geometry().type());
 
+    }
+
+    @Test
+    public void testIsResidentialStructureReturnsCorrectValue() throws Exception {
+
+        assertTrue(isResidentialStructure(REGISTER_FAMILY));
+        assertTrue(isResidentialStructure(BEDNET_DISTRIBUTION));
+        assertTrue(isResidentialStructure(BLOOD_SCREENING));
+        assertFalse(isResidentialStructure(MOSQUITO_COLLECTION));
+        assertFalse(isResidentialStructure(LARVAL_DIPPING));
+        assertFalse(isResidentialStructure(null));
+        assertFalse(isResidentialStructure(""));
     }
 
     private RevealApplication initRevealApplicationMock() throws Exception {

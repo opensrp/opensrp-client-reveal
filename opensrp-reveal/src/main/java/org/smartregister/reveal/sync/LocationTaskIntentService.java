@@ -12,6 +12,7 @@ import org.smartregister.domain.db.EventClient;
 import org.smartregister.job.SyncServiceJob;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.job.RevealSyncSettingsServiceJob;
 import org.smartregister.reveal.util.AppExecutors;
@@ -81,6 +82,9 @@ public class LocationTaskIntentService extends IntentService {
         List<Location> syncedStructures = locationServiceHelper.fetchLocationsStructures();
         planServiceHelper.syncPlans();
         List<Task> synchedTasks = taskServiceHelper.syncTasks();
+
+        TaskRepository taskRepository = RevealApplication.getInstance().getContext().getTaskRepository();
+        taskRepository.updateTaskStructureIdFromStructure(syncedStructures);
 
         if (hasChangesInCurrentOperationalArea(syncedStructures, synchedTasks)) {
             Intent intent = new Intent(STRUCTURE_TASK_SYNCED);

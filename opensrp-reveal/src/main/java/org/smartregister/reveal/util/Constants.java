@@ -100,6 +100,7 @@ public interface Constants {
         String LOCATION_TYPE = "locationType";
         String LOCATION_PARENT = "locationParent";
         String LOCATION_ID = "location_id";
+        String FEATURE_SELECT_TASK_BUSINESS_STATUS = "featureSelectTaskBusinessStatus";
     }
 
 
