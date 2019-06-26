@@ -221,7 +221,11 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
      */
     @Override
     public void onIndexCaseFound(JSONObject indexCase) {
-        getView().displayIndexCaseDetails(indexCase);
+        if (indexCase == null) {
+            getView().displayError(R.string.classification_details, R.string.index_case_not_found);
+        } else {
+            getView().displayIndexCaseDetails(indexCase);
+        }
     }
 
     @Override

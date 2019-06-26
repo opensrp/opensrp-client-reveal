@@ -332,7 +332,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             if (StringUtils.isBlank(structureId) && StringUtils.isBlank(operationalArea)) {
                 return;
             }
-            JSONObject jsonEvent = new JSONObject();
+            JSONObject jsonEvent = null;
             Cursor cursor = null;
             try {
                 cursor = getDatabase().rawQuery("SELECT json FROM "

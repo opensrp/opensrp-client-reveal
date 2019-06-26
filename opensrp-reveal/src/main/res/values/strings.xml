@@ -181,4 +181,5 @@
     <string name="focus_reason_format">Focus Reason: %1s</string>
     <string name="focus_status_format">Focus Status: %1s</string>
     <string name="return_to_register">Return</string>
+    <string name="index_case_not_found">Index Case details not found</string>
 </resources>
