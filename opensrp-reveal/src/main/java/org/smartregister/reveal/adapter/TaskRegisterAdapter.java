@@ -64,7 +64,7 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
             name = context.getString(R.string.bcc);
             action = context.getString(R.string.record_bcc);
             hasIcon = true;
-        } else if (Intervention.CASE_CONFIRMATION.equals(task.getTaskCode())) {
+        } else if (Intervention.CASE_CONFIRMATION.equals(task.getTaskCode()) && task.getTaskCount() == null) {
             viewHolder.setIcon(R.drawable.ic_classification_details);
             name = context.getString(R.string.classification_details);
             action = context.getString(R.string.view);

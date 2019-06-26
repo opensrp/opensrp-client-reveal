@@ -24,6 +24,7 @@ import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,6 +35,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.COMPLETED_TASK_COUNT;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FAMILY_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LATITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LONGITUDE;
@@ -126,8 +128,8 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
     }
 
     private String indexCaseSelect() {
-        return String.format("SELECT * FROM %s WHERE %s = ? AND %s != ? AND %s = ?",
-                TASK_TABLE, PLAN_ID, STATUS, CODE);
+        return String.format("SELECT * FROM %s WHERE %s = ? AND %s = ? AND %s != ? AND %s = ?",
+                TASK_TABLE, GROUPID, PLAN_ID, STATUS, CODE);
     }
 
 
@@ -184,8 +186,9 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
 
             // Query Case Confirmation task
-            tasks.addAll(queryTaskDetails(indexCaseSelect(), new String[]{mainCondition.second[1], TaskStatus.CANCELLED.name(),
-                            CASE_CONFIRMATION}, lastLocation,
+            String[] params = Arrays.copyOf(mainCondition.second, 4);
+            params[3] = CASE_CONFIRMATION;
+            tasks.addAll(queryTaskDetails(indexCaseSelect(), params, lastLocation,
                     operationalAreaCenter, houseLabel, structuresWithinBuffer, false));
 
             Collections.sort(tasks);
@@ -258,12 +261,14 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 }
                 task.setTaskDetails(reason);
             }
+
             task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
         }
+
         if (BCC.equals(task.getTaskCode())) {
             //set distance to -2 to always display on top of register
             task.setDistanceFromUser(-2);
-        } else if (CASE_CONFIRMATION.equals(task.getTaskCode())) {
+        } else if (CASE_CONFIRMATION.equals(task.getTaskCode()) && task.getTaskCount() == null) {
             //set distance to -1 to always display on top of register and below BCC
             task.setDistanceFromUser(-1);
         } else if (lastLocation != null) {
