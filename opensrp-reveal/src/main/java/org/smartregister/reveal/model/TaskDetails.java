@@ -4,14 +4,13 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
-import org.smartregister.reveal.util.Constants;
 
+import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.COMMA;
+import static org.smartregister.reveal.util.Constants.HYPHEN;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
-import static org.smartregister.reveal.util.Constants.COMMA;
-import static org.smartregister.reveal.util.Constants.HYPHEN;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 
 /**
  * Created by samuelgithengi on 3/20/19.

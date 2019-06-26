@@ -299,6 +299,18 @@
             "Not Eligible"
           ],
           "hsl(0, 0%, 9%)",
+          [
+            "Family Registered"
+          ],
+          "hsl(335, 100%, 79%)",
+          [
+            "Bednet Distributed"
+          ],
+          "hsl(199, 68%, 55%)",
+          [
+            "Blood Screening Complete"
+          ],
+          "hsl(262, 100%, 68%)",
           "hsl(0, 0%, 78%)"
         ],
         "fill-opacity": [
@@ -380,6 +392,18 @@
             "Not Eligible"
           ],
           "hsl(0, 0%, 9%)",
+          [
+            "Family Registered"
+          ],
+          "hsl(335, 100%, 79%)",
+          [
+            "Bednet Distributed"
+          ],
+          "hsl(199, 68%, 55%)",
+          [
+            "Blood Screening Complete"
+          ],
+          "hsl(262, 100%, 68%)",
           "hsl(0, 0%, 78%)"
         ],
         "circle-stroke-width": 1,
