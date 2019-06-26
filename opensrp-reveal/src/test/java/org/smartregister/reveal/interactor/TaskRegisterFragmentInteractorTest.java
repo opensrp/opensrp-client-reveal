@@ -84,6 +84,7 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
     private String nonRegisteredStructureTasksQuery;
     private String groupedRegisteredStructureTasksSelectQuery;
     private String bccSelectQuery;
+    private String indexSelectQuery;
 
     @Before
     public void setUp() {
@@ -98,6 +99,7 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         nonRegisteredStructureTasksQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? AND status != ?   AND ec_family.structure_id IS NULL";
         groupedRegisteredStructureTasksSelectQuery = " SELECT tasks.*, SUM(CASE WHEN tasks.status='COMPLETED' THEN 1 ELSE 0 END) AS completed_task_count , COUNT(tasks._id) AS task_count FROM ( Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name FROM task  JOIN structure ON task.structure_id = structure._id   JOIN ec_family ON structure._id = ec_family.structure_id  COLLATE NOCASE  LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id  WHERE task.group_id = ? AND task.plan_id = ? AND status != ?  ) AS tasks GROUP BY tasks.structure_id ";
         bccSelectQuery = "SELECT * FROM task WHERE for = ? AND plan_id = ? AND status != ? AND code ='BCC'";
+        indexSelectQuery = "SELECT * FROM task WHERE group_id = ? AND plan_id = ? AND status != ? AND code = ?";
     }
 
     @Test
@@ -118,6 +120,7 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         center.setLongitude(32.643570);
         when(database.rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor());
         when(database.rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor());
+        when(database.rawQuery(indexSelectQuery, new String[]{groupId, planId, CANCELLED.name(), Intervention.CASE_CONFIRMATION})).thenReturn(createEmptyCursor());
         interactor.findTasks(pair, null, center, "House");
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name()});
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()});
@@ -149,6 +152,7 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         userLocation.setLongitude(32.076570);
         when(database.rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor());
         when(database.rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor());
+        when(database.rawQuery(indexSelectQuery, new String[]{groupId, planId, CANCELLED.name(), Intervention.CASE_CONFIRMATION})).thenReturn(createEmptyCursor());
         interactor.findTasks(pair, userLocation, null, "House");
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name()});
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()});
@@ -219,10 +223,12 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         when(database.rawQuery(groupedRegisteredStructureTasksSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor());
         when(database.rawQuery(nonRegisteredStructureTasksQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor());
         when(database.rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor());
+        when(database.rawQuery(indexSelectQuery, new String[]{groupId, planId, CANCELLED.name(), Intervention.CASE_CONFIRMATION})).thenReturn(createEmptyCursor());
         interactor.findTasks(pair, userLocation, null, "House");
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(groupedRegisteredStructureTasksSelectQuery, new String[]{groupId, planId, CANCELLED.name()});
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(nonRegisteredStructureTasksQuery, new String[]{groupId, planId, CANCELLED.name()});
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()});
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(indexSelectQuery, new String[]{groupId, planId, CANCELLED.name(), Intervention.CASE_CONFIRMATION});
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskListCaptor.capture(), structuresCaptor.capture());
         verifyNoMoreInteractions(presenter);
         assertEquals(3, taskListCaptor.getValue().size());
@@ -254,24 +260,7 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
     }
 
     private Cursor createCursor() {
-        MatrixCursor cursor = new MatrixCursor(new String[]{
-                ID,
-                CODE,
-                FOR,
-                BUSINESS_STATUS,
-                STATUS,
-                LATITUDE,
-                LONGITUDE,
-                NAME,
-                FAMILY_NAME,
-                SPRAY_STATUS,
-                NOT_SRAYED_REASON,
-                NOT_SRAYED_OTHER_REASON,
-                STRUCTURE_ID,
-                FIRST_NAME,
-                TASK_COUNT,
-                COMPLETED_TASK_COUNT
-        });
+        MatrixCursor cursor = createEmptyCursor();
         cursor.addRow(new Object[]{
                 "task_id_1",
                 Intervention.IRS,
@@ -291,5 +280,26 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
                 1
         });
         return cursor;
+    }
+
+    private MatrixCursor createEmptyCursor() {
+        return new MatrixCursor(new String[]{
+                ID,
+                CODE,
+                FOR,
+                BUSINESS_STATUS,
+                STATUS,
+                LATITUDE,
+                LONGITUDE,
+                NAME,
+                FAMILY_NAME,
+                SPRAY_STATUS,
+                NOT_SRAYED_REASON,
+                NOT_SRAYED_OTHER_REASON,
+                STRUCTURE_ID,
+                FIRST_NAME,
+                TASK_COUNT,
+                COMPLETED_TASK_COUNT
+        });
     }
 }

@@ -63,7 +63,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
     private final Float locationBuffer;
 
 
-    int structuresWithinBuffer = 0;
+    private int structuresWithinBuffer = 0;
 
     public TaskRegisterFragmentInteractor(TaskRegisterFragmentContract.Presenter presenter) {
         this(presenter, Utils.getLocationBuffer());
@@ -207,8 +207,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         Cursor cursor = null;
         try {
             cursor = getDatabase().rawQuery(query, params);
-
-            while (cursor.moveToNext()) {
+            while (cursor != null && cursor.moveToNext()) {
                 TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, groupedTasks);
                 if (taskDetails.getDistanceFromUser() <= locationBuffer) {
                     structuresWithinBuffer += 1;
