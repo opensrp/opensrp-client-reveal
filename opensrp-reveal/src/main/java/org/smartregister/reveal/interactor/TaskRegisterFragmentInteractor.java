@@ -261,9 +261,9 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 }
                 task.setTaskDetails(reason);
             }
-
-            task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
         }
+
+        task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
 
         if (BCC.equals(task.getTaskCode())) {
             //set distance to -2 to always display on top of register
