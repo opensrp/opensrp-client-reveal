@@ -20,6 +20,7 @@ import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.EventType;
+import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.COMPLETED_TASK_COUNT;
@@ -362,7 +364,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
             JSONObject finalJsonEvent = jsonEvent;
             appExecutors.mainThread().execute(() -> {
-                getPresenter().onIndexCaseFound(finalJsonEvent);
+                getPresenter().onIndexCaseFound(finalJsonEvent, operationalArea.equals(finalJsonEvent.optString(Properties.BASE_ENTITY_ID)));
             });
         });
 

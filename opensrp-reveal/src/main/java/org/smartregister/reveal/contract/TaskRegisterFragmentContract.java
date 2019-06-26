@@ -31,7 +31,7 @@ public interface TaskRegisterFragmentContract {
         @StringRes
         int getInterventionLabel();
 
-        void onIndexCaseFound(JSONObject indexCase);
+        void onIndexCaseFound(JSONObject indexCase, boolean isLinkedToJurisdiction);
     }
 
     interface View extends BaseRegisterFragmentContract.View, BaseFormFragmentContract.View {

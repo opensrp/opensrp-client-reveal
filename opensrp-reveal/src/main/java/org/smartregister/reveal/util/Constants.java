@@ -34,12 +34,6 @@ public interface Constants {
 
     String STRUCTURE = "Structure";
 
-    String START_DATE = "start_date";
-
-    String END_DATE = "end_date";
-
-    String STATUS = "status";
-
     String FOCUS = "FOCUS";
 
     double MY_LOCATION_ZOOM_LEVEL = 17.5; // modifying this will also necessitate modifying the VERTICAL_OFFSET
@@ -101,6 +95,7 @@ public interface Constants {
         String LOCATION_PARENT = "locationParent";
         String LOCATION_ID = "location_id";
         String FEATURE_SELECT_TASK_BUSINESS_STATUS = "featureSelectTaskBusinessStatus";
+        String BASE_ENTITY_ID = "baseEntityId";
     }
 
 
@@ -222,8 +217,6 @@ public interface Constants {
 
         String NO_PADDING = "no_padding";
 
-        String IS_MANDATORY = "is_mandatory";
-
         String SHORTENED_HINT = "shortened_hint";
 
         String HINT = "hint";
@@ -316,8 +309,6 @@ public interface Constants {
         String TASK_COUNT = "task_count";
 
         String BASE_ENTITY_ID = "base_entity_id";
-
-        String FAMILY_MEMBER_TASK_ALIAS = "fmt";
 
 
     }

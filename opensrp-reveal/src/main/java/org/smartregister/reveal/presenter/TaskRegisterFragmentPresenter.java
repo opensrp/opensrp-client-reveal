@@ -215,12 +215,13 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     }
 
     /**
-     * Called by interactor when the event has been queried
+     * Called by interactor when the index event has been queried
      *
-     * @param indexCase
+     * @param indexCase              the index case details event JSON
+     * @param isLinkedToJurisdiction if index case was linked to FI, false if linked to structure
      */
     @Override
-    public void onIndexCaseFound(JSONObject indexCase) {
+    public void onIndexCaseFound(JSONObject indexCase, boolean isLinkedToJurisdiction) {
         if (indexCase == null) {
             getView().displayError(R.string.classification_details, R.string.index_case_not_found);
         } else {
