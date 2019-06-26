@@ -11,7 +11,6 @@ import net.sqlcipher.Cursor;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
-import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
@@ -29,7 +28,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.COMPLETED_TASK_COUNT;
@@ -63,6 +61,9 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
     private final LocationRepository locationRepository;
     private final Float locationBuffer;
+
+
+    int structuresWithinBuffer = 0;
 
     public TaskRegisterFragmentInteractor(TaskRegisterFragmentContract.Presenter presenter) {
         this(presenter, Utils.getLocationBuffer());
@@ -163,33 +164,33 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         // Fetch grouped tasks
         List<TaskDetails> tasks = new ArrayList<>();
         appExecutors.diskIO().execute(() -> {
-            int structuresWithinBuffer = 0;
+            structuresWithinBuffer = 0;
             if (Utils.getInterventionLabel() == R.string.focus_investigation) { // perform task grouping
 
                 tasks.addAll(queryTaskDetails(groupedRegisteredStructureTasksSelect(mainCondition.first),
-                        mainCondition.second, lastLocation, operationalAreaCenter, houseLabel, structuresWithinBuffer, true));
+                        mainCondition.second, lastLocation, operationalAreaCenter, houseLabel, true));
 
 
                 tasks.addAll(queryTaskDetails(nonRegisteredStructureTasksSelect(mainCondition.first),
-                        mainCondition.second, lastLocation, operationalAreaCenter, houseLabel, structuresWithinBuffer, false));
+                        mainCondition.second, lastLocation, operationalAreaCenter, houseLabel, false));
 
             } else {
 
                 tasks.addAll(queryTaskDetails(mainSelect(mainCondition.first), mainCondition.second,
-                        lastLocation, operationalAreaCenter, houseLabel, structuresWithinBuffer, false));
+                        lastLocation, operationalAreaCenter, houseLabel, false));
 
             }
 
             // Query BCC task
             tasks.addAll(queryTaskDetails(bccSelect(), mainCondition.second, lastLocation,
-                    operationalAreaCenter, houseLabel, structuresWithinBuffer, false));
+                    operationalAreaCenter, houseLabel, false));
 
 
             // Query Case Confirmation task
             String[] params = Arrays.copyOf(mainCondition.second, 4);
             params[3] = CASE_CONFIRMATION;
             tasks.addAll(queryTaskDetails(indexCaseSelect(), params, lastLocation,
-                    operationalAreaCenter, houseLabel, structuresWithinBuffer, false));
+                    operationalAreaCenter, houseLabel, false));
 
             Collections.sort(tasks);
             appExecutors.mainThread().execute(() -> {
@@ -201,7 +202,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
     }
 
     private List<TaskDetails> queryTaskDetails(String query, String[] params, Location lastLocation,
-                                               Location operationalAreaCenter, String houseLabel, Integer structuresWithinBuffer, boolean groupedTasks) {
+                                               Location operationalAreaCenter, String houseLabel, boolean groupedTasks) {
         List<TaskDetails> tasks = new ArrayList<>();
         Cursor cursor = null;
         try {
@@ -265,6 +266,12 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
         task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
 
+        calculateDistance(task, location, lastLocation, operationalAreaCenter);
+
+        return task;
+    }
+
+    private void calculateDistance(TaskDetails task, Location location, Location lastLocation, Location operationalAreaCenter) {
         if (BCC.equals(task.getTaskCode())) {
             //set distance to -2 to always display on top of register
             task.setDistanceFromUser(-2);
@@ -277,7 +284,6 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             task.setDistanceFromUser(location.distanceTo(operationalAreaCenter));
             task.setDistanceFromCenter(true);
         }
-        return task;
     }
 
 
@@ -330,13 +336,12 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             JSONObject jsonEvent = new JSONObject();
             Cursor cursor = null;
             try {
-                //String id = structureId != null ? structureId : operationalArea;
                 cursor = getDatabase().rawQuery("SELECT json FROM "
                                 + EventClientRepository.Table.event.name()
                                 + " WHERE "
                                 + EventClientRepository.event_column.baseEntityId.name()
                                 + " IN( ?, ?) AND " + EventClientRepository.event_column.eventType.name() + "= ? ",
-                        new String[]{structureId,operationalArea, EventType.CASE_DETAILS_EVENT});
+                        new String[]{structureId, operationalArea, EventType.CASE_DETAILS_EVENT});
                 while (cursor.moveToNext()) {
                     String jsonEventStr = cursor.getString(0);
 
