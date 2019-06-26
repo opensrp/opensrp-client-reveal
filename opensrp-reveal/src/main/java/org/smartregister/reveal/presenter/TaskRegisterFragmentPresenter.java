@@ -57,6 +57,8 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
 
     private PreferencesUtil prefsUtil;
 
+    private boolean isActionClicked = true;
+
 
     public TaskRegisterFragmentPresenter(TaskRegisterFragmentContract.View view, String viewConfigurationIdentifier) {
         this(view, viewConfigurationIdentifier, null);
@@ -189,8 +191,10 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     }
 
     @Override
-    public void onTaskSelected(TaskDetails details) {
+    public void onTaskSelected(TaskDetails details, boolean isActionClicked) {
+        this.isActionClicked = isActionClicked;
         if (details != null) {
+            setTaskDetails(details);
             if (CASE_CONFIRMATION.equals(details.getTaskCode())) {
                 interactor.getIndexCaseDetails(details.getStructureId(),
                         Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(), prefsUtil.getCurrentPlanId());
@@ -215,7 +219,9 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     }
 
     /**
-     * Called by interactor when the index event has been queried
+     * Called by interactor when the index event has been queried. If Event is not found an errror is displayed.
+     * If task confirmation  is not competed and event was linked to a household and button was selected, then family profile is opened,
+     * otherwise the index case details are displayed
      *
      * @param indexCase              the index case details event JSON
      * @param isLinkedToJurisdiction if index case was linked to FI, false if linked to structure
@@ -225,7 +231,12 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         if (indexCase == null) {
             getView().displayError(R.string.classification_details, R.string.index_case_not_found);
         } else {
-            getView().displayIndexCaseDetails(indexCase);
+            if (isActionClicked && !isLinkedToJurisdiction
+                    && getTaskDetails().getTaskStatus().equals(Task.TaskStatus.READY.name())) {
+                interactor.fetchFamilyDetails(getTaskDetails().getStructureId());
+            } else {
+                getView().displayIndexCaseDetails(indexCase);
+            }
         }
     }
 

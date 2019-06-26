@@ -26,12 +26,13 @@ public interface TaskRegisterFragmentContract {
 
         void onDrawerClosed();
 
-        void onTaskSelected(TaskDetails details);
+        void onTaskSelected(TaskDetails details, boolean isActionClicked);
 
         @StringRes
         int getInterventionLabel();
 
         void onIndexCaseFound(JSONObject indexCase, boolean isLinkedToJurisdiction);
+
     }
 
     interface View extends BaseRegisterFragmentContract.View, BaseFormFragmentContract.View {

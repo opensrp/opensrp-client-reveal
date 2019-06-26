@@ -147,7 +147,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     protected void onViewClicked(View view) {
         TaskDetails details = (TaskDetails) view.getTag(R.id.task_details);
-        getPresenter().onTaskSelected(details);
+        getPresenter().onTaskSelected(details, view.getId() == R.id.task_action);
     }
 
     @Override
