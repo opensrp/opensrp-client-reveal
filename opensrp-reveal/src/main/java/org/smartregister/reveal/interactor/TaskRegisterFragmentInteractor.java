@@ -165,7 +165,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             if (Utils.getInterventionLabel() == R.string.focus_investigation) { // perform task grouping
 
                 tasks.addAll(queryTaskDetails(groupedRegisteredStructureTasksSelect(mainCondition.first),
-                        new String[]{groupId, planId, groupId, planId}, lastLocation, operationalAreaCenter, houseLabel, structuresWithinBuffer, true));
+                        mainCondition.second, lastLocation, operationalAreaCenter, houseLabel, structuresWithinBuffer, true));
 
 
                 tasks.addAll(queryTaskDetails(nonRegisteredStructureTasksSelect(mainCondition.first),
@@ -184,7 +184,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
 
             // Query Case Confirmation task
-            tasks.addAll(queryTaskDetails(indexCaseSelect(), new String[]{planId, TaskStatus.CANCELLED.name(),
+            tasks.addAll(queryTaskDetails(indexCaseSelect(), new String[]{mainCondition.second[1], TaskStatus.CANCELLED.name(),
                             CASE_CONFIRMATION}, lastLocation,
                     operationalAreaCenter, houseLabel, structuresWithinBuffer, false));
 
