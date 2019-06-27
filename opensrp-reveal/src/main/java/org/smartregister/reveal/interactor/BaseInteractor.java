@@ -36,6 +36,7 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
+import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
@@ -53,7 +54,9 @@ import org.smartregister.util.PropertiesConverter;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
@@ -345,15 +348,17 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 task.setStatus(Task.TaskStatus.COMPLETED);
                 task.setSyncStatus(BaseRepository.TYPE_Unsynced);
                 taskRepository.addOrUpdate(task);
+                Set<Task> removedTasks = new HashSet<>();
                 for (Task bloodScreeningTask : taskRepository.getTasksByEntityAndCode(prefsUtil.getCurrentPlanId(),
                         Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(), baseEntityId, BLOOD_SCREENING)) {
                     bloodScreeningTask.setStatus(Task.TaskStatus.CANCELLED);
                     bloodScreeningTask.setSyncStatus(BaseRepository.TYPE_Unsynced);
                     taskRepository.addOrUpdate(bloodScreeningTask);
+                    removedTasks.add(bloodScreeningTask);
                 }
                 clientProcessor.processClient(Collections.singletonList(new EventClient(event, client)), true);
                 appExecutors.mainThread().execute(() -> {
-                    presenterCallBack.onFormSaved(event.getBaseEntityId(), taskID, Task.TaskStatus.COMPLETED, businessStatus, CASE_CONFIRMATION);
+                    ((StructureTasksContract.Presenter) presenterCallBack).onIndexConfirmationFormSaved(taskID, Task.TaskStatus.COMPLETED, businessStatus, removedTasks);
                 });
             } catch (Exception e) {
                 Log.e(TAG, "Error saving case confirmation data");

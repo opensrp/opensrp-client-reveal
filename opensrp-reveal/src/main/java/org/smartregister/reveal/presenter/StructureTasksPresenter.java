@@ -18,6 +18,7 @@ import org.smartregister.reveal.util.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Set;
 
 import static org.smartregister.reveal.contract.StructureTasksContract.Interactor;
 import static org.smartregister.reveal.contract.StructureTasksContract.Presenter;
@@ -93,6 +94,12 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     public void onDetectCase() {
         indexCase.setStructureId(structureId);
         interactor.getStructure(indexCase);
+    }
+
+    @Override
+    public void onIndexConfirmationFormSaved(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks) {
+        getView().updateTasks(taskID, taskStatus, businessStatus, removedTasks);
+        getView().hideProgressDialog();
     }
 
     @Override

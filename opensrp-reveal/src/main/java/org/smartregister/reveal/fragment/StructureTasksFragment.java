@@ -32,6 +32,7 @@ import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.List;
+import java.util.Set;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
 import io.ona.kujaku.utils.Constants;
@@ -192,6 +193,11 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     @Override
     public void displayDetectCaseButton() {
         detectCaseButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void updateTasks(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks) {
+        adapter.updateTasks(taskID,taskStatus,businessStatus,removedTasks);
     }
 
     @Override
