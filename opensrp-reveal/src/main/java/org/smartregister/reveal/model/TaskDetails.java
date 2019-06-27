@@ -145,6 +145,7 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         setFamilyRegistered(false);
         setBednetDistributed(false);
         setAllBloodScreeningDone(true);
+        int bloodScreeningCount = 0;
         if (StringUtils.isEmpty(groupedTaskCodeStatusString)) {
             return;
         }
@@ -157,8 +158,10 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
                 setBednetDistributed(true);
             } else if (taskCodeStatusArray[0].equals(BLOOD_SCREENING) && !taskCodeStatusArray[1].equals(COMPLETE)) {
                 setAllBloodScreeningDone(false);
+                bloodScreeningCount++;
             }
         }
+        setAllBloodScreeningDone(isAllBloodScreeningDone() && bloodScreeningCount > 0);
     }
 
     @Override
