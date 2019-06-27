@@ -40,8 +40,7 @@ public class GeoJsonUtils {
             HashMap<String, String> taskProperties = null;
             boolean familyRegistered = false;
             boolean bednetDistributed = false;
-            boolean allBloodScreeningDone = true;
-            int bloodScreeningCount = 0;
+            boolean bloodScreeningDone = false;
             if (taskSet == null)
                 continue;
             for (Task task : taskSet) {
@@ -51,11 +50,8 @@ public class GeoJsonUtils {
                         familyRegistered = true;
                     } else if (task.getCode().equals(BEDNET_DISTRIBUTION) && task.getBusinessStatus().equals(COMPLETE)) {
                         bednetDistributed = true;
-                    } else if (task.getCode().equals(BLOOD_SCREENING) ) {
-                        if (!task.getBusinessStatus().equals(COMPLETE)) {
-                            allBloodScreeningDone = false;
-                        }
-                        bloodScreeningCount++;
+                    } else if (task.getCode().equals(BLOOD_SCREENING) && task.getBusinessStatus().equals(COMPLETE)) {
+                        bloodScreeningDone = true;
                     }
 
                 }
@@ -82,15 +78,14 @@ public class GeoJsonUtils {
 
             }
 
-            allBloodScreeningDone = (allBloodScreeningDone && bloodScreeningCount > 0);
             if (Utils.isResidentialStructure(taskProperties.get(TASK_CODE))) {
-                if (familyRegistered && bednetDistributed && allBloodScreeningDone) {
+                if (familyRegistered && bednetDistributed && bloodScreeningDone) {
                     taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
-                } else if (familyRegistered && !bednetDistributed && !allBloodScreeningDone) {
+                } else if (familyRegistered && !bednetDistributed && !bloodScreeningDone) {
                     taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
                 } else if (bednetDistributed && familyRegistered) {
                     taskProperties.put(TASK_BUSINESS_STATUS, BEDNET_DISTRIBUTED);
-                } else if (allBloodScreeningDone) {
+                } else if (bloodScreeningDone) {
                     taskProperties.put(TASK_BUSINESS_STATUS, BLOOD_SCREENING_COMPLETE);
                 } else {
                     taskProperties.put(TASK_BUSINESS_STATUS, NOT_VISITED);
