@@ -34,11 +34,8 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
 
     private PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
 
-    private View itemView;
-
     public TaskRegisterViewHolder(@NonNull View itemView) {
         super(itemView);
-        this.itemView = itemView;
         context = itemView.getContext();
         iconView = itemView.findViewById(R.id.task_icon);
         nameView = itemView.findViewById(R.id.task_name);
