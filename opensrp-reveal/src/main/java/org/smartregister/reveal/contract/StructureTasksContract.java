@@ -16,11 +16,13 @@ public interface StructureTasksContract {
 
         void findTasks(String structureId);
 
-        void onTasksFound(List<StructureTaskDetails> taskDetailsList, boolean incompeleteIndexCase);
+        void onTasksFound(List<StructureTaskDetails> taskDetailsList, StructureTaskDetails incompleteIndexCase);
 
         void onTaskSelected(StructureTaskDetails details);
 
         void saveJsonForm(String json);
+
+        void onDetectCase();
     }
 
     interface Interactor extends BaseContract.BaseInteractor {

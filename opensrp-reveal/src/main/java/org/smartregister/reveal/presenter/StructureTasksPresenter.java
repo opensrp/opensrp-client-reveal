@@ -33,6 +33,10 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
     private PreferencesUtil prefsUtil;
 
+    private StructureTaskDetails indexCase;
+
+    private String structureId;
+
 
     public StructureTasksPresenter(StructureTasksContract.View view, Context context) {
         this(view, context, null, PreferencesUtil.getInstance());
@@ -49,14 +53,16 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
     @Override
     public void findTasks(String structureId) {
+        this.structureId = structureId;
         interactor.findTasks(structureId, prefsUtil.getCurrentPlanId(),
                 Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId());
     }
 
     @Override
-    public void onTasksFound(List<StructureTaskDetails> taskDetailsList, boolean incompeleteIndexCase) {
+    public void onTasksFound(List<StructureTaskDetails> taskDetailsList, StructureTaskDetails incompleteIndexCase) {
+        indexCase = incompleteIndexCase;
         getView().setTaskDetailsList(taskDetailsList);
-        if(incompeleteIndexCase){
+        if (incompleteIndexCase != null) {
             getView().displayDetectCaseButton();
         }
     }
@@ -81,6 +87,12 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     public void saveJsonForm(String json) {
         getView().showProgressDialog(R.string.saving_title, R.string.saving_message);
         interactor.saveJsonForm(json);
+    }
+
+    @Override
+    public void onDetectCase() {
+        indexCase.setStructureId(structureId);
+        interactor.getStructure(indexCase);
     }
 
     @Override

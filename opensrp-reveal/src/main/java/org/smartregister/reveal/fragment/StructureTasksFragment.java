@@ -109,6 +109,10 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         progressDialog.setCancelable(false);
 
         detectCaseButton = view.findViewById(R.id.detect_case);
+
+        detectCaseButton.setOnClickListener((View v) -> {
+            presenter.onDetectCase();
+        });
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {

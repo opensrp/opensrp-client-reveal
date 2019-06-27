@@ -26,7 +26,6 @@ import java.util.Set;
 
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -171,7 +170,7 @@ public class ListTaskInteractor extends BaseInteractor {
         Cursor cursor = null;
         String structureId = null;
         try {
-            cursor = getDatabase().rawQuery(getMembersSelect(String.format("%s=? AND %s=?",
+            cursor = getDatabase().rawQuery(getMemberTasksSelect(String.format("%s=? AND %s=?",
                     PLAN_ID, CODE), new String[]{}), new String[]{planId, CASE_CONFIRMATION});
             if (cursor.moveToNext()) {
                 structureId = cursor.getString(0);

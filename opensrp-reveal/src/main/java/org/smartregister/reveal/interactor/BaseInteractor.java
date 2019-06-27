@@ -324,7 +324,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         appExecutors.diskIO().execute(runnable);
     }
 
-    protected String getMembersSelect(String mainCondition, String[] memberColumns) {
+    protected String getMemberTasksSelect(String mainCondition, String[] memberColumns) {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
         queryBuilder.selectInitiateMainTable(STRUCTURES_TABLE, memberColumns, ID);
         queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
