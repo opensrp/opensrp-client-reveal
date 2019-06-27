@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.smartregister.AllConstants.OPERATIONAL_AREAS;
+import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.ACTIVE;
 import static org.smartregister.reveal.util.Constants.Tags.CANTON;
 import static org.smartregister.reveal.util.Constants.Tags.COUNTRY;
 import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
@@ -98,6 +99,9 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         List<String> ids = new ArrayList<>();
         List<FormLocation> formLocations = new ArrayList<>();
         for (PlanDefinition planDefinition : planDefinitions) {
+            if (!planDefinition.getStatus().equals(ACTIVE)) {
+                continue;
+            }
             ids.add(planDefinition.getIdentifier());
             FormLocation formLocation = new FormLocation();
             formLocation.name = planDefinition.getTitle();

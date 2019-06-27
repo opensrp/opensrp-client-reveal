@@ -316,5 +316,13 @@ public interface Constants {
 
     }
 
+    interface PlanDefinitionStatus {
+        String DRAFT = "draft";
+        String ACTIVE = "active";
+        String COMPLETE = "complete";
+        String RETIRED = "retired";
+
+    }
+
 
 }
