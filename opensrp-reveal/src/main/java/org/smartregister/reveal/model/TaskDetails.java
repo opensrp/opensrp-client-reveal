@@ -156,8 +156,10 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
                 setFamilyRegistered(true);
             } else if (taskCodeStatusArray[0].equals(BEDNET_DISTRIBUTION) && taskCodeStatusArray[1].equals(COMPLETE)) {
                 setBednetDistributed(true);
-            } else if (taskCodeStatusArray[0].equals(BLOOD_SCREENING) && !taskCodeStatusArray[1].equals(COMPLETE)) {
-                setAllBloodScreeningDone(false);
+            } else if (taskCodeStatusArray[0].equals(BLOOD_SCREENING) ) {
+                if (!taskCodeStatusArray[1].equals(COMPLETE)) {
+                    setAllBloodScreeningDone(false);
+                }
                 bloodScreeningCount++;
             }
         }
