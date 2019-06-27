@@ -18,7 +18,9 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestingUtils;
+import org.smartregister.reveal.util.Utils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -47,14 +49,15 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
     @Mock
     private PreferencesUtil prefsUtil;
 
-    private Context context=RuntimeEnvironment.application;
+    private Context context = RuntimeEnvironment.application;
 
     private StructureTasksPresenter presenter;
 
 
     @Before
     public void setUp() {
-        presenter = new StructureTasksPresenter(view,context, interactor, prefsUtil);
+        org.smartregister.Context.bindtypes = new ArrayList<>();
+        presenter = new StructureTasksPresenter(view, context, interactor, prefsUtil);
     }
 
     @Test
@@ -63,7 +66,7 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
         String structureId = UUID.randomUUID().toString();
         when(prefsUtil.getCurrentPlanId()).thenReturn(campaignId);
         presenter.findTasks(structureId);
-        verify(interactor).findTasks(structureId, campaignId);
+        verify(interactor).findTasks(structureId, campaignId, Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId());
         verify(prefsUtil).getCurrentPlanId();
     }
 
@@ -71,7 +74,7 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
     @Test
     public void testOnTasksFound() {
         List<StructureTaskDetails> taskDetailsList = Collections.singletonList(TestingUtils.getStructureTaskDetails());
-        presenter.onTasksFound(taskDetailsList);
+        presenter.onTasksFound(taskDetailsList, false);
         verify(view).setTaskDetailsList(taskDetailsList);
     }
 
