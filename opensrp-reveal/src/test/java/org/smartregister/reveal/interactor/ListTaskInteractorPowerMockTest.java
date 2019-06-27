@@ -8,17 +8,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.CardDetailsUtil;
 
 import java.util.concurrent.Executor;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -32,7 +36,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLL
  * @author Vincent Karuri
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ListTaskInteractor.class})
+@PrepareForTest({ListTaskInteractor.class, CardDetailsUtil.class})
 public class ListTaskInteractorPowerMockTest {
 
     private ListTaskInteractor listTaskInteractor;
@@ -224,6 +228,7 @@ public class ListTaskInteractorPowerMockTest {
     @Before
     public void setUp() {
         listTaskInteractor = spy(Whitebox.newInstance(ListTaskInteractor.class));
+        PowerMockito.mockStatic(CardDetailsUtil.class);
     }
 
     @Test
@@ -259,6 +264,8 @@ public class ListTaskInteractorPowerMockTest {
         when(cursor.getString(1)).thenReturn(START_DATE);
         when(cursor.getString(2)).thenReturn(END_DATE);
 
+        when(CardDetailsUtil.getTranslatedBusinessStatus(any())).thenReturn(STATUS);
+
         MosquitoHarvestCardDetails mosquitoHarvestCardDetails = Whitebox.invokeMethod(listTaskInteractor, "createMosquitoHarvestCardDetails", cursor, MOSQUITO_COLLECTION);
 
         assertEquals(mosquitoHarvestCardDetails.getStatus(), STATUS);
@@ -285,6 +292,7 @@ public class ListTaskInteractorPowerMockTest {
         when(cursor.getString(2)).thenReturn(SPRAY_OPERATOR);
         when(cursor.getString(3)).thenReturn(FAMILY_HEAD);
 
+        when(CardDetailsUtil.getTranslatedBusinessStatus(any())).thenReturn(anyString());
         SprayCardDetails sprayCardDetails = Whitebox.invokeMethod(listTaskInteractor, "createSprayCardDetails", cursor);
 
         assertEquals(sprayCardDetails.getPropertyType(), PROPERTY_TYPE);
