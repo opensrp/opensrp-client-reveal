@@ -138,8 +138,6 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        Whitebox.setInternalState(GeoJsonUtils.class, "buildCountry", Country.THAILAND);
-
         String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);

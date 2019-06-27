@@ -33,7 +33,6 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
  */
 public class GeoJsonUtils {
 
-    private static Country buildCountry = BuildConfig.BUILD_COUNTRY;
 
     public static String getGeoJsonFromStructuresAndTasks(List<Location> structures, Map<String, Set<Task>> tasks, String indexCase) {
         for (Location structure : structures) {
@@ -48,19 +47,16 @@ public class GeoJsonUtils {
                 continue;
             for (Task task : taskSet) {
                 if (Utils.isResidentialStructure(task.getCode())) {
-                    if (buildCountry == Country.THAILAND) {
 
-                        if (task.getCode().equals(REGISTER_FAMILY) && task.getBusinessStatus().equals(COMPLETE)) {
-                            familyRegistered = true;
-                        } else if (task.getCode().equals(BEDNET_DISTRIBUTION) && task.getBusinessStatus().equals(COMPLETE)) {
-                            bednetDistributed = true;
-                        } else if (task.getCode().equals(BLOOD_SCREENING) && !task.getBusinessStatus().equals(COMPLETE)) {
+                    if (task.getCode().equals(REGISTER_FAMILY) && task.getBusinessStatus().equals(COMPLETE)) {
+                        familyRegistered = true;
+                    } else if (task.getCode().equals(BEDNET_DISTRIBUTION) && task.getBusinessStatus().equals(COMPLETE)) {
+                        bednetDistributed = true;
+                    } else if (task.getCode().equals(BLOOD_SCREENING) ) {
+                        if (!task.getBusinessStatus().equals(COMPLETE)) {
                             allBloodScreeningDone = false;
-                            bloodScreeningCount++;
                         }
-
-                    } else if (!COMPLETE.equals(task.getBusinessStatus())) {
-                        groupedStructureTasksBusinessStatus = NOT_VISITED; // so as to display the residential structure in yellow
+                        bloodScreeningCount++;
                     }
 
                 }
@@ -88,7 +84,7 @@ public class GeoJsonUtils {
             }
 
             allBloodScreeningDone = (allBloodScreeningDone && bloodScreeningCount > 0);
-            if (Utils.isResidentialStructure(taskProperties.get(TASK_CODE)) && buildCountry == Country.THAILAND) {
+            if (Utils.isResidentialStructure(taskProperties.get(TASK_CODE))) {
                 if (familyRegistered && bednetDistributed && allBloodScreeningDone) {
                     taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
                 } else if (familyRegistered && !bednetDistributed && !allBloodScreeningDone) {
