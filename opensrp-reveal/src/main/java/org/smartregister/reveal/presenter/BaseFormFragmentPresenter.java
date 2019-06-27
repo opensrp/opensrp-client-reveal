@@ -166,7 +166,7 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
 
     @Override
     public void onFetchedFamilyMembers(JSONArray familyMembers, JSONObject formJSON) {
-        JSONObject familyMemberField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJSON), "familyMember");
+        JSONObject familyMemberField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJSON), JsonForm.FAMILY_MEMBER);
         try {
             familyMemberField.put(OPTIONS, familyMembers);
         } catch (JSONException e) {

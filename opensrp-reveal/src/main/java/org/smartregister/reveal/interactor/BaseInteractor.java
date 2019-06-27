@@ -71,6 +71,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -152,7 +153,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             } else if (BLOOD_SCREENING_EVENT.equals(encounterType)) {
                 saveMemberForm(jsonForm, encounterType, Intervention.BLOOD_SCREENING);
             } else if (CASE_CONFIRMATION_EVENT.equals(encounterType)) {
-                saveMemberForm(jsonForm, encounterType, Intervention.CASE_CONFIRMATION);
+                saveCaseConfirmation(jsonForm, encounterType, Intervention.CASE_CONFIRMATION);
             }
         } catch (Exception e) {
             Log.e(TAG, "Error saving Json Form data", e);
@@ -322,6 +323,25 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             }
         };
         appExecutors.diskIO().execute(runnable);
+    }
+
+    private void saveCaseConfirmation(JSONObject jsonForm, String eventType, String intervention) {
+        appExecutors.diskIO().execute(() -> {
+            try {
+                String baseEntityId = JsonFormUtils.getFieldValue(JsonFormUtils.fields(jsonForm), JsonForm.FAMILY_MEMBER);
+                jsonForm.put(JsonForm.BASE_ENTITY_ID, baseEntityId);
+                org.smartregister.domain.db.Event event = saveEvent(jsonForm, eventType, CASE_CONFIRMATION);
+                Client client = eventClientRepository.fetchClientByBaseEntityId(event.getBaseEntityId());
+                clientProcessor.processClient(Collections.singletonList(new EventClient(event, client)), true);
+                appExecutors.mainThread().execute(() -> {
+                    String businessStatus = clientProcessor.calculateBusinessStatus(event);
+                    String taskID = event.getDetails().get(Properties.TASK_IDENTIFIER);
+                    presenterCallBack.onFormSaved(event.getBaseEntityId(), taskID, Task.TaskStatus.COMPLETED, businessStatus, intervention);
+                });
+            } catch (Exception e) {
+                Log.e(TAG, "Error saving case confirmation data");
+            }
+        });
     }
 
     protected String getMemberTasksSelect(String mainCondition, String[] memberColumns) {

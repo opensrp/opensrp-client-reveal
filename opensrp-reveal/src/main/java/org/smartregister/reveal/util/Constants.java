@@ -223,6 +223,10 @@ public interface Constants {
         String HINT = "hint";
 
         String TITLE = "title";
+
+        String FAMILY_MEMBER = "familyMember";
+
+        String BASE_ENTITY_ID = "baseEntityId";
     }
 
     interface DateFormat {
