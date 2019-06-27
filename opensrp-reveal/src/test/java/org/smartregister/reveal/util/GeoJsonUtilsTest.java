@@ -6,7 +6,6 @@ import com.mapbox.geojson.Feature;
 
 import org.json.JSONArray;
 import org.junit.Test;
-import org.powermock.reflect.Whitebox;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Task;
@@ -25,11 +24,11 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_REGISTERED;
 import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_REGISTERED;
 
 public class GeoJsonUtilsTest extends BaseUnitTest {
 

@@ -2,7 +2,6 @@ package org.smartregister.reveal.util;
 
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
-import org.smartregister.reveal.BuildConfig;
 
 import java.util.HashMap;
 import java.util.List;
