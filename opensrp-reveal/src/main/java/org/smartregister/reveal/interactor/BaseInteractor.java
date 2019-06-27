@@ -44,6 +44,7 @@ import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.StructureType;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.DateTimeTypeConverter;
@@ -71,6 +72,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -121,6 +123,8 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
     private CommonRepository commonRepository;
 
+    private PreferencesUtil prefsUtil;
+
     public BaseInteractor(BasePresenter presenterCallBack) {
         this.presenterCallBack = presenterCallBack;
         appExecutors = getInstance().getAppExecutors();
@@ -131,6 +135,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         sharedPreferences = getInstance().getContext().allSharedPreferences();
         taskUtils = TaskUtils.getInstance();
         database = getInstance().getRepository().getReadableDatabase();
+        prefsUtil = PreferencesUtil.getInstance();
     }
 
     @VisibleForTesting
@@ -153,7 +158,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             } else if (BLOOD_SCREENING_EVENT.equals(encounterType)) {
                 saveMemberForm(jsonForm, encounterType, Intervention.BLOOD_SCREENING);
             } else if (CASE_CONFIRMATION_EVENT.equals(encounterType)) {
-                saveCaseConfirmation(jsonForm, encounterType, Intervention.CASE_CONFIRMATION);
+                saveCaseConfirmation(jsonForm, encounterType);
             }
         } catch (Exception e) {
             Log.e(TAG, "Error saving Json Form data", e);
@@ -318,18 +323,18 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                         }
                     });
                 } catch (Exception e) {
-                    Log.e(TAG, "Error saving bednet distribution point data");
+                    Log.e(TAG, "Error saving member event form");
                 }
             }
         };
         appExecutors.diskIO().execute(runnable);
     }
 
-    private void saveCaseConfirmation(JSONObject jsonForm, String eventType, String intervention) {
+    private void saveCaseConfirmation(JSONObject jsonForm, String eventType) {
         appExecutors.diskIO().execute(() -> {
             try {
                 String baseEntityId = JsonFormUtils.getFieldValue(JsonFormUtils.fields(jsonForm), JsonForm.FAMILY_MEMBER);
-                jsonForm.put(JsonForm.BASE_ENTITY_ID, baseEntityId);
+                jsonForm.put(ENTITY_ID, baseEntityId);
                 org.smartregister.domain.db.Event event = saveEvent(jsonForm, eventType, CASE_CONFIRMATION);
                 Client client = eventClientRepository.fetchClientByBaseEntityId(event.getBaseEntityId());
                 String taskID = event.getDetails().get(Properties.TASK_IDENTIFIER);
@@ -338,11 +343,17 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 task.setForEntity(baseEntityId);
                 task.setBusinessStatus(businessStatus);
                 task.setStatus(Task.TaskStatus.COMPLETED);
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
                 taskRepository.addOrUpdate(task);
+                for (Task bloodScreeningTask : taskRepository.getTasksByEntityAndCode(prefsUtil.getCurrentPlanId(),
+                        Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(), baseEntityId, BLOOD_SCREENING)) {
+                    bloodScreeningTask.setStatus(Task.TaskStatus.CANCELLED);
+                    bloodScreeningTask.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                    taskRepository.addOrUpdate(bloodScreeningTask);
+                }
                 clientProcessor.processClient(Collections.singletonList(new EventClient(event, client)), true);
                 appExecutors.mainThread().execute(() -> {
-
-                    presenterCallBack.onFormSaved(event.getBaseEntityId(), taskID, Task.TaskStatus.COMPLETED, businessStatus, intervention);
+                    presenterCallBack.onFormSaved(event.getBaseEntityId(), taskID, Task.TaskStatus.COMPLETED, businessStatus, CASE_CONFIRMATION);
                 });
             } catch (Exception e) {
                 Log.e(TAG, "Error saving case confirmation data");

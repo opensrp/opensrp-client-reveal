@@ -87,7 +87,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                     taskDetailsList.add(readMemberTaskDetails(cursor));
                 }
                 cursor.close();
-                cursor = database.rawQuery(getTaskSelect(String.format("%s=? AND %s=? AND %s =? AND %s = ?",
+                cursor = database.rawQuery(getTaskSelect(String.format("%s = ? AND %s = ? AND %s = ? AND %s = ?",
                         GROUPID, PLAN_ID, CODE, STATUS)),
                         new String[]{operationalAreaId, planId, Intervention.CASE_CONFIRMATION, READY.name()});
                 if (cursor.moveToNext()) {
