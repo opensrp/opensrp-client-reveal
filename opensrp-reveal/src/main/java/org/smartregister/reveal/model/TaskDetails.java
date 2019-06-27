@@ -39,7 +39,7 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
     private boolean bednetDistributed;
 
-    private boolean allBloodScreeningDone;
+    private boolean bloodScreeningDone;
 
     public TaskDetails(@NonNull String taskId) {
         super(taskId);
@@ -133,19 +133,18 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         this.bednetDistributed = bednetDistributed;
     }
 
-    public boolean isAllBloodScreeningDone() {
-        return allBloodScreeningDone;
+    public boolean isBloodScreeningDone() {
+        return bloodScreeningDone;
     }
 
-    public void setAllBloodScreeningDone(boolean allBloodScreeningDone) {
-        this.allBloodScreeningDone = allBloodScreeningDone;
+    public void setBloodScreeningDone(boolean bloodScreeningDone) {
+        this.bloodScreeningDone = bloodScreeningDone;
     }
 
     public void setGroupedTaskCodeStatus(String groupedTaskCodeStatusString) {
         setFamilyRegistered(false);
         setBednetDistributed(false);
-        setAllBloodScreeningDone(true);
-        int bloodScreeningCount = 0;
+        setBloodScreeningDone(false);
         if (StringUtils.isEmpty(groupedTaskCodeStatusString)) {
             return;
         }
@@ -156,12 +155,10 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
                 setFamilyRegistered(true);
             } else if (taskCodeStatusArray[0].equals(BEDNET_DISTRIBUTION) && taskCodeStatusArray[1].equals(COMPLETE)) {
                 setBednetDistributed(true);
-            } else if (taskCodeStatusArray[0].equals(BLOOD_SCREENING) && !taskCodeStatusArray[1].equals(COMPLETE)) {
-                setAllBloodScreeningDone(false);
-                bloodScreeningCount++;
+            } else if (taskCodeStatusArray[0].equals(BLOOD_SCREENING) && taskCodeStatusArray[1].equals(COMPLETE)) {
+                setBloodScreeningDone(true);
             }
         }
-        setAllBloodScreeningDone(isAllBloodScreeningDone() && bloodScreeningCount > 0);
     }
 
     @Override

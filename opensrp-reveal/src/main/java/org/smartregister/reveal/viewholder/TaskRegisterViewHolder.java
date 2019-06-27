@@ -89,13 +89,13 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
             if (task.getTaskCount() > 1) {
                 if (task.getTaskCount() != task.getCompleteTaskCount()) {
 
-                    if (task.isFamilyRegistered() && !task.isBednetDistributed() && !task.isAllBloodScreeningDone()) {
+                    if (task.isFamilyRegistered() && !task.isBednetDistributed() && !task.isBloodScreeningDone()) {
                         actionView.setBackground(context.getResources().getDrawable(R.drawable.family_registered_bg));
                         actionView.setTextColor(context.getResources().getColor(R.color.text_black));
                     } else if (task.isBednetDistributed() && task.isFamilyRegistered()) {
                         actionView.setBackground(context.getResources().getDrawable(R.drawable.bednet_distributed_bg));
                         actionView.setTextColor(context.getResources().getColor(R.color.text_black));
-                    } else if (task.isAllBloodScreeningDone()) {
+                    } else if (task.isBloodScreeningDone()) {
                         actionView.setBackground(context.getResources().getDrawable(R.drawable.blood_screening_complete_bg));
                         actionView.setTextColor(context.getResources().getColor(R.color.text_black));
                     } else {
