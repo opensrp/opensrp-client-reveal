@@ -16,7 +16,7 @@ public interface StructureTasksContract {
 
         void findTasks(String structureId);
 
-        void onTasksFound(List<StructureTaskDetails> taskDetailsList);
+        void onTasksFound(List<StructureTaskDetails> taskDetailsList, boolean incompeleteIndexCase);
 
         void onTaskSelected(StructureTaskDetails details);
 
@@ -25,7 +25,7 @@ public interface StructureTasksContract {
 
     interface Interactor extends BaseContract.BaseInteractor {
 
-        void findTasks(String structureId, String currentCampaignId);
+        void findTasks(String structureId, String currentPlanId, String operationalAreaId);
 
         void getStructure(StructureTaskDetails details);
     }
@@ -45,5 +45,7 @@ public interface StructureTasksContract {
         void setTaskDetailsList(List<StructureTaskDetails> taskDetailsList);
 
         void updateTask(String taskID, Task.TaskStatus taskStatus, String businessStatus);
+
+        void displayDetectCaseButton();
     }
 }

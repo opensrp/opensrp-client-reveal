@@ -43,7 +43,7 @@
     <dimen name="operational_area_boundary_text_size">10sp</dimen>
     <dimen name="operational_area_boundary_width">1dp</dimen>
     <dimen name="task_action_text">18sp</dimen>
-    <dimen name="detect_case_padding">32dp</dimen>
+    <dimen name="detect_case_padding">40dp</dimen>
 </resources>
 
 

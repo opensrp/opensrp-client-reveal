@@ -14,6 +14,7 @@ import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.interactor.StructureTasksInteractor;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -48,12 +49,16 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
     @Override
     public void findTasks(String structureId) {
-        interactor.findTasks(structureId, prefsUtil.getCurrentPlanId());
+        interactor.findTasks(structureId, prefsUtil.getCurrentPlanId(),
+                Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId());
     }
 
     @Override
-    public void onTasksFound(List<StructureTaskDetails> taskDetailsList) {
+    public void onTasksFound(List<StructureTaskDetails> taskDetailsList, boolean incompeleteIndexCase) {
         getView().setTaskDetailsList(taskDetailsList);
+        if(incompeleteIndexCase){
+            getView().displayDetectCaseButton();
+        }
     }
 
     @Override

@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +59,8 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     private boolean hasRequestedLocation;
 
     private TabLayout tabLayout;
+
+    private Button detectCaseButton;
 
     public static StructureTasksFragment newInstance(Bundle bundle, Context context) {
         StructureTasksFragment fragment = new StructureTasksFragment();
@@ -104,6 +107,8 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
 
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setCancelable(false);
+
+        detectCaseButton = view.findViewById(R.id.detect_case);
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -178,6 +183,11 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     @Override
     public void updateTask(String taskID, Task.TaskStatus taskStatus, String businessStatus) {
         adapter.updateTask(taskID, taskStatus, businessStatus);
+    }
+
+    @Override
+    public void displayDetectCaseButton() {
+        detectCaseButton.setVisibility(View.VISIBLE);
     }
 
     @Override

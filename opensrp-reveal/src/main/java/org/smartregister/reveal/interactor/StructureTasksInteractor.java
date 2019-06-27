@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.smartregister.domain.Task.TaskStatus.CANCELLED;
+import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.family.util.DBConstants.KEY.DOB;
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.LAST_NAME;
@@ -27,6 +28,7 @@ import static org.smartregister.family.util.DBConstants.KEY.MIDDLE_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
@@ -64,14 +66,15 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     }
 
     @Override
-    public void findTasks(String structureId, String campaignId) {
+    public void findTasks(String structureId, String planId, String operationalAreaId) {
         appExecutors.diskIO().execute(() -> {
             List<StructureTaskDetails> taskDetailsList = new ArrayList<>();
+            boolean hasIncompleteIndexCase = false;
             Cursor cursor = null;
             try {
                 cursor = database.rawQuery(getStructureSelect(String.format(
                         "%s=? AND %s=? AND %s != ?", FOR, PLAN_ID, STATUS)),
-                        new String[]{structureId, campaignId, CANCELLED.name()});
+                        new String[]{structureId, planId, CANCELLED.name()});
                 while (cursor.moveToNext()) {
                     taskDetailsList.add(readTaskDetails(cursor));
                 }
@@ -79,10 +82,15 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                 cursor.close();
                 cursor = database.rawQuery(getMembersSelect(String.format("%s.%s=? AND %s=? AND %s != ?",
                         STRUCTURES_TABLE, ID, PLAN_ID, STATUS), getMemberColumns()),
-                        new String[]{structureId, campaignId, CANCELLED.name()});
+                        new String[]{structureId, planId, CANCELLED.name()});
                 while (cursor.moveToNext()) {
                     taskDetailsList.add(readMemberTaskDetails(cursor));
                 }
+                cursor.close();
+                cursor = database.rawQuery(String.format("SELECT 1 FROM  %s WHERE %s=? AND %s=? AND %s =? AND %s = ?",
+                        TASK_TABLE, GROUPID, PLAN_ID, CODE, STATUS),
+                        new String[]{operationalAreaId, planId, Intervention.CASE_CONFIRMATION, READY.name()});
+                hasIncompleteIndexCase = cursor.getCount() > 0;
             } catch (Exception e) {
                 Log.e(TAG, "Error querying tasks for " + structureId, e);
             } finally {
@@ -90,8 +98,9 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                     cursor.close();
                 }
             }
+            boolean incompeleteIndexCase = hasIncompleteIndexCase;
             appExecutors.mainThread().execute(() -> {
-                presenter.onTasksFound(taskDetailsList);
+                presenter.onTasksFound(taskDetailsList, incompeleteIndexCase);
             });
         });
     }
