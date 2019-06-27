@@ -332,10 +332,16 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 jsonForm.put(JsonForm.BASE_ENTITY_ID, baseEntityId);
                 org.smartregister.domain.db.Event event = saveEvent(jsonForm, eventType, CASE_CONFIRMATION);
                 Client client = eventClientRepository.fetchClientByBaseEntityId(event.getBaseEntityId());
+                String taskID = event.getDetails().get(Properties.TASK_IDENTIFIER);
+                String businessStatus = clientProcessor.calculateBusinessStatus(event);
+                Task task = taskRepository.getTaskByIdentifier(taskID);
+                task.setForEntity(baseEntityId);
+                task.setBusinessStatus(businessStatus);
+                task.setStatus(Task.TaskStatus.COMPLETED);
+                taskRepository.addOrUpdate(task);
                 clientProcessor.processClient(Collections.singletonList(new EventClient(event, client)), true);
                 appExecutors.mainThread().execute(() -> {
-                    String businessStatus = clientProcessor.calculateBusinessStatus(event);
-                    String taskID = event.getDetails().get(Properties.TASK_IDENTIFIER);
+
                     presenterCallBack.onFormSaved(event.getBaseEntityId(), taskID, Task.TaskStatus.COMPLETED, businessStatus, intervention);
                 });
             } catch (Exception e) {
