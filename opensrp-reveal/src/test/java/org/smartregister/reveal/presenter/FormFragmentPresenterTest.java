@@ -124,7 +124,7 @@ public class FormFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnFoundMembersCount() throws JSONException {
-        presenter.onFoundMembersCount(3, new JSONObject("{\"members\": \"[num_fam_members]\"}"));
+        presenter.onFetchedMembersCount(3, new JSONObject("{\"members\": \"[num_fam_members]\"}"));
         verify(view).startForm(jsonArgumentCaptor.capture());
         verify(view).hideProgressDialog();
         assertEquals(3, jsonArgumentCaptor.getValue().getInt("members"));
