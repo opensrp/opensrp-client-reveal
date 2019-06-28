@@ -207,7 +207,9 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                 if (StringUtils.isNotBlank(db_key)) {
                     jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), db_key, false));
                 } else {
-                    jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), jsonObject.getString(KEY), false));
+                    String value = Utils.getValue(client.getColumnmaps(), jsonObject.getString(KEY), false);
+                    if (StringUtils.isNotBlank(value))
+                        jsonObject.put(VALUE, value);
                 }
                 break;
 
