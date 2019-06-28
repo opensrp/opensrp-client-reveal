@@ -72,19 +72,6 @@
         "type": "hidden"
       },
       {
-        "key": "surname",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Family surname",
-        "edit_type": "name",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter family surname"
-        }
-      },
-      {
         "key": "house_number",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_address",

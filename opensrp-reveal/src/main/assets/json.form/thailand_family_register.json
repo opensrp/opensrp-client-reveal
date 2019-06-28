@@ -69,19 +69,6 @@
         }
       },
       {
-        "key": "surname",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "",
-        "type": "",
-        "hint": "สกุลเจ้าบ้าน",
-        "edit_type": "name",
-        "v_required": {
-          "value": "true",
-          "err": "กรุณาใส่นามสกุลของครอบครัว"
-        }
-      },
-      {
         "key": "house_number",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_address",
@@ -136,6 +123,22 @@
         }
       },
       {
+        "key": "same_as_fam_name",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "",
+        "options": [
+          {
+            "key": "same_as_fam_name",
+            "text": "คลิกเลือกหากสกุลเดียวกับเจ้าบ้าน",
+            "text_size": "18px",
+            "value": "false"
+          }
+        ]
+      },
+      {
         "key": "surname",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -154,22 +157,6 @@
             }
           }
         }
-      },
-      {
-        "key": "same_as_fam_name",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "check_box",
-        "label": "",
-        "options": [
-          {
-            "key": "same_as_fam_name",
-            "text": "คลิกเลือกหากสกุลเดียวกับเจ้าบ้าน",
-            "text_size": "18px",
-            "value": "false"
-          }
-        ]
       },
       {
         "key": "surname_calculation",

@@ -80,22 +80,6 @@
         }
       },
       {
-        "key": "surname",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "นามสกุล",
-        "edit_type": "name",
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "thailand-family-member-relevance.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "same_as_fam_name",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -114,6 +98,22 @@
             "value": "false"
           }
         ]
+      },
+      {
+        "key": "surname",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "นามสกุล",
+        "edit_type": "name",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-family-member-relevance.yml"
+            }
+          }
+        }
       },
       {
         "key": "fam_name",
