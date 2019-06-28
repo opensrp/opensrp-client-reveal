@@ -228,7 +228,7 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
         allSharedPreferences.saveDefaultTeam("user1132", "Ateam");
         allSharedPreferences.saveDefaultTeamId("user1132", "2342fsdfds99");
         allSharedPreferences.saveDefaultLocalityId("user1132", "13k083-jhnf33");
-        Event event = FamilyJsonFormUtils.createUpdateMemberSurnameEvent(baseEntityId, updateFamilyEvent);
+        Event event = FamilyJsonFormUtils.createUpdateMemberNameEvent(baseEntityId, updateFamilyEvent);
         assertEquals("13k083-jhnf33", event.getLocationId());
         assertEquals("user1132", event.getProviderId());
         assertEquals("2342fsdfds99", event.getTeamId());

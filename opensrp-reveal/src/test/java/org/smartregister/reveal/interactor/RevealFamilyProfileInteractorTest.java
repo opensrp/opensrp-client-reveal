@@ -103,7 +103,7 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
     @Test
     public void testUpdateFamilyMemberSurnameWithoutFamilyMembers() {
         String baseEntityId = UUID.randomUUID().toString();
-        interactor.updateFamilyMemberSurname((Client) new Client().withBaseEntityId(baseEntityId),
+        interactor.updateFamilyMemberName((Client) new Client().withBaseEntityId(baseEntityId),
                 new Event(), "Victor");
         verify(commonRepository, timeout(ASYNC_TIMEOUT)).findByRelational_IDs(baseEntityId);
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).batchInsertClients(new JSONArray());
@@ -119,7 +119,7 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
         familyMember.setColumnmaps(client.getColumnmaps());
         when(commonRepository.findByRelational_IDs(baseEntityId)).thenReturn(Collections.singletonList(familyMember));
         when(eventClientRepository.getClientByBaseEntityId(familyMember.getCaseId())).thenReturn(new JSONObject());
-        interactor.updateFamilyMemberSurname((Client) new Client().withFirstName("Otale").withBaseEntityId(baseEntityId),
+        interactor.updateFamilyMemberName((Client) new Client().withFirstName("Otale").withBaseEntityId(baseEntityId),
                 new Event(), "Otala");
         verify(commonRepository, timeout(ASYNC_TIMEOUT)).findByRelational_IDs(baseEntityId);
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).batchInsertClients(jsonArrayArgumentCaptor.capture());
@@ -154,7 +154,7 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
         familyMember.setColumnmaps(client.getColumnmaps());
         when(commonRepository.findByRelational_IDs(baseEntityId)).thenReturn(Collections.singletonList(familyMember));
         when(eventClientRepository.getClientByBaseEntityId(familyMember.getCaseId())).thenReturn(null);
-        interactor.updateFamilyMemberSurname((Client) new Client().withFirstName("Otale").withBaseEntityId(baseEntityId),
+        interactor.updateFamilyMemberName((Client) new Client().withFirstName("Otale").withBaseEntityId(baseEntityId),
                 new Event(), "Otala");
         verify(commonRepository, timeout(ASYNC_TIMEOUT)).findByRelational_IDs(baseEntityId);
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).batchInsertClients(new JSONArray());
