@@ -180,9 +180,7 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     @Override
     public void setTaskDetailsList(List<StructureTaskDetails> taskDetailsList) {
         adapter.setTaskDetailsList(taskDetailsList);
-        if (tabLayout != null && tabLayout.getTabAt(1) != null) {
-            tabLayout.getTabAt(1).setText(getString(R.string.tasks, taskDetailsList.size()));
-        }
+        updateNumberOfTasks();
     }
 
     @Override
@@ -196,8 +194,20 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     }
 
     @Override
+    public void hideDetectCaseButton() {
+        detectCaseButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void updateNumberOfTasks() {
+        if (tabLayout != null && tabLayout.getTabAt(1) != null) {
+            tabLayout.getTabAt(1).setText(getString(R.string.tasks, adapter.getItemCount()));
+        }
+    }
+
+    @Override
     public void updateTasks(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks) {
-        adapter.updateTasks(taskID,taskStatus,businessStatus,removedTasks);
+        adapter.updateTasks(taskID, taskStatus, businessStatus, removedTasks);
     }
 
     @Override

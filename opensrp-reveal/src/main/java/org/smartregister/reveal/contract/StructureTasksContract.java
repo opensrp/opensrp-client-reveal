@@ -53,6 +53,10 @@ public interface StructureTasksContract {
 
         void displayDetectCaseButton();
 
+        void hideDetectCaseButton();
+
+        void updateNumberOfTasks();
+
         void updateTasks(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks);
     }
 }
