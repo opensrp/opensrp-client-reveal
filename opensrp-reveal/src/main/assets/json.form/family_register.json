@@ -112,14 +112,17 @@
       {
         "key": "first_name",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "first_name",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "First name",
         "edit_type": "name",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the first name"
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "family-register-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -132,7 +135,7 @@
         "options": [
           {
             "key": "same_as_fam_name",
-            "text": "Surname same as family name",
+            "text": "First name same as household name",
             "text_size": "18px",
             "value": "false"
           }
@@ -141,31 +144,22 @@
       {
         "key": "surname",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "last_name",
         "type": "edit_text",
         "hint": "Surname",
         "edit_type": "name",
         "v_required": {
           "value": "true",
           "err": "Please enter the surname"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "family-register-relevance.yml"
-            }
-          }
         }
       },
       {
-        "key": "surname_calculation",
+        "key": "first_name_calculation",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
-        "openmrs_entity_id": "last_name",
-        "type": "edit_text",
-        "hidden": true,
-        "hint": "Surname as Family name",
+        "openmrs_entity_id": "first_name",
+        "type": "hidden",
         "calculation": {
           "rules-engine": {
             "ex-rules": {

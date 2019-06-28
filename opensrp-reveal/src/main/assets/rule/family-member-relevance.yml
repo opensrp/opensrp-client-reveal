@@ -1,6 +1,6 @@
 ---
-name: step1_surname
-description: surname relevance
+name: step1_first_name
+description: first name relevance
 priority: 1
 condition: "!step1_same_as_fam_name.contains('same_as_fam_name')"
 actions:
