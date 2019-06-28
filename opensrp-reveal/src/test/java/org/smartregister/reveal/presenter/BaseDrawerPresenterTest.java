@@ -41,7 +41,6 @@ public class BaseDrawerPresenterTest {
     @Mock
     BaseDrawerContract.DrawerActivity activity;
 
-    @Mock
     BaseDrawerInteractor interactor;
 
     @Before
