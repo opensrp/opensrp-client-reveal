@@ -22,7 +22,6 @@ import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.Cache;
-import org.smartregister.util.CacheableData;
 
 import java.util.ArrayList;
 import java.util.Collections;

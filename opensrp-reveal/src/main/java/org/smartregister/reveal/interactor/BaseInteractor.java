@@ -159,7 +159,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             } else if (REGISTER_STRUCTURE_EVENT.equals(encounterType)) {
                 saveRegisterStructureForm(jsonForm);
             } else if (BLOOD_SCREENING_EVENT.equals(encounterType)) {
-                saveMemberForm(jsonForm, encounterType, Intervention.BLOOD_SCREENING);
+                saveMemberForm(jsonForm, encounterType, BLOOD_SCREENING);
             } else if (CASE_CONFIRMATION_EVENT.equals(encounterType)) {
                 saveCaseConfirmation(jsonForm, encounterType);
             }
