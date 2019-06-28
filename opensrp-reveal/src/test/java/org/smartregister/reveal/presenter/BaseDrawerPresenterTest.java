@@ -8,6 +8,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.smartregister.domain.PlanDefinition;
+import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.interactor.BaseDrawerInteractor;
@@ -31,22 +32,19 @@ import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.ACTIV
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({PreferencesUtil.class,RevealApplication.class})
-public class BaseDrawerPresenterTest {
+public class BaseDrawerPresenterTest extends BaseUnitTest {
 
     private BaseDrawerPresenter presenter;
 
     @Mock
     private BaseDrawerContract.View view;
 
-    @Mock
-    BaseDrawerContract.DrawerActivity activity;
-
-    BaseDrawerInteractor interactor;
+    private BaseDrawerInteractor interactor;
 
     @Before
     public void setUp() throws Exception {
         mockStaticMethods();
-        presenter = new BaseDrawerPresenter(view, activity);
+        presenter = new BaseDrawerPresenter(view, mock(BaseDrawerContract.DrawerActivity.class));
         interactor = mock(BaseDrawerInteractor.class);
         PowerMockito.whenNew(BaseDrawerInteractor.class).withAnyArguments().thenReturn(interactor);
 
