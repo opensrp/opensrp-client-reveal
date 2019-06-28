@@ -69,14 +69,17 @@
       {
         "key": "first_name",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "first_name",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "ชื่อ",
         "edit_type": "name",
-        "v_required": {
-          "value": "true",
-          "err": "กรุณาใส่ชื่อจริง"
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "family-member-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -102,17 +105,14 @@
       {
         "key": "surname",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "last_name",
         "type": "edit_text",
         "hint": "นามสกุล",
         "edit_type": "name",
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "thailand-family-member-relevance.yml"
-            }
-          }
+        "v_required": {
+          "value": "true",
+          "err": "กรุณาใส่นามสกุลของครอบครัว"
         }
       },
       {
@@ -124,16 +124,16 @@
         "hidden": "true"
       },
       {
-        "key": "surname_calculation",
+        "key": "first_name_calculation",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
-        "openmrs_entity_id": "last_name",
+        "openmrs_entity_id": "first_name",
         "type": "hidden",
         "hint": "คลิกเลือกหากนามสกุลเดียวกับเจ้าบ้าน",
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "thailand-family-member-calculation.yml"
+              "rules-file": "family-member-calculation.yml"
             }
           }
         }
@@ -158,7 +158,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "thailand-family-member-relevance.yml"
+              "rules-file": "family-member-relevance.yml"
             }
           }
         }
@@ -201,7 +201,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "thailand-family-member-relevance.yml"
+              "rules-file": "family-member-relevance.yml"
             }
           }
         },
@@ -280,7 +280,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "thailand-family-member-relevance.yml"
+              "rules-file": "family-member-relevance.yml"
             }
           }
         }
