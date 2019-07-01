@@ -22,7 +22,7 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
 
         void generateTasks(Context applicationContext, String baseEntityId);
 
-        void updateFamilyMemberSurname(@NonNull Client family, Event event, @NonNull String oldSurname);
+        void updateFamilyMemberName(@NonNull Client family, Event event, @NonNull String oldFamilyName);
     }
 
     interface Presenter extends org.smartregister.family.contract.FamilyProfileContract.Presenter {

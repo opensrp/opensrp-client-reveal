@@ -110,7 +110,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                 if (obs.getFieldCode().equals(DatabaseKeys.OLD_FAMILY_NAME)) {
                     String oldSurname = obs.getValue().toString();
                     if (!eventClient.getClient().getFirstName().equals(oldSurname)) {  //family name was changed
-                        getInteractor().updateFamilyMemberSurname(eventClient.getClient(), eventClient.getEvent(), oldSurname);
+                        getInteractor().updateFamilyMemberName(eventClient.getClient(), eventClient.getEvent(), oldSurname);
                         return;
                     }
                 }

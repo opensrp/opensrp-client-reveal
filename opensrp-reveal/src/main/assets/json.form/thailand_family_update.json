@@ -72,19 +72,6 @@
         "type": "hidden"
       },
       {
-        "key": "surname",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "",
-        "type": "",
-        "hint": "สกุลเจ้าบ้าน",
-        "edit_type": "name",
-        "v_required": {
-          "value": "true",
-          "err": "กรุณาใส่นามสกุลของครอบครัว"
-        }
-      },
-      {
         "key": "house_number",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_address",
