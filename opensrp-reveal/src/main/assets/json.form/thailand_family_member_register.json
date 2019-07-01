@@ -87,12 +87,8 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "openmrs_data_type": "text",
         "type": "check_box",
         "label": " ",
-        "exclusive": [
-          "none"
-        ],
         "options": [
           {
             "key": "same_as_fam_name",
