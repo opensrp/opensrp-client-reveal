@@ -54,6 +54,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_COUNT;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
+import static org.smartregister.reveal.util.Constants.HYPHEN;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
