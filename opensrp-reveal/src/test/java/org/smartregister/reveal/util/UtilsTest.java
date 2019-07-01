@@ -48,6 +48,7 @@ public class UtilsTest {
         PreferencesUtil preferencesUtil = mock(PreferencesUtil.class);
         PowerMockito.when(PreferencesUtil.class, "getInstance").thenReturn(preferencesUtil);
         when(preferencesUtil.getCurrentPlan()).thenReturn("IRS_1");
+        when(preferencesUtil.getInterventionTypeForPlan("IRS_1")).thenReturn("IRS");
         assertEquals(getInterventionLabel(), R.string.irs);
     }
 
