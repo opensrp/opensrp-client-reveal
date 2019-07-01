@@ -101,7 +101,7 @@
             "existingITNs",
             "existingLLINs"
           ],
-          "err": "The total number of existing nets should be equal to the sum of LLINs, HLINs and ITNs"
+          "err": "The total number of existing nets should be equal to the sum of LLINs, LLIHNs and ITNs"
         }
       },
       {
@@ -242,7 +242,7 @@
             "existingLLINs1yrTo2yr",
             "existingLLINs2yrTo3yr"
           ],
-          "err": "The sum of the 1-3 year old fields of existing LLINs or HLINs should equal the number of existing LLINs"
+          "err": "The sum of the 1-3 year old fields of existing LLINs or LLIHNs should equal the number of existing LLINs"
         },
         "relevance": {
           "rules-engine": {
@@ -258,11 +258,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many existing HLINs?",
+        "hint": "How many existing LLIHNs?",
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The total number of existing HLINs is required"
+          "err": "The total number of existing LLIHNs is required"
         },
         "v_numeric": {
           "value": "true",
@@ -278,7 +278,7 @@
             "existingITNs",
             "existingLLINs"
           ],
-          "err": "The total number of existing nets should be equal to the sum of LLINs, HLINs and ITNs"
+          "err": "The total number of existing nets should be equal to the sum of LLINs, LLIHNs and ITNs"
         }
       },
       {
@@ -287,11 +287,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many HLINs are <1 yr old?",
+        "hint": "How many LLIHNs are <1 yr old?",
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "Number of HLINs less than 1 yr old is required"
+          "err": "Number of LLIHNs less than 1 yr old is required"
         },
         "v_numeric": {
           "value": "true",
@@ -308,7 +308,7 @@
             "existingLLIHNs2yrTo3yr",
             "existingLLIHNsGreaterThan3yr"
           ],
-          "err": "The sum of the 1-3 year old fields of existing HLINs should equal the number of existing HLINs"
+          "err": "The sum of the 1-3 year old fields of existing LLIHNs should equal the number of existing LLIHNs"
         },
         "relevance": {
           "rules-engine": {
@@ -324,11 +324,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many HLINs are 1 to 2 yrs old?",
+        "hint": "How many LLIHNs are 1 to 2 yrs old?",
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "How many HLINs are between 1 and 2 yrs old?"
+          "err": "How many LLIHNs are between 1 and 2 yrs old?"
         },
         "v_numeric": {
           "value": "true",
@@ -345,7 +345,7 @@
             "existingLLIHNs2yrTo3yr",
             "existingLLIHNsGreaterThan3yr"
           ],
-          "err": "The sum of the 1-3 year old fields of existing HLINs should equal the number of existing HLINs"
+          "err": "The sum of the 1-3 year old fields of existing LLIHNs should equal the number of existing LLIHNs"
         },
         "relevance": {
           "rules-engine": {
@@ -361,11 +361,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many HLINs are 2 to 3 yrs old?",
+        "hint": "How many LLIHNs are 2 to 3 yrs old?",
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "How many  HLINs are between 2 and 3 yrs old?"
+          "err": "How many  LLIHNs are between 2 and 3 yrs old?"
         },
         "v_numeric": {
           "value": "true",
@@ -382,7 +382,7 @@
             "existingLLIHNs1yrTo2yr",
             "existingLLIHNsGreaterThan3yr"
           ],
-          "err": "The sum of the 1-3 year old fields of existing HLINs should equal the number of existing HLINs"
+          "err": "The sum of the 1-3 year old fields of existing LLIHNs should equal the number of existing LLIHNs"
         },
         "relevance": {
           "rules-engine": {
@@ -398,11 +398,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many HLINs are over 3 yrs old?",
+        "hint": "How many LLIHNs are over 3 yrs old?",
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The total number of HLINs over 3 yrs old is required"
+          "err": "The total number of LLIHNs over 3 yrs old is required"
         },
         "v_numeric": {
           "value": "true",
@@ -419,7 +419,7 @@
             "existingLLIHNs1yrTo2yr",
             "existingLLIHNs2yrTo3yr"
           ],
-          "err": "The sum of the 1-3 year old fields of existing HLINs or HLINs should equal the number of existing HLINs"
+          "err": "The sum of the 1-3 year old fields of existing LLIHNs or LLIHNs should equal the number of existing LLIHNs"
         },
         "relevance": {
           "rules-engine": {
@@ -595,17 +595,17 @@
         }
       },
       {
-        "key": "distributedHLINs",
+        "key": "distributedLLIHNs",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Total number of HLINs distributed",
-        "shortened_hint": "Disributed HLINs",
+        "hint": "Total number of LLIHNs distributed",
+        "shortened_hint": "Disributed LLIHNs",
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The total number of HLINs distributed is required"
+          "err": "The total number of LLIHNs distributed is required"
         },
         "v_numeric": {
           "value": "true",

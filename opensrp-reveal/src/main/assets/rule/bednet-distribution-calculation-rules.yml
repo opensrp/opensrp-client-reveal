@@ -18,7 +18,7 @@ description: The total number of nets distributed
 priority: 1
 condition: "true"
 actions:
-- "calculation = helper.ifNull(step1_distributedITNs + step1_distributedLLINs + step1_distributedHLINs,0)"
+- "calculation = helper.ifNull(step1_distributedITNs + step1_distributedLLINs + step1_distributedLLIHNs,0)"
 ---
 name: step1_displayRecommendedNumNets
 description: Display Calculated number of nets needed
