@@ -114,15 +114,19 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             for (PlanDefinition.UseContext useContext: planDefinition.getUseContext() ) {
                 if (useContext.getCode().equals(INTERVENTION_TYPE)) {
                     prefsUtil.setInterventionTypeForPlan(planDefinition.getTitle(), useContext.getValueCodableConcept());
+                    break;
                 }
             }
 
         }
 
-        String entireTreeString = AssetHandler.javaToJsonString(formLocations,
-                new TypeToken<List<FormLocation>>() {
-                }.getType());
-        
+        String entireTreeString = "";
+        if (formLocations != null && !formLocations.isEmpty()) {
+            entireTreeString = AssetHandler.javaToJsonString(formLocations,
+                    new TypeToken<List<FormLocation>>() {
+                    }.getType());
+        }
+
         view.showPlanSelector(ids, entireTreeString);
     }
 

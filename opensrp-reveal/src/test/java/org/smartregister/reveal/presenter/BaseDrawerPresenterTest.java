@@ -31,6 +31,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.ACTIVE;
+import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.COMPLETE;
 
 /**
  * @author Richard Kareko
@@ -62,7 +63,7 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
     }
 
     @Test
-    public void testOnPlansFetched() {
+    public void testOnPlansFetchedReturnsActivePlans() {
         PlanDefinition planDefinition = new PlanDefinition();
         planDefinition.setStatus(ACTIVE);
         planDefinition.setIdentifier("tlv_1");
@@ -83,6 +84,32 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
         assertNotNull(entireTreeString.getValue());
         assertTrue(entireTreeString.getValue().contains("tlv_1"));
         assertTrue(entireTreeString.getValue().contains("Intervention Plan"));
+        verifyNoMoreInteractions(view);
+        verifyNoMoreInteractions(interactor);
+
+    }
+
+    @Test
+    public void testOnPlansFetchedDoesNotReturnPlansThatAreNotActive() {
+        PlanDefinition planDefinition = new PlanDefinition();
+        planDefinition.setStatus(COMPLETE);
+        planDefinition.setIdentifier("tlv_1");
+        planDefinition.setTitle("Intervention Plan");
+        PlanDefinition.UseContext useContext = mock(PlanDefinition.UseContext.class);
+        when(useContext.getCode()).thenReturn("focus intervention");
+        when(useContext.getValueCodableConcept()).thenReturn("FI");
+        List<PlanDefinition.UseContext> useContextList = new ArrayList();
+        useContextList.add(useContext);
+        planDefinition.setUseContext(useContextList);
+
+        Set<PlanDefinition> planDefinitionsList = Collections.singleton(planDefinition);
+
+        presenter.onPlansFetched(planDefinitionsList);
+        verify(view).showPlanSelector(plansCaptor.capture(), entireTreeString.capture());
+        assertNotNull(plansCaptor.getValue());
+        assertTrue(plansCaptor.getValue().isEmpty());
+        assertNotNull(entireTreeString.getValue());
+        assertTrue(entireTreeString.getValue().isEmpty());
         verifyNoMoreInteractions(view);
         verifyNoMoreInteractions(interactor);
 
