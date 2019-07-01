@@ -270,7 +270,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void testOnTaskSelectedForCompletedTasks() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
-        presenter.onTaskSelected(taskDetails);
+        presenter.onTaskSelected(taskDetails, true);
         verify(view).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
         verify(interactor).getStructure(taskDetails);
     }
@@ -279,7 +279,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     public void testOnTaskSelectedShouldLaunchForm() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
         taskDetails.setTaskStatus(Task.TaskStatus.READY.name());
-        presenter.onTaskSelected(taskDetails);
+        presenter.onTaskSelected(taskDetails, false);
         verify(view).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
         verify(interactor).getStructure(taskDetails);
         verify(view).getContext();
@@ -291,7 +291,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     public void testOnTaskSelectedForBCCTasks() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
         taskDetails.setTaskCode(Constants.Intervention.BCC);
-        presenter.onTaskSelected(taskDetails);
+        presenter.onTaskSelected(taskDetails, true);
         verify(view).getContext();
         verify(view).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
         verify(interactor).getStructure(taskDetails);

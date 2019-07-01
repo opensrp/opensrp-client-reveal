@@ -27,8 +27,10 @@
         android:scrollHorizontally="false"
         android:textColor="@color/text_black"
         android:textSize="@dimen/task_register_text_size"
+        app:layout_constraintBottom_toTopOf="@id/distance_from_structure"
         app:layout_constraintEnd_toStartOf="@id/separator"
-        app:layout_constraintStart_toEndOf="@id/task_icon" />
+        app:layout_constraintStart_toEndOf="@id/task_icon"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <TextView
@@ -40,6 +42,7 @@
         android:paddingBottom="@dimen/task_register_vertical_padding"
         android:textColor="#7A7A7A"
         android:textSize="@dimen/task_register_text_size"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/task_icon"
         app:layout_constraintTop_toBottomOf="@id/task_name" />
 
