@@ -2,7 +2,8 @@
     <!-- Actions -->
     <string name="action_logout">Logout</string>
     <!-- General -->
-    <string name="app_name" translatable="false">Reveal</string>
+    <string name="reveal_app_name" translatable="false">Reveal</string>
+    <string name="app_name" translatable="false">@string/reveal_app_name</string>
     <!--Temp -->
     <string name="unauthorized">Please check the credentials</string>
     <string name="unauthorized_group">Your user group is not allowed to access this device</string>
@@ -160,4 +161,13 @@
     <string name="view_tasks">View \nTasks</string>
     <string name="tasks_complete">Tasks Complete</string>
     <string name="opensrp_url" translatable="false">@string/opensrp_base_url</string>
+
+    <string name="not_visited">Not Visited</string>
+    <string name="not_sprayed">Not Sprayed</string>
+    <string name="sprayed">Sprayed</string>
+    <string name="not_sprayable">Not Sprayable</string>
+    <string name="complete">Complete</string>
+    <string name="incomplete">Incomplete</string>
+    <string name="in_progress">In Progress</string>
+    <string name="not_eligible">Not Eligible</string>
 </resources>
