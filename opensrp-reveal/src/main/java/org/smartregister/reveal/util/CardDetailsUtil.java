@@ -1,6 +1,7 @@
 package org.smartregister.reveal.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Log;
@@ -8,11 +9,20 @@ import android.view.View;
 import android.widget.TextView;
 
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 
+import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 
@@ -105,4 +115,37 @@ public class CardDetailsUtil {
             activity.findViewById(R.id.larval_breeding_card_view).setVisibility(View.VISIBLE);
         }
     }
+
+    /**
+     * Takes in a business status and returns the translated value according to locale set.
+     *
+     * @param businessStatus Business status of the task attached to a structure
+     * @return status Translated status according to locale set
+     */
+    public static String getTranslatedBusinessStatus(String businessStatus) {
+        Context context = RevealApplication.getInstance().getApplicationContext();
+
+        switch(businessStatus)
+        {
+            case NOT_VISITED:
+                return context.getString(R.string.not_visited);
+            case NOT_SPRAYED:
+                return context.getString(R.string.not_sprayed);
+            case SPRAYED:
+                return context.getString(R.string.sprayed);
+            case NOT_SPRAYABLE:
+                return context.getString(R.string.not_sprayable);
+            case COMPLETE:
+                return context.getString(R.string.complete);
+            case INCOMPLETE:
+                return context.getString(R.string.incomplete);
+            case NOT_ELIGIBLE:
+                return context.getString(R.string.not_eligible);
+            case IN_PROGRESS:
+                return context.getString(R.string.in_progress);
+            default:
+                return businessStatus;
+        }
+    }
+
 }

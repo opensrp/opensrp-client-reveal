@@ -23,12 +23,14 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.smartregister.reveal.util.CardDetailsUtil.formatCardDetails;
+import static org.smartregister.reveal.util.CardDetailsUtil.getTranslatedBusinessStatus;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -179,4 +181,19 @@ public class CardDetailsUtilTest extends BaseUnitTest {
         assertEquals(tvLarvicideDate.getText(), TEST + END_DATE);
         assertEquals(larvalBreedingCardView.getVisibility(), View.VISIBLE);
     }
+
+    @Test
+    public void testBusinessStatusIsTranslatedCorrectly(){
+
+        assertEquals(NOT_VISITED, getTranslatedBusinessStatus(NOT_VISITED));
+        assertEquals(NOT_SPRAYED, getTranslatedBusinessStatus(NOT_SPRAYED));
+        assertEquals(SPRAYED, getTranslatedBusinessStatus(SPRAYED));
+        assertEquals(NOT_SPRAYABLE, getTranslatedBusinessStatus(NOT_SPRAYABLE));
+        assertEquals(COMPLETE, getTranslatedBusinessStatus(COMPLETE));
+        assertEquals(INCOMPLETE, getTranslatedBusinessStatus(INCOMPLETE));
+        assertEquals(NOT_ELIGIBLE, getTranslatedBusinessStatus(NOT_ELIGIBLE));
+        assertEquals(IN_PROGRESS, getTranslatedBusinessStatus(IN_PROGRESS));
+
+    }
+
 }
