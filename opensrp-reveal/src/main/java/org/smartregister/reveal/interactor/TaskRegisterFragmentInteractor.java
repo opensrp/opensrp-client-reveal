@@ -124,7 +124,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
         return String.format(" SELECT %s.* , SUM(CASE WHEN status='%s' THEN 1 ELSE 0 END ) AS %s , COUNT(_id ) AS %s, " +
                         "GROUP_CONCAT(%s || \"-\" || %s ) AS %s FROM ( ",
-                GROUPED_TASKS,  Task.TaskStatus.COMPLETED.toString(), COMPLETED_TASK_COUNT,  TASK_COUNT, CODE, BUSINESS_STATUS, GROUPED_STRUCTURE_TASK_CODE_AND_STATUS) + structureTasksQueryBuilder +
+                GROUPED_TASKS, Task.TaskStatus.COMPLETED.toString(), COMPLETED_TASK_COUNT, TASK_COUNT, CODE, BUSINESS_STATUS, GROUPED_STRUCTURE_TASK_CODE_AND_STATUS) + structureTasksQueryBuilder +
                 String.format(" ) AS %s GROUP BY %s ", GROUPED_TASKS, STRUCTURE_ID);
 
     }
@@ -369,7 +369,8 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
             JSONObject finalJsonEvent = jsonEvent;
             appExecutors.mainThread().execute(() -> {
-                getPresenter().onIndexCaseFound(finalJsonEvent, operationalArea.equals(finalJsonEvent.optString(Properties.BASE_ENTITY_ID)));
+                getPresenter().onIndexCaseFound(finalJsonEvent, finalJsonEvent != null
+                        && operationalArea.equals(finalJsonEvent.optString(Properties.BASE_ENTITY_ID)));
             });
         });
 
