@@ -78,6 +78,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
+        org.smartregister.Context.bindtypes=new ArrayList<>();
         presenter = new FamilyProfilePresenter(view, model, familyId, null, null, null);
         Whitebox.setInternalState(presenter, "preferencesUtil", preferencesUtil);
         Whitebox.setInternalState(presenter, "database", database);
