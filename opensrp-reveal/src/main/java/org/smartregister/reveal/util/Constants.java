@@ -129,6 +129,8 @@ public interface Constants {
         String CASE_CONFIRMATION = "Case Confirmation";
 
         String REGISTER_FAMILY = "RACD Register Family";
+
+        String FI = "FI";
     }
 
     interface Tables {
@@ -321,8 +323,10 @@ public interface Constants {
         String ACTIVE = "active";
         String COMPLETE = "complete";
         String RETIRED = "retired";
-
     }
 
+    interface UseContextCode {
+        String INTERVENTION_TYPE = "interventionType";
+    }
 
 }

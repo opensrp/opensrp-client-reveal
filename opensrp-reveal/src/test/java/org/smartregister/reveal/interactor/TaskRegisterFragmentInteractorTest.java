@@ -52,6 +52,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_COUNT;
+import static org.smartregister.reveal.util.Constants.Intervention.FI;
 
 /**
  * Created by samuelgithengi on 3/27/19.
@@ -212,6 +213,7 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
     @Test
     public void testFindTasksWithTaskGrouping() {
         PreferencesUtil.getInstance().setCurrentPlan("FI_2019_TV01_Focus");
+        PreferencesUtil.getInstance().setInterventionTypeForPlan("FI_2019_TV01_Focus", FI);
         Pair<String, String[]> pair = new Pair<>("task.group_id = ? AND task.plan_id = ? AND status != ?", new String[]{groupId, planId, CANCELLED.name()});
         Location userLocation = new Location("Test");
         userLocation.setLatitude(-14.987197);

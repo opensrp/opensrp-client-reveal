@@ -31,6 +31,7 @@ import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.PROVINCE;
+import static org.smartregister.reveal.util.Constants.UseContextCode.INTERVENTION_TYPE;
 
 /**
  * Created by samuelgithengi on 3/21/19.
@@ -108,11 +109,20 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             formLocation.key = planDefinition.getIdentifier();
             formLocation.level = "";
             formLocations.add(formLocation);
+            
+            // get intervention type for plan
+            for (PlanDefinition.UseContext useContext: planDefinition.getUseContext() ) {
+                if (useContext.getCode().equals(INTERVENTION_TYPE)) {
+                    prefsUtil.setInterventionTypeForPlan(planDefinition.getTitle(), useContext.getValueCodableConcept());
+                }
+            }
+
         }
 
         String entireTreeString = AssetHandler.javaToJsonString(formLocations,
                 new TypeToken<List<FormLocation>>() {
                 }.getType());
+        
         view.showPlanSelector(ids, entireTreeString);
     }
 
