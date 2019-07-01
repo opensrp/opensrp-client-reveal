@@ -51,6 +51,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
         eventClientRepository = CoreLibrary.getInstance().context().getEventClientRepository();
         FamilyMetadata familyMetadata = RevealApplication.getInstance().getMetadata();
         clientProcessor = (RevealClientProcessor) RevealApplication.getInstance().getClientProcessor();
+        org.smartregister.Context.bindtypes= new ArrayList<>();
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(familyMetadata.familyMemberRegister.tableName);
     }
 

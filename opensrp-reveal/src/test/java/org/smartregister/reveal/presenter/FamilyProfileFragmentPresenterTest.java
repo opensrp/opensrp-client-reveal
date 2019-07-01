@@ -41,6 +41,7 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
+import static org.smartregister.reveal.util.Constants.Intervention.FI;
 
 /**
  * Created by samuelgithengi on 4/25/19.
@@ -122,6 +123,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
     public void testOnRegistrationSavedForNewForms() {
         presenter = spy(presenter);
         PreferencesUtil.getInstance().setCurrentPlan("FI_2019_TV01_Focus");
+        PreferencesUtil.getInstance().setInterventionTypeForPlan("FI_2019_TV01_Focus", FI);
         Whitebox.setInternalState(presenter, "structureId", structureId);
         String baseEntityId = UUID.randomUUID().toString();
         FamilyEventClient eventClient = new FamilyEventClient(new Client(), new Event().withBaseEntityId(baseEntityId));
