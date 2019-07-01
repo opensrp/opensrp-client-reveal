@@ -2,7 +2,8 @@
     <!-- Actions -->
     <string name="action_logout">Logout</string>
     <!-- General -->
-    <string name="app_name" translatable="false">Reveal</string>
+    <string name="reveal_app_name" translatable="false">Reveal</string>
+    <string name="app_name" translatable="false">@string/reveal_app_name</string>
     <!--Temp -->
     <string name="unauthorized">Please check the credentials</string>
     <string name="unauthorized_group">Your user group is not allowed to access this device</string>
