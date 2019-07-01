@@ -151,11 +151,14 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         String[] groupedTaskCodeStatusArray = groupedTaskCodeStatusString.split(COMMA);
         for (int i = 0; i < groupedTaskCodeStatusArray.length; i++) {
             String[] taskCodeStatusArray = groupedTaskCodeStatusArray[i].split(HYPHEN);
-            if (taskCodeStatusArray[0].equals(REGISTER_FAMILY) && taskCodeStatusArray[1].equals(COMPLETE)) {
+            if (taskCodeStatusArray == null || taskCodeStatusArray.length != 2) {
+                return;
+            }
+            if (REGISTER_FAMILY.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
                 setFamilyRegistered(true);
-            } else if (taskCodeStatusArray[0].equals(BEDNET_DISTRIBUTION) && taskCodeStatusArray[1].equals(COMPLETE)) {
+            } else if (BEDNET_DISTRIBUTION.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
                 setBednetDistributed(true);
-            }  else if (taskCodeStatusArray[0].equals(BLOOD_SCREENING) && taskCodeStatusArray[1].equals(COMPLETE)) {
+            }  else if (BLOOD_SCREENING.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
                 setBloodScreeningDone(true);
             }
         }

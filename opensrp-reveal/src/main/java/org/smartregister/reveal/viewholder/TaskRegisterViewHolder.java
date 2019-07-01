@@ -89,10 +89,12 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
             if (task.getTaskCount() > 1) {
                 if (task.getTaskCount() != task.getCompleteTaskCount()) {
 
-                    if (task.isFamilyRegistered() && !task.isBednetDistributed() && !task.isBloodScreeningDone()) {
+                    if (task.isFamilyRegistered() && task.isBednetDistributed() && task.isBloodScreeningDone()) {
+                        showTasksCompleteActionView();
+                    } else if (task.isFamilyRegistered() && !task.isBednetDistributed() && !task.isBloodScreeningDone()) {
                         actionView.setBackground(context.getResources().getDrawable(R.drawable.family_registered_bg));
                         actionView.setTextColor(context.getResources().getColor(R.color.text_black));
-                    } else if (task.isBednetDistributed() && task.isFamilyRegistered()) {
+                    } else if (task.isFamilyRegistered() && task.isBednetDistributed()) {
                         actionView.setBackground(context.getResources().getDrawable(R.drawable.bednet_distributed_bg));
                         actionView.setTextColor(context.getResources().getColor(R.color.text_black));
                     } else if (task.isBloodScreeningDone()) {
@@ -103,12 +105,9 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
                         actionView.setTextColor(context.getResources().getColor(R.color.text_black));
                     }
 
-
                     actionView.setText(context.getText(R.string.view_tasks));
                 } else if (task.getTaskCount() == task.getCompleteTaskCount()) {
-                    actionView.setBackground(context.getResources().getDrawable(R.drawable.tasks_complete_bg));
-                    actionView.setTextColor(context.getResources().getColor(R.color.text_black));
-                    actionView.setText(context.getText(R.string.tasks_complete));
+                    showTasksCompleteActionView();
                 }
             }
 
@@ -134,5 +133,11 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
 
     public void hideIcon() {
         iconView.setVisibility(View.GONE);
+    }
+
+    private void showTasksCompleteActionView() {
+        actionView.setBackground(context.getResources().getDrawable(R.drawable.tasks_complete_bg));
+        actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+        actionView.setText(context.getText(R.string.tasks_complete));
     }
 }
