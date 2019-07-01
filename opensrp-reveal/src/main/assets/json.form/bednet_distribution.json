@@ -253,7 +253,7 @@
         }
       },
       {
-        "key": "existingHLINs",
+        "key": "existingLLIHNs",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -282,7 +282,7 @@
         }
       },
       {
-        "key": "existingHLINsLessThan1yr",
+        "key": "existingLLIHNsLessThan1yr",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -302,11 +302,11 @@
           "err": "Must be greater than or equal to 0"
         },
         "v_cumulative_total": {
-          "value": "existingHLINs",
+          "value": "existingLLIHNs",
           "related_fields": [
-            "existingHLINs1yrTo2yr",
-            "existingHLINs2yrTo3yr",
-            "existingHLINsGreaterThan3yr"
+            "existingLLIHNs1yrTo2yr",
+            "existingLLIHNs2yrTo3yr",
+            "existingLLIHNsGreaterThan3yr"
           ],
           "err": "The sum of the 1-3 year old fields of existing HLINs should equal the number of existing HLINs"
         },
@@ -319,7 +319,7 @@
         }
       },
       {
-        "key": "existingHLINs1yrTo2yr",
+        "key": "existingLLIHNs1yrTo2yr",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -339,11 +339,11 @@
           "err": "Must be greater than or equal to 0"
         },
         "v_cumulative_total": {
-          "value": "existingHLINs",
+          "value": "existingLLIHNs",
           "related_fields": [
-            "existingHLINsLessThan1yr",
-            "existingHLINs2yrTo3yr",
-            "existingHLINsGreaterThan3yr"
+            "existingLLIHNsLessThan1yr",
+            "existingLLIHNs2yrTo3yr",
+            "existingLLIHNsGreaterThan3yr"
           ],
           "err": "The sum of the 1-3 year old fields of existing HLINs should equal the number of existing HLINs"
         },
@@ -356,7 +356,7 @@
         }
       },
       {
-        "key": "existingHLINs2yrTo3yr",
+        "key": "existingLLIHNs2yrTo3yr",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -376,11 +376,11 @@
           "err": "Must be greater than or equal to 0"
         },
         "v_cumulative_total": {
-          "value": "existingHLINs",
+          "value": "existingLLIHNs",
           "related_fields": [
-            "existingHLINsLessThan1yr",
-            "existingHLINs1yrTo2yr",
-            "existingHLINsGreaterThan3yr"
+            "existingLLIHNsLessThan1yr",
+            "existingLLIHNs1yrTo2yr",
+            "existingLLIHNsGreaterThan3yr"
           ],
           "err": "The sum of the 1-3 year old fields of existing HLINs should equal the number of existing HLINs"
         },
@@ -393,7 +393,7 @@
         }
       },
       {
-        "key": "existingHLINsGreaterThan3yr",
+        "key": "existingLLIHNsGreaterThan3yr",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -413,11 +413,11 @@
           "err": "Must be greater than or equal to 0"
         },
         "v_cumulative_total": {
-          "value": "existingHLINs",
+          "value": "existingLLIHNs",
           "related_fields": [
-            "existingHLINsLessThan1yr",
-            "existingHLINs1yrTo2yr",
-            "existingHLINs2yrTo3yr"
+            "existingLLIHNsLessThan1yr",
+            "existingLLIHNs1yrTo2yr",
+            "existingLLIHNs2yrTo3yr"
           ],
           "err": "The sum of the 1-3 year old fields of existing HLINs or HLINs should equal the number of existing HLINs"
         },
@@ -454,7 +454,7 @@
           "value": "existingNets",
           "related_fields": [
             "existingLLINs",
-            "existingHLINs"
+            "existingLLIHNs"
           ],
           "err": "The total number of existing nets should be equal to the sum of LLINs and ITNs"
         }
