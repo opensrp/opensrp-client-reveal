@@ -9,6 +9,7 @@ import net.sqlcipher.Cursor;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
+import org.smartregister.domain.Task;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.R;
@@ -110,10 +111,10 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
         structureTasksQueryBuilder.mainCondition(mainCondition);
 
-        return String.format(" SELECT %s.*, SUM(CASE WHEN %s.status='COMPLETED' THEN 1 ELSE 0 END) AS %s , COUNT(%s._id) AS %s, " +
-                        "GROUP_CONCAT(%s.%s || \"%s\" || %s.%s) AS %s FROM ( ",
-                GROUPED_TASKS, GROUPED_TASKS, COMPLETED_TASK_COUNT, GROUPED_TASKS, TASK_COUNT, GROUPED_TASKS, CODE, HYPHEN, GROUPED_TASKS, BUSINESS_STATUS, GROUPED_STRUCTURE_TASK_CODE_AND_STATUS) + structureTasksQueryBuilder +
-                String.format(" ) AS %s GROUP BY %s.%s ", GROUPED_TASKS, GROUPED_TASKS, STRUCTURE_ID);
+        return String.format(" SELECT %s.* , SUM(CASE WHEN status='%s' THEN 1 ELSE 0 END ) AS %s , COUNT(_id ) AS %s, " +
+                        "GROUP_CONCAT(%s || \"-\" || %s ) AS %s FROM ( ",
+                GROUPED_TASKS,  Task.TaskStatus.COMPLETED.toString(), COMPLETED_TASK_COUNT,  TASK_COUNT, CODE, BUSINESS_STATUS, GROUPED_STRUCTURE_TASK_CODE_AND_STATUS) + structureTasksQueryBuilder +
+                String.format(" ) AS %s GROUP BY %s ", GROUPED_TASKS, STRUCTURE_ID);
 
     }
 
