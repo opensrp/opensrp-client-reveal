@@ -9,14 +9,17 @@ import com.mapbox.geojson.Feature;
 import org.json.JSONArray;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
+import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.interactor.StructureTasksInteractor;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.Set;
 
 import static org.smartregister.reveal.contract.StructureTasksContract.Interactor;
 import static org.smartregister.reveal.contract.StructureTasksContract.Presenter;
@@ -31,6 +34,10 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     private Interactor interactor;
 
     private PreferencesUtil prefsUtil;
+
+    private StructureTaskDetails indexCase;
+
+    private String structureId;
 
 
     public StructureTasksPresenter(StructureTasksContract.View view, Context context) {
@@ -48,18 +55,24 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
     @Override
     public void findTasks(String structureId) {
-        interactor.findTasks(structureId, prefsUtil.getCurrentPlanId());
+        this.structureId = structureId;
+        interactor.findTasks(structureId, prefsUtil.getCurrentPlanId(),
+                Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId());
     }
 
     @Override
-    public void onTasksFound(List<StructureTaskDetails> taskDetailsList) {
+    public void onTasksFound(List<StructureTaskDetails> taskDetailsList, StructureTaskDetails incompleteIndexCase) {
+        indexCase = incompleteIndexCase;
         getView().setTaskDetailsList(taskDetailsList);
+        if (incompleteIndexCase != null) {
+            getView().displayDetectCaseButton();
+        }
     }
 
     @Override
     public void onTaskSelected(StructureTaskDetails details) {
         if (details != null) {
-            if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
+            if (TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
                 getView().displayToast("Task Completed");
             } else {
                 getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
@@ -79,7 +92,25 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     }
 
     @Override
-    public void onFormSaved(@NonNull String structureId, String taskID, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
+    public void onDetectCase() {
+        indexCase.setStructureId(structureId);
+        interactor.getStructure(indexCase);
+    }
+
+    @Override
+    public void onIndexConfirmationFormSaved(String taskID, TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks) {
+        getView().updateTasks(taskID, taskStatus, businessStatus, removedTasks);
+        if (taskStatus.equals(TaskStatus.COMPLETED)) {
+            getView().hideDetectCaseButton();
+        }
+        if (!removedTasks.isEmpty()) {
+            getView().updateNumberOfTasks();
+        }
+        getView().hideProgressDialog();
+    }
+
+    @Override
+    public void onFormSaved(@NonNull String structureId, String taskID, @NonNull TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
         getView().hideProgressDialog();
         getView().updateTask(taskID, taskStatus, businessStatus);
     }

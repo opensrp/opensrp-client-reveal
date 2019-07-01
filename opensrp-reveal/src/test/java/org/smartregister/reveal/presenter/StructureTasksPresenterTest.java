@@ -8,7 +8,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
+import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
@@ -18,13 +20,19 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestingUtils;
+import org.smartregister.reveal.util.Utils;
+import org.smartregister.util.Cache;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -47,23 +55,31 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
     @Mock
     private PreferencesUtil prefsUtil;
 
-    private Context context=RuntimeEnvironment.application;
+    private Context context = RuntimeEnvironment.application;
 
     private StructureTasksPresenter presenter;
 
 
     @Before
     public void setUp() {
-        presenter = new StructureTasksPresenter(view,context, interactor, prefsUtil);
+        org.smartregister.Context.bindtypes = new ArrayList<>();
+        presenter = new StructureTasksPresenter(view, context, interactor, prefsUtil);
     }
 
     @Test
     public void testFindTasks() {
         String campaignId = UUID.randomUUID().toString();
         String structureId = UUID.randomUUID().toString();
+        String jurisdictionId = UUID.randomUUID().toString();
         when(prefsUtil.getCurrentPlanId()).thenReturn(campaignId);
+        when(prefsUtil.getCurrentOperationalArea()).thenReturn(jurisdictionId);
+        Location jurisdiction = new Location();
+        jurisdiction.setId(jurisdictionId);
+        Cache<Location> cache = mock(Cache.class);
+        when(cache.get(anyString(), any())).thenReturn(jurisdiction);
+        Whitebox.setInternalState(Utils.class, cache);
         presenter.findTasks(structureId);
-        verify(interactor).findTasks(structureId, campaignId);
+        verify(interactor).findTasks(structureId, campaignId, jurisdictionId);
         verify(prefsUtil).getCurrentPlanId();
     }
 
@@ -71,7 +87,7 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
     @Test
     public void testOnTasksFound() {
         List<StructureTaskDetails> taskDetailsList = Collections.singletonList(TestingUtils.getStructureTaskDetails());
-        presenter.onTasksFound(taskDetailsList);
+        presenter.onTasksFound(taskDetailsList, eq(null));
         verify(view).setTaskDetailsList(taskDetailsList);
     }
 

@@ -50,7 +50,7 @@ public class FormFragmentInteractorTest extends BaseUnitTest {
         String structureId = UUID.randomUUID().toString();
         JSONObject form = new JSONObject();
         interactor.findNumberOfMembers(structureId, form);
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onFoundMembersCount(12, form);
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onFetchedMembersCount(12, form);
         verify(commonRepository, timeout(ASYNC_TIMEOUT)).countSearchIds(anyString());
     }
 

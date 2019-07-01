@@ -28,6 +28,7 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -74,17 +75,18 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
     public void testFindTasks() {
         String campaign = UUID.randomUUID().toString();
         String structure = UUID.randomUUID().toString();
-        String taskQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status FROM task WHERE for=? AND plan_id=? AND status != ? ";
-        String memberQuery = "Select structure._id as _id , task._id , task.code , task.for , task.business_status , task.status , printf('%s %s %s',first_name,middle_name,last_name) AS name , dob , ec_family_member.structure_id FROM structure  LEFT JOIN ec_family_member ON ec_family_member.structure_id = structure._id   LEFT JOIN task ON task.for = ec_family_member.base_entity_id  WHERE structure._id=? AND plan_id=? AND status != ? ";
+        String jurisdiction = UUID.randomUUID().toString();
+        String taskQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.structure_id FROM task WHERE for=? AND plan_id=? AND status != ? ";
+        String memberQuery = "Select structure._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.structure_id , printf('%s %s %s',first_name,middle_name,last_name) AS name , dob , ec_family_member.structure_id FROM structure  LEFT JOIN ec_family_member ON ec_family_member.structure_id = structure._id   LEFT JOIN task ON task.for = ec_family_member.base_entity_id  WHERE structure._id=? AND plan_id=? AND status != ? ";
         when(database.rawQuery(taskQuery, new String[]{structure, campaign, CANCELLED.name()})).thenReturn(createCursor());
         when(database.rawQuery(memberQuery, new String[]{structure, campaign, CANCELLED.name()})).thenReturn(createMemberCursor());
 
-        interactor.findTasks(structure, campaign);
+        interactor.findTasks(structure, campaign, jurisdiction);
 
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(taskQuery, new String[]{structure, campaign, CANCELLED.name()});
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(memberQuery, new String[]{structure, campaign, CANCELLED.name()});
 
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskDetailsArgumentCaptor.capture());
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskDetailsArgumentCaptor.capture(), eq(null));
 
         assertEquals(2, taskDetailsArgumentCaptor.getValue().size());
 
@@ -103,7 +105,7 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
         assertEquals(Task.TaskStatus.READY.name(), memberTask.getTaskStatus());
         String age = org.smartregister.reveal.util.Utils.getAge("1982-01-01T03:00:00.000+03:00");
         assertEquals("Charity Otala, " + age, memberTask.getTaskName());
-        assertEquals("434343", memberTask.getStructureId());
+        assertEquals("1215972243", memberTask.getStructureId());
 
 
     }
@@ -138,14 +140,16 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
                 CODE,
                 FOR,
                 BUSINESS_STATUS,
-                STATUS
+                STATUS,
+                STRUCTURE_ID
         });
         cursor.addRow(new Object[]{
                 "task_id_1",
                 Intervention.IRS,
                 434343,
                 BusinessStatus.NOT_SPRAYED,
-                Task.TaskStatus.COMPLETED
+                Task.TaskStatus.COMPLETED,
+                1215972243
         });
         return cursor;
     }
@@ -170,7 +174,7 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
                 Task.TaskStatus.READY,
                 "Charity Otala",
                 "1982-01-01T03:00:00.000+03:00",
-                434343
+                1215972243
         });
         return cursor;
     }
