@@ -248,7 +248,7 @@
             "key": "Inconclusive",
             "text": "Inconclusive"
           }
-        ],q
+        ],
         "v_required": {
           "value": "true",
           "err": "กรุณาเลือกผลการทดสอบ"
