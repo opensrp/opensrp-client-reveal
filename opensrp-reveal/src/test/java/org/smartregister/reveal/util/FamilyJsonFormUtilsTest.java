@@ -200,18 +200,18 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
 
 
     @Test
-    public void testSurnameCalc() throws JSONException {
+    public void testFirstNameCalc() throws JSONException {
         setupMemberForm();
         String familyName = "Ker";
-        client.getColumnmaps().put(KEY.LAST_NAME, familyName);
+        client.getColumnmaps().put(KEY.FIRST_NAME, familyName);
         JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, familyName);
-        assertEquals("", JsonFormUtils.getFieldValue(form.toString(), FormKeys.SURNAME));
+        assertEquals("", JsonFormUtils.getFieldValue(form.toString(), FormKeys.FIRST_NAME));
         assertTrue(JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), "same_as_fam_name").getJSONArray(OPTIONS).getJSONObject(0).getBoolean(VALUE));
     }
 
 
     @Test
-    public void testSurnameMappedFileds() throws JSONException {
+    public void testSurnameMappedFields() throws JSONException {
         setupMemberForm();
         String citizenship = "Thai";
         client.getColumnmaps().put(DatabaseKeys.CITIZENSHIP, "Thai");
