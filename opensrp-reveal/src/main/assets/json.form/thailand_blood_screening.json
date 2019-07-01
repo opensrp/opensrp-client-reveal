@@ -248,7 +248,7 @@
             "key": "Inconclusive",
             "text": "Inconclusive"
           }
-        ],
+        ],q
         "v_required": {
           "value": "true",
           "err": "กรุณาเลือกผลการทดสอบ"
@@ -296,6 +296,9 @@
             "key": "Fg",
             "text": "Fg"
           }
+        ],
+        "exclusive": [
+          "Negative"
         ],
         "relevance": {
           "step1:testType": {
