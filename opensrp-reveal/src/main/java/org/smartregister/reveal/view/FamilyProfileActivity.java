@@ -8,7 +8,7 @@ import android.view.MenuItem;
 
 import org.smartregister.family.activity.BaseFamilyProfileActivity;
 import org.smartregister.family.adapter.ViewPagerAdapter;
-import org.smartregister.family.util.Constants;
+import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.fragment.FamilyProfileMemberFragment;
@@ -25,15 +25,17 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
 
     private StructureTasksFragment structureTasksFragment;
 
+    private FamilyProfileMemberFragment profileMemberFragment;
+
     private String familyBaseEntityId;
 
 
     @Override
     protected void initializePresenter() {
-        familyBaseEntityId = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID);
-        String familyHead = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_HEAD);
-        String primaryCaregiver = getIntent().getStringExtra(Constants.INTENT_KEY.PRIMARY_CAREGIVER);
-        String familyName = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_NAME);
+        familyBaseEntityId = getIntent().getStringExtra(INTENT_KEY.FAMILY_BASE_ENTITY_ID);
+        String familyHead = getIntent().getStringExtra(INTENT_KEY.FAMILY_HEAD);
+        String primaryCaregiver = getIntent().getStringExtra(INTENT_KEY.PRIMARY_CAREGIVER);
+        String familyName = getIntent().getStringExtra(INTENT_KEY.FAMILY_NAME);
 
         presenter = new FamilyProfilePresenter(this,
                 new FamilyProfileModel(familyName), familyBaseEntityId, familyHead, primaryCaregiver, familyName);
@@ -43,7 +45,7 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
     protected ViewPager setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        FamilyProfileMemberFragment profileMemberFragment = FamilyProfileMemberFragment.newInstance(this.getIntent().getExtras());
+        profileMemberFragment = FamilyProfileMemberFragment.newInstance(this.getIntent().getExtras());
         adapter.addFragment(profileMemberFragment, this.getString(R.string.residents).toUpperCase());
 
         structureTasksFragment = StructureTasksFragment.newInstance(this.getIntent().getExtras(), this);
@@ -67,6 +69,13 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
     @Override
     public void refreshTasks(String structureId) {
         structureTasksFragment.refreshTasks(structureId);
+    }
+
+    @Override
+    public void updateFamilyName(String firstName) {
+        if (profileMemberFragment.getArguments() != null) {
+            profileMemberFragment.getArguments().putString(INTENT_KEY.FAMILY_NAME, firstName);
+        }
     }
 
     @Override

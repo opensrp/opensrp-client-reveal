@@ -16,6 +16,8 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
         void setStructureId(String structureId);
 
         void refreshTasks(String structureId);
+
+        void updateFamilyName(String firstName);
     }
 
     interface Interactor extends org.smartregister.family.contract.FamilyProfileContract.Interactor {
