@@ -68,10 +68,10 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
 
     @Test
     public void testFindTasks() {
-        String campaignId = UUID.randomUUID().toString();
+        String planId = UUID.randomUUID().toString();
         String structureId = UUID.randomUUID().toString();
         String jurisdictionId = UUID.randomUUID().toString();
-        when(prefsUtil.getCurrentPlanId()).thenReturn(campaignId);
+        when(prefsUtil.getCurrentPlanId()).thenReturn(planId);
         when(prefsUtil.getCurrentOperationalArea()).thenReturn(jurisdictionId);
         Location jurisdiction = new Location();
         jurisdiction.setId(jurisdictionId);
@@ -79,7 +79,7 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
         when(cache.get(anyString(), any())).thenReturn(jurisdiction);
         Whitebox.setInternalState(Utils.class, cache);
         presenter.findTasks(structureId);
-        verify(interactor).findTasks(structureId, campaignId, jurisdictionId);
+        verify(interactor).findTasks(structureId, planId, jurisdictionId);
         verify(prefsUtil).getCurrentPlanId();
     }
 
