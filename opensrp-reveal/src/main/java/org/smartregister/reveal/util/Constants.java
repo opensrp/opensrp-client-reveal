@@ -54,6 +54,10 @@ public interface Constants {
 
     String DIGITAL_GLOBE_CONNECT_ID = "DG_CONNECT_ID";
 
+    String HYPHEN = "-";
+
+    String COMMA = ",";
+
     interface CONFIGURATION {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";
@@ -129,6 +133,8 @@ public interface Constants {
         String CASE_CONFIRMATION = "Case Confirmation";
 
         String REGISTER_FAMILY = "RACD Register Family";
+
+        String FI = "FI";
     }
 
     interface Tables {
@@ -317,8 +323,21 @@ public interface Constants {
 
         String LAST_NAME = "last_name";
 
+        String GROUPED_STRUCTURE_TASK_CODE_AND_STATUS = "grouped_structure_task_code_and_status";
+
+        String GROUPED_TASKS = "grouped_tasks";
 
     }
 
+    interface PlanDefinitionStatus {
+        String DRAFT = "draft";
+        String ACTIVE = "active";
+        String COMPLETE = "complete";
+        String RETIRED = "retired";
+    }
+
+    interface UseContextCode {
+        String INTERVENTION_TYPE = "interventionType";
+    }
 
 }

@@ -15,6 +15,7 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
+
 /**
  * Created by samuelgithengi on 3/12/19.
  */
@@ -67,20 +68,46 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         distanceView.setVisibility(View.GONE);
     }
 
+
+    /**
+     * Method that handles the populating of action view information on each row of the
+     * task register.
+     * <p>
+     * It handles the text and color displayed on an Action View. Also attaches a clickListener
+     * which handles clicks on the action view.
+     *
+     * @param actionLabel     Text that shows what action to take when action view is clicked
+     * @param task            TaskDetails object used to populate info in a particular row
+     * @param cardDetails     Object that contains status, status message and status color
+     * @param onClickListener Click listener that handles clicks events on the Task Action
+     */
     public void setTaskAction(String actionLabel, TaskDetails task, CardDetails cardDetails, View.OnClickListener onClickListener) {
         actionView.setText(actionLabel);
 
         // registered family with multiple tasks
         if (cardDetails != null && task.getTaskCount() != null && Utils.getInterventionLabel() == R.string.focus_investigation) { // task grouping only for FI
-            if (task.getTaskCount() > 1 ) {
+            if (task.getTaskCount() > 1) {
                 if (task.getTaskCount() != task.getCompleteTaskCount()) {
-                    actionView.setBackground(context.getResources().getDrawable(R.drawable.view_tasks_bg));
-                    actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+
+                    if (task.isFamilyRegistered() && task.isBednetDistributed() && task.isBloodScreeningDone()) {
+                        showTasksCompleteActionView();
+                    } else if (task.isFamilyRegistered() && !task.isBednetDistributed() && !task.isBloodScreeningDone()) {
+                        actionView.setBackground(context.getResources().getDrawable(R.drawable.family_registered_bg));
+                        actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                    } else if (task.isFamilyRegistered() && task.isBednetDistributed()) {
+                        actionView.setBackground(context.getResources().getDrawable(R.drawable.bednet_distributed_bg));
+                        actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                    } else if (task.isBloodScreeningDone()) {
+                        actionView.setBackground(context.getResources().getDrawable(R.drawable.blood_screening_complete_bg));
+                        actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                    } else {
+                        actionView.setBackground(context.getResources().getDrawable(R.drawable.no_task_complete_bg));
+                        actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                    }
+
                     actionView.setText(context.getText(R.string.view_tasks));
-                } else if (task.getTaskCount() == task.getCompleteTaskCount()){
-                    actionView.setBackground(context.getResources().getDrawable(R.drawable.tasks_complete_bg));
-                    actionView.setTextColor(context.getResources().getColor(R.color.text_black));
-                    actionView.setText(context.getText(R.string.tasks_complete));
+                } else if (task.getTaskCount() == task.getCompleteTaskCount()) {
+                    showTasksCompleteActionView();
                 }
             }
 
@@ -106,5 +133,11 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
 
     public void hideIcon() {
         iconView.setVisibility(View.GONE);
+    }
+
+    private void showTasksCompleteActionView() {
+        actionView.setBackground(context.getResources().getDrawable(R.drawable.tasks_complete_bg));
+        actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+        actionView.setText(context.getText(R.string.tasks_complete));
     }
 }
