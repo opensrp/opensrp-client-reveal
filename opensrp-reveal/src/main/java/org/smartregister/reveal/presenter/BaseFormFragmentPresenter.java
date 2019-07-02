@@ -10,6 +10,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
@@ -23,11 +24,13 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.util.DateTimeTypeConverter;
+import org.smartregister.util.JsonFormUtils;
 
 import java.lang.ref.WeakReference;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
 
+import static org.smartregister.family.util.Constants.JSON_FORM_KEY.OPTIONS;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
@@ -98,6 +101,10 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
                 if (Intervention.BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode())) {
                     interactor.findNumberOfMembers(taskDetails.getTaskEntity(), formJSON);
                     return;
+                }
+                if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
+                    interactor.findMemberDetails(taskDetails.getStructureId(), formJSON);
+                    return;
                 } else {
                     getView().startForm(formJSON);
                 }
@@ -147,7 +154,7 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
     }
 
     @Override
-    public void onFoundMembersCount(int numberOfMembers, JSONObject formJSON) {
+    public void onFetchedMembersCount(int numberOfMembers, JSONObject formJSON) {
         try {
             getView().startForm(new JSONObject(formJSON.toString().replace(JsonForm.NUMBER_OF_FAMILY_MEMBERS, numberOfMembers + "")));
         } catch (JSONException e) {
@@ -155,6 +162,17 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
             getView().startForm(formJSON);
         }
         getView().hideProgressDialog();
+    }
+
+    @Override
+    public void onFetchedFamilyMembers(JSONArray familyMembers, JSONObject formJSON) {
+        JSONObject familyMemberField = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJSON), JsonForm.FAMILY_MEMBER);
+        try {
+            familyMemberField.put(OPTIONS, familyMembers);
+        } catch (JSONException e) {
+            Log.e(getClass().getName(), "Error updating family members");
+        }
+        getView().startForm(formJSON);
     }
 
     public BaseTaskDetails getTaskDetails() {

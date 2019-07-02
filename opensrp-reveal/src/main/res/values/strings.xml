@@ -162,6 +162,8 @@
     <string name="tasks_complete">Tasks Complete</string>
     <string name="opensrp_url" translatable="false">@string/opensrp_base_url</string>
 
+    <string name="detect_case_button">Detect Case</string>
+
     <string name="not_visited">Not Visited</string>
     <string name="not_sprayed">Not Sprayed</string>
     <string name="sprayed">Sprayed</string>

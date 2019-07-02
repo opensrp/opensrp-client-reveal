@@ -5,10 +5,14 @@ import android.content.Context;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
+import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
@@ -18,13 +22,19 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestingUtils;
+import org.smartregister.reveal.util.Utils;
+import org.smartregister.util.Cache;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -47,23 +57,34 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
     @Mock
     private PreferencesUtil prefsUtil;
 
-    private Context context=RuntimeEnvironment.application;
+    @Captor
+    private ArgumentCaptor<StructureTaskDetails> taskDetailsArgumentCaptor;
+
+    private Context context = RuntimeEnvironment.application;
 
     private StructureTasksPresenter presenter;
 
 
     @Before
     public void setUp() {
-        presenter = new StructureTasksPresenter(view,context, interactor, prefsUtil);
+        org.smartregister.Context.bindtypes = new ArrayList<>();
+        presenter = new StructureTasksPresenter(view, context, interactor, prefsUtil);
     }
 
     @Test
     public void testFindTasks() {
-        String campaignId = UUID.randomUUID().toString();
+        String planId = UUID.randomUUID().toString();
         String structureId = UUID.randomUUID().toString();
-        when(prefsUtil.getCurrentPlanId()).thenReturn(campaignId);
+        String jurisdictionId = UUID.randomUUID().toString();
+        when(prefsUtil.getCurrentPlanId()).thenReturn(planId);
+        when(prefsUtil.getCurrentOperationalArea()).thenReturn(jurisdictionId);
+        Location jurisdiction = new Location();
+        jurisdiction.setId(jurisdictionId);
+        Cache<Location> cache = mock(Cache.class);
+        when(cache.get(anyString(), any())).thenReturn(jurisdiction);
+        Whitebox.setInternalState(Utils.class, cache);
         presenter.findTasks(structureId);
-        verify(interactor).findTasks(structureId, campaignId);
+        verify(interactor).findTasks(structureId, planId, jurisdictionId);
         verify(prefsUtil).getCurrentPlanId();
     }
 
@@ -71,8 +92,16 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
     @Test
     public void testOnTasksFound() {
         List<StructureTaskDetails> taskDetailsList = Collections.singletonList(TestingUtils.getStructureTaskDetails());
-        presenter.onTasksFound(taskDetailsList);
+        presenter.onTasksFound(taskDetailsList, eq(null));
         verify(view).setTaskDetailsList(taskDetailsList);
+    }
+
+    @Test
+    public void testOnTasksFoundWithIndexCase() {
+        List<StructureTaskDetails> taskDetailsList = Collections.singletonList(TestingUtils.getStructureTaskDetails());
+        presenter.onTasksFound(taskDetailsList, TestingUtils.getStructureTaskDetails());
+        verify(view).setTaskDetailsList(taskDetailsList);
+        verify(view).displayDetectCaseButton();
     }
 
     @Test
@@ -130,15 +159,55 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnStructureAdded() {
+        presenter.onStructureAdded(null, null);
         verifyNoMoreInteractions(interactor);
         verifyNoMoreInteractions(view);
     }
+
+    @Test
+    public void testOnFamilyFound() {
+        presenter.onFamilyFound(null);
+        verifyNoMoreInteractions(interactor);
+        verifyNoMoreInteractions(view);
+    }
+
 
     @Test
     public void testOnFormSaveFailure() {
         presenter.onFormSaveFailure(null);
         verify(view).hideProgressDialog();
 
+    }
+
+    @Test
+    public void testOnDetectCase() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        String structureId = UUID.randomUUID().toString();
+        Whitebox.setInternalState(presenter, "indexCase", taskDetails);
+        Whitebox.setInternalState(presenter, "structureId", structureId);
+        presenter.onDetectCase();
+        verify(interactor).getStructure(taskDetailsArgumentCaptor.capture());
+        assertEquals(structureId, taskDetailsArgumentCaptor.getValue().getStructureId());
+    }
+
+    @Test
+    public void testOnIndexConfirmationFormSaved() {
+        String taskId = UUID.randomUUID().toString();
+        Task indexCase = TestingUtils.getTask(taskId);
+        presenter.onIndexConfirmationFormSaved(taskId, Task.TaskStatus.COMPLETED, Constants.BusinessStatus.NOT_SPRAYED, Collections.singleton(indexCase));
+        verify(view).hideDetectCaseButton();
+        verify(view).updateNumberOfTasks();
+        verify(view).hideProgressDialog();
+        verify(view).updateTasks(taskId, Task.TaskStatus.COMPLETED, Constants.BusinessStatus.NOT_SPRAYED, Collections.singleton(indexCase));
+    }
+
+    @Test
+    public void testOnIndexConfirmationFormSavedCaseConfirmationNotComplete() {
+        String taskId = UUID.randomUUID().toString();
+        presenter.onIndexConfirmationFormSaved(taskId, Task.TaskStatus.IN_PROGRESS, Constants.BusinessStatus.NOT_SPRAYED, Collections.EMPTY_SET);
+        verify(view, never()).hideDetectCaseButton();
+        verify(view).hideProgressDialog();
+        verify(view).updateTasks(taskId, Task.TaskStatus.IN_PROGRESS, Constants.BusinessStatus.NOT_SPRAYED, Collections.EMPTY_SET);
     }
 
 }

@@ -51,6 +51,19 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "familyMember",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "เลือกสมาชิกครอบครัว",
+        "value": "Yes",
+        "v_required": {
+          "value": "true",
+          "err": "Please choose family member who is the index case"
+        }
+      },
+      {
         "key": "indexYesNo",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",

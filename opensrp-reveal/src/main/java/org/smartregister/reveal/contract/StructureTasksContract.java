@@ -6,6 +6,7 @@ import org.smartregister.domain.Task;
 import org.smartregister.reveal.model.StructureTaskDetails;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by samuelgithengi on 4/12/19.
@@ -16,16 +17,20 @@ public interface StructureTasksContract {
 
         void findTasks(String structureId);
 
-        void onTasksFound(List<StructureTaskDetails> taskDetailsList);
+        void onTasksFound(List<StructureTaskDetails> taskDetailsList, StructureTaskDetails incompleteIndexCase);
 
         void onTaskSelected(StructureTaskDetails details);
 
         void saveJsonForm(String json);
+
+        void onDetectCase();
+
+        void onIndexConfirmationFormSaved(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks);
     }
 
     interface Interactor extends BaseContract.BaseInteractor {
 
-        void findTasks(String structureId, String currentCampaignId);
+        void findTasks(String structureId, String currentPlanId, String operationalAreaId);
 
         void getStructure(StructureTaskDetails details);
     }
@@ -45,5 +50,13 @@ public interface StructureTasksContract {
         void setTaskDetailsList(List<StructureTaskDetails> taskDetailsList);
 
         void updateTask(String taskID, Task.TaskStatus taskStatus, String businessStatus);
+
+        void displayDetectCaseButton();
+
+        void hideDetectCaseButton();
+
+        void updateNumberOfTasks();
+
+        void updateTasks(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks);
     }
 }
