@@ -1,6 +1,5 @@
 package org.smartregister.reveal.fragment;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,11 +26,13 @@ import org.smartregister.reveal.adapter.StructureTaskAdapter;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.presenter.StructureTasksPresenter;
+import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.List;
+import java.util.Set;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
 import io.ona.kujaku.utils.Constants;
@@ -58,6 +60,8 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     private boolean hasRequestedLocation;
 
     private TabLayout tabLayout;
+
+    private Button detectCaseButton;
 
     public static StructureTasksFragment newInstance(Bundle bundle, Context context) {
         StructureTasksFragment fragment = new StructureTasksFragment();
@@ -104,6 +108,12 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
 
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setCancelable(false);
+
+        detectCaseButton = view.findViewById(R.id.detect_case);
+
+        detectCaseButton.setOnClickListener((View v) -> {
+            presenter.onDetectCase();
+        });
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -164,20 +174,40 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
 
     @Override
     public void displayError(int title, int message) {
-        new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(message).create().show();
+        AlertDialogUtils.displayNotification(getActivity(), title, message);
     }
 
     @Override
     public void setTaskDetailsList(List<StructureTaskDetails> taskDetailsList) {
         adapter.setTaskDetailsList(taskDetailsList);
-        if (tabLayout != null && tabLayout.getTabAt(1) != null) {
-            tabLayout.getTabAt(1).setText(getString(R.string.tasks, taskDetailsList.size()));
-        }
+        updateNumberOfTasks();
     }
 
     @Override
     public void updateTask(String taskID, Task.TaskStatus taskStatus, String businessStatus) {
         adapter.updateTask(taskID, taskStatus, businessStatus);
+    }
+
+    @Override
+    public void displayDetectCaseButton() {
+        detectCaseButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideDetectCaseButton() {
+        detectCaseButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void updateNumberOfTasks() {
+        if (tabLayout != null && tabLayout.getTabAt(1) != null) {
+            tabLayout.getTabAt(1).setText(getString(R.string.tasks, adapter.getItemCount()));
+        }
+    }
+
+    @Override
+    public void updateTasks(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks) {
+        adapter.updateTasks(taskID, taskStatus, businessStatus, removedTasks);
     }
 
     @Override

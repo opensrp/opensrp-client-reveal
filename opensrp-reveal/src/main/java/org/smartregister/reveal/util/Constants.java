@@ -152,6 +152,10 @@ public interface Constants {
         String INCOMPLETE = "Incomplete";
         String NOT_ELIGIBLE = "Not Eligible";
         String IN_PROGRESS = "In Progress";
+        // Following are for grouped structure tasks. Not synced to server
+        String FAMILY_REGISTERED = "Family Registered";
+        String BEDNET_DISTRIBUTED = "Bednet Distributed";
+        String BLOOD_SCREENING_COMPLETE = "Blood Screening Complete";
     }
 
 
@@ -228,6 +232,8 @@ public interface Constants {
         String HINT = "hint";
 
         String TITLE = "title";
+
+        String FAMILY_MEMBER = "familyMember";
     }
 
     interface DateFormat {
@@ -315,6 +321,10 @@ public interface Constants {
         String TASK_COUNT = "task_count";
 
         String BASE_ENTITY_ID = "base_entity_id";
+
+        String FIRST_NAME = "first_name";
+
+        String LAST_NAME = "last_name";
 
         String GROUPED_STRUCTURE_TASK_CODE_AND_STATUS = "grouped_structure_task_code_and_status";
 

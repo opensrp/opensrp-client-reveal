@@ -182,6 +182,7 @@
     <string name="focus_status_format">Focus Status: %1s</string>
     <string name="return_to_register">Return</string>
     <string name="index_case_not_found">Index Case details not found</string>
+    <string name="detect_case_button">Detect Case</string>
 
     <string name="not_visited">Not Visited</string>
     <string name="not_sprayed">Not Sprayed</string>

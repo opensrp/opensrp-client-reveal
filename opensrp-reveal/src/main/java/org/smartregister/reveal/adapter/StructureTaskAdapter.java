@@ -15,6 +15,7 @@ import org.smartregister.reveal.viewholder.StructureTaskViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by samuelgithengi on 4/11/19.
@@ -78,11 +79,28 @@ public class StructureTaskAdapter extends RecyclerView.Adapter<StructureTaskView
         notifyDataSetChanged();
     }
 
-    public void updateTask(String taskID, Task.TaskStatus taskStatus, String businessStatus) {
+    private int updateTaskStatus(String taskID, Task.TaskStatus taskStatus, String businessStatus) {
         int position = taskDetailsList.indexOf(new StructureTaskDetails(taskID));
-        StructureTaskDetails taskDetails = taskDetailsList.get(position);
-        taskDetails.setBusinessStatus(businessStatus);
-        taskDetails.setTaskStatus(taskStatus.name());
-        notifyItemChanged(position);
+        if (position != -1) {
+            StructureTaskDetails taskDetails = taskDetailsList.get(position);
+            taskDetails.setBusinessStatus(businessStatus);
+            taskDetails.setTaskStatus(taskStatus.name());
+        }
+        return position;
+    }
+
+    public void updateTask(String taskID, Task.TaskStatus taskStatus, String businessStatus) {
+        int position = updateTaskStatus(taskID, taskStatus, businessStatus);
+        if (position != -1) {
+            notifyItemChanged(position);
+        }
+    }
+
+    public void updateTasks(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks) {
+        updateTaskStatus(taskID, taskStatus, businessStatus);
+        for (Task task : removedTasks) {
+            taskDetailsList.remove(new StructureTaskDetails(task.getIdentifier()));
+        }
+        notifyDataSetChanged();
     }
 }

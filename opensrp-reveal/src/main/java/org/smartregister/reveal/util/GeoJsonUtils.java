@@ -9,9 +9,15 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.smartregister.reveal.interactor.ListTaskInteractor.gson;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.BEDNET_DISTRIBUTED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.BLOOD_SCREENING_COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_REGISTERED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
+import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
@@ -26,19 +32,30 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
  */
 public class GeoJsonUtils {
 
+
     public static String getGeoJsonFromStructuresAndTasks(List<Location> structures, Map<String, Set<Task>> tasks, String indexCase) {
         for (Location structure : structures) {
             Set<Task> taskSet = tasks.get(structure.getId());
             String groupedStructureTasksBusinessStatus = COMPLETE;
-            boolean incompleteResidentialTaskFound = false;
+            HashMap<String, String> taskProperties = null;
+            boolean familyRegistered = false;
+            boolean bednetDistributed = false;
+            boolean bloodScreeningDone = false;
             if (taskSet == null)
                 continue;
             for (Task task : taskSet) {
-                if (Utils.isResidentialStructure(task.getCode()) && !COMPLETE.equals(task.getBusinessStatus())) {
-                    groupedStructureTasksBusinessStatus = NOT_VISITED; // so as to display the residential structure in yellow
-                    incompleteResidentialTaskFound = true;
+                if (Utils.isResidentialStructure(task.getCode())) {
+
+                    if (task.getCode().equals(REGISTER_FAMILY) && task.getBusinessStatus().equals(COMPLETE)) {
+                        familyRegistered = true;
+                    } else if (task.getCode().equals(BEDNET_DISTRIBUTION) && task.getBusinessStatus().equals(COMPLETE)) {
+                        bednetDistributed = true;
+                    } else if (task.getCode().equals(BLOOD_SCREENING) && task.getBusinessStatus().equals(COMPLETE)) {
+                        bloodScreeningDone = true;
+                    }
+
                 }
-                HashMap<String, String> taskProperties = new HashMap<>();
+                taskProperties = new HashMap<>();
                 taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
                 if (Utils.isResidentialStructure(task.getCode())) { // used to determine color of structure displayed on map
                     taskProperties.put(TASK_BUSINESS_STATUS, groupedStructureTasksBusinessStatus);
@@ -58,11 +75,25 @@ public class GeoJsonUtils {
                 taskProperties.put(LOCATION_UUID, structure.getProperties().getUid());
                 taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
                 taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
-                structure.getProperties().setCustomProperties(taskProperties);
-                if (incompleteResidentialTaskFound) {
-                    break;
+
+            }
+
+            if (Utils.isResidentialStructure(taskProperties.get(TASK_CODE))) {
+                if (familyRegistered && bednetDistributed && bloodScreeningDone) {
+                    taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
+                } else if (familyRegistered && !bednetDistributed && !bloodScreeningDone) {
+                    taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
+                } else if (bednetDistributed && familyRegistered) {
+                    taskProperties.put(TASK_BUSINESS_STATUS, BEDNET_DISTRIBUTED);
+                } else if (bloodScreeningDone) {
+                    taskProperties.put(TASK_BUSINESS_STATUS, BLOOD_SCREENING_COMPLETE);
+                } else {
+                    taskProperties.put(TASK_BUSINESS_STATUS, NOT_VISITED);
                 }
             }
+
+            structure.getProperties().setCustomProperties(taskProperties);
+
         }
         return gson.toJson(structures);
     }

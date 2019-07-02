@@ -171,7 +171,7 @@ public class ListTaskInteractor extends BaseInteractor {
         Cursor cursor = null;
         String structureId = null;
         try {
-            cursor = getDatabase().rawQuery(getMembersSelect(String.format("%s=? AND %s=?",
+            cursor = getDatabase().rawQuery(getMemberTasksSelect(String.format("%s=? AND %s=?",
                     PLAN_ID, CODE), new String[]{}), new String[]{planId, CASE_CONFIRMATION});
             if (cursor.moveToNext()) {
                 structureId = cursor.getString(0);

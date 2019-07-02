@@ -1,5 +1,6 @@
 package org.smartregister.reveal.contract;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.reveal.model.BaseTaskDetails;
@@ -14,7 +15,9 @@ public interface BaseFormFragmentContract {
 
         void onStructureFound(Location structure, BaseTaskDetails details);
 
-        void onFoundMembersCount(int numberOfMembers, JSONObject formJSON);
+        void onFetchedMembersCount(int numberOfMembers, JSONObject formJSON);
+
+        void onFetchedFamilyMembers(JSONArray familyMembers, JSONObject formJSON);
     }
 
     interface View extends UserLocationContract.UserLocationView {
@@ -30,5 +33,7 @@ public interface BaseFormFragmentContract {
     interface Interactor {
 
         void findNumberOfMembers(String structureId, JSONObject formJSON);
+
+        void findMemberDetails(String structureId, JSONObject formJSON);
     }
 }
