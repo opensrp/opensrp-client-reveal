@@ -84,5 +84,12 @@ public class PreferencesUtil {
         return allSharedPreferences.getPreference(FACILITY_LEVEL);
     }
 
+    public void setInterventionTypeForPlan(String planId, String interventionType) {
+        allSharedPreferences.savePreference(planId, interventionType);
+    }
+
+    public String getInterventionTypeForPlan(String planId){
+        return allSharedPreferences.getPreference(planId);
+    }
 
 }

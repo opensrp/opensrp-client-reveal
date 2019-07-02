@@ -16,6 +16,7 @@ import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
+import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.GeoJSON;
 import org.smartregister.reveal.util.GeoJsonUtils;
 import org.smartregister.reveal.util.Utils;
@@ -110,7 +111,7 @@ public class ListTaskInteractor extends BaseInteractor {
             reason = cursor.getString(cursor.getColumnIndex("not_sprayed_other_reason"));
         }
         return new SprayCardDetails(
-                cursor.getString(cursor.getColumnIndex("spray_status")),
+                CardDetailsUtil.getTranslatedBusinessStatus(cursor.getString(cursor.getColumnIndex("spray_status"))),
                 cursor.getString(cursor.getColumnIndex("property_type")),
                 cursor.getString(cursor.getColumnIndex("spray_date")),
                 cursor.getString(cursor.getColumnIndex("spray_operator")),
@@ -121,7 +122,7 @@ public class ListTaskInteractor extends BaseInteractor {
 
     private MosquitoHarvestCardDetails createMosquitoHarvestCardDetails(Cursor cursor, String interventionType) {
         return new MosquitoHarvestCardDetails(
-                cursor.getString(cursor.getColumnIndex("status")),
+                CardDetailsUtil.getTranslatedBusinessStatus(cursor.getString(cursor.getColumnIndex("status"))),
                 cursor.getString(cursor.getColumnIndex("start_date")),
                 cursor.getString(cursor.getColumnIndex("end_date")),
                 interventionType

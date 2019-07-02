@@ -145,4 +145,16 @@
     <string name="form_not_found">ไม่พบแบบฟอร์ม</string>
     <string name="edit_member_form_title">แก้ไขข้อมูลสมาชิกในครัวเรือน</string>
 
+    <string name="not_visited">Not Visited</string>
+    <string name="not_sprayed">Not Sprayed</string>
+    <string name="sprayed">Sprayed thai</string>
+    <string name="not_sprayable">Not Sprayable</string>
+    <string name="complete">Complete</string>
+    <string name="incomplete">Incomplete</string>
+    <string name="in_progress">In Progress</string>
+    <string name="not_eligible">Not Eligible</string>
+
+    <string name="view_tasks">View \nTasks</string>
+    <string name="tasks_complete">Tasks Complete</string>
+
     </resources>

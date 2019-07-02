@@ -1,5 +1,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <solid android:color="@color/structure_tasks_complete" />
+    <solid android:color="@color/blood_screening_complete" />
     <corners android:radius="4dp" />
 </shape>

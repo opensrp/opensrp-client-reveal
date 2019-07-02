@@ -29,7 +29,6 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.job.LocationTaskServiceJob;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
-import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
@@ -44,7 +43,8 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_P
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LONGITUDE_AT_EQUITOR;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.METERS_PER_KILOMETER;
 import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
-import static org.smartregister.reveal.util.Constants.FOCUS;
+import static org.smartregister.reveal.util.Constants.Intervention.FI;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 
@@ -144,9 +144,10 @@ public class Utils {
 
     public static int getInterventionLabel() {
         String plan = PreferencesUtil.getInstance().getCurrentPlan();
-        if (plan.toUpperCase().contains(FOCUS))
+        String interventionType =  PreferencesUtil.getInstance().getInterventionTypeForPlan(plan);
+        if (interventionType.equals(FI))
             return R.string.focus_investigation;
-        else if (plan.toUpperCase().contains(Intervention.IRS))
+        else if (interventionType.equals(IRS))
             return R.string.irs;
         else
             return R.string.irs;
