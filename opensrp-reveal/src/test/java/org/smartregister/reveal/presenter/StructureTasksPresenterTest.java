@@ -5,6 +5,8 @@ import android.content.Context;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -55,6 +57,9 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
     @Mock
     private PreferencesUtil prefsUtil;
 
+    @Captor
+    private ArgumentCaptor<StructureTaskDetails> taskDetailsArgumentCaptor;
+
     private Context context = RuntimeEnvironment.application;
 
     private StructureTasksPresenter presenter;
@@ -89,6 +94,14 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
         List<StructureTaskDetails> taskDetailsList = Collections.singletonList(TestingUtils.getStructureTaskDetails());
         presenter.onTasksFound(taskDetailsList, eq(null));
         verify(view).setTaskDetailsList(taskDetailsList);
+    }
+
+    @Test
+    public void testOnTasksFoundWithIndexCase() {
+        List<StructureTaskDetails> taskDetailsList = Collections.singletonList(TestingUtils.getStructureTaskDetails());
+        presenter.onTasksFound(taskDetailsList, TestingUtils.getStructureTaskDetails());
+        verify(view).setTaskDetailsList(taskDetailsList);
+        verify(view).displayDetectCaseButton();
     }
 
     @Test
@@ -146,15 +159,55 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnStructureAdded() {
+        presenter.onStructureAdded(null, null);
         verifyNoMoreInteractions(interactor);
         verifyNoMoreInteractions(view);
     }
+
+    @Test
+    public void testOnFamilyFound() {
+        presenter.onFamilyFound(null);
+        verifyNoMoreInteractions(interactor);
+        verifyNoMoreInteractions(view);
+    }
+
 
     @Test
     public void testOnFormSaveFailure() {
         presenter.onFormSaveFailure(null);
         verify(view).hideProgressDialog();
 
+    }
+
+    @Test
+    public void testOnDetectCase() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        String structureId = UUID.randomUUID().toString();
+        Whitebox.setInternalState(presenter, "indexCase", taskDetails);
+        Whitebox.setInternalState(presenter, "structureId", structureId);
+        presenter.onDetectCase();
+        verify(interactor).getStructure(taskDetailsArgumentCaptor.capture());
+        assertEquals(structureId, taskDetailsArgumentCaptor.getValue().getStructureId());
+    }
+
+    @Test
+    public void testOnIndexConfirmationFormSaved() {
+        String taskId = UUID.randomUUID().toString();
+        Task indexCase = TestingUtils.getTask(taskId);
+        presenter.onIndexConfirmationFormSaved(taskId, Task.TaskStatus.COMPLETED, Constants.BusinessStatus.NOT_SPRAYED, Collections.singleton(indexCase));
+        verify(view).hideDetectCaseButton();
+        verify(view).updateNumberOfTasks();
+        verify(view).hideProgressDialog();
+        verify(view).updateTasks(taskId, Task.TaskStatus.COMPLETED, Constants.BusinessStatus.NOT_SPRAYED, Collections.singleton(indexCase));
+    }
+
+    @Test
+    public void testOnIndexConfirmationFormSavedCaseConfirmationNotComplete() {
+        String taskId = UUID.randomUUID().toString();
+        presenter.onIndexConfirmationFormSaved(taskId, Task.TaskStatus.IN_PROGRESS, Constants.BusinessStatus.NOT_SPRAYED, Collections.EMPTY_SET);
+        verify(view, never()).hideDetectCaseButton();
+        verify(view).hideProgressDialog();
+        verify(view).updateTasks(taskId, Task.TaskStatus.IN_PROGRESS, Constants.BusinessStatus.NOT_SPRAYED, Collections.EMPTY_SET);
     }
 
 }

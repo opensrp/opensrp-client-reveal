@@ -195,6 +195,7 @@ public class FormFragmentPresenterTest extends BaseUnitTest {
         when(jsonFormUtils.getFormJSON(context, CASE_CONFIRMATION_FORM, taskDetails, structure)).thenReturn(form);
         presenter.onLocationValidated();
         verify(interactor).findMemberDetails(taskDetails.getStructureId(), form);
+        verify(view, never()).hideProgressDialog();
 
     }
 
