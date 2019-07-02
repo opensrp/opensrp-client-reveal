@@ -42,6 +42,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.COMPLETED_TASK_COUNT;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FAMILY_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPED_STRUCTURE_TASK_CODE_AND_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LATITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LONGITUDE;
@@ -302,7 +303,8 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
                 STRUCTURE_ID,
                 FIRST_NAME,
                 TASK_COUNT,
-                COMPLETED_TASK_COUNT
+                COMPLETED_TASK_COUNT,
+                GROUPED_STRUCTURE_TASK_CODE_AND_STATUS
         });
     }
 }
