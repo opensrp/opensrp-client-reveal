@@ -27,6 +27,7 @@ import org.smartregister.reveal.adapter.StructureTaskAdapter;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.presenter.StructureTasksPresenter;
+import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
@@ -174,7 +175,7 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
 
     @Override
     public void displayError(int title, int message) {
-        new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(message).create().show();
+        AlertDialogUtils.displayNotification(getActivity(), title, message);
     }
 
     @Override
