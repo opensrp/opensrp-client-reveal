@@ -4,7 +4,7 @@ description: Number of existinf nets needed
 priority: 1
 condition: "true"
 actions:
-- "calculation = helper.ifNull(step1_existingLLINs + step1_existingHLINs + step1_existingITNs,0)"
+- "calculation = helper.ifNull(step1_existingLLINs + step1_existingLLIHNs + step1_existingITNs,0)"
 ---
 name: step1_calcNumNetsNeeded
 description: Number of nets needed
@@ -18,7 +18,7 @@ description: The total number of nets distributed
 priority: 1
 condition: "true"
 actions:
-- "calculation = helper.ifNull(step1_distributedITNs + step1_distributedLLINs + step1_distributedHLINs,0)"
+- "calculation = helper.ifNull(step1_distributedITNs + step1_distributedLLINs + step1_distributedLLIHNs,0)"
 ---
 name: step1_displayRecommendedNumNets
 description: Display Calculated number of nets needed
@@ -39,7 +39,7 @@ description: Display Calculated number of nets eligible for dipping
 priority: 1
 condition: "true"
 actions:
-- "calculation = helper.ifNull(step1_existingLLINsGreaterThan3yr + step1_existingHLINsGreaterThan3yr + step1_existingITNs - step1_existingITNDipped,0)"
+- "calculation = helper.ifNull(step1_existingLLINsGreaterThan3yr + step1_existingLLIHNsGreaterThan3yr + step1_existingITNs - step1_existingITNDipped,0)"
 ---
 name: step1_displayNumNetsToRedip
 description: Display Number of nets eligible for redipping

@@ -16,13 +16,15 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
         void setStructureId(String structureId);
 
         void refreshTasks(String structureId);
+
+        void updateFamilyName(String firstName);
     }
 
     interface Interactor extends org.smartregister.family.contract.FamilyProfileContract.Interactor {
 
         void generateTasks(Context applicationContext, String baseEntityId);
 
-        void updateFamilyMemberSurname(@NonNull Client family, Event event, @NonNull String oldSurname);
+        void updateFamilyMemberName(@NonNull Client family, Event event, @NonNull String oldFamilyName);
     }
 
     interface Presenter extends org.smartregister.family.contract.FamilyProfileContract.Presenter {

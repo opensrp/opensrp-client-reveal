@@ -69,19 +69,6 @@
         }
       },
       {
-        "key": "surname",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "",
-        "type": "",
-        "hint": "สกุลเจ้าบ้าน",
-        "edit_type": "name",
-        "v_required": {
-          "value": "true",
-          "err": "กรุณาใส่นามสกุลของครอบครัว"
-        }
-      },
-      {
         "key": "house_number",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_address",
@@ -125,32 +112,15 @@
       {
         "key": "first_name",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "first_name",
-        "type": "edit_text",
-        "hint": "ชื่อ",
-        "edit_type": "name",
-        "v_required": {
-          "value": "true",
-          "err": "กรุณาใส่ชื่อจริง"
-        }
-      },
-      {
-        "key": "surname",
-        "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "นามสกุล",
+        "hint": "ชื่อ",
         "edit_type": "name",
-        "v_required": {
-          "value": "true",
-          "err": "กรุณาใส่นามสกุลของครอบครัว"
-        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "thailand-family-register-relevance.yml"
+              "rules-file": "family-register-relevance.yml"
             }
           }
         }
@@ -172,17 +142,29 @@
         ]
       },
       {
-        "key": "surname_calculation",
+        "key": "surname",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
         "openmrs_entity_id": "last_name",
         "type": "edit_text",
-        "hidden": true,
+        "hint": "นามสกุล",
+        "edit_type": "name",
+        "v_required": {
+          "value": "true",
+          "err": "กรุณาใส่นามสกุลของครอบครัว"
+        }
+      },
+      {
+        "key": "first_name_calculation",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "first_name",
+        "type": "hidden",
         "hint": "คลิกเลือกหากนามสกุลเดียวกับเจ้าบ้าน",
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "thailand-family-register-calculation.yml"
+              "rules-file": "family-register-calculation.yml"
             }
           }
         }
@@ -207,7 +189,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "thailand-family-register-relevance.yml"
+              "rules-file": "family-register-relevance.yml"
             }
           }
         }
@@ -250,7 +232,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "thailand-family-register-relevance.yml"
+              "rules-file": "family-register-relevance.yml"
             }
           }
         },
@@ -329,7 +311,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "thailand-family-register-relevance.yml"
+              "rules-file": "family-register-relevance.yml"
             }
           }
         }

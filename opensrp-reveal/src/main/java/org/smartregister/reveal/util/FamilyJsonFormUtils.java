@@ -67,6 +67,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         jsonDbMap.put(DatabaseKeys.OCCUPATION, DatabaseKeys.OCCUPATION);
         jsonDbMap.put(DatabaseKeys.SLEEPS_OUTDOORS, DatabaseKeys.SLEEPS_OUTDOORS);
         jsonDbMap.put(DatabaseKeys.PHONE_NUMBER, DatabaseKeys.PHONE_NUMBER);
+        jsonDbMap.put(FormKeys.SURNAME, DBConstants.KEY.LAST_NAME);
 
     }
 
@@ -108,6 +109,9 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
             case DatabaseKeys.FAMILY_NAME:
             case DatabaseKeys.OLD_FAMILY_NAME:
                 jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), DBConstants.KEY.FIRST_NAME, false));
+                break;
+            case FormKeys.SURNAME:
+                jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), DBConstants.KEY.LAST_NAME, false));
                 break;
             case DBConstants.KEY.VILLAGE_TOWN:
                 jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), DBConstants.KEY.VILLAGE_TOWN, false));
@@ -203,7 +207,9 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                 if (StringUtils.isNotBlank(db_key)) {
                     jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), db_key, false));
                 } else {
-                    jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), jsonObject.getString(KEY), false));
+                    String value = Utils.getValue(client.getColumnmaps(), jsonObject.getString(KEY), false);
+                    if (StringUtils.isNotBlank(value))
+                        jsonObject.put(VALUE, value);
                 }
                 break;
 
@@ -243,34 +249,34 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
         jsonObject.put(VALUE, familyName);
 
-        String lastName = Utils.getValue(client.getColumnmaps(), DBConstants.KEY.LAST_NAME, false);
+        String firstName = Utils.getValue(client.getColumnmaps(), DBConstants.KEY.FIRST_NAME, false);
 
         JSONObject sameAsFamName = getFieldJSONObject(jsonArray, FormKeys.SAME_AS_FAM_NAME);
         JSONObject sameOptions = sameAsFamName.getJSONArray(JSON_FORM_KEY.OPTIONS).getJSONObject(0);
 
-        if (familyName.equals(lastName)) {
+        if (familyName.equals(firstName)) {
             sameOptions.put(VALUE, true);
         } else {
             sameOptions.put(VALUE, false);
         }
 
-        JSONObject surname = getFieldJSONObject(jsonArray, FormKeys.SURNAME);
-        if (!familyName.equals(lastName)) {
-            surname.put(VALUE, lastName);
+        JSONObject firstNameKey = getFieldJSONObject(jsonArray, FormKeys.FIRST_NAME);
+        if (!familyName.equals(firstName)) {
+            firstNameKey.put(VALUE, firstName);
         } else {
-            surname.put(VALUE, "");
+            firstNameKey.put(VALUE, "");
         }
     }
 
-    public static Event createUpdateMemberSurnameEvent(String baseEntityId, Event updateFamilyEvent) {
+    public static Event createUpdateMemberNameEvent(String baseEntityId, Event updateFamilyEvent) {
         FamilyMetadata familyMetadata = RevealApplication.getInstance().getMetadata();
-        Event updateMemberSurnameEvent =
+        Event updateMemberNameEvent =
                 (Event) new Event().withBaseEntityId(baseEntityId).withEventDate(new Date()).withEventType(familyMetadata.familyMemberRegister.updateEventType)
                         .withLocationId(updateFamilyEvent.getLocationId()).withEntityType(familyMetadata.familyMemberRegister.tableName)
                         .withFormSubmissionId(UUID.randomUUID().toString()).withDateCreated(new Date());
-        tagSyncMetadata(RevealApplication.getInstance().getContext().allSharedPreferences(), updateMemberSurnameEvent);
-        updateMemberSurnameEvent.setDetails(updateFamilyEvent.getDetails());
-        return updateMemberSurnameEvent;
+        tagSyncMetadata(RevealApplication.getInstance().getContext().allSharedPreferences(), updateMemberNameEvent);
+        updateMemberNameEvent.setDetails(updateFamilyEvent.getDetails());
+        return updateMemberNameEvent;
     }
 
 

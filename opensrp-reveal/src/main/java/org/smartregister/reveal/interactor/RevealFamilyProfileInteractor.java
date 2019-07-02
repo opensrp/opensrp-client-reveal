@@ -72,20 +72,20 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     }
 
     @Override
-    public void updateFamilyMemberSurname(@NonNull Client family, Event event, @NonNull String oldSurname) {
+    public void updateFamilyMemberName(@NonNull Client family, Event event, @NonNull String oldFamilyName) {
         appExecutors.diskIO().execute(() -> {
             JSONArray familyMembers = new JSONArray();
             JSONArray updateSurnameEvents = new JSONArray();
             List<String> formSubmissionIds = new ArrayList<>();
             for (CommonPersonObject commonPersonObject : commonRepository.findByRelational_IDs(family.getBaseEntityId())) {
-                String lastName = commonPersonObject.getColumnmaps().get(KEY.LAST_NAME);
-                if (oldSurname.equalsIgnoreCase(lastName)) {//surname same as the edited family name
+                String firstName = commonPersonObject.getColumnmaps().get(KEY.FIRST_NAME);
+                if (oldFamilyName.equalsIgnoreCase(firstName)) {//name same as the edited family name
                     JSONObject client = eventClientRepository.getClientByBaseEntityId(commonPersonObject.getCaseId());
                     try {
-                        client.put("lastName", family.getFirstName());
+                        client.put("firstName", family.getFirstName());
                         client.put(syncStatus.name(), BaseRepository.TYPE_Unsynced);
                         familyMembers.put(client);
-                        Event updateEvent = FamilyJsonFormUtils.createUpdateMemberSurnameEvent(commonPersonObject.getCaseId(), event);
+                        Event updateEvent = FamilyJsonFormUtils.createUpdateMemberNameEvent(commonPersonObject.getCaseId(), event);
                         JSONObject eventJson = new JSONObject(JsonFormUtils.gson.toJson(updateEvent));
                         eventJson.put(syncStatus.name(), BaseRepository.TYPE_Unsynced);
                         updateSurnameEvents.put(eventJson);

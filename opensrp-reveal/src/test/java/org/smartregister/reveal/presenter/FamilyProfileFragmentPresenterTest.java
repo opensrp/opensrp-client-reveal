@@ -79,6 +79,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
+        org.smartregister.Context.bindtypes=new ArrayList<>();
         presenter = new FamilyProfilePresenter(view, model, familyId, null, null, null);
         Whitebox.setInternalState(presenter, "preferencesUtil", preferencesUtil);
         Whitebox.setInternalState(presenter, "database", database);
@@ -141,7 +142,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
                 .withBaseEntityId(entityId).withObs(new ArrayList<>()));
         when(model.getEventClient()).thenReturn(eventClient);
         presenter.onRegistrationSaved(true);
-        verify(interactor, never()).updateFamilyMemberSurname(eventClient.getClient(), eventClient.getEvent(), null);
+        verify(interactor, never()).updateFamilyMemberName(eventClient.getClient(), eventClient.getEvent(), null);
         verify(view, never()).refreshTasks(structureId);
     }
 
@@ -153,7 +154,8 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
                 .withBaseEntityId(entityId).withObs(new Obs().withValue("Victoria").withFieldCode(DatabaseKeys.OLD_FAMILY_NAME)));
         when(model.getEventClient()).thenReturn(eventClient);
         presenter.onRegistrationSaved(true);
-        verify(interactor).updateFamilyMemberSurname(eventClient.getClient(), eventClient.getEvent(), "Victoria");
+        verify(interactor).updateFamilyMemberName(eventClient.getClient(), eventClient.getEvent(), "Victoria");
+        verify(view).updateFamilyName("Victor");
         verify(view, never()).hideProgressDialog();
         verify(view, never()).refreshMemberList(FetchStatus.fetched);
     }
@@ -167,7 +169,8 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
                 .withBaseEntityId(entityId).withObs(new Obs().withValue("Victor").withFieldCode(DatabaseKeys.OLD_FAMILY_NAME)));
         when(model.getEventClient()).thenReturn(eventClient);
         presenter.onRegistrationSaved(true);
-        verify(interactor, never()).updateFamilyMemberSurname(eventClient.getClient(), eventClient.getEvent(), "Victoria");
+        verify(interactor, never()).updateFamilyMemberName(eventClient.getClient(), eventClient.getEvent(), "Victoria");
+        verify(view,never()).updateFamilyName("Victor");
         verify(view).hideProgressDialog();
         verify(view).refreshMemberList(FetchStatus.fetched);
     }

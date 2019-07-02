@@ -297,6 +297,9 @@
             "text": "Fg"
           }
         ],
+        "exclusive": [
+          "Negative"
+        ],
         "relevance": {
           "step1:testType": {
             "type": "string",
