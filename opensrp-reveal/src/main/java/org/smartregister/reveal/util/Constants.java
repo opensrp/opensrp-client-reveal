@@ -151,6 +151,10 @@ public interface Constants {
         String INCOMPLETE = "Incomplete";
         String NOT_ELIGIBLE = "Not Eligible";
         String IN_PROGRESS = "In Progress";
+        // Following are for grouped structure tasks. Not synced to server
+        String FAMILY_REGISTERED = "Family Registered";
+        String BEDNET_DISTRIBUTED = "Bednet Distributed";
+        String BLOOD_SCREENING_COMPLETE = "Blood Screening Complete";
     }
 
 

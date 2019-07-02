@@ -151,6 +151,7 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         String[] groupedTaskCodeStatusArray = groupedTaskCodeStatusString.split(COMMA);
         for (int i = 0; i < groupedTaskCodeStatusArray.length; i++) {
             String[] taskCodeStatusArray = groupedTaskCodeStatusArray[i].split(HYPHEN);
+
             if (taskCodeStatusArray == null || taskCodeStatusArray.length != 2) {
                 continue;
             }
