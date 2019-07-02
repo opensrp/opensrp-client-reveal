@@ -155,6 +155,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         when(model.getEventClient()).thenReturn(eventClient);
         presenter.onRegistrationSaved(true);
         verify(interactor).updateFamilyMemberName(eventClient.getClient(), eventClient.getEvent(), "Victoria");
+        verify(view).updateFamilyName("Victor");
         verify(view, never()).hideProgressDialog();
         verify(view, never()).refreshMemberList(FetchStatus.fetched);
     }
@@ -169,6 +170,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         when(model.getEventClient()).thenReturn(eventClient);
         presenter.onRegistrationSaved(true);
         verify(interactor, never()).updateFamilyMemberName(eventClient.getClient(), eventClient.getEvent(), "Victoria");
+        verify(view,never()).updateFamilyName("Victor");
         verify(view).hideProgressDialog();
         verify(view).refreshMemberList(FetchStatus.fetched);
     }
