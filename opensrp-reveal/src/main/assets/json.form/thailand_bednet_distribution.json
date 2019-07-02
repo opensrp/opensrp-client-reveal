@@ -101,7 +101,7 @@
             "existingITNs",
             "existingLLINs"
           ],
-          "err": "จำนวนมุ้งที่มีอยู่ทั้งหมดควรเท่ากับผลรวมของจำนวนมุ้ง LLIN, มุ้ง HLIN และมุ้งธรรมดา"
+          "err": "จำนวนมุ้งที่มีอยู่ทั้งหมดควรเท่ากับผลรวมของจำนวนมุ้ง LLIN, มุ้ง LLIHN และมุ้งธรรมดา"
         }
       },
       {
@@ -253,7 +253,7 @@
         }
       },
       {
-        "key": "existingHLINs",
+        "key": "existingLLIHNs",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -262,7 +262,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "ต้องใส่จำนวนมุ้ง HLIN ที่มีอยู่ทั้งหมด"
+          "err": "ต้องใส่จำนวนมุ้ง LLIHN ที่มีอยู่ทั้งหมด"
         },
         "v_numeric": {
           "value": "true",
@@ -278,11 +278,11 @@
             "existingITNs",
             "existingLLINs"
           ],
-          "err": "จำนวนมุ้งที่มีอยู่ทั้งหมดควรเท่ากับผลรวมของจำนวนมุ้ง LLIN, มุ้ง HLIN และมุ้งธรรมดา"
+          "err": "จำนวนมุ้งที่มีอยู่ทั้งหมดควรเท่ากับผลรวมของจำนวนมุ้ง LLIN, มุ้ง LLIHN และมุ้งธรรมดา"
         }
       },
       {
-        "key": "existingHLINsLessThan1yr",
+        "key": "existingLLIHNsLessThan1yr",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -291,7 +291,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "Number of HLINs less than 1 yr old is required"
+          "err": "Number of LLIHNs less than 1 yr old is required"
         },
         "v_numeric": {
           "value": "true",
@@ -302,13 +302,13 @@
           "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_cumulative_total": {
-          "value": "existingHLINs",
+          "value": "existingLLIHNs",
           "related_fields": [
-            "existingHLINs1yrTo2yr",
-            "existingHLINs2yrTo3yr",
-            "existingHLINsGreaterThan3yr"
+            "existingLLIHNs1yrTo2yr",
+            "existingLLIHNs2yrTo3yr",
+            "existingLLIHNsGreaterThan3yr"
           ],
-          "err": "ผลรวมของจำนวนมุ้ง HLIN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง HLIN ที่มีอยู่ทั้งหมด"
+          "err": "ผลรวมของจำนวนมุ้ง LLIHN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง LLIHN ที่มีอยู่ทั้งหมด"
         },
         "relevance": {
           "rules-engine": {
@@ -319,7 +319,7 @@
         }
       },
       {
-        "key": "existingHLINs1yrTo2yr",
+        "key": "existingLLIHNs1yrTo2yr",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -328,7 +328,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "How many HLINs are between 1 and 2 yrs old?"
+          "err": "How many LLIHNs are between 1 and 2 yrs old?"
         },
         "v_numeric": {
           "value": "true",
@@ -339,13 +339,13 @@
           "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_cumulative_total": {
-          "value": "existingHLINs",
+          "value": "existingLLIHNs",
           "related_fields": [
-            "existingHLINsLessThan1yr",
-            "existingHLINs2yrTo3yr",
-            "existingHLINsGreaterThan3yr"
+            "existingLLIHNsLessThan1yr",
+            "existingLLIHNs2yrTo3yr",
+            "existingLLIHNsGreaterThan3yr"
           ],
-          "err": "ผลรวมของจำนวนมุ้ง HLIN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง HLIN ที่มีอยู่ทั้งหมด"
+          "err": "ผลรวมของจำนวนมุ้ง LLIHN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง LLIHN ที่มีอยู่ทั้งหมด"
         },
         "relevance": {
           "rules-engine": {
@@ -356,7 +356,7 @@
         }
       },
       {
-        "key": "existingHLINs2yrTo3yr",
+        "key": "existingLLIHNs2yrTo3yr",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -365,7 +365,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "How many  HLINs are between 2 and 3 yrs old?"
+          "err": "How many  LLIHNs are between 2 and 3 yrs old?"
         },
         "v_numeric": {
           "value": "true",
@@ -376,13 +376,13 @@
           "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_cumulative_total": {
-          "value": "existingHLINs",
+          "value": "existingLLIHNs",
           "related_fields": [
-            "existingHLINsLessThan1yr",
-            "existingHLINs1yrTo2yr",
-            "existingHLINsGreaterThan3yr"
+            "existingLLIHNsLessThan1yr",
+            "existingLLIHNs1yrTo2yr",
+            "existingLLIHNsGreaterThan3yr"
           ],
-          "err": "ผลรวมของจำนวนมุ้ง HLIN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง HLIN ที่มีอยู่ทั้งหมด"
+          "err": "ผลรวมของจำนวนมุ้ง LLIHN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง LLIHN ที่มีอยู่ทั้งหมด"
         },
         "relevance": {
           "rules-engine": {
@@ -393,7 +393,7 @@
         }
       },
       {
-        "key": "existingHLINsGreaterThan3yr",
+        "key": "existingLLIHNsGreaterThan3yr",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -402,7 +402,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The total number of HLINs over 3 yrs old is required"
+          "err": "The total number of LLIHNs over 3 yrs old is required"
         },
         "v_numeric": {
           "value": "true",
@@ -413,13 +413,13 @@
           "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_cumulative_total": {
-          "value": "existingHLINs",
+          "value": "existingLLIHNs",
           "related_fields": [
-            "existingHLINsLessThan1yr",
-            "existingHLINs1yrTo2yr",
-            "existingHLINs2yrTo3yr"
+            "existingLLIHNsLessThan1yr",
+            "existingLLIHNs1yrTo2yr",
+            "existingLLIHNs2yrTo3yr"
           ],
-          "err": "ผลรวมของจำนวนมุ้ง HLIN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง HLIN ที่มีอยู่ทั้งหมด"
+          "err": "ผลรวมของจำนวนมุ้ง LLIHN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง LLIHN ที่มีอยู่ทั้งหมด"
         },
         "relevance": {
           "rules-engine": {
@@ -454,9 +454,9 @@
           "value": "existingNets",
           "related_fields": [
             "existingLLINs",
-            "existingHLINs"
+            "existingLLIHNs"
           ],
-          "err": "จำนวนมุ้งที่มีอยู่ทั้งหมดควรเท่ากับผลรวมของจำนวนมุ้ง LLIN, มุ้ง HLIN และมุ้งธรรมดา"
+          "err": "จำนวนมุ้งที่มีอยู่ทั้งหมดควรเท่ากับผลรวมของจำนวนมุ้ง LLIN, มุ้ง LLIHN และมุ้งธรรมดา"
         }
       },
       {
@@ -595,17 +595,17 @@
         }
       },
       {
-        "key": "distributedHLINs",
+        "key": "distributedLLIHNs",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Total number of HLINs distributed",
-        "shortened_hint": "Disributed HLINs",
+        "hint": "Total number of LLIHNs distributed",
+        "shortened_hint": "Disributed LLIHNs",
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "ต้องใส่จำนวนมุ้ง HLIN ทั้งหมดที่แจกไป"
+          "err": "ต้องใส่จำนวนมุ้ง LLIHN ทั้งหมดที่แจกไป"
         },
         "v_numeric": {
           "value": "true",

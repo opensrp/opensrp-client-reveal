@@ -103,7 +103,7 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
     @Test
     public void testUpdateFamilyMemberSurnameWithoutFamilyMembers() {
         String baseEntityId = UUID.randomUUID().toString();
-        interactor.updateFamilyMemberSurname((Client) new Client().withBaseEntityId(baseEntityId),
+        interactor.updateFamilyMemberName((Client) new Client().withBaseEntityId(baseEntityId),
                 new Event(), "Victor");
         verify(commonRepository, timeout(ASYNC_TIMEOUT)).findByRelational_IDs(baseEntityId);
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).batchInsertClients(new JSONArray());
@@ -112,15 +112,15 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
     }
 
     @Test
-    public void testUpdateFamilyMemberSurnameUpdatesClientAndGeneratesEvents() throws JSONException {
+    public void testUpdateFamilyMemberFirstNameUpdatesClientAndGeneratesEvents() throws JSONException {
         String baseEntityId = UUID.randomUUID().toString();
         CommonPersonObjectClient client = TestingUtils.getCommonPersonObjectClient();
         CommonPersonObject familyMember = new CommonPersonObject(client.getCaseId(), null, client.getDetails(), "ec_family_member");
         familyMember.setColumnmaps(client.getColumnmaps());
         when(commonRepository.findByRelational_IDs(baseEntityId)).thenReturn(Collections.singletonList(familyMember));
         when(eventClientRepository.getClientByBaseEntityId(familyMember.getCaseId())).thenReturn(new JSONObject());
-        interactor.updateFamilyMemberSurname((Client) new Client().withFirstName("Otale").withBaseEntityId(baseEntityId),
-                new Event(), "Otala");
+        interactor.updateFamilyMemberName((Client) new Client().withFirstName("Otale").withBaseEntityId(baseEntityId),
+                new Event(), "Charity");
         verify(commonRepository, timeout(ASYNC_TIMEOUT)).findByRelational_IDs(baseEntityId);
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).batchInsertClients(jsonArrayArgumentCaptor.capture());
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).batchInsertEvents(jsonArrayArgumentCaptor.capture(), eq(0l));
@@ -131,7 +131,7 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
         JSONArray clients = jsonArrayArgumentCaptor.getAllValues().get(0);
         JSONObject clientJSONObject = clients.getJSONObject(0);
         assertEquals(1, clients.length());
-        assertEquals("Otale", clientJSONObject.getString("lastName"));
+        assertEquals("Otale", clientJSONObject.getString("firstName"));
         assertEquals(TYPE_Unsynced, clientJSONObject.getString("syncStatus"));
 
         //assert event is generated
@@ -154,7 +154,7 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
         familyMember.setColumnmaps(client.getColumnmaps());
         when(commonRepository.findByRelational_IDs(baseEntityId)).thenReturn(Collections.singletonList(familyMember));
         when(eventClientRepository.getClientByBaseEntityId(familyMember.getCaseId())).thenReturn(null);
-        interactor.updateFamilyMemberSurname((Client) new Client().withFirstName("Otale").withBaseEntityId(baseEntityId),
+        interactor.updateFamilyMemberName((Client) new Client().withFirstName("Otale").withBaseEntityId(baseEntityId),
                 new Event(), "Otala");
         verify(commonRepository, timeout(ASYNC_TIMEOUT)).findByRelational_IDs(baseEntityId);
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).batchInsertClients(new JSONArray());

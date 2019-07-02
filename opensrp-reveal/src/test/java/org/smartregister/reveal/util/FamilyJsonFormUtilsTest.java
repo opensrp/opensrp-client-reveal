@@ -32,6 +32,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.smartregister.family.util.Constants.JSON_FORM_KEY.ENCOUNTER_LOCATION;
 import static org.smartregister.family.util.Constants.JSON_FORM_KEY.OPTIONS;
@@ -87,6 +88,15 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
         assertNull("The Luang", JsonFormUtils.getFieldValue(formString, KEY.VILLAGE_TOWN));
         JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditFormString(FAMILY_UPDATE, context, client, UPDATE_FAMILY_REGISTRATION);
         assertEquals("The Luang", JsonFormUtils.getFieldValue(form.toString(), KEY.LANDMARK));
+    }
+
+    @Test
+    public void testGetAutoPopulatedJsonEditForm() {
+        when(formUtils.getFormJson(anyString())).thenReturn(new JSONObject());
+        familyJsonFormUtils = new FamilyJsonFormUtils(lpv, formUtils, locationHelper, context);
+        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditFormString(FAMILY_UPDATE, context, client, UPDATE_FAMILY_REGISTRATION);
+        assertNull(form);
+
     }
 
     @Test
@@ -146,6 +156,16 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
 
     }
 
+    @Test
+    public void testProcessPopulatableSurname() throws JSONException {
+
+        JSONObject form = new JSONObject();
+        form.put(JsonFormUtils.KEY, FormKeys.SURNAME);
+        FamilyJsonFormUtils.processPopulatableFields(client, form);
+        assertEquals("Otala", form.getString(VALUE));
+
+    }
+
 
     @Test
     public void testProcessPopulatableOtherFields() throws JSONException {
@@ -184,6 +204,16 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
         assertEquals(DateUtil.formatDate(dobString, DateUtil.DATE_FORMAT_FOR_TIMELINE_EVENT), JsonFormUtils.getFieldValue(form.toString(), DOB));
     }
 
+    @Test
+    public void testGetAutoPopulatedJsonEditMemberForm() throws JSONException {
+        setupMemberForm();
+        when(formUtils.getFormJson(FAMILY_MEMBER_REGISTER)).thenReturn(new JSONObject());
+        String locationId = UUID.randomUUID().toString();
+        when(locationHelper.getOpenMrsLocationId(null)).thenReturn(locationId);
+        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, "Ker");
+        assertNull(form);
+    }
+
 
     @Test
     public void testGetAutoPopulatedJsonEditMemberFormStringForEstimateDob() throws JSONException {
@@ -200,18 +230,18 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
 
 
     @Test
-    public void testSurnameCalc() throws JSONException {
+    public void testFirstNameCalc() throws JSONException {
         setupMemberForm();
         String familyName = "Ker";
-        client.getColumnmaps().put(KEY.LAST_NAME, familyName);
+        client.getColumnmaps().put(KEY.FIRST_NAME, familyName);
         JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, familyName);
-        assertEquals("", JsonFormUtils.getFieldValue(form.toString(), FormKeys.SURNAME));
+        assertEquals("", JsonFormUtils.getFieldValue(form.toString(), FormKeys.FIRST_NAME));
         assertTrue(JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), "same_as_fam_name").getJSONArray(OPTIONS).getJSONObject(0).getBoolean(VALUE));
     }
 
 
     @Test
-    public void testSurnameMappedFileds() throws JSONException {
+    public void testSurnameMappedFields() throws JSONException {
         setupMemberForm();
         String citizenship = "Thai";
         client.getColumnmaps().put(DatabaseKeys.CITIZENSHIP, "Thai");
@@ -228,7 +258,7 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
         allSharedPreferences.saveDefaultTeam("user1132", "Ateam");
         allSharedPreferences.saveDefaultTeamId("user1132", "2342fsdfds99");
         allSharedPreferences.saveDefaultLocalityId("user1132", "13k083-jhnf33");
-        Event event = FamilyJsonFormUtils.createUpdateMemberSurnameEvent(baseEntityId, updateFamilyEvent);
+        Event event = FamilyJsonFormUtils.createUpdateMemberNameEvent(baseEntityId, updateFamilyEvent);
         assertEquals("13k083-jhnf33", event.getLocationId());
         assertEquals("user1132", event.getProviderId());
         assertEquals("2342fsdfds99", event.getTeamId());

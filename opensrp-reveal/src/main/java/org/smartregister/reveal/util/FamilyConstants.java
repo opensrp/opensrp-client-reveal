@@ -64,6 +64,7 @@ public interface FamilyConstants {
         String SEX = "sex";
         String SAME_AS_FAM_NAME = "same_as_fam_name";
         String SURNAME = "surname";
+        String FIRST_NAME = "first_name";
     }
 
 
