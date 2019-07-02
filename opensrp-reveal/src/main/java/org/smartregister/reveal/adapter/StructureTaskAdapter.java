@@ -81,14 +81,19 @@ public class StructureTaskAdapter extends RecyclerView.Adapter<StructureTaskView
 
     private int updateTaskStatus(String taskID, Task.TaskStatus taskStatus, String businessStatus) {
         int position = taskDetailsList.indexOf(new StructureTaskDetails(taskID));
-        StructureTaskDetails taskDetails = taskDetailsList.get(position);
-        taskDetails.setBusinessStatus(businessStatus);
-        taskDetails.setTaskStatus(taskStatus.name());
+        if (position != -1) {
+            StructureTaskDetails taskDetails = taskDetailsList.get(position);
+            taskDetails.setBusinessStatus(businessStatus);
+            taskDetails.setTaskStatus(taskStatus.name());
+        }
         return position;
     }
 
     public void updateTask(String taskID, Task.TaskStatus taskStatus, String businessStatus) {
-        notifyItemChanged(updateTaskStatus(taskID, taskStatus, businessStatus));
+        int position = updateTaskStatus(taskID, taskStatus, businessStatus);
+        if (position != -1) {
+            notifyItemChanged(position);
+        }
     }
 
     public void updateTasks(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks) {
