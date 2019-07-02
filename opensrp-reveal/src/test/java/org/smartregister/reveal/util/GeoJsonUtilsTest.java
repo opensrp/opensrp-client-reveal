@@ -24,7 +24,10 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_REGISTERED;
 import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 
 public class GeoJsonUtilsTest extends BaseUnitTest {
@@ -111,6 +114,37 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
         Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
 
         assertEquals(Intervention.REGISTER_FAMILY, feature.getStringProperty(TASK_CODE));
+
+    }
+
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForTaskColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setCurrentPlan("Focus 1");
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task task = initTestTask();
+        task.setCode(Intervention.REGISTER_FAMILY);
+        task.setBusinessStatus(COMPLETE);
+        taskSet.add(task);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(Intervention.REGISTER_FAMILY, feature.getStringProperty(TASK_CODE));
+        assertEquals(FAMILY_REGISTERED, feature.getStringProperty(TASK_BUSINESS_STATUS));
 
     }
 
