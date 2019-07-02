@@ -23,8 +23,11 @@
 
     <color name="task_not_done">#FAAB00</color>
 
-    <color name="structure_tasks_due">#FFFF00</color>
-    <color name="no_structure_tasks_due">#00FF00</color>
+    <color name="structure_tasks_due">#FFCA16</color>
+    <color name="structure_tasks_complete">#68BB0C</color>
 
+    <color name="blood_screening_complete">#995EFF</color>
+    <color name="bednet_distributed">#3DA9DA</color>
+    <color name="family_registered">#FF96C2</color>
 
 </resources>

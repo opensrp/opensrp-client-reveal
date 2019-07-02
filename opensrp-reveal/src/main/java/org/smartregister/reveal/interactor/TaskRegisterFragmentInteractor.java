@@ -11,6 +11,7 @@ import net.sqlcipher.Cursor;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
+import org.smartregister.domain.Task;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
@@ -29,12 +30,13 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.COMPLETED_TASK_COUNT;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FAMILY_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPED_STRUCTURE_TASK_CODE_AND_STATUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPED_TASKS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LATITUDE;
@@ -119,9 +121,10 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
         structureTasksQueryBuilder.mainCondition(mainCondition);
 
-        return String.format(" SELECT %s.*, SUM(CASE WHEN %s.status='COMPLETED' THEN 1 ELSE 0 END) AS %s , COUNT(%s._id) AS %s FROM ( ",
-                "tasks", "tasks", COMPLETED_TASK_COUNT, "tasks", TASK_COUNT) + structureTasksQueryBuilder +
-                " ) AS tasks GROUP BY tasks.structure_id ";
+        return String.format(" SELECT %s.* , SUM(CASE WHEN status='%s' THEN 1 ELSE 0 END ) AS %s , COUNT(_id ) AS %s, " +
+                        "GROUP_CONCAT(%s || \"-\" || %s ) AS %s FROM ( ",
+                GROUPED_TASKS,  Task.TaskStatus.COMPLETED.toString(), COMPLETED_TASK_COUNT,  TASK_COUNT, CODE, BUSINESS_STATUS, GROUPED_STRUCTURE_TASK_CODE_AND_STATUS) + structureTasksQueryBuilder +
+                String.format(" ) AS %s GROUP BY %s ", GROUPED_TASKS, STRUCTURE_ID);
 
     }
 
@@ -234,6 +237,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         if (isGroupedTasks) {
             task.setTaskCount(cursor.getInt(cursor.getColumnIndex(TASK_COUNT)));
             task.setCompleteTaskCount(cursor.getInt(cursor.getColumnIndex(COMPLETED_TASK_COUNT)));
+            task.setGroupedTaskCodeStatus(cursor.getString(cursor.getColumnIndex(GROUPED_STRUCTURE_TASK_CODE_AND_STATUS)));
         }
         Location location = new Location((String) null);
 

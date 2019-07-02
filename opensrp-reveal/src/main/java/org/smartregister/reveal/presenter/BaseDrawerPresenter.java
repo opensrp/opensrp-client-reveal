@@ -24,12 +24,14 @@ import java.util.List;
 import java.util.Set;
 
 import static org.smartregister.AllConstants.OPERATIONAL_AREAS;
+import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.ACTIVE;
 import static org.smartregister.reveal.util.Constants.Tags.CANTON;
 import static org.smartregister.reveal.util.Constants.Tags.COUNTRY;
 import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.PROVINCE;
+import static org.smartregister.reveal.util.Constants.UseContextCode.INTERVENTION_TYPE;
 
 /**
  * Created by samuelgithengi on 3/21/19.
@@ -98,17 +100,33 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         List<String> ids = new ArrayList<>();
         List<FormLocation> formLocations = new ArrayList<>();
         for (PlanDefinition planDefinition : planDefinitions) {
+            if (!planDefinition.getStatus().equals(ACTIVE)) {
+                continue;
+            }
             ids.add(planDefinition.getIdentifier());
             FormLocation formLocation = new FormLocation();
             formLocation.name = planDefinition.getTitle();
             formLocation.key = planDefinition.getIdentifier();
             formLocation.level = "";
             formLocations.add(formLocation);
+            
+            // get intervention type for plan
+            for (PlanDefinition.UseContext useContext: planDefinition.getUseContext() ) {
+                if (useContext.getCode().equals(INTERVENTION_TYPE)) {
+                    prefsUtil.setInterventionTypeForPlan(planDefinition.getTitle(), useContext.getValueCodableConcept());
+                    break;
+                }
+            }
+
         }
 
-        String entireTreeString = AssetHandler.javaToJsonString(formLocations,
-                new TypeToken<List<FormLocation>>() {
-                }.getType());
+        String entireTreeString = "";
+        if (formLocations != null && !formLocations.isEmpty()) {
+            entireTreeString = AssetHandler.javaToJsonString(formLocations,
+                    new TypeToken<List<FormLocation>>() {
+                    }.getType());
+        }
+
         view.showPlanSelector(ids, entireTreeString);
     }
 

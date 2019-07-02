@@ -75,14 +75,14 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
                 name = task.getFamilyName() != null ? task.getFamilyName() : context.getString(R.string.unenumerated_structure);
             }
             if (task.getBusinessStatus() != null) {
-                action = task.getBusinessStatus().replaceAll(" ", "\n");
+                action = CardDetailsUtil.getTranslatedBusinessStatus(task.getBusinessStatus()).replaceAll(" ", "\n");
             }
         }
         viewHolder.setTaskName(name);
         CardDetails cardDetails = new CardDetails(task.getBusinessStatus());
         if (Task.TaskStatus.COMPLETED.name().equals(task.getTaskStatus())) {
             if (task.getBusinessStatus() != null) {
-                action = task.getBusinessStatus().replaceAll(" ", "\n");
+                action = CardDetailsUtil.getTranslatedBusinessStatus(task.getBusinessStatus()).replaceAll(" ", "\n");
             }
             CardDetailsUtil.formatCardDetails(cardDetails);
         }
