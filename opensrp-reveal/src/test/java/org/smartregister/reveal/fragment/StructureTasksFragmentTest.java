@@ -5,9 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import org.json.JSONObject;
 import org.junit.Before;
@@ -19,6 +23,7 @@ import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowToast;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.BaseUnitTest;
@@ -36,6 +41,7 @@ import org.smartregister.reveal.util.TestingUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import io.ona.kujaku.utils.Constants.RequestCode;
@@ -46,6 +52,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -89,7 +96,7 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
     @Before
     public void setUp() {
         fragment = new StructureTasksFragment();
-        activity = Robolectric.buildActivity(AppCompatActivity.class).create().get();
+        activity = Robolectric.buildActivity(AppCompatActivity.class).create().start().get();
         activity.setContentView(R.layout.activity_family_profile);
         activity.getSupportFragmentManager().beginTransaction().add(fragment, "Tasks").commit();
     }
@@ -178,6 +185,16 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
     }
 
     @Test
+    public void testDisplayError() {
+        assertNull(ShadowAlertDialog.getLatestDialog());
+        fragment.displayError(R.string.opening_form_title, R.string.form_not_found);
+        AlertDialog dialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(dialog.isShowing());
+        assertEquals(context.getString(R.string.form_not_found), ((TextView) dialog.findViewById(android.R.id.message)).getText());
+    }
+
+
+    @Test
     public void testSetTaskDetailsList() {
         Whitebox.setInternalState(fragment, "adapter", adapter);
         List<StructureTaskDetails> taskDetailsList = Collections.singletonList(TestingUtils.getStructureTaskDetails());
@@ -244,7 +261,7 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
     public void testNewInstance() {
         Bundle bundle = new Bundle();
         org.smartregister.Context.bindtypes = new ArrayList<>();
-        fragment = StructureTasksFragment.newInstance(bundle,context);
+        fragment = StructureTasksFragment.newInstance(bundle, context);
         assertNotNull(fragment);
         assertEquals(bundle, fragment.getArguments());
         assertNotNull(Whitebox.getInternalState(fragment, "presenter"));
@@ -261,6 +278,49 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
         view.setOnClickListener(onClickListener);
         view.performClick();
         verify(presenter).onTaskSelected(taskDetails);
+    }
+
+
+    @Test
+    public void testDisplayDetectCaseButton() {
+        fragment.displayDetectCaseButton();
+        Button button = Whitebox.getInternalState(fragment, "detectCaseButton");
+        assertEquals(View.VISIBLE, button.getVisibility());
+    }
+
+    @Test
+    public void testHideDetectCaseButton() {
+        fragment.hideDetectCaseButton();
+        Button button = Whitebox.getInternalState(fragment, "detectCaseButton");
+        assertEquals(View.GONE, button.getVisibility());
+    }
+
+    @Test
+    public void testUpdateNumberOfTasks() {
+        TabLayout tabLayout = Whitebox.getInternalState(fragment, "tabLayout");
+        tabLayout.addTab(tabLayout.newTab());
+        tabLayout.addTab(tabLayout.newTab());
+        when(adapter.getItemCount()).thenReturn(4);
+        Whitebox.setInternalState(fragment, "adapter", adapter);
+        fragment.updateNumberOfTasks();
+        assertEquals("TASKS (4)", tabLayout.getTabAt(1).getText());
+    }
+
+
+    @Test
+    public void testUpdateTasks() {
+        Whitebox.setInternalState(fragment, "adapter", adapter);
+        Set<Task> tasks = Collections.singleton(TestingUtils.getTask(UUID.randomUUID().toString()));
+        fragment.updateTasks("task_id_11", Task.TaskStatus.COMPLETED, BusinessStatus.COMPLETE, tasks);
+        verify(adapter).updateTasks("task_id_11", Task.TaskStatus.COMPLETED, BusinessStatus.COMPLETE, tasks);
+    }
+
+    @Test
+    public void testDetectCaseClickListener() {
+        Whitebox.setInternalState(fragment,"presenter",presenter);
+        Button button = Whitebox.getInternalState(fragment, "detectCaseButton");
+        button.performClick();
+        verify(presenter).onDetectCase();
     }
 
 }

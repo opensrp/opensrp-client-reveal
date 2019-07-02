@@ -24,7 +24,10 @@ import org.smartregister.reveal.viewholder.StructureTaskViewHolder;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -154,6 +157,36 @@ public class StructureTaskAdapterTest extends BaseUnitTest {
         assertEquals(BusinessStatus.NOT_ELIGIBLE, taskDetailsList.get(0).getBusinessStatus());
         verify(adapter).notifyItemChanged(0);
 
+
+    }
+
+    @Test
+    public void testUpdateTasks() {
+
+        adapter.setTaskDetailsList(taskDetailsList);
+        adapter = spy(adapter);
+        Set<Task> tasks = new HashSet<>();
+        Task bloodScreeningTask = new Task();
+        bloodScreeningTask.setIdentifier(UUID.randomUUID().toString());
+        bloodScreeningTask.setCode(Constants.Intervention.BLOOD_SCREENING);
+        bloodScreeningTask.setForEntity(taskDetailsList.get(0).getTaskEntity());
+        tasks.add(bloodScreeningTask);
+        taskDetailsList.add(getStructureTaskDetails(bloodScreeningTask));
+        assertEquals(2, adapter.getItemCount());
+        adapter.updateTasks(taskDetailsList.get(0).getTaskId(), Task.TaskStatus.FAILED, BusinessStatus.NOT_ELIGIBLE, tasks);
+        assertEquals(1, adapter.getItemCount());
+        assertEquals(Task.TaskStatus.FAILED.name(), taskDetailsList.get(0).getTaskStatus());
+        assertEquals(BusinessStatus.NOT_ELIGIBLE, taskDetailsList.get(0).getBusinessStatus());
+        verify(adapter).notifyDataSetChanged();
+
+
+    }
+
+    private StructureTaskDetails getStructureTaskDetails(Task task) {
+        StructureTaskDetails taskDetails = new StructureTaskDetails(task.getIdentifier());
+        taskDetails.setTaskCode(task.getCode());
+        taskDetails.setTaskEntity(task.getForEntity());
+        return taskDetails;
 
     }
 }

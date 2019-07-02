@@ -36,6 +36,7 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
+import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
@@ -44,6 +45,7 @@ import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.StructureType;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.DateTimeTypeConverter;
@@ -52,7 +54,9 @@ import org.smartregister.util.PropertiesConverter;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
@@ -71,6 +75,8 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -120,6 +126,8 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
     private CommonRepository commonRepository;
 
+    private PreferencesUtil prefsUtil;
+
     public BaseInteractor(BasePresenter presenterCallBack) {
         this.presenterCallBack = presenterCallBack;
         appExecutors = getInstance().getAppExecutors();
@@ -130,6 +138,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         sharedPreferences = getInstance().getContext().allSharedPreferences();
         taskUtils = TaskUtils.getInstance();
         database = getInstance().getRepository().getReadableDatabase();
+        prefsUtil = PreferencesUtil.getInstance();
     }
 
     @VisibleForTesting
@@ -150,9 +159,9 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             } else if (REGISTER_STRUCTURE_EVENT.equals(encounterType)) {
                 saveRegisterStructureForm(jsonForm);
             } else if (BLOOD_SCREENING_EVENT.equals(encounterType)) {
-                saveMemberForm(jsonForm, encounterType, Intervention.BLOOD_SCREENING);
+                saveMemberForm(jsonForm, encounterType, BLOOD_SCREENING);
             } else if (CASE_CONFIRMATION_EVENT.equals(encounterType)) {
-                saveMemberForm(jsonForm, encounterType, Intervention.CASE_CONFIRMATION);
+                saveCaseConfirmation(jsonForm, encounterType);
             }
         } catch (Exception e) {
             Log.e(TAG, "Error saving Json Form data", e);
@@ -317,14 +326,47 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                         }
                     });
                 } catch (Exception e) {
-                    Log.e(TAG, "Error saving bednet distribution point data");
+                    Log.e(TAG, "Error saving member event form");
                 }
             }
         };
         appExecutors.diskIO().execute(runnable);
     }
 
-    protected String getMembersSelect(String mainCondition, String[] memberColumns) {
+    private void saveCaseConfirmation(JSONObject jsonForm, String eventType) {
+        appExecutors.diskIO().execute(() -> {
+            try {
+                String baseEntityId = JsonFormUtils.getFieldValue(JsonFormUtils.fields(jsonForm), JsonForm.FAMILY_MEMBER);
+                jsonForm.put(ENTITY_ID, baseEntityId);
+                org.smartregister.domain.db.Event event = saveEvent(jsonForm, eventType, CASE_CONFIRMATION);
+                Client client = eventClientRepository.fetchClientByBaseEntityId(event.getBaseEntityId());
+                String taskID = event.getDetails().get(Properties.TASK_IDENTIFIER);
+                String businessStatus = clientProcessor.calculateBusinessStatus(event);
+                Task task = taskRepository.getTaskByIdentifier(taskID);
+                task.setForEntity(baseEntityId);
+                task.setBusinessStatus(businessStatus);
+                task.setStatus(Task.TaskStatus.COMPLETED);
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                taskRepository.addOrUpdate(task);
+                Set<Task> removedTasks = new HashSet<>();
+                for (Task bloodScreeningTask : taskRepository.getTasksByEntityAndCode(prefsUtil.getCurrentPlanId(),
+                        Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(), baseEntityId, BLOOD_SCREENING)) {
+                    bloodScreeningTask.setStatus(Task.TaskStatus.CANCELLED);
+                    bloodScreeningTask.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                    taskRepository.addOrUpdate(bloodScreeningTask);
+                    removedTasks.add(bloodScreeningTask);
+                }
+                clientProcessor.processClient(Collections.singletonList(new EventClient(event, client)), true);
+                appExecutors.mainThread().execute(() -> {
+                    ((StructureTasksContract.Presenter) presenterCallBack).onIndexConfirmationFormSaved(taskID, Task.TaskStatus.COMPLETED, businessStatus, removedTasks);
+                });
+            } catch (Exception e) {
+                Log.e(TAG, "Error saving case confirmation data");
+            }
+        });
+    }
+
+    protected String getMemberTasksSelect(String mainCondition, String[] memberColumns) {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
         queryBuilder.selectInitiateMainTable(STRUCTURES_TABLE, memberColumns, ID);
         queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",

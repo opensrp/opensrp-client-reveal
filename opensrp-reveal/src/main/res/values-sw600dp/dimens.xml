@@ -38,4 +38,6 @@
     <dimen name="task_register_action_text">18sp</dimen>
     <dimen name="task_register_action_width">140dp</dimen>
 
+    <dimen name="detect_case_padding">40dp</dimen>
+
 </resources>
