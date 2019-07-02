@@ -28,11 +28,14 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smartregister.domain.Task.TaskStatus.CANCELLED;
+import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.family.util.DBConstants.KEY.DOB;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
@@ -62,6 +65,9 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
     @Captor
     private ArgumentCaptor<List<StructureTaskDetails>> taskDetailsArgumentCaptor;
 
+    @Captor
+    private ArgumentCaptor<StructureTaskDetails> taskArgumentCaptor;
+
     private StructureTasksInteractor interactor;
 
     @Before
@@ -78,15 +84,19 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
         String jurisdiction = UUID.randomUUID().toString();
         String taskQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.structure_id FROM task WHERE for=? AND plan_id=? AND status != ? ";
         String memberQuery = "Select structure._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.structure_id , printf('%s %s %s',first_name,middle_name,last_name) AS name , dob , ec_family_member.structure_id FROM structure  LEFT JOIN ec_family_member ON ec_family_member.structure_id = structure._id   LEFT JOIN task ON task.for = ec_family_member.base_entity_id  WHERE structure._id=? AND plan_id=? AND status != ? ";
+        String indexQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.structure_id FROM task WHERE group_id = ? AND plan_id = ? AND code = ? AND status = ? ";
+
         when(database.rawQuery(taskQuery, new String[]{structure, planId, CANCELLED.name()})).thenReturn(createCursor());
         when(database.rawQuery(memberQuery, new String[]{structure, planId, CANCELLED.name()})).thenReturn(createMemberCursor());
+        when(database.rawQuery(indexQuery, new String[]{jurisdiction, planId, Intervention.CASE_CONFIRMATION, READY.name()})).thenReturn(createIndexCursor());
 
         interactor.findTasks(structure, planId, jurisdiction);
 
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(taskQuery, new String[]{structure, planId, CANCELLED.name()});
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(memberQuery, new String[]{structure, planId, CANCELLED.name()});
+        verify(database,timeout(ASYNC_TIMEOUT)).rawQuery(indexQuery, new String[]{jurisdiction, planId, Intervention.CASE_CONFIRMATION, READY.name()});
 
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskDetailsArgumentCaptor.capture(), eq(null));
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskDetailsArgumentCaptor.capture(), taskArgumentCaptor.capture());
 
         assertEquals(2, taskDetailsArgumentCaptor.getValue().size());
 
@@ -107,6 +117,10 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
         assertEquals("Charity Otala, " + age, memberTask.getTaskName());
         assertEquals("1215972243", memberTask.getStructureId());
 
+        StructureTaskDetails indexCase = taskArgumentCaptor.getValue();
+        assertEquals("task_id_123", indexCase.getTaskId());
+        assertEquals(Intervention.CASE_CONFIRMATION, indexCase.getTaskCode());
+        assertEquals("063e4d28-9caa-11e9-a2a3", indexCase.getTaskEntity());
 
     }
 
@@ -149,6 +163,26 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
                 434343,
                 BusinessStatus.NOT_SPRAYED,
                 Task.TaskStatus.COMPLETED,
+                1215972243
+        });
+        return cursor;
+    }
+
+    private Cursor createIndexCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{
+                ID,
+                CODE,
+                FOR,
+                BUSINESS_STATUS,
+                STATUS,
+                STRUCTURE_ID
+        });
+        cursor.addRow(new Object[]{
+                "task_id_123",
+                Intervention.CASE_CONFIRMATION,
+                "063e4d28-9caa-11e9-a2a3",
+                BusinessStatus.NOT_VISITED,
+                READY,
                 1215972243
         });
         return cursor;
