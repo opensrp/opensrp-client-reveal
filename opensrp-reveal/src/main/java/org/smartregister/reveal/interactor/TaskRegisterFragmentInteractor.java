@@ -294,7 +294,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         appExecutors.diskIO().execute(() -> {
             int structuresWithinBuffer = 0;
             for (TaskDetails taskDetails : tasks) {
-                if (!BCC.equals(taskDetails.getTaskCode())) {
+                if (!BCC.equals(taskDetails.getTaskCode()) && !CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
                     taskDetails.setDistanceFromUser(taskDetails.getLocation().distanceTo(location));
                     taskDetails.setDistanceFromCenter(false);
                 }
