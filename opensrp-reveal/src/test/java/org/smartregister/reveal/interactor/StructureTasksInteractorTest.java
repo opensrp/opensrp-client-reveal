@@ -28,9 +28,6 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -94,7 +91,7 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
 
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(taskQuery, new String[]{structure, planId, CANCELLED.name()});
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(memberQuery, new String[]{structure, planId, CANCELLED.name()});
-        verify(database,timeout(ASYNC_TIMEOUT)).rawQuery(indexQuery, new String[]{jurisdiction, planId, Intervention.CASE_CONFIRMATION, READY.name()});
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(indexQuery, new String[]{jurisdiction, planId, Intervention.CASE_CONFIRMATION, READY.name()});
 
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskDetailsArgumentCaptor.capture(), taskArgumentCaptor.capture());
 
@@ -205,7 +202,7 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
                 Intervention.BLOOD_SCREENING,
                 "w08989-ejkjkj-eere",
                 BusinessStatus.NOT_VISITED,
-                Task.TaskStatus.READY,
+                READY,
                 "Charity Otala",
                 "1982-01-01T03:00:00.000+03:00",
                 1215972243
