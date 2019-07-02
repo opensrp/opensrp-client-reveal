@@ -5,6 +5,7 @@ import android.support.v7.app.AlertDialog;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -19,22 +20,30 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.domain.Location;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.model.StructureTaskDetails;
+import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.TestingUtils;
+import org.smartregister.util.AssetHandler;
+import org.smartregister.util.JsonFormUtils;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.family.util.Constants.JSON_FORM_KEY.OPTIONS;
+import static org.smartregister.reveal.util.Constants.JsonForm.CASE_CONFIRMATION_FORM;
 
 /**
  * Created by samuelgithengi on 4/18/19.
@@ -134,5 +143,70 @@ public class FormFragmentPresenterTest extends BaseUnitTest {
     public void testGetLocationPresenter() {
         assertNotNull(presenter.getLocationPresenter());
     }
+
+    @Test
+    public void testSetTaskDetails() {
+        presenter.setTaskDetails(taskDetails);
+        assertEquals(taskDetails, presenter.getTaskDetails());
+    }
+
+    @Test
+    public void testOnFetchedFamilyMembers() throws JSONException {
+        JSONArray familyMembers = new JSONArray();
+        familyMembers.put(new JSONObject("{\"key\":\"35rfdsfdsf-sdfdsm\"}"));
+        JSONObject formJSON = new JSONObject(AssetHandler.readFileFromAssetsFolder(CASE_CONFIRMATION_FORM, context));
+        presenter.onFetchedFamilyMembers(familyMembers, formJSON);
+        verify(view).startForm(jsonArgumentCaptor.capture());
+        assertEquals(familyMembers, JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(jsonArgumentCaptor.getValue()), Constants.JsonForm.FAMILY_MEMBER).getJSONArray(OPTIONS));
+
+    }
+
+    @Test
+    public void testOnStructureFound() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        taskDetails.setTaskCode(Constants.Intervention.BLOOD_SCREENING);
+        presenter = spy(presenter);
+        presenter.onStructureFound(null, taskDetails);
+        verify(presenter).validateFarStructures();
+
+    }
+
+
+    @Test
+    public void testOnStructureFoundInvalidTask() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        taskDetails.setTaskCode("UnknownCode");
+        presenter = spy(presenter);
+        presenter.onStructureFound(null, taskDetails);
+        verify(presenter, never()).validateFarStructures();
+        verify(presenter).onLocationValidated();
+
+    }
+
+
+    @Test
+    public void testOnLocationValidatedFetchesMemberDetails() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        taskDetails.setStructureId(UUID.randomUUID().toString());
+        taskDetails.setTaskCode(Constants.Intervention.CASE_CONFIRMATION);
+        Whitebox.setInternalState(presenter, "taskDetails", taskDetails);
+        when(jsonFormUtils.getFormName(null, taskDetails.getTaskCode())).thenReturn(CASE_CONFIRMATION_FORM);
+        JSONObject form = new JSONObject();
+        when(jsonFormUtils.getFormJSON(context, CASE_CONFIRMATION_FORM, taskDetails, structure)).thenReturn(form);
+        presenter.onLocationValidated();
+        verify(interactor).findMemberDetails(taskDetails.getStructureId(), form);
+
+    }
+
+    @Test
+    public void testOnLocationValidatedDisplaysWarning() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        Whitebox.setInternalState(presenter, "taskDetails", taskDetails);
+        presenter.onLocationValidated();
+        verify(view).displayError(R.string.opening_form_title, R.string.form_not_found);
+        verify(view).hideProgressDialog();
+
+    }
+
 
 }
