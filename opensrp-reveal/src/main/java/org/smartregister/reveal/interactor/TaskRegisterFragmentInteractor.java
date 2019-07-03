@@ -337,16 +337,17 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
     public void getIndexCaseDetails(String structureId, String operationalArea, String currentPlanId) {
         appExecutors.diskIO().execute(() -> {
             JSONObject jsonEvent = null;
-            if (StringUtils.isNotBlank(structureId) && StringUtils.isNotBlank(operationalArea)) {
+            if (StringUtils.isNotBlank(structureId) || StringUtils.isNotBlank(operationalArea)) {
 
                 Cursor cursor = null;
                 try {
-                    cursor = getDatabase().rawQuery("SELECT json FROM "
-                                    + EventClientRepository.Table.event.name()
-                                    + " WHERE "
-                                    + EventClientRepository.event_column.baseEntityId.name()
-                                    + " IN( ?, ?) AND " + EventClientRepository.event_column.eventType.name() + "= ? ",
-                            new String[]{structureId, operationalArea, EventType.CASE_DETAILS_EVENT});
+                    if (structureId == null)
+                        cursor = getDatabase().rawQuery("SELECT json FROM "
+                                        + EventClientRepository.Table.event.name()
+                                        + " WHERE "
+                                        + EventClientRepository.event_column.baseEntityId.name()
+                                        + " IN( ?, ?) AND " + EventClientRepository.event_column.eventType.name() + "= ? ",
+                                new String[]{structureId == null ? "" : structureId, operationalArea, EventType.CASE_DETAILS_EVENT});
                     while (cursor.moveToNext()) {
                         String jsonEventStr = cursor.getString(0);
 
