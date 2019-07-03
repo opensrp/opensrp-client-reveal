@@ -2,24 +2,30 @@ package org.smartregister.reveal.interactor;
 
 import android.location.Location;
 import android.support.v4.util.Pair;
+import android.util.Log;
 
 import com.google.common.annotations.VisibleForTesting;
 
 import net.sqlcipher.Cursor;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Task;
 import org.smartregister.family.util.DBConstants;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.EventType;
+import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,6 +37,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.FAMILY_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPED_STRUCTURE_TASK_CODE_AND_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPED_TASKS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LATITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LONGITUDE;
@@ -48,6 +55,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_NAM
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_COUNT;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
 
 /**
@@ -57,6 +65,9 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
     private final LocationRepository locationRepository;
     private final Float locationBuffer;
+
+
+    private int structuresWithinBuffer = 0;
 
     public TaskRegisterFragmentInteractor(TaskRegisterFragmentContract.Presenter presenter) {
         this(presenter, Utils.getLocationBuffer());
@@ -112,7 +123,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
         return String.format(" SELECT %s.* , SUM(CASE WHEN status='%s' THEN 1 ELSE 0 END ) AS %s , COUNT(_id ) AS %s, " +
                         "GROUP_CONCAT(%s || \"-\" || %s ) AS %s FROM ( ",
-                GROUPED_TASKS,  Task.TaskStatus.COMPLETED.toString(), COMPLETED_TASK_COUNT,  TASK_COUNT, CODE, BUSINESS_STATUS, GROUPED_STRUCTURE_TASK_CODE_AND_STATUS) + structureTasksQueryBuilder +
+                GROUPED_TASKS, Task.TaskStatus.COMPLETED.toString(), COMPLETED_TASK_COUNT, TASK_COUNT, CODE, BUSINESS_STATUS, GROUPED_STRUCTURE_TASK_CODE_AND_STATUS) + structureTasksQueryBuilder +
                 String.format(" ) AS %s GROUP BY %s ", GROUPED_TASKS, STRUCTURE_ID);
 
     }
@@ -120,6 +131,11 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
     private String bccSelect() {
         return String.format("SELECT * FROM %s WHERE %s = ? AND %s = ? AND %s != ? AND %s ='%s'",
                 TASK_TABLE, FOR, PLAN_ID, STATUS, CODE, BCC);
+    }
+
+    private String indexCaseSelect() {
+        return String.format("SELECT * FROM %s WHERE %s = ? AND %s = ? AND %s != ? AND %s = ?",
+                TASK_TABLE, GROUPID, PLAN_ID, STATUS, CODE);
     }
 
 
@@ -153,86 +169,63 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         // Fetch grouped tasks
         List<TaskDetails> tasks = new ArrayList<>();
         appExecutors.diskIO().execute(() -> {
-            int structuresWithinBuffer = 0;
+            structuresWithinBuffer = 0;
             if (Utils.getInterventionLabel() == R.string.focus_investigation) { // perform task grouping
-                String groupedRegisteredStructureTasksQuery = groupedRegisteredStructureTasksSelect(mainCondition.first);
-                Cursor cursor = null;
-                try {
-                    cursor = getDatabase().rawQuery(groupedRegisteredStructureTasksQuery, mainCondition.second);
-                    while (cursor.moveToNext()) {
-                        TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, true);
-                        if (taskDetails.getDistanceFromUser() <= locationBuffer) {
-                            structuresWithinBuffer += 1;
-                        }
-                        tasks.add(taskDetails);
-                    }
-                } finally {
-                    if (cursor != null) {
-                        cursor.close();
-                    }
-                }
 
-                String nonRegisteredStructureTasksQuery = nonRegisteredStructureTasksSelect(mainCondition.first);
-                cursor = null; //reset cursor
-                try {
-                    cursor = getDatabase().rawQuery(nonRegisteredStructureTasksQuery, mainCondition.second);
-                    while (cursor.moveToNext()) {
-                        TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, false);
-                        if (taskDetails.getDistanceFromUser() <= locationBuffer) {
-                            structuresWithinBuffer += 1;
-                        }
-                        tasks.add(taskDetails);
-                    }
-                } finally {
-                    if (cursor != null) {
-                        cursor.close();
-                    }
-                }
+                tasks.addAll(queryTaskDetails(groupedRegisteredStructureTasksSelect(mainCondition.first),
+                        mainCondition.second, lastLocation, operationalAreaCenter, houseLabel, true));
+
+
+                tasks.addAll(queryTaskDetails(nonRegisteredStructureTasksSelect(mainCondition.first),
+                        mainCondition.second, lastLocation, operationalAreaCenter, houseLabel, false));
+
             } else {
-                String mainSelectQuery = mainSelect(mainCondition.first);
-                Cursor cursor = null;
-                try {
-                    cursor = getDatabase().rawQuery(mainSelectQuery, mainCondition.second);
-                    while (cursor.moveToNext()) {
-                        TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, false);
-                        if (taskDetails.getDistanceFromUser() <= locationBuffer) {
-                            structuresWithinBuffer += 1;
-                        }
-                        tasks.add(taskDetails);
-                    }
-                } finally {
-                    if (cursor != null) {
-                        cursor.close();
-                    }
-                }
+
+                tasks.addAll(queryTaskDetails(mainSelect(mainCondition.first), mainCondition.second,
+                        lastLocation, operationalAreaCenter, houseLabel, false));
+
             }
 
-            // Query BCC tasks
-            String bccSelectQuery = bccSelect();
-            Cursor cursor = null;
-            try {
-                cursor = getDatabase().rawQuery(bccSelectQuery, mainCondition.second);
-                while (cursor.moveToNext()) {
-                    TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, false);
-                    if (taskDetails.getDistanceFromUser() <= locationBuffer) {
-                        structuresWithinBuffer += 1;
-                    }
-                    tasks.add(taskDetails);
-                }
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
-            }
+            // Query BCC task
+            tasks.addAll(queryTaskDetails(bccSelect(), mainCondition.second, lastLocation,
+                    operationalAreaCenter, houseLabel, false));
 
-            int finalStructureWithinBuffer = structuresWithinBuffer;
+
+            // Query Case Confirmation task
+            String[] params = Arrays.copyOf(mainCondition.second, 4);
+            params[3] = CASE_CONFIRMATION;
+            tasks.addAll(queryTaskDetails(indexCaseSelect(), params, lastLocation,
+                    operationalAreaCenter, houseLabel, false));
+
             Collections.sort(tasks);
             appExecutors.mainThread().execute(() -> {
-                getPresenter().onTasksFound(tasks, finalStructureWithinBuffer);
+                getPresenter().onTasksFound(tasks, structuresWithinBuffer);
             });
 
         });
 
+    }
+
+    private List<TaskDetails> queryTaskDetails(String query, String[] params, Location lastLocation,
+                                               Location operationalAreaCenter, String houseLabel, boolean groupedTasks) {
+        List<TaskDetails> tasks = new ArrayList<>();
+        Cursor cursor = null;
+        try {
+            cursor = getDatabase().rawQuery(query, params);
+            while (cursor != null && cursor.moveToNext()) {
+                TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, groupedTasks);
+                //skip BCC and Case confirmation tasks in tracking tasks within buffer
+                if (taskDetails.getDistanceFromUser() <= locationBuffer && taskDetails.getDistanceFromUser() >= 0) {
+                    structuresWithinBuffer += 1;
+                }
+                tasks.add(taskDetails);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return tasks;
     }
 
 
@@ -249,7 +242,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         }
         Location location = new Location((String) null);
 
-        if (!BCC.equals(task.getTaskCode())) {
+        if (!BCC.equals(task.getTaskCode()) && !CASE_CONFIRMATION.equals(task.getTaskCode())) {
             location.setLatitude(cursor.getDouble(cursor.getColumnIndex(LATITUDE)));
             location.setLongitude(cursor.getDouble(cursor.getColumnIndex(LONGITUDE)));
             task.setLocation(location);
@@ -275,10 +268,21 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 }
                 task.setTaskDetails(reason);
             }
-            task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
         }
+
+        task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
+
+        calculateDistance(task, location, lastLocation, operationalAreaCenter);
+
+        return task;
+    }
+
+    private void calculateDistance(TaskDetails task, Location location, Location lastLocation, Location operationalAreaCenter) {
         if (BCC.equals(task.getTaskCode())) {
-            //set distance to -1 to always display on top of register
+            //set distance to -2 to always display on top of register
+            task.setDistanceFromUser(-2);
+        } else if (CASE_CONFIRMATION.equals(task.getTaskCode()) && task.getTaskCount() == null) {
+            //set distance to -1 to always display on top of register and below BCC
             task.setDistanceFromUser(-1);
         } else if (lastLocation != null) {
             task.setDistanceFromUser(location.distanceTo(lastLocation));
@@ -286,7 +290,6 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             task.setDistanceFromUser(location.distanceTo(operationalAreaCenter));
             task.setDistanceFromCenter(true);
         }
-        return task;
     }
 
 
@@ -296,7 +299,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         appExecutors.diskIO().execute(() -> {
             int structuresWithinBuffer = 0;
             for (TaskDetails taskDetails : tasks) {
-                if (!BCC.equals(taskDetails.getTaskCode())) {
+                if (!BCC.equals(taskDetails.getTaskCode()) && !CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
                     taskDetails.setDistanceFromUser(taskDetails.getLocation().distanceTo(location));
                     taskDetails.setDistanceFromCenter(false);
                 }
@@ -331,4 +334,45 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         return (TaskRegisterFragmentContract.Presenter) presenterCallBack;
     }
 
+    public void getIndexCaseDetails(String structureId, String operationalArea, String currentPlanId) {
+        appExecutors.diskIO().execute(() -> {
+            JSONObject jsonEvent = null;
+            if (StringUtils.isNotBlank(structureId) && StringUtils.isNotBlank(operationalArea)) {
+
+                Cursor cursor = null;
+                try {
+                    cursor = getDatabase().rawQuery("SELECT json FROM "
+                                    + EventClientRepository.Table.event.name()
+                                    + " WHERE "
+                                    + EventClientRepository.event_column.baseEntityId.name()
+                                    + " IN( ?, ?) AND " + EventClientRepository.event_column.eventType.name() + "= ? ",
+                            new String[]{structureId, operationalArea, EventType.CASE_DETAILS_EVENT});
+                    while (cursor.moveToNext()) {
+                        String jsonEventStr = cursor.getString(0);
+
+                        jsonEventStr = jsonEventStr.replaceAll("'", "");
+
+                        jsonEvent = new JSONObject(jsonEventStr);
+
+                        if (cursor.getCount() == 1 || currentPlanId.equals(jsonEvent.optJSONObject(Constants.DETAILS).optString("plan_id"))) {
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.e(getClass().getName(), "Exception", e);
+                } finally {
+                    if (cursor != null) {
+                        cursor.close();
+                    }
+                }
+
+            }
+            JSONObject finalJsonEvent = jsonEvent;
+            appExecutors.mainThread().execute(() -> {
+                getPresenter().onIndexCaseFound(finalJsonEvent, finalJsonEvent != null
+                        && operationalArea.equals(finalJsonEvent.optString(Properties.BASE_ENTITY_ID)));
+            });
+        });
+
+    }
 }

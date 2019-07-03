@@ -2,6 +2,7 @@ package org.smartregister.reveal.adapter;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.Shadows;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.TaskDetails;
@@ -137,7 +139,10 @@ public class TaskRegisterAdapterTest extends BaseUnitTest {
 
         assertEquals(context.getString(R.string.bcc), ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
         assertEquals(View.GONE, holder.itemView.findViewById(R.id.distance_from_structure).getVisibility());
-        assertEquals(View.VISIBLE, holder.itemView.findViewById(R.id.task_icon).getVisibility());
+
+        ImageView imageView = holder.itemView.findViewById(R.id.task_icon);
+        assertEquals(View.VISIBLE, imageView.getVisibility());
+        assertEquals(R.drawable.ic_bcc, Shadows.shadowOf(imageView.getDrawable()).getCreatedFromResId());
     }
 
     @Test
@@ -159,6 +164,26 @@ public class TaskRegisterAdapterTest extends BaseUnitTest {
         assertEquals(View.VISIBLE, holder.itemView.findViewById(R.id.task_details).getVisibility());
         assertEquals(View.GONE, holder.itemView.findViewById(R.id.task_icon).getVisibility());
 
+    }
+
+
+    @Test
+    public void testonBindViewHolderForIndexCase() {
+        TaskDetails indexCaseTask = new TaskDetails(UUID.randomUUID().toString());
+        taskDetailsList.add(indexCaseTask);
+        indexCaseTask.setTaskCode(Constants.Intervention.CASE_CONFIRMATION);
+        LinearLayout vg = new LinearLayout(context);
+        TaskRegisterViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+        Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
+        adapter.onBindViewHolder(holder, 1);
+
+        assertEquals(context.getString(R.string.classification_details), ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+        assertEquals(View.GONE, holder.itemView.findViewById(R.id.distance_from_structure).getVisibility());
+
+
+        ImageView imageView = holder.itemView.findViewById(R.id.task_icon);
+        assertEquals(View.VISIBLE, imageView.getVisibility());
+        assertEquals(R.drawable.ic_classification_details, Shadows.shadowOf(imageView.getDrawable()).getCreatedFromResId());
     }
 
     @Test
