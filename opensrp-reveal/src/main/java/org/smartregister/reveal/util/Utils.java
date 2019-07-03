@@ -163,6 +163,36 @@ public class Utils {
     }
 
     /**
+     * Uses the server setting "validate_far_structures" to determine whether to Validate Far Structures
+     * If this variable is not available on the server the value is retrieved from BuildConfig.VALIDATE_FAR_STRUCTURES
+     *
+     * @return validateFarStructures
+     */
+    public static Boolean validateFarStructures() {
+        return Boolean.valueOf(getGlobalConfig(CONFIGURATION.VALIDATE_FAR_STRUCTURES, BuildConfig.VALIDATE_FAR_STRUCTURES + ""));
+    }
+
+    /**
+     * Uses the server setting "resolve_location_timeout_in_seconds" to determine the Resolve Location Timeout In Seconds value
+     * If this variable is not available on the server the value is retrieved from BuildConfig.RESOLVE_LOCATION_TIMEOUT_IN_SECONDS
+     *
+     * @return ResolveLocationTimeoutInSeconds
+     */
+    public static int getResolveLocationTimeoutInSeconds() {
+        return Integer.valueOf(getGlobalConfig(CONFIGURATION.RESOLVE_LOCATION_TIMEOUT_IN_SECONDS, BuildConfig.RESOLVE_LOCATION_TIMEOUT_IN_SECONDS + ""));
+    }
+
+    /**
+     * Uses the server setting "admin_password_not_near_structures" to determine the Admin Password required to perform any edits when not near a structure
+     * If this variable is not available on the server the value is retrieved from BuildConfig.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES
+     *
+     * @return AdminPassword
+     */
+    public static String getAdminPasswordNotNearStructures() {
+        return getGlobalConfig(CONFIGURATION.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES, BuildConfig.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES );
+    }
+
+    /**
      * Creates a circle using a GeoJSON polygon.
      * It's not strictly a circle but by increasing the number of sides on the polygon you can get pretty close to one.
      *
