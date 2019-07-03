@@ -68,7 +68,7 @@ public class CaseClassificationFragment extends Fragment implements CaseClassifi
     }
 
     @Override
-    public void displayIndexCase(JSONObject indexCase) {
+    public void displayIndexCase(@NonNull JSONObject indexCase) {
         JSONObject details = indexCase.optJSONObject(Constants.DETAILS);
         if (details == null) {
             details = new JSONObject();
