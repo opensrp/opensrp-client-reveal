@@ -7,7 +7,9 @@ import android.view.View;
 
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.contract.CaseClassificationContract;
 import org.smartregister.reveal.contract.TaskRegisterContract;
+import org.smartregister.reveal.fragment.CaseClassificationFragment;
 import org.smartregister.reveal.fragment.TaskRegisterFragment;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterPresenter;
@@ -32,6 +34,8 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
 
     private RevealJsonFormUtils jsonFormUtils;
 
+    private CaseClassificationFragment caseClassificationFragment = new CaseClassificationFragment();
+
     @Override
     protected void initializePresenter() {
         presenter = new TaskRegisterPresenter(this);
@@ -47,7 +51,7 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
 
     @Override
     protected Fragment[] getOtherFragments() {
-        return new Fragment[0];
+        return new Fragment[]{caseClassificationFragment};
     }
 
     @Override
@@ -97,5 +101,16 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
         intent.putExtra(Properties.TASK_BUSINESS_STATUS, taskDetails.getBusinessStatus());
         intent.putExtra(Properties.TASK_STATUS, taskDetails.getTaskStatus());
         startActivity(intent);
+    }
+
+    public void displayIndexCaseFragment(JSONObject indexCase) {
+        ((CaseClassificationContract.View) caseClassificationFragment).displayIndexCase(indexCase);
+        switchToFragment(1);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        switchToBaseFragment();
+        return true;
     }
 }

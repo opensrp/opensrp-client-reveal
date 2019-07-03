@@ -122,6 +122,11 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         actionView.setTag(R.id.task_details, task);
     }
 
+    public void setItemViewListener(TaskDetails task, View.OnClickListener onClickListener) {
+        itemView.setOnClickListener(onClickListener);
+        itemView.setTag(R.id.task_details, task);
+    }
+
     public void setTaskDetails(String businessStatus, String taskDetails) {
         if (Constants.BusinessStatus.NOT_SPRAYED.equals(businessStatus)) {
             taskDetailsView.setVisibility(View.VISIBLE);

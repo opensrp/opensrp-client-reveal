@@ -30,17 +30,9 @@ public interface Constants {
 
     String BLOOD_SCREENING_EVENT = "blood_screening";
 
-    String CASE_CONFIRMATION_EVENT = "case_confirmation";
-
     String BEHAVIOUR_CHANGE_COMMUNICATION = "behaviour_change_communication";
 
     String STRUCTURE = "Structure";
-
-    String START_DATE = "start_date";
-
-    String END_DATE = "end_date";
-
-    String STATUS = "status";
 
     String FOCUS = "FOCUS";
 
@@ -107,6 +99,7 @@ public interface Constants {
         String LOCATION_PARENT = "locationParent";
         String LOCATION_ID = "location_id";
         String FEATURE_SELECT_TASK_BUSINESS_STATUS = "featureSelectTaskBusinessStatus";
+        String BASE_ENTITY_ID = "baseEntityId";
     }
 
 
@@ -135,6 +128,14 @@ public interface Constants {
         String REGISTER_FAMILY = "RACD Register Family";
 
         String FI = "FI";
+    }
+
+
+    interface EventType {
+
+        String CASE_CONFIRMATION_EVENT = "case_confirmation";
+
+        String CASE_DETAILS_EVENT = "Case Details";
     }
 
     interface Tables {
@@ -225,8 +226,6 @@ public interface Constants {
         String STRUCTURES_TAG = "structures";
 
         String NO_PADDING = "no_padding";
-
-        String IS_MANDATORY = "is_mandatory";
 
         String SHORTENED_HINT = "shortened_hint";
 
