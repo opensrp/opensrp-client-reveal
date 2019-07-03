@@ -123,7 +123,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
         return String.format(" SELECT %s.* , SUM(CASE WHEN status='%s' THEN 1 ELSE 0 END ) AS %s , COUNT(_id ) AS %s, " +
                         "GROUP_CONCAT(%s || \"-\" || %s ) AS %s FROM ( ",
-                GROUPED_TASKS,  Task.TaskStatus.COMPLETED.toString(), COMPLETED_TASK_COUNT,  TASK_COUNT, CODE, BUSINESS_STATUS, GROUPED_STRUCTURE_TASK_CODE_AND_STATUS) + structureTasksQueryBuilder +
+                GROUPED_TASKS, Task.TaskStatus.COMPLETED.toString(), COMPLETED_TASK_COUNT, TASK_COUNT, CODE, BUSINESS_STATUS, GROUPED_STRUCTURE_TASK_CODE_AND_STATUS) + structureTasksQueryBuilder +
                 String.format(" ) AS %s GROUP BY %s ", GROUPED_TASKS, STRUCTURE_ID);
 
     }
@@ -214,7 +214,8 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             cursor = getDatabase().rawQuery(query, params);
             while (cursor != null && cursor.moveToNext()) {
                 TaskDetails taskDetails = readTaskDetails(cursor, lastLocation, operationalAreaCenter, houseLabel, groupedTasks);
-                if (taskDetails.getDistanceFromUser() <= locationBuffer) {
+                //skip BCC and Case confirmation tasks in tracking tasks within buffer
+                if (taskDetails.getDistanceFromUser() <= locationBuffer && taskDetails.getDistanceFromUser() >= 0) {
                     structuresWithinBuffer += 1;
                 }
                 tasks.add(taskDetails);
@@ -335,37 +336,37 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
     public void getIndexCaseDetails(String structureId, String operationalArea, String currentPlanId) {
         appExecutors.diskIO().execute(() -> {
-            if (StringUtils.isBlank(structureId) && StringUtils.isBlank(operationalArea)) {
-                return;
-            }
             JSONObject jsonEvent = null;
-            Cursor cursor = null;
-            try {
-                cursor = getDatabase().rawQuery("SELECT json FROM "
-                                + EventClientRepository.Table.event.name()
-                                + " WHERE "
-                                + EventClientRepository.event_column.baseEntityId.name()
-                                + " IN( ?, ?) AND " + EventClientRepository.event_column.eventType.name() + "= ? ",
-                        new String[]{structureId, operationalArea, EventType.CASE_DETAILS_EVENT});
-                while (cursor.moveToNext()) {
-                    String jsonEventStr = cursor.getString(0);
+            if (StringUtils.isNotBlank(structureId) && StringUtils.isNotBlank(operationalArea)) {
 
-                    jsonEventStr = jsonEventStr.replaceAll("'", "");
+                Cursor cursor = null;
+                try {
+                    cursor = getDatabase().rawQuery("SELECT json FROM "
+                                    + EventClientRepository.Table.event.name()
+                                    + " WHERE "
+                                    + EventClientRepository.event_column.baseEntityId.name()
+                                    + " IN( ?, ?) AND " + EventClientRepository.event_column.eventType.name() + "= ? ",
+                            new String[]{structureId, operationalArea, EventType.CASE_DETAILS_EVENT});
+                    while (cursor.moveToNext()) {
+                        String jsonEventStr = cursor.getString(0);
 
-                    jsonEvent = new JSONObject(jsonEventStr);
+                        jsonEventStr = jsonEventStr.replaceAll("'", "");
 
-                    if (cursor.getCount() == 1 || currentPlanId.equals(jsonEvent.optJSONObject(Constants.DETAILS).optString("plan_id"))) {
-                        break;
+                        jsonEvent = new JSONObject(jsonEventStr);
+
+                        if (cursor.getCount() == 1 || currentPlanId.equals(jsonEvent.optJSONObject(Constants.DETAILS).optString("plan_id"))) {
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.e(getClass().getName(), "Exception", e);
+                } finally {
+                    if (cursor != null) {
+                        cursor.close();
                     }
                 }
-            } catch (Exception e) {
-                Log.e(getClass().getName(), "Exception", e);
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
-            }
 
+            }
             JSONObject finalJsonEvent = jsonEvent;
             appExecutors.mainThread().execute(() -> {
                 getPresenter().onIndexCaseFound(finalJsonEvent, finalJsonEvent != null

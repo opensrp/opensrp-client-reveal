@@ -7,6 +7,7 @@ import net.sqlcipher.Cursor;
 import net.sqlcipher.MatrixCursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,6 +22,7 @@ import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -31,6 +33,10 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -78,6 +84,9 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
     @Captor
     private ArgumentCaptor<Integer> structuresCaptor;
 
+    @Captor
+    private ArgumentCaptor<JSONObject> jsonCaptor;
+
     private TaskRegisterFragmentInteractor interactor;
 
     private String groupId;
@@ -96,8 +105,6 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         groupId = UUID.randomUUID().toString();
         planId = UUID.randomUUID().toString();
         mainSelectQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? AND status != ? ";
-        groupId = UUID.randomUUID().toString();
-        planId = UUID.randomUUID().toString();
         nonRegisteredStructureTasksQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? AND status != ?   AND ec_family.structure_id IS NULL";
         groupedRegisteredStructureTasksSelectQuery = " SELECT grouped_tasks.* , SUM(CASE WHEN status='COMPLETED' THEN 1 ELSE 0 END ) AS completed_task_count , COUNT(_id ) AS task_count, GROUP_CONCAT(code || \"-\" || business_status ) AS grouped_structure_task_code_and_status FROM ( Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name FROM task  JOIN structure ON task.structure_id = structure._id   JOIN ec_family ON structure._id = ec_family.structure_id  COLLATE NOCASE  LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id  WHERE task.group_id = ? AND task.plan_id = ? AND status != ?  ) AS grouped_tasks GROUP BY structure_id ";
         bccSelectQuery = "SELECT * FROM task WHERE for = ? AND plan_id = ? AND status != ? AND code ='BCC'";
@@ -120,8 +127,10 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         Location center = new Location("Test");
         center.setLatitude(-14.152197);
         center.setLongitude(32.643570);
-        when(database.rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor());
-        when(database.rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor());
+        String taskId = UUID.randomUUID().toString();
+        String bccTask = UUID.randomUUID().toString();
+        when(database.rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor(taskId, Intervention.IRS));
+        when(database.rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor(bccTask, Intervention.BCC));
         when(database.rawQuery(indexSelectQuery, new String[]{groupId, planId, CANCELLED.name(), Intervention.CASE_CONFIRMATION})).thenReturn(createEmptyCursor());
         interactor.findTasks(pair, null, center, "House");
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name()});
@@ -129,8 +138,8 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskListCaptor.capture(), structuresCaptor.capture());
         verifyNoMoreInteractions(presenter);
         assertEquals(2, taskListCaptor.getValue().size());
-        TaskDetails taskDetails = taskListCaptor.getValue().get(0);
-        assertEquals("task_id_1", taskDetails.getTaskId());
+        TaskDetails taskDetails = taskListCaptor.getValue().get(1);
+        assertEquals(taskId, taskDetails.getTaskId());
         assertEquals(Intervention.IRS, taskDetails.getTaskCode());
         assertEquals(BusinessStatus.NOT_SPRAYED, taskDetails.getBusinessStatus());
         assertEquals(Task.TaskStatus.COMPLETED.name(), taskDetails.getTaskStatus());
@@ -142,7 +151,12 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         assertEquals("Ali House", taskDetails.getFamilyName());
         assertEquals("Not Completed", taskDetails.getTaskDetails());
         assertEquals(66.850830078125, taskDetails.getDistanceFromUser(), 0.00001);
-        assertEquals(2, structuresCaptor.getValue().intValue());
+        assertEquals(1, structuresCaptor.getValue().intValue());
+
+        TaskDetails bccTaskDetails = taskListCaptor.getValue().get(0);
+        assertEquals(bccTask, bccTaskDetails.getTaskId());
+        assertEquals(Intervention.BCC, bccTaskDetails.getTaskCode());
+        assertEquals(-2, bccTaskDetails.getDistanceFromUser(), 0);
     }
 
     @Test
@@ -152,8 +166,10 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         Location userLocation = new Location("Test");
         userLocation.setLatitude(-14.987197);
         userLocation.setLongitude(32.076570);
-        when(database.rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor());
-        when(database.rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor());
+        String memberTask = UUID.randomUUID().toString();
+        String bccTask = UUID.randomUUID().toString();
+        when(database.rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor(memberTask, Intervention.BLOOD_SCREENING));
+        when(database.rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor(bccTask, Intervention.BCC));
         when(database.rawQuery(indexSelectQuery, new String[]{groupId, planId, CANCELLED.name(), Intervention.CASE_CONFIRMATION})).thenReturn(createEmptyCursor());
         interactor.findTasks(pair, userLocation, null, "House");
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name()});
@@ -161,9 +177,9 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskListCaptor.capture(), structuresCaptor.capture());
         verifyNoMoreInteractions(presenter);
         assertEquals(2, taskListCaptor.getValue().size());
-        TaskDetails taskDetails = taskListCaptor.getValue().get(0);
-        assertEquals("task_id_1", taskDetails.getTaskId());
-        assertEquals(Intervention.IRS, taskDetails.getTaskCode());
+        TaskDetails taskDetails = taskListCaptor.getValue().get(1);
+        assertEquals(memberTask, taskDetails.getTaskId());
+        assertEquals(Intervention.BLOOD_SCREENING, taskDetails.getTaskCode());
         assertEquals(BusinessStatus.NOT_SPRAYED, taskDetails.getBusinessStatus());
         assertEquals(Task.TaskStatus.COMPLETED.name(), taskDetails.getTaskStatus());
         assertEquals(-14.15191915, taskDetails.getLocation().getLatitude(), 0.00001);
@@ -175,6 +191,11 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         assertEquals("Not Completed", taskDetails.getTaskDetails());
         assertEquals(110757.984375, taskDetails.getDistanceFromUser(), 0.00001);
         assertEquals(0, structuresCaptor.getValue().intValue());
+
+        TaskDetails bccTaskDetails = taskListCaptor.getValue().get(0);
+        assertEquals(bccTask, bccTaskDetails.getTaskId());
+        assertEquals(Intervention.BCC, bccTaskDetails.getTaskCode());
+        assertEquals(-2, bccTaskDetails.getDistanceFromUser(), 0);
     }
 
     @Test
@@ -223,10 +244,13 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         Location userLocation = new Location("Test");
         userLocation.setLatitude(-14.987197);
         userLocation.setLongitude(32.076570);
-        when(database.rawQuery(groupedRegisteredStructureTasksSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor());
-        when(database.rawQuery(nonRegisteredStructureTasksQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor());
-        when(database.rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor());
-        when(database.rawQuery(indexSelectQuery, new String[]{groupId, planId, CANCELLED.name(), Intervention.CASE_CONFIRMATION})).thenReturn(createEmptyCursor());
+        String memberTask = UUID.randomUUID().toString();
+        String bccTask = UUID.randomUUID().toString();
+        String indexTask = UUID.randomUUID().toString();
+        when(database.rawQuery(groupedRegisteredStructureTasksSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor(memberTask, Intervention.BEDNET_DISTRIBUTION));
+        when(database.rawQuery(nonRegisteredStructureTasksQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor(UUID.randomUUID().toString(), Intervention.LARVAL_DIPPING));
+        when(database.rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor(bccTask, Intervention.BCC));
+        when(database.rawQuery(indexSelectQuery, new String[]{groupId, planId, CANCELLED.name(), Intervention.CASE_CONFIRMATION})).thenReturn(createCursor(indexTask, Intervention.CASE_CONFIRMATION));
         interactor.findTasks(pair, userLocation, null, "House");
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(groupedRegisteredStructureTasksSelectQuery, new String[]{groupId, planId, CANCELLED.name()});
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(nonRegisteredStructureTasksQuery, new String[]{groupId, planId, CANCELLED.name()});
@@ -234,10 +258,23 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(indexSelectQuery, new String[]{groupId, planId, CANCELLED.name(), Intervention.CASE_CONFIRMATION});
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskListCaptor.capture(), structuresCaptor.capture());
         verifyNoMoreInteractions(presenter);
-        assertEquals(3, taskListCaptor.getValue().size());
-        TaskDetails taskDetails = taskListCaptor.getValue().get(0);
-        assertEquals("task_id_1", taskDetails.getTaskId());
-        assertEquals(Intervention.IRS, taskDetails.getTaskCode());
+        assertEquals(4, taskListCaptor.getValue().size());
+
+
+        TaskDetails bccTaskDetails = taskListCaptor.getValue().get(0);
+        assertEquals(bccTask, bccTaskDetails.getTaskId());
+        assertEquals(Intervention.BCC, bccTaskDetails.getTaskCode());
+        assertEquals(-2, bccTaskDetails.getDistanceFromUser(), 0);
+
+        TaskDetails indexTaskDetails = taskListCaptor.getValue().get(1);
+        assertEquals(indexTask, indexTaskDetails.getTaskId());
+        assertEquals(Intervention.CASE_CONFIRMATION, indexTaskDetails.getTaskCode());
+        assertEquals(-1, indexTaskDetails.getDistanceFromUser(), 0);
+
+
+        TaskDetails taskDetails = taskListCaptor.getValue().get(2);
+        assertEquals(memberTask, taskDetails.getTaskId());
+        assertEquals(Intervention.BEDNET_DISTRIBUTION, taskDetails.getTaskCode());
         assertEquals(BusinessStatus.NOT_SPRAYED, taskDetails.getBusinessStatus());
         assertEquals(Task.TaskStatus.COMPLETED.name(), taskDetails.getTaskStatus());
         assertEquals(-14.15191915, taskDetails.getLocation().getLatitude(), 0.00001);
@@ -262,11 +299,34 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         verify(presenter, timeout(ASYNC_TIMEOUT)).onStructureFound(structure, taskDetails);
     }
 
-    private Cursor createCursor() {
+    @Test
+    public void testGetIndexCaseDetailsWillNullParams() {
+        interactor.getIndexCaseDetails(null, "", planId);
+        verify(database, never()).rawQuery(anyString(), any());
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onIndexCaseFound(null, false);
+        verifyNoMoreInteractions(database);
+        verifyNoMoreInteractions(presenter);
+    }
+
+    @Test
+    public void testGetIndexCaseDetails() {
+        String structureId = UUID.randomUUID().toString();
+        String query = "SELECT json FROM event WHERE baseEntityId IN( ?, ?) AND eventType= ? ";
+        String[] params = new String[]{structureId, groupId, Constants.EventType.CASE_DETAILS_EVENT};
+        when(database.rawQuery(query, params)).thenReturn(createIndexCaseCursor());
+        interactor.getIndexCaseDetails(structureId, groupId, planId);
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(query, new String[]{structureId, groupId, Constants.EventType.CASE_DETAILS_EVENT});
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onIndexCaseFound(jsonCaptor.capture(), eq(false));
+        assertEquals(TestingUtils.caseConfirmstionEventJSON, jsonCaptor.getValue().toString());
+        verifyNoMoreInteractions(database);
+        verifyNoMoreInteractions(presenter);
+    }
+
+    private Cursor createCursor(String taskId, String intervention) {
         MatrixCursor cursor = createEmptyCursor();
         cursor.addRow(new Object[]{
-                "task_id_1",
-                Intervention.IRS,
+                taskId,
+                intervention,
                 434343,
                 BusinessStatus.NOT_SPRAYED,
                 Task.TaskStatus.COMPLETED,
@@ -306,5 +366,14 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
                 COMPLETED_TASK_COUNT,
                 GROUPED_STRUCTURE_TASK_CODE_AND_STATUS
         });
+    }
+
+    private Cursor createIndexCaseCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{
+                "json"
+        });
+        cursor.addRow(new Object[]{
+                TestingUtils.caseConfirmstionEventJSON});
+        return cursor;
     }
 }
