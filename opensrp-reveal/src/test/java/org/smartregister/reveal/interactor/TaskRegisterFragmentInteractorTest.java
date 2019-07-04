@@ -311,13 +311,28 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
     @Test
     public void testGetIndexCaseDetails() {
         String structureId = UUID.randomUUID().toString();
-        String query = "SELECT json FROM event WHERE baseEntityId IN( ?, ?) AND eventType= ? ";
+        String query = "SELECT json FROM event WHERE baseEntityId IN (?,?) AND eventType = ?";
         String[] params = new String[]{structureId, groupId, Constants.EventType.CASE_DETAILS_EVENT};
-        when(database.rawQuery(query, params)).thenReturn(createIndexCaseCursor());
+        when(database.rawQuery(query, params)).thenReturn(createIndexCaseCursor(TestingUtils.caseConfirmstionEventJSON));
         interactor.getIndexCaseDetails(structureId, groupId, planId);
         verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(query, new String[]{structureId, groupId, Constants.EventType.CASE_DETAILS_EVENT});
         verify(presenter, timeout(ASYNC_TIMEOUT)).onIndexCaseFound(jsonCaptor.capture(), eq(false));
         assertEquals(TestingUtils.caseConfirmstionEventJSON, jsonCaptor.getValue().toString());
+        verifyNoMoreInteractions(database);
+        verifyNoMoreInteractions(presenter);
+    }
+
+
+    @Test
+    public void testGetIndexCaseDetailsLinkedToJurisdiction() {
+        String query = "SELECT json FROM event WHERE baseEntityId IN (?) AND eventType = ?";
+        String[] params = new String[]{groupId, Constants.EventType.CASE_DETAILS_EVENT};
+        String event = TestingUtils.caseConfirmstionEventJSON.replace("bd73f7d7-4387-4b6b-b632-acb03c4ea160", groupId);
+        when(database.rawQuery(query, params)).thenReturn(createIndexCaseCursor(event));
+        interactor.getIndexCaseDetails(null, groupId, planId);
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(query, new String[]{groupId, Constants.EventType.CASE_DETAILS_EVENT});
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onIndexCaseFound(jsonCaptor.capture(), eq(true));
+        assertEquals(event, jsonCaptor.getValue().toString());
         verifyNoMoreInteractions(database);
         verifyNoMoreInteractions(presenter);
     }
@@ -368,12 +383,13 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         });
     }
 
-    private Cursor createIndexCaseCursor() {
+    private Cursor createIndexCaseCursor(String event) {
         MatrixCursor cursor = new MatrixCursor(new String[]{
                 "json"
         });
+
         cursor.addRow(new Object[]{
-                TestingUtils.caseConfirmstionEventJSON});
+                event});
         return cursor;
     }
 }

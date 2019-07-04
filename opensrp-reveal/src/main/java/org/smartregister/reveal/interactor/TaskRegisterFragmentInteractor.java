@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Task;
 import org.smartregister.family.util.DBConstants;
-import org.smartregister.repository.EventClientRepository;
+import org.smartregister.repository.EventClientRepository.event_column;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
+import static org.smartregister.repository.EventClientRepository.Table.event;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.COMPLETED_TASK_COUNT;
@@ -341,13 +342,15 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
                 Cursor cursor = null;
                 try {
-                    if (structureId == null)
-                        cursor = getDatabase().rawQuery("SELECT json FROM "
-                                        + EventClientRepository.Table.event.name()
-                                        + " WHERE "
-                                        + EventClientRepository.event_column.baseEntityId.name()
-                                        + " IN( ?, ?) AND " + EventClientRepository.event_column.eventType.name() + "= ? ",
-                                new String[]{structureId == null ? "" : structureId, operationalArea, EventType.CASE_DETAILS_EVENT});
+                    String[] params;
+                    if (structureId == null) {
+                        params = new String[]{operationalArea, EventType.CASE_DETAILS_EVENT};
+                    } else {
+                        params = new String[]{structureId, operationalArea, EventType.CASE_DETAILS_EVENT};
+                    }
+                    String query = String.format("SELECT %s FROM %s WHERE %s IN (%s) AND %s = ?", event_column.json.name(), event.name(), event_column.baseEntityId.name(),
+                            structureId == null ? "?" : "?,?", event_column.eventType.name());
+                    cursor = getDatabase().rawQuery(query, params);
                     while (cursor.moveToNext()) {
                         String jsonEventStr = cursor.getString(0);
 
