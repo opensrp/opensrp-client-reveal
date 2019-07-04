@@ -383,15 +383,15 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnTaskSelectedFetchesCaseDetails() {
-        String planId = UUID.randomUUID().toString();
+        String eventId = UUID.randomUUID().toString();
         when(preferencesUtil.getCurrentOperationalArea()).thenReturn("MTI_84");
-        when(preferencesUtil.getCurrentPlanId()).thenReturn(planId);
 
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
         taskDetails.setTaskCode(Constants.Intervention.CASE_CONFIRMATION);
+        taskDetails.setReasonReference(eventId);
         presenter.onTaskSelected(taskDetails, true);
         verify(view).getContext();
-        verify(interactor).getIndexCaseDetails(taskDetails.getStructureId(), operationalArea.getId(), planId);
+        verify(interactor).getIndexCaseDetails(taskDetails.getStructureId(), operationalArea.getId(), eventId);
         verifyNoMoreInteractions(view);
         verifyNoMoreInteractions(interactor);
     }

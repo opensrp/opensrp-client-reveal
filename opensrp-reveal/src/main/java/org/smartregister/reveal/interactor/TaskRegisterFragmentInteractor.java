@@ -47,6 +47,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.NOT_SRAYED_OT
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NOT_SRAYED_REASON;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.OTHER;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.REFERENCE_REASON;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
@@ -147,6 +148,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 tableName + "." + FOR,
                 tableName + "." + BUSINESS_STATUS,
                 tableName + "." + STATUS,
+                tableName + "." + REFERENCE_REASON,
                 STRUCTURES_TABLE + "." + LATITUDE,
                 STRUCTURES_TABLE + "." + LONGITUDE,
                 STRUCTURES_TABLE + "." + NAME,
@@ -243,7 +245,9 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         }
         Location location = new Location((String) null);
 
-        if (!BCC.equals(task.getTaskCode()) && !CASE_CONFIRMATION.equals(task.getTaskCode())) {
+        if (CASE_CONFIRMATION.equals(task.getTaskCode())) {
+            task.setReasonReference(cursor.getString(cursor.getColumnIndex(REFERENCE_REASON)));
+        } else if (!BCC.equals(task.getTaskCode())) {
             location.setLatitude(cursor.getDouble(cursor.getColumnIndex(LATITUDE)));
             location.setLongitude(cursor.getDouble(cursor.getColumnIndex(LONGITUDE)));
             task.setLocation(location);
@@ -270,7 +274,6 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 task.setTaskDetails(reason);
             }
         }
-
         task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
 
         calculateDistance(task, location, lastLocation, operationalAreaCenter);
@@ -335,7 +338,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         return (TaskRegisterFragmentContract.Presenter) presenterCallBack;
     }
 
-    public void getIndexCaseDetails(String structureId, String operationalArea, String currentPlanId) {
+    public void getIndexCaseDetails(String structureId, String operationalArea, String indexCaseEventId) {
         appExecutors.diskIO().execute(() -> {
             JSONObject jsonEvent = null;
             if (StringUtils.isNotBlank(structureId) || StringUtils.isNotBlank(operationalArea)) {
@@ -358,7 +361,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
                         jsonEvent = new JSONObject(jsonEventStr);
 
-                        if (cursor.getCount() == 1 || currentPlanId.equals(jsonEvent.optJSONObject(Constants.DETAILS).optString("plan_id"))) {
+                        if (cursor.getCount() == 1 || jsonEvent.optString(event_column.baseEntityId.name()).equals(indexCaseEventId)) {
                             break;
                         }
                     }

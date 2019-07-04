@@ -296,6 +296,8 @@ public interface Constants {
 
         String STATUS = "status";
 
+        String REFERENCE_REASON = "reason_reference";
+
         String FAMILY_NAME = "family_head_name";
 
         String SPRAY_STATUS = "spray_status";
