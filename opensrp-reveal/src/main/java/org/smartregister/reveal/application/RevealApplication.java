@@ -90,6 +90,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     private boolean familyAdded;
 
+    private boolean refreshMapAfterFeatureSelect;
+
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
     }
@@ -347,5 +349,13 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     @Override
     public ClientProcessorForJava getClientProcessor() {
         return RevealClientProcessor.getInstance(this);
+    }
+
+    public boolean isRefreshMapAfterFeatureSelect() {
+        return refreshMapAfterFeatureSelect;
+    }
+
+    public void setRefreshMapAfterFeatureSelect(boolean refreshMapAfterFeatureSelect) {
+        this.refreshMapAfterFeatureSelect = refreshMapAfterFeatureSelect;
     }
 }

@@ -448,4 +448,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         this.changeMapPosition = changeMapPosition;
     }
 
+    @Override
+    public void refreshMapAfterFeatureSelect() {
+        listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
+        listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalArea());
+        RevealApplication.getInstance().setRefreshMapAfterFeatureSelect(false);
+    }
 }

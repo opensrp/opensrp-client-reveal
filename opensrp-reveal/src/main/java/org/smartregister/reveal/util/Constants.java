@@ -343,4 +343,8 @@ public interface Constants {
         String INTERVENTION_TYPE = "interventionType";
     }
 
+    interface IntentKey {
+        String REFRESH_MAP_AFTER_FEATURE_SELECT = "refresh_map_after_feature_select";
+    }
+
 }
