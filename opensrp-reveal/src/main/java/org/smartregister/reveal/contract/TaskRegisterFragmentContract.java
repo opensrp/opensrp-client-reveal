@@ -4,6 +4,7 @@ package org.smartregister.reveal.contract;
 import android.location.Location;
 import android.support.annotation.StringRes;
 
+import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
@@ -25,10 +26,13 @@ public interface TaskRegisterFragmentContract {
 
         void onDrawerClosed();
 
-        void onTaskSelected(TaskDetails details);
+        void onTaskSelected(TaskDetails details, boolean isActionClicked);
 
         @StringRes
         int getInterventionLabel();
+
+        void onIndexCaseFound(JSONObject indexCase, boolean isLinkedToJurisdiction);
+
     }
 
     interface View extends BaseRegisterFragmentContract.View, BaseFormFragmentContract.View {
@@ -54,6 +58,8 @@ public interface TaskRegisterFragmentContract {
         void registerFamily(BaseTaskDetails taskDetails);
 
         void openFamilyProfile(CommonPersonObjectClient family, BaseTaskDetails taskDetails);
+
+        void displayIndexCaseDetails(JSONObject indexCase);
     }
 
 }

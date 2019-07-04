@@ -8,6 +8,7 @@ import com.mapbox.geojson.Feature;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
@@ -55,6 +56,8 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     private boolean recalculateDistance;
 
     private PreferencesUtil prefsUtil;
+
+    private boolean isActionClicked = true;
 
 
     public TaskRegisterFragmentPresenter(TaskRegisterFragmentContract.View view, String viewConfigurationIdentifier) {
@@ -188,13 +191,18 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     }
 
     @Override
-    public void onTaskSelected(TaskDetails details) {
+    public void onTaskSelected(TaskDetails details, boolean isActionClicked) {
+        this.isActionClicked = isActionClicked;
         if (details != null) {
-            if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())
-                    && (CASE_CONFIRMATION.equals(details.getTaskCode()) ||
-                    BLOOD_SCREENING.equals(details.getTaskCode()) ||
-                    BEDNET_DISTRIBUTION.equals(details.getTaskCode()) ||
-                    REGISTER_FAMILY.equals(details.getTaskCode())) ||
+            setTaskDetails(details);
+            if (CASE_CONFIRMATION.equals(details.getTaskCode())) {
+                interactor.getIndexCaseDetails(details.getStructureId(),
+                        Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(), prefsUtil.getCurrentPlanId());
+            } else if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())
+                    &&
+                    (BLOOD_SCREENING.equals(details.getTaskCode()) ||
+                            BEDNET_DISTRIBUTION.equals(details.getTaskCode()) ||
+                            REGISTER_FAMILY.equals(details.getTaskCode())) ||
                     (details.getTaskCount() != null && details.getTaskCount() > 1)) { // structures with grouped tasks should display the family profile
                 setTaskDetails(details);
                 interactor.fetchFamilyDetails(details.getStructureId());
@@ -208,6 +216,28 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public int getInterventionLabel() {
         return Utils.getInterventionLabel();
+    }
+
+    /**
+     * Called by interactor when the index event has been queried. If Event is not found an errror is displayed.
+     * If task confirmation  is not competed and event was linked to a household and button was selected, then family profile is opened,
+     * otherwise the index case details are displayed
+     *
+     * @param indexCase              the index case details event JSON
+     * @param isLinkedToJurisdiction if index case was linked to FI, false if linked to structure
+     */
+    @Override
+    public void onIndexCaseFound(JSONObject indexCase, boolean isLinkedToJurisdiction) {
+        if (indexCase == null) {
+            getView().displayError(R.string.classification_details, R.string.index_case_not_found);
+        } else {
+            if (isActionClicked && !isLinkedToJurisdiction
+                    && getTaskDetails().getTaskStatus().equals(Task.TaskStatus.READY.name())) {
+                interactor.fetchFamilyDetails(getTaskDetails().getStructureId());
+            } else {
+                getView().displayIndexCaseDetails(indexCase);
+            }
+        }
     }
 
     @Override

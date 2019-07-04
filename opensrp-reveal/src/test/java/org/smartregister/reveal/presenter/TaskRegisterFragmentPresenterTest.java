@@ -3,6 +3,7 @@ package org.smartregister.reveal.presenter;
 import android.location.Location;
 import android.support.v4.util.Pair;
 
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -111,7 +112,6 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         view.setIdentifier(UUID.randomUUID().toString());
         visibleColumns.add(view);
         location = new Location("TaskRegisterFragmentPresenterTest");
-        when(locationUtils.getLastLocation()).thenReturn(location);
         Cache<org.smartregister.domain.Location> cache = new Cache<>();
         operationalArea = TestingUtils.gson.fromJson(TestingUtils.operationalAreaGeoJSON, org.smartregister.domain.Location.class);
         cache.get("MTI_84", () -> operationalArea);
@@ -142,8 +142,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         assertNull(mainConditionCaptor.getValue().second[0]);
         assertNull(mainConditionCaptor.getValue().second[1]);
 
-        assertEquals(location, myLocationCaptor.getValue());
-
+        assertNull(myLocationCaptor.getValue());
         assertNull(operationalAreaCenterCaptor.getValue());
     }
 
@@ -154,6 +153,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         when(preferencesUtil.getCurrentOperationalArea()).thenReturn("MTI_84");
         String mainCondition = "task.group_id = ? AND task.plan_id = ? AND task.status != ?";
         Whitebox.setInternalState(presenter, "visibleColumns", visibleColumns);
+        when(locationUtils.getLastLocation()).thenReturn(location);
         presenter.initializeQueries(mainCondition);
         verify(view).initializeAdapter(eq(visibleColumns));
         verify(view).showProgressView();
@@ -270,7 +270,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void testOnTaskSelectedForCompletedTasks() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
-        presenter.onTaskSelected(taskDetails);
+        presenter.onTaskSelected(taskDetails, true);
         verify(view).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
         verify(interactor).getStructure(taskDetails);
     }
@@ -279,7 +279,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     public void testOnTaskSelectedShouldLaunchForm() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
         taskDetails.setTaskStatus(Task.TaskStatus.READY.name());
-        presenter.onTaskSelected(taskDetails);
+        presenter.onTaskSelected(taskDetails, false);
         verify(view).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
         verify(interactor).getStructure(taskDetails);
         verify(view).getContext();
@@ -291,7 +291,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     public void testOnTaskSelectedForBCCTasks() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
         taskDetails.setTaskCode(Constants.Intervention.BCC);
-        presenter.onTaskSelected(taskDetails);
+        presenter.onTaskSelected(taskDetails, true);
         verify(view).getContext();
         verify(view).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
         verify(interactor).getStructure(taskDetails);
@@ -379,6 +379,82 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         verifyNoMoreInteractions(view);
         verifyNoMoreInteractions(interactor);
 
+    }
+
+    @Test
+    public void testOnTaskSelectedFetchesCaseDetails() {
+        String planId = UUID.randomUUID().toString();
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn("MTI_84");
+        when(preferencesUtil.getCurrentPlanId()).thenReturn(planId);
+
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        taskDetails.setTaskCode(Constants.Intervention.CASE_CONFIRMATION);
+        presenter.onTaskSelected(taskDetails, true);
+        verify(view).getContext();
+        verify(interactor).getIndexCaseDetails(taskDetails.getStructureId(), operationalArea.getId(), planId);
+        verifyNoMoreInteractions(view);
+        verifyNoMoreInteractions(interactor);
+    }
+
+    @Test
+    public void testOnTaskSelectedOpensFamilyProfile() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        taskDetails.setTaskCode(Constants.Intervention.BLOOD_SCREENING);
+        taskDetails.setTaskCount(2);
+        taskDetails.setStructureId(UUID.randomUUID().toString());
+        presenter.onTaskSelected(taskDetails, true);
+        verify(view).getContext();
+        verify(interactor).fetchFamilyDetails(taskDetails.getStructureId());
+        verifyNoMoreInteractions(view);
+        verifyNoMoreInteractions(interactor);
+    }
+
+    @Test
+    public void testOnLocationValidatedStartsFamilyForm() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        taskDetails.setTaskCode(Constants.Intervention.REGISTER_FAMILY);
+        presenter.setTaskDetails(taskDetails);
+        presenter.onLocationValidated();
+        verify(view).registerFamily(taskDetails);
+        verify(view).hideProgressDialog();
+        verifyNoMoreInteractions(interactor);
+    }
+
+    @Test
+    public void testOnIndexCaseNotFound() {
+        presenter.onIndexCaseFound(null, false);
+        verify(view).displayError(R.string.classification_details, R.string.index_case_not_found);
+        verify(view).getContext();
+        verifyNoMoreInteractions(view);
+        verifyNoMoreInteractions(interactor);
+    }
+
+    @Test
+    public void testOnIndexLinkedToJurisdictionCaseFound() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        taskDetails.setTaskCode(Constants.Intervention.CASE_CONFIRMATION);
+        presenter.setTaskDetails(taskDetails);
+        JSONObject indexCase = new JSONObject();
+        presenter.onIndexCaseFound(indexCase, true);
+        verify(view).displayIndexCaseDetails(indexCase);
+        verify(view).getContext();
+        verifyNoMoreInteractions(view);
+        verifyNoMoreInteractions(interactor);
+    }
+
+    @Test
+    public void testOnIndexLinkedToStructureCaseAndNotCompletedFound() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        taskDetails.setTaskCode(Constants.Intervention.CASE_CONFIRMATION);
+        taskDetails.setTaskStatus(Task.TaskStatus.READY.name());
+        presenter.setTaskDetails(taskDetails);
+        JSONObject indexCase = new JSONObject();
+        Whitebox.setInternalState(presenter, "isActionClicked", true);
+        presenter.onIndexCaseFound(indexCase, false);
+        verify(interactor).fetchFamilyDetails(taskDetails.getStructureId());
+        verify(view).getContext();
+        verifyNoMoreInteractions(view);
+        verifyNoMoreInteractions(interactor);
     }
 
 }
