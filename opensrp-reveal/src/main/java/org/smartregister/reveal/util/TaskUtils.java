@@ -41,18 +41,18 @@ public class TaskUtils {
         prefsUtil = PreferencesUtil.getInstance();
     }
 
-    public void generateBloodScreeningTask(Context context, String entityId) {
-        generateTask(context, entityId, BusinessStatus.NOT_VISITED, Intervention.BLOOD_SCREENING,
+    public void generateBloodScreeningTask(Context context, String entityId, String structureId) {
+        generateTask(context, entityId, structureId, BusinessStatus.NOT_VISITED, Intervention.BLOOD_SCREENING,
                 R.string.blood_screening_description);
 
     }
 
     public void generateBedNetDistributionTask(Context context, String entityId) {
-        generateTask(context, entityId, BusinessStatus.NOT_VISITED, Intervention.BEDNET_DISTRIBUTION,
+        generateTask(context, entityId, entityId, BusinessStatus.NOT_VISITED, Intervention.BEDNET_DISTRIBUTION,
                 R.string.bednet_distribution_description);
     }
 
-    public Task generateTask(Context context, String entityId, String businessStatus, String intervention, @StringRes int description) {
+    public Task generateTask(Context context, String entityId, String structureId, String businessStatus, String intervention, @StringRes int description) {
         Task task = new Task();
         DateTime now = new DateTime();
         task.setIdentifier(UUID.randomUUID().toString());
@@ -65,6 +65,7 @@ public class TaskUtils {
         task.setDescription(context.getString(description));
         task.setFocus(intervention);
         task.setForEntity(entityId);
+        task.setStructureId(structureId);
         task.setExecutionStartDate(now);
         task.setAuthoredOn(now);
         task.setLastModified(now);
@@ -76,7 +77,7 @@ public class TaskUtils {
 
 
     public Task generateRegisterFamilyTask(Context context, String entityId) {
-        return generateTask(context, entityId, BusinessStatus.NOT_VISITED, Intervention.REGISTER_FAMILY,
+        return generateTask(context, entityId, entityId, BusinessStatus.NOT_VISITED, Intervention.REGISTER_FAMILY,
                 R.string.register_family_description);
 
     }

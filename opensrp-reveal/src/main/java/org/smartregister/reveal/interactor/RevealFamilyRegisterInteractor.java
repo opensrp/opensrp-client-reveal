@@ -47,7 +47,7 @@ public class RevealFamilyRegisterInteractor extends org.smartregister.family.int
                 String entityId = eventClient.getClient().getBaseEntityId();
                 if (!generatedIds.contains(entityId)) {
                     generatedIds.add(entityId);
-                    taskUtils.generateBloodScreeningTask(context, entityId);
+                    taskUtils.generateBloodScreeningTask(context, entityId,structureId);
                 }
             }
             taskUtils.generateBedNetDistributionTask(context, structureId);

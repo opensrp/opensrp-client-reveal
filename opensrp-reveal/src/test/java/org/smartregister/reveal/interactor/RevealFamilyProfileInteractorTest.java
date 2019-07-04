@@ -94,7 +94,7 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
     @Test
     public void testGenerateTasks() {
         String baseEntityId = UUID.randomUUID().toString();
-        interactor.generateTasks(context, baseEntityId);
+        interactor.generateTasks(context, baseEntityId, structureId);
         verify(taskUtils, timeout(ASYNC_TIMEOUT)).generateBloodScreeningTask(context, baseEntityId);
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksGenerated();
     }
