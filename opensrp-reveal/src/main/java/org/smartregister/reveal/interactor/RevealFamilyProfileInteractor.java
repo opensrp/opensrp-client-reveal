@@ -51,7 +51,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
         eventClientRepository = CoreLibrary.getInstance().context().getEventClientRepository();
         FamilyMetadata familyMetadata = RevealApplication.getInstance().getMetadata();
         clientProcessor = (RevealClientProcessor) RevealApplication.getInstance().getClientProcessor();
-        org.smartregister.Context.bindtypes= new ArrayList<>();
+        org.smartregister.Context.bindtypes = new ArrayList<>();
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(familyMetadata.familyMemberRegister.tableName);
     }
 
@@ -61,10 +61,10 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     }
 
     @Override
-    public void generateTasks(Context applicationContext, String baseEntityId) {
+    public void generateTasks(Context applicationContext, String baseEntityId, String structureId) {
         appExecutors.diskIO().execute(() -> {
             taskUtils.generateBloodScreeningTask(applicationContext,
-                    baseEntityId);
+                    baseEntityId, structureId);
             appExecutors.mainThread().execute(() -> {
                 presenter.onTasksGenerated();
             });
