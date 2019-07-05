@@ -102,7 +102,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
     public void onRegistrationSaved(boolean isEdit) {
         if (!isEdit && Utils.getInterventionLabel() == R.string.focus_investigation) {
             getInteractor().generateTasks(getView().getApplicationContext(),
-                    getModel().getEventClient().getEvent().getBaseEntityId());
+                    getModel().getEventClient().getEvent().getBaseEntityId(),structureId);
             return;
         } else {
             FamilyEventClient eventClient = getModel().getEventClient();

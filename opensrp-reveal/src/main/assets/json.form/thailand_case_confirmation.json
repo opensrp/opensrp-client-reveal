@@ -64,29 +64,6 @@
         }
       },
       {
-        "key": "indexYesNo",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "ผู้ป่วยติดเชื้อในพื้นที่หรือไม่",
-        "options": [
-          {
-            "key": "Yes",
-            "text": "ใช่"
-          },
-          {
-            "key": "No",
-            "text": "ไม่ใช่"
-          }
-        ],
-        "value": "Yes",
-        "v_required": {
-          "value": "true",
-          "err": "Please choose if this is the index case"
-        }
-      },
-      {
         "key": "comment",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
