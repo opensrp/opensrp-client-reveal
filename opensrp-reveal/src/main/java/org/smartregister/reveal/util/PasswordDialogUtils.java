@@ -12,7 +12,6 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
 
@@ -54,7 +53,7 @@ public class PasswordDialogUtils {
                 passwordDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (!adminPassEditText.getText().toString().equals(BuildConfig.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES)) {
+                        if (!adminPassEditText.getText().toString().equals(Utils.getAdminPasswordNotNearStructures())) {
                             Toast.makeText(context, R.string.wrong_admin_password, Toast.LENGTH_LONG).show();
                             adminPassEditText.setError(context.getString(R.string.wrong_admin_password));
                         } else {

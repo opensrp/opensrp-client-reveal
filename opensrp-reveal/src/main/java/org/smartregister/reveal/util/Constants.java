@@ -67,6 +67,9 @@ public interface Constants {
         Float METERS_PER_KILOMETER = 1000f;
         Float KILOMETERS_PER_DEGREE_OF_LONGITUDE_AT_EQUITOR = 111.320f;
         Float KILOMETERS_PER_DEGREE_OF_LATITUDE_AT_EQUITOR = 110.574f;
+        String VALIDATE_FAR_STRUCTURES = "validate_far_structures";
+        String RESOLVE_LOCATION_TIMEOUT_IN_SECONDS = "resolve_location_timeout_in_seconds";
+        String ADMIN_PASSWORD_NOT_NEAR_STRUCTURES = "admin_password_not_near_structures";
     }
 
     interface Preferences {
