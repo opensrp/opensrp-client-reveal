@@ -456,6 +456,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
         listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalArea());
         listTaskView.clearSelectedFeature();
-        RevealApplication.getInstance().setRefreshMapAfterFeatureSelect(false);
+        revealApplication.setRefreshMapAfterFeatureSelect(false);
     }
 }
