@@ -131,7 +131,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         presenter.onRegistrationSaved(false);
         verify(presenter, never()).onTasksGenerated();
         verify(view, never()).refreshTasks(structureId);
-        verify(interactor).generateTasks(view.getApplicationContext(), baseEntityId);
+        verify(interactor).generateTasks(view.getApplicationContext(), baseEntityId, structureId);
     }
 
     @Test
