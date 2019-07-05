@@ -34,7 +34,6 @@ import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.contract.StructureTasksContract;
