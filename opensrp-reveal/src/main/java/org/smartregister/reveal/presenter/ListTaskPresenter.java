@@ -438,6 +438,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             refreshStructures(true);
             revealApplication.setFamilyAdded(false);
         }
+        if (revealApplication.isRefreshMapAfterFeatureSelect()) {
+            refreshMapAfterFeatureSelect();
+        }
     }
 
     public boolean isChangeMapPosition() {
@@ -452,6 +455,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void refreshMapAfterFeatureSelect() {
         listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
         listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalArea());
+        listTaskView.clearSelectedFeature();
         RevealApplication.getInstance().setRefreshMapAfterFeatureSelect(false);
     }
 }
