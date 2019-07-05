@@ -56,34 +56,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Select Family Member",
+        "label": "Select Family Member that is the Index Case",
         "value": "Yes",
         "v_required": {
           "value": "true",
           "err": "Please choose family member who is the index case"
-        }
-      },
-      {
-        "key": "indexYesNo",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Is this the index case?",
-        "options": [
-          {
-            "key": "Yes",
-            "text": "Yes"
-          },
-          {
-            "key": "No",
-            "text": "No"
-          }
-        ],
-        "value": "Yes",
-        "v_required": {
-          "value": "true",
-          "err": "Please choose if this is the index case"
         }
       },
       {
