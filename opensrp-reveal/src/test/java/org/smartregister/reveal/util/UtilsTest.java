@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 
@@ -17,21 +18,28 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_GEO_JSON_CIRCLE_SIDES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES;
-import static org.smartregister.reveal.util.Utils.createCircleFeature;
-import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
-import static org.smartregister.reveal.util.Utils.getInterventionLabel;
-import static org.smartregister.reveal.util.Utils.isResidentialStructure;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.RESOLVE_LOCATION_TIMEOUT_IN_SECONDS;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.VALIDATE_FAR_STRUCTURES;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
-import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
-import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
+import static org.smartregister.reveal.util.Utils.createCircleFeature;
+import static org.smartregister.reveal.util.Utils.getAdminPasswordNotNearStructures;
+import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
+import static org.smartregister.reveal.util.Utils.getInterventionLabel;
+import static org.smartregister.reveal.util.Utils.getResolveLocationTimeoutInSeconds;
+import static org.smartregister.reveal.util.Utils.isResidentialStructure;
+import static org.smartregister.reveal.util.Utils.validateFarStructures;
 
 /**
  * Created by Vincent Karuri on 08/05/2019
@@ -115,6 +123,54 @@ public class UtilsTest {
         RevealApplication revealApplication = mock(RevealApplication.class);
         PowerMockito.when(RevealApplication.class, "getInstance").thenReturn(revealApplication);
         return revealApplication;
+    }
+
+    @Test
+    public void testValidateFarStructuresReturnsTrueWhenSettingsValueIsTrue() throws Exception {
+        RevealApplication revealApplication = initRevealApplicationMock();
+
+        Map<String, String> settings = new HashMap<>();
+        settings.put(VALIDATE_FAR_STRUCTURES, "true");
+
+        when(revealApplication.getGlobalConfigs()).thenReturn(settings);
+        assertTrue(validateFarStructures());
+    }
+
+    @Test
+    public void testValidateFarStructuresReturnsFalseWhenSettingsValueIsFalse() throws Exception {
+        RevealApplication revealApplication = initRevealApplicationMock();
+
+        Map<String, String> settings = new HashMap<>();
+        settings.put(VALIDATE_FAR_STRUCTURES, "false");
+
+        when(revealApplication.getGlobalConfigs()).thenReturn(settings);
+        assertFalse(validateFarStructures());
+    }
+
+    @Test
+    public void testGetResolveLocationTimeoutInSecondsReturnsCorrectSettingsValue() throws Exception {
+        RevealApplication revealApplication = initRevealApplicationMock();
+
+        Integer testResolveLocationTimeoutInSeconds = 20;
+        Map<String, String> settings = new HashMap<>();
+        settings.put(RESOLVE_LOCATION_TIMEOUT_IN_SECONDS, testResolveLocationTimeoutInSeconds.toString());
+
+        when(revealApplication.getGlobalConfigs()).thenReturn(settings);
+        assertEquals(testResolveLocationTimeoutInSeconds.intValue(), getResolveLocationTimeoutInSeconds());
+        assertNotEquals(testResolveLocationTimeoutInSeconds.intValue(), BuildConfig.RESOLVE_LOCATION_TIMEOUT_IN_SECONDS);
+    }
+
+    @Test
+    public void testGetAdminPasswordNotNearStructuresReturnsCorrectSettingsValue() throws Exception {
+        RevealApplication revealApplication = initRevealApplicationMock();
+
+        String testAdminPass = "NewAdminPass";
+        Map<String, String> settings = new HashMap<>();
+        settings.put(ADMIN_PASSWORD_NOT_NEAR_STRUCTURES, testAdminPass);
+
+        when(revealApplication.getGlobalConfigs()).thenReturn(settings);
+        assertEquals(testAdminPass, getAdminPasswordNotNearStructures());
+        assertNotEquals(testAdminPass, BuildConfig.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES);
     }
 
 }

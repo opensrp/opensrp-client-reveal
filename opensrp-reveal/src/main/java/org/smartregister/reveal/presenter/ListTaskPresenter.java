@@ -19,7 +19,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task.TaskStatus;
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
@@ -68,6 +67,7 @@ import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Utils.formatDate;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
+import static org.smartregister.reveal.util.Utils.validateFarStructures;
 
 
 /**
@@ -228,7 +228,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             selectedFeatureInterventionType = code;
             if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || REGISTER_FAMILY.equals(code))
                     && (NOT_VISITED.equals(businessStatus) || businessStatus == null)) {
-                if (BuildConfig.VALIDATE_FAR_STRUCTURES) {
+                if (validateFarStructures()) {
                     validateUserLocation();
                 } else {
                     onLocationValidated();

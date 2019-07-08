@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.UserLocationContract;
@@ -73,7 +72,7 @@ public class ValidateUserLocationPresenter implements UserLocationContract.UserL
         Location location = locationView.getUserCurrentLocation();
         Log.d(TAG, "user location: " + location);
         if (location == null) {
-            if (elapsedTimeInMillis / 1000 >= BuildConfig.RESOLVE_LOCATION_TIMEOUT_IN_SECONDS) {
+            if (elapsedTimeInMillis / 1000 >= Utils.getResolveLocationTimeoutInSeconds()) {
                 appExecutors.mainThread().execute(() -> onGetUserLocationFailed());
             } else {
                 if (elapsedTimeInMillis == 0) {//first try running in main thread ; show progress dialog.
