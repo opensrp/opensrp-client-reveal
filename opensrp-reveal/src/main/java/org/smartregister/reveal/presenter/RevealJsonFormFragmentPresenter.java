@@ -14,12 +14,12 @@ import com.vijay.jsonwizard.interactors.JsonFormInteractor;
 import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 import com.vijay.jsonwizard.utils.ValidationStatus;
 
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.util.PasswordDialogUtils;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
 
@@ -84,7 +84,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
 
     @VisibleForTesting
     protected boolean validateFarStructures() {
-        return BuildConfig.VALIDATE_FAR_STRUCTURES;
+        return Utils.validateFarStructures();
     }
 
 

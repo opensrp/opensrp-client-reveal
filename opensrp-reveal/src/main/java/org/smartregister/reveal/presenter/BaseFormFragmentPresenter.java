@@ -14,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
@@ -23,6 +22,7 @@ import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.PasswordDialogUtils;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.JsonFormUtils;
 
@@ -73,7 +73,7 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
     }
 
     protected boolean validateFarStructures() {
-        return BuildConfig.VALIDATE_FAR_STRUCTURES;
+        return Utils.validateFarStructures();
     }
 
     private void validateUserLocation() {

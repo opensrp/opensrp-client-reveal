@@ -351,6 +351,7 @@ public class ListTaskPresenterTest {
 
         Feature feature = mock(Feature.class);
         doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
+        when(Utils.validateFarStructures()).thenReturn(true);
 
         Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
 

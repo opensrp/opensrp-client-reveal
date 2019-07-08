@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LATITUDE_AT_EQUITOR;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LONGITUDE_AT_EQUITOR;
@@ -125,7 +126,8 @@ public class Utils {
     }
 
     public static String getGlobalConfig(String key, String defaultValue) {
-        String val = RevealApplication.getInstance().getGlobalConfigs().get(key);
+        Map<String, String> globalConfigs = RevealApplication.getInstance().getGlobalConfigs();
+        String val = globalConfigs != null ? globalConfigs.get(key) : null;
         return val == null ? defaultValue : val;
     }
 
@@ -158,8 +160,44 @@ public class Utils {
         return dobString.contains("y") ? dobString.substring(0, dobString.indexOf("y")) : dobString;
     }
 
+    /**
+     * Uses the server setting "draw_operational_area_boundary_and_label" to determine whether to draw the operational area boundary
+     * If this variable is not available on the server the DEFAULT_DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL value from the constants file is used
+     *
+     * @return drawOperationalAreaBoundaryAndLabel
+     */
     public static Boolean getDrawOperationalAreaBoundaryAndLabel() {
         return Boolean.valueOf(getGlobalConfig(CONFIGURATION.DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL, CONFIGURATION.DEFAULT_DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL.toString()));
+    }
+
+    /**
+     * Uses the server setting "validate_far_structures" to determine whether to Validate Far Structures
+     * If this variable is not available on the server the value is retrieved from BuildConfig.VALIDATE_FAR_STRUCTURES
+     *
+     * @return validateFarStructures
+     */
+    public static Boolean validateFarStructures() {
+        return Boolean.valueOf(getGlobalConfig(CONFIGURATION.VALIDATE_FAR_STRUCTURES, BuildConfig.VALIDATE_FAR_STRUCTURES + ""));
+    }
+
+    /**
+     * Uses the server setting "resolve_location_timeout_in_seconds" to determine the Resolve Location Timeout In Seconds value
+     * If this variable is not available on the server the value is retrieved from BuildConfig.RESOLVE_LOCATION_TIMEOUT_IN_SECONDS
+     *
+     * @return ResolveLocationTimeoutInSeconds
+     */
+    public static int getResolveLocationTimeoutInSeconds() {
+        return Integer.valueOf(getGlobalConfig(CONFIGURATION.RESOLVE_LOCATION_TIMEOUT_IN_SECONDS, BuildConfig.RESOLVE_LOCATION_TIMEOUT_IN_SECONDS + ""));
+    }
+
+    /**
+     * Uses the server setting "admin_password_not_near_structures" to determine the Admin Password required to perform any edits when not near a structure
+     * If this variable is not available on the server the value is retrieved from BuildConfig.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES
+     *
+     * @return AdminPassword
+     */
+    public static String getAdminPasswordNotNearStructures() {
+        return getGlobalConfig(CONFIGURATION.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES, BuildConfig.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES );
     }
 
     /**
