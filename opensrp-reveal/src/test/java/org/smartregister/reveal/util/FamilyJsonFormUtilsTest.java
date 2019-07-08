@@ -20,7 +20,6 @@ import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.FamilyConstants.DatabaseKeys;
-import org.smartregister.reveal.util.FamilyConstants.FormKeys;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.DateUtil;
 import org.smartregister.util.FormUtils;
@@ -42,6 +41,7 @@ import static org.smartregister.family.util.JsonFormUtils.CURRENT_OPENSRP_ID;
 import static org.smartregister.family.util.JsonFormUtils.METADATA;
 import static org.smartregister.reveal.util.FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION;
 import static org.smartregister.reveal.util.FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION;
+import static org.smartregister.reveal.util.FamilyConstants.FormKeys.SURNAME;
 import static org.smartregister.reveal.util.FamilyConstants.JSON_FORM.FAMILY_MEMBER_REGISTER;
 import static org.smartregister.reveal.util.FamilyConstants.JSON_FORM.FAMILY_UPDATE;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
@@ -157,17 +157,6 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public void testProcessPopulatableSurname() throws JSONException {
-
-        JSONObject form = new JSONObject();
-        form.put(JsonFormUtils.KEY, FormKeys.SURNAME);
-        FamilyJsonFormUtils.processPopulatableFields(client, form);
-        assertEquals("Otala", form.getString(VALUE));
-
-    }
-
-
-    @Test
     public void testProcessPopulatableOtherFields() throws JSONException {
         String uniqueId = "0ffa3ebd94124eacb8";
         client.getColumnmaps().put(UNIQUE_ID, uniqueId);
@@ -195,7 +184,7 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
         assertEquals(locationId, form.getJSONObject(METADATA).getString(ENCOUNTER_LOCATION));
         assertEquals("12987632", form.getString(CURRENT_OPENSRP_ID));
         assertEquals("Charity", JsonFormUtils.getFieldValue(form.toString(), KEY.FIRST_NAME));
-        assertEquals("Otala", JsonFormUtils.getFieldValue(form.toString(), FormKeys.SURNAME));
+        assertEquals("Otala", JsonFormUtils.getFieldValue(form.toString(), SURNAME));
         assertEquals("Ker", JsonFormUtils.getFieldValue(form.toString(), DatabaseKeys.FAMILY_NAME));
         String dobString = "1982-01-01";
         String ageStr = org.smartregister.util.Utils.getDuration(dobString);
@@ -230,12 +219,12 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
 
 
     @Test
-    public void testFirstNameCalc() throws JSONException {
+    public void testSurnameNameCalc() throws JSONException {
         setupMemberForm();
         String familyName = "Ker";
-        client.getColumnmaps().put(KEY.FIRST_NAME, familyName);
+        client.getColumnmaps().put(KEY.LAST_NAME, familyName);
         JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, familyName);
-        assertEquals("", JsonFormUtils.getFieldValue(form.toString(), FormKeys.FIRST_NAME));
+        assertEquals("", JsonFormUtils.getFieldValue(form.toString(), SURNAME));
         assertTrue(JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), "same_as_fam_name").getJSONArray(OPTIONS).getJSONObject(0).getBoolean(VALUE));
     }
 
