@@ -87,6 +87,10 @@
         "type": "edit_text",
         "hint": "Surname",
         "edit_type": "name",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the Surname"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -110,19 +114,6 @@
             "value": "false"
           }
         ]
-      },
-      {
-        "key": "surname",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "last_name",
-        "type": "edit_text",
-        "hint": "Surname",
-        "edit_type": "name",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the Surname"
-        }
       },
       {
         "key": "fam_name",

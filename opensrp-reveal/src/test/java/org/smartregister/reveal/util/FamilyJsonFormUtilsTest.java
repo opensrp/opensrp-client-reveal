@@ -74,7 +74,7 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
     public void testGetAutoPopulatedJsonEditFormStringWithoutForm() {
         familyJsonFormUtils = new FamilyJsonFormUtils(lpv, formUtils, locationHelper, context);
         client.getColumnmaps().put(KEY.VILLAGE_TOWN, "The Luang");
-        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditFormString(FAMILY_UPDATE, context, client, UPDATE_FAMILY_REGISTRATION);
+        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditFormString(FAMILY_UPDATE, client, UPDATE_FAMILY_REGISTRATION);
         assertNull(form);
     }
 
@@ -86,7 +86,7 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
         familyJsonFormUtils = new FamilyJsonFormUtils(lpv, formUtils, locationHelper, context);
         client.getColumnmaps().put(KEY.LANDMARK, "The Luang");
         assertNull("The Luang", JsonFormUtils.getFieldValue(formString, KEY.VILLAGE_TOWN));
-        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditFormString(FAMILY_UPDATE, context, client, UPDATE_FAMILY_REGISTRATION);
+        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditFormString(FAMILY_UPDATE, client, UPDATE_FAMILY_REGISTRATION);
         assertEquals("The Luang", JsonFormUtils.getFieldValue(form.toString(), KEY.LANDMARK));
     }
 
@@ -94,7 +94,7 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
     public void testGetAutoPopulatedJsonEditForm() {
         when(formUtils.getFormJson(anyString())).thenReturn(new JSONObject());
         familyJsonFormUtils = new FamilyJsonFormUtils(lpv, formUtils, locationHelper, context);
-        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditFormString(FAMILY_UPDATE, context, client, UPDATE_FAMILY_REGISTRATION);
+        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditFormString(FAMILY_UPDATE, client, UPDATE_FAMILY_REGISTRATION);
         assertNull(form);
 
     }

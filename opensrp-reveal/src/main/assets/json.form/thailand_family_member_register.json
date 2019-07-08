@@ -87,6 +87,10 @@
         "type": "edit_text",
         "hint": "นามสกุล",
         "edit_type": "name",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the Surname"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
