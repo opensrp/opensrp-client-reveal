@@ -13,6 +13,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.AdditionalMatchers;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -76,6 +78,8 @@ public class ListTaskPresenterTest {
     private ListTaskContract.ListTaskView listTaskViewSpy;
     private ListTaskPresenter listTaskPresenter;
     private ListTaskInteractor listTaskInteractor;
+    @Captor
+    private ArgumentCaptor<Boolean> isRefreshMapAfterFeatureSelectCaptor;
 
     @Before
     public void setUp() throws Exception {
@@ -497,13 +501,29 @@ public class ListTaskPresenterTest {
     public void testOnResume() {
 
         RevealApplication revealApplication = mock(RevealApplication.class);
-        when(revealApplication.isFamilyAdded()).thenReturn(true);
+        when(revealApplication.isRefreshMapOnEventSaved()).thenReturn(true);
         Whitebox.setInternalState(listTaskPresenter, "revealApplication", revealApplication);
         listTaskPresenter.onResume();
         assertFalse(listTaskPresenter.isChangeMapPosition());
 
         verify(listTaskViewSpy).showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
         verify(listTaskInteractor).fetchLocations(anyString(),anyString());
+    }
+
+    @Test
+    public void testOnResumeMapIsRefreshedAfterFeatureSelect() {
+
+        RevealApplication revealApplication = mock(RevealApplication.class);
+        when(revealApplication.isRefreshMapOnEventSaved()).thenReturn(false);
+        when(revealApplication.isRefreshMapOnEventSaved()).thenReturn(true);
+        Whitebox.setInternalState(listTaskPresenter, "revealApplication", revealApplication);
+        listTaskPresenter.onResume();
+
+        verify(listTaskViewSpy).showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
+        verify(listTaskInteractor).fetchLocations(anyString(),anyString());
+        verify(listTaskViewSpy).clearSelectedFeature();
+        verify(revealApplication).setRefreshMapOnEventSaved(isRefreshMapAfterFeatureSelectCaptor.capture());
+        assertFalse(isRefreshMapAfterFeatureSelectCaptor.getValue());
     }
 
     private void mockStaticMethods() {

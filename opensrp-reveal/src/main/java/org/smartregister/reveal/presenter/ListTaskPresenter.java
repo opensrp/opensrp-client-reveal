@@ -434,9 +434,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
 
     public void onResume() {
-        if (revealApplication.isFamilyAdded()) {
+        if (revealApplication.isRefreshMapOnEventSaved()) {
             refreshStructures(true);
-            revealApplication.setFamilyAdded(false);
+            listTaskView.clearSelectedFeature();
+            revealApplication.setRefreshMapOnEventSaved(false);
         }
     }
 

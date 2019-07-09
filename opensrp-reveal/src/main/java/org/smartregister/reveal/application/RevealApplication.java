@@ -88,7 +88,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     private AppExecutors appExecutors;
 
-    private boolean familyAdded;
+    private boolean refreshMapOnEventSaved;
 
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
@@ -335,17 +335,17 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         return planDefinitionSearchRepository;
     }
 
-    public boolean isFamilyAdded() {
-        return familyAdded;
-    }
-
-    public void setFamilyAdded(boolean familyAdded) {
-        this.familyAdded = familyAdded;
-    }
-
     @NonNull
     @Override
     public ClientProcessorForJava getClientProcessor() {
         return RevealClientProcessor.getInstance(this);
+    }
+
+    public boolean isRefreshMapOnEventSaved() {
+        return refreshMapOnEventSaved;
+    }
+
+    public void setRefreshMapOnEventSaved(boolean refreshMapOnEventSaved) {
+        this.refreshMapOnEventSaved = refreshMapOnEventSaved;
     }
 }
