@@ -163,7 +163,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             } else if (CASE_CONFIRMATION_EVENT.equals(encounterType)) {
                 saveCaseConfirmation(jsonForm, encounterType);
             }
-            getInstance().setRefreshMapAfterFeatureSelect(true);
+            getInstance().setRefreshMapOnEventSaved(true);
         } catch (Exception e) {
             Log.e(TAG, "Error saving Json Form data", e);
         }

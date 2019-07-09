@@ -37,7 +37,7 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter impleme
     public void onTasksGenerated() {
         view.hideProgressDialog();
         openProfileActivity();
-        RevealApplication.getInstance().setRefreshMapAfterFeatureSelect(true);
+        RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
     }
 
     private void openProfileActivity() {

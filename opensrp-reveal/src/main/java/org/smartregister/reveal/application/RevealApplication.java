@@ -88,7 +88,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     private AppExecutors appExecutors;
 
-    private boolean refreshMapAfterFeatureSelect;
+    private boolean refreshMapOnEventSaved;
 
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
@@ -341,11 +341,11 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         return RevealClientProcessor.getInstance(this);
     }
 
-    public boolean isRefreshMapAfterFeatureSelect() {
-        return refreshMapAfterFeatureSelect;
+    public boolean isRefreshMapOnEventSaved() {
+        return refreshMapOnEventSaved;
     }
 
-    public void setRefreshMapAfterFeatureSelect(boolean refreshMapAfterFeatureSelect) {
-        this.refreshMapAfterFeatureSelect = refreshMapAfterFeatureSelect;
+    public void setRefreshMapOnEventSaved(boolean refreshMapOnEventSaved) {
+        this.refreshMapOnEventSaved = refreshMapOnEventSaved;
     }
 }

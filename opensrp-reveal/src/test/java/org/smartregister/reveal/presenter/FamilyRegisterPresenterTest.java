@@ -99,6 +99,6 @@ public class FamilyRegisterPresenterTest extends BaseUnitTest {
         presenter.onTasksGenerated();
         verify(view).hideProgressDialog();
         verify(view).startProfileActivity(baseEntityId, familyHead, careGiver, "Otala");
-        assertTrue(RevealApplication.getInstance().isRefreshMapAfterFeatureSelect());
+        assertTrue(RevealApplication.getInstance().isRefreshMapOnEventSaved());
     }
 }

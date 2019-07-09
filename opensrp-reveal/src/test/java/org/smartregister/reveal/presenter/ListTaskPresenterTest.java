@@ -501,7 +501,7 @@ public class ListTaskPresenterTest {
     public void testOnResume() {
 
         RevealApplication revealApplication = mock(RevealApplication.class);
-        when(revealApplication.isRefreshMapAfterFeatureSelect()).thenReturn(true);
+        when(revealApplication.isRefreshMapOnEventSaved()).thenReturn(true);
         Whitebox.setInternalState(listTaskPresenter, "revealApplication", revealApplication);
         listTaskPresenter.onResume();
         assertFalse(listTaskPresenter.isChangeMapPosition());
@@ -514,15 +514,15 @@ public class ListTaskPresenterTest {
     public void testOnResumeMapIsRefreshedAfterFeatureSelect() {
 
         RevealApplication revealApplication = mock(RevealApplication.class);
-        when(revealApplication.isRefreshMapAfterFeatureSelect()).thenReturn(false);
-        when(revealApplication.isRefreshMapAfterFeatureSelect()).thenReturn(true);
+        when(revealApplication.isRefreshMapOnEventSaved()).thenReturn(false);
+        when(revealApplication.isRefreshMapOnEventSaved()).thenReturn(true);
         Whitebox.setInternalState(listTaskPresenter, "revealApplication", revealApplication);
         listTaskPresenter.onResume();
 
         verify(listTaskViewSpy).showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
         verify(listTaskInteractor).fetchLocations(anyString(),anyString());
         verify(listTaskViewSpy).clearSelectedFeature();
-        verify(revealApplication).setRefreshMapAfterFeatureSelect(isRefreshMapAfterFeatureSelectCaptor.capture());
+        verify(revealApplication).setRefreshMapOnEventSaved(isRefreshMapAfterFeatureSelectCaptor.capture());
         assertFalse(isRefreshMapAfterFeatureSelectCaptor.getValue());
     }
 
