@@ -41,6 +41,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
     private boolean bloodScreeningDone;
 
+    private String reasonReference;
+
     public TaskDetails(@NonNull String taskId) {
         super(taskId);
     }
@@ -168,5 +170,13 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
     @Override
     public int compareTo(@NonNull TaskDetails other) {
         return Double.compare(distanceFromUser, other.getDistanceFromUser());
+    }
+
+    public void setReasonReference(String reasonReference) {
+        this.reasonReference = reasonReference;
+    }
+
+    public String getReasonReference() {
+        return reasonReference;
     }
 }

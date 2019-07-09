@@ -197,7 +197,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             setTaskDetails(details);
             if (CASE_CONFIRMATION.equals(details.getTaskCode())) {
                 interactor.getIndexCaseDetails(details.getStructureId(),
-                        Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(), prefsUtil.getCurrentPlanId());
+                        Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(), details.getReasonReference());
             } else if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())
                     &&
                     (BLOOD_SCREENING.equals(details.getTaskCode()) ||
