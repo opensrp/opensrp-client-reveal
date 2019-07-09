@@ -49,7 +49,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         try {
             familyJsonFormUtils = new FamilyJsonFormUtils(getView().getApplicationContext());
         } catch (Exception e) {
-            Log.e(TAG, "error Intitializing FamilyJsonFormUtils ");
+            Log.e(TAG, "error Initializing FamilyJsonFormUtils ");
         }
     }
 
@@ -102,7 +102,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
     public void onRegistrationSaved(boolean isEdit) {
         if (!isEdit && Utils.getInterventionLabel() == R.string.focus_investigation) {
             getInteractor().generateTasks(getView().getApplicationContext(),
-                    getModel().getEventClient().getEvent().getBaseEntityId(),structureId);
+                    getModel().getEventClient().getEvent().getBaseEntityId(), structureId);
             return;
         } else {
             FamilyEventClient eventClient = getModel().getEventClient();
@@ -140,7 +140,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
     public void startFormForEdit(CommonPersonObjectClient client) {
         String formName = BuildConfig.BUILD_COUNTRY == Country.THAILAND ? JSON_FORM.THAILAND_FAMILY_UPDATE : JSON_FORM.FAMILY_UPDATE;
         JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditFormString(formName,
-                getView().getApplicationContext(), client, RevealApplication.getInstance().getMetadata().familyRegister.updateEventType);
+                client, RevealApplication.getInstance().getMetadata().familyRegister.updateEventType);
         try {
             getView().startFormActivity(form);
 
