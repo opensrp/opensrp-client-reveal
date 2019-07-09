@@ -67,11 +67,10 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         jsonDbMap.put(DatabaseKeys.OCCUPATION, DatabaseKeys.OCCUPATION);
         jsonDbMap.put(DatabaseKeys.SLEEPS_OUTDOORS, DatabaseKeys.SLEEPS_OUTDOORS);
         jsonDbMap.put(DatabaseKeys.PHONE_NUMBER, DatabaseKeys.PHONE_NUMBER);
-        jsonDbMap.put(FormKeys.SURNAME, DBConstants.KEY.LAST_NAME);
 
     }
 
-    public JSONObject getAutoPopulatedJsonEditFormString(String formName, Context context, CommonPersonObjectClient client, String eventType) {
+    public JSONObject getAutoPopulatedJsonEditFormString(String formName, CommonPersonObjectClient client, String eventType) {
         try {
             JSONObject form = formUtils.getFormJson(formName);
             if (form != null) {
@@ -109,9 +108,6 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
             case DatabaseKeys.FAMILY_NAME:
             case DatabaseKeys.OLD_FAMILY_NAME:
                 jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), DBConstants.KEY.FIRST_NAME, false));
-                break;
-            case FormKeys.SURNAME:
-                jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), DBConstants.KEY.LAST_NAME, false));
                 break;
             case DBConstants.KEY.VILLAGE_TOWN:
                 jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), DBConstants.KEY.VILLAGE_TOWN, false));
@@ -249,22 +245,22 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
         jsonObject.put(VALUE, familyName);
 
-        String firstName = Utils.getValue(client.getColumnmaps(), DBConstants.KEY.FIRST_NAME, false);
+        String lastName = Utils.getValue(client.getColumnmaps(), DBConstants.KEY.LAST_NAME, false);
 
         JSONObject sameAsFamName = getFieldJSONObject(jsonArray, FormKeys.SAME_AS_FAM_NAME);
         JSONObject sameOptions = sameAsFamName.getJSONArray(JSON_FORM_KEY.OPTIONS).getJSONObject(0);
 
-        if (familyName.equals(firstName)) {
+        if (familyName.equals(lastName)) {
             sameOptions.put(VALUE, true);
         } else {
             sameOptions.put(VALUE, false);
         }
 
-        JSONObject firstNameKey = getFieldJSONObject(jsonArray, FormKeys.FIRST_NAME);
-        if (!familyName.equals(firstName)) {
-            firstNameKey.put(VALUE, firstName);
+        JSONObject surname = getFieldJSONObject(jsonArray, FormKeys.SURNAME);
+        if (!familyName.equals(lastName)) {
+            surname.put(VALUE, lastName);
         } else {
-            firstNameKey.put(VALUE, "");
+            surname.put(VALUE, "");
         }
     }
 

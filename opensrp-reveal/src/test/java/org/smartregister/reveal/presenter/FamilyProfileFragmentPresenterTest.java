@@ -192,7 +192,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
     public void testStartFormForEdit() {
         CommonPersonObjectClient client = TestingUtils.getCommonPersonObjectClient();
         presenter.startFormForEdit(client);
-        verify(familyJsonFormUtils).getAutoPopulatedJsonEditFormString(JSON_FORM.FAMILY_UPDATE, context, client, EventType.UPDATE_FAMILY_REGISTRATION);
+        verify(familyJsonFormUtils).getAutoPopulatedJsonEditFormString(JSON_FORM.FAMILY_UPDATE, client, EventType.UPDATE_FAMILY_REGISTRATION);
         verify(view).startFormActivity(null);
     }
 
