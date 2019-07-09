@@ -501,7 +501,7 @@ public class ListTaskPresenterTest {
     public void testOnResume() {
 
         RevealApplication revealApplication = mock(RevealApplication.class);
-        when(revealApplication.isFamilyAdded()).thenReturn(true);
+        when(revealApplication.isRefreshMapAfterFeatureSelect()).thenReturn(true);
         Whitebox.setInternalState(listTaskPresenter, "revealApplication", revealApplication);
         listTaskPresenter.onResume();
         assertFalse(listTaskPresenter.isChangeMapPosition());
@@ -514,7 +514,7 @@ public class ListTaskPresenterTest {
     public void testOnResumeMapIsRefreshedAfterFeatureSelect() {
 
         RevealApplication revealApplication = mock(RevealApplication.class);
-        when(revealApplication.isFamilyAdded()).thenReturn(false);
+        when(revealApplication.isRefreshMapAfterFeatureSelect()).thenReturn(false);
         when(revealApplication.isRefreshMapAfterFeatureSelect()).thenReturn(true);
         Whitebox.setInternalState(listTaskPresenter, "revealApplication", revealApplication);
         listTaskPresenter.onResume();

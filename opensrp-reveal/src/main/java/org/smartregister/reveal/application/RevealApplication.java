@@ -88,8 +88,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     private AppExecutors appExecutors;
 
-    private boolean familyAdded;
-
     private boolean refreshMapAfterFeatureSelect;
 
     public static synchronized RevealApplication getInstance() {
@@ -335,14 +333,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             planDefinitionSearchRepository = new PlanDefinitionSearchRepository(getRepository());
         }
         return planDefinitionSearchRepository;
-    }
-
-    public boolean isFamilyAdded() {
-        return familyAdded;
-    }
-
-    public void setFamilyAdded(boolean familyAdded) {
-        this.familyAdded = familyAdded;
     }
 
     @NonNull

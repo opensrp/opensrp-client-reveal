@@ -434,12 +434,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
 
     public void onResume() {
-        if (revealApplication.isFamilyAdded()) {
-            refreshStructures(true);
-            revealApplication.setFamilyAdded(false);
-        }
         if (revealApplication.isRefreshMapAfterFeatureSelect()) {
-            refreshMapAfterFeatureSelect();
+            refreshStructures(true);
+            listTaskView.clearSelectedFeature();
+            revealApplication.setRefreshMapAfterFeatureSelect(false);
         }
     }
 
@@ -451,11 +449,4 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         this.changeMapPosition = changeMapPosition;
     }
 
-    @Override
-    public void refreshMapAfterFeatureSelect() {
-        listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
-        listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalArea());
-        listTaskView.clearSelectedFeature();
-        revealApplication.setRefreshMapAfterFeatureSelect(false);
-    }
 }
