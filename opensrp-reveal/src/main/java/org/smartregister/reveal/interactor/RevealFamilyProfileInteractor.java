@@ -78,11 +78,11 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
             JSONArray updateSurnameEvents = new JSONArray();
             List<String> formSubmissionIds = new ArrayList<>();
             for (CommonPersonObject commonPersonObject : commonRepository.findByRelational_IDs(family.getBaseEntityId())) {
-                String firstName = commonPersonObject.getColumnmaps().get(KEY.FIRST_NAME);
-                if (oldFamilyName.equalsIgnoreCase(firstName)) {//name same as the edited family name
+                String lastName = commonPersonObject.getColumnmaps().get(KEY.LAST_NAME);
+                if (oldFamilyName.equalsIgnoreCase(lastName)) {//surname same as the edited family name
                     JSONObject client = eventClientRepository.getClientByBaseEntityId(commonPersonObject.getCaseId());
                     try {
-                        client.put("firstName", family.getFirstName());
+                        client.put("lastName", family.getFirstName());
                         client.put(syncStatus.name(), BaseRepository.TYPE_Unsynced);
                         familyMembers.put(client);
                         Event updateEvent = FamilyJsonFormUtils.createUpdateMemberNameEvent(commonPersonObject.getCaseId(), event);

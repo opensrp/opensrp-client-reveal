@@ -69,11 +69,28 @@
       {
         "key": "first_name",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "first_name",
         "type": "edit_text",
         "hint": "ชื่อ",
         "edit_type": "name",
+        "v_required": {
+          "value": "true",
+          "err": "กรุณาใส่ชื่อจริง"
+        }
+      },
+      {
+        "key": "surname",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "นามสกุล",
+        "edit_type": "name",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the Surname"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -99,19 +116,6 @@
         ]
       },
       {
-        "key": "surname",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "last_name",
-        "type": "edit_text",
-        "hint": "นามสกุล",
-        "edit_type": "name",
-        "v_required": {
-          "value": "true",
-          "err": "กรุณาใส่นามสกุลของครอบครัว"
-        }
-      },
-      {
         "key": "fam_name",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -120,10 +124,10 @@
         "hidden": "true"
       },
       {
-        "key": "first_name_calculation",
+        "key": "surname_calculation",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
-        "openmrs_entity_id": "first_name",
+        "openmrs_entity_id": "last_name",
         "type": "hidden",
         "hint": "คลิกเลือกหากนามสกุลเดียวกับเจ้าบ้าน",
         "calculation": {
