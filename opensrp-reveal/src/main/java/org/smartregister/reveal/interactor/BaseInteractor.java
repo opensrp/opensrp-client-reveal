@@ -263,7 +263,9 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     String structureName = event.findObs(null, false, JsonForm.STRUCTURE_NAME).getValue().toString();
                     properties.setName(structureName);
                     String physicalType = event.findObs(null, false, JsonForm.PHYSICAL_TYPE).getValue().toString();
-                    properties.getCustomProperties().put("physicalType", physicalType);
+                    Map<String, String> customProperties = new HashMap<>();
+                    customProperties.put("physicalType", physicalType);
+                    properties.setCustomProperties(customProperties);
                     structure.setProperties(properties);
                     structure.setSyncStatus(BaseRepository.TYPE_Created);
                     structureRepository.addOrUpdate(structure);
