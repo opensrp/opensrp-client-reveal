@@ -2,7 +2,9 @@ package org.smartregister.reveal.model;
 
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.model.BaseFamilyRegisterModel;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.Properties;
 
 import java.util.List;
 
@@ -32,10 +34,11 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
         eventClientList = super.processRegistration(jsonString);
         for (FamilyEventClient eventClient : eventClientList) {
             eventClient.getClient().addAttribute(RESIDENCE, structureId);
-            eventClient.getEvent().addDetails(Constants.Properties.TASK_IDENTIFIER, taskId);
-            eventClient.getEvent().addDetails(Constants.Properties.TASK_BUSINESS_STATUS, taskBusinessStatus);
-            eventClient.getEvent().addDetails(Constants.Properties.TASK_STATUS, taskStatus);
-            eventClient.getEvent().addDetails(Constants.Properties.LOCATION_UUID, structureId);
+            eventClient.getEvent().addDetails(Properties.TASK_IDENTIFIER, taskId);
+            eventClient.getEvent().addDetails(Properties.TASK_BUSINESS_STATUS, taskBusinessStatus);
+            eventClient.getEvent().addDetails(Properties.TASK_STATUS, taskStatus);
+            eventClient.getEvent().addDetails(Properties.LOCATION_UUID, structureId);
+            eventClient.getEvent().addDetails(Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
         }
         return eventClientList;
     }
