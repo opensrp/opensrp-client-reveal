@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 
+import org.apache.commons.lang3.tuple.Triple;
 import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.presenter.BaseFamilyRegisterPresenter;
@@ -59,5 +60,20 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter impleme
 
     private FamilyRegisterContract.Interactor getInteractor() {
         return (FamilyRegisterContract.Interactor) interactor;
+    }
+
+
+    @Override
+    public void onDestroy(boolean isChangingConfiguration) {
+        super.viewReference = null;
+        super.interactor = null;
+        super.model = null;
+    }
+
+    @Override
+    public void onUniqueIdFetched(Triple<String, String, String> triple, String entityId) {
+        if (viewReference != null) {
+            super.onUniqueIdFetched(triple, entityId);
+        }
     }
 }

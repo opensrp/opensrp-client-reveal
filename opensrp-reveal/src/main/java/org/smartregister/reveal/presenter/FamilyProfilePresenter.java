@@ -145,7 +145,9 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
             getView().startFormActivity(form);
 
         } catch (Exception e) {
-            Log.e("TAG", e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
     }
+
+
 }
