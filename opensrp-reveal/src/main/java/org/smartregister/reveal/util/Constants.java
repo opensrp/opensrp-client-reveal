@@ -237,6 +237,10 @@ public interface Constants {
         String TITLE = "title";
 
         String FAMILY_MEMBER = "familyMember";
+
+        String STRUCTURE_NAME = "structureName";
+
+        String PHYSICAL_TYPE = "physicalType";
     }
 
     interface DateFormat {

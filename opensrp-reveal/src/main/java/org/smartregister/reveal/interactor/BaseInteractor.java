@@ -260,6 +260,10 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     properties.setParentId(operationalAreaId);
                     properties.setStatus(LocationProperty.PropertyStatus.PENDING_REVIEW);
                     properties.setUid(UUID.randomUUID().toString());
+                    String structureName = event.findObs(null, false, JsonForm.STRUCTURE_NAME).getValue().toString();
+                    properties.setName(structureName);
+                    String physicalType = event.findObs(null, false, JsonForm.PHYSICAL_TYPE).getValue().toString();
+                    properties.getCustomProperties().put("physicalType", physicalType);
                     structure.setProperties(properties);
                     structure.setSyncStatus(BaseRepository.TYPE_Created);
                     structureRepository.addOrUpdate(structure);
