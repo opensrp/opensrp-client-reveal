@@ -15,7 +15,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -65,6 +64,7 @@ import org.smartregister.util.AssetHandler;
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
 import io.ona.kujaku.utils.Constants;
+import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
@@ -88,8 +88,6 @@ import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
  */
 public class ListTasksActivity extends BaseMapActivity implements ListTaskContract.ListTaskView,
         View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener, UserLocationView, OnLocationComponentInitializedCallback {
-
-    private static final String TAG = "ListTasksActivity";
 
     private ListTaskPresenter listTaskPresenter;
 
@@ -449,7 +447,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             try {
                 selectedGeoJsonSource.setGeoJson(new com.cocoahero.android.geojson.FeatureCollection().toJSON().toString());
             } catch (JSONException e) {
-                Log.e(TAG, "Error clearing selected feature");
+                Timber.e(e, "Error clearing selected feature");
             }
         }
     }
@@ -463,7 +461,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
             String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
-            Log.d(TAG, json);
+            Timber.d( json);
             listTaskPresenter.saveJsonForm(json);
         } else if (requestCode == Constants.RequestCode.LOCATION_SETTINGS && hasRequestedLocation) {
             if (resultCode == RESULT_OK) {

@@ -1,7 +1,5 @@
 package org.smartregister.reveal.interactor;
 
-import android.util.Log;
-
 import com.mapbox.geojson.Feature;
 
 import net.sqlcipher.Cursor;
@@ -25,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import timber.log.Timber;
+
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
@@ -38,9 +38,6 @@ import static org.smartregister.reveal.util.Constants.Tables.MOSQUITO_COLLECTION
  * Created by samuelgithengi on 11/27/18.
  */
 public class ListTaskInteractor extends BaseInteractor {
-
-    private static final String TAG = ListTaskInteractor.class.getCanonicalName();
-
 
     public ListTaskInteractor(ListTaskContract.Presenter presenter) {
         super(presenter);
@@ -70,7 +67,7 @@ public class ListTaskInteractor extends BaseInteractor {
                         cardDetails = createCardDetails(cursor, interventionType);
                     }
                 } catch (Exception e) {
-                    Log.e(TAG, Log.getStackTraceString(e));
+                    Timber.e(e);
                 } finally {
                     if (cursor != null) {
                         cursor.close();
@@ -142,11 +139,11 @@ public class ListTaskInteractor extends BaseInteractor {
                         List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
                         String indexCase = getIndexCaseStructure(plan);
                         featureCollection.put(GeoJSON.FEATURES, new JSONArray(GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, indexCase)));
-                        Log.d(TAG, "features:" + featureCollection.toString());
+                        Timber.d("features:" + featureCollection.toString());
 
                     }
                 } catch (Exception e) {
-                    Log.e(TAG, e.getMessage(), e);
+                    Timber.e(e);
                 }
                 JSONObject finalFeatureCollection = featureCollection;
                 appExecutors.mainThread().execute(new Runnable() {
@@ -177,7 +174,7 @@ public class ListTaskInteractor extends BaseInteractor {
                 structureId = cursor.getString(0);
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            Timber.e(e);
         } finally {
             if (cursor != null) {
                 cursor.close();

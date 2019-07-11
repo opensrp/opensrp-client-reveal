@@ -2,7 +2,6 @@ package org.smartregister.reveal.presenter;
 
 import android.location.Location;
 import android.os.SystemClock;
-import android.util.Log;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
@@ -17,12 +16,12 @@ import org.smartregister.reveal.util.Utils;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import timber.log.Timber;
+
 /**
  * Created by samuelgithengi on 2/13/19.
  */
 public class ValidateUserLocationPresenter implements UserLocationContract.UserLocationPresenter {
-
-    private static final String TAG = "ValidateUserLocation";
 
     private UserLocationView locationView;
 
@@ -70,7 +69,7 @@ public class ValidateUserLocationPresenter implements UserLocationContract.UserL
 
     private void waitForUserLocation(long elapsedTimeInMillis) {
         Location location = locationView.getUserCurrentLocation();
-        Log.d(TAG, "user location: " + location);
+        Timber.d("user location: " + location);
         if (location == null) {
             if (elapsedTimeInMillis / 1000 >= Utils.getResolveLocationTimeoutInSeconds()) {
                 appExecutors.mainThread().execute(() -> onGetUserLocationFailed());

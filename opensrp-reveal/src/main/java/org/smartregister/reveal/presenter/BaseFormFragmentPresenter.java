@@ -2,7 +2,6 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,6 +28,7 @@ import org.smartregister.util.JsonFormUtils;
 import java.lang.ref.WeakReference;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
+import timber.log.Timber;
 
 import static org.smartregister.family.util.Constants.JSON_FORM_KEY.OPTIONS;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
@@ -158,7 +158,7 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
         try {
             getView().startForm(new JSONObject(formJSON.toString().replace(JsonForm.NUMBER_OF_FAMILY_MEMBERS, numberOfMembers + "")));
         } catch (JSONException e) {
-            Log.e(getClass().getName(), "Error updating Number of members");
+            Timber.e(e, "Error updating Number of members");
             getView().startForm(formJSON);
         }
         getView().hideProgressDialog();
@@ -170,7 +170,7 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
         try {
             familyMemberField.put(OPTIONS, familyMembers);
         } catch (JSONException e) {
-            Log.e(getClass().getName(), "Error updating family members");
+            Timber.e(e, "Error updating family members");
         }
         getView().startForm(formJSON);
     }

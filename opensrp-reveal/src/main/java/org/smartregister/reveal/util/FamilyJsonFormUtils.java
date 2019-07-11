@@ -97,7 +97,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                 return form;
             }
         } catch (Exception e) {
-            Log.e(TAG, Log.getStackTraceString(e));
+            Timber.e(e);
         }
 
         return null;

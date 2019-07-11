@@ -117,6 +117,10 @@
         "type": "edit_text",
         "hint": "First name",
         "edit_type": "name",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter first name of Head of Household"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {

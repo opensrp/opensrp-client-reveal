@@ -3,7 +3,6 @@ package org.smartregister.reveal.sync;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
@@ -28,6 +27,8 @@ import org.smartregister.sync.ClientProcessorForJava;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
@@ -35,17 +36,15 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_D
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
-import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
 
 /**
  * Created by samuelgithengi on 12/7/18.
  */
 public class RevealClientProcessor extends ClientProcessorForJava {
-
-    private static final String TAG = RevealClientProcessor.class.getCanonicalName();
 
     private EventClientRepository eventClientRepository;
 
@@ -112,7 +111,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                             }
                             processEvent(event, client, clientClassification);
                         } catch (Exception e) {
-                            Log.d(TAG, e.getMessage());
+                            Timber.e(e);
                         }
 
                     }
@@ -140,7 +139,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 return event.getDetails().get(LOCATION_PARENT);
             }
         } catch (Exception e) {
-            Log.e(TAG, "Error processing register structure event", e);
+            Timber.e(e, "Error processing register structure event");
         }
         return null;
     }
@@ -166,10 +165,10 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 Client client = new Client(event.getBaseEntityId());
                 processEvent(event, client, clientClassification);
             } catch (Exception e) {
-                Log.e(TAG, "Error processing spray event", e);
+                Timber.e(e, "Error processing spray event");
             }
         } else {
-            Log.w(TAG, String.format("Spray Event %s does not have task details", event.getEventId()));
+            Timber.w(String.format("Spray Event %s does not have task details", event.getEventId()));
         }
         return operationalAreaId;
     }
@@ -182,7 +181,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 Client client = new Client(event.getBaseEntityId());
                 processEvent(event, client, clientClassification);
             } catch (Exception e) {
-                Log.e(TAG, "Error processing spray event", e);
+                Timber.e(e, "Error processing spray event");
             }
         }
         return operationalAreaId;

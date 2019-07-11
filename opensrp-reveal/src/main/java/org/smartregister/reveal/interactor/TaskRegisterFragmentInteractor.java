@@ -2,7 +2,6 @@ package org.smartregister.reveal.interactor;
 
 import android.location.Location;
 import android.support.v4.util.Pair;
-import android.util.Log;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -28,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
 import static org.smartregister.repository.EventClientRepository.Table.event;
@@ -366,7 +367,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                         }
                     }
                 } catch (Exception e) {
-                    Log.e(getClass().getName(), "Exception", e);
+                    Timber.e(e);
                 } finally {
                     if (cursor != null) {
                         cursor.close();
