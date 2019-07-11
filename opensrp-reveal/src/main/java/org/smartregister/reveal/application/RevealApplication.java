@@ -42,6 +42,7 @@ import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.util.CrashlyticsTree;
 import org.smartregister.reveal.util.RevealSyncConfiguration;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.FamilyProfileActivity;
@@ -66,8 +67,6 @@ import static org.smartregister.reveal.util.FamilyConstants.EventType;
 import static org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
 import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
-import static org.smartregister.util.Log.logError;
-import static org.smartregister.util.Log.logInfo;
 
 public class RevealApplication extends DrishtiApplication implements TimeChangedBroadcastReceiver.OnTimeChangedListener {
 
@@ -100,6 +99,13 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     @Override
     public void onCreate() {
         super.onCreate();
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        } else {
+            Timber.plant(new CrashlyticsTree());
+        }
+
         mInstance = this;
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
@@ -142,7 +148,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
                 repository = new RevealRepository(getInstance().getApplicationContext(), context);
             }
         } catch (UnsatisfiedLinkError e) {
-            Timber.e(e,"Error on getRepository: " );
+            Timber.e(e, "Error on getRepository: ");
 
         }
         return repository;
@@ -182,7 +188,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     @Override
     public void onTerminate() {
-        logInfo("Application is terminating. Stopping Sync scheduler and resetting isSyncInProgress setting.");
+        Timber.e("Application is terminating. Stopping Sync scheduler and resetting isSyncInProgress setting.");
         cleanUpSyncState();
         TimeChangedBroadcastReceiver.destroy(this);
         SyncStatusBroadcastReceiver.destroy(this);
