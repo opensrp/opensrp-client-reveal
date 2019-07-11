@@ -61,17 +61,4 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter impleme
     private FamilyRegisterContract.Interactor getInteractor() {
         return (FamilyRegisterContract.Interactor) interactor;
     }
-
-
-    @Override
-    public void onDestroy(boolean isChangingConfiguration) {
-        //do nothing
-    }
-
-    @Override
-    public void onUniqueIdFetched(Triple<String, String, String> triple, String entityId) {
-        if (viewReference != null) {
-            super.onUniqueIdFetched(triple, entityId);
-        }
-    }
 }

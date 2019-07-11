@@ -148,9 +148,4 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
             Log.e(TAG, e.getMessage());
         }
     }
-
-    @Override
-    public void onDestroy(boolean isChangingConfiguration) {
-        //do nothing
-    }
 }
