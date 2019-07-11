@@ -2,6 +2,8 @@ package org.smartregister.reveal.model;
 
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.model.BaseFamilyProfileModel;
+import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.util.Constants;
 
 import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
 
@@ -21,26 +23,30 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
     @Override
     public FamilyEventClient processMemberRegistration(String jsonString, String familyBaseEntityId) {
         eventClient = super.processMemberRegistration(jsonString, familyBaseEntityId);
-        if (structureId != null)
-            eventClient.getClient().addAttribute(RESIDENCE, structureId);
+        tagEventClientDetails(eventClient);
         return eventClient;
     }
 
     @Override
     public FamilyEventClient processFamilyRegistrationForm(String jsonString, String familyBaseEntityId) {
         eventClient = super.processFamilyRegistrationForm(jsonString, familyBaseEntityId);
-        if (structureId != null)
-            eventClient.getClient().addAttribute(RESIDENCE, structureId);
-
+        tagEventClientDetails(eventClient);
         return eventClient;
     }
 
     @Override
     public FamilyEventClient processUpdateMemberRegistration(String jsonString, String familyBaseEntityId) {
         eventClient = super.processUpdateMemberRegistration(jsonString, familyBaseEntityId);
-        if (structureId != null)
-            eventClient.getClient().addAttribute(RESIDENCE, structureId);
+        tagEventClientDetails(eventClient);
         return eventClient;
+    }
+
+    private void tagEventClientDetails(FamilyEventClient eventClient) {
+        if (structureId != null) {
+            eventClient.getClient().addAttribute(RESIDENCE, structureId);
+            eventClient.getEvent().addDetails(Constants.Properties.LOCATION_UUID, structureId);
+        }
+        eventClient.getEvent().addDetails(Constants.Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
     }
 
     public void setStructureId(String structureId) {

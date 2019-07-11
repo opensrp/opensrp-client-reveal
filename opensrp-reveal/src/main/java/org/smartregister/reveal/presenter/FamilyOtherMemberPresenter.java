@@ -111,4 +111,5 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
     protected FamilyOtherMemberProfileContract.View getView() {
         return (FamilyOtherMemberProfileContract.View) super.getView();
     }
+
 }

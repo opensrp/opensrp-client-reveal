@@ -32,6 +32,7 @@ import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
@@ -178,6 +179,8 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
         formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
         formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
+        formTag.databaseVersion = BuildConfig.DATABASE_VERSION;
+        formTag.appVersion = BuildConfig.VERSION_CODE;
         Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, encounterType, bindType);
         JSONObject eventJson = new JSONObject(gson.toJson(event));
         eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
@@ -237,7 +240,10 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             public void run() {
                 try {
                     jsonForm.put(ENTITY_ID, UUID.randomUUID().toString());
-                    jsonForm.put(DETAILS, new JSONObject().put(Properties.LOCATION_PARENT, operationalAreaId));
+                    JSONObject eventDetails = new JSONObject();
+                    eventDetails.put(Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
+                    eventDetails.put(Properties.LOCATION_PARENT, operationalAreaId);
+                    jsonForm.put(DETAILS, eventDetails);
                     org.smartregister.domain.db.Event event = saveEvent(jsonForm, REGISTER_STRUCTURE_EVENT, STRUCTURE);
                     com.cocoahero.android.geojson.Feature feature = new com.cocoahero.android.geojson.Feature(new JSONObject(event.findObs(null, false, "structure").getValue().toString()));
                     DateTime now = new DateTime();
