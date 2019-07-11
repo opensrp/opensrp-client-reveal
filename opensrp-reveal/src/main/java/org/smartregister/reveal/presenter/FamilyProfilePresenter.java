@@ -149,5 +149,8 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         }
     }
 
-
+    @Override
+    public void onDestroy(boolean isChangingConfiguration) {
+        //do nothing
+    }
 }

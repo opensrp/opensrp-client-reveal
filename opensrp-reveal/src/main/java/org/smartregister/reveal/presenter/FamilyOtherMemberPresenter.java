@@ -112,4 +112,9 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
     protected FamilyOtherMemberProfileContract.View getView() {
         return (FamilyOtherMemberProfileContract.View) super.getView();
     }
+
+    @Override
+    public void onDestroy(boolean isChangingConfiguration) {
+        //do nothing
+    }
 }
