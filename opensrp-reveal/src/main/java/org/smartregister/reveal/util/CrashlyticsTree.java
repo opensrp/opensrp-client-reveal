@@ -18,12 +18,16 @@ public class CrashlyticsTree extends Timber.Tree {
     private static final String CRASHLYTICS_KEY_MESSAGE = "message";
 
 
-    private String userName = RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM();
+    private String userName;
 
     @Override
     protected void log(int priority, @Nullable String tag, @NotNull String message, @Nullable Throwable t) {
         if (priority == Log.VERBOSE || priority == Log.DEBUG || priority == Log.INFO) {
             return;
+        }
+
+        if (userName == null) {
+            userName = RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM();
         }
 
         Crashlytics.setInt(CRASHLYTICS_KEY_PRIORITY, priority);
