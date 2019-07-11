@@ -3,7 +3,6 @@ package org.smartregister.reveal.model;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.model.BaseFamilyRegisterModel;
 import org.smartregister.reveal.BuildConfig;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Properties;
 
 import java.util.List;

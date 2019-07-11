@@ -5,7 +5,6 @@ import org.smartregister.job.SyncServiceJob;
 import org.smartregister.login.interactor.BaseLoginInteractor;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.job.LocationTaskServiceJob;
-import org.smartregister.reveal.util.TestDataUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.view.contract.BaseLoginContract;
 

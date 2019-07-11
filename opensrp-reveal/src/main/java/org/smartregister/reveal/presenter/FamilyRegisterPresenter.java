@@ -1,7 +1,6 @@
 package org.smartregister.reveal.presenter;
 
 
-import org.apache.commons.lang3.tuple.Triple;
 import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.presenter.BaseFamilyRegisterPresenter;
