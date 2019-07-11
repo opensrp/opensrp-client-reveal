@@ -1,7 +1,5 @@
 package org.smartregister.reveal.interactor;
 
-import android.util.Log;
-
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -11,6 +9,8 @@ import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.util.AppExecutors;
+
+import timber.log.Timber;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
@@ -70,7 +70,7 @@ public class BaseFormFragmentInteractor implements BaseFormFragmentContract.Inte
                     familyMembers.put(member);
                 }
             } catch (Exception e) {
-                Log.e(getClass().getName(), "Error find Member Details ", e);
+                Timber.e(e, "Error find Member Details ");
             } finally {
                 if (cursor != null)
                     cursor.close();

@@ -22,6 +22,8 @@ import org.smartregister.view.fragment.BaseRegisterFragment;
 import java.util.Collections;
 import java.util.List;
 
+import timber.log.Timber;
+
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.TaskRegister;
@@ -67,7 +69,7 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
     protected void onActivityResultExtended(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
             String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
-            Log.d(TAG, json);
+            Timber.d( json);
             getPresenter().saveJsonForm(json);
         } else {
             mBaseFragment.onActivityResult(requestCode, resultCode, data);

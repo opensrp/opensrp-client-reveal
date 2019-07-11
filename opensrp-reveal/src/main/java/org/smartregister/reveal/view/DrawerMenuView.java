@@ -9,7 +9,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
@@ -34,12 +33,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import timber.log.Timber;
+
 /**
  * Created by samuelgithengi on 3/21/19.
  */
 public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.View {
 
-    private static final String TAG = "DrawerMenuView";
 
     private TextView planTextView;
     private TextView operationalAreaTextView;
@@ -109,7 +109,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             ((TextView) headerView.findViewById(R.id.application_version))
                     .setText(getContext().getString(R.string.app_version, Utils.getVersion(getContext())));
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, e.getMessage(), e);
+           Timber.e(e);
         }
 
         String buildDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -199,7 +199,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             });
             treeViewDialog.show();
         } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
+            Timber.e(e);
         }
 
     }
@@ -221,7 +221,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             });
             treeViewDialog.show();
         } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
+            Timber.e(e);
         }
     }
 

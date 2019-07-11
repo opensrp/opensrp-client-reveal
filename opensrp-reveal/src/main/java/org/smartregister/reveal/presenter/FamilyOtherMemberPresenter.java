@@ -1,8 +1,6 @@
 package org.smartregister.reveal.presenter;
 
 
-import android.util.Log;
-
 import org.apache.commons.lang3.tuple.Triple;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -17,13 +15,14 @@ import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 
+import timber.log.Timber;
+
 /**
  * Created by samuelgithengi on 5/31/19.
  */
 public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActivityPresenter
         implements FamilyOtherMemberProfileContract.Presenter, FamilyProfileContract.InteractorCallBack {
 
-    private static final String TAG = FamilyOtherMemberPresenter.class.getName();
 
     private CommonPersonObjectClient client;
 
@@ -46,7 +45,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
         try {
             familyJsonFormUtils = new FamilyJsonFormUtils(view.getContext());
         } catch (Exception e) {
-            Log.e(TAG, "error starting FamilyJsonFormUtils");
+            Timber.e("error starting FamilyJsonFormUtils");
         }
     }
 
@@ -104,7 +103,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
             profileInteractor.saveRegistration(familyEventClient, jsonString, true, this);
         } catch (Exception e) {
             getView().hideProgressDialog();
-            Log.e(TAG, e.getMessage(), e);
+            Timber.e(e);
         }
     }
 

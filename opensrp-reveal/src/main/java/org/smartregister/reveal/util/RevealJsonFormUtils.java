@@ -3,7 +3,6 @@ package org.smartregister.reveal.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.mapbox.geojson.Feature;
 
@@ -20,6 +19,8 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.util.AssetHandler;
+
+import timber.log.Timber;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
@@ -42,9 +43,6 @@ import static org.smartregister.reveal.util.Utils.getPropertyValue;
  */
 public class RevealJsonFormUtils {
 
-    private static final String TAG = "RevealJsonFormUtils";
-
-
     public JSONObject getFormJSON(Context context, String formName, Feature feature, String sprayStatus, String familyHead) {
 
         String taskBusinessStatus = getPropertyValue(feature, Properties.TASK_BUSINESS_STATUS);
@@ -65,7 +63,7 @@ public class RevealJsonFormUtils {
             populateFormFields(formJson, structureType, sprayStatus, familyHead);
             return formJson;
         } catch (Exception e) {
-            Log.e(TAG, "error launching form" + formName, e);
+            Timber.e(e, "error launching form" + formName);
         }
         return null;
     }
@@ -97,7 +95,7 @@ public class RevealJsonFormUtils {
             populateFormFields(formJson, structureType, sprayStatus, familyHead);
             return formJson;
         } catch (JSONException e) {
-            Log.e(TAG, "error launching form" + formName, e);
+            Timber.e(e, "error launching form" + formName);
         }
         return null;
     }
@@ -163,7 +161,7 @@ public class RevealJsonFormUtils {
             intent.putExtra(JSON_FORM_PARAM_JSON, form.toString());
             context.startActivityForResult(intent, requestCode);
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            Timber.e(e);
         }
     }
 
