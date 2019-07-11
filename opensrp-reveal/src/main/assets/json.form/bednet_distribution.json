@@ -366,7 +366,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "How many existing normal (conventional) nets?",
-        "shortened_hint": "Normal nets dipped < 6 months",
+        "shortened_hint": "Normal (conventional) nets?",
         "edit_type": "number",
         "v_required": {
           "value": true,

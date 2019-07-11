@@ -129,6 +129,7 @@ public class RevealJsonFormUtils {
         formData.put(Properties.LOCATION_ID, structureId);
         formData.put(Properties.LOCATION_UUID, structureUUID);
         formData.put(Properties.LOCATION_VERSION, structureVersion);
+        formData.put(Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
         formJson.put(DETAILS, formData);
         return formJson;
     }
