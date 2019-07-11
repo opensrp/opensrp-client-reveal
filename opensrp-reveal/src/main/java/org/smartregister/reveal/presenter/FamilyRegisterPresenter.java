@@ -65,9 +65,7 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter impleme
 
     @Override
     public void onDestroy(boolean isChangingConfiguration) {
-        super.viewReference = null;
-        super.interactor = null;
-        super.model = null;
+        //do nothing
     }
 
     @Override

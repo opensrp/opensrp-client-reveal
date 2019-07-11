@@ -28,7 +28,6 @@ public class LoginInteractor extends BaseLoginInteractor implements BaseLoginCon
 
     @Override
     protected void scheduleJobsImmediately() {
-        new TestDataUtils().populateTestData();
         Utils.startImmediateSync();
     }
 
