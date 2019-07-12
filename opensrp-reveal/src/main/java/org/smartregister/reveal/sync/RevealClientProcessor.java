@@ -154,12 +154,12 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         }
         try {
             Location structure = structureRepository.getLocationById(event.getLocationId());
-            Obs houseNumberObs = event.findObs(null, false, JsonForm.HOUSE_NUMBER);
-            if (houseNumberObs == null) {
-                return;
-            }
+
             if (structure != null) {
-                if (structure.getProperties() != null
+                Obs houseNumberObs = event.findObs(null, false, JsonForm.HOUSE_NUMBER);
+                if (houseNumberObs == null) {
+                    return;
+                } else if (structure.getProperties() != null
                         && StringUtils.isNotEmpty(structure.getProperties().getName())
                         && !structure.getProperties().getName().equalsIgnoreCase(houseNumberObs.getValue().toString())) {
                     structure.getProperties().setName(houseNumberObs.getValue().toString());
@@ -168,7 +168,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
             }
         } catch (Exception e) {
-            Log.e(TAG, "Error processing update family registration event", e);
+            Timber.e(e, "Error processing update family registration event");
         }
     }
 
