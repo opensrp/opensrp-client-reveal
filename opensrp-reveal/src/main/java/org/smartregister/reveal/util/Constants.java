@@ -103,6 +103,7 @@ public interface Constants {
         String LOCATION_ID = "location_id";
         String FEATURE_SELECT_TASK_BUSINESS_STATUS = "featureSelectTaskBusinessStatus";
         String BASE_ENTITY_ID = "baseEntityId";
+        String STRUCTURE_NAME = "structure_name";
     }
 
 
@@ -241,6 +242,7 @@ public interface Constants {
         String STRUCTURE_NAME = "structureName";
 
         String PHYSICAL_TYPE = "physicalType";
+        String HOUSE_NUMBER = "house_number";
     }
 
     interface DateFormat {

@@ -339,6 +339,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         intent.putExtra(Properties.TASK_IDENTIFIER, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_IDENTIFIER));
         intent.putExtra(Properties.TASK_BUSINESS_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_BUSINESS_STATUS));
         intent.putExtra(Properties.TASK_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_STATUS));
+        intent.putExtra(Properties.STRUCTURE_NAME, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.STRUCTURE_NAME));
         startActivity(intent);
 
     }

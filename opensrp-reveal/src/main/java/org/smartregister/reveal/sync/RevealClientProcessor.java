@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.Client;
@@ -35,10 +36,11 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_D
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
-import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION;
+import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
 
 /**
  * Created by samuelgithengi on 12/7/18.
@@ -101,6 +103,8 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     operationalAreaId = processEvent(event, clientClassification, localEvents);
                 } else if (eventType.equals(REGISTER_STRUCTURE_EVENT)) {
                     operationalAreaId = processRegisterStructureEvent(event, clientClassification);
+                } else if (eventType.equals(UPDATE_FAMILY_REGISTRATION)) {
+                    processUpdateFamilyRegistrationEvent(event, localEvents);
                 } else {
                     Client client = eventClient.getClient();
 
@@ -143,6 +147,30 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             Log.e(TAG, "Error processing register structure event", e);
         }
         return null;
+    }
+
+    private void processUpdateFamilyRegistrationEvent(Event event, boolean localEvents) {
+        if (!localEvents ) {
+            return;
+        }
+        try {
+            Location structure = structureRepository.getLocationById(event.getLocationId());
+            Obs houseNumberObs = event.findObs(null, false, JsonForm.HOUSE_NUMBER);
+            if (houseNumberObs == null) {
+                return;
+            }
+            if (structure != null) {
+                if (structure.getProperties() != null
+                        && StringUtils.isNotEmpty(structure.getProperties().getName())
+                        && !structure.getProperties().getName().equalsIgnoreCase(houseNumberObs.getValue().toString())) {
+                    structure.getProperties().setName(houseNumberObs.getValue().toString());
+                    structureRepository.addOrUpdate(structure);
+                }
+
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error processing update family registration event", e);
+        }
     }
 
     private String processSprayEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
