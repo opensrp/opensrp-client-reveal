@@ -6,7 +6,6 @@ import android.graphics.RectF;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -37,6 +36,8 @@ import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.util.Utils;
 
 import java.util.List;
+
+import timber.log.Timber;
 
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
@@ -75,8 +76,6 @@ import static org.smartregister.reveal.util.Utils.validateFarStructures;
  */
 public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRequestCallback,
         UserLocationCallback {
-
-    private static final String TAG = "ListTaskPresenter";
 
     private ListTaskView listTaskView;
 
@@ -164,7 +163,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 listTaskView.clearSelectedFeature();
                 listTaskView.closeCardView(R.id.btn_collapse_spray_card_view);
             } catch (JSONException e) {
-                Log.e(TAG, "error resetting structures");
+                Timber.e("error resetting structures");
             }
         }
     }
@@ -184,7 +183,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void onMapClicked(MapboxMap mapboxMap, LatLng point) {
         double currentZoom = mapboxMap.getCameraPosition().zoom;
         if (currentZoom < MAX_SELECT_ZOOM_LEVEL) {
-            Log.w(TAG, "onMapClicked Current Zoom level" + currentZoom);
+            Timber.w("onMapClicked Current Zoom level" + currentZoom);
             listTaskView.displayToast(R.string.zoom_in_to_select);
             return;
         }
@@ -199,16 +198,16 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     pixel.y - CLICK_SELECT_RADIUS);
             features = mapboxMap.queryRenderedFeatures(clickArea,
                     context.getString(R.string.reveal_layer_polygons), context.getString(R.string.reveal_layer_points));
-            Log.d(TAG, "Selected structure after increasing click area: " + features.size());
+            Timber.d("Selected structure after increasing click area: " + features.size());
             if (features.size() == 1) {
                 onFeatureSelected(features.get(0));
             } else {
-                Log.d(TAG, "Not Selected structure after increasing click area: " + features.size());
+                Timber.d("Not Selected structure after increasing click area: " + features.size());
             }
         } else {
             onFeatureSelected(features.get(0));
             if (features.size() > 1) {
-                Log.w(TAG, "Selected more than 1 structure: " + features.size());
+                Timber.w("Selected more than 1 structure: " + features.size());
             }
         }
 
@@ -223,7 +222,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
         } else {
-            String businessStatus =  getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
+            String businessStatus = getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             selectedFeatureInterventionType = code;
             if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || REGISTER_FAMILY.equals(code))
@@ -283,14 +282,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             String formattedDate = formatDate(sprayCardDetails.getSprayDate(), EVENT_DATE_FORMAT_Z);
             sprayCardDetails.setSprayDate(formattedDate);
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-            Log.i(TAG, "Date parsing failed, trying another date format");
+            Timber.e(e);
+            Timber.i("Date parsing failed, trying another date format");
             try {
                 // try another date format
                 String formattedDate = formatDate(sprayCardDetails.getSprayDate(), EVENT_DATE_FORMAT_XXX);
                 sprayCardDetails.setSprayDate(formattedDate);
             } catch (Exception exception) {
-                Log.e(TAG, exception.getMessage());
+                Timber.e(e);
             }
         }
 
@@ -355,7 +354,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.displaySelectedFeature(feature, clickedPoint);
 
         } catch (JSONException e) {
-            Log.e(TAG, "error extracting coordinates of added structure", e);
+            Timber.e(e, "error extracting coordinates of added structure");
         }
     }
 
@@ -375,7 +374,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             formJson.put(STRUCTURES_TAG, featureCollection.toJson());
             listTaskView.startJsonForm(formJson);
         } catch (Exception e) {
-            Log.e(TAG, "error launching add structure form", e);
+            Timber.e(e, "error launching add structure form");
         }
 
     }

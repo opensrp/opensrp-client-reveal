@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -55,6 +54,7 @@ import java.util.List;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
+import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.DIGITAL_GLOBE_CONNECT_ID;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
@@ -123,7 +123,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
             operationalArea = new JSONObject(formFragment.getCurrentJsonState()).optString(OPERATIONAL_AREA_TAG);
             featureCollection = new JSONObject(formFragment.getCurrentJsonState()).optString(STRUCTURES_TAG);
         } catch (JSONException e) {
-            Log.e(TAG, "error extracting geojson form jsonform", e);
+            Timber.e(e, "error extracting geojson form jsonform");
         }
 
         mapView.setId(canvasId);
@@ -194,7 +194,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
                     @Override
                     public void onMoveEnd(@NonNull MoveGestureDetector detector) {
-                        Log.d(TAG, "onMoveEnd: " + mapboxMap.getCameraPosition().target.toString());
+                        Timber.d("onMoveEnd: " + mapboxMap.getCameraPosition().target.toString());
                         writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key,
                                 openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom);
                     }
@@ -249,7 +249,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
             jsonApi.writeValue(stepName, key, markerPosition.toJSON().toString(), openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
             jsonApi.writeValue(stepName, ZOOM_LEVEL, zoomLevel + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
         } catch (JSONException e) {
-            Log.e(TAG, "error writing Geowidget values", e);
+            Timber.e(e, "error writing Geowidget values");
         }
 
     }
@@ -270,7 +270,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 mapView.addValidator(new MinZoomValidator(minValidation.getString(JsonFormConstants.ERR),
                         minValidation.getDouble(JsonFormConstants.VALUE)));
             } catch (JSONException e) {
-                Log.e(TAG, "Error extracting max zoom level from" + minValidation);
+                Timber.e( "Error extracting max zoom level from" + minValidation);
             }
         }
     }

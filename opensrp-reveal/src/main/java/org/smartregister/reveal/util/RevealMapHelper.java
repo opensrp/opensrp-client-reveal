@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -26,6 +25,8 @@ import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.Constants.StructureType;
 
 import java.util.ArrayList;
+
+import timber.log.Timber;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.eq;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.get;
@@ -52,8 +53,6 @@ import static org.smartregister.reveal.util.Utils.getGlobalConfig;
  * Created by samuelgithengi on 2/20/19.
  */
 public class RevealMapHelper {
-
-    private static final String TAG = RevealMapHelper.class.getName();
 
     private static final String LARVAL_BREEDING_ICON = "larval-breeding-icon";
 
@@ -139,7 +138,7 @@ public class RevealMapHelper {
             indexCaseSource = new GeoJsonSource(INDEX_CASE_SOURCE, circleFeature);
             mapboxMap.getStyle().addSource(indexCaseSource);
         } catch (JSONException e) {
-            Log.e(TAG, e.getStackTrace().toString());
+            Timber.e(e);
         }
 
         indexCaseLineLayer = new LineLayer(INDEX_CASE_LINE_LAYER, indexCaseSource.getId());
@@ -173,7 +172,7 @@ public class RevealMapHelper {
                 }
             }
         } catch (JSONException e) {
-            Log.e(TAG, e.getStackTrace().toString());
+            Timber.e(e);
         }
     }
 

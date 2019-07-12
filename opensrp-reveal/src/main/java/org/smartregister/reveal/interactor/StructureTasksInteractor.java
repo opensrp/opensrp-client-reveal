@@ -1,7 +1,6 @@
 package org.smartregister.reveal.interactor;
 
 import android.support.annotation.VisibleForTesting;
-import android.util.Log;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -18,6 +17,8 @@ import org.smartregister.reveal.util.Constants.Intervention;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static org.smartregister.domain.Task.TaskStatus.CANCELLED;
 import static org.smartregister.domain.Task.TaskStatus.READY;
@@ -43,8 +44,6 @@ import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_ME
  */
 public class StructureTasksInteractor extends BaseInteractor implements StructureTasksContract.Interactor {
 
-
-    private static final String TAG = StructureTasksInteractor.class.getName();
     private AppExecutors appExecutors;
 
     private SQLiteDatabase database;
@@ -94,7 +93,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                     incompleteIndexCase = readTaskDetails(cursor);
                 }
             } catch (Exception e) {
-                Log.e(TAG, "Error querying tasks for " + structureId, e);
+                Timber.e(e, "Error querying tasks for " + structureId);
             } finally {
                 if (cursor != null) {
                     cursor.close();

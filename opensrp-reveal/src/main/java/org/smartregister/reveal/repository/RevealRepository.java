@@ -1,7 +1,6 @@
 package org.smartregister.reveal.repository;
 
 import android.content.Context;
-import android.util.Log;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -33,6 +32,8 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import timber.log.Timber;
+
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
@@ -42,7 +43,6 @@ import static org.smartregister.util.DatabaseMigrationUtils.isColumnExists;
 
 public class RevealRepository extends Repository {
 
-    private static final String TAG = RevealRepository.class.getCanonicalName();
     protected SQLiteDatabase readableDatabase;
     protected SQLiteDatabase writableDatabase;
 
@@ -68,9 +68,8 @@ public class RevealRepository extends Repository {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.w(RevealRepository.class.getName(),
-                "Upgrading database from version " + oldVersion + " to "
-                        + newVersion + ", which will destroy all old data");
+        Timber.w("Upgrading database from version " + oldVersion + " to "
+                + newVersion + ", which will destroy all old data");
 
         int upgradeTo = oldVersion + 1;
         while (upgradeTo <= newVersion) {
@@ -153,7 +152,7 @@ public class RevealRepository extends Repository {
             }
             return readableDatabase;
         } catch (Exception e) {
-            Log.e(TAG, "Database Error. " + e.getMessage());
+            Timber.e(e, "Database Error. ");
             return null;
         }
 

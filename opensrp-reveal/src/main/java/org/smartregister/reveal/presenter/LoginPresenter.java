@@ -2,7 +2,6 @@ package org.smartregister.reveal.presenter;
 
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.CheckBox;
@@ -25,9 +24,9 @@ import org.smartregister.view.contract.BaseLoginContract;
 
 import java.lang.ref.WeakReference;
 
-public class LoginPresenter extends BaseLoginPresenter implements BaseLoginContract.Presenter {
+import timber.log.Timber;
 
-    private static final String TAG = LoginPresenter.class.getCanonicalName();
+public class LoginPresenter extends BaseLoginPresenter implements BaseLoginContract.Presenter {
 
     public LoginPresenter(BaseLoginContract.View loginView) {
         mLoginView = new WeakReference<>(loginView);
@@ -76,7 +75,7 @@ public class LoginPresenter extends BaseLoginPresenter implements BaseLoginContr
             }
 
         } catch (Exception e) {
-            Log.d(TAG, e.getMessage());
+            Timber.e(e);
         }
     }
 

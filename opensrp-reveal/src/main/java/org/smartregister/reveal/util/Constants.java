@@ -104,6 +104,7 @@ public interface Constants {
         String FEATURE_SELECT_TASK_BUSINESS_STATUS = "featureSelectTaskBusinessStatus";
         String BASE_ENTITY_ID = "baseEntityId";
         String STRUCTURE_NAME = "structure_name";
+        String APP_VERSION_NAME = "appVersionName";
     }
 
 

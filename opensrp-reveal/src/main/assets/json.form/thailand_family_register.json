@@ -65,7 +65,7 @@
         "edit_type": "name",
         "v_required": {
           "value": "true",
-          "err": "กรุณาใส่ชื่อหัวหน้าครอบครัว"
+          "err": "กรุณาใส่ชื่อจริง"
         }
       },
       {
@@ -117,6 +117,10 @@
         "type": "edit_text",
         "hint": "ชื่อ",
         "edit_type": "name",
+        "v_required": {
+          "value": "true",
+          "err": "กรุณาใส่ชื่อหัวหน้าครอบครัว"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {

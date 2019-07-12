@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -26,6 +25,8 @@ import org.smartregister.reveal.fragment.FamilyOtherMemberProfileFragment;
 import org.smartregister.reveal.presenter.FamilyOtherMemberPresenter;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.view.fragment.BaseRegisterFragment;
+
+import timber.log.Timber;
 
 public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfileActivity implements FamilyOtherMemberProfileContract.View {
 
@@ -137,7 +138,7 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
                     presenter().updateFamilyMember(jsonString);
                 }
             } catch (Exception e) {
-                Log.e(TAG, "Error processing form submission", e);
+                Timber.e(e, "Error processing form submission");
             }
 
         }
