@@ -207,7 +207,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": "Enter a number"
+          "err": "กรุณาใส่เป็นตัวเลข"
         },
         "v_min": {
           "value": "0",

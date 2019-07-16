@@ -89,7 +89,7 @@
         "edit_type": "name",
         "v_required": {
           "value": "true",
-          "err": "Please enter the Surname"
+          "err": "กรุณาใส่นามสกุลของครอบครัว"
         },
         "relevance": {
           "rules-engine": {
@@ -147,7 +147,7 @@
         "hint": "วันเกิด",
         "expanded": false,
         "duration": {
-          "label": "Age"
+          "label": "อายุ"
         },
         "min_date": "today-120y",
         "max_date": "today",
@@ -317,7 +317,7 @@
         "openmrs_entity": "concept",
         "openmrs_entity_id": "163084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
         "label_info_text": "กรุณากรอกหมายเลขประจำตัวประชาชน",
-        "label_info_title": "National ID number",
+        "label_info_title": "หมายเลขประจำตัว",
         "type": "edit_text",
         "hint": "รหัสประชาชน",
         "v_numeric": {
