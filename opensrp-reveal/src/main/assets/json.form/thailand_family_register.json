@@ -102,7 +102,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_identifier",
         "openmrs_entity_id": "opensrp_id",
-        "type": "edit_text",
+        "type": "hidden",
         "hint": "รหัสผู้ป่วย",
         "v_required": {
           "value": "true",
