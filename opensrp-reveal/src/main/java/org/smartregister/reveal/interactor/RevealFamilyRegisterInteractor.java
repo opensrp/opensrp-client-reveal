@@ -60,6 +60,6 @@ public class RevealFamilyRegisterInteractor extends org.smartregister.family.int
 
     @Override
     protected void processClient(List<EventClient> eventClientList) {
-        clientProcessor.processClient(eventClientList);
+        clientProcessor.processClient(eventClientList, true);
     }
 }
