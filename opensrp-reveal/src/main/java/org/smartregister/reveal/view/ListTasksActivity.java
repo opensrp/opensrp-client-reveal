@@ -186,7 +186,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void closeCardView(int id) {
-        clearSelectedFeature();
         if (id == R.id.btn_collapse_spray_card_view) {
             setViewVisibility(sprayCardView, false);
         } else if (id == R.id.btn_collapse_mosquito_collection_card_view) {
@@ -421,7 +420,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void startJsonForm(JSONObject form) {
-        clearSelectedFeature();
         jsonFormUtils.startJsonForm(form, this);
     }
 

@@ -2,6 +2,7 @@ package org.smartregister.reveal.util;
 
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.R;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_S
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
+import static org.smartregister.reveal.util.Utils.getInterventionLabel;
 
 /**
  * Created by samuelgithengi on 1/7/19.
@@ -57,7 +59,7 @@ public class GeoJsonUtils {
                 }
                 taskProperties = new HashMap<>();
                 taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
-                if (Utils.isResidentialStructure(task.getCode())) { // used to determine color of structure displayed on map
+                if (Utils.isResidentialStructure(task.getCode()) && getInterventionLabel() == R.string.focus_investigation) { // used to determine color of structure displayed on map
                     taskProperties.put(TASK_BUSINESS_STATUS, groupedStructureTasksBusinessStatus);
                 } else {
                     taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
@@ -78,7 +80,7 @@ public class GeoJsonUtils {
 
             }
 
-            if (Utils.isResidentialStructure(taskProperties.get(TASK_CODE))) {
+            if (Utils.isResidentialStructure(taskProperties.get(TASK_CODE)) && getInterventionLabel() == R.string.focus_investigation) {
                 if (familyRegistered && bednetDistributed && bloodScreeningDone) {
                     taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
                 } else if (familyRegistered && !bednetDistributed && !bloodScreeningDone) {

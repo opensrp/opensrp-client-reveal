@@ -144,7 +144,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
         Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
 
         assertEquals(Intervention.REGISTER_FAMILY, feature.getStringProperty(TASK_CODE));
-        assertEquals(FAMILY_REGISTERED, feature.getStringProperty(TASK_BUSINESS_STATUS));
+        assertEquals(COMPLETE, feature.getStringProperty(TASK_BUSINESS_STATUS));
 
     }
 
