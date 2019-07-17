@@ -81,6 +81,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
+import static org.smartregister.reveal.util.Constants.JsonForm.PHYSICAL_TYPE;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.METADATA;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
@@ -264,7 +265,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     properties.setName(structureName);
                     String physicalType = event.findObs(null, false, JsonForm.PHYSICAL_TYPE).getValue().toString();
                     Map<String, String> customProperties = new HashMap<>();
-                    customProperties.put("physicalType", physicalType);
+                    customProperties.put(PHYSICAL_TYPE, physicalType);
                     properties.setCustomProperties(customProperties);
                     structure.setProperties(properties);
                     structure.setSyncStatus(BaseRepository.TYPE_Created);
