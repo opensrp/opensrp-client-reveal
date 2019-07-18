@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
+import android.support.v7.app.AlertDialog;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -545,6 +546,43 @@ public class ListTaskPresenterTest {
         verify(listTaskViewSpy).clearSelectedFeature();
         verify(revealApplication).setRefreshMapOnEventSaved(isRefreshMapAfterFeatureSelectCaptor.capture());
         assertFalse(isRefreshMapAfterFeatureSelectCaptor.getValue());
+    }
+
+    @Test
+    public void testSaveJsonForm() {
+        String form = "{\"form\"}";
+        listTaskPresenter.saveJsonForm(form);
+        verify(listTaskViewSpy).showProgressDialog(R.string.saving_title, R.string.saving_message);
+        verify(listTaskInteractor).saveJsonForm(form);
+
+    }
+
+    @Test
+    public void testOnFormSaveFailure() {
+        listTaskPresenter.onFormSaveFailure(Constants.REGISTER_STRUCTURE_EVENT);
+        verify(listTaskViewSpy).hideProgressDialog();
+        verify(listTaskViewSpy).displayNotification(R.string.form_save_failure_title, R.string.add_structure_form_save_failure);
+    }
+
+    @Test
+    public void testOnSprayFormSaveFailure() {
+        listTaskPresenter.onFormSaveFailure(Constants.SPRAY_EVENT);
+        verify(listTaskViewSpy).hideProgressDialog();
+        verify(listTaskViewSpy).displayNotification(R.string.form_save_failure_title, R.string.spray_form_save_failure);
+
+    }
+
+    public void testRequestUserPassword() {
+        listTaskPresenter.requestUserPassword();
+        AlertDialog passwordDialog = mock(AlertDialog.class);
+        Whitebox.setInternalState(listTaskInteractor, "passwordDialog", passwordDialog);
+        verify(passwordDialog).show();
+    }
+
+    public void testOnPasswordVerified() throws Exception {
+        listTaskPresenter = spy(listTaskPresenter);
+        listTaskPresenter.onPasswordVerified();
+        PowerMockito.verifyPrivate(listTaskPresenter).invoke("onLocationValidated");
     }
 
     private void mockStaticMethods() {
