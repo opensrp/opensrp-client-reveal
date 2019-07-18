@@ -244,6 +244,7 @@ public interface Constants {
 
         String PHYSICAL_TYPE = "physicalType";
         String HOUSE_NUMBER = "house_number";
+
     }
 
     interface DateFormat {

@@ -10,6 +10,7 @@ import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.db.EventClient;
 import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.family.interactor.FamilyProfileInteractor;
 import org.smartregister.family.util.DBConstants.KEY;
@@ -112,4 +113,8 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
         });
     }
 
+    @Override
+    protected void processClient(List<EventClient> eventClientList) {
+        clientProcessor.processClient(eventClientList, true);
+    }
 }

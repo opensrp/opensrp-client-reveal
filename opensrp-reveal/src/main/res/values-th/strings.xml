@@ -25,7 +25,7 @@
     <string name="district">อำเภอ</string>
     <string name="facility">ที่ตั้ง:</string>
     <string name="canton">ตำบล:</string>
-    <string name="operator">ผู้ปฏิบัติการพ่นสารเคมี</string>
+    <string name="operator">ผู้ใช้งาน:</string>
 
     <string name="fetch_location_and_structures_failed">ตรวจไม่พบพื้นที่ปฏิบัติงานนี้ในระบบ โปรดลองทำการซิงค์อุปกรณ์ของท่าน หากยังตรวจไม่พบหมายเลขพื้นที่ปฏิบัติงาน โปรดติดต่อแอดมินฯผู้ดูแลระบบ %1$s</string>
     <string name="fetch_structures_title">ทำการโหลดไม่สำเร็จ</string>

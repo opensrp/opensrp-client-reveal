@@ -60,7 +60,7 @@
         "value": "Yes",
         "v_required": {
           "value": "true",
-          "err": "Please choose family member who is the index case"
+          "err": "โปรดเลือกสมาชิกในครอบครัวที่เป็น index case"
         }
       },
       {
