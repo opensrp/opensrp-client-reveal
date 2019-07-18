@@ -45,6 +45,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -257,6 +258,26 @@ public class ListTaskPresenterTest {
         assertFalse(Whitebox.getInternalState(listTaskPresenter, "changeInterventionStatus"));
         listTaskPresenter.onInterventionFormDetailsFetched(mock(MosquitoHarvestCardDetails.class));
         Assert.assertTrue(Whitebox.getInternalState(listTaskPresenter, "changeInterventionStatus"));
+    }
+
+    @Test
+    public void testOnInterventionFormDetailsFetchedEnabledPasswordValidationStatus() throws Exception {
+        PowerMockito.when(Utils.validateFarStructures()).thenReturn(true);
+        listTaskPresenter = spy(listTaskPresenter);
+        listTaskPresenter.onInterventionFormDetailsFetched(mock(SprayCardDetails.class));
+        PowerMockito.verifyPrivate(listTaskPresenter).invoke("validateUserLocation");
+        PowerMockito.verifyPrivate(listTaskPresenter, never()).invoke("onLocationValidated");
+
+    }
+
+    @Test
+    public void testOnInterventionFormDetailsFetchedDisabledPasswordValidationStatus() throws Exception {
+        PowerMockito.when(Utils.validateFarStructures()).thenReturn(false);
+        listTaskPresenter = spy(listTaskPresenter);
+        listTaskPresenter.onInterventionFormDetailsFetched(mock(SprayCardDetails.class));
+        PowerMockito.verifyPrivate(listTaskPresenter, never()).invoke("validateUserLocation");
+        PowerMockito.verifyPrivate(listTaskPresenter).invoke("onLocationValidated");
+
     }
 
     @Test
@@ -507,7 +528,7 @@ public class ListTaskPresenterTest {
         assertFalse(listTaskPresenter.isChangeMapPosition());
 
         verify(listTaskViewSpy).showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
-        verify(listTaskInteractor).fetchLocations(anyString(),anyString());
+        verify(listTaskInteractor).fetchLocations(anyString(), anyString());
     }
 
     @Test
@@ -520,7 +541,7 @@ public class ListTaskPresenterTest {
         listTaskPresenter.onResume();
 
         verify(listTaskViewSpy).showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
-        verify(listTaskInteractor).fetchLocations(anyString(),anyString());
+        verify(listTaskInteractor).fetchLocations(anyString(), anyString());
         verify(listTaskViewSpy).clearSelectedFeature();
         verify(revealApplication).setRefreshMapOnEventSaved(isRefreshMapAfterFeatureSelectCaptor.capture());
         assertFalse(isRefreshMapAfterFeatureSelectCaptor.getValue());
