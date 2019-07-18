@@ -59,8 +59,9 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_identifier",
         "openmrs_entity_id": "opensrp_id",
-        "type": "hidden",
+        "type": "edit_text",
         "hint": "ID",
+        "read_only": "True",
         "v_required": {
           "value": "true",
           "err": "Please enter the ID"
