@@ -260,8 +260,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         this.cardDetails = cardDetails;
         this.changeInterventionStatus = true;
         listTaskView.hideProgressDialog();
-        validateUserLocation();
+        if (validateFarStructures()) {
+            validateUserLocation();
+        } else {
+            onLocationValidated();
+        }
     }
+
 
     @Override
     public void onCardDetailsFetched(CardDetails cardDetails) {
