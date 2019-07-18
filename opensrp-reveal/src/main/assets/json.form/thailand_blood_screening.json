@@ -155,7 +155,7 @@
         ],
         "v_required": {
           "value": true,
-          "err": "Enter reason person was not tested"
+          "err": "หากไม่เคย โปรดระบุเหตุผล"
         },
         "relevance": {
           "step1:personTested": {
@@ -207,7 +207,7 @@
         },
         "v_numeric": {
           "value": "true",
-          "err": "Enter a number"
+          "err": "กรุณาใส่เป็นตัวเลข"
         },
         "v_min": {
           "value": "0",

@@ -290,7 +290,7 @@
         "value": "No",
         "v_required": {
           "value": "true",
-          "err": "Is this a mop-up activity?"
+          "err": "นี่เป็นกิจกรรม mop-up หรือไม่"
         },
         "relevance": {
           "rules-engine": {
