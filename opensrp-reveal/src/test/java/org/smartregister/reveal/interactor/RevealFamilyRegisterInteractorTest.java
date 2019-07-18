@@ -12,6 +12,7 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.cloudant.models.Client;
 import org.smartregister.cloudant.models.Event;
+import org.smartregister.domain.db.EventClient;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.FamilyRegisterContract;
@@ -21,6 +22,7 @@ import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.sync.ClientProcessorForJava;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -44,6 +46,9 @@ public class RevealFamilyRegisterInteractorTest extends BaseUnitTest {
     @Mock
     private TaskUtils taskUtils;
 
+    @Mock
+    private RevealClientProcessor clientProcessor;
+
     private RevealFamilyRegisterInteractor interactor;
 
     private Context context = RuntimeEnvironment.application;
@@ -55,6 +60,7 @@ public class RevealFamilyRegisterInteractorTest extends BaseUnitTest {
         AppExecutors appExecutors = new AppExecutors(Executors.newSingleThreadExecutor(),
                 Executors.newSingleThreadExecutor(), Executors.newSingleThreadExecutor());
         Whitebox.setInternalState(interactor, "appExecutors", appExecutors);
+        Whitebox.setInternalState(interactor, "clientProcessor", clientProcessor);
     }
 
     @Test
@@ -83,5 +89,13 @@ public class RevealFamilyRegisterInteractorTest extends BaseUnitTest {
         verify(taskUtils, timeout(ASYNC_TIMEOUT)).generateBedNetDistributionTask(context, structureId);
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksGenerated();
     }
+
+    @Test
+    public void testProcessClient() {
+        List<EventClient> eventClientList = Collections.singletonList(new EventClient(new org.smartregister.domain.db.Event()));
+        interactor.processClient(eventClientList);
+        verify(clientProcessor).processClient(eventClientList, true);
+    }
+
 
 }
