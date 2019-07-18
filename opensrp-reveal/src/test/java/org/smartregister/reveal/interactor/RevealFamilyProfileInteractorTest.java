@@ -20,6 +20,7 @@ import org.smartregister.cloudant.models.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.db.EventClient;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.FamilyProfileContract;
@@ -33,6 +34,7 @@ import org.smartregister.sync.ClientProcessorForJava;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 
@@ -65,6 +67,9 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
     @Mock
     private EventClientRepository eventClientRepository;
 
+    @Mock
+    private RevealClientProcessor clientProcessor;
+
     @Captor
     private ArgumentCaptor<JSONArray> jsonArrayArgumentCaptor;
 
@@ -82,6 +87,7 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
         Whitebox.setInternalState(interactor, "appExecutors", appExecutors);
         Whitebox.setInternalState(interactor, "commonRepository", commonRepository);
         Whitebox.setInternalState(interactor, "eventClientRepository", eventClientRepository);
+        Whitebox.setInternalState(interactor, "clientProcessor", clientProcessor);
     }
 
     @Test
@@ -164,5 +170,11 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
         verify(presenter, timeout(ASYNC_TIMEOUT)).onMembersUpdated();
     }
 
+    @Test
+    public void testProcessClient() {
+        List<EventClient> eventClientList = Collections.singletonList(new EventClient(new org.smartregister.domain.db.Event()));
+        interactor.processClient(eventClientList);
+        verify(clientProcessor).processClient(eventClientList, true);
+    }
 
 }
