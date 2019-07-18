@@ -61,6 +61,7 @@
         "openmrs_entity_id": "opensrp_id",
         "type": "edit_text",
         "hint": "ID",
+        "read_only": "True",
         "v_required": {
           "value": "true",
           "err": "Please enter the ID"
