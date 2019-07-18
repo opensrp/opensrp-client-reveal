@@ -54,6 +54,7 @@ import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -250,7 +251,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     jsonForm.put(DETAILS, eventDetails);
                     org.smartregister.domain.db.Event event = saveEvent(jsonForm, REGISTER_STRUCTURE_EVENT, STRUCTURE);
                     com.cocoahero.android.geojson.Feature feature = new com.cocoahero.android.geojson.Feature(new JSONObject(event.findObs(null, false, "structure").getValue().toString()));
-                    DateTime now = new DateTime();
+                    Date now = new Date();
                     Location structure = new Location();
                     structure.setId(event.getBaseEntityId());
                     structure.setType(feature.getType());
