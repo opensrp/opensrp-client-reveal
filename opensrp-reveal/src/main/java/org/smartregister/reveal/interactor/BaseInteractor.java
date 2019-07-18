@@ -25,6 +25,7 @@ import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.Client;
 import org.smartregister.domain.db.EventClient;
+import org.smartregister.domain.db.Obs;
 import org.smartregister.domain.tag.FormTag;
 import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.repository.AllSharedPreferences;
@@ -84,6 +85,8 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.PHYSICAL_TYPE;
+import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_NAME;
+import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_TYPE;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.METADATA;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
@@ -152,7 +155,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
     public void saveJsonForm(String json) {
         try {
             JSONObject jsonForm = new JSONObject(json);
-            String encounterType = jsonForm.getString(JsonForm.ENCOUNTER_TYPE);
+            String encounterType = jsonForm.getString(ENCOUNTER_TYPE);
             if (SPRAY_EVENT.equals(encounterType) || MOSQUITO_COLLECTION_EVENT.equals(encounterType)
                     || LARVAL_DIPPING_EVENT.equals(encounterType) || BEDNET_DISTRIBUTION_EVENT.equals(encounterType)
                     || BEHAVIOUR_CHANGE_COMMUNICATION.equals(encounterType)) {
@@ -260,15 +263,17 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     geometry.setCoordinates(coordinates);
                     structure.setGeometry(geometry);
                     LocationProperty properties = new LocationProperty();
-                    String structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE).getValue().toString();
+                    String structureType = event.findObs(null, false, STRUCTURE_TYPE).getValue().toString();
                     properties.setType(structureType);
                     properties.setEffectiveStartDate(now);
                     properties.setParentId(operationalAreaId);
                     properties.setStatus(LocationProperty.PropertyStatus.PENDING_REVIEW);
                     properties.setUid(UUID.randomUUID().toString());
-                    String structureName = event.findObs(null, false, JsonForm.STRUCTURE_NAME).getValue().toString();
-                    properties.setName(structureName);
-                    String physicalType = event.findObs(null, false, JsonForm.PHYSICAL_TYPE).getValue().toString();
+                    Obs structureNameObs = event.findObs(null, false, STRUCTURE_NAME);
+                    if (structureNameObs != null && structureNameObs.getValue() != null) {
+                        properties.setName(structureNameObs.getValue().toString());
+                    }
+                    String physicalType = event.findObs(null, false, PHYSICAL_TYPE).getValue().toString();
                     Map<String, String> customProperties = new HashMap<>();
                     customProperties.put(PHYSICAL_TYPE, physicalType);
                     properties.setCustomProperties(customProperties);
