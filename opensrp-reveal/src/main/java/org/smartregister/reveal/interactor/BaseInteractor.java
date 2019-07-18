@@ -273,10 +273,12 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     if (structureNameObs != null && structureNameObs.getValue() != null) {
                         properties.setName(structureNameObs.getValue().toString());
                     }
-                    String physicalType = event.findObs(null, false, PHYSICAL_TYPE).getValue().toString();
-                    Map<String, String> customProperties = new HashMap<>();
-                    customProperties.put(PHYSICAL_TYPE, physicalType);
-                    properties.setCustomProperties(customProperties);
+                    Obs physicalTypeObs = event.findObs(null, false, PHYSICAL_TYPE);
+                    if (physicalTypeObs != null && physicalTypeObs.getValue() != null) {
+                        Map<String, String> customProperties = new HashMap<>();
+                        customProperties.put(PHYSICAL_TYPE, physicalTypeObs.getValue().toString());
+                        properties.setCustomProperties(customProperties);
+                    }
                     structure.setProperties(properties);
                     structure.setSyncStatus(BaseRepository.TYPE_Created);
                     structureRepository.addOrUpdate(structure);
