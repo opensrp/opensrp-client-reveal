@@ -104,6 +104,7 @@
         "openmrs_entity_id": "opensrp_id",
         "type": "edit_text",
         "hint": "รหัสผู้ป่วย",
+        "read_only": "True",
         "v_required": {
           "value": "true",
           "err": "กรุณากรอกหมายเลขประจำตัว"
@@ -182,7 +183,7 @@
         "hint": "วันเกิด",
         "expanded": false,
         "duration": {
-          "label": "Age"
+          "label": "อายุ"
         },
         "min_date": "today-120y",
         "max_date": "today-5y",
@@ -351,8 +352,8 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "163084AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-        "label_info_text": "What is their national identity number or their voter registration number?",
-        "label_info_title": "National ID number",
+        "label_info_text": "กรุณากรอกหมายเลขประจำตัวประชาชน",
+        "label_info_title": "หมายเลขประจำตัว",
         "type": "edit_text",
         "hint": "รหัสประชาชน",
         "v_numeric": {
