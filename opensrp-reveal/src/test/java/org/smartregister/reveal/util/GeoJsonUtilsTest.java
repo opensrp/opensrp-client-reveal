@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mapbox.geojson.Feature;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.junit.Test;
 import org.smartregister.domain.Location;
@@ -24,11 +25,21 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.smartregister.domain.Task.TaskStatus;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.BEDNET_DISTRIBUTED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.BLOOD_SCREENING_COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_REGISTERED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
 import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
+import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
+
 
 public class GeoJsonUtilsTest extends BaseUnitTest {
 
@@ -45,7 +56,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         Map<String, Set<Task>> tasks = new HashMap<>();
 
-        Task task = initTestTask();
+        Task task = initTestTask(null,null);
 
         tasks.put(structure.getId(), Collections.singleton(task));
 
@@ -71,8 +82,8 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         Map<String, Set<Task>> tasks = new HashMap<>();
 
-        Task task = initTestTask();
-        task.setCode(Intervention.BEDNET_DISTRIBUTION); // Value set to another code that
+        Task task = initTestTask(null,null);
+        task.setCode(BEDNET_DISTRIBUTION); // Value set to another code that
         // is not "Case Confirmation"
 
         tasks.put(structure.getId(), Collections.singleton(task));
@@ -101,8 +112,8 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
         Map<String, Set<Task>> tasks = new HashMap<>();
 
         Set<Task> taskSet = new HashSet<>();
-        Task task = initTestTask();
-        task.setCode(Intervention.REGISTER_FAMILY);
+        Task task = initTestTask(null,null);
+        task.setCode(REGISTER_FAMILY);
         taskSet.add(task);
 
         tasks.put(structure.getId(), taskSet);
@@ -113,7 +124,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
 
-        assertEquals(Intervention.REGISTER_FAMILY, feature.getStringProperty(TASK_CODE));
+        assertEquals(REGISTER_FAMILY, feature.getStringProperty(TASK_CODE));
 
     }
 
@@ -130,8 +141,8 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
         Map<String, Set<Task>> tasks = new HashMap<>();
 
         Set<Task> taskSet = new HashSet<>();
-        Task task = initTestTask();
-        task.setCode(Intervention.REGISTER_FAMILY);
+        Task task = initTestTask(null,null);
+        task.setCode(REGISTER_FAMILY);
         task.setBusinessStatus(COMPLETE);
         taskSet.add(task);
 
@@ -146,14 +157,150 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
         assertEquals(Intervention.REGISTER_FAMILY, feature.getStringProperty(TASK_CODE));
         assertEquals(COMPLETE, feature.getStringProperty(TASK_BUSINESS_STATUS));
 
+
     }
 
-    private Task initTestTask() {
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForTasksCompleteColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setCurrentPlan("Focus 1");
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task familyRegTask = initTestTask(REGISTER_FAMILY, COMPLETE);
+        taskSet.add(familyRegTask);
+
+        Task bednetDistributionTask = initTestTask(BEDNET_DISTRIBUTION, COMPLETE);
+        taskSet.add(bednetDistributionTask);
+
+        Task bloodScreeningTask = initTestTask(BLOOD_SCREENING, COMPLETE);
+        taskSet.add(bloodScreeningTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(COMPLETE, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForRegisterFamilyCompleteColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setCurrentPlan("Focus 1");
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task familyRegTask = initTestTask(REGISTER_FAMILY, COMPLETE);
+        taskSet.add(familyRegTask);
+
+        Task bednetDistributionTask = initTestTask(BEDNET_DISTRIBUTION, IN_PROGRESS);
+        taskSet.add(bednetDistributionTask);
+
+        Task bloodScreeningTask = initTestTask(BLOOD_SCREENING, INCOMPLETE);
+        taskSet.add(bloodScreeningTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(FAMILY_REGISTERED, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForBednetDistributionCompleteColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setCurrentPlan("Focus 1");
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task familyRegTask = initTestTask(REGISTER_FAMILY, COMPLETE);
+        taskSet.add(familyRegTask);
+
+        Task bednetDistributionTask = initTestTask(BEDNET_DISTRIBUTION, COMPLETE);
+        taskSet.add(bednetDistributionTask);
+
+        Task bloodScreeningTask = initTestTask(BLOOD_SCREENING, INCOMPLETE);
+        taskSet.add(bloodScreeningTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(BEDNET_DISTRIBUTED, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForBLoodScreeningCompleteColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setCurrentPlan("Focus 1");
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task familyRegTask = initTestTask(REGISTER_FAMILY, COMPLETE);
+        taskSet.add(familyRegTask);
+
+        Task bednetDistributionTask = initTestTask(BEDNET_DISTRIBUTION, IN_PROGRESS);
+        taskSet.add(bednetDistributionTask);
+
+        Task bloodScreeningTask = initTestTask(BLOOD_SCREENING, COMPLETE);
+        taskSet.add(bloodScreeningTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(BLOOD_SCREENING_COMPLETE, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    private Task initTestTask(String taskCode, String businessStatus) {
         Task task = new Task();
         task.setIdentifier("ARCHIVE_2019-04");
-        task.setBusinessStatus("In Progress");
-        task.setStatus(Task.TaskStatus.IN_PROGRESS);
-        task.setCode(Intervention.CASE_CONFIRMATION);
+        String taskBusinessSTatus =  StringUtils.isNotEmpty(businessStatus) ? businessStatus : IN_PROGRESS;
+        task.setBusinessStatus(taskBusinessSTatus);
+        task.setStatus(TaskStatus.IN_PROGRESS);
+        String code =  StringUtils.isNotEmpty(taskCode) ? taskCode : CASE_CONFIRMATION;
+        task.setCode(code);
         return task;
     }
 

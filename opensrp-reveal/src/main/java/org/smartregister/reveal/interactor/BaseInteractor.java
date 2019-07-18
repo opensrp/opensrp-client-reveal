@@ -25,6 +25,7 @@ import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.Client;
 import org.smartregister.domain.db.EventClient;
+import org.smartregister.domain.db.Obs;
 import org.smartregister.domain.tag.FormTag;
 import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.repository.AllSharedPreferences;
@@ -53,6 +54,7 @@ import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -83,6 +85,9 @@ import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
+import static org.smartregister.reveal.util.Constants.JsonForm.PHYSICAL_TYPE;
+import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_NAME;
+import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_TYPE;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.METADATA;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
@@ -151,7 +156,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
     public void saveJsonForm(String json) {
         try {
             JSONObject jsonForm = new JSONObject(json);
-            String encounterType = jsonForm.getString(JsonForm.ENCOUNTER_TYPE);
+            String encounterType = jsonForm.getString(ENCOUNTER_TYPE);
             if (SPRAY_EVENT.equals(encounterType) || MOSQUITO_COLLECTION_EVENT.equals(encounterType)
                     || LARVAL_DIPPING_EVENT.equals(encounterType) || BEDNET_DISTRIBUTION_EVENT.equals(encounterType)
                     || BEHAVIOUR_CHANGE_COMMUNICATION.equals(encounterType)) {
@@ -246,7 +251,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     jsonForm.put(DETAILS, eventDetails);
                     org.smartregister.domain.db.Event event = saveEvent(jsonForm, REGISTER_STRUCTURE_EVENT, STRUCTURE);
                     com.cocoahero.android.geojson.Feature feature = new com.cocoahero.android.geojson.Feature(new JSONObject(event.findObs(null, false, "structure").getValue().toString()));
-                    DateTime now = new DateTime();
+                    Date now = new Date();
                     Location structure = new Location();
                     structure.setId(event.getBaseEntityId());
                     structure.setType(feature.getType());
@@ -259,12 +264,22 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     geometry.setCoordinates(coordinates);
                     structure.setGeometry(geometry);
                     LocationProperty properties = new LocationProperty();
-                    String structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE).getValue().toString();
+                    String structureType = event.findObs(null, false, STRUCTURE_TYPE).getValue().toString();
                     properties.setType(structureType);
                     properties.setEffectiveStartDate(now);
                     properties.setParentId(operationalAreaId);
                     properties.setStatus(LocationProperty.PropertyStatus.PENDING_REVIEW);
                     properties.setUid(UUID.randomUUID().toString());
+                    Obs structureNameObs = event.findObs(null, false, STRUCTURE_NAME);
+                    if (structureNameObs != null && structureNameObs.getValue() != null) {
+                        properties.setName(structureNameObs.getValue().toString());
+                    }
+                    Obs physicalTypeObs = event.findObs(null, false, PHYSICAL_TYPE);
+                    if (physicalTypeObs != null && physicalTypeObs.getValue() != null) {
+                        Map<String, String> customProperties = new HashMap<>();
+                        customProperties.put(PHYSICAL_TYPE, physicalTypeObs.getValue().toString());
+                        properties.setCustomProperties(customProperties);
+                    }
                     structure.setProperties(properties);
                     structure.setSyncStatus(BaseRepository.TYPE_Created);
                     structureRepository.addOrUpdate(structure);

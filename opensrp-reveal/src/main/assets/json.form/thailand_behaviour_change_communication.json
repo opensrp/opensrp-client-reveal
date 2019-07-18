@@ -69,7 +69,7 @@
         ],
         "v_required": {
           "value": true,
-          "err": "This field is required"
+          "err": "จะต้องให้ข้อมูลในด้านนี้"
         }
       },
       {

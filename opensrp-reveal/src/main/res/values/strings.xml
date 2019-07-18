@@ -28,7 +28,7 @@
     <string name="district">District:</string>
     <string name="facility">Location:</string>
     <string name="canton">Canton:</string>
-    <string name="operator">Spray Operator:</string>
+    <string name="operator">User:</string>
 
     <string name="fetch_location_and_structures_failed">This operational area has not been defined in the system. Please try to sync your device. Please contact the system administrator if that doesn\'t solve the issue noting the operational area number %1$s.</string>
     <string name="fetch_structures_title">Loading failed</string>
