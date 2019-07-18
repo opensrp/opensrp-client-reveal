@@ -2,7 +2,6 @@ package org.smartregister.reveal.job;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.evernote.android.job.Job;
 import com.evernote.android.job.JobCreator;
@@ -12,6 +11,8 @@ import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.job.SyncServiceJob;
 import org.smartregister.job.ValidateSyncDataServiceJob;
 import org.smartregister.sync.intent.SyncIntentService;
+
+import timber.log.Timber;
 
 /**
  * Created by samuelgithengi on 11/21/18.
@@ -34,7 +35,7 @@ public class RevealJobCreator implements JobCreator {
             case ValidateSyncDataServiceJob.TAG:
                 return new ValidateSyncDataServiceJob();
             default:
-                Log.w(RevealJobCreator.class.getCanonicalName(), tag + " is not declared in RevealJobCreator Job Creator");
+                Timber.w(tag + " is not declared in RevealJobCreator Job Creator");
                 return null;
         }
     }

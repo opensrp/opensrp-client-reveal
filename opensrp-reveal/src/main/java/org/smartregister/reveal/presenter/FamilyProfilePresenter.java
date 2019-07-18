@@ -1,7 +1,5 @@
 package org.smartregister.reveal.presenter;
 
-import android.util.Log;
-
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -23,6 +21,8 @@ import org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
+
+import timber.log.Timber;
 
 import static org.smartregister.family.util.Constants.INTENT_KEY.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
@@ -49,7 +49,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         try {
             familyJsonFormUtils = new FamilyJsonFormUtils(getView().getApplicationContext());
         } catch (Exception e) {
-            Log.e(TAG, "error Initializing FamilyJsonFormUtils ");
+            Timber.e(e, "error Initializing FamilyJsonFormUtils ");
         }
     }
 
@@ -71,7 +71,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                     structureId = cursor.getString(0);
                 }
             } catch (Exception e) {
-                Log.e(TAG, "Error getting residence for" + familyId, e);
+                Timber.e(e, "Error getting residence for" + familyId);
             } finally {
                 if (cursor != null)
                     cursor.close();
@@ -145,7 +145,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
             getView().startFormActivity(form);
 
         } catch (Exception e) {
-            Log.e("TAG", e.getMessage());
+            Timber.e(e);
         }
     }
 }

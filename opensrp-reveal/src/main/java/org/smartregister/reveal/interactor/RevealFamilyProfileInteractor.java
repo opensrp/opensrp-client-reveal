@@ -2,7 +2,6 @@ package org.smartregister.reveal.interactor;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,6 +26,8 @@ import org.smartregister.util.JsonFormUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 import static org.smartregister.repository.EventClientRepository.client_column.syncStatus;
 
@@ -92,7 +93,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
                         formSubmissionIds.add(updateEvent.getFormSubmissionId());
 
                     } catch (Exception e) {
-                        Log.e(TAG, "Error updating Family Surname", e);
+                        Timber.e(e, "Error updating Family Surname");
                     }
                 }
             }

@@ -2,7 +2,6 @@ package org.smartregister.reveal.interactor;
 
 import android.content.Context;
 import android.support.annotation.VisibleForTesting;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,6 +32,7 @@ import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
@@ -58,6 +58,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+
+import timber.log.Timber;
 
 import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
 import static org.smartregister.family.util.DBConstants.KEY.BASE_ENTITY_ID;
@@ -98,8 +100,6 @@ import static org.smartregister.util.JsonFormUtils.getString;
  * Created by samuelgithengi on 3/25/19.
  */
 public class BaseInteractor implements BaseContract.BaseInteractor {
-
-    private static final String TAG = BaseInteractor.class.getCanonicalName();
 
     public static final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
             .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
@@ -166,7 +166,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             }
             getInstance().setRefreshMapOnEventSaved(true);
         } catch (Exception e) {
-            Log.e(TAG, "Error saving Json Form data", e);
+            Timber.e(e, "Error saving Json Form data");
         }
     }
 
@@ -180,6 +180,8 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
         formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
         formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
+        formTag.databaseVersion = BuildConfig.DATABASE_VERSION;
+        formTag.appVersion = BuildConfig.VERSION_CODE;
         Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, encounterType, bindType);
         JSONObject eventJson = new JSONObject(gson.toJson(event));
         eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
@@ -204,7 +206,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 interventionType = BCC;
             }
         } catch (JSONException e) {
-            Log.e(TAG, e.getStackTrace().toString());
+            Timber.e(e);
         }
 
         final String finalInterventionType = interventionType;
@@ -224,7 +226,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                         }
                     });
                 } catch (JSONException e) {
-                    Log.e(TAG, "Error saving spraye", e);
+                    Timber.e(e, "Error saving saving Form ");
                     presenterCallBack.onFormSaveFailure(finalEncounterType);
                 }
             }
@@ -239,7 +241,10 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             public void run() {
                 try {
                     jsonForm.put(ENTITY_ID, UUID.randomUUID().toString());
-                    jsonForm.put(DETAILS, new JSONObject().put(Properties.LOCATION_PARENT, operationalAreaId));
+                    JSONObject eventDetails = new JSONObject();
+                    eventDetails.put(Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
+                    eventDetails.put(Properties.LOCATION_PARENT, operationalAreaId);
+                    jsonForm.put(DETAILS, eventDetails);
                     org.smartregister.domain.db.Event event = saveEvent(jsonForm, REGISTER_STRUCTURE_EVENT, STRUCTURE);
                     com.cocoahero.android.geojson.Feature feature = new com.cocoahero.android.geojson.Feature(new JSONObject(event.findObs(null, false, "structure").getValue().toString()));
                     DateTime now = new DateTime();
@@ -276,13 +281,13 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                         task = taskUtils.generateRegisterFamilyTask(applicationContext, structure.getId());
                     } else {
                         if (StructureType.RESIDENTIAL.equals(structureType)) {
-                            task = taskUtils.generateTask(applicationContext, structure.getId(),structure.getId(),
+                            task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
                                     BusinessStatus.NOT_VISITED, Intervention.IRS, R.string.irs_task_description);
                         } else if (StructureType.MOSQUITO_COLLECTION_POINT.equals(structureType)) {
-                            task = taskUtils.generateTask(applicationContext, structure.getId(),structure.getId(),
+                            task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
                                     BusinessStatus.NOT_VISITED, Intervention.MOSQUITO_COLLECTION, R.string.mosquito_collection_task_description);
                         } else if (StructureType.LARVAL_BREEDING_SITE.equals(structureType)) {
-                            task = taskUtils.generateTask(applicationContext, structure.getId(),structure.getId(),
+                            task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
                                     BusinessStatus.NOT_VISITED, Intervention.LARVAL_DIPPING, R.string.larval_dipping_task_description);
                         }
                     }
@@ -308,7 +313,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                         }
                     });
                 } catch (JSONException e) {
-                    Log.e(TAG, "Error saving new Structure", e);
+                    Timber.e(e, "Error saving new Structure");
                     presenterCallBack.onFormSaveFailure(REGISTER_STRUCTURE_EVENT);
                 }
             }
@@ -334,7 +339,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                         }
                     });
                 } catch (Exception e) {
-                    Log.e(TAG, "Error saving member event form");
+                    Timber.e("Error saving member event form");
                 }
             }
         };
@@ -369,7 +374,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     ((StructureTasksContract.Presenter) presenterCallBack).onIndexConfirmationFormSaved(taskID, Task.TaskStatus.COMPLETED, businessStatus, removedTasks);
                 });
             } catch (Exception e) {
-                Log.e(TAG, "Error saving case confirmation data");
+                Timber.e("Error saving case confirmation data");
             }
         });
     }
@@ -400,7 +405,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     family.setColumnmaps(personObject.getColumnmaps());
                 }
             } catch (Exception e) {
-                Log.e(TAG, e.getMessage(), e);
+                Timber.e(e);
             } finally {
                 if (cursor != null)
                     cursor.close();

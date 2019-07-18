@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,6 +13,8 @@ import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
+
+import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
@@ -30,8 +31,6 @@ import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLL
  * Created by samuelgithengi on 3/22/19.
  */
 public class CardDetailsUtil {
-
-    private String TAG = CardDetailsUtil.class.getName();
 
     public static void formatCardDetails(CardDetails cardDetails) {
         if (cardDetails == null || cardDetails.getStatus() == null)
@@ -58,7 +57,7 @@ public class CardDetailsUtil {
                 cardDetails.setReason(null);
                 break;
             default:
-                Log.w(CardDetailsUtil.class.getName(), "business status not defined :" + cardDetails.getStatus());
+                Timber.w( "business status not defined :" + cardDetails.getStatus());
                 break;
         }
     }
@@ -89,7 +88,7 @@ public class CardDetailsUtil {
                 tvReason.setVisibility(View.GONE);
             }
         } catch (Resources.NotFoundException e) {
-            Log.e(TAG, e.getStackTrace().toString());
+            Timber.e(e);
         }
     }
 

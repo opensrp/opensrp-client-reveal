@@ -2,7 +2,6 @@ package org.smartregister.reveal.presenter;
 
 import android.support.v4.util.Pair;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -23,6 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import timber.log.Timber;
+
 import static org.smartregister.AllConstants.OPERATIONAL_AREAS;
 import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.ACTIVE;
 import static org.smartregister.reveal.util.Constants.Tags.CANTON;
@@ -37,8 +38,6 @@ import static org.smartregister.reveal.util.Constants.UseContextCode.INTERVENTIO
  * Created by samuelgithengi on 3/21/19.
  */
 public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
-
-    private static final String TAG = "BaseDrawerPresenter";
 
     private BaseDrawerContract.View view;
     private BaseDrawerContract.DrawerActivity drawerActivity;
@@ -180,7 +179,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     public void onOperationalAreaSelectorClicked(ArrayList<String> name) {
 
-        Log.d(TAG, "Selected Location Hierarchy: " + TextUtils.join(",", name));
+        Timber.d( "Selected Location Hierarchy: " + TextUtils.join(",", name));
         if (name.size() != 4)//no operational area was selected, dialog was dismissed
             return;
         prefsUtil.setCurrentDistrict(name.get(2));
@@ -242,8 +241,8 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     public void onPlanSelectorClicked(ArrayList<String> value, ArrayList<String> name) {
         if (Utils.isEmptyCollection(name))
             return;
-        Log.d(TAG, "Selected Plan : " + TextUtils.join(",", name));
-        Log.d(TAG, "Selected Plan Ids: " + TextUtils.join(",", value));
+        Timber.d( "Selected Plan : " + TextUtils.join(",", name));
+        Timber.d( "Selected Plan Ids: " + TextUtils.join(",", value));
 
         prefsUtil.setCurrentPlan(name.get(0));
         prefsUtil.setCurrentPlanId(value.get(0));

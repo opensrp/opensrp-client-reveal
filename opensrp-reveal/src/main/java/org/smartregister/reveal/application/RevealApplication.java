@@ -2,7 +2,6 @@ package org.smartregister.reveal.application;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -43,6 +42,7 @@ import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.util.CrashlyticsTree;
 import org.smartregister.reveal.util.RevealSyncConfiguration;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.FamilyProfileActivity;
@@ -56,6 +56,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
+import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.GLOBAL_CONFIGS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KEY;
@@ -66,12 +67,9 @@ import static org.smartregister.reveal.util.FamilyConstants.EventType;
 import static org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
 import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
-import static org.smartregister.util.Log.logError;
-import static org.smartregister.util.Log.logInfo;
 
 public class RevealApplication extends DrishtiApplication implements TimeChangedBroadcastReceiver.OnTimeChangedListener {
 
-    private static final String TAG = RevealApplication.class.getCanonicalName();
     private JsonSpecHelper jsonSpecHelper;
     private String password;
 
@@ -101,6 +99,13 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     @Override
     public void onCreate() {
         super.onCreate();
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        } else {
+            Timber.plant(new CrashlyticsTree());
+        }
+
         mInstance = this;
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
@@ -130,7 +135,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
         if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
             LangUtils.saveLanguage(getApplicationContext(), "th");
-        }else{
+        } else {
             LangUtils.saveLanguage(getApplicationContext(), "en");
         }
 
@@ -143,7 +148,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
                 repository = new RevealRepository(getInstance().getApplicationContext(), context);
             }
         } catch (UnsatisfiedLinkError e) {
-            logError("Error on getRepository: " + e);
+            Timber.e(e, "Error on getRepository: ");
 
         }
         return repository;
@@ -177,13 +182,13 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             DrishtiSyncScheduler.stop(getApplicationContext());
             context.allSharedPreferences().saveIsSyncInProgress(false);
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            Timber.e(e);
         }
     }
 
     @Override
     public void onTerminate() {
-        logInfo("Application is terminating. Stopping Sync scheduler and resetting isSyncInProgress setting.");
+        Timber.e("Application is terminating. Stopping Sync scheduler and resetting isSyncInProgress setting.");
         cleanUpSyncState();
         TimeChangedBroadcastReceiver.destroy(this);
         SyncStatusBroadcastReceiver.destroy(this);
@@ -255,7 +260,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
                 }
             }
         } catch (JSONException e) {
-            Log.e(TAG, e.getMessage());
+            Timber.e(e);
         }
     }
 

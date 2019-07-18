@@ -11,7 +11,6 @@ import android.support.annotation.StringRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +35,7 @@ import java.util.Set;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
 import io.ona.kujaku.utils.Constants;
+import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -47,7 +47,6 @@ import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON_FRAG
  */
 public class StructureTasksFragment extends Fragment implements StructureTasksContract.View {
 
-    private static final String TAG = StructureTasksFragment.class.getName();
     private RecyclerView taskRecyclerView;
     private StructureTaskAdapter adapter;
 
@@ -222,7 +221,7 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
             hasRequestedLocation = false;
         } else if (requestCode == REQUEST_CODE_GET_JSON_FRAGMENT && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
             String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
-            Log.d(TAG, json);
+            Timber.d(json);
             presenter.saveJsonForm(json);
         }
     }
