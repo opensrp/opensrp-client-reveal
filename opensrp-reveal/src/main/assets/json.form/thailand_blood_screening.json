@@ -155,7 +155,7 @@
         ],
         "v_required": {
           "value": true,
-          "err": "Enter reason person was not tested"
+          "err": "หากไม่เคย โปรดระบุเหตุผล"
         },
         "relevance": {
           "step1:personTested": {

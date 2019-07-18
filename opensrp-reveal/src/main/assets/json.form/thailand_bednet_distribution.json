@@ -72,7 +72,7 @@
         },
         "v_max": {
           "value": "[num_fam_members]",
-          "err": "Cannot be more than number of registered members"
+          "err": "ต้องไม่เกินจำนวนสมาชิกที่ลงทะเบียน"
         }
       },
       {
@@ -106,7 +106,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "Number of LLINs less than 1 yr old is required"
+          "err": "ต้องมีจำนวน LLINs ที่น้อยกว่า 1 ปี"
         },
         "v_numeric": {
           "value": "true",
@@ -134,7 +134,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "How many LLINs are between 1 and 2 yrs old?"
+          "err": "จำนวนมุ้ง LLIN ที่ใช้งาน 1-2 ปี"
         },
         "v_numeric": {
           "value": "true",
@@ -162,7 +162,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "How many  LLINs are between 2 and 3 yrs old?"
+          "err": "จำนวนมุ้ง LLIN ที่ใช้งาน 2-3 ปี"
         },
         "v_numeric": {
           "value": "true",
@@ -190,7 +190,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The total number of LLINs over 3 yrs old is required"
+          "err": "ต้องระบุจำนวน LLINs ที่มีอายุมากกว่า 3 ปี"
         },
         "v_numeric": {
           "value": "true",
@@ -248,7 +248,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "Number of LLIHNs less than 1 yr old is required"
+          "err": "ต้องมีจำนวน LLIHNs ที่น้อยกว่า 1 ปี"
         },
         "v_numeric": {
           "value": "true",
@@ -276,7 +276,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "How many LLIHNs are between 1 and 2 yrs old?"
+          "err": "จำนวนมุ้ง LLIHN ที่ใช้งาน 1-2 ปี"
         },
         "v_numeric": {
           "value": "true",
@@ -304,7 +304,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "How many LLIHNs are between 2 and 3 yrs old?"
+          "err": "จำนวนมุ้ง LLIHN ที่ใช้งาน 2-3 ปี"
         },
         "v_numeric": {
           "value": "true",
@@ -332,7 +332,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "The total number of LLIHNs over 3 yrs old is required"
+          "err": "ต้องระบุจำนวน LLIHNs ที่มีอายุมากกว่า 3 ปี"
         },
         "v_numeric": {
           "value": "true",
@@ -366,7 +366,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "จำนวนมุ้งธรรมดาที่มีอยู่",
-        "shortened_hint": "Normal (conventional) nets?",
+        "shortened_hint": "มุ้งปกติ",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -388,11 +388,11 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "จำนวนมุ้งธรรมดาที่ได้รับการชุบเมื่อ 6 เดือนที่ผ่านมา",
-        "shortened_hint": "Normal nets dipped < 6 months",
+        "shortened_hint": "มุ้งปกติจุ่ม <6 เดือน",
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "How many normal nets that were dipped in the last 6 months?"
+          "err": "มีตาข่ายปกติกี่ตัวที่ถูกจุ่มใน 6 เดือนที่ผ่านมา?"
         },
         "v_numeric": {
           "value": "true",
@@ -404,7 +404,7 @@
         },
         "v_relative_max": {
           "value": "existingITNs",
-          "err": "Number nets dipped < 6 months cannot be greater that total normal nets"
+          "err": "จำนวนตาข่ายที่จุ่ม <6 เดือนต้องไม่เกินกว่าจำนวนตาข่ายปกติทั้งหมด"
         }
       },
       {
@@ -489,8 +489,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Total number of LLINs distributed",
-        "shortened_hint": "Distributed LLINs",
+        "hint": "จำนวนมุ้ง LLIN ทั้งหมดที่แจกไป",
+        "shortened_hint": "จำนวน LLIN แจก",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -502,7 +502,7 @@
         },
         "v_relative_max": {
           "value": "totPopulation",
-          "err": "Cannot be more than number of people in the house"
+          "err": "ต้องไม่เกินจำนวนคนในบ้าน"
         },
         "v_min": {
           "value": "0",
@@ -522,8 +522,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Total number of LLIHNs distributed",
-        "shortened_hint": "Disributed LLIHNs",
+        "hint": "จำนวนมุ้ง LLIHN ทั้งหมดที่แจกไป",
+        "shortened_hint": "จำนวน LLIHN แจก",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -539,7 +539,7 @@
         },
         "v_max": {
           "value": "1",
-          "err": "Cannot be greater than 1"
+          "err": "ต้องไม่มากกว่า 1"
         },
         "relevance": {
           "rules-engine": {
@@ -555,8 +555,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Total number of ITNs distributed",
-        "shortened_hint": "Distributed ITNs",
+        "hint": "จำนวนมุ้ง ITN ทั้งหมดที่แจกไป",
+        "shortened_hint": "จำนวน ITN แจก",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -572,7 +572,7 @@
         },
         "v_relative_max": {
           "value": "calcPopulationMinusExistingNets",
-          "err": "Cannot be more than total Population subtract existing nets"
+          "err": "ต้องไม่เกินจำนวนประชากรทั้งหมดที่หักลบมุ้งที่มีอยู่"
         },
         "relevance": {
           "rules-engine": {
@@ -677,7 +677,7 @@
         },
         "v_relative_max": {
           "value": "calcNumNetsToRedip",
-          "err": "Cannot be more than Total nets eligible for redipping"
+          "err": "ต้องไม่เกินจำนวนสุทธิที่ใช้ได้สำหรับการจุ่มซ้ำ"
         }
       },
       {
@@ -686,8 +686,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Number of personal repellent units distributed",
-        "shortened_hint": "Distributed repellent units",
+        "hint": "จำนวนยากันยุงส่วนบุคคล",
+        "shortened_hint": "จำนวนยากันยุงส่วนบุคคลที่แจกจ่ายแล้ว",
         "edit_type": "number",
         "v_required": {
           "value": true,
