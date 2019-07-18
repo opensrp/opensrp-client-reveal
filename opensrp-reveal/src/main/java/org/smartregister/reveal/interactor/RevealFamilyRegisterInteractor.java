@@ -2,6 +2,7 @@ package org.smartregister.reveal.interactor;
 
 import android.content.Context;
 
+import org.smartregister.domain.db.EventClient;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyRegisterContract;
@@ -23,12 +24,14 @@ public class RevealFamilyRegisterInteractor extends org.smartregister.family.int
 
     private AppExecutors appExecutors;
 
-    private FamilyRegisterContract.Presenter presenter;
+    private RevealClientProcessor clientProcessor;
 
+    private FamilyRegisterContract.Presenter presenter;
 
     public RevealFamilyRegisterInteractor(FamilyRegisterContract.Presenter presenter) {
         this.presenter = presenter;
         taskUtils = TaskUtils.getInstance();
+        clientProcessor = (RevealClientProcessor) RevealApplication.getInstance().getClientProcessor();
         appExecutors = RevealApplication.getInstance().getAppExecutors();
     }
 
@@ -53,5 +56,10 @@ public class RevealFamilyRegisterInteractor extends org.smartregister.family.int
             taskUtils.generateBedNetDistributionTask(context, structureId);
             appExecutors.mainThread().execute(() -> presenter.onTasksGenerated());
         });
+    }
+
+    @Override
+    protected void processClient(List<EventClient> eventClientList) {
+        clientProcessor.processClient(eventClientList, true);
     }
 }
