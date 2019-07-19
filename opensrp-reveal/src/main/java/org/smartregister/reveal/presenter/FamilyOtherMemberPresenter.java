@@ -3,19 +3,23 @@ package org.smartregister.reveal.presenter;
 
 import org.apache.commons.lang3.tuple.Triple;
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.contract.FamilyOtherMemberContract.Model;
-import org.smartregister.family.contract.FamilyProfileContract;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.interactor.FamilyProfileInteractor;
 import org.smartregister.family.presenter.BaseFamilyOtherMemberProfileActivityPresenter;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
+import org.smartregister.reveal.contract.FamilyProfileContract;
+import org.smartregister.reveal.interactor.RevealFamilyOtherMemberInteractor;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 
 import timber.log.Timber;
+
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;
 
 /**
  * Created by samuelgithengi on 5/31/19.
@@ -29,9 +33,9 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
     private FamilyJsonFormUtils familyJsonFormUtils;
 
     private String familyBaseEntityId;
-    private String familyName;
 
-    private FamilyProfileContract.Interactor profileInteractor;
+    private FamilyOtherMemberProfileContract.Interactor otherMemberInteractor;
+    private org.smartregister.family.contract.FamilyProfileContract.Interactor profileInteractor;
     private FamilyProfileContract.Model profileModel;
 
     public FamilyOtherMemberPresenter(FamilyOtherMemberProfileContract.View view, Model model,
@@ -39,7 +43,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
                                       String familyHead, String primaryCaregiver, String villageTown, String familyName) {
         super(view, model, viewConfigurationIdentifier, baseEntityId, familyHead, primaryCaregiver, villageTown);
         this.familyBaseEntityId = familyBaseEntityId;
-        this.familyName = familyName;
+        this.otherMemberInteractor = new RevealFamilyOtherMemberInteractor();
         this.profileInteractor = new FamilyProfileInteractor();
         this.profileModel = new FamilyProfileModel(familyName);
         try {
@@ -52,10 +56,16 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
 
     @Override
     public void startFormForEdit(CommonPersonObjectClient client) {
+        otherMemberInteractor.getFamilyHead(this,familyHead);
+    }
+
+    @Override
+    public void onFetchFamilyHead(CommonPersonObject commonPersonObject) {
         JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(
                 R.string.edit_member_form_title,
                 RevealApplication.getInstance().getMetadata().familyMemberRegister.formName,
-                client, RevealApplication.getInstance().getMetadata().familyMemberRegister.updateEventType, familyName);
+                client, RevealApplication.getInstance().getMetadata().familyMemberRegister.updateEventType,
+                commonPersonObject.getColumnmaps().get(LAST_NAME));
         getView().startFormActivity(form);
     }
 
