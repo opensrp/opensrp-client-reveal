@@ -43,7 +43,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
                                       String familyHead, String primaryCaregiver, String villageTown, String familyName) {
         super(view, model, viewConfigurationIdentifier, baseEntityId, familyHead, primaryCaregiver, villageTown);
         this.familyBaseEntityId = familyBaseEntityId;
-        this.otherMemberInteractor = new RevealFamilyOtherMemberInteractor(this);
+        this.otherMemberInteractor = new RevealFamilyOtherMemberInteractor();
         this.profileInteractor = new FamilyProfileInteractor();
         this.profileModel = new FamilyProfileModel(familyName);
         try {
@@ -56,7 +56,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
 
     @Override
     public void startFormForEdit(CommonPersonObjectClient client) {
-        otherMemberInteractor.getFamilyHead(familyHead);
+        otherMemberInteractor.getFamilyHead(this,familyHead);
     }
 
     @Override

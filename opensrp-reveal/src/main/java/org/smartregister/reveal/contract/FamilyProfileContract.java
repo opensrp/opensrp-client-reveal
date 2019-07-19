@@ -32,6 +32,8 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
         void onTasksGenerated();
 
         void onMembersUpdated();
+
+        void addFamilyMember();
     }
 }
 

@@ -4,14 +4,18 @@ import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.json.JSONObject;
+import org.smartregister.AllConstants;
 import org.smartregister.clientandeventmodel.Obs;
+import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.presenter.BaseFamilyProfilePresenter;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.contract.FamilyProfileContract;
+import org.smartregister.reveal.interactor.RevealFamilyOtherMemberInteractor;
 import org.smartregister.reveal.interactor.RevealFamilyProfileInteractor;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.util.AppExecutors;
@@ -31,13 +35,16 @@ import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
 /**
  * Created by samuelgithengi on 4/10/19.
  */
-public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implements FamilyProfileContract.Presenter {
+public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implements FamilyProfileContract.Presenter, FamilyOtherMemberProfileContract.BasePresenter {
     private AppExecutors appExecutors;
     private SQLiteDatabase database;
     private String structureId;
     private PreferencesUtil preferencesUtil;
 
     private FamilyJsonFormUtils familyJsonFormUtils;
+
+    private RevealFamilyOtherMemberInteractor otherMemberInteractor;
+
 
     public FamilyProfilePresenter(FamilyProfileContract.View view, FamilyProfileContract.Model model, String familyBaseEntityId, String familyHead, String primaryCaregiver, String familyName) {
         super(view, model, familyBaseEntityId, familyHead, primaryCaregiver, familyName);
@@ -51,6 +58,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         } catch (Exception e) {
             Timber.e(e, "error Initializing FamilyJsonFormUtils ");
         }
+        otherMemberInteractor = new RevealFamilyOtherMemberInteractor();
     }
 
     @Override
@@ -132,6 +140,15 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         onTasksGenerated();
     }
 
+    @Override
+    public void addFamilyMember() {
+        if (getModel().getFamilyHeadPersonObject() == null) {
+            otherMemberInteractor.getFamilyHead(this, familyHead);
+        } else {
+            openAddMemberForm();
+        }
+    }
+
     private FamilyProfileContract.Interactor getInteractor() {
         return (FamilyProfileContract.Interactor) interactor;
     }
@@ -146,6 +163,20 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
         } catch (Exception e) {
             Timber.e(e);
+        }
+    }
+
+    @Override
+    public void onFetchFamilyHead(CommonPersonObject familyHeadPersonObject) {
+        getModel().setFamilyHeadPersonObject(familyHeadPersonObject);
+        openAddMemberForm();
+    }
+
+    private void openAddMemberForm() {
+        try {
+            startForm(org.smartregister.family.util.Utils.metadata().familyMemberRegister.formName, null, null, RevealApplication.getInstance().getContext().allSharedPreferences().getPreference(AllConstants.CURRENT_LOCATION_ID));
+        } catch (Exception e) {
+            Timber.e(e, "Error opening add member form");
         }
     }
 }

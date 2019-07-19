@@ -98,6 +98,10 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
         if (R.id.edit_family == item.getItemId()) {
             startFormForEdit();
             return true;
+        }
+        if (R.id.add_member == item.getItemId()) {
+            presenter().addFamilyMember();
+            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -107,5 +111,10 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
         if (familyBaseEntityId != null) {
             presenter().fetchProfileData();
         }
+    }
+
+    @Override
+    public FamilyProfileContract.Presenter presenter() {
+        return (FamilyProfileContract.Presenter) super.presenter();
     }
 }
