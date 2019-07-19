@@ -1,10 +1,16 @@
 package org.smartregister.reveal.model;
 
+import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.model.BaseFamilyProfileModel;
+import org.smartregister.family.util.JsonFormUtils;
+import org.smartregister.family.util.Utils;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.util.FormUtils;
 
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;
 import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
 
 /**
@@ -15,6 +21,8 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
     private String structureId;
 
     private FamilyEventClient eventClient;
+
+    private CommonPersonObject familyHeadPersonObject;
 
     public FamilyProfileModel(String familyName) {
         super(familyName);
@@ -56,5 +64,29 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
 
     public FamilyEventClient getEventClient() {
         return eventClient;
+    }
+
+    @Override
+    public JSONObject getFormAsJson(String formName, String entityId, String currentLocationId) throws Exception {
+
+        JSONObject form = FormUtils.getInstance(Utils.context().applicationContext()).getFormJson(formName);
+        if (form == null) {
+            return null;
+        }
+        form = JsonFormUtils.getFormAsJson(form, formName, entityId, currentLocationId);
+
+        if (formName.equals(Utils.metadata().familyMemberRegister.formName)) {
+            JsonFormUtils.updateJsonForm(form, familyHeadPersonObject.getColumnmaps().get(LAST_NAME));
+        }
+
+        return form;
+    }
+
+    public void setFamilyHeadPersonObject(CommonPersonObject familyHeadPersonObject) {
+        this.familyHeadPersonObject = familyHeadPersonObject;
+    }
+
+    public CommonPersonObject getFamilyHeadPersonObject() {
+        return familyHeadPersonObject;
     }
 }

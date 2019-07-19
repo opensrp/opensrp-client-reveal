@@ -45,7 +45,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
         super(view, model, viewConfigurationIdentifier, baseEntityId, familyHead, primaryCaregiver, villageTown);
         this.familyBaseEntityId = familyBaseEntityId;
         this.familyName = familyName;
-        this.otherMemberInteractor = new RevealFamilyOtherMemberInteractor(this);
+        this.otherMemberInteractor = new RevealFamilyOtherMemberInteractor();
         this.profileInteractor = new FamilyProfileInteractor();
         this.profileModel = new FamilyProfileModel(familyName);
         try {
@@ -61,7 +61,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
         if (client.getCaseId().equals(familyHead)) {
             startFamilyMemberForm(familyName, true);
         } else {
-            otherMemberInteractor.getFamilyHead(familyHead);
+            otherMemberInteractor.getFamilyHead(this, familyHead);
         }
     }
 

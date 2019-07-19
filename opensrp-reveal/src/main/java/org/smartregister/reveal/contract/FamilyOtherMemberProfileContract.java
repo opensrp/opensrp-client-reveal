@@ -11,9 +11,11 @@ import org.smartregister.family.contract.FamilyOtherMemberContract;
  */
 public interface FamilyOtherMemberProfileContract {
 
-    interface Presenter extends FamilyOtherMemberContract.Presenter {
+    interface BasePresenter {
         void onFetchFamilyHead(CommonPersonObject commonPersonObject);
+    }
 
+    interface Presenter extends BasePresenter, FamilyOtherMemberContract.Presenter {
         void onEditMemberDetails();
 
         void updateFamilyMember(String jsonString);
@@ -31,6 +33,6 @@ public interface FamilyOtherMemberProfileContract {
 
     interface Interactor extends FamilyOtherMemberContract.Interactor {
 
-        void getFamilyHead(String familyHeadId);
+        void getFamilyHead(BasePresenter presenter, String familyHeadId);
     }
 }

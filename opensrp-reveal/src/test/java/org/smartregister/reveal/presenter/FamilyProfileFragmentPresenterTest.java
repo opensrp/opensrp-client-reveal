@@ -17,11 +17,13 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.cloudant.models.Client;
 import org.smartregister.cloudant.models.Event;
+import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.util.FamilyConstants.DatabaseKeys;
@@ -35,10 +37,13 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.FI;
@@ -67,6 +72,9 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
     private FamilyProfileContract.Interactor interactor;
 
     @Mock
+    private FamilyOtherMemberProfileContract.Interactor otherMemberInteractor;
+
+    @Mock
     private FamilyJsonFormUtils familyJsonFormUtils;
 
     private Context context = RuntimeEnvironment.application;
@@ -75,16 +83,21 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
 
     private String familyId = UUID.randomUUID().toString();
 
+    private String familyHeadId = UUID.randomUUID().toString();
+
     private String structureId = UUID.randomUUID().toString();
+
+    private CommonPersonObject familyHead = new CommonPersonObject(UUID.randomUUID().toString(), null, null, null);
 
     @Before
     public void setUp() {
-        org.smartregister.Context.bindtypes=new ArrayList<>();
-        presenter = new FamilyProfilePresenter(view, model, familyId, null, null, null);
+        org.smartregister.Context.bindtypes = new ArrayList<>();
+        presenter = new FamilyProfilePresenter(view, model, familyId, familyHeadId, null, null);
         Whitebox.setInternalState(presenter, "preferencesUtil", preferencesUtil);
         Whitebox.setInternalState(presenter, "database", database);
         Whitebox.setInternalState(presenter, "interactor", interactor);
         Whitebox.setInternalState(presenter, "familyJsonFormUtils", familyJsonFormUtils);
+        Whitebox.setInternalState(presenter, "otherMemberInteractor", otherMemberInteractor);
         when(view.getApplicationContext()).thenReturn(context);
 
     }
@@ -170,7 +183,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         when(model.getEventClient()).thenReturn(eventClient);
         presenter.onRegistrationSaved(true);
         verify(interactor, never()).updateFamilyMemberName(eventClient.getClient(), eventClient.getEvent(), "Victoria");
-        verify(view,never()).updateFamilyName("Victor");
+        verify(view, never()).updateFamilyName("Victor");
         verify(view).hideProgressDialog();
         verify(view).refreshMemberList(FetchStatus.fetched);
     }
@@ -194,6 +207,55 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         presenter.startFormForEdit(client);
         verify(familyJsonFormUtils).getAutoPopulatedJsonEditFormString(JSON_FORM.FAMILY_UPDATE, client, EventType.UPDATE_FAMILY_REGISTRATION);
         verify(view).startFormActivity(null);
+    }
+
+    @Test
+    public void testStartFormForEditErrors() {
+        doThrow(new RuntimeException()).when(view).startFormActivity(any());
+        CommonPersonObjectClient client = TestingUtils.getCommonPersonObjectClient();
+        presenter.startFormForEdit(client);
+        verify(familyJsonFormUtils).getAutoPopulatedJsonEditFormString(JSON_FORM.FAMILY_UPDATE, client, EventType.UPDATE_FAMILY_REGISTRATION);
+        verify(view).startFormActivity(null);
+    }
+
+
+    @Test
+    public void testOnAddFamilyMemberFetchesFamilyHead() {
+        presenter.onAddFamilyMember();
+        verify(otherMemberInteractor).getFamilyHead(presenter, familyHeadId);
+        verify(view).getApplicationContext();
+        verifyNoMoreInteractions(view);
+    }
+
+    @Test
+    public void testOnAddFamilyMemberOpensFormIfFamilyHeadIsFetched() throws Exception {
+        when(model.getFamilyHeadPersonObject()).thenReturn(familyHead);
+        presenter = spy(presenter);
+        presenter.onAddFamilyMember();
+        verify(otherMemberInteractor, never()).getFamilyHead(presenter, familyHeadId);
+        verify(interactor).getNextUniqueId(any(), any());
+        verify(presenter).startForm(JSON_FORM.FAMILY_MEMBER_REGISTER, null, null, "");
+    }
+
+
+    @Test
+    public void testOnFetchFamilyHead() throws Exception {
+        presenter = spy(presenter);
+        presenter.onFetchFamilyHead(familyHead);
+        verify(model).setFamilyHeadPersonObject(familyHead);
+        verify(interactor).getNextUniqueId(any(), any());
+        verify(presenter).startForm(JSON_FORM.FAMILY_MEMBER_REGISTER, null, null, "");
+    }
+
+
+    @Test
+    public void testOnFetchFamilyHeadError() throws Exception {
+        presenter = spy(presenter);
+        doThrow(new RuntimeException()).when(presenter).startForm(JSON_FORM.FAMILY_MEMBER_REGISTER, null, null, "");
+        presenter.onFetchFamilyHead(familyHead);
+        verify(model).setFamilyHeadPersonObject(familyHead);
+        verify(interactor, never()).getNextUniqueId(any(), any());
+        verify(presenter).startForm(JSON_FORM.FAMILY_MEMBER_REGISTER, null, null, "");
     }
 
 
