@@ -92,7 +92,7 @@ public class FamilyOtherMemberPresenterTest extends BaseUnitTest {
                 RevealApplication.getInstance().getMetadata().familyMemberRegister.formName,
                 client, RevealApplication.getInstance().getMetadata().familyMemberRegister.updateEventType, familyName);
         verify(view, never()).startFormActivity(any());
-        verify(otherMemberInteractor).getFamilyHead(familyHead);
+        verify(otherMemberInteractor).getFamilyHead(otherMemberPresenter, familyHead);
     }
 
 

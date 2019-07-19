@@ -8,7 +8,6 @@ import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.util.FormUtils;
 
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;

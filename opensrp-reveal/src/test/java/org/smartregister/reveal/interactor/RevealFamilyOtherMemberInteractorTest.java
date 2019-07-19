@@ -39,7 +39,7 @@ public class RevealFamilyOtherMemberInteractorTest extends BaseUnitTest {
     @Before
     public void setUp() {
         Context.bindtypes = new ArrayList<>();
-        interactor = new RevealFamilyOtherMemberInteractor(presenter);
+        interactor = new RevealFamilyOtherMemberInteractor();
         Whitebox.setInternalState(interactor, "commonRepository", commonRepository);
     }
 
@@ -47,7 +47,7 @@ public class RevealFamilyOtherMemberInteractorTest extends BaseUnitTest {
     public void testGetFamilyHead() {
         String familyHead = UUID.randomUUID().toString();
         when(commonRepository.findByBaseEntityId(familyHead)).thenReturn(familyHeadPersonObject);
-        interactor.getFamilyHead(familyHead);
+        interactor.getFamilyHead(presenter, familyHead);
         verify(presenter, timeout(ASYNC_TIMEOUT)).onFetchFamilyHead(familyHeadPersonObject);
 
     }
