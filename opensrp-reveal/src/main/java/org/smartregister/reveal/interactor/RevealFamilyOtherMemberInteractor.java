@@ -4,7 +4,6 @@ package org.smartregister.reveal.interactor;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.family.interactor.FamilyOtherMemberProfileInteractor;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract.Interactor;
 import org.smartregister.reveal.util.AppExecutors;
@@ -22,7 +21,7 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
     public RevealFamilyOtherMemberInteractor(FamilyOtherMemberProfileContract.Presenter presenter) {
         this.presenter = presenter;
         commonRepository = getInstance().getContext().commonrepository(getInstance().getMetadata().familyMemberRegister.tableName);
-        appExecutors = RevealApplication.getInstance().getAppExecutors();
+        appExecutors = getInstance().getAppExecutors();
     }
 
     @Override
