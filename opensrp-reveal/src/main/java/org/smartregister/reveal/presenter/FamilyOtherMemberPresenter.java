@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
@@ -58,7 +59,9 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
 
     @Override
     public void startFormForEdit(CommonPersonObjectClient client) {
-        if (client.getCaseId().equals(familyHead)) {
+        if (StringUtils.isBlank(familyHead) || client.getCaseId().equals(familyHead)) {
+            startFamilyMemberForm(familyName, false);
+        } else if (client.getCaseId().equals(familyHead)) {
             startFamilyMemberForm(familyName, true);
         } else {
             otherMemberInteractor.getFamilyHead(this, familyHead);
