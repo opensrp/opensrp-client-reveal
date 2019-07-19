@@ -57,7 +57,7 @@ public class CardDetailsUtil {
                 cardDetails.setReason(null);
                 break;
             default:
-                Timber.w( "business status not defined :" + cardDetails.getStatus());
+                Timber.w("business status not defined :" + cardDetails.getStatus());
                 break;
         }
     }
@@ -124,8 +124,9 @@ public class CardDetailsUtil {
     public static String getTranslatedBusinessStatus(String businessStatus) {
         Context context = RevealApplication.getInstance().getApplicationContext();
 
-        switch(businessStatus)
-        {
+        if (businessStatus == null)
+            return context.getString(R.string.not_eligible);
+        switch (businessStatus) {
             case NOT_VISITED:
                 return context.getString(R.string.not_visited);
             case NOT_SPRAYED:
@@ -145,6 +146,8 @@ public class CardDetailsUtil {
             default:
                 return businessStatus;
         }
+
+
     }
 
 }
