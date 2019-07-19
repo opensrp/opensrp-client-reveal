@@ -75,6 +75,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         jsonDbMap.put(DatabaseKeys.OCCUPATION, DatabaseKeys.OCCUPATION);
         jsonDbMap.put(DatabaseKeys.SLEEPS_OUTDOORS, DatabaseKeys.SLEEPS_OUTDOORS);
         jsonDbMap.put(DatabaseKeys.PHONE_NUMBER, DatabaseKeys.PHONE_NUMBER);
+        jsonDbMap.put(FormKeys.SURNAME, LAST_NAME);
 
     }
 
@@ -259,7 +260,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
         String lookupName = Utils.getValue(client.getColumnmaps(), isFamilyHead ? FIRST_NAME : LAST_NAME, false);
 
-        JSONObject sameAsFamName = getFieldJSONObject(jsonArray, isFamilyHead ? FormKeys.SAME_AS_FAM_FIRSTNAME : FormKeys.SAME_AS_FAM_NAME);
+        JSONObject sameAsFamName = getFieldJSONObject(jsonArray, isFamilyHead ? FormKeys.SAME_AS_FAM_FIRST_NAME : FormKeys.SAME_AS_FAM_NAME);
         JSONObject sameOptions = sameAsFamName.getJSONArray(JSON_FORM_KEY.OPTIONS).getJSONObject(0);
 
         if (familyName.equals(lookupName)) {

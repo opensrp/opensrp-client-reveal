@@ -6,6 +6,13 @@ condition: "!step1_same_as_fam_name.contains('same_as_fam_name')"
 actions:
  - "isRelevant = true"
 ---
+name: step1_first_name
+description: First name relevance
+priority: 1
+condition: "!step1_first_name_as_fam_name.contains('same_as_fam_name')"
+actions:
+ - "isRelevant = true"
+---
 name: step1_dob
 description: dob relevance
 priority: 1
