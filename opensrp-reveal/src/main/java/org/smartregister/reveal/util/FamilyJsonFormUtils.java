@@ -128,7 +128,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
     }
 
     public JSONObject getAutoPopulatedJsonEditMemberFormString(@StringRes int formTitle, String formName,
-                                                               CommonPersonObjectClient client, String updateEventType, String familyName) {
+                                                               CommonPersonObjectClient client, String updateEventType, String familyName, boolean isFamilyHead) {
         try {
 
             // get the event and the client from ec model
@@ -157,7 +157,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
 
                     try {
-                        processFieldsForMemberEdit(client, jsonObject, jsonArray, familyName);
+                        processFieldsForMemberEdit(client, jsonObject, jsonArray, familyName,isFamilyHead);
                     } catch (Exception e) {
                         Timber.e(Log.getStackTraceString(e));
                     }
@@ -174,7 +174,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
 
     private void processFieldsForMemberEdit(CommonPersonObjectClient client, JSONObject jsonObject,
-                                            JSONArray jsonArray, String familyName) throws JSONException {
+                                            JSONArray jsonArray, String familyName, boolean isFamilyHead) throws JSONException {
 
 
         switch (jsonObject.getString(KEY).toLowerCase()) {
@@ -196,6 +196,10 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
             case DatabaseKeys.FAMILY_NAME:
                 computeFamName(client, jsonObject, jsonArray, familyName);
+                break;
+
+            case DatabaseKeys.IS_FAMILY_HEAD:
+                jsonObject.put(VALUE, isFamilyHead);
                 break;
 
             default:

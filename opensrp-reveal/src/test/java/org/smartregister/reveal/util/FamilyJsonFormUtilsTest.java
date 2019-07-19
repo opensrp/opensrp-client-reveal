@@ -180,7 +180,7 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
         setupMemberForm();
         String locationId = UUID.randomUUID().toString();
         when(locationHelper.getOpenMrsLocationId(null)).thenReturn(locationId);
-        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, "Ker");
+        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, "Ker", isFamilyHead);
         assertEquals(locationId, form.getJSONObject(METADATA).getString(ENCOUNTER_LOCATION));
         assertEquals("12987632", form.getString(CURRENT_OPENSRP_ID));
         assertEquals("Charity", JsonFormUtils.getFieldValue(form.toString(), KEY.FIRST_NAME));
@@ -199,7 +199,7 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
         when(formUtils.getFormJson(FAMILY_MEMBER_REGISTER)).thenReturn(new JSONObject());
         String locationId = UUID.randomUUID().toString();
         when(locationHelper.getOpenMrsLocationId(null)).thenReturn(locationId);
-        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, "Ker");
+        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, "Ker", isFamilyHead);
         assertNull(form);
     }
 
@@ -209,7 +209,7 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
         setupMemberForm();
         client.getColumnmaps().put(Constants.JSON_FORM_KEY.DOB_UNKNOWN, "true");
         client.getColumnmaps().put(DatabaseKeys.AGE, "37");
-        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, "Ker");
+        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, "Ker", isFamilyHead);
         assertEquals("37", JsonFormUtils.getFieldValue(form.toString(), DatabaseKeys.AGE));
         String dobString = org.smartregister.util.Utils.getDob(37);
         assertEquals(dobString, JsonFormUtils.getFieldValue(form.toString(), DOB));
@@ -223,7 +223,7 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
         setupMemberForm();
         String familyName = "Ker";
         client.getColumnmaps().put(KEY.LAST_NAME, familyName);
-        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, familyName);
+        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, familyName, isFamilyHead);
         assertEquals("", JsonFormUtils.getFieldValue(form.toString(), SURNAME));
         assertTrue(JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), "same_as_fam_name").getJSONArray(OPTIONS).getJSONObject(0).getBoolean(VALUE));
     }
@@ -234,7 +234,7 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
         setupMemberForm();
         String citizenship = "Thai";
         client.getColumnmaps().put(DatabaseKeys.CITIZENSHIP, "Thai");
-        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, citizenship);
+        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, citizenship, isFamilyHead);
         assertEquals(citizenship, JsonFormUtils.getFieldValue(form.toString(), DatabaseKeys.CITIZENSHIP));
     }
 

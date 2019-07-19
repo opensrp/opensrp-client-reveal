@@ -82,7 +82,7 @@ public class FamilyOtherMemberPresenterTest extends BaseUnitTest {
         otherMemberPresenter.startFormForEdit(client);
         verify(familyJsonFormUtils).getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title,
                 RevealApplication.getInstance().getMetadata().familyMemberRegister.formName,
-                client, RevealApplication.getInstance().getMetadata().familyMemberRegister.updateEventType, familyName);
+                client, RevealApplication.getInstance().getMetadata().familyMemberRegister.updateEventType, familyName, isFamilyHead);
         verify(view).startFormActivity(any());
     }
 

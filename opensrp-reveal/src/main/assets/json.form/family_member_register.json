@@ -90,7 +90,7 @@
         "options": [
           {
             "key": "same_as_fam_name",
-            "text": "Surname same as head of family",
+            "text": "First name same as household name",
             "text_size": "18px",
             "value": "false"
           }
@@ -98,7 +98,7 @@
         "relevance": {
           "step1:is_family_head": {
             "type": "string",
-            "ex": "equalTo(., \"True\")"
+            "ex": "equalTo(., \"true\")"
           }
         }
       },
@@ -140,7 +140,7 @@
         "relevance": {
           "step1:is_family_head": {
             "type": "string",
-            "ex": "equalTo(., \"False\")"
+            "ex": "equalTo(., \"false\")"
           }
         }
       },
