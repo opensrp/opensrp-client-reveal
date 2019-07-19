@@ -243,7 +243,6 @@ public interface Constants {
         String STRUCTURE_NAME = "structureName";
 
         String PHYSICAL_TYPE = "physicalType";
-        String HOUSE_NUMBER = "house_number";
 
     }
 

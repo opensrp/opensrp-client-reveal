@@ -37,6 +37,7 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_D
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
@@ -103,7 +104,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 } else if (eventType.equals(REGISTER_STRUCTURE_EVENT)) {
                     operationalAreaId = processRegisterStructureEvent(event, clientClassification);
                 } else if (eventType.equals(UPDATE_FAMILY_REGISTRATION)) {
-                    processUpdateFamilyRegistrationEvent(event, localEvents);
+                    processUpdateFamilyRegistrationEvent(event, eventClient.getClient(), clientClassification, localEvents);
                 } else {
                     Client client = eventClient.getClient();
 
@@ -148,24 +149,26 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         return null;
     }
 
-    private void processUpdateFamilyRegistrationEvent(Event event, boolean localEvents) {
+    private void processUpdateFamilyRegistrationEvent(Event event, Client client, ClientClassification clientClassification, boolean localEvents) {
         if (!localEvents ) {
             return;
         }
         try {
-            Location structure = structureRepository.getLocationById(event.getLocationId());
+            Location structure = null;
+            if (event.getDetails() != null) {
+                structure = structureRepository.getLocationById(event.getDetails().get(LOCATION_UUID));
+            }
 
-            if (structure != null) {
-                Obs houseNumberObs = event.findObs(null, false, JsonForm.HOUSE_NUMBER);
-                if (houseNumberObs == null) {
+            if (structure != null && client.getAddresses() != null && !client.getAddresses().isEmpty()) {
+                String houseNumber = client.getAddresses().get(0).getAddressField("address2");
+                if (StringUtils.isEmpty(houseNumber)) {
                     return;
                 } else if (structure.getProperties() != null
-                        && StringUtils.isNotEmpty(structure.getProperties().getName())
-                        && !structure.getProperties().getName().equalsIgnoreCase(houseNumberObs.getValue().toString())) {
-                    structure.getProperties().setName(houseNumberObs.getValue().toString());
+                        && !houseNumber.equalsIgnoreCase(structure.getProperties().getName())) {
+                    structure.getProperties().setName(houseNumber);
                     structureRepository.addOrUpdate(structure);
                 }
-
+                processEvent(event, client, clientClassification);
             }
         } catch (Exception e) {
             Timber.e(e, "Error processing update family registration event");
