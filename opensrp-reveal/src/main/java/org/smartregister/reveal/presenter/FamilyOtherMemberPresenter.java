@@ -59,7 +59,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
 
     @Override
     public void startFormForEdit(CommonPersonObjectClient client) {
-        if (StringUtils.isBlank(familyHead) || client.getCaseId().equals(familyHead)) {
+        if (StringUtils.isBlank(familyHead)) {
             startFamilyMemberForm(familyName, false);
         } else if (client.getCaseId().equals(familyHead)) {
             startFamilyMemberForm(familyName, true);
