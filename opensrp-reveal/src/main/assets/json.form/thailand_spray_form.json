@@ -276,7 +276,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "เป็นกิจกรรมเสริมหรือไม่",
+        "label": "เป็นกิจกรรมเก็บรายละเอียด (mop-up) ใช่หรือไม่?",
         "options": [
           {
             "key": "Yes",
