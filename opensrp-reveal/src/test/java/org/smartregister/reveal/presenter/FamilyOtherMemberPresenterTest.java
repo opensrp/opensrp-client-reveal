@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.contract.FamilyOtherMemberContract;
 import org.smartregister.family.contract.FamilyProfileContract;
@@ -19,6 +20,7 @@ import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.TestingUtils;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -54,6 +56,9 @@ public class FamilyOtherMemberPresenterTest extends BaseUnitTest {
     @Mock
     private FamilyProfileContract.Model profileModel;
 
+    @Mock
+    private FamilyOtherMemberProfileContract.Interactor otherMemberInteractor;
+
     private FamilyOtherMemberPresenter otherMemberPresenter;
 
     private CommonPersonObjectClient client = TestingUtils.getCommonPersonObjectClient();
@@ -72,18 +77,22 @@ public class FamilyOtherMemberPresenterTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
+        Context.bindtypes = new ArrayList<>();
         otherMemberPresenter = new FamilyOtherMemberPresenter(view, model, null, familyBaseEntityId, baseEntityId, familyHead, primaryCaregiver, villageTown, familyName);
         Whitebox.setInternalState(otherMemberPresenter, "familyJsonFormUtils", familyJsonFormUtils);
         Whitebox.setInternalState(otherMemberPresenter, "interactor", interactor);
+        Whitebox.setInternalState(otherMemberPresenter, "otherMemberInteractor", otherMemberInteractor);
     }
 
     @Test
     public void testStartFormForEdit() {
+        client.setCaseId(familyHead);
         otherMemberPresenter.startFormForEdit(client);
-        verify(familyJsonFormUtils).getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title,
+        verify(familyJsonFormUtils, never()).getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title,
                 RevealApplication.getInstance().getMetadata().familyMemberRegister.formName,
                 client, RevealApplication.getInstance().getMetadata().familyMemberRegister.updateEventType, familyName);
-        verify(view).startFormActivity(any());
+        verify(view, never()).startFormActivity(any());
+        verify(otherMemberInteractor).getFamilyHead(familyHead);
     }
 
 
