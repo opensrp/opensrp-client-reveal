@@ -35,7 +35,8 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity implement
         String taskId = getIntent().getStringExtra(Properties.TASK_IDENTIFIER);
         String taskBusinessStatus = getIntent().getStringExtra(Properties.TASK_BUSINESS_STATUS);
         String taskStatus = getIntent().getStringExtra(Properties.TASK_STATUS);
-        presenter = new FamilyRegisterPresenter(this, new FamilyRegisterModel(structureId, taskId, taskBusinessStatus, taskStatus));
+        String structureName = getIntent().getStringExtra(Properties.STRUCTURE_NAME);
+        presenter = new FamilyRegisterPresenter(this, new FamilyRegisterModel(structureId, taskId, taskBusinessStatus, taskStatus, structureName));
     }
 
     @Override
