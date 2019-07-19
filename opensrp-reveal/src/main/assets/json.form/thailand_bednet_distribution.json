@@ -72,7 +72,7 @@
         },
         "v_max": {
           "value": "[num_fam_members]",
-          "err": "ต้องไม่เกินจำนวนสมาชิกที่ลงทะเบียน"
+          "err": "ต้องไม่เกินจำนวนสมาชิกในครัวเรือนที่ลงทะเบียน"
         }
       },
       {
@@ -106,7 +106,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "ต้องมีจำนวน LLINs ที่น้อยกว่า 1 ปี"
+          "err": "โปรดกรอกจำนวน LLIN ที่น้อยกว่า 1 ปี"
         },
         "v_numeric": {
           "value": "true",
@@ -190,7 +190,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "ต้องระบุจำนวน LLINs ที่มีอายุมากกว่า 3 ปี"
+          "err": "โปรดกรอกจำนวน LLIN ที่อายุมากกว่า 3 ปี"
         },
         "v_numeric": {
           "value": "true",
@@ -248,7 +248,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "ต้องมีจำนวน LLIHNs ที่น้อยกว่า 1 ปี"
+          "err": "โปรดกรอกจำนวน LLIHN ที่น้อยกว่า 1 ปี"
         },
         "v_numeric": {
           "value": "true",
@@ -332,7 +332,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "ต้องระบุจำนวน LLIHNs ที่มีอายุมากกว่า 3 ปี"
+          "err": "โปรดกรอกจำนวน LLIHN ที่อายุมากกว่า 3 ปี"
         },
         "v_numeric": {
           "value": "true",
@@ -366,7 +366,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "จำนวนมุ้งธรรมดาที่มีอยู่",
-        "shortened_hint": "มุ้งปกติ",
+        "shortened_hint": "จำนวนมุ้งธรรมดาที่มีอยู่",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -387,8 +387,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "จำนวนมุ้งธรรมดาที่ได้รับการชุบเมื่อ 6 เดือนที่ผ่านมา",
-        "shortened_hint": "มุ้งปกติจุ่ม <6 เดือน",
+        "hint": "จำนวนมุ้งที่ได้ชุบภายใน 6 เดือนที่ผ่านมา",
+        "shortened_hint": "จำนวนมุ้งที่ได้ชุบภายใน 6 เดือนที่ผ่านมา",
         "edit_type": "number",
         "v_required": {
           "value": true,
@@ -404,7 +404,7 @@
         },
         "v_relative_max": {
           "value": "existingITNs",
-          "err": "จำนวนตาข่ายที่จุ่ม <6 เดือนต้องไม่เกินกว่าจำนวนตาข่ายปกติทั้งหมด"
+          "err": "จำนวนมุ้งชุบภายใน 6 เดือนที่ผ่านมาต้องไม่เกินจำนวนมุ้งธรรมดาที่มี"
         }
       },
       {
@@ -572,7 +572,7 @@
         },
         "v_relative_max": {
           "value": "calcPopulationMinusExistingNets",
-          "err": "ต้องไม่เกินจำนวนประชากรทั้งหมดที่หักลบมุ้งที่มีอยู่"
+          "err": "จำนวนมุ้งไม่ควรเกินจำนวนคนในบ้าน"
         },
         "relevance": {
           "rules-engine": {
@@ -677,7 +677,7 @@
         },
         "v_relative_max": {
           "value": "calcNumNetsToRedip",
-          "err": "ต้องไม่เกินจำนวนสุทธิที่ใช้ได้สำหรับการจุ่มซ้ำ"
+          "err": "จำนวนมุ้งธรรมดาไม่ควรเกินจำนวนมุ้งที่ชุบ"
         }
       },
       {
@@ -686,8 +686,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "จำนวนยากันยุงส่วนบุคคล",
-        "shortened_hint": "จำนวนยากันยุงส่วนบุคคลที่แจกจ่ายแล้ว",
+        "hint": "จำนวนยาทากันยุงที่แจก",
+        "shortened_hint": "จำนวนยาทากันยุงที่ได้รับ",
         "edit_type": "number",
         "v_required": {
           "value": true,
