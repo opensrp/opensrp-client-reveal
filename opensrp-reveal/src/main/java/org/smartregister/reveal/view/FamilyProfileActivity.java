@@ -100,7 +100,7 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
             return true;
         }
         if (R.id.add_member == item.getItemId()) {
-            presenter().addFamilyMember();
+            presenter().onAddFamilyMember();
             return true;
         } else {
             return super.onOptionsItemSelected(item);

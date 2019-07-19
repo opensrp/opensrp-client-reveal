@@ -33,7 +33,7 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
 
         void onMembersUpdated();
 
-        void addFamilyMember();
+        void onAddFamilyMember();
     }
 }
 

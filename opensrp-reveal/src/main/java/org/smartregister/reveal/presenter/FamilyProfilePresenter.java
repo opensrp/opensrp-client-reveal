@@ -43,7 +43,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
     private FamilyJsonFormUtils familyJsonFormUtils;
 
-    private RevealFamilyOtherMemberInteractor otherMemberInteractor;
+    private FamilyOtherMemberProfileContract.Interactor otherMemberInteractor;
 
 
     public FamilyProfilePresenter(FamilyProfileContract.View view, FamilyProfileContract.Model model, String familyBaseEntityId, String familyHead, String primaryCaregiver, String familyName) {
@@ -141,7 +141,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
     }
 
     @Override
-    public void addFamilyMember() {
+    public void onAddFamilyMember() {
         if (getModel().getFamilyHeadPersonObject() == null) {
             otherMemberInteractor.getFamilyHead(this, familyHead);
         } else {
