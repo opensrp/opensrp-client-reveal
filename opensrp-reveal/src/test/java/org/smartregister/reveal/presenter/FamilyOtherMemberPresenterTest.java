@@ -98,8 +98,8 @@ public class FamilyOtherMemberPresenterTest extends BaseUnitTest {
         verify(familyJsonFormUtils, never()).getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title,
                 RevealApplication.getInstance().getMetadata().familyMemberRegister.formName,
                 client, RevealApplication.getInstance().getMetadata().familyMemberRegister.updateEventType, familyName, false);
-        verify(view, never()).startFormActivity(any());
-        verify(otherMemberInteractor).getFamilyHead(otherMemberPresenter, familyHead);
+        verify(view).startFormActivity(any());
+        verify(otherMemberInteractor, never()).getFamilyHead(otherMemberPresenter, familyHead);
     }
 
 
@@ -209,6 +209,7 @@ public class FamilyOtherMemberPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnEditMemberDetails() {
+        Whitebox.setInternalState(otherMemberPresenter, "client", client);
         otherMemberPresenter.onEditMemberDetails();
         verify(view, never()).startFormActivity(any());
         verify(otherMemberInteractor).getFamilyHead(otherMemberPresenter, familyHead);
