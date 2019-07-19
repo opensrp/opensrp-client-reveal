@@ -166,6 +166,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 } else if (structure.getProperties() != null
                         && !houseNumber.equalsIgnoreCase(structure.getProperties().getName())) {
                     structure.getProperties().setName(houseNumber);
+                    structure.setSyncStatus(BaseRepository.TYPE_Created);
                     structureRepository.addOrUpdate(structure);
                 }
                 processEvent(event, client, clientClassification);
