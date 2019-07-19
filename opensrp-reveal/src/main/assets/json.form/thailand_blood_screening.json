@@ -155,7 +155,7 @@
         ],
         "v_required": {
           "value": true,
-          "err": "หากไม่เคย โปรดระบุเหตุผล"
+          "err": "หากไม่ตรวจ โปรดระบุเหตุผล"
         },
         "relevance": {
           "step1:personTested": {
