@@ -3,6 +3,7 @@ package org.smartregister.reveal.contract;
 import android.content.Context;
 
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.family.contract.FamilyOtherMemberContract;
 
 /**
@@ -11,6 +12,8 @@ import org.smartregister.family.contract.FamilyOtherMemberContract;
 public interface FamilyOtherMemberProfileContract {
 
     interface Presenter extends FamilyOtherMemberContract.Presenter {
+        void onFetchFamilyHead(CommonPersonObject commonPersonObject);
+
         void onEditMemberDetails();
 
         void updateFamilyMember(String jsonString);
@@ -23,5 +26,11 @@ public interface FamilyOtherMemberProfileContract {
         Context getContext();
 
         void refreshList();
+    }
+
+
+    interface Interactor extends FamilyOtherMemberContract.Interactor {
+
+        void getFamilyHead(String familyHeadId);
     }
 }
