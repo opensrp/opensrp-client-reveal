@@ -81,6 +81,28 @@
         }
       },
       {
+        "key": "firstname_as_fam_name",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": " ",
+        "options": [
+          {
+            "key": "same_as_fam_name",
+            "text": "Surname same as head of family",
+            "text_size": "18px",
+            "value": "false"
+          }
+        ],
+        "relevance": {
+          "step1:is_family_head": {
+            "type": "string",
+            "ex": "equalTo(., \"True\")"
+          }
+        }
+      },
+      {
         "key": "surname",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -114,15 +136,27 @@
             "text_size": "18px",
             "value": "false"
           }
-        ]
+        ],
+        "relevance": {
+          "step1:is_family_head": {
+            "type": "string",
+            "ex": "equalTo(., \"False\")"
+          }
+        }
       },
       {
         "key": "fam_name",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "label",
-        "hidden": "true"
+        "type": "hidden"
+      },
+      {
+        "key": "is_family_head",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden"
       },
       {
         "key": "surname_calculation",
