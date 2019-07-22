@@ -257,23 +257,25 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
     private void computeFamName(CommonPersonObjectClient client, JSONObject jsonObject, JSONArray jsonArray, String familyName, boolean isFamilyHead) throws JSONException {
 
         jsonObject.put(VALUE, familyName);
-
-        String lookupName = Utils.getValue(client.getColumnmaps(), isFamilyHead ? FIRST_NAME : LAST_NAME, false);
-
-        JSONObject sameAsFamName = getFieldJSONObject(jsonArray, isFamilyHead ? FormKeys.SAME_AS_FAM_FIRST_NAME : FormKeys.SAME_AS_FAM_NAME);
+        String lookupName;
+        JSONObject sameAsFamName;
+        JSONObject lookupField;
+        if (isFamilyHead) {
+            lookupName = Utils.getValue(client.getColumnmaps(), FIRST_NAME, false);
+            sameAsFamName = getFieldJSONObject(jsonArray, FormKeys.SAME_AS_FAM_FIRST_NAME);
+            lookupField = getFieldJSONObject(jsonArray, FormKeys.FIRST_NAME);
+        } else {
+            lookupName = Utils.getValue(client.getColumnmaps(), LAST_NAME, false);
+            sameAsFamName = getFieldJSONObject(jsonArray, FormKeys.SAME_AS_FAM_NAME);
+            lookupField = getFieldJSONObject(jsonArray, FormKeys.SURNAME);
+        }
         JSONObject sameOptions = sameAsFamName.getJSONArray(JSON_FORM_KEY.OPTIONS).getJSONObject(0);
-
         if (familyName.equals(lookupName)) {
             sameOptions.put(VALUE, true);
+            lookupField.put(VALUE, "");
         } else {
             sameOptions.put(VALUE, false);
-        }
-
-        JSONObject lookupField = getFieldJSONObject(jsonArray, isFamilyHead ? FormKeys.FIRST_NAME : FormKeys.SURNAME);
-        if (!familyName.equals(lookupName)) {
             lookupField.put(VALUE, lookupName);
-        } else {
-            lookupField.put(VALUE, "");
         }
     }
 
