@@ -29,6 +29,7 @@ import org.smartregister.view.LocationPickerView;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -41,6 +42,7 @@ import static org.smartregister.family.util.JsonFormUtils.CURRENT_OPENSRP_ID;
 import static org.smartregister.family.util.JsonFormUtils.METADATA;
 import static org.smartregister.reveal.util.FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION;
 import static org.smartregister.reveal.util.FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION;
+import static org.smartregister.reveal.util.FamilyConstants.FormKeys.FIRST_NAME;
 import static org.smartregister.reveal.util.FamilyConstants.FormKeys.SURNAME;
 import static org.smartregister.reveal.util.FamilyConstants.JSON_FORM.FAMILY_MEMBER_REGISTER;
 import static org.smartregister.reveal.util.FamilyConstants.JSON_FORM.FAMILY_UPDATE;
@@ -215,6 +217,25 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
         assertEquals(dobString, JsonFormUtils.getFieldValue(form.toString(), DOB));
         assertTrue(JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), Constants.JSON_FORM_KEY.DOB_UNKNOWN).getJSONArray(OPTIONS).getJSONObject(0).getBoolean(VALUE));
 
+    }
+
+
+    @Test
+    public void testFirstNameCalcForFamilyHead() throws JSONException {
+        setupMemberForm();
+        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, "Charity", true);
+        assertEquals("", JsonFormUtils.getFieldValue(form.toString(), FIRST_NAME));
+        assertEquals(client.getColumnmaps().get(KEY.LAST_NAME), JsonFormUtils.getFieldValue(form.toString(), SURNAME));
+        assertTrue(JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), "first_name_as_fam_name").getJSONArray(OPTIONS).getJSONObject(0).getBoolean(VALUE));
+    }
+
+    @Test
+    public void testFirstNameCalcForNonFamilyHead() throws JSONException {
+        setupMemberForm();
+        JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, "Charity", false);
+        assertEquals(client.getColumnmaps().get(KEY.FIRST_NAME), JsonFormUtils.getFieldValue(form.toString(), FIRST_NAME));
+        assertEquals(client.getColumnmaps().get(KEY.LAST_NAME), JsonFormUtils.getFieldValue(form.toString(), SURNAME));
+        assertFalse(JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), "first_name_as_fam_name").getJSONArray(OPTIONS).getJSONObject(0).getBoolean(VALUE));
     }
 
 
