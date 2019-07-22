@@ -150,30 +150,31 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     }
 
     private void processUpdateFamilyRegistrationEvent(Event event, Client client, ClientClassification clientClassification, boolean localEvents) {
-        if (!localEvents ) {
-            return;
-        }
         try {
-            Location structure = null;
-            if (event.getDetails() != null) {
-                structure = structureRepository.getLocationById(event.getDetails().get(LOCATION_UUID));
-            }
-
-            if (structure != null && client.getAddresses() != null && !client.getAddresses().isEmpty()) {
-                String houseNumber = client.getAddresses().get(0).getAddressField("address2");
-                if (StringUtils.isEmpty(houseNumber)) {
-                    return;
-                } else if (structure.getProperties() != null
-                        && !houseNumber.equalsIgnoreCase(structure.getProperties().getName())) {
-                    structure.getProperties().setName(houseNumber);
-                    structure.setSyncStatus(BaseRepository.TYPE_Created);
-                    structureRepository.addOrUpdate(structure);
+            if (localEvents) {
+                Location structure = null;
+                if (event.getDetails() != null) {
+                    structure = structureRepository.getLocationById(event.getDetails().get(LOCATION_UUID));
                 }
-                processEvent(event, client, clientClassification);
+
+                if (structure != null && client.getAddresses() != null && !client.getAddresses().isEmpty()) {
+                    String houseNumber = client.getAddresses().get(0).getAddressField("address2");
+                    if (StringUtils.isEmpty(houseNumber)) {
+                        return;
+                    } else if (structure.getProperties() != null
+                            && !houseNumber.equalsIgnoreCase(structure.getProperties().getName())) {
+                        structure.getProperties().setName(houseNumber);
+                        structure.setSyncStatus(BaseRepository.TYPE_Created);
+                        structureRepository.addOrUpdate(structure);
+                    }
+
+                }
             }
+            processEvent(event, client, clientClassification);
         } catch (Exception e) {
             Timber.e(e, "Error processing update family registration event");
         }
+
     }
 
     private String processSprayEvent(Event event, ClientClassification clientClassification, boolean localEvents) {

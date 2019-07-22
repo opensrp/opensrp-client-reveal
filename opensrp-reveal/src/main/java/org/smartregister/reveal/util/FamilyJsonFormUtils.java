@@ -12,7 +12,6 @@ import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.family.util.Constants.JSON_FORM_KEY;
-import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
 import org.smartregister.location.helper.LocationHelper;
@@ -27,6 +26,15 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import timber.log.Timber;
+
+import static org.smartregister.family.util.DBConstants.KEY.DOB;
+import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
+import static org.smartregister.family.util.DBConstants.KEY.GENDER;
+import static org.smartregister.family.util.DBConstants.KEY.LANDMARK;
+import static org.smartregister.family.util.DBConstants.KEY.LAST_NAME;
+import static org.smartregister.family.util.DBConstants.KEY.STREET;
+import static org.smartregister.family.util.DBConstants.KEY.UNIQUE_ID;
+import static org.smartregister.family.util.DBConstants.KEY.VILLAGE_TOWN;
 
 /**
  * Created by samuelgithengi on 5/24/19.
@@ -61,12 +69,13 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
     private void initMap() {
         jsonDbMap = new HashMap<>();
-        jsonDbMap.put(FormKeys.SEX, DBConstants.KEY.GENDER);
+        jsonDbMap.put(FormKeys.SEX, GENDER);
         jsonDbMap.put(DatabaseKeys.NATIONAL_ID, DatabaseKeys.NATIONAL_ID);
         jsonDbMap.put(DatabaseKeys.CITIZENSHIP, DatabaseKeys.CITIZENSHIP);
         jsonDbMap.put(DatabaseKeys.OCCUPATION, DatabaseKeys.OCCUPATION);
         jsonDbMap.put(DatabaseKeys.SLEEPS_OUTDOORS, DatabaseKeys.SLEEPS_OUTDOORS);
         jsonDbMap.put(DatabaseKeys.PHONE_NUMBER, DatabaseKeys.PHONE_NUMBER);
+        jsonDbMap.put(FormKeys.SURNAME, LAST_NAME);
 
     }
 
@@ -82,7 +91,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
                 metadata.put(ENCOUNTER_LOCATION, lastLocationId);
 
-                form.put(CURRENT_OPENSRP_ID, Utils.getValue(client.getColumnmaps(), DBConstants.KEY.UNIQUE_ID, false));
+                form.put(CURRENT_OPENSRP_ID, Utils.getValue(client.getColumnmaps(), UNIQUE_ID, false));
 
                 //inject opensrp id into the form
                 JSONObject stepOne = form.getJSONObject(STEP1);
@@ -107,19 +116,19 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         switch (jsonObject.getString(KEY)) {
             case DatabaseKeys.FAMILY_NAME:
             case DatabaseKeys.OLD_FAMILY_NAME:
-                jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), DBConstants.KEY.FIRST_NAME, false));
+                jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), FIRST_NAME, false));
                 break;
-            case DBConstants.KEY.VILLAGE_TOWN:
-                jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), DBConstants.KEY.VILLAGE_TOWN, false));
+            case VILLAGE_TOWN:
+                jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), VILLAGE_TOWN, false));
                 break;
             case DatabaseKeys.HOUSE_NUMBER:
                 jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), DatabaseKeys.HOUSE_NUMBER, false));
                 break;
-            case DBConstants.KEY.STREET:
-                jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), DBConstants.KEY.STREET, false));
+            case STREET:
+                jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), STREET, false));
                 break;
-            case DBConstants.KEY.LANDMARK:
-                jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), DBConstants.KEY.LANDMARK, false));
+            case LANDMARK:
+                jsonObject.put(VALUE, Utils.getValue(client.getColumnmaps(), LANDMARK, false));
                 break;
             default:
                 JsonFormUtils.processPopulatableFields(client, jsonObject);
@@ -128,7 +137,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
     }
 
     public JSONObject getAutoPopulatedJsonEditMemberFormString(@StringRes int formTitle, String formName,
-                                                               CommonPersonObjectClient client, String updateEventType, String familyName) {
+                                                               CommonPersonObjectClient client, String updateEventType, String familyName, boolean isFamilyHead) {
         try {
 
             // get the event and the client from ec model
@@ -143,7 +152,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
                 metadata.put(ENCOUNTER_LOCATION, lastLocationId);
 
-                form.put(CURRENT_OPENSRP_ID, Utils.getValue(client.getColumnmaps(), DBConstants.KEY.UNIQUE_ID, false));
+                form.put(CURRENT_OPENSRP_ID, Utils.getValue(client.getColumnmaps(), UNIQUE_ID, false));
 
                 //inject opensrp id into the form
                 JSONObject stepOne = form.getJSONObject(STEP1);
@@ -157,7 +166,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
 
                     try {
-                        processFieldsForMemberEdit(client, jsonObject, jsonArray, familyName);
+                        processFieldsForMemberEdit(client, jsonObject, jsonArray, familyName, isFamilyHead);
                     } catch (Exception e) {
                         Timber.e(Log.getStackTraceString(e));
                     }
@@ -174,7 +183,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
 
     private void processFieldsForMemberEdit(CommonPersonObjectClient client, JSONObject jsonObject,
-                                            JSONArray jsonArray, String familyName) throws JSONException {
+                                            JSONArray jsonArray, String familyName, boolean isFamilyHead) throws JSONException {
 
 
         switch (jsonObject.getString(KEY).toLowerCase()) {
@@ -186,16 +195,20 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                 computeAge(jsonObject, client);
                 break;
 
-            case DBConstants.KEY.DOB:
+            case DOB:
                 computeDOB(jsonObject, client);
                 break;
 
-            case DBConstants.KEY.UNIQUE_ID:
+            case UNIQUE_ID:
                 computeID(jsonObject, client);
                 break;
 
             case DatabaseKeys.FAMILY_NAME:
-                computeFamName(client, jsonObject, jsonArray, familyName);
+                computeFamName(client, jsonObject, jsonArray, familyName, isFamilyHead);
+                break;
+
+            case DatabaseKeys.IS_FAMILY_HEAD:
+                jsonObject.put(VALUE, isFamilyHead);
                 break;
 
             default:
@@ -213,12 +226,12 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
     }
 
     private void computeID(JSONObject jsonObject, CommonPersonObjectClient client) throws JSONException {
-        String uniqueId = Utils.getValue(client.getColumnmaps(), DBConstants.KEY.UNIQUE_ID, false);
+        String uniqueId = Utils.getValue(client.getColumnmaps(), UNIQUE_ID, false);
         jsonObject.put(VALUE, uniqueId.replace("-", ""));
     }
 
     private void computeAge(JSONObject jsonObject, CommonPersonObjectClient client) throws JSONException {
-        String dobString = Utils.getValue(client.getColumnmaps(), DBConstants.KEY.DOB, false);
+        String dobString = Utils.getValue(client.getColumnmaps(), DOB, false);
         dobString = Utils.getDuration(dobString);
         dobString = dobString.contains("y") ? dobString.substring(0, dobString.indexOf("y")) : "0";
         jsonObject.put(VALUE, Integer.valueOf(dobString));
@@ -231,7 +244,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
     }
 
     private void computeDOB(JSONObject jsonObject, CommonPersonObjectClient client) throws JSONException {
-        String dobString = Utils.getValue(client.getColumnmaps(), DBConstants.KEY.DOB, false);
+        String dobString = Utils.getValue(client.getColumnmaps(), DOB, false);
         if (StringUtils.isNotBlank(dobString)) {
             Date dob = Utils.dobStringToDate(dobString);
             if (dob != null) {
@@ -241,26 +254,28 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
     }
 
 
-    private void computeFamName(CommonPersonObjectClient client, JSONObject jsonObject, JSONArray jsonArray, String familyName) throws JSONException {
+    private void computeFamName(CommonPersonObjectClient client, JSONObject jsonObject, JSONArray jsonArray, String familyName, boolean isFamilyHead) throws JSONException {
 
         jsonObject.put(VALUE, familyName);
-
-        String lastName = Utils.getValue(client.getColumnmaps(), DBConstants.KEY.LAST_NAME, false);
-
-        JSONObject sameAsFamName = getFieldJSONObject(jsonArray, FormKeys.SAME_AS_FAM_NAME);
+        String lookupName;
+        JSONObject sameAsFamName;
+        JSONObject lookupField;
+        if (isFamilyHead) {
+            lookupName = Utils.getValue(client.getColumnmaps(), FIRST_NAME, false);
+            sameAsFamName = getFieldJSONObject(jsonArray, FormKeys.SAME_AS_FAM_FIRST_NAME);
+            lookupField = getFieldJSONObject(jsonArray, FormKeys.FIRST_NAME);
+        } else {
+            lookupName = Utils.getValue(client.getColumnmaps(), LAST_NAME, false);
+            sameAsFamName = getFieldJSONObject(jsonArray, FormKeys.SAME_AS_FAM_NAME);
+            lookupField = getFieldJSONObject(jsonArray, FormKeys.SURNAME);
+        }
         JSONObject sameOptions = sameAsFamName.getJSONArray(JSON_FORM_KEY.OPTIONS).getJSONObject(0);
-
-        if (familyName.equals(lastName)) {
+        if (familyName.equals(lookupName)) {
             sameOptions.put(VALUE, true);
+            lookupField.put(VALUE, "");
         } else {
             sameOptions.put(VALUE, false);
-        }
-
-        JSONObject surname = getFieldJSONObject(jsonArray, FormKeys.SURNAME);
-        if (!familyName.equals(lastName)) {
-            surname.put(VALUE, lastName);
-        } else {
-            surname.put(VALUE, "");
+            lookupField.put(VALUE, lookupName);
         }
     }
 
