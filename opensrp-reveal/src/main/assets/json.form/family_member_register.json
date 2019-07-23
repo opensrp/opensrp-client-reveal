@@ -70,14 +70,43 @@
       {
         "key": "first_name",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "first_name",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "First name",
         "edit_type": "name",
         "v_required": {
           "value": "true",
           "err": "Please enter the first name"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "family-member-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "first_name_as_fam_name",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": " ",
+        "options": [
+          {
+            "key": "same_as_fam_name",
+            "text": "First name same as household name",
+            "text_size": "18px",
+            "value": "false"
+          }
+        ],
+        "relevance": {
+          "step1:is_family_head": {
+            "type": "string",
+            "ex": "equalTo(., \"true\")"
+          }
         }
       },
       {
@@ -114,15 +143,42 @@
             "text_size": "18px",
             "value": "false"
           }
-        ]
+        ],
+        "relevance": {
+          "step1:is_family_head": {
+            "type": "string",
+            "ex": "equalTo(., \"false\")"
+          }
+        }
       },
       {
         "key": "fam_name",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "label",
-        "hidden": "true"
+        "type": "hidden"
+      },
+      {
+        "key": "is_family_head",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "value": false
+      },
+      {
+        "key": "first_name_calculation",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "first_name",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "family-member-calculation.yml"
+            }
+          }
+        }
       },
       {
         "key": "surname_calculation",

@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
@@ -33,6 +34,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
     private FamilyJsonFormUtils familyJsonFormUtils;
 
     private String familyBaseEntityId;
+    private String familyName;
 
     private FamilyOtherMemberProfileContract.Interactor otherMemberInteractor;
     private org.smartregister.family.contract.FamilyProfileContract.Interactor profileInteractor;
@@ -43,6 +45,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
                                       String familyHead, String primaryCaregiver, String villageTown, String familyName) {
         super(view, model, viewConfigurationIdentifier, baseEntityId, familyHead, primaryCaregiver, villageTown);
         this.familyBaseEntityId = familyBaseEntityId;
+        this.familyName = familyName;
         this.otherMemberInteractor = new RevealFamilyOtherMemberInteractor();
         this.profileInteractor = new FamilyProfileInteractor();
         this.profileModel = new FamilyProfileModel(familyName);
@@ -56,16 +59,26 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
 
     @Override
     public void startFormForEdit(CommonPersonObjectClient client) {
-        otherMemberInteractor.getFamilyHead(this,familyHead);
+        if (StringUtils.isBlank(familyHead)) {
+            startFamilyMemberForm(familyName, false);
+        } else if (client.getCaseId().equals(familyHead)) {
+            startFamilyMemberForm(familyName, true);
+        } else {
+            otherMemberInteractor.getFamilyHead(this, familyHead);
+        }
     }
 
     @Override
-    public void onFetchFamilyHead(CommonPersonObject commonPersonObject) {
+    public void onFetchFamilyHead(CommonPersonObject familyHeadPersonObject) {
+        startFamilyMemberForm(familyHeadPersonObject.getColumnmaps().get(LAST_NAME), false);
+    }
+
+    private void startFamilyMemberForm(String familyName, boolean isFamilyHead) {
         JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(
                 R.string.edit_member_form_title,
                 RevealApplication.getInstance().getMetadata().familyMemberRegister.formName,
                 client, RevealApplication.getInstance().getMetadata().familyMemberRegister.updateEventType,
-                commonPersonObject.getColumnmaps().get(LAST_NAME));
+                familyName, isFamilyHead);
         getView().startFormActivity(form);
     }
 

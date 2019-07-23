@@ -97,9 +97,9 @@ public class FamilyOtherMemberPresenterTest extends BaseUnitTest {
         otherMemberPresenter.startFormForEdit(client);
         verify(familyJsonFormUtils, never()).getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title,
                 RevealApplication.getInstance().getMetadata().familyMemberRegister.formName,
-                client, RevealApplication.getInstance().getMetadata().familyMemberRegister.updateEventType, familyName);
-        verify(view, never()).startFormActivity(any());
-        verify(otherMemberInteractor).getFamilyHead(otherMemberPresenter, familyHead);
+                client, RevealApplication.getInstance().getMetadata().familyMemberRegister.updateEventType, familyName, false);
+        verify(view).startFormActivity(any());
+        verify(otherMemberInteractor, never()).getFamilyHead(otherMemberPresenter, familyHead);
     }
 
 
@@ -180,13 +180,13 @@ public class FamilyOtherMemberPresenterTest extends BaseUnitTest {
         JSONObject form = new JSONObject();
         when(familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title,
                 RevealApplication.getInstance().getMetadata().familyMemberRegister.formName,
-                client, RevealApplication.getInstance().getMetadata().familyMemberRegister.updateEventType, surname)).thenReturn(form);
+                client, RevealApplication.getInstance().getMetadata().familyMemberRegister.updateEventType, surname, false)).thenReturn(form);
         Whitebox.setInternalState(otherMemberPresenter, "client", client);
         otherMemberPresenter.onFetchFamilyHead(familyHead);
         verify(view).startFormActivity(form);
         verify(familyJsonFormUtils).getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title,
                 RevealApplication.getInstance().getMetadata().familyMemberRegister.formName,
-                client, RevealApplication.getInstance().getMetadata().familyMemberRegister.updateEventType, surname);
+                client, RevealApplication.getInstance().getMetadata().familyMemberRegister.updateEventType, surname, false);
     }
 
 
@@ -209,6 +209,7 @@ public class FamilyOtherMemberPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnEditMemberDetails() {
+        Whitebox.setInternalState(otherMemberPresenter, "client", client);
         otherMemberPresenter.onEditMemberDetails();
         verify(view, never()).startFormActivity(any());
         verify(otherMemberInteractor).getFamilyHead(otherMemberPresenter, familyHead);

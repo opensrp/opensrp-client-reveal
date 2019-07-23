@@ -332,11 +332,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         clearSelectedFeature();
         Intent intent = new Intent(this, FamilyRegisterActivity.class);
         intent.putExtra(START_REGISTRATION, true);
-        intent.putExtra(Properties.LOCATION_UUID, listTaskPresenter.getSelectedFeature().id());
-        intent.putExtra(Properties.TASK_IDENTIFIER, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_IDENTIFIER));
-        intent.putExtra(Properties.TASK_BUSINESS_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_BUSINESS_STATUS));
-        intent.putExtra(Properties.TASK_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_STATUS));
-        intent.putExtra(Properties.STRUCTURE_NAME, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.STRUCTURE_NAME));
+        Feature feature = listTaskPresenter.getSelectedFeature();
+        intent.putExtra(Properties.LOCATION_UUID, feature.id());
+        intent.putExtra(Properties.TASK_IDENTIFIER, feature.getStringProperty(Properties.TASK_IDENTIFIER));
+        intent.putExtra(Properties.TASK_BUSINESS_STATUS, feature.getStringProperty(Properties.TASK_BUSINESS_STATUS));
+        intent.putExtra(Properties.TASK_STATUS, feature.getStringProperty(Properties.TASK_STATUS));
+        if (feature.hasProperty(Properties.STRUCTURE_NAME))
+            intent.putExtra(Properties.STRUCTURE_NAME, feature.getStringProperty(Properties.STRUCTURE_NAME));
         startActivity(intent);
 
     }
@@ -460,7 +462,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
             String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
-            Timber.d( json);
+            Timber.d(json);
             listTaskPresenter.saveJsonForm(json);
         } else if (requestCode == Constants.RequestCode.LOCATION_SETTINGS && hasRequestedLocation) {
             if (resultCode == RESULT_OK) {
