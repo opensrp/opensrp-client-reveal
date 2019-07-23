@@ -9,12 +9,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.interactor.BaseDrawerInteractor;
-import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
@@ -34,6 +32,7 @@ import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.PROVINCE;
+import static org.smartregister.reveal.util.Constants.Tags.SUB_DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.VILLAGE;
 import static org.smartregister.reveal.util.Constants.UseContextCode.INTERVENTION_TYPE;
 
@@ -75,6 +74,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             operationalAreaLevels.add(HEALTH_CENTER);
             operationalAreaLevels.add(VILLAGE);
             operationalAreaLevels.add(CANTON);
+            operationalAreaLevels.add(SUB_DISTRICT);
             List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels);
 
             if (defaultLocation != null) {
@@ -161,9 +161,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         operationalAreaLevels.add(COUNTRY);
         operationalAreaLevels.add(PROVINCE);
         operationalAreaLevels.add(DISTRICT);
-        if (BuildConfig.BUILD_COUNTRY.equals(Country.BOTSWANA)) {
-            operationalAreaLevels.add(CANTON);
-        }
+        operationalAreaLevels.add(SUB_DISTRICT);
         operationalAreaLevels.add(OPERATIONAL_AREA);
 
         List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels);
@@ -195,6 +193,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         ArrayList<String> operationalAreaLevels = new ArrayList<>();
         operationalAreaLevels.add(DISTRICT);
         operationalAreaLevels.add(HEALTH_CENTER);
+        operationalAreaLevels.add(VILLAGE);
         operationalAreaLevels.add(CANTON);
         operationalAreaLevels.add(OPERATIONAL_AREA);
         List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
@@ -233,9 +232,6 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             if (!districtLocation.name.equals(district))
                 continue;
             for (FormLocation facilityLocation : districtLocation.nodes) {
-                if (facilityLocation.nodes == null && facilityLocation.name.equals(operationalArea)) {
-                    return new Pair<>(facilityLocation.level, facilityLocation.name);
-                }
                 for (FormLocation operationalAreaLocation : facilityLocation.nodes) {
                     if (operationalAreaLocation.name.equals(operationalArea)) {
                         return new Pair<>(facilityLocation.level, facilityLocation.name);
