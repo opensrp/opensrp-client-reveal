@@ -133,6 +133,8 @@ public interface Constants {
         String REGISTER_FAMILY = "RACD Register Family";
 
         String FI = "FI";
+
+        String PAOT = "PAOT";
     }
 
 
@@ -273,6 +275,8 @@ public interface Constants {
         String MOSQUITO_COLLECTION_POINT = "Mosquito Collection Point";
 
         String LARVAL_BREEDING_SITE = "Larval Breeding Site";
+
+        String POTENTIAL_AREA_OF_TRANSMISSION = "Potential Area of Transmission";
     }
 
     interface TaskRegister {

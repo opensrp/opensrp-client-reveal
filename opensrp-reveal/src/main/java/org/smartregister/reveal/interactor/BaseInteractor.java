@@ -84,6 +84,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMA
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.PHYSICAL_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_NAME;
@@ -297,6 +298,9 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                         } else if (StructureType.LARVAL_BREEDING_SITE.equals(structureType)) {
                             task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
                                     BusinessStatus.NOT_VISITED, Intervention.LARVAL_DIPPING, R.string.larval_dipping_task_description);
+                        } else if (StructureType.POTENTIAL_AREA_OF_TRANSMISSION.equals(structureType)){
+                            task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
+                                    BusinessStatus.NOT_VISITED, PAOT, R.string.poat_task_description);
                         }
                     }
                     clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
