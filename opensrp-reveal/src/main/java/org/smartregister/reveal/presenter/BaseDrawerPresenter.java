@@ -13,6 +13,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.interactor.BaseDrawerInteractor;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
@@ -187,19 +188,21 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         Timber.d("Selected Location Hierarchy: " + TextUtils.join(",", name));
         if (name.size() <= 2)//no operational area was selected, dialog was dismissed
             return;
-        prefsUtil.setCurrentDistrict(name.get(name.size() - 2));
-        prefsUtil.setCurrentOperationalArea(name.get(name.size() - 1));
-
         ArrayList<String> operationalAreaLevels = new ArrayList<>();
         operationalAreaLevels.add(DISTRICT);
         operationalAreaLevels.add(HEALTH_CENTER);
-        operationalAreaLevels.add(VILLAGE);
+        operationalAreaLevels.add(SUB_DISTRICT);
         operationalAreaLevels.add(CANTON);
         operationalAreaLevels.add(OPERATIONAL_AREA);
         List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
-        Pair<String, String> facility = getFacilityFromOperationalArea(name.get(name.size() - 2), name.get(name.size() - 1), entireTree);
-        prefsUtil.setCurrentFacility(facility == null ? null : facility.second);
-        prefsUtil.setCurrentFacilityLevel(facility == null ? null : facility.first);
+        int districtOffset = name.get(0).equalsIgnoreCase(Country.BOTSWANA.name()) ? 3 : 2;
+        prefsUtil.setCurrentDistrict(name.get(name.size() - districtOffset));
+        prefsUtil.setCurrentOperationalArea(name.get(name.size() - 1));
+        Pair<String, String> facility = getFacilityFromOperationalArea(name.get(name.size() - districtOffset), name.get(name.size() - 1), entireTree);
+        if (facility != null) {
+            prefsUtil.setCurrentFacility(facility.second);
+            prefsUtil.setCurrentFacilityLevel(facility.first);
+        }
         changedCurrentSelection = true;
         populateLocationsFromPreferences();
         unlockDrawerLayout();
