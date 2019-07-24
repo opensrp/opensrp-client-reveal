@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.vijay.jsonwizard.customviews.TreeViewDialog;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.smartregister.reveal.BuildConfig;
@@ -109,7 +110,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             ((TextView) headerView.findViewById(R.id.application_version))
                     .setText(getContext().getString(R.string.app_version, Utils.getVersion(getContext())));
         } catch (PackageManager.NameNotFoundException e) {
-           Timber.e(e);
+            Timber.e(e);
         }
 
         String buildDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -207,6 +208,10 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     @Override
     public void showPlanSelector(List<String> campaigns, String entireTreeString) {
+        if (StringUtils.isBlank(entireTreeString)) {
+            displayNotification(R.string.plans_download_on_progress_title, R.string.plans_download_on_progress);
+            return;
+        }
         try {
             TreeViewDialog treeViewDialog = new TreeViewDialog(getContext(),
                     R.style.AppTheme_WideDialog,
