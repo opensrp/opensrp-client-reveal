@@ -13,6 +13,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.interactor.BaseDrawerInteractor;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
@@ -32,6 +33,8 @@ import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.PROVINCE;
+import static org.smartregister.reveal.util.Constants.Tags.SUB_DISTRICT;
+import static org.smartregister.reveal.util.Constants.Tags.VILLAGE;
 import static org.smartregister.reveal.util.Constants.UseContextCode.INTERVENTION_TYPE;
 
 /**
@@ -70,7 +73,9 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             ArrayList<String> operationalAreaLevels = new ArrayList<>();
             operationalAreaLevels.add(DISTRICT);
             operationalAreaLevels.add(HEALTH_CENTER);
+            operationalAreaLevels.add(VILLAGE);
             operationalAreaLevels.add(CANTON);
+            operationalAreaLevels.add(SUB_DISTRICT);
             List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels);
 
             if (defaultLocation != null) {
@@ -108,9 +113,9 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             formLocation.key = planDefinition.getIdentifier();
             formLocation.level = "";
             formLocations.add(formLocation);
-            
+
             // get intervention type for plan
-            for (PlanDefinition.UseContext useContext: planDefinition.getUseContext() ) {
+            for (PlanDefinition.UseContext useContext : planDefinition.getUseContext()) {
                 if (useContext.getCode().equals(INTERVENTION_TYPE)) {
                     prefsUtil.setInterventionTypeForPlan(planDefinition.getTitle(), useContext.getValueCodableConcept());
                     break;
@@ -157,6 +162,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         operationalAreaLevels.add(COUNTRY);
         operationalAreaLevels.add(PROVINCE);
         operationalAreaLevels.add(DISTRICT);
+        operationalAreaLevels.add(SUB_DISTRICT);
         operationalAreaLevels.add(OPERATIONAL_AREA);
 
         List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels);
@@ -179,21 +185,24 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     public void onOperationalAreaSelectorClicked(ArrayList<String> name) {
 
-        Timber.d( "Selected Location Hierarchy: " + TextUtils.join(",", name));
-        if (name.size() != 4)//no operational area was selected, dialog was dismissed
+        Timber.d("Selected Location Hierarchy: " + TextUtils.join(",", name));
+        if (name.size() <= 2)//no operational area was selected, dialog was dismissed
             return;
-        prefsUtil.setCurrentDistrict(name.get(2));
-        prefsUtil.setCurrentOperationalArea(name.get(3));
-
         ArrayList<String> operationalAreaLevels = new ArrayList<>();
         operationalAreaLevels.add(DISTRICT);
         operationalAreaLevels.add(HEALTH_CENTER);
+        operationalAreaLevels.add(SUB_DISTRICT);
         operationalAreaLevels.add(CANTON);
         operationalAreaLevels.add(OPERATIONAL_AREA);
         List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
-        Pair<String, String> facility = getFacilityFromOperationalArea(name.get(2), name.get(3), entireTree);
-        prefsUtil.setCurrentFacility(facility.second);
-        prefsUtil.setCurrentFacilityLevel(facility.first);
+        int districtOffset = name.get(0).equalsIgnoreCase(Country.BOTSWANA.name()) ? 3 : 2;
+        prefsUtil.setCurrentDistrict(name.get(name.size() - districtOffset));
+        prefsUtil.setCurrentOperationalArea(name.get(name.size() - 1));
+        Pair<String, String> facility = getFacilityFromOperationalArea(name.get(name.size() - districtOffset), name.get(name.size() - 1), entireTree);
+        if (facility != null) {
+            prefsUtil.setCurrentFacility(facility.second);
+            prefsUtil.setCurrentFacilityLevel(facility.first);
+        }
         changedCurrentSelection = true;
         populateLocationsFromPreferences();
         unlockDrawerLayout();
@@ -205,7 +214,11 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
         for (FormLocation countryLocation : entireTree) {
             for (FormLocation provinceLocation : countryLocation.nodes) {
+                if (provinceLocation.nodes == null)
+                    return;
                 for (FormLocation districtLocation : provinceLocation.nodes) {
+                    if (districtLocation.nodes == null)
+                        return;
                     List<FormLocation> toRemove = new ArrayList<>();
                     for (FormLocation operationalAreaLocation : districtLocation.nodes) {
                         if (!operationalAreas.contains(operationalAreaLocation.name))
@@ -241,8 +254,8 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     public void onPlanSelectorClicked(ArrayList<String> value, ArrayList<String> name) {
         if (Utils.isEmptyCollection(name) || (name.size() > 1))
             return;
-        Timber.d( "Selected Plan : " + TextUtils.join(",", name));
-        Timber.d( "Selected Plan Ids: " + TextUtils.join(",", value));
+        Timber.d("Selected Plan : " + TextUtils.join(",", name));
+        Timber.d("Selected Plan Ids: " + TextUtils.join(",", value));
 
         prefsUtil.setCurrentPlan(name.get(0));
         prefsUtil.setCurrentPlanId(value.get(0));
