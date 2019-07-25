@@ -239,7 +239,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
 
     public void onPlanSelectorClicked(ArrayList<String> value, ArrayList<String> name) {
-        if (Utils.isEmptyCollection(name))
+        if (Utils.isEmptyCollection(name) || (name.size() > 1))
             return;
         Timber.d( "Selected Plan : " + TextUtils.join(",", name));
         Timber.d( "Selected Plan Ids: " + TextUtils.join(",", value));
