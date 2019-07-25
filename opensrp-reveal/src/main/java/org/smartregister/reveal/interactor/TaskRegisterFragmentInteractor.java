@@ -58,6 +58,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_NAM
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_COUNT;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
 
@@ -108,8 +109,10 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
                 FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
         queryBuilder.mainCondition(mainCondition);
-        return queryBuilder.addCondition(String.format(" AND %s.%s IS NULL",
+        queryBuilder.addCondition(String.format(" AND %s.%s IS NULL",
                 FAMILY, STRUCTURE_ID));
+        return queryBuilder.addCondition(String.format(" AND %s.%s != '%s'",
+                tableName, CODE, BEDNET_DISTRIBUTION));
     }
 
     private String groupedRegisteredStructureTasksSelect(String mainCondition) {
