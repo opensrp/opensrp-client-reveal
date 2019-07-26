@@ -193,5 +193,7 @@
     <string name="incomplete">Incomplete</string>
     <string name="in_progress">In Progress</string>
     <string name="not_eligible">Not Eligible</string>
+    <string name="plans_download_on_progress_title">Download in Progress</string>
+    <string name="plans_download_on_progress">Downloading of Plans In Progress. Please wait</string>
 
 </resources>

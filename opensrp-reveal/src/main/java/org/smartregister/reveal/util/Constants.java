@@ -85,6 +85,7 @@ public interface Constants {
         String COUNTRY = "Country";
         String PROVINCE = "Province";
         String DISTRICT = "District";
+        String SUB_DISTRICT = "Sub-district";
         String HEALTH_CENTER = "Rural Health Centre";
         String CANTON = "Canton";
         String VILLAGE = "Village";
