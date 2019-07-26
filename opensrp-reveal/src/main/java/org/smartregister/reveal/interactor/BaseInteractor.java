@@ -54,7 +54,6 @@ import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
