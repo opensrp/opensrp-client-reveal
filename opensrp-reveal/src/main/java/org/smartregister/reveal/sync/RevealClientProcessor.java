@@ -2,6 +2,7 @@ package org.smartregister.reveal.sync;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.apache.commons.lang3.StringUtils;
@@ -181,7 +182,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
     }
 
-    private String processEvent(Event event, ClientClassification clientClassification, boolean localEvents, String formField) {
+    private String processEvent(Event event, ClientClassification clientClassification, boolean localEvents, @NonNull String formField) {
         String operationalAreaId = null;
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
             operationalAreaId = updateTask(event, localEvents);
@@ -189,10 +190,10 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             Location structure = structureRepository.getLocationById(event.getBaseEntityId());
             if (structure != null) {
                 Obs eventObs = event.findObs(null, false, formField);
-                if (eventObs != null && event.getEventType().equals(Constants.EventType.PAOT_EVENT)) {
-                    structure.getProperties().setStatus(PropertyStatus.valueOf(eventObs.getValue().toString()));
+                if (eventObs != null && JsonForm.PAOT_STATUS.equals(formField)) {
+                    structure.getProperties().setStatus(PropertyStatus.valueOf(eventObs.getValue().toString().toUpperCase()));
                     structureRepository.addOrUpdate(structure);
-                } else if (eventObs != null && event.getEventType().equals(SPRAY_EVENT)) {
+                } else if (eventObs != null && JsonForm.STRUCTURE_TYPE.equals(formField)) {
                     structure.getProperties().setType(eventObs.getValue().toString());
                     structureRepository.addOrUpdate(structure);
                 }
