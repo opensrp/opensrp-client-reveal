@@ -60,6 +60,8 @@ public class RevealMapHelper {
 
     private static final String INDEX_CASE_TARGET_ICON = "index-case-target-icon";
 
+    private static final String POTENTIAL_AREA_OF_TRANSMISSION_ICON = "potential-area-of-transmission-icon";
+
     public static final String LARVAL_BREEDING_LAYER = "larval-breeding-layer";
 
     public static final String MOSQUITO_COLLECTION_LAYER = "mosquito-collection-layer";
@@ -67,6 +69,8 @@ public class RevealMapHelper {
     public static final String INDEX_CASE_SYMBOL_LAYER = "index-case-symbol-layer";
 
     public static final String INDEX_CASE_LINE_LAYER = "index-case-line-layer";
+
+    private static final String POTENTIAL_AREA_OF_TRANSMISSION_LAYER = "potential-area-of-transmission-layer";
 
     private static final String INDEX_CASE_SOURCE = "index_case_source";
 
@@ -105,6 +109,16 @@ public class RevealMapHelper {
                 iconImage(LARVAL_BREEDING_ICON),
                 iconSize(dynamicIconSize));
         symbolLayer.setFilter(eq(get(TYPE), StructureType.LARVAL_BREEDING_SITE));
+        mMapboxMapStyle.addLayer(symbolLayer);
+
+        // Potential Area Of Transmission symbol layer
+        icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_paot);
+        mMapboxMapStyle.addImage(POTENTIAL_AREA_OF_TRANSMISSION_ICON, icon);
+        symbolLayer = new SymbolLayer(POTENTIAL_AREA_OF_TRANSMISSION_LAYER, context.getString(R.string.reveal_datasource_name));
+        symbolLayer.setProperties(
+                iconImage(POTENTIAL_AREA_OF_TRANSMISSION_ICON),
+                iconSize(dynamicIconSize));
+        symbolLayer.setFilter(eq(get(TYPE), StructureType.POTENTIAL_AREA_OF_TRANSMISSION));
         mMapboxMapStyle.addLayer(symbolLayer);
     }
 
