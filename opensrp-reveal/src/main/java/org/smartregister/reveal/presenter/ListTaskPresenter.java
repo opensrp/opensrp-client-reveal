@@ -226,7 +226,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             String businessStatus = getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             selectedFeatureInterventionType = code;
-            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || REGISTER_FAMILY.equals(code))
+            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || PAOT.equals(code) || REGISTER_FAMILY.equals(code))
                     && (NOT_VISITED.equals(businessStatus) || businessStatus == null)) {
                 if (validateFarStructures()) {
                     validateUserLocation();
@@ -240,7 +240,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
                     || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
                 listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
-            } else if(PAOT.equals(code)) {
+            } else if (PAOT.equals(code)) {
                 listTaskView.displayNotification("Display PAOT card");
             } else if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.focus_investigation) {
                 listTaskInteractor.fetchFamilyDetails(selectedFeature.id());

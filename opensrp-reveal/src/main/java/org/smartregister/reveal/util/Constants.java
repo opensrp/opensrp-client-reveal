@@ -144,6 +144,8 @@ public interface Constants {
         String CASE_CONFIRMATION_EVENT = "case_confirmation";
 
         String CASE_DETAILS_EVENT = "Case Details";
+
+        String PAOT_EVENT = "PAOT";
     }
 
     interface Tables {
@@ -213,6 +215,8 @@ public interface Constants {
 
         String BEHAVIOUR_CHANGE_COMMUNICATION_FORM = "json.form/behaviour_change_communication.json";
 
+        String PAOT_FORM = "json.form/paot.json";
+
         String THAILAND_LARVAL_DIPPING_FORM = "json.form/thailand_larval_dipping_form.json";
 
         String THAILAND_MOSQUITO_COLLECTION_FORM = "json.form/thailand_mosquito_collection_form.json";
@@ -228,6 +232,8 @@ public interface Constants {
         String THAILAND_CASE_CONFIRMATION_FORM = "json.form/thailand_case_confirmation.json";
 
         String THAILAND_BEHAVIOUR_CHANGE_COMMUNICATION_FORM = "json.form/thailand_behaviour_change_communication.json";
+
+        String THAILAND_PAOT_FORM = "json.form/thailand_paot.json";
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 
