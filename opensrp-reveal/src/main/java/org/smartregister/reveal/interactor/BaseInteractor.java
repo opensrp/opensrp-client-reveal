@@ -40,6 +40,7 @@ import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -53,6 +54,7 @@ import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -158,16 +160,14 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         try {
             JSONObject jsonForm = new JSONObject(json);
             String encounterType = jsonForm.getString(ENCOUNTER_TYPE);
-            if (SPRAY_EVENT.equals(encounterType) || MOSQUITO_COLLECTION_EVENT.equals(encounterType)
-                    || LARVAL_DIPPING_EVENT.equals(encounterType) || BEDNET_DISTRIBUTION_EVENT.equals(encounterType)
-                    || BEHAVIOUR_CHANGE_COMMUNICATION.equals(encounterType)) {
-                saveLocationInterventionForm(jsonForm);
-            } else if (REGISTER_STRUCTURE_EVENT.equals(encounterType)) {
+            if (REGISTER_STRUCTURE_EVENT.equals(encounterType)) {
                 saveRegisterStructureForm(jsonForm);
             } else if (BLOOD_SCREENING_EVENT.equals(encounterType)) {
                 saveMemberForm(jsonForm, encounterType, BLOOD_SCREENING);
             } else if (CASE_CONFIRMATION_EVENT.equals(encounterType)) {
                 saveCaseConfirmation(jsonForm, encounterType);
+            } else {
+                saveLocationInterventionForm(jsonForm);
             }
             getInstance().setRefreshMapOnEventSaved(true);
         } catch (Exception e) {
@@ -209,6 +209,8 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 interventionType = BEDNET_DISTRIBUTION;
             } else if (encounterType.equals(BEHAVIOUR_CHANGE_COMMUNICATION)) {
                 interventionType = BCC;
+            } else if (encounterType.equals(Constants.EventType.PAOT_EVENT)) {
+                interventionType = PAOT;
             }
         } catch (JSONException e) {
             Timber.e(e);
@@ -298,7 +300,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                         } else if (StructureType.LARVAL_BREEDING_SITE.equals(structureType)) {
                             task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
                                     BusinessStatus.NOT_VISITED, Intervention.LARVAL_DIPPING, R.string.larval_dipping_task_description);
-                        } else if (StructureType.POTENTIAL_AREA_OF_TRANSMISSION.equals(structureType)){
+                        } else if (StructureType.POTENTIAL_AREA_OF_TRANSMISSION.equals(structureType)) {
                             task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
                                     BusinessStatus.NOT_VISITED, PAOT, R.string.poat_task_description);
                         }
