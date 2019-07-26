@@ -253,6 +253,8 @@ public interface Constants {
 
         String PHYSICAL_TYPE = "physicalType";
 
+        String PAOT_STATUS = "paotStatus";
+
     }
 
     interface DateFormat {

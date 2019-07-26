@@ -6,6 +6,7 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.LocationProperty.PropertyStatus;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.Client;
 import org.smartregister.domain.db.Event;
@@ -17,6 +18,7 @@ import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.StructureType;
@@ -96,7 +98,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
                 String eventType = event.getEventType();
                 if (eventType.equals(SPRAY_EVENT)) {
-                    operationalAreaId = processSprayEvent(event, clientClassification, localEvents);
+                    operationalAreaId = processEvent(event, clientClassification, localEvents, JsonForm.STRUCTURE_TYPE);
                 } else if (eventType.equals(MOSQUITO_COLLECTION_EVENT) || eventType.equals(LARVAL_DIPPING_EVENT)
                         || eventType.equals(BEDNET_DISTRIBUTION_EVENT) ||
                         eventType.equals(BEHAVIOUR_CHANGE_COMMUNICATION)) {
@@ -105,6 +107,8 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     operationalAreaId = processRegisterStructureEvent(event, clientClassification);
                 } else if (eventType.equals(UPDATE_FAMILY_REGISTRATION)) {
                     processUpdateFamilyRegistrationEvent(event, eventClient.getClient(), clientClassification, localEvents);
+                } else if (eventType.equals(Constants.EventType.PAOT_EVENT)) {
+                    operationalAreaId = processEvent(event, clientClassification, localEvents, JsonForm.PAOT_STATUS);
                 } else {
                     Client client = eventClient.getClient();
 
@@ -177,16 +181,19 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
     }
 
-    private String processSprayEvent(Event event, ClientClassification clientClassification, boolean localEvents) {
+    private String processEvent(Event event, ClientClassification clientClassification, boolean localEvents, String formField) {
         String operationalAreaId = null;
         if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
             operationalAreaId = updateTask(event, localEvents);
 
             Location structure = structureRepository.getLocationById(event.getBaseEntityId());
             if (structure != null) {
-                Obs structureType = event.findObs(null, false, JsonForm.STRUCTURE_TYPE);
-                if (structureType != null) {
-                    structure.getProperties().setType(structureType.getValue().toString());
+                Obs eventObs = event.findObs(null, false, formField);
+                if (eventObs != null && event.getEventType().equals(Constants.EventType.PAOT_EVENT)) {
+                    structure.getProperties().setStatus(PropertyStatus.valueOf(eventObs.getValue().toString()));
+                    structureRepository.addOrUpdate(structure);
+                } else if (eventObs != null && event.getEventType().equals(SPRAY_EVENT)) {
+                    structure.getProperties().setType(eventObs.getValue().toString());
                     structureRepository.addOrUpdate(structure);
                 }
                 if (operationalAreaId == null) {
@@ -198,10 +205,10 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 Client client = new Client(event.getBaseEntityId());
                 processEvent(event, client, clientClassification);
             } catch (Exception e) {
-                Timber.e(e, "Error processing spray event");
+                Timber.e(e, "Error processing %s event", event.getEventType());
             }
         } else {
-            Timber.w(String.format("Spray Event %s does not have task details", event.getEventId()));
+            Timber.w("%s Event %s does not have task details", event.getEventType(), event.getEventId());
         }
         return operationalAreaId;
     }
