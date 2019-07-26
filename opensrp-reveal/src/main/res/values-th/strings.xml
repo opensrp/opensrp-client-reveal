@@ -41,6 +41,7 @@
     <string name="error_fetching_location_hierarchy">เกิดความผิดพลาดในการจัดลำดับประมวลผลตำแหน่ง โปรดออกจากระบบเพื่อดาวน์โหลดการจัดลำดับตำแหน่งอีกครั้งหนึ่ง</string>
 
     <string name="irs_task_description">เข้าเยี่ยมพื้นที่สิ่งปลูกสร้าง, ประเมิน และทำกิจกรรมพ่นสารเคมี</string>
+    <string name="poat_task_description"> Update Potential Areas of Transmission</string>
 
     <string name="form_save_failure_title">เกิดความผิดพลาดในการบันทึกแบบฟอร์ม</string>
     <string name="spray_form_save_failure">เกิดความผิดพลาดในการบันทึกแบบฟอร์มพ่นสารเคมี</string>

@@ -78,6 +78,10 @@
           {
             "key": "Larval Breeding Site",
             "text": "Larval Breeding Site"
+          },
+          {
+            "key": "Potential Area of Transmission",
+            "text": "Potential Area of Transmission"
           }
         ],
         "value": "Residential Structure",

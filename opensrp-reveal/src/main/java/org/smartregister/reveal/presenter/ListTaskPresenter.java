@@ -54,6 +54,7 @@ import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
@@ -239,6 +240,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
                     || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
                 listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
+            } else if(PAOT.equals(code)) {
+                listTaskView.displayNotification("Display PAOT card");
             } else if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.focus_investigation) {
                 listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
             }
