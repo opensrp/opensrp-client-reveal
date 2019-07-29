@@ -241,7 +241,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
                 listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
             } else if (PAOT.equals(code)) {
-                listTaskView.displayNotification("Display PAOT card");
+                //TODO remove once card view is completed, for now open the form
+                onChangeInterventionStatus(PAOT);
             } else if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.focus_investigation) {
                 listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
             }
@@ -327,6 +328,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.showProgressDialog(R.string.fetching_mosquito_collection_points_title, R.string.fetching_mosquito_collection_points_message);
         } else if (LARVAL_DIPPING.equals(interventionType)) {
             listTaskView.showProgressDialog(R.string.fetching_larval_dipping_points_title, R.string.fetching_larval_dipping_points_message);
+        }else if (PAOT.equals(interventionType)) {
+            listTaskView.showProgressDialog(R.string.fetching_paot_title, R.string.fetching_paot_message);
         }
         listTaskInteractor.fetchInterventionDetails(interventionType, selectedFeature.id(), true);
     }
