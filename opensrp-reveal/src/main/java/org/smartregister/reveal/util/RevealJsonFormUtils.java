@@ -224,6 +224,12 @@ public class RevealJsonFormUtils {
             } else {
                 formName = JsonForm.ADD_STRUCTURE_FORM;
             }
+        } else if (Constants.EventType.PAOT_EVENT.equals(encounterType) || Intervention.PAOT.equals(taskCode)) {
+            if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
+                formName = JsonForm.THAILAND_PAOT_FORM;
+            } else {
+                formName = JsonForm.PAOT_FORM;
+            }
         }
         return formName;
     }
