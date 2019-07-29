@@ -31,6 +31,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMA
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Tables.LARVAL_DIPPINGS_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.MOSQUITO_COLLECTIONS_TABLE;
 
@@ -53,6 +54,9 @@ public class ListTaskInteractor extends BaseInteractor {
             sql = String.format(sql, MOSQUITO_COLLECTIONS_TABLE);
         } else if (LARVAL_DIPPING.equals(interventionType)) {
             sql = String.format(sql, LARVAL_DIPPINGS_TABLE);
+        } else if (PAOT.equals(interventionType)) {
+            //TODO implement card view query
+            return;
         }
 
         final String SQL = sql;
