@@ -26,6 +26,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 
 /**
  * Created by samuelgithengi on 3/22/19.
@@ -112,6 +113,12 @@ public class CardDetailsUtil {
             tvIdentifiedDate.setText(activity.getResources().getString(R.string.larval_breeding_identified_date_test_text) + startDate);
             tvLarvicideDate.setText(activity.getResources().getString(R.string.larval_breeding_larvacide_date_test_text) + endDate);
             activity.findViewById(R.id.larval_breeding_card_view).setVisibility(View.VISIBLE);
+        } else if (PAOT.equals(interventionType)) {
+            String lastUpdatedDate =  mosquitoHarvestCardDetails.getStartDate();
+
+            TextView lastUpdatedDateView = activity.findViewById(R.id.paot_last_updated_date);
+            lastUpdatedDateView.setText(activity.getResources().getString(R.string.potential_area_of_transmission_last_updated_date_test_text) + lastUpdatedDate);
+            activity.findViewById(R.id.potential_area_of_transmission_card_view).setVisibility(View.VISIBLE);
         }
     }
 

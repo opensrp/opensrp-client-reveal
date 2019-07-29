@@ -88,6 +88,13 @@
                 layout="@layout/larval_breeding_card_view"
                 android:visibility="gone"/>
 
+            <include
+                android:id="@+id/potential_area_of_transmission_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/potential_area_of_transmission_card_view"
+                android:visibility="gone"/>
+
         </LinearLayout>
 
     </FrameLayout>
