@@ -34,6 +34,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLL
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Tables.LARVAL_DIPPINGS_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.MOSQUITO_COLLECTIONS_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.POTENTIAL_AREA_OF_TRANSMISSION_TABLE;
 
 /**
  * Created by samuelgithengi on 11/27/18.
@@ -49,14 +50,13 @@ public class ListTaskInteractor extends BaseInteractor {
         String sql = "SELECT status, start_date, end_date FROM %s WHERE id=?";
         if (IRS.equals(interventionType)) {
             sql = "SELECT spray_status, not_sprayed_reason, not_sprayed_other_reason, property_type, spray_date," +
-                    " spray_operator, family_head_name FROM sprayed_structures WHERE id=?";
+                    " spray_operator, family_head_name FROM sprayed_structures WHERE id=? ";
         } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
             sql = String.format(sql, MOSQUITO_COLLECTIONS_TABLE);
         } else if (LARVAL_DIPPING.equals(interventionType)) {
             sql = String.format(sql, LARVAL_DIPPINGS_TABLE);
         } else if (PAOT.equals(interventionType)) {
-            //TODO implement card view query
-            return;
+            sql = String.format("SELECT last_updated_date,  FROM %s WHERE id=? ", POTENTIAL_AREA_OF_TRANSMISSION_TABLE);
         }
 
         final String SQL = sql;
@@ -102,6 +102,8 @@ public class ListTaskInteractor extends BaseInteractor {
             cardDetails = createMosquitoHarvestCardDetails(cursor, interventionType);
         } else if (IRS.equals(interventionType)) {
             cardDetails = createSprayCardDetails(cursor);
+        } else if (PAOT.equals(interventionType)) {
+            cardDetails = createPaotCardDetails(cursor, interventionType);
         }
         return cardDetails;
     }
@@ -126,7 +128,18 @@ public class ListTaskInteractor extends BaseInteractor {
                 CardDetailsUtil.getTranslatedBusinessStatus(cursor.getString(cursor.getColumnIndex("status"))),
                 cursor.getString(cursor.getColumnIndex("start_date")),
                 cursor.getString(cursor.getColumnIndex("end_date")),
-                interventionType
+                interventionType,
+                null
+        );
+    }
+
+    private MosquitoHarvestCardDetails createPaotCardDetails(Cursor cursor, String interventionType) {
+        return new MosquitoHarvestCardDetails(
+                CardDetailsUtil.getTranslatedBusinessStatus(cursor.getString(cursor.getColumnIndex("paot_status"))),
+                cursor.getString(cursor.getColumnIndex("last_updated_date")),
+                null,
+                interventionType,
+                cursor.getString(cursor.getColumnIndex("paot_comments"))
         );
     }
 

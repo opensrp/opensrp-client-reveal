@@ -241,7 +241,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
                 listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
             } else if (PAOT.equals(code)) {
-                listTaskView.displayNotification("Display PAOT card");
+                listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
             } else if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.focus_investigation) {
                 listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
             }

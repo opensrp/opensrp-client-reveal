@@ -151,6 +151,7 @@ public interface Constants {
     interface Tables {
         String MOSQUITO_COLLECTIONS_TABLE = "mosquito_collections";
         String LARVAL_DIPPINGS_TABLE = "larval_dippings";
+        String POTENTIAL_AREA_OF_TRANSMISSION_TABLE = "potential_area_of_transmission";
     }
 
     interface BusinessStatus {
