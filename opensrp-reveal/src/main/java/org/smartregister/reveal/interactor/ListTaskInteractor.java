@@ -34,6 +34,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLL
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Tables.LARVAL_DIPPINGS_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.MOSQUITO_COLLECTIONS_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.POTENTIAL_AREA_OF_TRANSMISSION_TABLE;
 
 /**
  * Created by samuelgithengi on 11/27/18.
@@ -55,8 +56,7 @@ public class ListTaskInteractor extends BaseInteractor {
         } else if (LARVAL_DIPPING.equals(interventionType)) {
             sql = String.format(sql, LARVAL_DIPPINGS_TABLE);
         } else if (PAOT.equals(interventionType)) {
-            //TODO implement card view query
-            return;
+            sql = String.format("SELECT last_updated_date,paot_status,paot_comments  FROM %s WHERE id=? ", POTENTIAL_AREA_OF_TRANSMISSION_TABLE);
         }
 
         final String SQL = sql;
@@ -67,7 +67,11 @@ public class ListTaskInteractor extends BaseInteractor {
 
                 CardDetails cardDetails = null;
                 try {
-                    if (cursor.moveToFirst()) {
+                    if ((PAOT.equals(interventionType)) && cursor.moveToFirst()) {
+                        cardDetails = new MosquitoHarvestCardDetails(cursor.getColumnName(cursor.getColumnIndex("paot_status")),
+                                cursor.getColumnName(cursor.getColumnIndex("last_updated_date")), null, PAOT);
+                        cardDetails.setComments(cursor.getColumnName(cursor.getColumnIndex("paot_comments")));
+                    } else if (cursor.moveToFirst()) {
                         cardDetails = createCardDetails(cursor, interventionType);
                     }
                 } catch (Exception e) {
@@ -103,6 +107,7 @@ public class ListTaskInteractor extends BaseInteractor {
         } else if (IRS.equals(interventionType)) {
             cardDetails = createSprayCardDetails(cursor);
         }
+
         return cardDetails;
     }
 

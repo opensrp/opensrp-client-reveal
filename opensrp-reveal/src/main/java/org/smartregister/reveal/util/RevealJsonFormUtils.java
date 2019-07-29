@@ -14,15 +14,19 @@ import org.smartregister.domain.Location;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.model.BaseTaskDetails;
+import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.util.AssetHandler;
+import org.smartregister.util.JsonFormUtils;
 
 import timber.log.Timber;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
@@ -236,5 +240,15 @@ public class RevealJsonFormUtils {
 
     public String getFormName(String encounterType) {
         return getFormName(encounterType, null);
+    }
+
+    public void populatePAOTForm(MosquitoHarvestCardDetails cardDetails, JSONObject formJson) {
+        try {
+            JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJson), JsonForm.PAOT_STATUS).put(VALUE, cardDetails.getStatus());
+            JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJson), JsonForm.PAOT_COMMENTS).put(VALUE, cardDetails.getComments());
+            JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJson), JsonForm.LAST_UPDATED_DATE).put(VALUE, cardDetails.getStartDate());
+        } catch (JSONException e) {
+            Timber.e(e);
+        }
     }
 }
