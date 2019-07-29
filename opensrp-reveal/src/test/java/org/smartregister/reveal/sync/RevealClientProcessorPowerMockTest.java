@@ -28,6 +28,7 @@ import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,6 +107,27 @@ public class RevealClientProcessorPowerMockTest {
         clientProcessor.processClient(eventClients, true);
 
         verifyPrivate(clientProcessor, times(1)).invoke("processEvent", eq(event), any(ClientClassification.class), anyBoolean());
+    }
+
+
+    @Test
+    public void testProcessClientShouldCallProcessPOATEventWhenIsPOATEventType() throws Exception {
+        mockStaticMethods();
+        mockRepositories();
+
+        List<EventClient> eventClients = new ArrayList<>();
+        event.setEventType(Constants.EventType.PAOT_EVENT);
+        event.withObs(new Obs("","",JsonForm.PAOT_STATUS,"", Collections.singletonList("Active"),"","",new ArrayList<>()));
+
+        EventClient eventClient = new EventClient(event, null);
+        eventClients.add(eventClient);
+
+        PowerMockito.doReturn(new ClientClassification()).when(clientProcessor, "assetJsonToJava", anyString(), any());
+        clientProcessor.processClient(eventClients, true);
+
+        verifyPrivate(clientProcessor, times(1)).invoke("processEvent", eq(event), any(ClientClassification.class), anyBoolean(),eq(JsonForm.PAOT_STATUS));
+        verify(structureRepository).addOrUpdate(any(Location.class));
+        verify(taskRepository).addOrUpdate(any(Task.class));
     }
 
     @Test
