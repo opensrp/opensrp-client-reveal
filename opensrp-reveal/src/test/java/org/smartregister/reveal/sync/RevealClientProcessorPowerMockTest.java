@@ -23,10 +23,12 @@ import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,7 +88,7 @@ public class RevealClientProcessorPowerMockTest {
         PowerMockito.doReturn(new ClientClassification()).when(clientProcessor, "assetJsonToJava", anyString(), any());
         clientProcessor.processClient(eventClients, true);
 
-        verifyPrivate(clientProcessor, times(1)).invoke("processSprayEvent", eq(event), any(ClientClassification.class), anyBoolean());
+        verifyPrivate(clientProcessor, times(1)).invoke("processEvent", eq(event), any(ClientClassification.class), anyBoolean(),eq(JsonForm.STRUCTURE_TYPE));
         verify(structureRepository).addOrUpdate(any(Location.class));
     }
 
@@ -105,6 +107,27 @@ public class RevealClientProcessorPowerMockTest {
         clientProcessor.processClient(eventClients, true);
 
         verifyPrivate(clientProcessor, times(1)).invoke("processEvent", eq(event), any(ClientClassification.class), anyBoolean());
+    }
+
+
+    @Test
+    public void testProcessClientShouldCallProcessPOATEventWhenIsPOATEventType() throws Exception {
+        mockStaticMethods();
+        mockRepositories();
+
+        List<EventClient> eventClients = new ArrayList<>();
+        event.setEventType(Constants.EventType.PAOT_EVENT);
+        event.withObs(new Obs("","",JsonForm.PAOT_STATUS,"", Collections.singletonList("Active"),"","",new ArrayList<>()));
+
+        EventClient eventClient = new EventClient(event, null);
+        eventClients.add(eventClient);
+
+        PowerMockito.doReturn(new ClientClassification()).when(clientProcessor, "assetJsonToJava", anyString(), any());
+        clientProcessor.processClient(eventClients, true);
+
+        verifyPrivate(clientProcessor, times(1)).invoke("processEvent", eq(event), any(ClientClassification.class), anyBoolean(),eq(JsonForm.PAOT_STATUS));
+        verify(structureRepository).addOrUpdate(any(Location.class));
+        verify(taskRepository).addOrUpdate(any(Task.class));
     }
 
     @Test
@@ -174,20 +197,20 @@ public class RevealClientProcessorPowerMockTest {
         event = spy(new Event());
 
         Obs obs = new Obs();
-        obs.setFieldCode(Constants.JsonForm.STRUCTURE_TYPE);
+        obs.setFieldCode(JsonForm.STRUCTURE_TYPE);
         obs.setValue("Non residential");
         obs.setFormSubmissionField("form_submission_field_1");
         event.addObs(obs);
 
 
         obs = new Obs();
-        obs.setFieldCode(Constants.JsonForm.TRAP_SET_DATE);
+        obs.setFieldCode(JsonForm.TRAP_SET_DATE);
         obs.setValue(TRAP_SET_DATE);
         obs.setFormSubmissionField("form_submission_field_2");
         event.addObs(obs);
 
         obs = new Obs();
-        obs.setFieldCode(Constants.JsonForm.TRAP_FOLLOW_UP_DATE);
+        obs.setFieldCode(JsonForm.TRAP_FOLLOW_UP_DATE);
         obs.setValue(TRAP_FOLLOW_UP_DATE);
         obs.setFormSubmissionField("form_submission_field_3");
         event.addObs(obs);

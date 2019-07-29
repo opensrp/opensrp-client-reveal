@@ -48,6 +48,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.FI;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 
 public class Utils {
 
@@ -146,7 +147,7 @@ public class Utils {
 
     public static int getInterventionLabel() {
         String plan = PreferencesUtil.getInstance().getCurrentPlan();
-        String interventionType =  PreferencesUtil.getInstance().getInterventionTypeForPlan(plan);
+        String interventionType = PreferencesUtil.getInstance().getInterventionTypeForPlan(plan);
         if (interventionType.equals(FI))
             return R.string.focus_investigation;
         else if (interventionType.equals(IRS))
@@ -197,13 +198,13 @@ public class Utils {
      * @return AdminPassword
      */
     public static String getAdminPasswordNotNearStructures() {
-        return getGlobalConfig(CONFIGURATION.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES, BuildConfig.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES );
+        return getGlobalConfig(CONFIGURATION.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES, BuildConfig.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES);
     }
 
     /**
      * Creates a circle using a GeoJSON polygon.
      * It's not strictly a circle but by increasing the number of sides on the polygon you can get pretty close to one.
-     *
+     * <p>
      * Adapted from https://stackoverflow.com/questions/37599561/drawing-a-circle-with-the-radius-in-miles-meters-with-mapbox-gl-js/39006388#39006388
      *
      * @param center - Coordinates for the center of the circle
@@ -253,8 +254,8 @@ public class Utils {
     }
 
     /**
-     *
      * Determines whether a structure is a residence based on the Task Code value
+     *
      * @param taskCode
      * @return isResidentialStructure
      */
@@ -262,6 +263,6 @@ public class Utils {
         if (StringUtils.isEmpty(taskCode)) {
             return false;
         }
-        return !(MOSQUITO_COLLECTION.equals(taskCode) || LARVAL_DIPPING.equals(taskCode));
+        return !(MOSQUITO_COLLECTION.equals(taskCode) || LARVAL_DIPPING.equals(taskCode) || PAOT.equals(taskCode));
     }
 }

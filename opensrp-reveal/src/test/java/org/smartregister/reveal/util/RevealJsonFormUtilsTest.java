@@ -2,6 +2,8 @@ package org.smartregister.reveal.util;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.powermock.reflect.Whitebox;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.util.Constants.JsonForm;
 
 import static org.junit.Assert.assertEquals;
@@ -20,6 +22,7 @@ public class RevealJsonFormUtilsTest {
     @Before
     public void setUp() {
         revealJsonFormUtils = new RevealJsonFormUtils();
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
     }
 
     @Test
@@ -40,5 +43,16 @@ public class RevealJsonFormUtilsTest {
     @Test
     public void testGetFormNameShouldReturnThailandMosquitoCollectionFormForLarvalDippingIntervention() {
         assertEquals(revealJsonFormUtils.getFormName(null, MOSQUITO_COLLECTION), JsonForm.MOSQUITO_COLLECTION_FORM);
+    }
+
+    @Test
+    public void testGetFormNameShouldReturnPAOTForm() {
+        assertEquals(JsonForm.PAOT_FORM, revealJsonFormUtils.getFormName(null, Constants.EventType.PAOT_EVENT));
+    }
+
+    @Test
+    public void testGetFormNameShouldReturnThailandPAOTForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        assertEquals(JsonForm.THAILAND_PAOT_FORM, revealJsonFormUtils.getFormName(null, Constants.EventType.PAOT_EVENT));
     }
 }
