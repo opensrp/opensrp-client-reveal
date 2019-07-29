@@ -2,16 +2,11 @@ package org.smartregister.reveal.util;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.util.Constants.JsonForm;
 
 import static org.junit.Assert.assertEquals;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
@@ -27,6 +22,7 @@ public class RevealJsonFormUtilsTest {
     @Before
     public void setUp() {
         revealJsonFormUtils = new RevealJsonFormUtils();
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
     }
 
     @Test
@@ -51,7 +47,6 @@ public class RevealJsonFormUtilsTest {
 
     @Test
     public void testGetFormNameShouldReturnPAOTForm() {
-        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         assertEquals(JsonForm.PAOT_FORM, revealJsonFormUtils.getFormName(null, Constants.EventType.PAOT_EVENT));
     }
 
