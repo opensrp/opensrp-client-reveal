@@ -67,6 +67,13 @@
             "creates_case": [
               "bednet_distribution"
             ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "PAOT",
+            "creates_case": [
+              "potential_area_of_transmission"
+            ]
           }
         ]
       }
