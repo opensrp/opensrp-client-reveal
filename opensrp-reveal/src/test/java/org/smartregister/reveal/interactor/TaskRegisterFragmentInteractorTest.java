@@ -61,6 +61,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_COUNT;
 import static org.smartregister.reveal.util.Constants.Intervention.FI;
+import static org.smartregister.reveal.util.FamilyConstants.DatabaseKeys.HOUSE_NUMBER;
 
 /**
  * Created by samuelgithengi on 3/27/19.
@@ -105,9 +106,9 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         Whitebox.setInternalState(interactor, "database", database);
         groupId = UUID.randomUUID().toString();
         planId = UUID.randomUUID().toString();
-        mainSelectQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? AND status != ? ";
-        nonRegisteredStructureTasksQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? AND status != ?   AND ec_family.structure_id IS NULL  AND task.code != 'Bednet Distribution'";
-        groupedRegisteredStructureTasksSelectQuery = " SELECT grouped_tasks.* , SUM(CASE WHEN status='COMPLETED' THEN 1 ELSE 0 END ) AS completed_task_count , COUNT(_id ) AS task_count, GROUP_CONCAT(code || \"-\" || business_status ) AS grouped_structure_task_code_and_status FROM ( Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name FROM task  JOIN structure ON task.structure_id = structure._id   JOIN ec_family ON structure._id = ec_family.structure_id  COLLATE NOCASE  LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id  WHERE task.group_id = ? AND task.plan_id = ? AND status != ?  ) AS grouped_tasks GROUP BY structure_id ";
+        mainSelectQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name , ec_family.house_number FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? AND status != ? ";
+        nonRegisteredStructureTasksQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name , ec_family.house_number FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? AND status != ?   AND ec_family.structure_id IS NULL  AND task.code != 'Bednet Distribution'";
+        groupedRegisteredStructureTasksSelectQuery = " SELECT grouped_tasks.* , SUM(CASE WHEN status='COMPLETED' THEN 1 ELSE 0 END ) AS completed_task_count , COUNT(_id ) AS task_count, GROUP_CONCAT(code || \"-\" || business_status ) AS grouped_structure_task_code_and_status FROM ( Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name , ec_family.house_number FROM task  JOIN structure ON task.structure_id = structure._id   JOIN ec_family ON structure._id = ec_family.structure_id  COLLATE NOCASE  LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id  WHERE task.group_id = ? AND task.plan_id = ? AND status != ?  ) AS grouped_tasks GROUP BY structure_id ";
         bccSelectQuery = "SELECT * FROM task WHERE for = ? AND plan_id = ? AND status != ? AND code ='BCC'";
         indexSelectQuery = "SELECT * FROM task WHERE group_id = ? AND plan_id = ? AND status != ? AND code = ?";
     }
@@ -358,7 +359,8 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
                 1,
                 1,
                 "BedNet Distribution-Complete",
-                null
+                null,
+                12
         });
         return cursor;
     }
@@ -382,7 +384,8 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
                 TASK_COUNT,
                 COMPLETED_TASK_COUNT,
                 GROUPED_STRUCTURE_TASK_CODE_AND_STATUS,
-                REFERENCE_REASON
+                REFERENCE_REASON,
+                HOUSE_NUMBER
         });
     }
 
