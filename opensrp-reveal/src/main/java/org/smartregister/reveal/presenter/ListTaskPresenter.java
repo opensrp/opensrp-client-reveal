@@ -319,7 +319,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private void startForm(String formName, Feature feature, String sprayStatus, String familyHead) {
         JSONObject formJson = jsonFormUtils.getFormJSON(listTaskView.getContext()
                 , formName, feature, sprayStatus, familyHead);
-        if (cardDetails instanceof MosquitoHarvestCardDetails && ((MosquitoHarvestCardDetails) cardDetails).getInterventionType().equals(PAOT)) {
+        if (cardDetails instanceof MosquitoHarvestCardDetails && PAOT.equals(((MosquitoHarvestCardDetails) cardDetails).getInterventionType())) {
             jsonFormUtils.populatePAOTForm((MosquitoHarvestCardDetails) cardDetails, formJson);
         }
         listTaskView.startJsonForm(formJson);
