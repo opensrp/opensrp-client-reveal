@@ -55,7 +55,7 @@ public class ListTaskInteractor extends BaseInteractor {
         String sql = "SELECT status, start_date, end_date FROM %s WHERE id=?";
         if (IRS.equals(interventionType)) {
             sql = "SELECT spray_status, not_sprayed_reason, not_sprayed_other_reason, property_type, spray_date," +
-                    " spray_operator, family_head_name FROM sprayed_structures WHERE id=? ";
+                    " spray_operator, family_head_name FROM sprayed_structures WHERE id=?";
         } else if (MOSQUITO_COLLECTION.equals(interventionType)) {
             sql = String.format(sql, MOSQUITO_COLLECTIONS_TABLE);
         } else if (LARVAL_DIPPING.equals(interventionType)) {

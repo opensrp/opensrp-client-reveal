@@ -199,7 +199,7 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", MOSQUITO_COLLECTION);
 
-        CardDetails mosquitoCollectionCardDetails = new MosquitoHarvestCardDetails(null, null, null, null, null);
+        CardDetails mosquitoCollectionCardDetails = new MosquitoHarvestCardDetails(null, null, null, null);
 
         Whitebox.setInternalState(listTaskPresenterSpy, "cardDetails", mosquitoCollectionCardDetails);
 
@@ -427,7 +427,7 @@ public class ListTaskPresenterTest {
 
     @Test
     public void testOpenCardViewIsCalledWithCorrectArgumentOnMosquitoCollectionCardDetailsFetched() {
-        MosquitoHarvestCardDetails mosquitoHarvestCardDetails = new MosquitoHarvestCardDetails(null, null, null, null, null);
+        MosquitoHarvestCardDetails mosquitoHarvestCardDetails = new MosquitoHarvestCardDetails(null, null, null, null);
 
         doNothing().when(listTaskViewSpy).openCardView(any(CardDetails.class));
         listTaskPresenter.onCardDetailsFetched(mosquitoHarvestCardDetails);
