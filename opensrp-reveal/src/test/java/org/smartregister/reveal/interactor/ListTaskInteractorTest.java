@@ -27,6 +27,7 @@ import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -229,6 +230,22 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals(Boolean.TRUE.toString(), feature.getStringProperty(Constants.GeoJSON.IS_INDEX_CASE));
     }
 
+
+    @Test
+    public void testFetchPAOTFormDetails() {
+        String feature = UUID.randomUUID().toString();
+        when(database.rawQuery(any(), any())).thenReturn(createPAOTCursor());
+        listTaskInteractor.fetchInterventionDetails(Intervention.PAOT, feature, true);
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery("SELECT paot_status, paot_comments, last_updated_date  FROM potential_area_of_transmission WHERE base_entity_id=? ", new String[]{feature});
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onInterventionFormDetailsFetched(cardDetailsCaptor.capture());
+        MosquitoHarvestCardDetails cardDetails = (MosquitoHarvestCardDetails) cardDetailsCaptor.getValue();
+        assertEquals("In-active", cardDetails.getStatus());
+        assertEquals("Paot Active Comments", cardDetails.getComments());
+        assertEquals("11/02/1977", cardDetails.getStartDate());
+        assertEquals(Intervention.PAOT, cardDetails.getInterventionType());
+    }
+
+
     private Cursor createSprayCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{"spray_status", "not_sprayed_reason",
                 "not_sprayed_other_reason", "property_type", "spray_date", "spray_operator", "family_head_name"});
@@ -245,6 +262,13 @@ public class ListTaskInteractorTest extends BaseUnitTest {
     private Cursor createIndexCaseCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{STRUCTURE_ID});
         cursor.addRow(new Object[]{structure.getId()});
+        return cursor;
+    }
+
+
+    private Cursor createPAOTCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{DatabaseKeys.PAOT_STATUS, DatabaseKeys.PAOT_COMMENTS, DatabaseKeys.LAST_UPDATED_DATE});
+        cursor.addRow(new Object[]{"In-active", "Paot Active Comments", "11/02/1977"});
         return cursor;
     }
 
