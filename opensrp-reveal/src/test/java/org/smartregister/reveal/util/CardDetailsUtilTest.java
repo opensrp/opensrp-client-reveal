@@ -34,6 +34,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 
 /**
  * Created by Vincent Karuri on 25/04/2019
@@ -152,19 +153,24 @@ public class CardDetailsUtilTest extends BaseUnitTest {
         TextView tvMosquitoTrapFollowUpDate = new TextView(RuntimeEnvironment.application);
         TextView tvIdentifiedDate= new TextView(RuntimeEnvironment.application);
         TextView tvLarvicideDate = new TextView(RuntimeEnvironment.application);
+        TextView tvLastUpdatedDateView = new TextView(RuntimeEnvironment.application);
 
         CardView mosquitoCollectionCardView = new CardView(RuntimeEnvironment.application);
         mosquitoCollectionCardView.setVisibility(View.GONE);
         CardView larvalBreedingCardView = new CardView(RuntimeEnvironment.application);
         larvalBreedingCardView.setVisibility(View.GONE);
+        CardView paotCardview = new CardView(RuntimeEnvironment.application);
+        paotCardview.setVisibility(View.GONE);
 
         doReturn(tvIdentifiedDate).when(activity).findViewById(eq(R.id.larval_identified_date));
         doReturn(tvLarvicideDate).when(activity).findViewById(eq(R.id.larvacide_date));
         doReturn(tvMosquitoCollectionStatus).when(activity).findViewById(eq(R.id.trap_collection_status));
         doReturn(tvMosquitoTrapSetDate).when(activity).findViewById(eq(R.id.trap_set_date));
         doReturn(tvMosquitoTrapFollowUpDate).when(activity).findViewById(eq(R.id.trap_follow_up_date));
+        doReturn(tvLastUpdatedDateView).when(activity).findViewById(eq(R.id.paot_last_updated_date));
         doReturn(mosquitoCollectionCardView).when(activity).findViewById(eq( R.id.mosquito_collection_card_view));
         doReturn(larvalBreedingCardView).when(activity).findViewById(eq(R.id.larval_breeding_card_view));
+        doReturn(paotCardview).when(activity).findViewById(eq(R.id.potential_area_of_transmission_card_view));
         doReturn(TEST).when(activity).getString(anyInt());
 
         new CardDetailsUtil().populateAndOpenMosquitoHarvestCard(mosquitoHarvestCardDetails, activity);
@@ -180,6 +186,12 @@ public class CardDetailsUtilTest extends BaseUnitTest {
         assertEquals(tvIdentifiedDate.getText(), TEST + START_DATE);
         assertEquals(tvLarvicideDate.getText(), TEST + END_DATE);
         assertEquals(larvalBreedingCardView.getVisibility(), View.VISIBLE);
+
+        mosquitoHarvestCardDetails = new MosquitoHarvestCardDetails(TEST, START_DATE, END_DATE, PAOT);
+
+        new CardDetailsUtil().populateAndOpenMosquitoHarvestCard(mosquitoHarvestCardDetails, activity);
+        assertEquals(tvLastUpdatedDateView.getText(), TEST + START_DATE);
+        assertEquals(paotCardview.getVisibility(), View.VISIBLE);
     }
 
     @Test
