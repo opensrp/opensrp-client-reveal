@@ -31,6 +31,7 @@ import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -63,6 +64,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.THAILAND_LARVAL_DIPPING_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM;
@@ -243,6 +245,35 @@ public class ListTaskPresenterTest {
         listTaskPresenterSpy.onLocationValidated();
 
         verify(formUtils, times(1)).getFormJSON(any(), eq(THAILAND_LARVAL_DIPPING_FORM), eq(feature), any(), any());
+
+        verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
+    }
+
+
+    @Test
+    public void testOnLocationValidatedCallsStartFormWithCorrectArgumentsForPAO() {
+        mockStaticMethods();
+
+        ListTaskPresenter listTaskPresenterSpy = spy(listTaskPresenter);
+
+        Feature feature = mock(Feature.class);
+        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeature", feature);
+        MosquitoHarvestCardDetails cardDetails= new MosquitoHarvestCardDetails("Avctive","2019-08-19",null,PAOT);
+        Whitebox.setInternalState(listTaskPresenterSpy, "cardDetails", cardDetails);
+
+        doNothing().when(listTaskViewSpy).startJsonForm(any(JSONObject.class));
+
+        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", PAOT);
+
+        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
+        Whitebox.setInternalState(listTaskPresenterSpy, "jsonFormUtils", formUtils);
+        doReturn(JsonForm.PAOT_FORM).when(formUtils).getFormName(any(), any());
+
+        doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
+
+        listTaskPresenterSpy.onLocationValidated();
+
+        verify(formUtils, times(1)).getFormJSON(any(), eq(JsonForm.PAOT_FORM), eq(feature), any(), any());
 
         verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
     }
@@ -435,6 +466,19 @@ public class ListTaskPresenterTest {
         listTaskPresenter.onChangeInterventionStatus(LARVAL_DIPPING);
 
         verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(LARVAL_DIPPING), AdditionalMatchers.or(anyString(), isNull()), eq(true));
+    }
+
+
+
+    @Test
+    public void testFetchInterventionDetailsIsCalledForOpenPAOTForm() {
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mock(Feature.class));
+
+        doNothing().when(listTaskViewSpy).showProgressDialog(anyInt(), anyInt());
+
+        listTaskPresenter.onChangeInterventionStatus(PAOT);
+
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(PAOT), AdditionalMatchers.or(anyString(), isNull()), eq(true));
     }
 
     @Test
