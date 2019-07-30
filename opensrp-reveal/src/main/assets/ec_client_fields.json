@@ -459,6 +459,42 @@
           }
         }
       ]
+    },
+    {
+      "name": "potential_area_of_transmission",
+      "columns": [
+        {
+          "column_name": "base_entity_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "baseEntityId"
+          }
+        },
+        {
+          "column_name": "last_updated_date",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "lastUpdatedDate"
+          }
+        },
+        {
+          "column_name": "paot_status",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "paotStatus"
+          }
+        },
+        {
+          "column_name": "paot_comments",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "paotComments"
+          }
+        }
+      ]
     }
   ]
 }

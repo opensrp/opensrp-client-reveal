@@ -151,6 +151,7 @@ public interface Constants {
     interface Tables {
         String MOSQUITO_COLLECTIONS_TABLE = "mosquito_collections";
         String LARVAL_DIPPINGS_TABLE = "larval_dippings";
+        String PAOT_TABLE = "potential_area_of_transmission";
     }
 
     interface BusinessStatus {
@@ -255,6 +256,10 @@ public interface Constants {
 
         String PAOT_STATUS = "paotStatus";
 
+        String PAOT_COMMENTS = "paotComments";
+
+        String LAST_UPDATED_DATE = "lastUpdatedDate";
+
     }
 
     interface DateFormat {
@@ -354,6 +359,12 @@ public interface Constants {
         String GROUPED_STRUCTURE_TASK_CODE_AND_STATUS = "grouped_structure_task_code_and_status";
 
         String GROUPED_TASKS = "grouped_tasks";
+
+        String LAST_UPDATED_DATE ="last_updated_date";
+
+        String PAOT_STATUS ="paot_status";
+
+        String PAOT_COMMENTS = "paot_comments";
 
     }
 
