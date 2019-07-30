@@ -28,6 +28,9 @@ import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_UPDATED_DATE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_COMMENTS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
@@ -58,8 +61,8 @@ public class ListTaskInteractor extends BaseInteractor {
         } else if (LARVAL_DIPPING.equals(interventionType)) {
             sql = String.format(sql, LARVAL_DIPPINGS_TABLE);
         } else if (PAOT.equals(interventionType)) {
-            sql = String.format("SELECT %s, %s, %s  FROM %s WHERE %s=? ", DatabaseKeys.PAOT_STATUS,
-                    DatabaseKeys.PAOT_COMMENTS, DatabaseKeys.LAST_UPDATED_DATE, PAOT_TABLE, BASE_ENTITY_ID);
+            sql = String.format("SELECT %s, %s, %s  FROM %s WHERE %s=? ", PAOT_STATUS,
+                    PAOT_COMMENTS, LAST_UPDATED_DATE, PAOT_TABLE, BASE_ENTITY_ID);
         }
 
         final String SQL = sql;
@@ -71,8 +74,8 @@ public class ListTaskInteractor extends BaseInteractor {
                 CardDetails cardDetails = null;
                 try {
                     if ((PAOT.equals(interventionType)) && isForForm && cursor.moveToFirst()) {
-                        cardDetails = new MosquitoHarvestCardDetails(cursor.getString(cursor.getColumnIndex(DatabaseKeys.PAOT_STATUS)),
-                                cursor.getString(cursor.getColumnIndex(DatabaseKeys.LAST_UPDATED_DATE)), null, PAOT);
+                        cardDetails = new MosquitoHarvestCardDetails(cursor.getString(cursor.getColumnIndex(PAOT_STATUS)),
+                                cursor.getString(cursor.getColumnIndex(LAST_UPDATED_DATE)), null, PAOT);
                         cardDetails.setComments(cursor.getString(cursor.getColumnIndex(DatabaseKeys.PAOT_COMMENTS)));
                     } else if (cursor.moveToFirst()) {
                         cardDetails = createCardDetails(cursor, interventionType);
@@ -136,19 +139,19 @@ public class ListTaskInteractor extends BaseInteractor {
                 CardDetailsUtil.getTranslatedBusinessStatus(cursor.getString(cursor.getColumnIndex("status"))),
                 cursor.getString(cursor.getColumnIndex("start_date")),
                 cursor.getString(cursor.getColumnIndex("end_date")),
-                interventionType,
-                null
+                interventionType
         );
     }
 
     private MosquitoHarvestCardDetails createPaotCardDetails(Cursor cursor, String interventionType) {
-        return new MosquitoHarvestCardDetails(
-                CardDetailsUtil.getTranslatedBusinessStatus(cursor.getString(cursor.getColumnIndex("business_status"))),
-                cursor.getString(cursor.getColumnIndex("last_updated_date")),
+        MosquitoHarvestCardDetails paotCardDetails =  new MosquitoHarvestCardDetails(
+                cursor.getString(cursor.getColumnIndex(PAOT_STATUS)),
+                cursor.getString(cursor.getColumnIndex(LAST_UPDATED_DATE)),
                 null,
-                interventionType,
-                cursor.getString(cursor.getColumnIndex("paot_comments"))
+                interventionType
         );
+        paotCardDetails.setComments(cursor.getString(cursor.getColumnIndex(PAOT_COMMENTS)));
+        return paotCardDetails;
     }
 
     public void fetchLocations(String plan, String operationalArea) {

@@ -15,7 +15,7 @@
         android:orientation="vertical">
 
         <ImageButton
-            android:id="@+id/btn_collapse_potential_area_of_transmission_card_view"
+            android:id="@+id/btn_collapse_paot_card_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
@@ -31,7 +31,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/potential_area_of_transmission_card_view_title"
+                    android:id="@+id/paot_card_view_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/mosquito_collection_card_view_title_left_margin"
@@ -40,7 +40,7 @@
                     android:drawableLeft="@drawable/ic_paot"
                     android:drawablePadding="10dp"
                     android:textSize="@dimen/mosquito_collection_card_view_title_text_size"
-                    android:text="@string/card_view_potential_area_of_transmission"
+                    android:text="@string/card_view_paot"
                     android:textStyle="bold"/>
 
                 <View
@@ -61,7 +61,7 @@
                     android:textAllCaps="false"
                     android:textColor="@color/text_black"
                     android:textSize="@dimen/structure_info_card_text_size"
-                    android:text="@string/potential_area_of_transmission_last_updated_date_test_text"/>
+                    android:text="@string/paot_last_updated_date_test_text"/>
 
             </LinearLayout>
 

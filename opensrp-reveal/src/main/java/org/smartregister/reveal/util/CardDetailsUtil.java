@@ -117,7 +117,7 @@ public class CardDetailsUtil {
             String lastUpdatedDate =  mosquitoHarvestCardDetails.getStartDate();
 
             TextView lastUpdatedDateView = activity.findViewById(R.id.paot_last_updated_date);
-            lastUpdatedDateView.setText(activity.getResources().getString(R.string.potential_area_of_transmission_last_updated_date_test_text) + lastUpdatedDate);
+            lastUpdatedDateView.setText(activity.getResources().getString(R.string.paot_last_updated_date_test_text) + lastUpdatedDate);
             activity.findViewById(R.id.potential_area_of_transmission_card_view).setVisibility(View.VISIBLE);
         }
     }
