@@ -42,6 +42,7 @@ import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_LINE_LAYE
 import static org.smartregister.reveal.util.RevealMapHelper.INDEX_CASE_SYMBOL_LAYER;
 import static org.smartregister.reveal.util.RevealMapHelper.MOSQUITO_COLLECTION_LAYER;
 import static org.smartregister.reveal.util.RevealMapHelper.LARVAL_BREEDING_LAYER;
+import static org.smartregister.reveal.util.RevealMapHelper.POTENTIAL_AREA_OF_TRANSMISSION_LAYER;
 
 
 /**
@@ -145,11 +146,13 @@ public class RevealMapHelperTest {
                 .thenReturn(symbolLayer);
         when(symbolLayer.getId())
                 .thenReturn(MOSQUITO_COLLECTION_LAYER)
-                .thenReturn(LARVAL_BREEDING_LAYER);
+                .thenReturn(LARVAL_BREEDING_LAYER)
+                .thenReturn(POTENTIAL_AREA_OF_TRANSMISSION_LAYER);
         revealMapHelper.addCustomLayers(style, context);
-        verify(style, times(2)).addLayer(layerArgumentCaptor.capture());
+        verify(style, times(3)).addLayer(layerArgumentCaptor.capture());
         assertEquals(layerArgumentCaptor.getAllValues().get(0).getId(), MOSQUITO_COLLECTION_LAYER);
         assertEquals(layerArgumentCaptor.getAllValues().get(1).getId(), LARVAL_BREEDING_LAYER);
+        assertEquals(layerArgumentCaptor.getAllValues().get(2).getId(), POTENTIAL_AREA_OF_TRANSMISSION_LAYER);
 
     }
 }

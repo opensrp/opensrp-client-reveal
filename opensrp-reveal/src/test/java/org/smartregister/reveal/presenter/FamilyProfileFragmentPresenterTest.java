@@ -99,7 +99,6 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         Whitebox.setInternalState(presenter, "familyJsonFormUtils", familyJsonFormUtils);
         Whitebox.setInternalState(presenter, "otherMemberInteractor", otherMemberInteractor);
         when(view.getApplicationContext()).thenReturn(context);
-
     }
 
     @Test

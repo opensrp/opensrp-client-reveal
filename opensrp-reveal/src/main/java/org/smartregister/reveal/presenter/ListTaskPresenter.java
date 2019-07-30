@@ -317,6 +317,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private void startForm(String formName, Feature feature, String sprayStatus, String familyHead) {
         JSONObject formJson = jsonFormUtils.getFormJSON(listTaskView.getContext()
                 , formName, feature, sprayStatus, familyHead);
+        if (cardDetails instanceof MosquitoHarvestCardDetails && PAOT.equals(((MosquitoHarvestCardDetails) cardDetails).getInterventionType())) {
+            jsonFormUtils.populatePAOTForm((MosquitoHarvestCardDetails) cardDetails, formJson);
+        }
         listTaskView.startJsonForm(formJson);
     }
 
@@ -327,6 +330,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.showProgressDialog(R.string.fetching_mosquito_collection_points_title, R.string.fetching_mosquito_collection_points_message);
         } else if (LARVAL_DIPPING.equals(interventionType)) {
             listTaskView.showProgressDialog(R.string.fetching_larval_dipping_points_title, R.string.fetching_larval_dipping_points_message);
+        } else if (PAOT.equals(interventionType)) {
+            listTaskView.showProgressDialog(R.string.fetching_paot_title, R.string.fetching_paot_message);
         }
         listTaskInteractor.fetchInterventionDetails(interventionType, selectedFeature.id(), true);
     }
