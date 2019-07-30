@@ -157,5 +157,6 @@
 
     <string name="view_tasks">View \nTasks</string>
     <string name="tasks_complete">Tasks Complete</string>
+    <string name="numero_sign">\u2116</string>
 
     </resources>
