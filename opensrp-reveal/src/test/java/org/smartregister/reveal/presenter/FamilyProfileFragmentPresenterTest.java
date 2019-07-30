@@ -6,6 +6,7 @@ import net.sqlcipher.Cursor;
 import net.sqlcipher.MatrixCursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -99,7 +100,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         Whitebox.setInternalState(presenter, "familyJsonFormUtils", familyJsonFormUtils);
         Whitebox.setInternalState(presenter, "otherMemberInteractor", otherMemberInteractor);
         when(view.getApplicationContext()).thenReturn(context);
-
+        System.out.println("Completed initializing test objects");
     }
 
     @Test
@@ -110,6 +111,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         when(preferencesUtil.getCurrentOperationalArea()).thenReturn(oAname);
         when(preferencesUtil.getCurrentDistrict()).thenReturn(district);
         when(view.getString(R.string.family_title)).thenReturn(context.getString(R.string.family_title));
+        System.out.println(ReflectionToStringBuilder.toString(presenter));
         presenter.refreshProfileTopSection(client);
         verify(view).setProfileDetailOne(oAname);
         verify(view).setProfileDetailTwo(district);
