@@ -56,7 +56,7 @@ public class ListTaskInteractor extends BaseInteractor {
         } else if (LARVAL_DIPPING.equals(interventionType)) {
             sql = String.format(sql, LARVAL_DIPPINGS_TABLE);
         } else if (PAOT.equals(interventionType)) {
-            sql = String.format("SELECT last_updated_date,  FROM %s WHERE id=? ", POTENTIAL_AREA_OF_TRANSMISSION_TABLE);
+            sql = String.format("SELECT last_updated_date, business_status, paot_comments  FROM %s WHERE id=? ", POTENTIAL_AREA_OF_TRANSMISSION_TABLE);
         }
 
         final String SQL = sql;
@@ -135,7 +135,7 @@ public class ListTaskInteractor extends BaseInteractor {
 
     private MosquitoHarvestCardDetails createPaotCardDetails(Cursor cursor, String interventionType) {
         return new MosquitoHarvestCardDetails(
-                CardDetailsUtil.getTranslatedBusinessStatus(cursor.getString(cursor.getColumnIndex("paot_status"))),
+                CardDetailsUtil.getTranslatedBusinessStatus(cursor.getString(cursor.getColumnIndex("business_status"))),
                 cursor.getString(cursor.getColumnIndex("last_updated_date")),
                 null,
                 interventionType,

@@ -472,11 +472,11 @@
           }
         },
         {
-          "column_name": "paot_status",
+          "column_name": "business_status",
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "paotStatus"
+            "concept": "business_status"
           }
         },
         {

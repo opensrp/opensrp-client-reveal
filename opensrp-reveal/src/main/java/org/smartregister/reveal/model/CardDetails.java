@@ -9,6 +9,7 @@ public class CardDetails {
     private int statusMessage;
     private Integer statusColor;
     private String reason;
+    private String comments;
 
     public CardDetails(String status) {
         this.status = status;
@@ -44,5 +45,13 @@ public class CardDetails {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 }

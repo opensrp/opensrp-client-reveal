@@ -8,14 +8,13 @@ public class MosquitoHarvestCardDetails extends CardDetails {
     private String startDate;
     private String endDate;
     private String interventionType;
-    private String comments;
 
     public MosquitoHarvestCardDetails(String status, String trapSetDate, String endDate, String interventionType, String comments) {
         super(status);
         this.startDate = trapSetDate;
         this.endDate = endDate;
         this.interventionType = interventionType;
-        this.comments = comments;
+        this.setComments(comments);
     }
 
     public String getStartDate() {
