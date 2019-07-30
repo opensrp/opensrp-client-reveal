@@ -38,7 +38,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.COMPLETED_TAS
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FAMILY_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPED_STRUCTURE_TASK_CODE_AND_STATUS;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPED_TASKS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LATITUDE;
@@ -129,8 +129,8 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
         return String.format(" SELECT %s.* , SUM(CASE WHEN status='%s' THEN 1 ELSE 0 END ) AS %s , COUNT(_id ) AS %s, " +
                         "GROUP_CONCAT(%s || \"-\" || %s ) AS %s FROM ( ",
-                GROUPED_TASKS, Task.TaskStatus.COMPLETED.toString(), COMPLETED_TASK_COUNT, TASK_COUNT, CODE, BUSINESS_STATUS, GROUPED_STRUCTURE_TASK_CODE_AND_STATUS) + structureTasksQueryBuilder +
-                String.format(" ) AS %s GROUP BY %s ", GROUPED_TASKS, STRUCTURE_ID);
+                PAOT_STATUS, Task.TaskStatus.COMPLETED.toString(), COMPLETED_TASK_COUNT, TASK_COUNT, CODE, BUSINESS_STATUS, GROUPED_STRUCTURE_TASK_CODE_AND_STATUS) + structureTasksQueryBuilder +
+                String.format(" ) AS %s GROUP BY %s ", PAOT_STATUS, STRUCTURE_ID);
 
     }
 

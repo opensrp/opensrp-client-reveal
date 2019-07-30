@@ -15,6 +15,7 @@ import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.CardDetailsUtil;
+import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Constants.GeoJSON;
 import org.smartregister.reveal.util.GeoJsonUtils;
 import org.smartregister.reveal.util.Utils;
@@ -25,6 +26,7 @@ import java.util.Set;
 
 import timber.log.Timber;
 
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
@@ -34,7 +36,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLL
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Tables.LARVAL_DIPPINGS_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.MOSQUITO_COLLECTIONS_TABLE;
-import static org.smartregister.reveal.util.Constants.Tables.POTENTIAL_AREA_OF_TRANSMISSION_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.PAOT_TABLE;
 
 /**
  * Created by samuelgithengi on 11/27/18.
@@ -56,7 +58,8 @@ public class ListTaskInteractor extends BaseInteractor {
         } else if (LARVAL_DIPPING.equals(interventionType)) {
             sql = String.format(sql, LARVAL_DIPPINGS_TABLE);
         } else if (PAOT.equals(interventionType)) {
-            sql = String.format("SELECT last_updated_date,paot_status,paot_comments  FROM %s WHERE id=? ", POTENTIAL_AREA_OF_TRANSMISSION_TABLE);
+            sql = String.format("SELECT %s, %s, %s  FROM %s WHERE %s=? ", DatabaseKeys.PAOT_STATUS,
+                    DatabaseKeys.PAOT_COMMENTS, DatabaseKeys.LAST_UPDATED_DATE, PAOT_TABLE, BASE_ENTITY_ID);
         }
 
         final String SQL = sql;
@@ -68,9 +71,9 @@ public class ListTaskInteractor extends BaseInteractor {
                 CardDetails cardDetails = null;
                 try {
                     if ((PAOT.equals(interventionType)) && isForForm && cursor.moveToFirst()) {
-                        cardDetails = new MosquitoHarvestCardDetails(cursor.getString(cursor.getColumnIndex("paot_status")),
-                                cursor.getString(cursor.getColumnIndex("last_updated_date")), null, PAOT);
-                        cardDetails.setComments(cursor.getString(cursor.getColumnIndex("paot_comments")));
+                        cardDetails = new MosquitoHarvestCardDetails(cursor.getString(cursor.getColumnIndex(DatabaseKeys.PAOT_STATUS)),
+                                cursor.getString(cursor.getColumnIndex(DatabaseKeys.LAST_UPDATED_DATE)), null, PAOT);
+                        cardDetails.setComments(cursor.getString(cursor.getColumnIndex(DatabaseKeys.PAOT_COMMENTS)));
                     } else if (cursor.moveToFirst()) {
                         cardDetails = createCardDetails(cursor, interventionType);
                     }
