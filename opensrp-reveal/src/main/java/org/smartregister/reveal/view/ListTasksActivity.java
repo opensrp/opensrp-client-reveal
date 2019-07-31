@@ -73,6 +73,7 @@ import static org.smartregister.reveal.util.Constants.DIGITAL_GLOBE_CONNECT_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.Map;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
@@ -107,6 +108,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private CardView mosquitoCollectionCardView;
     private CardView larvalBreedingCardView;
+    private CardView potentialAreaOfTransmissionCardView;
 
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
@@ -163,6 +165,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         larvalBreedingCardView = findViewById(R.id.larval_breeding_card_view);
 
+        potentialAreaOfTransmissionCardView = findViewById(R.id.potential_area_of_transmission_card_view);
+
         findViewById(R.id.btn_add_structure).setOnClickListener(this);
 
         findViewById(R.id.btn_collapse_spray_card_view).setOnClickListener(this);
@@ -182,6 +186,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         findViewById(R.id.btn_collapse_larval_breeding_card_view).setOnClickListener(this);
 
         findViewById(R.id.btn_record_larval_dipping).setOnClickListener(this);
+
+        findViewById(R.id.btn_collapse_paot_card_view).setOnClickListener(this);
+
+        findViewById(R.id.btn_edit_paot_details).setOnClickListener(this);
     }
 
     @Override
@@ -192,6 +200,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             setViewVisibility(mosquitoCollectionCardView, false);
         } else if (id == R.id.btn_collapse_larval_breeding_card_view) {
             setViewVisibility(larvalBreedingCardView, false);
+        } else if (id == R.id.btn_collapse_paot_card_view) {
+            setViewVisibility(potentialAreaOfTransmissionCardView, false);
         }
     }
 
@@ -200,6 +210,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         setViewVisibility(sprayCardView, false);
         setViewVisibility(mosquitoCollectionCardView, false);
         setViewVisibility(larvalBreedingCardView, false);
+        setViewVisibility(potentialAreaOfTransmissionCardView, false);
     }
 
     private void setViewVisibility(View view, boolean isVisible) {
@@ -282,13 +293,16 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
         } else if (v.getId() == R.id.btn_record_larval_dipping) {
             listTaskPresenter.onChangeInterventionStatus(LARVAL_DIPPING);
+        } else if(v.getId() == R.id.btn_edit_paot_details) {
+            listTaskPresenter.onChangeInterventionStatus(PAOT);
         } else if (v.getId() == R.id.btn_collapse_spray_card_view) {
             setViewVisibility(tvReason, false);
             closeCardView(v.getId());
         } else if (v.getId() == R.id.register_family) {
             registerFamily();
         } else if (v.getId() == R.id.btn_collapse_mosquito_collection_card_view
-                || v.getId() == R.id.btn_collapse_larval_breeding_card_view) {
+                || v.getId() == R.id.btn_collapse_larval_breeding_card_view
+                || v.getId() == R.id.btn_collapse_paot_card_view) {
             closeCardView(v.getId());
         } else if (v.getId() == R.id.task_register) {
             openTaskRegister();

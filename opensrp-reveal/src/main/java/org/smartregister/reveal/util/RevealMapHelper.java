@@ -71,7 +71,7 @@ public class RevealMapHelper {
     public static final String INDEX_CASE_LINE_LAYER = "index-case-line-layer";
 
     public static final String POTENTIAL_AREA_OF_TRANSMISSION_LAYER = "potential-area-of-transmission-layer";
-
+  
     private static final String INDEX_CASE_SOURCE = "index_case_source";
 
     private Location indexCaseLocation = null;

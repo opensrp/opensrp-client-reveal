@@ -128,6 +128,10 @@
     <string name="mosquito_collection_trap_set_date">กำหนดวันที่:&#160;</string>
     <string name="mosquito_collection_trap_follow_up_date">วันที่ติดตาม:&#160;</string>
 
+    <string name="paot_last_updated_date_test_text">อัพเดทล่าสุด:&#160;</string>
+    <string name="card_view_edit_paot_details">บแก้ไขข้อมูล</string>
+    <string name="card_view_paot">ศักยภาพของการส่งสัญญาณ</string>
+
     <string name="residents">ผู้พักอาศัย</string>
     <string name="return_to_all_families">ย้อนกลับ</string>
     <string name="tasks">งาน (%1$d)</string>
@@ -184,6 +188,6 @@
 
     <string name="view_tasks">ดูรายการงาน</string>
     <string name="tasks_complete">งานเสร็จสมบูรณ์</string>
-    <string name="numero_sign">\u2116</string>
+    <string name="numero_sign">เลขที่</string>
 
     </resources>
