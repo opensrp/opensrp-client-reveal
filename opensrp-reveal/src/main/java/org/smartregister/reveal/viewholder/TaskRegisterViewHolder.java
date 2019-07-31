@@ -33,6 +33,8 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
 
     private TextView taskDetailsView;
 
+    private TextView houseNumberView;
+
     private PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
 
     public TaskRegisterViewHolder(@NonNull View itemView) {
@@ -43,6 +45,7 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         distanceView = itemView.findViewById(R.id.distance_from_structure);
         taskDetailsView = itemView.findViewById(R.id.task_details);
         actionView = itemView.findViewById(R.id.task_action);
+        houseNumberView = itemView.findViewById(R.id.house_number);
     }
 
 
@@ -134,6 +137,17 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         } else {
             taskDetailsView.setVisibility(View.GONE);
         }
+    }
+
+    public void setHouseNumber(String houseNumber) {
+        houseNumberView.setText(houseNumber);
+    }
+
+    public void showHouseNumber() {
+        houseNumberView.setVisibility(View.VISIBLE);
+    }
+    public void hideHouseNumber() {
+        houseNumberView.setVisibility(View.GONE);
     }
 
     public void hideIcon() {

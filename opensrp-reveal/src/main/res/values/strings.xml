@@ -202,5 +202,6 @@
     <string name="not_eligible">Not Eligible</string>
     <string name="plans_download_on_progress_title">Download in Progress</string>
     <string name="plans_download_on_progress">Downloading of Plans In Progress. Please wait</string>
+    <string name="numero_sign">\u2116</string>
 
 </resources>

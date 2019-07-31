@@ -43,6 +43,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
     private String reasonReference;
 
+    private String houseNumber;
+
     public TaskDetails(@NonNull String taskId) {
         super(taskId);
     }
@@ -178,5 +180,13 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
     public String getReasonReference() {
         return reasonReference;
+    }
+
+    public String getHouseNumber() {
+        return houseNumber;
+    }
+
+    public void setHouseNumber(String houseNumber) {
+        this.houseNumber = houseNumber;
     }
 }

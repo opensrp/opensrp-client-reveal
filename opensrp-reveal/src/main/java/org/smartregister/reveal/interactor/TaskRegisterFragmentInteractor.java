@@ -60,6 +60,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
+import static org.smartregister.reveal.util.FamilyConstants.DatabaseKeys.HOUSE_NUMBER;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
 
 /**
@@ -162,7 +163,8 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
                 SPRAYED_STRUCTURES + "." + NOT_SRAYED_REASON,
                 SPRAYED_STRUCTURES + "." + NOT_SRAYED_OTHER_REASON,
                 STRUCTURES_TABLE + "." + ID + " AS " + STRUCTURE_ID,
-                FAMILY + "." + FIRST_NAME
+                FAMILY + "." + FIRST_NAME,
+                FAMILY + "." + HOUSE_NUMBER
 
         };
     }
@@ -246,6 +248,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             task.setTaskCount(cursor.getInt(cursor.getColumnIndex(TASK_COUNT)));
             task.setCompleteTaskCount(cursor.getInt(cursor.getColumnIndex(COMPLETED_TASK_COUNT)));
             task.setGroupedTaskCodeStatus(cursor.getString(cursor.getColumnIndex(GROUPED_STRUCTURE_TASK_CODE_AND_STATUS)));
+            task.setHouseNumber(cursor.getString(cursor.getColumnIndex(HOUSE_NUMBER)));
         }
         Location location = new Location((String) null);
 
