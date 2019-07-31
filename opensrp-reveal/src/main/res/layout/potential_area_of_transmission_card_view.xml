@@ -37,7 +37,7 @@
                     android:layout_marginLeft="@dimen/mosquito_collection_card_view_title_left_margin"
                     android:textAllCaps="false"
                     android:textColor="#1B1B1B"
-                    android:drawableLeft="@drawable/ic_paot"
+                    android:drawableLeft="@drawable/ic_paot_card_icon"
                     android:drawablePadding="10dp"
                     android:textSize="@dimen/mosquito_collection_card_view_title_text_size"
                     android:text="@string/card_view_paot"

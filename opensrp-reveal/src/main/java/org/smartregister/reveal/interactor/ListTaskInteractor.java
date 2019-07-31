@@ -73,11 +73,7 @@ public class ListTaskInteractor extends BaseInteractor {
 
                 CardDetails cardDetails = null;
                 try {
-                    if ((PAOT.equals(interventionType)) && isForForm && cursor.moveToFirst()) {
-                        cardDetails = new MosquitoHarvestCardDetails(cursor.getString(cursor.getColumnIndex(PAOT_STATUS)),
-                                cursor.getString(cursor.getColumnIndex(LAST_UPDATED_DATE)), null, PAOT);
-                        cardDetails.setComments(cursor.getString(cursor.getColumnIndex(DatabaseKeys.PAOT_COMMENTS)));
-                    } else if (cursor.moveToFirst()) {
+                    if (cursor.moveToFirst()) {
                         cardDetails = createCardDetails(cursor, interventionType);
                     }
                 } catch (Exception e) {
