@@ -96,15 +96,15 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Location Physical Type",
+        "label": "ประเภททางกายภาพ",
         "options": [
           {
             "key": "Home",
-            "text": "Home"
+            "text": "บ้าน"
           },
           {
             "key": "Hut",
-            "text": "Hut"
+            "text": "กระท่อม"
           }
         ],
         "value": "Home",
