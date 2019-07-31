@@ -47,12 +47,12 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "Possible Area of Transmission",
+    "title": "ศักยภาพของการส่งสัญญาณ",
     "display_back_button": "true",
     "fields": [
       {
         "key": "paotStatus",
-        "label": "Status",
+        "label": "สถานะ",
         "type": "native_radio",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -60,16 +60,16 @@
         "options": [
           {
             "key": "Active",
-            "text": "Active"
+            "text": "สถานะการใช้งาน"
           },
           {
             "key": "Inactive",
-            "text": "Inactive"
+            "text": "สถานะไม่ใช้งาน"
           }
         ],
         "v_required": {
           "value": true,
-          "err": "Please specify status of area of transmission"
+          "err": "โปรดเลือกสถานะ"
         }
       },
       {
@@ -78,7 +78,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Comments"
+        "hint": "ข้อคิดเห็น"
       },
       {
         "key": "lastUpdatedDate",
@@ -86,11 +86,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "date_picker",
-        "hint": "Last Updated",
+        "hint": "อัพเดทล่าสุด",
         "max_date": "today",
         "v_required": {
           "value": true,
-          "err": "Please specify the last updated date"
+          "err": "กรุณาระบุวันที่ทำก"
         }
       },
       {

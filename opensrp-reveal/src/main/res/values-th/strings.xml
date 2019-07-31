@@ -74,6 +74,9 @@
     <string name="fetching_larval_dipping_points_title">กำลังดึงข้อมูลรายละเอียดดำแหน่งที่ทำ Larval dipping</string>
     <string name="fetching_larval_dipping_points_message">กำลังดึงข้อมูลรายละเอียดตำแหน่งที่ทำ Larval dipping โปรดรอสักครู่</string>
 
+    <string name="fetching_paot_title">กำลังดึงข้อมูลรายละเอียดดำแหน่งที่ทำพื้นที่เสี่ยง</string>
+    <string name="fetching_paot_message">กำลังดึงข้อมูลรายละเอียดตำแหน่งที่ทำพื้นที่เสี่ยง โปรดรอสักครู่</string>
+
     <string name="narrowing_location_title">กำลังคำนวณตำแหน่งของท่าน</string>
     <string name="narrowing_location_message">กำลังคำนวณตำแหน่งของท่าน โปรดรอสักครู่</string>
 
@@ -150,16 +153,40 @@
     <string name="form_not_found">ไม่พบแบบฟอร์ม</string>
     <string name="edit_member_form_title">แก้ไขข้อมูลสมาชิกในครัวเรือน</string>
 
-    <string name="not_visited">Not Visited</string>
-    <string name="not_sprayed">Not Sprayed</string>
-    <string name="sprayed">Sprayed thai</string>
-    <string name="not_sprayable">Not Sprayable</string>
-    <string name="complete">Complete</string>
-    <string name="incomplete">Incomplete</string>
-    <string name="in_progress">In Progress</string>
-    <string name="not_eligible">Not Eligible</string>
+    <string name="classification_details">รายละเอียดการจำแนกประเภท</string>
+    <string name="view">ดู</string>
+    <string name="family_details">เพิ่มครอบครัว</string>
+    <string name="family_name_format">นามสกุล: %1s</string>
+    <string name="village_town_format">หมู่บ้านเมือง: %1s</string>
+    <string name="quarter_clan_format">ตระกูล: %1s</string>
+    <string name="street_format">ถนน: %1s</string>
+    <string name="landmark_format">สถานที่สำคัญใกล้บ้าน: %1s</string>
+    <string name="family_member_data">สมาชิกในครอบครัว</string>
+    <string name="surname_format">นามสกุล: %1s</string>
+    <string name="first_name_format">ชื่อ: %1s</string>
+    <string name="middle_name_format">ชื่อกลาง: %1s</string>
+    <string name="dob_format">วันเกิด: %1s</string>
+    <string name="case_classification_data">รายละเอียดการจำแนกเคส</string>
+    <string name="case_number_format">หมายเลขเคส: %1s</string>
+    <string name="case_classification_format">จำแนกเคส: %1s</string>
+    <string name="focus_reason_format">เหตุผล: %1s</string>
+    <string name="focus_status_format">สถานะ: %1s</string>
+    <string name="return_to_register">ย้อน</string>
+    <string name="index_case_not_found">ไม่พบ</string>
+    <string name="detect_case_button">ตรวจสอบกรณี</string>
 
-    <string name="view_tasks">View \nTasks</string>
-    <string name="tasks_complete">Tasks Complete</string>
+    <string name="not_visited">ไม่ได้เข้าชม</string>
+    <string name="not_sprayed">ไม่ได้พ่น</string>
+    <string name="sprayed">ได้พ่น</string>
+    <string name="not_sprayable">ไม่มีสิทธิ์</string>
+    <string name="complete">เสร็จ</string>
+    <string name="incomplete">ไม่สมบูรณ์</string>
+    <string name="in_progress">กำลังดำเนินการ</string>
+    <string name="not_eligible">ไม่มีสิทธิ์</string>
+    <string name="plans_download_on_progress_title">ดาวน์โหลดกำลังดำเนินการ</string>
+    <string name="plans_download_on_progress">กำลังดาวน์โหลดแผนอยู่ในระหว่างดำเนินการ โปรดรอสักครู่</string>
+
+    <string name="view_tasks">ดูรายการงาน</string>
+    <string name="tasks_complete">งานเสร็จสมบูรณ์</string>
 
     </resources>
