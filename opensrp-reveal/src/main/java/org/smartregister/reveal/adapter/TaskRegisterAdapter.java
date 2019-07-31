@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
@@ -95,6 +96,12 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
             viewHolder.hideIcon();
         }
 
+        if (StringUtils.isNotEmpty(task.getHouseNumber())){
+            viewHolder.showHouseNumber();
+            viewHolder.setHouseNumber( context.getString(R.string.numero_sign) + " " + task.getHouseNumber());
+        } else {
+            viewHolder.hideHouseNumber();
+        }
     }
 
     @Override

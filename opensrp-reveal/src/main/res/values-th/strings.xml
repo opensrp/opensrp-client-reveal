@@ -184,5 +184,6 @@
 
     <string name="view_tasks">ดูรายการงาน</string>
     <string name="tasks_complete">งานเสร็จสมบูรณ์</string>
+    <string name="numero_sign">\u2116</string>
 
     </resources>
