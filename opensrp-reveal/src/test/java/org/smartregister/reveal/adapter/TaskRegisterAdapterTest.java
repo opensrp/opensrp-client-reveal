@@ -19,6 +19,7 @@ import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.viewholder.TaskRegisterViewHolder;
 
@@ -100,7 +101,7 @@ public class TaskRegisterAdapterTest extends BaseUnitTest {
     @Test
     public void testonBindViewHolderMosquitoPoint() {
         TaskDetails task = taskDetailsList.get(0);
-        task.setTaskCode(Constants.Intervention.MOSQUITO_COLLECTION);
+        task.setTaskCode(Intervention.MOSQUITO_COLLECTION);
         LinearLayout vg = new LinearLayout(context);
         TaskRegisterViewHolder holder = adapter.onCreateViewHolder(vg, 0);
         Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
@@ -115,7 +116,7 @@ public class TaskRegisterAdapterTest extends BaseUnitTest {
     @Test
     public void testonBindViewHolderLarvacide() {
         TaskDetails task = taskDetailsList.get(0);
-        task.setTaskCode(Constants.Intervention.LARVAL_DIPPING);
+        task.setTaskCode(Intervention.LARVAL_DIPPING);
         LinearLayout vg = new LinearLayout(context);
         TaskRegisterViewHolder holder = adapter.onCreateViewHolder(vg, 0);
         Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
@@ -131,7 +132,7 @@ public class TaskRegisterAdapterTest extends BaseUnitTest {
     public void testonBindViewHolderForBCCShouldDisplayIconAndHideDistance() {
         TaskDetails bccTask = new TaskDetails(UUID.randomUUID().toString());
         taskDetailsList.add(bccTask);
-        bccTask.setTaskCode(Constants.Intervention.BCC);
+        bccTask.setTaskCode(Intervention.BCC);
         LinearLayout vg = new LinearLayout(context);
         TaskRegisterViewHolder holder = adapter.onCreateViewHolder(vg, 0);
         Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
@@ -171,7 +172,7 @@ public class TaskRegisterAdapterTest extends BaseUnitTest {
     public void testonBindViewHolderForIndexCase() {
         TaskDetails indexCaseTask = new TaskDetails(UUID.randomUUID().toString());
         taskDetailsList.add(indexCaseTask);
-        indexCaseTask.setTaskCode(Constants.Intervention.CASE_CONFIRMATION);
+        indexCaseTask.setTaskCode(Intervention.CASE_CONFIRMATION);
         LinearLayout vg = new LinearLayout(context);
         TaskRegisterViewHolder holder = adapter.onCreateViewHolder(vg, 0);
         Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
@@ -184,6 +185,21 @@ public class TaskRegisterAdapterTest extends BaseUnitTest {
         ImageView imageView = holder.itemView.findViewById(R.id.task_icon);
         assertEquals(View.VISIBLE, imageView.getVisibility());
         assertEquals(R.drawable.ic_classification_details, Shadows.shadowOf(imageView.getDrawable()).getCreatedFromResId());
+    }
+
+    @Test
+    public void testonBindViewHolderForPAOT() {
+        TaskDetails task = taskDetailsList.get(0);
+        task.setTaskCode(Intervention.PAOT);
+        LinearLayout vg = new LinearLayout(context);
+        TaskRegisterViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+        Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
+        adapter.onBindViewHolder(holder, 0);
+
+        assertEquals(context.getString(R.string.card_view_paot), ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+        assertEquals(View.VISIBLE, holder.itemView.findViewById(R.id.distance_from_structure).getVisibility());
+        assertEquals("26 m away", ((TextView) holder.itemView.findViewById(R.id.distance_from_structure)).getText());
+        assertEquals(View.GONE, holder.itemView.findViewById(R.id.task_icon).getVisibility());
     }
 
     @Test

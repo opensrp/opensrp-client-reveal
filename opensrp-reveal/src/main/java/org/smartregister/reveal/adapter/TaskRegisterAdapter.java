@@ -71,6 +71,11 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
             name = context.getString(R.string.classification_details);
             action = context.getString(R.string.view);
             hasIcon = true;
+        } else if (Intervention.PAOT.equals(task.getTaskCode())) {
+            name = context.getString(R.string.card_view_paot);
+            if (task.getBusinessStatus() != null) {
+                action = CardDetailsUtil.getTranslatedBusinessStatus(task.getBusinessStatus()).replaceAll(" ", "\n");
+            }
         } else {
             name = task.getFamilyName();
             if (name == null) {
@@ -97,9 +102,9 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
             viewHolder.hideIcon();
         }
 
-        if (StringUtils.isNotEmpty(task.getHouseNumber())){
+        if (StringUtils.isNotEmpty(task.getHouseNumber())) {
             viewHolder.showHouseNumber();
-            viewHolder.setHouseNumber( context.getString(R.string.numero_sign) + " " + task.getHouseNumber());
+            viewHolder.setHouseNumber(context.getString(R.string.numero_sign) + " " + task.getHouseNumber());
         } else {
             viewHolder.hideHouseNumber();
         }
