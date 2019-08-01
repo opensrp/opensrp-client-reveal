@@ -218,5 +218,31 @@ public class TaskRegisterAdapterTest extends BaseUnitTest {
         verify(adapter, times(2)).notifyDataSetChanged();
     }
 
+    @Test
+    public void testOnBindViewHolderUsesFamilyNameNotStructureNameIfBothExist() {
+        String structureName = "William residence";
+        String familyName = "John";
+        TaskDetails task = taskDetailsList.get(0);
+        task.setFamilyName(familyName);
+        task.setStructureName(structureName);
+        task.setTaskCode(Constants.Intervention.REGISTER_FAMILY);
+        LinearLayout vg = new LinearLayout(context);
+        TaskRegisterViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+        Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
+        adapter.onBindViewHolder(holder, 0);
+        assertEquals(familyName, ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+    }
 
+    @Test
+    public void testOnBindViewHolderUsesStructureNameIfFamilyNameIsMissing() {
+        String structureName = "William residence";
+        TaskDetails task = taskDetailsList.get(0);
+        task.setStructureName(structureName);
+        task.setTaskCode(Constants.Intervention.REGISTER_FAMILY);
+        LinearLayout vg = new LinearLayout(context);
+        TaskRegisterViewHolder holder = adapter.onCreateViewHolder(vg, 0);
+        Whitebox.setInternalState(adapter, "taskDetails", taskDetailsList);
+        adapter.onBindViewHolder(holder, 0);
+        assertEquals(structureName, ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+    }
 }
