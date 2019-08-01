@@ -77,8 +77,9 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
                 action = CardDetailsUtil.getTranslatedBusinessStatus(task.getBusinessStatus()).replaceAll(" ", "\n");
             }
         } else {
+            name = task.getFamilyName();
             if (name == null) {
-                name = task.getFamilyName() != null ? task.getFamilyName() : context.getString(R.string.unenumerated_structure);
+                name = task.getStructureName() != null ? task.getStructureName() : context.getString(R.string.unenumerated_structure);
             }
             if (task.getBusinessStatus() != null) {
                 action = CardDetailsUtil.getTranslatedBusinessStatus(task.getBusinessStatus()).replaceAll(" ", "\n");
