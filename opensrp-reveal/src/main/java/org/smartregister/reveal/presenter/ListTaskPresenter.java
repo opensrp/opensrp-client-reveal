@@ -217,6 +217,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private void onFeatureSelected(Feature feature) {
         this.selectedFeature = feature;
         this.changeInterventionStatus = false;
+        cardDetails=null;
 
         listTaskView.closeAllCardViews();
         listTaskView.displaySelectedFeature(feature, clickedPoint);
