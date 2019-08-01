@@ -242,12 +242,21 @@ public class RevealJsonFormUtils {
     }
 
     public void populatePAOTForm(MosquitoHarvestCardDetails cardDetails, JSONObject formJson) {
+        if (formJson == null)
+            return;
         try {
-            JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJson), JsonForm.PAOT_STATUS).put(VALUE, cardDetails.getStatus());
-            JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJson), JsonForm.PAOT_COMMENTS).put(VALUE, cardDetails.getComments());
-            JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJson), JsonForm.LAST_UPDATED_DATE).put(VALUE, cardDetails.getStartDate());
+            populateField(formJson, JsonForm.PAOT_STATUS, cardDetails.getStatus());
+            populateField(formJson, JsonForm.PAOT_COMMENTS, cardDetails.getComments());
+            populateField(formJson, JsonForm.LAST_UPDATED_DATE, cardDetails.getStartDate());
         } catch (JSONException e) {
             Timber.e(e);
+        }
+    }
+
+    private void populateField(JSONObject formJson, String key, String value) throws JSONException {
+        JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJson), key);
+        if (field != null) {
+            field.put(VALUE, value);
         }
     }
 }
