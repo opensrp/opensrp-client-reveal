@@ -85,6 +85,7 @@ public class LocationTaskIntentService extends IntentService {
 
         TaskRepository taskRepository = RevealApplication.getInstance().getContext().getTaskRepository();
         taskRepository.updateTaskStructureIdFromStructure(syncedStructures);
+        taskRepository.updateTaskStructureIdsFromExistingStructures();
 
         if (hasChangesInCurrentOperationalArea(syncedStructures, synchedTasks)) {
             Intent intent = new Intent(STRUCTURE_TASK_SYNCED);
