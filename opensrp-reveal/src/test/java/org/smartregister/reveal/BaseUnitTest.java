@@ -7,11 +7,12 @@ import org.joda.time.DateTime;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+import org.smartregister.reveal.shadow.CustomFontTextViewShadow;
 import org.smartregister.util.DateTimeTypeConverter;
 
 
 @RunWith(RobolectricTestRunner.class)
-@Config(application = TestRevealApplication.class)
+@Config(application = TestRevealApplication.class, shadows = {CustomFontTextViewShadow.class})
 public abstract class BaseUnitTest {
 
     protected static final String DUMMY_USERNAME = "myusername";
