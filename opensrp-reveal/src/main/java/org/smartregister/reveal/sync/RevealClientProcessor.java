@@ -46,6 +46,7 @@ import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION;
 import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
+import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 
 /**
  * Created by samuelgithengi on 12/7/18.
@@ -134,6 +135,8 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         }
 
         taskRepository.updateTaskStructureIdFromClient(clients, RESIDENCE);
+        taskRepository.updateTaskStructureIdsFromExistingStructures();
+        taskRepository.updateTaskStructureIdsFromExistingClients(FAMILY_MEMBER);
 
         if (hasSyncedEventsInTarget) {
             Intent intent = new Intent(STRUCTURE_TASK_SYNCED);
