@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
-import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 
 public class LocationTaskIntentService extends IntentService {
 
@@ -87,7 +86,6 @@ public class LocationTaskIntentService extends IntentService {
         TaskRepository taskRepository = RevealApplication.getInstance().getContext().getTaskRepository();
         taskRepository.updateTaskStructureIdFromStructure(syncedStructures);
         taskRepository.updateTaskStructureIdsFromExistingStructures();
-        taskRepository.updateTaskStructureIdsFromExistingClients(FAMILY_MEMBER);
 
         if (hasChangesInCurrentOperationalArea(syncedStructures, synchedTasks)) {
             Intent intent = new Intent(STRUCTURE_TASK_SYNCED);
