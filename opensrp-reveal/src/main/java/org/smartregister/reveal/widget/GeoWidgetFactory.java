@@ -57,6 +57,7 @@ import io.ona.kujaku.layers.BoundaryLayer;
 import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.DIGITAL_GLOBE_CONNECT_ID;
+import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
@@ -118,10 +119,12 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
         String operationalArea = null;
         String featureCollection = null;
+        boolean locationComponentActive = false;
 
         try {
             operationalArea = new JSONObject(formFragment.getCurrentJsonState()).optString(OPERATIONAL_AREA_TAG);
             featureCollection = new JSONObject(formFragment.getCurrentJsonState()).optString(STRUCTURES_TAG);
+            locationComponentActive = new JSONObject(formFragment.getCurrentJsonState()).optBoolean(LOCATION_COMPONENT_ACTIVE);
         } catch (JSONException e) {
             Timber.e(e, "error extracting geojson form jsonform");
         }
@@ -147,6 +150,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         String finalFeatureCollection = featureCollection;
         com.mapbox.geojson.Feature finalOperationalAreaFeature = operationalAreaFeature;
 
+        boolean finalLocationComponentActive = locationComponentActive;
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
@@ -172,7 +176,9 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 mapView.setMapboxMap(mapboxMap);
                 float bufferRadius = getLocationBuffer() / getPixelsPerDPI(context.getResources());
                 mapView.setLocationBufferRadius(bufferRadius);
-                if (finalOperationalAreaFeature != null) {
+
+
+                if (finalOperationalAreaFeature != null && !finalLocationComponentActive) {
                     CameraPosition cameraPosition = mapboxMap.getCameraForGeometry(finalOperationalAreaFeature.geometry());
                     if (cameraPosition != null) {
                         mapboxMap.setCameraPosition(cameraPosition);
@@ -182,7 +188,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 }
 
 
-                writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom);
+                writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom, finalLocationComponentActive);
                 mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
                     @Override
                     public void onMoveBegin(@NonNull MoveGestureDetector detector) {//do nothing
@@ -196,7 +202,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                     public void onMoveEnd(@NonNull MoveGestureDetector detector) {
                         Timber.d("onMoveEnd: " + mapboxMap.getCameraPosition().target.toString());
                         writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key,
-                                openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom);
+                                openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom, finalLocationComponentActive);
                     }
                 });
             }
@@ -242,12 +248,13 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
     }
 
     private void writeValues(JsonApi jsonApi, String stepName, Feature markerPosition, String key,
-                             String openMrsEntityParent, String openMrsEntity, String openMrsEntityId, double zoomLevel) {
+                             String openMrsEntityParent, String openMrsEntity, String openMrsEntityId, double zoomLevel, boolean finalLocationComponentActive) {
         if (markerPosition == null)
             return;
         try {
             jsonApi.writeValue(stepName, key, markerPosition.toJSON().toString(), openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
             jsonApi.writeValue(stepName, ZOOM_LEVEL, zoomLevel + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
+            jsonApi.writeValue(stepName, LOCATION_COMPONENT_ACTIVE, finalLocationComponentActive + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
         } catch (JSONException e) {
             Timber.e(e, "error writing Geowidget values");
         }
@@ -270,7 +277,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 mapView.addValidator(new MinZoomValidator(minValidation.getString(JsonFormConstants.ERR),
                         minValidation.getDouble(JsonFormConstants.VALUE)));
             } catch (JSONException e) {
-                Timber.e( "Error extracting max zoom level from" + minValidation);
+                Timber.e("Error extracting max zoom level from" + minValidation);
             }
         }
     }

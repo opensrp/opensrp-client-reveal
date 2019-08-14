@@ -125,6 +125,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private RevealMapHelper revealMapHelper;
 
+    private ImageButton myLocationButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -220,6 +222,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private void initializeMapView(Bundle savedInstanceState) {
         kujakuMapView = findViewById(R.id.kujakuMapView);
 
+        myLocationButton = findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
+
         kujakuMapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
 
         kujakuMapView.onCreate(savedInstanceState);
@@ -273,27 +277,30 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
 
     private void displayMyLocationAtButtom() {
-        ImageButton myLocationComponent = findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
-        if (myLocationComponent != null) {
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) myLocationComponent.getLayoutParams();
+        if (myLocationButton != null) {
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
             params.gravity = Gravity.BOTTOM | Gravity.END;
             params.bottomMargin = params.topMargin;
             params.topMargin = 0;
-            myLocationComponent.setLayoutParams(params);
+            myLocationButton.setLayoutParams(params);
         }
+    }
+
+    private boolean isMyLocationComponentActive() {
+        return getResources().getDrawable(R.drawable.ic_cross_hair_blue).getConstantState().equals(myLocationButton.getDrawable().getConstantState());
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_add_structure) {
-            listTaskPresenter.onAddStructureClicked();
+            listTaskPresenter.onAddStructureClicked(isMyLocationComponentActive());
         } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeInterventionStatus(IRS);
         } else if (v.getId() == R.id.btn_record_mosquito_collection) {
             listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
         } else if (v.getId() == R.id.btn_record_larval_dipping) {
             listTaskPresenter.onChangeInterventionStatus(LARVAL_DIPPING);
-        } else if(v.getId() == R.id.btn_edit_paot_details) {
+        } else if (v.getId() == R.id.btn_edit_paot_details) {
             listTaskPresenter.onChangeInterventionStatus(PAOT);
         } else if (v.getId() == R.id.btn_collapse_spray_card_view) {
             setViewVisibility(tvReason, false);
