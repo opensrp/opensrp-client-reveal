@@ -267,6 +267,7 @@
         "openmrs_entity_id": "",
         "type": "check_box",
         "label": "Microscopy Result",
+        "combine_checkbox_option_values" : "true",
         "options": [
           {
             "key": "Negative",
