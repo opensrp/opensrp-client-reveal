@@ -599,7 +599,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 float bufferRadius = getLocationBuffer() / getPixelsPerDPI(getResources());
                 kujakuMapView.setLocationBufferRadius(bufferRadius);
             } else {
-                localSyncDone = extras != null ? extras.getBoolean(LOCAL_SYNC_DONE) : false;
+                localSyncDone = extras != null && extras.getBoolean(LOCAL_SYNC_DONE);
                 listTaskPresenter.refreshStructures(localSyncDone);
             }
         }
