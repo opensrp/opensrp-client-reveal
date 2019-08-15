@@ -454,6 +454,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.clearSelectedFeature();
             revealApplication.setRefreshMapOnEventSaved(false);
         }
+
+        listTaskView.updateLocationComponentState(revealApplication.isMyLocationComponentEnabled());
     }
 
     public boolean isChangeMapPosition() {

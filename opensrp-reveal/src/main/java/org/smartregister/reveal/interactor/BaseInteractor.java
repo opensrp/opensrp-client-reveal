@@ -35,6 +35,7 @@ import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.contract.StructureTasksContract;
@@ -87,6 +88,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
+import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.PHYSICAL_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_NAME;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE_TYPE;
@@ -321,6 +323,12 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                             taskProperties.put(Properties.LOCATION_VERSION, structure.getProperties().getVersion() + "");
                             taskProperties.put(Properties.LOCATION_TYPE, structure.getProperties().getType());
                             structure.getProperties().setCustomProperties(taskProperties);
+
+
+                            Obs myLocationActiveObs = event.findObs(null, false, LOCATION_COMPONENT_ACTIVE);
+
+                            boolean myLocationActive = myLocationActiveObs != null && Boolean.valueOf(myLocationActiveObs.getValue().toString());
+                            RevealApplication.getInstance().setMyLocationComponentEnabled(myLocationActive);
 
                             presenterCallBack.onStructureAdded(Feature.fromJson(gson.toJson(structure)), featureCoordinates);
                         }

@@ -43,6 +43,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants.Map;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.reveal.validators.MinZoomValidator;
@@ -79,6 +80,9 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
     private JsonApi jsonApi;
 
+    private ImageButton myLocationButton;
+
+    private RevealMapHelper mapHelper = new RevealMapHelper();
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView, RevealMapView mapView) {
 
@@ -136,7 +140,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         mapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
 
 
-        ImageButton myLocationButton = mapView.findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
+        myLocationButton = mapView.findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
 
         com.mapbox.geojson.Feature operationalAreaFeature = null;
         if (operationalArea != null) {
@@ -191,7 +195,6 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                     mapView.focusOnUserLocation(true, bufferRadius);
                 }
 
-                RevealMapHelper mapHelper = new RevealMapHelper();
                 writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom, finalLocationComponentActive);
                 mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
                     @Override
@@ -320,6 +323,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
     @Override
     public void onPause() {
+        if (myLocationButton != null && jsonApi instanceof Context)
+            RevealApplication.getInstance().setMyLocationComponentEnabled(mapHelper.isMyLocationComponentActive((Context) jsonApi, myLocationButton));
         if (mapView != null)
             mapView.onPause();
     }
