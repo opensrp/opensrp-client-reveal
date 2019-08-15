@@ -80,7 +80,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
     private JsonApi jsonApi;
 
     private static com.mapbox.geojson.Feature operationalArea = null;
-
+    private Style mapBoxStyleMain = null;
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView, RevealMapView mapView) {
 
@@ -163,11 +163,51 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
                         GeoJsonSource geoJsonSource = style.getSourceAs(context.getString(R.string.reveal_datasource_name));
+                        mapBoxStyleMain = style;
 
                         if (geoJsonSource != null && StringUtils.isNotBlank(finalFeatureCollection)) {
                             geoJsonSource.setGeoJson(finalFeatureCollection);
                         }
                         RevealMapHelper.addCustomLayers(style, context);
+
+                        try {
+                            JSONArray coordinates = new JSONArray();
+                            JSONArray bufferArray = new JSONArray();
+
+                            JSONArray coordinate1 = new JSONArray();
+                            coordinate1.put(-198.6328125);
+                            coordinate1.put(-79.6240562918881);
+                            bufferArray.put(coordinate1);
+                            JSONArray coordinate2 = new JSONArray();
+                            coordinate2.put(186.6796875);
+                            coordinate2.put(-79.6240562918881);
+                            bufferArray.put(coordinate2);
+                            JSONArray coordinate3 = new JSONArray();
+                            coordinate3.put(186.6796875);
+                            coordinate3.put(84.60784045604665);
+                            bufferArray.put(coordinate3);
+                            JSONArray coordinate4 = new JSONArray();
+                            coordinate4.put(-198.6328125);
+                            coordinate4.put(84.60784045604665);
+                            bufferArray.put(coordinate4);
+
+                            bufferArray.put(coordinate1);
+
+                            coordinates.put(bufferArray);
+                            JSONObject feature = new JSONObject();
+                            feature.put("type", "Feature");
+                            feature.put("properties", new JSONObject());
+                            JSONObject geometry = new JSONObject();
+
+                            geometry.put("type", "Polygon");
+                            geometry.put("coordinates", coordinates);
+                            feature.put("geometry", geometry);
+
+                            RevealMapHelper.addOutOfBoundaryMask(mapBoxStyleMain,  finalOperationalAreaFeature, com.mapbox.geojson.Feature.fromJson(feature.toString()));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                         mapView.setMapboxMap(mapboxMap);
                     }
                 });
