@@ -286,14 +286,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         }
     }
 
-    private boolean isMyLocationComponentActive() {
-        return getResources().getDrawable(R.drawable.ic_cross_hair_blue).getConstantState().equals(myLocationButton.getDrawable().getConstantState());
-    }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_add_structure) {
-            listTaskPresenter.onAddStructureClicked(isMyLocationComponentActive());
+            listTaskPresenter.onAddStructureClicked(revealMapHelper.isMyLocationComponentActive(this, myLocationButton));
         } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeInterventionStatus(IRS);
         } else if (v.getId() == R.id.btn_record_mosquito_collection) {

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -134,6 +135,9 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         mapView.setDisableMyLocationOnMapMove(true);
         mapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
 
+
+        ImageButton myLocationButton = mapView.findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
+
         com.mapbox.geojson.Feature operationalAreaFeature = null;
         if (operationalArea != null) {
             operationalAreaFeature = com.mapbox.geojson.Feature.fromJson(operationalArea);
@@ -187,7 +191,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                     mapView.focusOnUserLocation(true, bufferRadius);
                 }
 
-
+                RevealMapHelper mapHelper = new RevealMapHelper();
                 writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom, finalLocationComponentActive);
                 mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
                     @Override
@@ -202,7 +206,9 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                     public void onMoveEnd(@NonNull MoveGestureDetector detector) {
                         Timber.d("onMoveEnd: " + mapboxMap.getCameraPosition().target.toString());
                         writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key,
-                                openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom, finalLocationComponentActive);
+                                openMrsEntityParent, openMrsEntity, openMrsEntityId,
+                                mapboxMap.getCameraPosition().zoom,
+                                mapHelper.isMyLocationComponentActive(context, myLocationButton));
                     }
                 });
             }

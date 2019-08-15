@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.widget.ImageButton;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -71,7 +72,7 @@ public class RevealMapHelper {
     public static final String INDEX_CASE_LINE_LAYER = "index-case-line-layer";
 
     public static final String POTENTIAL_AREA_OF_TRANSMISSION_LAYER = "potential-area-of-transmission-layer";
-  
+
     private static final String INDEX_CASE_SOURCE = "index_case_source";
 
     private Location indexCaseLocation = null;
@@ -204,4 +205,10 @@ public class RevealMapHelper {
     public LineLayer getIndexCaseLineLayer() {
         return indexCaseLineLayer;
     }
+
+
+    public boolean isMyLocationComponentActive(Context context, ImageButton myLocationButton) {
+        return context.getResources().getDrawable(R.drawable.ic_cross_hair_blue).getConstantState().equals(myLocationButton.getDrawable().getConstantState());
+    }
+
 }
