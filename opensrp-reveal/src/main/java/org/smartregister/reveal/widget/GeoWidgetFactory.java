@@ -17,6 +17,7 @@ import com.cocoahero.android.geojson.Point;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.MultiPolygon;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
@@ -25,6 +26,7 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.turf.TurfJoins;
 import com.rengwuxian.materialedittext.validation.METValidator;
 import com.rey.material.util.ViewUtil;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
@@ -76,6 +78,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
     private RevealMapView mapView;
 
     private JsonApi jsonApi;
+
+    private static com.mapbox.geojson.Feature operationalArea = null;
 
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView, RevealMapView mapView) {
@@ -146,6 +150,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
         String finalFeatureCollection = featureCollection;
         com.mapbox.geojson.Feature finalOperationalAreaFeature = operationalAreaFeature;
+        this.operationalArea = operationalAreaFeature;
 
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -182,7 +187,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 }
 
 
-                writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom);
+                writeValues(((JsonApi) context), stepName, getCenterPointFeature(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom);
                 mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
                     @Override
                     public void onMoveBegin(@NonNull MoveGestureDetector detector) {//do nothing
@@ -195,7 +200,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                     @Override
                     public void onMoveEnd(@NonNull MoveGestureDetector detector) {
                         Timber.d("onMoveEnd: " + mapboxMap.getCameraPosition().target.toString());
-                        writeValues(((JsonApi) context), stepName, getCenterPoint(mapboxMap), key,
+                        writeValues(((JsonApi) context), stepName, getCenterPointFeature(mapboxMap), key,
                                 openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom);
                     }
                 });
@@ -255,11 +260,17 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
     }
 
 
-    private Feature getCenterPoint(MapboxMap mapboxMap) {
+    private Feature getCenterPointFeature(MapboxMap mapboxMap) {
         LatLng latLng = mapboxMap.getCameraPosition().target;
         Feature feature = new Feature();
         feature.setGeometry(new Point(latLng.getLatitude(), latLng.getLongitude()));
         return feature;
+    }
+
+    private static com.mapbox.geojson.Point getCenterPoint(MapboxMap mapboxMap) {
+        LatLng latLng = mapboxMap.getCameraPosition().target;
+        com.mapbox.geojson.Point  centerpoint = com.mapbox.geojson.Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
+        return centerpoint;
     }
 
     private void addMaximumZoomLevel(JSONObject jsonObject, RevealMapView mapView) {
@@ -283,6 +294,12 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
             locationComponent.applyStyle(mapView.getContext(), R.style.LocationComponentStyling);
             locationComponent.setRenderMode(RenderMode.COMPASS);
         }
+    }
+
+    public static boolean isWithinOperationalArea(RevealMapView mapView) {
+        com.mapbox.geojson.Point selectedpoint = getCenterPoint(mapView.getMapboxMap());
+        boolean isWithinOperationArea = TurfJoins.inside(selectedpoint, MultiPolygon.fromJson(operationalArea.geometry().toJson()));
+        return isWithinOperationArea;
     }
 
     @Override

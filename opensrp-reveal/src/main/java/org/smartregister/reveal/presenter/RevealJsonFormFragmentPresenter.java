@@ -16,8 +16,10 @@ import com.vijay.jsonwizard.utils.ValidationStatus;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
+import org.smartregister.reveal.contract.AlertDialogCallback;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
+import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.RevealMapView;
@@ -26,7 +28,7 @@ import org.smartregister.reveal.widget.GeoWidgetFactory;
 /**
  * Created by samuelgithengi on 1/30/19.
  */
-public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter implements PasswordRequestCallback, UserLocationCallback {
+public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter implements PasswordRequestCallback, UserLocationCallback, AlertDialogCallback {
 
     private JsonFormFragment formFragment;
 
@@ -67,11 +69,14 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                         return;
                     }
                 }
+                this.mapView = mapView;
                 break;//exit loop, assumption; there will be only 1 map per form.
             }
         }
         if (isFormValid()) {// if form is valid and did not have a map, if it had a map view it will be handled above
-            onLocationValidated();
+            if (!GeoWidgetFactory.isWithinOperationalArea(mapView)) {
+                AlertDialogUtils.displayNotificationWithCallback(formFragment.getContext(), R.string.register_outside_boundary_title, R.string.register_outside_boundary_warning, R.string.register, R.string.cancel, this);
+            }
         } else {//if form is invalid whether having a map or not
             if (showErrorsOnSubmit()) {
                 launchErrorDialog();
@@ -140,5 +145,10 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
     @Override
     public ValidateUserLocationPresenter getLocationPresenter() {
         return locationPresenter;
+    }
+
+    @Override
+    public void onPositiveBtnClicked() {
+        onLocationValidated();
     }
 }

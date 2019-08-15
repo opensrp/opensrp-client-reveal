@@ -203,5 +203,10 @@
     <string name="plans_download_on_progress_title">Download in Progress</string>
     <string name="plans_download_on_progress">Downloading of Plans In Progress. Please wait</string>
     <string name="numero_sign">No.</string>
+    <string name="register_outside_boundary_title">Register structure outside area boundary?</string>
+    <string name="register_outside_boundary_warning">Warning: this location is beyond the boundaries of the selected operational area. If you continue, the structure may be added to an incorrect area</string>
+    <string name="register">Register</string>
+    <string name="cancel">Cancel</string>
+
 
 </resources>
