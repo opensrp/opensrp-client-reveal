@@ -454,8 +454,18 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.clearSelectedFeature();
             revealApplication.setRefreshMapOnEventSaved(false);
         }
+        updateLocationComponentState();
+    }
 
-        listTaskView.updateLocationComponentState(revealApplication.isMyLocationComponentEnabled());
+    private void updateLocationComponentState() {
+        if (revealApplication.isMyLocationComponentEnabled() && !listTaskView.isMyLocationComponentActive()) {
+            listTaskView.focusOnUserLocation(true);
+        } else if (!revealApplication.isMyLocationComponentEnabled() && listTaskView.isMyLocationComponentActive()) {
+            listTaskView.focusOnUserLocation(false);
+            listTaskView.setGeoJsonSource(featureCollection, operationalArea, true);
+        } else {
+            listTaskView.setGeoJsonSource(featureCollection, operationalArea, true);
+        }
     }
 
     public boolean isChangeMapPosition() {
@@ -465,5 +475,4 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void setChangeMapPosition(boolean changeMapPosition) {
         this.changeMapPosition = changeMapPosition;
     }
-
 }

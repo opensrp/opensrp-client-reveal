@@ -595,13 +595,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void updateLocationComponentState(boolean myLocationComponentEnabled) {
-        if (myLocationComponentEnabled && !revealMapHelper.isMyLocationComponentActive(this, myLocationButton)) {
-            kujakuMapView.focusOnUserLocation(true);
-        } else if (!myLocationComponentEnabled && revealMapHelper.isMyLocationComponentActive(this, myLocationButton)) {
-            kujakuMapView.focusOnUserLocation(false);
-        }
+    public void focusOnUserLocation(boolean focusOnUserLocation) {
+        kujakuMapView.focusOnUserLocation(focusOnUserLocation);
+    }
 
+    @Override
+    public boolean isMyLocationComponentActive() {
+        return revealMapHelper.isMyLocationComponentActive(this, myLocationButton);
     }
 
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {

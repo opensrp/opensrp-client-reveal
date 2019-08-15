@@ -54,7 +54,9 @@ public interface ListTaskContract {
 
         RevealJsonFormUtils getJsonFormUtils();
 
-        void updateLocationComponentState(boolean myLocationComponentEnabled);
+        void focusOnUserLocation(boolean focusOnUserLocation);
+
+        boolean isMyLocationComponentActive();
     }
 
     interface Presenter extends BaseContract.BasePresenter {
