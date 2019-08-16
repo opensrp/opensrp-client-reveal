@@ -3,7 +3,6 @@ package org.smartregister.reveal.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.location.Location;
 import android.support.annotation.NonNull;
 
