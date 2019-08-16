@@ -60,6 +60,26 @@
         }
       },
       {
+        "key": "selectedOpAreaLabel",
+        "type": "label",
+        "text": "Selected Operational Area",
+        "read_only": true,
+        "hint_on_text": false,
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
+      },
+      {
+        "key": "selectedOpAreaName",
+        "type": "label",
+        "text": "",
+        "read_only": true,
+        "hint_on_text": true,
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
+      },
+      {
         "key": "structureType",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",

@@ -259,4 +259,12 @@ public class RevealJsonFormUtils {
             field.put(VALUE, value);
         }
     }
+
+    public void populateField(JSONObject formJson, String key, String value, String fieldToPopulate) throws JSONException {
+        JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJson), key);
+        if (field != null) {
+            field.put(fieldToPopulate, value);
+        }
+    }
+
 }

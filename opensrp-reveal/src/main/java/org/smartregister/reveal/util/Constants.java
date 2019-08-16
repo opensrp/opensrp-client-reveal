@@ -70,6 +70,8 @@ public interface Constants {
         String VALIDATE_FAR_STRUCTURES = "validate_far_structures";
         String RESOLVE_LOCATION_TIMEOUT_IN_SECONDS = "resolve_location_timeout_in_seconds";
         String ADMIN_PASSWORD_NOT_NEAR_STRUCTURES = "admin_password_not_near_structures";
+        String DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG = "display_add_structure_out_of_boundary_warning_dialog";
+        Boolean DEFAULT_DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG = false;
     }
 
     interface Preferences {
@@ -259,6 +261,8 @@ public interface Constants {
         String PAOT_COMMENTS = "paotComments";
 
         String LAST_UPDATED_DATE = "lastUpdatedDate";
+
+        String SELECTED_OPERATIONAL_AREA_NAME = "selectedOpAreaName";
 
     }
 

@@ -43,6 +43,7 @@
     <string name="reveal_datasource_name" translatable="false">reveal-data-set</string>
     <string name="reveal_layer_polygons" translatable="false">reveal-data-polygons</string>
     <string name="reveal_layer_points" translatable="false">reveal-data-points</string>
+    <string name="base_map_feature_json" translatable="false">base_map_feature.json</string>
 
 
     <string name="task_not_found">This structure does not have a task assigned to it for the Plan %1s</string>

@@ -30,4 +30,6 @@
     <color name="bednet_distributed">#3DA9DA</color>
     <color name="family_registered">#FF96C2</color>
 
+    <color name="outside_area_mask">#313131</color>
+
 </resources>

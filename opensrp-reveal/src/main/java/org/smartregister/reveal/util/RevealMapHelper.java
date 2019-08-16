@@ -40,6 +40,7 @@ import static com.mapbox.mapboxsdk.style.expressions.Expression.linear;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillOpacity;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
@@ -215,7 +216,7 @@ public class RevealMapHelper {
         return indexCaseLineLayer;
     }
 
-    public static void addOutOfBoundaryMask(@NonNull Style mMapboxMapStyle, Feature operationalArea, Feature boundingBoxPolygon) {
+    public static void addOutOfBoundaryMask(@NonNull Style mMapboxMapStyle, Feature operationalArea, Feature boundingBoxPolygon, Context context) {
 
         // create multi polygon
         List<Polygon> polygonList = new ArrayList<>();
@@ -229,7 +230,8 @@ public class RevealMapHelper {
 
         // add mask
         FillLayer maskLayer = new FillLayer(OUT_OF_BOUNDARY_LAYER, outOfBoundarySource.getId());
-        maskLayer.withProperties(fillColor(Color.parseColor("#7E3F34")));
+        maskLayer.withProperties(fillColor(context.getResources().getColor(R.color.outside_area_mask)),
+                fillOpacity(.75f));
         mMapboxMapStyle.addLayer(maskLayer);
 
     }
