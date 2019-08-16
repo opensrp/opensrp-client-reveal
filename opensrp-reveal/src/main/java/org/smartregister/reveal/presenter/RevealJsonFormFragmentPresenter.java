@@ -76,7 +76,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         if (isFormValid()) {// if form is valid and did not have a map, if it had a map view it will be handled above
             if (Utils.displayAddStructureOutOfBoundaryWarningDialog() && !GeoWidgetFactory.isWithinOperationalArea(mapView)) {
                 AlertDialogUtils.displayNotificationWithCallback(formFragment.getContext(), R.string.register_outside_boundary_title, R.string.register_outside_boundary_warning, R.string.register, R.string.cancel, this);
-            } else if (!Utils.displayAddStructureOutOfBoundaryWarningDialog()) {
+            } else {
                 onLocationValidated();
             }
 

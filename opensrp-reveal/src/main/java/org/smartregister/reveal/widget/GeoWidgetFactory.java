@@ -18,6 +18,7 @@ import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.MultiPolygon;
+import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
@@ -302,7 +303,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
     public static boolean isWithinOperationalArea(RevealMapView mapView) {
         com.mapbox.geojson.Point selectedpoint = getCenterPoint(mapView.getMapboxMap());
-        boolean isWithinOperationArea = TurfJoins.inside(selectedpoint, MultiPolygon.fromJson(operationalArea.geometry().toJson()));
+        boolean isWithinOperationArea = TurfJoins.inside(selectedpoint, MultiPolygon.fromPolygon((Polygon) operationalArea.geometry()));
         return isWithinOperationArea;
     }
 
