@@ -45,4 +45,26 @@ public class AlertDialogUtilsTest extends BaseUnitTest {
         assertTrue(alertDialog.isShowing());
         assertEquals("Custom messsage", ((TextView) alertDialog.findViewById(android.R.id.message)).getText());
     }
+
+    @Test
+    public void testdisplayNotificationWithCallback() {
+        AlertDialog alertDialog = AlertDialogUtils.displayNotificationWithCallback(context, R.string.register_outside_boundary_title,
+                R.string.register_outside_boundary_warning, R.string.register, R.string.cancel, null);
+        assertNotNull(alertDialog);
+        assertEquals(context.getString(R.string.register_outside_boundary_title), ((TextView) alertDialog.findViewById(R.id.alertTitle)).getText());
+        assertEquals(context.getString(R.string.register_outside_boundary_warning), ((TextView) alertDialog.findViewById(android.R.id.message)).getText());
+        assertEquals(context.getString(R.string.register), alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).getText());
+        assertEquals(context.getString(R.string.cancel), alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).getText());
+    }
+
+    @Test
+    public void testdisplayNotificationWithCallbackWithFormatArgs() {
+        AlertDialog alertDialog = AlertDialogUtils.displayNotificationWithCallback(context, R.string.register_outside_boundary_title,
+                R.string.distance_from_structure, R.string.register, R.string.cancel, null, 20f);
+        assertNotNull(alertDialog);
+        assertEquals(context.getString(R.string.register_outside_boundary_title), ((TextView) alertDialog.findViewById(R.id.alertTitle)).getText());
+        assertEquals("20 m away", ((TextView) alertDialog.findViewById(android.R.id.message)).getText());
+        assertEquals(context.getString(R.string.register), alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).getText());
+        assertEquals(context.getString(R.string.cancel), alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).getText());
+    }
 }

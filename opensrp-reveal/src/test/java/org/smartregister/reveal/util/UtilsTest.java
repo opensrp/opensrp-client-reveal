@@ -26,6 +26,7 @@ import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_GEO_JSON_CIRCLE_SIDES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.RESOLVE_LOCATION_TIMEOUT_IN_SECONDS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.VALIDATE_FAR_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
@@ -34,6 +35,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Utils.createCircleFeature;
+import static org.smartregister.reveal.util.Utils.displayAddStructureOutOfBoundaryWarningDialog;
 import static org.smartregister.reveal.util.Utils.getAdminPasswordNotNearStructures;
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
 import static org.smartregister.reveal.util.Utils.getInterventionLabel;
@@ -171,6 +173,28 @@ public class UtilsTest {
         when(revealApplication.getGlobalConfigs()).thenReturn(settings);
         assertEquals(testAdminPass, getAdminPasswordNotNearStructures());
         assertNotEquals(testAdminPass, BuildConfig.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES);
+    }
+
+    @Test
+    public void testDisplayAddStructureOutOfBoundaryWarningDialogReturnsTrueWhenSettingsValueIsTrue() throws Exception {
+        RevealApplication revealApplication = initRevealApplicationMock();
+        Map<String, String> settings = new HashMap<>();
+        settings.put(DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG, "true");
+
+        when(revealApplication.getGlobalConfigs()).thenReturn(settings);
+        assertTrue(displayAddStructureOutOfBoundaryWarningDialog());
+
+    }
+
+    @Test
+    public void testDisplayAddStructureOutOfBoundaryWarningDialogReturnsFalseWhenSettingsValueIsFalse() throws Exception {
+        RevealApplication revealApplication = initRevealApplicationMock();
+        Map<String, String> settings = new HashMap<>();
+        settings.put(DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG, "false");
+
+        when(revealApplication.getGlobalConfigs()).thenReturn(settings);
+        assertFalse(displayAddStructureOutOfBoundaryWarningDialog());
+
     }
 
 }
