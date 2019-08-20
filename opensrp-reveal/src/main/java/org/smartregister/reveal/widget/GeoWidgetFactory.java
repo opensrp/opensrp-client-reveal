@@ -167,11 +167,12 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         if (geoJsonSource != null && StringUtils.isNotBlank(finalFeatureCollection)) {
                             geoJsonSource.setGeoJson(finalFeatureCollection);
                         }
-                        RevealMapHelper.addCustomLayers(style, context);
 
                         String baseMapFeatureString = AssetHandler.readFileFromAssetsFolder(context.getString(R.string.base_map_feature_json), context);
                         RevealMapHelper.addOutOfBoundaryMask(style,  finalOperationalAreaFeature,
                                 com.mapbox.geojson.Feature.fromJson(baseMapFeatureString), context);
+
+                        RevealMapHelper.addCustomLayers(style, context);
 
                         mapView.setMapboxMap(mapboxMap);
                     }
