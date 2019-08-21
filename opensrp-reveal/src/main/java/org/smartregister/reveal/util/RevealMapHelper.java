@@ -77,7 +77,7 @@ public class RevealMapHelper {
 
     private Location indexCaseLocation = null;
 
-    private GeoJsonSource indexCaseSource = new GeoJsonSource(INDEX_CASE_SOURCE);
+    private GeoJsonSource indexCaseSource;
 
     private float radius = Float.valueOf(getGlobalConfig(INDEX_CASE_CIRCLE_RADIUS_IN_METRES, DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES.toString()));
 
