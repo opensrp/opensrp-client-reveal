@@ -463,8 +463,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if (!revealApplication.isMyLocationComponentEnabled() && listTaskView.isMyLocationComponentActive()) {
             listTaskView.focusOnUserLocation(false);
             listTaskView.setGeoJsonSource(featureCollection, operationalArea, true);
-        } else {
-            listTaskView.setGeoJsonSource(featureCollection, operationalArea, true);
         }
     }
 

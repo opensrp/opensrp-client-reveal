@@ -44,6 +44,7 @@ import org.smartregister.family.util.Utils;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
@@ -576,6 +577,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void onPause() {
         SyncStatusBroadcastReceiver.getInstance().removeSyncStatusListener(this);
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(refreshGeowidgetReceiver);
+        RevealApplication.getInstance().setMyLocationComponentEnabled(revealMapHelper.isMyLocationComponentActive(this, myLocationButton));
         super.onPause();
     }
 

@@ -35,7 +35,6 @@ import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.contract.StructureTasksContract;
@@ -328,7 +327,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                             Obs myLocationActiveObs = event.findObs(null, false, LOCATION_COMPONENT_ACTIVE);
 
                             boolean myLocationActive = myLocationActiveObs != null && Boolean.valueOf(myLocationActiveObs.getValue().toString());
-                            RevealApplication.getInstance().setMyLocationComponentEnabled(myLocationActive);
+                            getInstance().setMyLocationComponentEnabled(myLocationActive);
 
                             presenterCallBack.onStructureAdded(Feature.fromJson(gson.toJson(structure)), featureCoordinates);
                         }
