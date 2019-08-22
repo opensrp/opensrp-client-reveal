@@ -17,7 +17,11 @@ import org.smartregister.reveal.viewholder.FamilyMemberViewHolder;
 import java.util.HashMap;
 import java.util.Set;
 
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
+
 public class FamilyProfileMemberFragment extends BaseFamilyProfileMemberFragment {
+
+    private String structureId;
 
     public static FamilyProfileMemberFragment newInstance(Bundle bundle) {
         Bundle args = bundle;
@@ -67,8 +71,12 @@ public class FamilyProfileMemberFragment extends BaseFamilyProfileMemberFragment
         Intent intent = new Intent(getActivity(), FamilyOtherMemberProfileActivity.class);
         intent.putExtras(getArguments());
         intent.putExtra(Constants.INTENT_KEY.BASE_ENTITY_ID, patient.getCaseId());
+        intent.putExtra(STRUCTURE_ID, structureId);
         startActivity(intent);
     }
 
 
+    public void setStructure(String structureId) {
+        this.structureId = structureId;
+    }
 }

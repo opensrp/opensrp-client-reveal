@@ -135,4 +135,7 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
         return (FamilyOtherMemberProfileContract.View) super.getView();
     }
 
+    public void setStructureId(String structureId) {
+        ((FamilyProfileModel) profileModel).setStructureId(structureId);
+    }
 }
