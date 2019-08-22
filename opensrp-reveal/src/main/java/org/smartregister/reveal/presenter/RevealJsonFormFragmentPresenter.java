@@ -15,6 +15,7 @@ import com.vijay.jsonwizard.interactors.JsonFormInteractor;
 import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 import com.vijay.jsonwizard.utils.ValidationStatus;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
@@ -62,7 +63,9 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
             if (childAt instanceof RevealMapView) {
                 RevealMapView mapView = (RevealMapView) childAt;
                 ValidationStatus validationStatus = GeoWidgetFactory.validate(formFragment, mapView);
-                outOfOperationalArea = validationStatus.getErrorMessage().equals(formFragment.getContext().getString(R.string.register_outside_boundary_warning));
+                if (validationStatus != null && StringUtils.isNotBlank(validationStatus.getErrorMessage())) {
+                    outOfOperationalArea = validationStatus.getErrorMessage().equals(formFragment.getContext().getString(R.string.register_outside_boundary_warning));
+                }
                 String key = (String) childAt.getTag(com.vijay.jsonwizard.R.id.key);
                 String mStepName = this.getView().getArguments().getString("stepName");
                 String fieldKey = mStepName + " (" + mStepDetails.optString("title") + ") :" + key;
