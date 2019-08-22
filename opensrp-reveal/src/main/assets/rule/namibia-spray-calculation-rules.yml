@@ -1,7 +1,49 @@
 ---
+name: step1_nUnsprayedTotalFirst
+description: step1_nUnsprayedTotalFirst
+priority: 1
+condition: "true"
+actions:
+- "calculation =  helper.ifNull(step1_nSprayableTotal,0) - helper.ifNull(step1_nSprayedTotalFirst,0)"
+---
+name: step1_nUnsprayedTotalFirstLabel
+description: step1_nUnsprayedTotalFirstLabel
+priority: 1
+condition: "true"
+actions:
+- "calculation = ['nUnsprayedTotalFirst' : step1_nUnsprayedTotalFirst]"
+---
+name: step1_mopupStructuresToBeSprayed
+description: step1_mopupStructuresToBeSprayed
+priority: 1
+condition: "true"
+actions:
+- "calculation =  step1_nUnsprayedTotalFirst == '' ? step1_nSprayableTotal : step1_nUnsprayedTotalFirst"
+---
+name: step1_mopupStructuresToBeSprayedLabel
+description: step1_mopupStructuresToBeSprayedLabel
+priority: 1
+condition: "true"
+actions:
+- "calculation =  ['mopupStructuresToBeSprayed' : step1_mopupStructuresToBeSprayed]"
+---
+name: step1_nUnsprayedTotalMop
+description: step1_nUnsprayedTotalMop
+priority: 1
+condition: "true"
+actions:
+- "calculation =  helper.ifNull(step1_nSprayableTotal,0) - helper.ifNull(step1_nSprayedTotalFirst,0) - helper.ifNull(step1_nSprayedTotalMop,0)"
+---
+name: step1_nUnsprayedTotalMopLabel
+description: step1_nUnsprayedTotalMopLabel
+priority: 1
+condition: "true"
+actions:
+- "calculation =  ['nUnsprayedTotalMop' : step1_nUnsprayedTotalMop]"
+---
 name: step1_business_status
 description: Task business status
 priority: 1
 condition: "true"
 actions:
-- "calculation = (step1_structureType != '' && step1_structureType == 'Non-Residential Structure') ? 'Not Sprayable' :  (helper.ifNull(step1_numbersprayed_ddt,0) + helper.ifNull(step1_numbersprayed_delta,0) + helper.ifNull(step1_numbersprayed_actellic,0)  > 0 ) ? 'Sprayed': 'Not Sprayed' "
+- "calculation = (step1_unsprayedReasonHH == '' && helper.ifNull(step1_nUnsprayedTotalFirst,0) == 0 && helper.ifNull(step1_nUnsprayedTotalMop,0) == 0 ) ? 'Sprayed': (step1_unsprayedReasonHH != '' || (helper.ifNull(step1_nSprayableTotal,0) > 0 && (helper.ifNull(step1_nSprayedTotalFirst,0) + helper.ifNull(step1_nSprayedTotalMop,0) == 0))) ? 'Not Sprayed' : ((helper.ifNull(step1_nUnsprayedTotalFirst,0) > 0 || helper.ifNull(step1_nUnsprayedTotalMop,0) > 0) && (helper.ifNull(step1_nSprayedTotalFirst,0) + helper.ifNull(step1_nSprayedTotalMop,0) > 0)) ? 'Partially Sprayed' : 'Not Visited'"
