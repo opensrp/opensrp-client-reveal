@@ -1,16 +1,14 @@
 package org.smartregister.reveal.widget;
 
 import android.content.Context;
-import android.support.constraint.ConstraintLayout;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interfaces.CommonListener;
 import com.vijay.jsonwizard.utils.FormUtils;
-import com.vijay.jsonwizard.views.CustomTextView;
 import com.vijay.jsonwizard.widgets.LabelFactory;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
 
@@ -28,11 +26,12 @@ public class RevealLabelFactory extends LabelFactory {
             views.get(0).setPaddingRelative(context.getResources().getDimensionPixelSize(R.dimen.default_left_margin),
                     0, context.getResources().getDimensionPixelSize(R.dimen.default_right_margin), 0);
         }
-        JSONArray canvasIds = new JSONArray();
-        ConstraintLayout constraintLayout = FormUtils.createLabelLinearLayout(stepName, canvasIds, jsonObject, context, listener);
-        CustomTextView labelText = (CustomTextView)constraintLayout.findViewById(R.id.label_text);
-        labelText.setTextColor(context.getResources().getColor(R.color.black));
-        views.add(constraintLayout);
+
+        LinearLayout.LayoutParams layoutParams = FormUtils
+                .getLinearLayoutParams(FormUtils.MATCH_PARENT, FormUtils.WRAP_CONTENT, 0,
+                        0, 0, 15);
+        views.get(0).setLayoutParams(layoutParams);
         return views;
     }
+
 }
