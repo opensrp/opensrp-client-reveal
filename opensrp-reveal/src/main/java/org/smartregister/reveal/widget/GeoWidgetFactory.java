@@ -45,6 +45,7 @@ import org.json.JSONObject;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Map;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.reveal.validators.MinZoomValidator;
@@ -95,12 +96,6 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 if (validator instanceof MinZoomValidator) {
                     Double zoom = mapView.getMapboxMapZoom();
                     if (zoom != null && !validator.isValid(String.valueOf(zoom), false)) {
-                        Toast.makeText(formFragmentView.getContext(), validator.getErrorMessage(), Toast.LENGTH_LONG).show();
-                        return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
-                    }
-                } else if (validator instanceof WithinOperationAreaValidator) {
-                    // perform within op area validation
-                    if (!validator.isValid("", true)) {
                         Toast.makeText(formFragmentView.getContext(), validator.getErrorMessage(), Toast.LENGTH_LONG).show();
                         return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
                     }
@@ -187,7 +182,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         }
 
                         String baseMapFeatureString = AssetHandler.readFileFromAssetsFolder(context.getString(R.string.base_map_feature_json), context);
-                        RevealMapHelper.addOutOfBoundaryMask(style,  finalOperationalAreaFeature,
+                        RevealMapHelper.addOutOfBoundaryMask(style, finalOperationalAreaFeature,
                                 com.mapbox.geojson.Feature.fromJson(baseMapFeatureString), context);
 
                         RevealMapHelper.addCustomLayers(style, context);
@@ -214,7 +209,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
                 writeValues(((JsonApi) context), stepName, getCenterPointFeature(mapboxMap), key, openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom, finalLocationComponentActive);
 
-              mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
+                mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
                     @Override
                     public void onMoveBegin(@NonNull MoveGestureDetector detector) {//do nothing
                     }
@@ -254,7 +249,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         int mapViewHeight = displayMetrics.heightPixels / 2;
 
-        mapView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  mapViewHeight));
+        mapView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mapViewHeight));
 
         addMaximumZoomLevel(jsonObject, mapView);
         addWithinOperationalAreaValidator(context);

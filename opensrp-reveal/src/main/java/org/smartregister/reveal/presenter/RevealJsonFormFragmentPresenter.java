@@ -86,9 +86,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
             onLocationValidated();
 
         } else {//if form is invalid whether having a map or not
-            if (Utils.displayAddStructureOutOfBoundaryWarningDialog() && outOfOperationalArea) {
-                AlertDialogUtils.displayNotificationWithCallback(formFragment.getContext(), R.string.register_outside_boundary_title, R.string.register_outside_boundary_warning, R.string.register, R.string.cancel, this);
-            } else if (showErrorsOnSubmit()) {
+            if (showErrorsOnSubmit()) {
                 launchErrorDialog();
                 getView().showToast(getView().getContext().getResources().getString(R.string.json_form_error_msg, this.getInvalidFields().size()));
             } else {
