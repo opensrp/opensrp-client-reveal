@@ -28,6 +28,8 @@ import org.smartregister.view.fragment.BaseRegisterFragment;
 
 import timber.log.Timber;
 
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
+
 public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfileActivity implements FamilyOtherMemberProfileContract.View {
 
     @Override
@@ -38,8 +40,10 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
         String primaryCaregiver = getIntent().getStringExtra(Constants.INTENT_KEY.PRIMARY_CAREGIVER);
         String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
         String familyName = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_NAME);
+        String structureId = getIntent().getStringExtra(STRUCTURE_ID);
         presenter = new FamilyOtherMemberPresenter(this, new BaseFamilyOtherMemberProfileActivityModel(),
                 null, familyBaseEntityId, baseEntityId, familyHead, primaryCaregiver, operationalArea, familyName);
+        ((FamilyOtherMemberPresenter) presenter).setStructureId(structureId);
     }
 
     @Override

@@ -64,6 +64,8 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
     @Override
     public void setStructureId(String structureId) {
         structureTasksFragment.setStructure(structureId);
+        profileMemberFragment.setStructure(structureId);
+
     }
 
     @Override
