@@ -404,6 +404,10 @@
             "Blood Screening Complete"
           ],
           "hsl(262, 100%, 68%)",
+          [
+            "Partially Sprayed"
+          ],
+          "hsl(146, 100%, 50%)",
           "hsl(0, 0%, 78%)"
         ],
         "circle-stroke-width": 1,
@@ -412,7 +416,7 @@
     },
     {
       "id": "select-layer-polygons",
-      "type": "fill",
+      "type": "line",
       "source": "select-data",
       "filter": [
         "==",
@@ -421,9 +425,8 @@
       ],
       "layout": {},
       "paint": {
-        "fill-outline-color": "rgb(0, 0, 0)",
-        "fill-opacity": 1,
-        "fill-color": "hsl(26, 84%, 56%)"
+        "line-color": "hsl(146, 100%, 50%)",
+        "line-width": 4
       }
     },
     {
@@ -436,7 +439,7 @@
         "Point"
       ],
       "paint": {
-        "circle-color": "hsl(26, 84%, 56%)",
+        "circle-color": "hsla(360, 100%, 100%, 0)",
         "circle-radius": [
           "interpolate",
           [
@@ -452,7 +455,8 @@
           18.8,
           15
         ],
-        "circle-stroke-width": 1
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "hsl(146, 100%, 50%)"
       }
     }
   ],
