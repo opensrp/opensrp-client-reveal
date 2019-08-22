@@ -183,7 +183,8 @@ public class RevealMapHelper {
                     circleFeature = createCircleFeature(new LatLng(indexCaseLocation.getLatitude(), indexCaseLocation.getLongitude()), radius, DEFAULT_GEO_JSON_CIRCLE_SIDES);
                     indexCaseSource.setGeoJson(circleFeature);
                 } else { // Clear outer circle if there is no index case
-                    indexCaseSource.setGeoJson(FeatureCollection.fromFeatures(new ArrayList<>()));
+                    if (indexCaseSource != null)
+                        indexCaseSource.setGeoJson(FeatureCollection.fromFeatures(new ArrayList<>()));
                 }
             }
         } catch (JSONException e) {
