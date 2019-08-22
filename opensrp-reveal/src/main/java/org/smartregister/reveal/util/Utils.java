@@ -265,4 +265,17 @@ public class Utils {
         }
         return !(MOSQUITO_COLLECTION.equals(taskCode) || LARVAL_DIPPING.equals(taskCode) || PAOT.equals(taskCode));
     }
+
+    /**
+     * Uses the server setting "display_add_structure_out_of_boundary_warning_dialog" to determine
+     * whether to display the "Register structure outside area boundary" warning dialog
+     *
+     * <p>
+     * If this variable is not available on the server the DEFAULT_DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL value from the constants file is used
+     *
+     * @return displayAddStructureOutOfBoundaryWarningDialog
+     */
+    public static Boolean displayAddStructureOutOfBoundaryWarningDialog() {
+        return Boolean.valueOf(getGlobalConfig(CONFIGURATION.DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG, CONFIGURATION.DEFAULT_DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG.toString()));
+    }
 }
