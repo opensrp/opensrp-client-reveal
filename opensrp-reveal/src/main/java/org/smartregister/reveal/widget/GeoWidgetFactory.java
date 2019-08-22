@@ -17,8 +17,6 @@ import com.cocoahero.android.geojson.Point;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.android.gestures.MoveGestureDetector;
 import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.MultiPolygon;
-import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
@@ -27,7 +25,6 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
-import com.mapbox.turf.TurfJoins;
 import com.rengwuxian.materialedittext.validation.METValidator;
 import com.rey.material.util.ViewUtil;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
@@ -48,6 +45,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.util.Constants.Map;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.reveal.validators.MinZoomValidator;
+import org.smartregister.reveal.validators.WithinOperationAreaValidator;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
@@ -89,6 +87,12 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 if (validator instanceof MinZoomValidator) {
                     Double zoom = mapView.getMapboxMapZoom();
                     if (zoom != null && !validator.isValid(String.valueOf(zoom), false)) {
+                        Toast.makeText(formFragmentView.getContext(), validator.getErrorMessage(), Toast.LENGTH_LONG).show();
+                        return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
+                    }
+                } else if (validator instanceof WithinOperationAreaValidator) {
+                    // perform within op area validation
+                    if (!validator.isValid("", true)) {
                         Toast.makeText(formFragmentView.getContext(), validator.getErrorMessage(), Toast.LENGTH_LONG).show();
                         return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
                     }
@@ -232,6 +236,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         mapView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1));
 
         addMaximumZoomLevel(jsonObject, mapView);
+        addWithinOperationalAreaValidator(context);
         views.add(mapView);
         mapView.onStart();
         mapView.showCurrentLocationBtn(true);
@@ -273,12 +278,6 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         return feature;
     }
 
-    private static com.mapbox.geojson.Point getCenterPoint(MapboxMap mapboxMap) {
-        LatLng latLng = mapboxMap.getCameraPosition().target;
-        com.mapbox.geojson.Point  centerpoint = com.mapbox.geojson.Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
-        return centerpoint;
-    }
-
     private void addMaximumZoomLevel(JSONObject jsonObject, RevealMapView mapView) {
 
         JSONObject minValidation = jsonObject.optJSONObject(MAX_ZOOM_LEVEL);
@@ -292,6 +291,10 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         }
     }
 
+    private void addWithinOperationalAreaValidator(Context context) {
+        mapView.addValidator(new WithinOperationAreaValidator(context.getString(R.string.register_outside_boundary_warning), mapView, operationalArea));
+    }
+
     @Override
     public void onLocationComponentInitialized() {
         if (PermissionsManager.areLocationPermissionsGranted(mapView.getContext())) {
@@ -300,12 +303,6 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
             locationComponent.applyStyle(mapView.getContext(), R.style.LocationComponentStyling);
             locationComponent.setRenderMode(RenderMode.COMPASS);
         }
-    }
-
-    public static boolean isWithinOperationalArea(RevealMapView mapView) {
-        com.mapbox.geojson.Point selectedpoint = getCenterPoint(mapView.getMapboxMap());
-        boolean isWithinOperationArea = TurfJoins.inside(selectedpoint, MultiPolygon.fromPolygon((Polygon) operationalArea.geometry()));
-        return isWithinOperationArea;
     }
 
     @Override

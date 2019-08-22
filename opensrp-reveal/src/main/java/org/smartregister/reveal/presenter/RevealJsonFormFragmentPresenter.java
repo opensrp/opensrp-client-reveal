@@ -1,5 +1,6 @@
 package org.smartregister.reveal.presenter;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.support.annotation.VisibleForTesting;
@@ -16,7 +17,6 @@ import com.vijay.jsonwizard.utils.ValidationStatus;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
-import org.smartregister.reveal.contract.AlertDialogCallback;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.util.AlertDialogUtils;
@@ -25,10 +25,14 @@ import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
 
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
+import static android.content.DialogInterface.BUTTON_NEUTRAL;
+import static android.content.DialogInterface.BUTTON_POSITIVE;
+
 /**
  * Created by samuelgithengi on 1/30/19.
  */
-public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter implements PasswordRequestCallback, UserLocationCallback, AlertDialogCallback {
+public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter implements PasswordRequestCallback, UserLocationCallback, DialogInterface.OnClickListener {
 
     private JsonFormFragment formFragment;
 
@@ -53,10 +57,12 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
     @Override
     public void validateAndWriteValues() {
         super.validateAndWriteValues();
+        boolean outOfOperationalArea = false;
         for (View childAt : formFragment.getJsonApi().getFormDataViews()) {
             if (childAt instanceof RevealMapView) {
                 RevealMapView mapView = (RevealMapView) childAt;
                 ValidationStatus validationStatus = GeoWidgetFactory.validate(formFragment, mapView);
+                outOfOperationalArea = validationStatus.getErrorMessage().equals(formFragment.getContext().getString(R.string.register_outside_boundary_warning));
                 String key = (String) childAt.getTag(com.vijay.jsonwizard.R.id.key);
                 String mStepName = this.getView().getArguments().getString("stepName");
                 String fieldKey = mStepName + " (" + mStepDetails.optString("title") + ") :" + key;
@@ -74,14 +80,12 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
             }
         }
         if (isFormValid()) {// if form is valid and did not have a map, if it had a map view it will be handled above
-            if (Utils.displayAddStructureOutOfBoundaryWarningDialog() && !GeoWidgetFactory.isWithinOperationalArea(mapView)) {
-                AlertDialogUtils.displayNotificationWithCallback(formFragment.getContext(), R.string.register_outside_boundary_title, R.string.register_outside_boundary_warning, R.string.register, R.string.cancel, this);
-            } else {
-                onLocationValidated();
-            }
+            onLocationValidated();
 
         } else {//if form is invalid whether having a map or not
-            if (showErrorsOnSubmit()) {
+            if (Utils.displayAddStructureOutOfBoundaryWarningDialog() && outOfOperationalArea) {
+                AlertDialogUtils.displayNotificationWithCallback(formFragment.getContext(), R.string.register_outside_boundary_title, R.string.register_outside_boundary_warning, R.string.register, R.string.cancel, this);
+            } else if (showErrorsOnSubmit()) {
                 launchErrorDialog();
                 getView().showToast(getView().getContext().getResources().getString(R.string.json_form_error_msg, this.getInvalidFields().size()));
             } else {
@@ -151,7 +155,19 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
     }
 
     @Override
-    public void onPositiveBtnClicked() {
-        onLocationValidated();
+    public void onClick(DialogInterface dialog, int which) {
+        switch (which) {
+            case BUTTON_NEGATIVE:
+                dialog.dismiss();
+                break;
+            case BUTTON_NEUTRAL:
+                dialog.dismiss();
+                break;
+            case BUTTON_POSITIVE:
+                onLocationValidated();
+                dialog.dismiss();
+                break;
+        }
+
     }
 }
