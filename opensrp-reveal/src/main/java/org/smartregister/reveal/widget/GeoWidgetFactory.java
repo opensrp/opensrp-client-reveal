@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -233,7 +234,10 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
         ((JsonApi) context).addFormDataView(mapView);
 
-        mapView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1));
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        int mapViewHeight = displayMetrics.heightPixels / 2;
+
+        mapView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  mapViewHeight));
 
         addMaximumZoomLevel(jsonObject, mapView);
         addWithinOperationalAreaValidator(context);
