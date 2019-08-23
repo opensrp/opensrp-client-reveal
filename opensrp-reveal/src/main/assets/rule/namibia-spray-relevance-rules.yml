@@ -1,73 +1,252 @@
 ---
-name: step1_prev_closed_open
-description: prev_closed_open
+name: step1_nSprayableTotal
+description: step1_nSprayableTotal
 priority: 1
-condition: "step1_visit_number.equals('Mop-up') && step1_any_sprayed.equals('Yes')"
+condition: "step1_householdAccessible.equals('yes')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_number_sprayable
-description: number_sprayable
+name: step1_nSprayableZinc
+description: step1_nSprayableZinc
 priority: 1
-condition: "step1_any_sprayed.equals('Yes') || step1_prev_closed_open.equals('Closed')"
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0"
 actions:
   - "isRelevant = true"
 ---
-name: step1_number_unsprayable
-description: number_unsprayable
+name: step1_nSprayableTrad
+description: step1_nSprayableTrad
 priority: 1
-condition: "step1_any_sprayed.equals('Yes') || step1_prev_closed_open.equals('Closed')"
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0"
 actions:
   - "isRelevant = true"
 ---
-name: step1_number_unsprayed
-description: number_unsprayed
+name: step1_nSprayableMod
+description: step1_nSprayableMod
 priority: 1
-condition: "step1_any_sprayed.equals('Yes') && step1_visit_number.equals('First')"
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0"
 actions:
   - "isRelevant = true"
 ---
-name: step1_number_unsprayed_mopup
-description: number_unsprayed_mopup
+name: step1_nSprayableCanopy
+description: step1_nSprayableCanopy
 priority: 1
-condition: "step1_any_sprayed.equals('Yes') && step1_visit_number.equals('Mop-up')"
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0"
 actions:
   - "isRelevant = true"
 ---
-name: step1_reasons_for_not_spraying
-description: reasons_for_not_spraying
+name: step1_nUnsprayable
+description: step1_nUnsprayable
 priority: 1
-condition: "helper.ifNull(step1_number_unsprayed,0) > 0 || helper.ifNull(step1_number_unsprayed_mopup,0) > 0 "
+condition: "step1_householdAccessible.equals('yes')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_refusal_reasons_for_not_spraying
-description: refusal_reasons_for_not_spraying
+name: step1_popTotal
+description: step1_popTotal
 priority: 1
-condition: "(helper.ifNull(step1_number_unsprayed,0) > 0 || helper.ifNull(step1_number_unsprayed_mopup,0) > 0) && step1_reasons_for_not_spraying.contains('Refused')"
+condition: "step1_householdAccessible.equals('yes')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_refusal_reasons_for_not_spraying_comment
-description: refusal_reasons_for_not_spraying_comment
+name: step1_nameHoH
+description: step1_nameHoH
 priority: 1
-condition: "(helper.ifNull(step1_number_unsprayed,0) > 0 || helper.ifNull(step1_number_unsprayed_mopup,0) > 0) && step1_refusal_reasons_for_not_spraying.contains('Other')"
+condition: "step1_householdAccessible.equals('yes')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_refusal_reason_for_not_spraying_household
-description: refusal_reason_for_not_spraying_household
+name: step1_firstVisitGroupHeading
+description: step1_firstVisitGroupHeading
 priority: 1
-condition: "step1_any_sprayed.equals('No') && step1_reasons_for_not_spraying_household.contains('Refused')"
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0 && step1_ableToSprayFirst.equals('yes')"
 actions:
   - "isRelevant = true"
 ---
-name: step1_refusal_reason_for_not_spraying_household_comment
-description: refusal_reason_for_not_spraying_household_comment
+name: step1_nSprayedTotalFirst
+description: step1_nSprayedTotalFirst
 priority: 1
-condition: "step1_any_sprayed.equals('No') && step1_refusal_reason_for_not_spraying_household.contains('Other')"
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0 && step1_ableToSprayFirst.equals('yes')"
 actions:
   - "isRelevant = true"
-
-
-
+---
+name: step1_nSprayedDDTFirst
+description: step1_nSprayedDDTFirst
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0 && step1_ableToSprayFirst.equals('yes') && helper.ifNull(step1_nSprayedTotalFirst,0) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_nSprayedDeltaFirst
+description: step1_nSprayedDeltaFirst
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0 && step1_ableToSprayFirst.equals('yes') && helper.ifNull(step1_nSprayedTotalFirst,0) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_nSprayedActellicFirst
+description: step1_nSprayedActellicFirst
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0 && step1_ableToSprayFirst.equals('yes') && helper.ifNull(step1_nSprayedTotalFirst,0) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_nUnsprayedTotalFirstLabel
+description: step1_nUnsprayedTotalFirstLabel
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayable,0) > 0 && step1_ableToSprayFirst.equals('yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_nUnsprayedZincFirst
+description:
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayable,0) > 0 && step1_ableToSprayFirst.equals('yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_nUnsprayedTradFirst
+description: step1_nUnsprayedTradFirst
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayable,0) > 0 && step1_ableToSprayFirst.equals('yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_nUnsprayedModFirst
+description: step1_nUnsprayedModFirst
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayable,0) > 0 && step1_ableToSprayFirst.equals('yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_nUnsprayedCanopyFirst
+description: step1_nUnsprayedCanopyFirst
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayable,0) > 0 && step1_ableToSprayFirst.equals('yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_unsprayedReasonFirst
+description: step1_unsprayedReasonFirst
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayable,0) > 0 && step1_ableToSprayFirst.equals('yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_refusalReasonFirst
+description: step1_refusalReasonFirst
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayable,0) > 0 && step1_ableToSprayFirst.equals('yes') && step1_unsprayedReasonFirst.equals('refused')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_refusalReasonOtherFirst
+description: step1_refusalReasonOtherFirst
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayable,0) > 0 && step1_ableToSprayFirst.equals('yes') && step1_refusalReasonFirst.equals('other')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_mopUpVisit
+description: step1_mopUpVisit
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && (helper.ifNull(step1_nUnsprayedTotalFirst,0) > 0)"
+actions:
+  - "isRelevant = true"
+---
+name: step1_mopupVisitGroupHeading
+description: step1_mopupVisitGroupHeading
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0 && step1_mopUpVisit.equals('yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_mopupStructuresToBeSprayedLabel
+description: step1_mopupStructuresToBeSprayedLabel
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0 && step1_mopUpVisit.equals('yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_nSprayedTotalMop
+description: step1_nSprayedTotalMop
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0 && step1_mopUpVisit.equals('yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_nSprayedDDTMop
+description: step1_nSprayedDDTMop
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0 && step1_mopUpVisit.equals('yes') && helper.ifNull(step1_nSprayedTotalMop,0) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_nSprayedDeltaMop
+description: step1_nSprayedDeltaMop
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0 && step1_mopUpVisit.equals('yes') && helper.ifNull(step1_nSprayedTotalMop,0) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_nSprayedActellicMop
+description:
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0 && step1_mopUpVisit.equals('yes') && helper.ifNull(step1_nSprayedTotalMop,0) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_nUnsprayedTotalMopLabel
+description:
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayedTotalMop,0) > 0 && step1_mopUpVisit.equals('yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_unsprayedReasonMop
+description: step1_unsprayedReasonMop
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayedTotalMop,0) > 0 && step1_mopUpVisit.equals('yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_refusalReasonMop
+description: step1_refusalReasonMop
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayedTotalMop,0) > 0 && step1_mopUpVisit.equals('yes') && step1_unsprayedReasonMop.equals('refused')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_refusalReasonOtherMop
+description: step1_refusalReasonOtherMop
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayedTotalMop,0) > 0 && step1_mopUpVisit.equals('yes') && step1_refusalReasonMop.equals('other')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_nPeopleProtected
+description: step1_nPeopleProtected
+priority: 1
+condition: "step1_householdAccessible.equals('yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_unsprayedReasonHH
+description: step1_unsprayedReasonHH
+priority: 1
+condition: "step1_householdAccessible.equals('no')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_refusalReasonHH
+description: step1_refusalReasonHH
+priority: 1
+condition: "step1_householdAccessible.equals('no') && step1_unsprayedReasonHH.equals('refused')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_refusalReasonOtherHH
+description: step1_refusalReasonOtherHH
+priority: 1
+condition: "step1_householdAccessible.equals('no') && step1_refusalReasonHH.equals('other')"
+actions:
+  - "isRelevant = true"

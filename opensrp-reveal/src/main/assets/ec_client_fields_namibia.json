@@ -61,7 +61,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "name_household"
+            "concept": "nameHoH"
           }
         }
       ]

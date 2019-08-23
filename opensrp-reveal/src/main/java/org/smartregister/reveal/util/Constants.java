@@ -86,6 +86,7 @@ public interface Constants {
     interface Tags {
         String COUNTRY = "Country";
         String PROVINCE = "Province";
+        String REGION = "Region";
         String DISTRICT = "District";
         String SUB_DISTRICT = "Sub-district";
         String HEALTH_CENTER = "Rural Health Centre";

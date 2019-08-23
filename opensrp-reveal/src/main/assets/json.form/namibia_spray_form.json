@@ -51,151 +51,353 @@
     "display_back_button": "true",
     "fields": [
       {
-        "key": "structureType",
+        "key": "householdAccessible",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Type of Structure",
+        "label": "Were you able to access this household?",
         "options": [
           {
-            "key": "Residential Structure",
-            "text": "Residential Structure"
-          },
-          {
-            "key": "Non-Residential Structure",
-            "text": "Non-Residential Structure"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Specify type of Structure"
-        }
-      },
-      {
-        "key": "visit_number",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "First visit or mop-up",
-        "options": [
-          {
-            "key": "First",
-            "text": "First"
-          },
-          {
-            "key": "Mop-up",
-            "text": "Mop-up"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "First visit or mop-up"
-        },
-        "relevance": {
-          "step1:structureType": {
-            "type": "string",
-            "ex": "equalTo(., \"Residential Structure\")"
-          }
-        }
-      },
-      {
-        "key": "any_sprayed",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Were any structures sprayed",
-        "options": [
-          {
-            "key": "Yes",
+            "key": "yes",
             "text": "Yes"
           },
           {
-            "key": "No",
+            "key": "no",
             "text": "No"
           }
         ],
+        "value": "no",
         "v_required": {
           "value": "true",
-          "err": "Were any structures sprayed?"
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "villageName",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Village Name",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "nSprayableTotal",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# of total sprayable structures",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_max": {
+          "value": "99",
+          "err": "Cannot be greater than 99"
         },
         "relevance": {
-          "step1:structureType": {
-            "type": "string",
-            "ex": "equalTo(., \"Residential Structure\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
           }
         }
       },
       {
-        "key": "prev_closed_open",
+        "key": "nSprayableZinc",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# of sprayable zinc structures",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "nSprayableTotal",
+          "err": "Cannot be more than # of total sprayable structures"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "nSprayableTrad",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# of sprayable traditional structures",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "nSprayableTotal",
+          "err": "Cannot be more than # of total sprayable structures"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "nSprayableMod",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# of sprayable modern structures",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "nSprayableTotal",
+          "err": "Cannot be more than # of total sprayable structures"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "nSprayableCanopy",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# of sprayable canopy structures",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_cumulative_total": {
+          "value": "nSprayableTotal",
+          "related_fields": [
+            "nSprayableZinc",
+            "nSprayableTrad",
+            "nSprayableMod",
+            "nSprayableCanopy"
+          ],
+          "err": "The sum of Zinc, traditional, modern, canopy must equal total number of sprayable structures"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "nUnsprayable",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# of structures not sprayable",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_max": {
+          "value": "99",
+          "err": "Cannot be greater than 99"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "popTotal",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# total people living in the homestead/house",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_max": {
+          "value": "99",
+          "err": "Cannot be greater than 99"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "nameHoH",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Head of household name",
+        "text_size": "8sp",
+        "is_mandatory": "true",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "firstVisitGroupHeading",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "label",
+        "text": "First Visit or Revisit",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "ableToSprayFirst",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Was this household previously open or closed?",
+        "label": "Were you able to spray this structure on the first visit?",
         "options": [
           {
-            "key": "Open",
-            "text": "Open"
+            "key": "yes",
+            "text": "Yes"
           },
           {
-            "key": "Closed",
-            "text": "Closed"
+            "key": "no",
+            "text": "No"
           }
         ],
+        "value": "no",
         "v_required": {
           "value": "true",
-          "err": "Was this household previously open or closed?"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
-          }
+          "err": "Required field"
         }
       },
       {
-        "key": "number_sprayable",
+        "key": "nSprayedTotalFirst",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "# sprayable structures",
-        "is_mandatory": "true",
+        "hint": "# total structures sprayed",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
-          "err": "Enter # sprayable structures"
+          "err": "Required field"
         },
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
         },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "number_unsprayable",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "# unsprayable structures",
-        "is_mandatory": "true",
-        "v_required": {
-          "value": "true",
-          "err": "Enter # unsprayable structures"
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
         },
-        "v_numeric": {
-          "value": "true",
-          "err": "Must be a number"
+        "v_max": {
+          "value": "99",
+          "err": "Cannot be greater than 99"
         },
         "relevance": {
           "rules-engine": {
@@ -206,109 +408,97 @@
         }
       },
       {
-        "key": "numbersprayed_ddt",
+        "key": "nSprayedDDTFirst",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# structures sprayed with DDT",
-        "is_mandatory": "true",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
-          "err": "Enter # structures sprayed with DDT"
+          "err": "Required field"
         },
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
         },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
         "v_relative_max": {
-          "value": "number_sprayable",
-          "err": "# structures sprayed with DDT cannot be greater sprayable number rooms"
+          "value": "nSprayableTotal",
+          "err": "Cannot be more than # of total sprayable structures"
         },
         "relevance": {
-          "step1:any_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
           }
         }
       },
       {
-        "key": "numbersprayed_delta",
+        "key": "nSprayedDeltaFirst",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# structures sprayed with Delta",
-        "is_mandatory": "true",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
-          "err": "Enter # structures sprayed with Delta"
+          "err": "Required field"
         },
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
         },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
         "v_relative_max": {
-          "value": "number_sprayable",
-          "err": "# structures sprayed with Delta cannot be greater sprayable number rooms"
+          "value": "nSprayableTotal",
+          "err": "Cannot be more than # of total sprayable structures"
         },
         "relevance": {
-          "step1:any_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
           }
         }
       },
       {
-        "key": "numbersprayed_actellic",
+        "key": "nSprayedActellicFirst",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# structures sprayed with Actellic",
-        "is_mandatory": "true",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
-          "err": "Enter # structures sprayed with Actellic"
+          "err": "Required field"
         },
         "v_numeric": {
           "value": "true",
           "err": "Must be a number"
         },
-        "v_relative_max": {
-          "value": "number_sprayable",
-          "err": "# structures sprayed with Actellic cannot be greater sprayable number rooms"
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
         },
         "v_cumulative_total": {
-          "value": "number_sprayable",
+          "value": "nSprayableTotalFirst",
           "related_fields": [
-            "numbersprayed_ddt",
-            "numbersprayed_delta"
+            "nSprayedDDTFirst",
+            "nSprayedDeltaFirst",
+            "nSprayedActellicFirst"
           ],
-          "err": "Number of rooms sprayed with DDT + Actellic + Delta should be equal to rooms sprayable"
-        },
-        "relevance": {
-          "step1:any_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
-      },
-      {
-        "key": "number_unsprayed",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "# unsprayed structures",
-        "is_mandatory": "true",
-        "v_required": {
-          "value": "true",
-          "err": "Enter # unsprayed structures"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Must be a number"
+          "err": "The sum of DDT, Delta and Actellic must equal total sprayed"
         },
         "relevance": {
           "rules-engine": {
@@ -319,20 +509,34 @@
         }
       },
       {
-        "key": "number_unsprayed_mopup",
+        "key": "nUnsprayedTotalFirst",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "# structures not sprayed (mop-up)",
-        "is_mandatory": "true",
-        "v_required": {
-          "value": "true",
-          "err": "Enter # structures not sprayed (mop-up)"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Must be a number"
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "nUnsprayedTotalFirstLabel",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "{nUnsprayedTotalFirst} total structures unsprayed after first visit",
+        "text_color": "#000000",
+        "toaster_type": "info",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-calculation-rules.yml"
+            }
+          }
         },
         "relevance": {
           "rules-engine": {
@@ -343,33 +547,163 @@
         }
       },
       {
-        "key": "reasons_for_not_spraying",
+        "key": "nUnsprayedZincFirst",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "check_box",
-        "label": "Reason those STRUCTURES were not sprayed",
+        "type": "edit_text",
+        "hint": "# of unsprayed zinc structures",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "nSprayableZinc",
+          "err": "Cannot be more than # of structures of this type"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "nUnsprayedTradFirst",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# of unsprayed traditional structures",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "nSprayableTrad",
+          "err": "Cannot be more than # of structures of this type"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "nUnsprayedModFirst",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# of unsprayed modern structures",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "nSprayableMod",
+          "err": "Cannot be more than # of structures of this type"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "nUnsprayedCanopyFirst",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# of unsprayed canopy structures",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_cumulative_total": {
+          "value": "nUnsprayedTotalFirst",
+          "related_fields": [
+            "nUnsprayedZincFirst",
+            "nUnsprayedTradFirst",
+            "nUnsprayedModFirst",
+            "nUnsprayedCanopyFirst"
+          ],
+          "err": "The sum of unsprayed zinc, traditional, modern and canopy structures must equal total unsprayed structures"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "unsprayedReasonFirst",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Reason for not spraying these structures",
         "options": [
           {
-            "key": "Refused",
+            "key": "refused",
             "text": "Refused"
           },
           {
-            "key": "Locked/no one home",
-            "text": "Locked/no one home"
+            "key": "locked",
+            "text": "Locked or no one home"
           },
           {
-            "key": "No adult home",
+            "key": "noAdultHome",
             "text": "No adult home"
-          },
-          {
-            "key": "Unsprayable",
-            "text": "Unsprayable"
           }
         ],
         "v_required": {
           "value": "true",
-          "err": "Reason those STRUCTURES were not sprayed"
+          "err": "Required field"
         },
         "relevance": {
           "rules-engine": {
@@ -380,33 +714,33 @@
         }
       },
       {
-        "key": "refusal_reasons_for_not_spraying",
+        "key": "refusalReasonFirst",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "check_box",
-        "label": "Reason for refusal",
+        "type": "native_radio",
+        "label": "Refusal reason",
         "options": [
           {
-            "key": "Pregnant/Newborn",
-            "text": "Pregnant/Newborn"
+            "key": "pregnantOrNewborn",
+            "text": "Pregnant or Newborn"
           },
           {
-            "key": "Sick",
+            "key": "sick",
             "text": "Sick"
           },
           {
-            "key": "Does not understand",
+            "key": "notUnderstand",
             "text": "Does not understand"
           },
           {
-            "key": "Other",
-            "text": "Other"
+            "key": "other",
+            "text": "Other (specify)"
           }
         ],
         "v_required": {
           "value": "true",
-          "err": "Specify reason for refusal"
+          "err": "Required field"
         },
         "relevance": {
           "rules-engine": {
@@ -417,16 +751,16 @@
         }
       },
       {
-        "key": "refusal_reasons_for_not_spraying_comment",
+        "key": "refusalReasonOtherFirst",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Please Explain",
-        "is_mandatory": "true",
+        "hint": "Specify other refusal reason",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
-          "err": "Please explain reason for refusal "
+          "err": "A reason must be entered"
         },
         "relevance": {
           "rules-engine": {
@@ -437,181 +771,283 @@
         }
       },
       {
-        "key": "house_population",
+        "key": "mopUpVisit",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "House Population",
-        "is_mandatory": "true",
-        "v_required": {
-          "value": "true",
-          "err": "Enter # House Population"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Must be a number"
-        },
-        "relevance": {
-          "step1:any_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
-      },
-      {
-        "key": "total_population_sprayedrooms",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Population in the visited household sleeping in sprayed rooms",
-        "shortened_hint": "Population sleeping in sprayed rooms",
-        "is_mandatory": "true",
-        "v_required": {
-          "value": "true",
-          "err": "Enter Population in the visited household sleeping in sprayed rooms"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Must be a number"
-        },
-        "relevance": {
-          "step1:any_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
-      },
-      {
-        "key": "name_household",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Name of household",
-        "is_mandatory": "true",
-        "v_required": {
-          "value": "true",
-          "err": "Enter name of household"
-        },
-        "relevance": {
-          "step1:any_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
-      },
-      {
-        "key": "health_number",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Household health number",
-        "is_mandatory": "true",
-        "v_required": {
-          "value": "true",
-          "err": "Enter household health number"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Must be a number"
-        },
-        "relevance": {
-          "step1:any_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
-      },
-      {
-        "key": "confirm",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Confirm household health number",
-        "is_mandatory": "true",
-        "v_required": {
-          "value": "true",
-          "err": "Confirm household health number"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Must be a number"
-        },
-        "relevance": {
-          "step1:any_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
-      },
-      {
-        "key": "reasons_for_not_spraying_household",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "check_box",
-        "label": "Reason those STRUCTURES were not sprayed",
+        "type": "native_radio",
+        "label": "Register a Mop-up Visit?",
         "options": [
           {
-            "key": "Refused",
+            "key": "yes",
+            "text": "Yes"
+          },
+          {
+            "key": "no",
+            "text": "No"
+          }
+        ],
+        "value": "no",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "mopupVisitGroupHeading",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "label",
+        "text": "Mop-up Visit",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "mopupStructuresToBeSprayed",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "mopupStructuresToBeSprayedLabel",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "{mopupStructuresToBeSprayed} structures to be sprayed",
+        "text_color": "#000000",
+        "toaster_type": "info",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-calculation-rules.yml"
+            }
+          }
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "nSprayedTotalMop",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# total structures sprayed during mop-up",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "mopupStructuresToBeSprayed",
+          "err": "Cannot be more than # of structures remaining unsprayed"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "nSprayedDDTMop",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# structures sprayed with DDT during mop-up",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "mopupStructuresToBeSprayed",
+          "err": "Cannot be more than # of structures remaining unsprayed"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "nSprayedDeltaMop",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# structures sprayed with Delta during mop-up",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "mopupStructuresToBeSprayed",
+          "err": "Cannot be more than # of structures remaining unsprayed"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "nSprayedActellicMop",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# structures sprayed with Actellic during mop-up",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_cumulative_total": {
+          "value": "nSprayedTotalMop",
+          "related_fields": [
+            "nSprayedDDTMop",
+            "nSprayedDeltaMop",
+            "nSprayedActellicMop"
+          ],
+          "err": "The sum of DDT, Delta and Actellic must equal total sprayed during mop-up"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "nUnsprayedTotalMop",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "nUnsprayedTotalMopLabel",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "{nUnsprayedTotalMop} total structures unsprayed after mop-up visit",
+        "text_color": "#000000",
+        "toaster_type": "info",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-calculation-rules.yml"
+            }
+          }
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "unsprayedReasonMop",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Reason for not spraying these structures",
+        "options": [
+          {
+            "key": "refused",
             "text": "Refused"
           },
           {
-            "key": "Locked/no one home",
-            "text": "Locked/no one home"
+            "key": "locked",
+            "text": "Locked or no one home"
           },
           {
-            "key": "No adult home",
+            "key": "noAdultHome",
             "text": "No adult home"
-          },
-          {
-            "key": "Unsprayable",
-            "text": "Unsprayable"
           }
         ],
         "v_required": {
           "value": "true",
-          "err": "Specify reason those STRUCTURES were not sprayed"
-        },
-        "relevance": {
-          "step1:any_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"No\")"
-          }
-        }
-      },
-      {
-        "key": "refusal_reason_for_not_spraying_household",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "check_box",
-        "label": "Reason for refusal",
-        "options": [
-          {
-            "key": "Pregnant/Newborn",
-            "text": "Pregnant/Newborn"
-          },
-          {
-            "key": "Sick",
-            "text": "Sick"
-          },
-          {
-            "key": "Does not understand",
-            "text": "Does not understand"
-          },
-          {
-            "key": "Other",
-            "text": "Other"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Specify reason for refusal"
+          "err": "Required field"
         },
         "relevance": {
           "rules-engine": {
@@ -622,16 +1058,53 @@
         }
       },
       {
-        "key": "refusal_reason_for_not_spraying_household_comment",
+        "key": "refusalReasonMop",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Refusal reason",
+        "options": [
+          {
+            "key": "pregnantOrNewborn",
+            "text": "Pregnant or Newborn"
+          },
+          {
+            "key": "sick",
+            "text": "Sick"
+          },
+          {
+            "key": "notUnderstand",
+            "text": "Does not understand"
+          },
+          {
+            "key": "other",
+            "text": "Other (specify)"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "refusalReasonOtherMop",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Please explain",
-        "is_mandatory": "true",
+        "hint": "Specify other refusal reason",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
-          "err": "Please explain"
+          "err": "A reason must be entered"
         },
         "relevance": {
           "rules-engine": {
@@ -640,6 +1113,136 @@
             }
           }
         }
+      },
+      {
+        "key": "nPeopleProtected",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# people sleeping in sprayed rooms",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "popTotal",
+          "err": "Population protected cannot be greater than total population"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "unsprayedReasonHH",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Reason for not spraying this homestead",
+        "options": [
+          {
+            "key": "refused",
+            "text": "Refused"
+          },
+          {
+            "key": "locked",
+            "text": "Locked or no one home"
+          },
+          {
+            "key": "noAdultHome",
+            "text": "No adult home"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "refusalReasonHH",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Refusal reason",
+        "options": [
+          {
+            "key": "pregnantOrNewborn",
+            "text": "Pregnant or Newborn"
+          },
+          {
+            "key": "sick",
+            "text": "Sick"
+          },
+          {
+            "key": "notUnderstand",
+            "text": "Does not understand"
+          },
+          {
+            "key": "other",
+            "text": "Other (specify)"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "refusalReasonOtherHH",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Specify other refusal reason",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "A reason must be entered"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "structureType",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "value": "Residential"
       },
       {
         "key": "business_status",
