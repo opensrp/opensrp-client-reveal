@@ -78,10 +78,13 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "toaster_notes",
-        "text": "[villageName]",
-        "text_color": "#000000",
-        "toaster_type": "info"
+        "type": "edit_text",
+        "hint": "Village Name",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
       },
       {
         "key": "nSprayableTotal",
@@ -90,6 +93,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# of total sprayable structures",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -121,6 +125,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# of sprayable zinc structures",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -152,6 +157,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# of sprayable traditional structures",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -183,6 +189,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# of sprayable modern structures",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -214,6 +221,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# of sprayable canopy structures",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -226,9 +234,15 @@
           "value": "0",
           "err": "Must be greater than or equal to 0"
         },
-        "v_relative_max": {
+        "v_cumulative_total": {
           "value": "nSprayableTotal",
-          "err": "Cannot be more than # of total sprayable structures"
+          "related_fields": [
+            "nSprayableZinc",
+            "nSprayableTrad",
+            "nSprayableMod",
+            "nSprayableCanopy"
+          ],
+          "err": "The sum of Zinc, traditional, modern, canopy must equal total number of sprayable structures"
         },
         "relevance": {
           "rules-engine": {
@@ -245,6 +259,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# of structures not sprayable",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -276,6 +291,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# total people living in the homestead/house",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -307,6 +323,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Head of household name",
+        "text_size": "8sp",
         "is_mandatory": "true",
         "v_required": {
           "value": "true",
@@ -325,10 +342,8 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "toaster_notes",
+        "type": "label",
         "text": "First Visit or Revisit",
-        "text_color": "#000000",
-        "toaster_type": "info",
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -367,6 +382,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# total structures sprayed",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -398,6 +414,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# structures sprayed with DDT",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -429,6 +446,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# structures sprayed with Delta",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -460,6 +478,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# structures sprayed with Actellic",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -472,9 +491,14 @@
           "value": "0",
           "err": "Must be greater than or equal to 0"
         },
-        "v_relative_max": {
-          "value": "nSprayableTotal",
-          "err": "Cannot be more than # of total sprayable structures"
+        "v_cumulative_total": {
+          "value": "nSprayableTotalFirst",
+          "related_fields": [
+            "nSprayedDDTFirst",
+            "nSprayedDeltaFirst",
+            "nSprayedActellicFirst"
+          ],
+          "err": "The sum of DDT, Delta and Actellic must equal total sprayed"
         },
         "relevance": {
           "rules-engine": {
@@ -513,6 +537,13 @@
               "rules-file": "namibia-spray-calculation-rules.yml"
             }
           }
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -522,6 +553,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# of unsprayed zinc structures",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -553,6 +585,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# of unsprayed traditional structures",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -584,6 +617,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# of unsprayed modern structures",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -615,6 +649,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# of unsprayed canopy structures",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -627,9 +662,15 @@
           "value": "0",
           "err": "Must be greater than or equal to 0"
         },
-        "v_relative_max": {
-          "value": "nSprayableCanopy",
-          "err": "Cannot be more than # of structures of this type"
+        "v_cumulative_total": {
+          "value": "nUnsprayedTotalFirst",
+          "related_fields": [
+            "nUnsprayedZincFirst",
+            "nUnsprayedTradFirst",
+            "nUnsprayedModFirst",
+            "nUnsprayedCanopyFirst"
+          ],
+          "err": "The sum of unsprayed zinc, traditional, modern and canopy structures must equal total unsprayed structures"
         },
         "relevance": {
           "rules-engine": {
@@ -716,6 +757,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Specify other refusal reason",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "A reason must be entered"
@@ -756,10 +798,8 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "toaster_notes",
+        "type": "label",
         "text": "Mop-up Visit",
-        "text_color": "#000000",
-        "toaster_type": "info",
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -797,6 +837,13 @@
               "rules-file": "namibia-spray-calculation-rules.yml"
             }
           }
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -806,6 +853,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# total structures sprayed during mop-up",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -837,6 +885,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# structures sprayed with DDT during mop-up",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -868,6 +917,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# structures sprayed with Delta during mop-up",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -899,6 +949,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# structures sprayed with Actellic during mop-up",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -911,9 +962,14 @@
           "value": "0",
           "err": "Must be greater than or equal to 0"
         },
-        "v_relative_max": {
-          "value": "mopupStructuresToBeSprayed",
-          "err": "Cannot be more than # of structures remaining unsprayed"
+        "v_cumulative_total": {
+          "value": "nSprayedTotalMop",
+          "related_fields": [
+            "nSprayedDDTMop",
+            "nSprayedDeltaMop",
+            "nSprayedActellicMop"
+          ],
+          "err": "The sum of DDT, Delta and Actellic must equal total sprayed during mop-up"
         },
         "relevance": {
           "rules-engine": {
@@ -950,6 +1006,13 @@
           "rules-engine": {
             "ex-rules": {
               "rules-file": "namibia-spray-calculation-rules.yml"
+            }
+          }
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
             }
           }
         }
@@ -1031,6 +1094,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Specify other refusal reason",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "A reason must be entered"
@@ -1050,6 +1114,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "# people sleeping in sprayed rooms",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -1151,6 +1216,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Specify other refusal reason",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "A reason must be entered"
