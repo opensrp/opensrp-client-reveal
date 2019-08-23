@@ -245,18 +245,19 @@ public class RevealJsonFormUtils {
         if (formJson == null)
             return;
         try {
-            populateField(formJson, JsonForm.PAOT_STATUS, cardDetails.getStatus());
-            populateField(formJson, JsonForm.PAOT_COMMENTS, cardDetails.getComments());
-            populateField(formJson, JsonForm.LAST_UPDATED_DATE, cardDetails.getStartDate());
+            populateField(formJson, JsonForm.PAOT_STATUS, cardDetails.getStatus(), VALUE);
+            populateField(formJson, JsonForm.PAOT_COMMENTS, cardDetails.getComments(), VALUE);
+            populateField(formJson, JsonForm.LAST_UPDATED_DATE, cardDetails.getStartDate(), VALUE);
         } catch (JSONException e) {
             Timber.e(e);
         }
     }
 
-    private void populateField(JSONObject formJson, String key, String value) throws JSONException {
+    public void populateField(JSONObject formJson, String key, String value, String fieldToPopulate) throws JSONException {
         JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJson), key);
         if (field != null) {
-            field.put(VALUE, value);
+            field.put(fieldToPopulate, value);
         }
     }
+
 }
