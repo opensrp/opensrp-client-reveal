@@ -97,33 +97,34 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         Toast.makeText(formFragmentView.getContext(), validator.getErrorMessage(), Toast.LENGTH_LONG).show();
                         return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
                     }
-                } else if (validator instanceof WithinOperationAreaValidator) {
+                } else if ((validator instanceof WithinOperationAreaValidator)
+                        && org.smartregister.reveal.util.Utils.displayAddStructureOutOfBoundaryWarningDialog()
+                        && !validator.isValid("", true)) {
                     // perform within op area validation
-                    if ( !validator.isValid("", true) && org.smartregister.reveal.util.Utils.displayAddStructureOutOfBoundaryWarningDialog()) {
 
-                        AlertDialogUtils.displayNotificationWithCallback(formFragmentView.getContext(), R.string.register_outside_boundary_title, R.string.register_outside_boundary_warning, R.string.register, R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case BUTTON_NEGATIVE:
-                                        dialog.dismiss();
-                                        break;
-                                    case BUTTON_NEUTRAL:
-                                        dialog.dismiss();
-                                        break;
-                                    case BUTTON_POSITIVE:
-                                      ((WithinOperationAreaValidator) validator).setDisabled(true);
-                                        presenter.validateAndWriteValues();
-                                        dialog.dismiss();
-                                        break;
-                                    default:
-                                        break;
-                                }
+                    AlertDialogUtils.displayNotificationWithCallback(formFragmentView.getContext(), R.string.register_outside_boundary_title, R.string.register_outside_boundary_warning, R.string.register, R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case BUTTON_NEGATIVE:
+                                    dialog.dismiss();
+                                    break;
+                                case BUTTON_NEUTRAL:
+                                    dialog.dismiss();
+                                    break;
+                                case BUTTON_POSITIVE:
+                                  ((WithinOperationAreaValidator) validator).setDisabled(true);
+                                    presenter.validateAndWriteValues();
+                                    dialog.dismiss();
+                                    break;
+                                default:
+                                    break;
                             }
-                        });
+                        }
+                    });
 
-                        return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
-                    }
+                    return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
+
                 }
             }
         }

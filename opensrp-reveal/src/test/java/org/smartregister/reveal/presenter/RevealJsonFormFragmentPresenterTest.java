@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 
+import com.rengwuxian.materialedittext.validation.METValidator;
 import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.junit.Rule;
@@ -19,15 +20,19 @@ import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.fragment.RevealJsonFormFragment;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.validators.MinZoomValidator;
+import org.smartregister.reveal.validators.WithinOperationAreaValidator;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.AssetHandler;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -54,6 +59,9 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
 
     @Mock
     private RevealMapView mapView;
+
+    @Mock
+    private WithinOperationAreaValidator withinOperationAreaValidator;
 
 
     private void setUpFormActivity(String formName) {
@@ -193,6 +201,44 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
     public void testGetLocationPresenter() {
         setUpFormActivity(JsonForm.ADD_STRUCTURE_FORM);
         assertNotNull(presenter.getLocationPresenter());
+    }
+
+
+    @Test
+    public void testValidateWithMapShouldValidateLocationIfValidateWithinOperationalAreaReturnsTrue() {
+        setUpFormActivity(JsonForm.ADD_STRUCTURE_FORM);
+        presenter = spy(presenter);
+        List<METValidator> validators = new ArrayList<>();
+        validators.add(new MinZoomValidator("error", 20));
+        validators.add(withinOperationAreaValidator);
+        when(mapView.getValidators()).thenReturn(validators);
+        when(mapView.getMapboxMapZoom()).thenReturn(20.5);
+        when(withinOperationAreaValidator.isValid(anyString(), anyBoolean())).thenReturn(true);
+        formFragment.getJsonApi().addFormDataView(mapView);
+        JsonFormFragmentView view = spy(Whitebox.getInternalState(presenter, JsonFormFragmentView.class));
+        Whitebox.setInternalState(presenter, "viewRef", new WeakReference<>(view));
+        jsonFormActivity = spy(jsonFormActivity);
+        doReturn(null).when(jsonFormActivity).getUserCurrentLocation();
+
+
+        Whitebox.setInternalState(presenter, "jsonFormView", jsonFormActivity);
+
+        ValidateUserLocationPresenter userLocationPresenter = Whitebox.getInternalState(presenter, "locationPresenter");
+        userLocationPresenter = spy(userLocationPresenter);
+        doNothing().when(userLocationPresenter).requestUserLocation();
+
+        Whitebox.setInternalState(presenter, "locationPresenter", userLocationPresenter);
+
+        presenter.onSaveClick(formFragment.getMainView());
+
+        verify(presenter).validateAndWriteValues();
+        verify(jsonFormActivity).getUserCurrentLocation();
+
+
+        verify(userLocationPresenter).requestUserLocation();
+
+        assertEquals(mapView, presenter.getMapView());
+
     }
 
 }
