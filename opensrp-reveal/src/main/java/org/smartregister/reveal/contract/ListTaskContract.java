@@ -53,6 +53,10 @@ public interface ListTaskContract {
         void displayToast(@StringRes int resourceId);
 
         RevealJsonFormUtils getJsonFormUtils();
+
+        void focusOnUserLocation(boolean focusOnUserLocation);
+
+        boolean isMyLocationComponentActive();
     }
 
     interface Presenter extends BaseContract.BasePresenter {

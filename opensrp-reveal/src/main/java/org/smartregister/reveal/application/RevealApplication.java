@@ -88,6 +88,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     private boolean refreshMapOnEventSaved;
 
+    private boolean myLocationComponentEnabled;
+
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
     }
@@ -352,5 +354,13 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     public void setRefreshMapOnEventSaved(boolean refreshMapOnEventSaved) {
         this.refreshMapOnEventSaved = refreshMapOnEventSaved;
+    }
+
+    public boolean isMyLocationComponentEnabled() {
+        return myLocationComponentEnabled;
+    }
+
+    public void setMyLocationComponentEnabled(boolean myLocationComponentEnabled) {
+        this.myLocationComponentEnabled = myLocationComponentEnabled;
     }
 }

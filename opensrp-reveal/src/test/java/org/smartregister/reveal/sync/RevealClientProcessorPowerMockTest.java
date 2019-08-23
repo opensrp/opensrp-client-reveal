@@ -147,7 +147,7 @@ public class RevealClientProcessorPowerMockTest {
         task = null;
         doReturn(task).when(taskRepository).getTaskByIdentifier(anyString());
 
-        Whitebox.invokeMethod(clientProcessor, "updateTask", event, true);
+        Whitebox.invokeMethod(clientProcessor, "updateTask", event, false);
 
         verify(eventClientRepository).markEventAsTaskUnprocessed(eq(FORM_SUBMISSION_ID));
     }

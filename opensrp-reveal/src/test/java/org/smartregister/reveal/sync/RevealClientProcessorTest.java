@@ -148,7 +148,7 @@ public class RevealClientProcessorTest extends BaseUnitTest {
     @Test
     public void testProcessEventClientWithoutTasksAndLocations() {
         Whitebox.setInternalState(clientProcessor, "eventClientRepository", eventClientRepository);
-        clientProcessor.processClient(Arrays.asList(new EventClient(event, null), new EventClient(sprayedEvent, null)), true);
+        clientProcessor.processClient(Arrays.asList(new EventClient(event, null), new EventClient(sprayedEvent, null)), false);
 
         verify(eventClientRepository, times(2)).markEventAsTaskUnprocessed(anyString());
     }

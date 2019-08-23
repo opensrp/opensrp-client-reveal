@@ -240,6 +240,8 @@ public interface Constants {
 
         String STRUCTURES_TAG = "structures";
 
+        String LOCATION_COMPONENT_ACTIVE = "my_location_active";
+
         String NO_PADDING = "no_padding";
 
         String SHORTENED_HINT = "shortened_hint";
