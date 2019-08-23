@@ -54,7 +54,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         for (View childAt : formFragment.getJsonApi().getFormDataViews()) {
             if (childAt instanceof RevealMapView) {
                 RevealMapView mapView = (RevealMapView) childAt;
-                ValidationStatus validationStatus = GeoWidgetFactory.validate(formFragment, mapView);
+                ValidationStatus validationStatus = GeoWidgetFactory.validate(formFragment, mapView, this);
                 String key = (String) childAt.getTag(com.vijay.jsonwizard.R.id.key);
                 String mStepName = this.getView().getArguments().getString("stepName");
                 String fieldKey = mStepName + " (" + mStepDetails.optString("title") + ") :" + key;
@@ -67,11 +67,13 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                         return;
                     }
                 }
+                this.mapView = mapView;
                 break;//exit loop, assumption; there will be only 1 map per form.
             }
         }
         if (isFormValid()) {// if form is valid and did not have a map, if it had a map view it will be handled above
             onLocationValidated();
+
         } else {//if form is invalid whether having a map or not
             if (showErrorsOnSubmit()) {
                 launchErrorDialog();
@@ -141,4 +143,5 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
     public ValidateUserLocationPresenter getLocationPresenter() {
         return locationPresenter;
     }
+
 }

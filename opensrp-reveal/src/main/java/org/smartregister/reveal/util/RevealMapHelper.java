@@ -5,13 +5,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.widget.ImageButton;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.MultiPolygon;
+import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
+import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.layers.Property;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
@@ -25,6 +29,7 @@ import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.Constants.StructureType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import timber.log.Timber;
 
@@ -34,6 +39,8 @@ import static com.mapbox.mapboxsdk.style.expressions.Expression.interpolate;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.linear;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
 import static com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillOpacity;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
@@ -71,12 +78,16 @@ public class RevealMapHelper {
     public static final String INDEX_CASE_LINE_LAYER = "index-case-line-layer";
 
     public static final String POTENTIAL_AREA_OF_TRANSMISSION_LAYER = "potential-area-of-transmission-layer";
+
+    public static final String OUT_OF_BOUNDARY_LAYER = "out-of-boundary-layer";
+
+    public static final String OUT_OF_BOUNDARY_SOURCE = "out-of-boundary-source";
   
     private static final String INDEX_CASE_SOURCE = "index_case_source";
 
     private Location indexCaseLocation = null;
 
-    private GeoJsonSource indexCaseSource = new GeoJsonSource(INDEX_CASE_SOURCE);
+    private GeoJsonSource indexCaseSource;
 
     private float radius = Float.valueOf(getGlobalConfig(INDEX_CASE_CIRCLE_RADIUS_IN_METRES, DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES.toString()));
 
@@ -182,7 +193,8 @@ public class RevealMapHelper {
                     circleFeature = createCircleFeature(new LatLng(indexCaseLocation.getLatitude(), indexCaseLocation.getLongitude()), radius, DEFAULT_GEO_JSON_CIRCLE_SIDES);
                     indexCaseSource.setGeoJson(circleFeature);
                 } else { // Clear outer circle if there is no index case
-                    indexCaseSource.setGeoJson(FeatureCollection.fromFeatures(new ArrayList<>()));
+                    if (indexCaseSource != null)
+                        indexCaseSource.setGeoJson(FeatureCollection.fromFeatures(new ArrayList<>()));
                 }
             }
         } catch (JSONException e) {
@@ -204,4 +216,29 @@ public class RevealMapHelper {
     public LineLayer getIndexCaseLineLayer() {
         return indexCaseLineLayer;
     }
+
+    public static void addOutOfBoundaryMask(@NonNull Style mMapboxMapStyle, Feature operationalArea, Feature boundingBoxPolygon, Context context) {
+
+        // create multi polygon
+        List<Polygon> polygonList = new ArrayList<>();
+        polygonList.add((Polygon) boundingBoxPolygon.geometry());
+        polygonList.add((Polygon) operationalArea.geometry());
+        MultiPolygon opAreaMultiPolygon = MultiPolygon.fromPolygons(polygonList);
+
+        // create mask source
+        GeoJsonSource outOfBoundarySource = new GeoJsonSource(OUT_OF_BOUNDARY_SOURCE, opAreaMultiPolygon);
+        mMapboxMapStyle.addSource(outOfBoundarySource);
+
+        // add mask
+        FillLayer maskLayer = new FillLayer(OUT_OF_BOUNDARY_LAYER, outOfBoundarySource.getId());
+        maskLayer.withProperties(fillColor(context.getResources().getColor(R.color.outside_area_mask)),
+                fillOpacity(.65f));
+        mMapboxMapStyle.addLayer(maskLayer);
+
+    }
+
+    public boolean isMyLocationComponentActive(Context context, ImageButton myLocationButton) {
+        return context.getResources().getDrawable(R.drawable.ic_cross_hair_blue).getConstantState().equals(myLocationButton.getDrawable().getConstantState());
+    }
+
 }

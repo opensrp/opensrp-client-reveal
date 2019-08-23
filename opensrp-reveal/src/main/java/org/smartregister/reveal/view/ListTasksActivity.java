@@ -44,6 +44,7 @@ import org.smartregister.family.util.Utils;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
@@ -124,6 +125,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private BoundaryLayer boundaryLayer;
 
     private RevealMapHelper revealMapHelper;
+
+    private ImageButton myLocationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,6 +223,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private void initializeMapView(Bundle savedInstanceState) {
         kujakuMapView = findViewById(R.id.kujakuMapView);
 
+        myLocationButton = findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
+
         kujakuMapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
 
         kujakuMapView.onCreate(savedInstanceState);
@@ -273,27 +278,27 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
 
     private void displayMyLocationAtButtom() {
-        ImageButton myLocationComponent = findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
-        if (myLocationComponent != null) {
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) myLocationComponent.getLayoutParams();
+        if (myLocationButton != null) {
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
             params.gravity = Gravity.BOTTOM | Gravity.END;
             params.bottomMargin = params.topMargin;
             params.topMargin = 0;
-            myLocationComponent.setLayoutParams(params);
+            myLocationButton.setLayoutParams(params);
         }
     }
+
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_add_structure) {
-            listTaskPresenter.onAddStructureClicked();
+            listTaskPresenter.onAddStructureClicked(revealMapHelper.isMyLocationComponentActive(this, myLocationButton));
         } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeInterventionStatus(IRS);
         } else if (v.getId() == R.id.btn_record_mosquito_collection) {
             listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
         } else if (v.getId() == R.id.btn_record_larval_dipping) {
             listTaskPresenter.onChangeInterventionStatus(LARVAL_DIPPING);
-        } else if(v.getId() == R.id.btn_edit_paot_details) {
+        } else if (v.getId() == R.id.btn_edit_paot_details) {
             listTaskPresenter.onChangeInterventionStatus(PAOT);
         } else if (v.getId() == R.id.btn_collapse_spray_card_view) {
             setViewVisibility(tvReason, false);
@@ -373,6 +378,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             geoJsonSource.setGeoJson(featureCollection);
             if (operationalArea != null) {
                 CameraPosition cameraPosition = mMapboxMap.getCameraForGeometry(operationalArea.geometry());
+
                 if (getInterventionLabel() == R.string.focus_investigation) {
                     Feature indexCase = revealMapHelper.getIndexCase(featureCollection);
                     if (indexCase != null) {
@@ -572,6 +578,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void onPause() {
         SyncStatusBroadcastReceiver.getInstance().removeSyncStatusListener(this);
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(refreshGeowidgetReceiver);
+        RevealApplication.getInstance().setMyLocationComponentEnabled(revealMapHelper.isMyLocationComponentActive(this, myLocationButton));
         super.onPause();
     }
 
@@ -590,6 +597,16 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         return jsonFormUtils;
     }
 
+    @Override
+    public void focusOnUserLocation(boolean focusOnUserLocation) {
+        kujakuMapView.focusOnUserLocation(focusOnUserLocation);
+    }
+
+    @Override
+    public boolean isMyLocationComponentActive() {
+        return revealMapHelper.isMyLocationComponentActive(this, myLocationButton);
+    }
+
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -599,7 +616,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 float bufferRadius = getLocationBuffer() / getPixelsPerDPI(getResources());
                 kujakuMapView.setLocationBufferRadius(bufferRadius);
             } else {
-                localSyncDone = extras != null ? extras.getBoolean(LOCAL_SYNC_DONE) : false;
+                localSyncDone = extras != null && extras.getBoolean(LOCAL_SYNC_DONE);
                 listTaskPresenter.refreshStructures(localSyncDone);
             }
         }

@@ -248,7 +248,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             }
             taskRepository.addOrUpdate(task);
             operationalAreaId = task.getGroupIdentifier();
-        } else {
+        } else if(!localEvents) {
             eventClientRepository.markEventAsTaskUnprocessed(event.getFormSubmissionId());
         }
         return operationalAreaId;

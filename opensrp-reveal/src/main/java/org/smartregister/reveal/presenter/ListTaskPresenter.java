@@ -30,6 +30,7 @@ import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.CardDetailsUtil;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -39,6 +40,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
@@ -56,6 +58,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
@@ -217,7 +220,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private void onFeatureSelected(Feature feature) {
         this.selectedFeature = feature;
         this.changeInterventionStatus = false;
-        cardDetails=null;
+        cardDetails = null;
 
         listTaskView.closeAllCardViews();
         listTaskView.displaySelectedFeature(feature, clickedPoint);
@@ -380,12 +383,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
 
-    public void onAddStructureClicked() {
+    public void onAddStructureClicked(boolean myLocationComponentActive) {
         String formName = jsonFormUtils.getFormName(REGISTER_STRUCTURE_EVENT);
         try {
             JSONObject formJson = new JSONObject(jsonFormUtils.getFormString(listTaskView.getContext(), formName, null));
             formJson.put(OPERATIONAL_AREA_TAG, operationalArea.toJson());
             formJson.put(STRUCTURES_TAG, featureCollection.toJson());
+            jsonFormUtils.populateField(formJson, Constants.JsonForm.SELECTED_OPERATIONAL_AREA_NAME, prefsUtil.getCurrentOperationalArea(), TEXT);
+            formJson.put(LOCATION_COMPONENT_ACTIVE, myLocationComponentActive);
             listTaskView.startJsonForm(formJson);
         } catch (Exception e) {
             Timber.e(e, "error launching add structure form");
@@ -452,6 +457,17 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.clearSelectedFeature();
             revealApplication.setRefreshMapOnEventSaved(false);
         }
+        updateLocationComponentState();
+    }
+
+    private void updateLocationComponentState() {
+        if (revealApplication.isMyLocationComponentEnabled() && !listTaskView.isMyLocationComponentActive()) {
+            listTaskView.focusOnUserLocation(true);
+        } else if (!revealApplication.isMyLocationComponentEnabled() && listTaskView.isMyLocationComponentActive()
+                || !listTaskView.isMyLocationComponentActive()) {
+            listTaskView.focusOnUserLocation(false);
+            listTaskView.setGeoJsonSource(featureCollection, operationalArea, true);
+        }
     }
 
     public boolean isChangeMapPosition() {
@@ -461,5 +477,4 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void setChangeMapPosition(boolean changeMapPosition) {
         this.changeMapPosition = changeMapPosition;
     }
-
 }
