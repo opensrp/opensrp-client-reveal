@@ -1,6 +1,5 @@
 package org.smartregister.reveal.presenter;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.support.annotation.VisibleForTesting;
@@ -15,20 +14,14 @@ import com.vijay.jsonwizard.interactors.JsonFormInteractor;
 import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 import com.vijay.jsonwizard.utils.ValidationStatus;
 
-import org.apache.commons.lang3.StringUtils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
-import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
-
-import static android.content.DialogInterface.BUTTON_NEGATIVE;
-import static android.content.DialogInterface.BUTTON_NEUTRAL;
-import static android.content.DialogInterface.BUTTON_POSITIVE;
 
 /**
  * Created by samuelgithengi on 1/30/19.
