@@ -82,7 +82,7 @@ public class RevealMapHelper {
     public static final String OUT_OF_BOUNDARY_LAYER = "out-of-boundary-layer";
 
     public static final String OUT_OF_BOUNDARY_SOURCE = "out-of-boundary-source";
-  
+
     private static final String INDEX_CASE_SOURCE = "index_case_source";
 
     private Location indexCaseLocation = null;
@@ -219,10 +219,16 @@ public class RevealMapHelper {
 
     public static void addOutOfBoundaryMask(@NonNull Style mMapboxMapStyle, Feature operationalArea, Feature boundingBoxPolygon, Context context) {
 
+
         // create multi polygon
         List<Polygon> polygonList = new ArrayList<>();
         polygonList.add((Polygon) boundingBoxPolygon.geometry());
-        polygonList.add((Polygon) operationalArea.geometry());
+        if (operationalArea.geometry() instanceof MultiPolygon) {
+            polygonList.addAll(((MultiPolygon) operationalArea.geometry()).polygons());
+        } else {
+            polygonList.add((Polygon) operationalArea.geometry());
+        }
+
         MultiPolygon opAreaMultiPolygon = MultiPolygon.fromPolygons(polygonList);
 
         // create mask source
