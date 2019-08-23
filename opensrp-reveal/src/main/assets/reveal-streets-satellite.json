@@ -311,6 +311,10 @@
             "Blood Screening Complete"
           ],
           "hsl(262, 100%, 68%)",
+          [
+            "Partially Sprayed"
+          ],
+          "hsl(26, 84%, 56%)",
           "hsl(0, 0%, 78%)"
         ],
         "fill-opacity": [
@@ -407,7 +411,7 @@
           [
             "Partially Sprayed"
           ],
-          "hsl(146, 100%, 50%)",
+          "hsl(26, 84%, 56%)",
           "hsl(0, 0%, 78%)"
         ],
         "circle-stroke-width": 1,
