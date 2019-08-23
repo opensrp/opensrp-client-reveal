@@ -33,6 +33,7 @@ import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.PROVINCE;
+import static org.smartregister.reveal.util.Constants.Tags.REGION;
 import static org.smartregister.reveal.util.Constants.Tags.SUB_DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.VILLAGE;
 import static org.smartregister.reveal.util.Constants.UseContextCode.INTERVENTION_TYPE;
@@ -161,6 +162,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         ArrayList<String> operationalAreaLevels = new ArrayList<>();
         operationalAreaLevels.add(COUNTRY);
         operationalAreaLevels.add(PROVINCE);
+        operationalAreaLevels.add(REGION);
         operationalAreaLevels.add(DISTRICT);
         operationalAreaLevels.add(SUB_DISTRICT);
         operationalAreaLevels.add(OPERATIONAL_AREA);
@@ -195,7 +197,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         operationalAreaLevels.add(CANTON);
         operationalAreaLevels.add(OPERATIONAL_AREA);
         List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
-        int districtOffset = name.get(0).equalsIgnoreCase(Country.BOTSWANA.name()) ? 3 : 2;
+        int districtOffset = name.get(0).equalsIgnoreCase(Country.BOTSWANA.name()) || name.get(0).equalsIgnoreCase(Country.NAMIBIA.name()) ? 3 : 2;
         prefsUtil.setCurrentDistrict(name.get(name.size() - districtOffset));
         prefsUtil.setCurrentOperationalArea(name.get(name.size() - 1));
         Pair<String, String> facility = getFacilityFromOperationalArea(name.get(name.size() - districtOffset), name.get(name.size() - 1), entireTree);
