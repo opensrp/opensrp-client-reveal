@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.widget.ImageButton;
 
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -86,7 +87,7 @@ public class RevealMapHelper {
 
     private Location indexCaseLocation = null;
 
-    private GeoJsonSource indexCaseSource = new GeoJsonSource(INDEX_CASE_SOURCE);
+    private GeoJsonSource indexCaseSource;
 
     private float radius = Float.valueOf(getGlobalConfig(INDEX_CASE_CIRCLE_RADIUS_IN_METRES, DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES.toString()));
 
@@ -192,7 +193,8 @@ public class RevealMapHelper {
                     circleFeature = createCircleFeature(new LatLng(indexCaseLocation.getLatitude(), indexCaseLocation.getLongitude()), radius, DEFAULT_GEO_JSON_CIRCLE_SIDES);
                     indexCaseSource.setGeoJson(circleFeature);
                 } else { // Clear outer circle if there is no index case
-                    indexCaseSource.setGeoJson(FeatureCollection.fromFeatures(new ArrayList<>()));
+                    if (indexCaseSource != null)
+                        indexCaseSource.setGeoJson(FeatureCollection.fromFeatures(new ArrayList<>()));
                 }
             }
         } catch (JSONException e) {
@@ -234,4 +236,9 @@ public class RevealMapHelper {
         mMapboxMapStyle.addLayer(maskLayer);
 
     }
+
+    public boolean isMyLocationComponentActive(Context context, ImageButton myLocationButton) {
+        return context.getResources().getDrawable(R.drawable.ic_cross_hair_blue).getConstantState().equals(myLocationButton.getDrawable().getConstantState());
+    }
+
 }
