@@ -13,8 +13,9 @@ import com.rengwuxian.materialedittext.validation.METValidator;
 import org.smartregister.reveal.view.RevealMapView;
 
 public class WithinOperationAreaValidator extends METValidator {
-    RevealMapView mapView = null;
-    Feature operationalArea = null;
+    private RevealMapView mapView;
+    private Feature operationalArea;
+    private boolean disabled=false;
 
     public WithinOperationAreaValidator(String errorMessage, RevealMapView mapView, Feature operationalArea) {
         super(errorMessage);
@@ -24,6 +25,7 @@ public class WithinOperationAreaValidator extends METValidator {
 
     @Override
     public boolean isValid(@NonNull CharSequence text, boolean isEmpty) {
+        if(disabled) return true;
         com.mapbox.geojson.Point selectedpoint = getCenterPoint(mapView.getMapboxMap());
         boolean isWithinOperationArea = TurfJoins.inside(selectedpoint, MultiPolygon.fromPolygon((Polygon) operationalArea.geometry()));
         return isWithinOperationArea;
@@ -33,5 +35,9 @@ public class WithinOperationAreaValidator extends METValidator {
         LatLng latLng = mapboxMap.getCameraPosition().target;
         com.mapbox.geojson.Point  centerpoint = com.mapbox.geojson.Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
         return centerpoint;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 }

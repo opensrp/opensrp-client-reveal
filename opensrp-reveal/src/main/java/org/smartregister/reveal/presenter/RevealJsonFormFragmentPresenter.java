@@ -33,7 +33,7 @@ import static android.content.DialogInterface.BUTTON_POSITIVE;
 /**
  * Created by samuelgithengi on 1/30/19.
  */
-public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter implements PasswordRequestCallback, UserLocationCallback, DialogInterface.OnClickListener {
+public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter implements PasswordRequestCallback, UserLocationCallback {
 
     private JsonFormFragment formFragment;
 
@@ -58,14 +58,10 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
     @Override
     public void validateAndWriteValues() {
         super.validateAndWriteValues();
-        boolean outOfOperationalArea = false;
         for (View childAt : formFragment.getJsonApi().getFormDataViews()) {
             if (childAt instanceof RevealMapView) {
                 RevealMapView mapView = (RevealMapView) childAt;
-                ValidationStatus validationStatus = GeoWidgetFactory.validate(formFragment, mapView);
-                if (validationStatus != null && StringUtils.isNotBlank(validationStatus.getErrorMessage())) {
-                    outOfOperationalArea = validationStatus.getErrorMessage().equals(formFragment.getContext().getString(R.string.register_outside_boundary_warning));
-                }
+                ValidationStatus validationStatus = GeoWidgetFactory.validate(formFragment, mapView, this);
                 String key = (String) childAt.getTag(com.vijay.jsonwizard.R.id.key);
                 String mStepName = this.getView().getArguments().getString("stepName");
                 String fieldKey = mStepName + " (" + mStepDetails.optString("title") + ") :" + key;
@@ -86,9 +82,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
             onLocationValidated();
 
         } else {//if form is invalid whether having a map or not
-            if (Utils.displayAddStructureOutOfBoundaryWarningDialog() && outOfOperationalArea) {
-                AlertDialogUtils.displayNotificationWithCallback(formFragment.getContext(), R.string.register_outside_boundary_title, R.string.register_outside_boundary_warning, R.string.register, R.string.cancel, this);
-            } else if (showErrorsOnSubmit()) {
+            if (showErrorsOnSubmit()) {
                 launchErrorDialog();
                 getView().showToast(getView().getContext().getResources().getString(R.string.json_form_error_msg, this.getInvalidFields().size()));
             } else {
@@ -157,20 +151,4 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         return locationPresenter;
     }
 
-    @Override
-    public void onClick(DialogInterface dialog, int which) {
-        switch (which) {
-            case BUTTON_NEGATIVE:
-                dialog.dismiss();
-                break;
-            case BUTTON_NEUTRAL:
-                dialog.dismiss();
-                break;
-            case BUTTON_POSITIVE:
-                onLocationValidated();
-                dialog.dismiss();
-                break;
-        }
-
-    }
 }
