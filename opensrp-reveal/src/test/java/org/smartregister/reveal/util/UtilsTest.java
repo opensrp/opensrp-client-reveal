@@ -66,7 +66,7 @@ public class UtilsTest {
     public void testgetDrawOperationalAreaBoundaryAndLabelReturnsDefaultValueWhenSettingsValueIsNull() throws Exception {
         RevealApplication revealApplication = initRevealApplicationMock();
 
-        when(revealApplication.getGlobalConfigs()).thenReturn(new HashMap<>());
+        when(revealApplication.getServerConfigs()).thenReturn(new HashMap<>());
         assertEquals(getDrawOperationalAreaBoundaryAndLabel(), Constants.CONFIGURATION.DEFAULT_DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL);
     }
 
@@ -77,7 +77,7 @@ public class UtilsTest {
         Map<String, String> settings = new HashMap<>();
         settings.put("draw_operational_area_boundary_and_label", "false");
 
-        when(revealApplication.getGlobalConfigs()).thenReturn(settings);
+        when(revealApplication.getServerConfigs()).thenReturn(settings);
         assertFalse(getDrawOperationalAreaBoundaryAndLabel());
     }
 
@@ -88,7 +88,7 @@ public class UtilsTest {
         Map<String, String> settings = new HashMap<>();
         settings.put("draw_operational_area_boundary_and_label", "true");
 
-        when(revealApplication.getGlobalConfigs()).thenReturn(settings);
+        when(revealApplication.getServerConfigs()).thenReturn(settings);
         assert(getDrawOperationalAreaBoundaryAndLabel());
     }
 
@@ -134,7 +134,7 @@ public class UtilsTest {
         Map<String, String> settings = new HashMap<>();
         settings.put(VALIDATE_FAR_STRUCTURES, "true");
 
-        when(revealApplication.getGlobalConfigs()).thenReturn(settings);
+        when(revealApplication.getServerConfigs()).thenReturn(settings);
         assertTrue(validateFarStructures());
     }
 
@@ -145,7 +145,7 @@ public class UtilsTest {
         Map<String, String> settings = new HashMap<>();
         settings.put(VALIDATE_FAR_STRUCTURES, "false");
 
-        when(revealApplication.getGlobalConfigs()).thenReturn(settings);
+        when(revealApplication.getServerConfigs()).thenReturn(settings);
         assertFalse(validateFarStructures());
     }
 
@@ -157,7 +157,7 @@ public class UtilsTest {
         Map<String, String> settings = new HashMap<>();
         settings.put(RESOLVE_LOCATION_TIMEOUT_IN_SECONDS, testResolveLocationTimeoutInSeconds.toString());
 
-        when(revealApplication.getGlobalConfigs()).thenReturn(settings);
+        when(revealApplication.getServerConfigs()).thenReturn(settings);
         assertEquals(testResolveLocationTimeoutInSeconds.intValue(), getResolveLocationTimeoutInSeconds());
         assertNotEquals(testResolveLocationTimeoutInSeconds.intValue(), BuildConfig.RESOLVE_LOCATION_TIMEOUT_IN_SECONDS);
     }
@@ -170,7 +170,7 @@ public class UtilsTest {
         Map<String, String> settings = new HashMap<>();
         settings.put(ADMIN_PASSWORD_NOT_NEAR_STRUCTURES, testAdminPass);
 
-        when(revealApplication.getGlobalConfigs()).thenReturn(settings);
+        when(revealApplication.getServerConfigs()).thenReturn(settings);
         assertEquals(testAdminPass, getAdminPasswordNotNearStructures());
         assertNotEquals(testAdminPass, BuildConfig.ADMIN_PASSWORD_NOT_NEAR_STRUCTURES);
     }
@@ -181,7 +181,7 @@ public class UtilsTest {
         Map<String, String> settings = new HashMap<>();
         settings.put(DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG, "true");
 
-        when(revealApplication.getGlobalConfigs()).thenReturn(settings);
+        when(revealApplication.getServerConfigs()).thenReturn(settings);
         assertTrue(displayAddStructureOutOfBoundaryWarningDialog());
 
     }
@@ -192,7 +192,7 @@ public class UtilsTest {
         Map<String, String> settings = new HashMap<>();
         settings.put(DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG, "false");
 
-        when(revealApplication.getGlobalConfigs()).thenReturn(settings);
+        when(revealApplication.getServerConfigs()).thenReturn(settings);
         assertFalse(displayAddStructureOutOfBoundaryWarningDialog());
 
     }
