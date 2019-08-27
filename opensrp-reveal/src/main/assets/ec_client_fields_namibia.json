@@ -63,6 +63,270 @@
             "field": "obs.fieldCode",
             "concept": "nameHoH"
           }
+        },
+        {
+          "column_name": "householdAccessible",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "householdAccessible"
+          }
+        },
+        {
+          "column_name": "nSprayableTotal",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nSprayableTotal"
+          }
+        },
+        {
+          "column_name": "nSprayableZinc",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nSprayableZinc"
+          }
+        },
+        {
+          "column_name": "nSprayableTrad",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nSprayableTrad"
+          }
+        },
+        {
+          "column_name": "nSprayableMod",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nSprayableMod"
+          }
+        },
+        {
+          "column_name": "nSprayableCanopy",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nSprayableCanopy"
+          }
+        },
+        {
+          "column_name": "nUnsprayable",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nUnsprayable"
+          }
+        },
+        {
+          "column_name": "popTotal",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "popTotal"
+          }
+        },
+        {
+          "column_name": "nameHoH",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nameHoH"
+          }
+        },
+        {
+          "column_name": "firstVisitGroupHeading",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "firstVisitGroupHeading"
+          }
+        },
+        {
+          "column_name": "ableToSprayFirst",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "ableToSprayFirst"
+          }
+        },
+        {
+          "column_name": "nSprayedTotalFirst",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nSprayedTotalFirst"
+          }
+        },
+        {
+          "column_name": "nSprayedDDTFirst",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nSprayedDDTFirst"
+          }
+        },
+        {
+          "column_name": "nSprayedDeltaFirst",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nSprayedDeltaFirst"
+          }
+        },
+        {
+          "column_name": "nSprayedActellicFirst",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nSprayedActellicFirst"
+          }
+        },
+        {
+          "column_name": "nUnsprayedZincFirst",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nUnsprayedZincFirst"
+          }
+        },
+        {
+          "column_name": "nUnsprayedTradFirst",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nUnsprayedTradFirst"
+          }
+        },
+        {
+          "column_name": "nUnsprayedModFirst",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nUnsprayedModFirst"
+          }
+        },
+        {
+          "column_name": "nUnsprayedCanopyFirst",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nUnsprayedCanopyFirst"
+          }
+        },
+        {
+          "column_name": "unsprayedReasonFirst",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "unsprayedReasonFirst"
+          }
+        },
+        {
+          "column_name": "refusalReasonFirst",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "refusalReasonFirst"
+          }
+        },
+        {
+          "column_name": "refusalReasonOtherFirst",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "refusalReasonOtherFirst"
+          }
+        },
+        {
+          "column_name": "mopUpVisit",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "mopUpVisit"
+          }
+        },
+        {
+          "column_name": "nSprayedTotalMop",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nSprayedTotalMop"
+          }
+        },
+        {
+          "column_name": "nSprayedDDTMop",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nSprayedDDTMop"
+          }
+        },
+        {
+          "column_name": "nSprayedDeltaMop",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nSprayedDeltaMop"
+          }
+        },
+        {
+          "column_name": "nSprayedActellicMop",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nSprayedActellicMop"
+          }
+        },
+        {
+          "column_name": "unsprayedReasonMop",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "unsprayedReasonMop"
+          }
+        },
+        {
+          "column_name": "refusalReasonMop",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "refusalReasonMop"
+          }
+        },
+        {
+          "column_name": "refusalReasonOtherMop",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "refusalReasonOtherMop"
+          }
+        },
+        {
+          "column_name": "nPeopleProtected",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nPeopleProtected"
+          }
+        },
+        {
+          "column_name": "unsprayedReasonHH",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "unsprayedReasonHH"
+          }
+        },
+        {
+          "column_name": "refusalReasonHH",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "refusalReasonHH"
+          }
         }
       ]
     },
