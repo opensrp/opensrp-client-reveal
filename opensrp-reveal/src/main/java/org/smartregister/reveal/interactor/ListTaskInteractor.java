@@ -7,8 +7,11 @@ import net.sqlcipher.Cursor;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObject;
+import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
@@ -32,6 +35,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_UPDATED_
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_COMMENTS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -46,8 +50,12 @@ import static org.smartregister.reveal.util.Constants.Tables.PAOT_TABLE;
  */
 public class ListTaskInteractor extends BaseInteractor {
 
+
+    private CommonRepository commonRepository;
+
     public ListTaskInteractor(ListTaskContract.Presenter presenter) {
         super(presenter);
+        commonRepository = RevealApplication.getInstance().getContext().commonrepository(DatabaseKeys.SPRAYED_STRUCTURES);
     }
 
 
@@ -91,6 +99,8 @@ public class ListTaskInteractor extends BaseInteractor {
                     public void run() {
                         if (isForForm) {
                             ((ListTaskPresenter) presenterCallBack).onInterventionFormDetailsFetched(CARD_DETAILS);
+                            getSprayDetails(interventionType, featureId, CARD_DETAILS);
+
                         } else {
                             ((ListTaskPresenter) presenterCallBack).onCardDetailsFetched(CARD_DETAILS);
                         }
@@ -100,6 +110,22 @@ public class ListTaskInteractor extends BaseInteractor {
         };
 
         appExecutors.diskIO().execute(runnable);
+    }
+
+    private void getSprayDetails(String interventionType, String structureId, CardDetails cardDetails) {
+        if (IRS.equals(interventionType)) {
+            Cursor cursor = null;
+            try {
+                cursor = eventClientRepository.getWritableDatabase().rawQuery(
+                        String.format("select * from %s where %s = ?", SPRAYED_STRUCTURES, BASE_ENTITY_ID), new String[]{structureId});
+                CommonPersonObject commonPersonObject = commonRepository.getCommonPersonObjectFromCursor(cursor);
+                ((SprayCardDetails) cardDetails).setCommonPersonObject(commonPersonObject);
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        }
     }
 
     private CardDetails createCardDetails(Cursor cursor, String interventionType) {
@@ -140,7 +166,7 @@ public class ListTaskInteractor extends BaseInteractor {
     }
 
     private MosquitoHarvestCardDetails createPaotCardDetails(Cursor cursor, String interventionType) {
-        MosquitoHarvestCardDetails paotCardDetails =  new MosquitoHarvestCardDetails(
+        MosquitoHarvestCardDetails paotCardDetails = new MosquitoHarvestCardDetails(
                 cursor.getString(cursor.getColumnIndex(PAOT_STATUS)),
                 cursor.getString(cursor.getColumnIndex(LAST_UPDATED_DATE)),
                 null,
