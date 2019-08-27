@@ -58,7 +58,7 @@ public class CardDetailsUtil {
                 cardDetails.setStatusMessage(R.string.details_not_sprayable);
                 cardDetails.setReason(null);
                 break;
-            case BusinessStatus.PARTIALLY_SPRAYED:
+            case PARTIALLY_SPRAYED:
                 cardDetails.setStatusColor(R.color.partially_sprayed);
                 cardDetails.setStatusMessage(R.string.partially_sprayed);
                 break;
