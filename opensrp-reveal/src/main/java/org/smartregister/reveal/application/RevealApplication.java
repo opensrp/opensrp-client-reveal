@@ -58,6 +58,7 @@ import java.util.Map;
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.TEAM_CONFIGS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.GLOBAL_CONFIGS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KEY;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.SETTINGS;
@@ -80,7 +81,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     private PlanDefinitionRepository planDefinitionRepository;
     private PlanDefinitionSearchRepository planDefinitionSearchRepository;
 
-    private Map<String, String> globalConfigs;
+    private Map<String, String> serverConfigs;
 
     private static CommonFtsObject commonFtsObject;
 
@@ -128,7 +129,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         SyncStatusBroadcastReceiver.init(this);
 
         jsonSpecHelper = new JsonSpecHelper(this);
-        globalConfigs = new HashMap<>();
+        serverConfigs = new HashMap<>();
 
         Mapbox.getInstance(getApplicationContext(), BuildConfig.MAPBOX_SDK_ACCESS_TOKEN);
 
@@ -242,12 +243,12 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         return getInstance().getContext().allSettings();
     }
 
-    public void processGlobalConfigs() {
-        Setting globalSettings = getSettingsRepository().getSetting(GLOBAL_CONFIGS);
-        populateGlobalConfigs(globalSettings);
+    public void processServerConfigs() {
+        populateConfigs(getSettingsRepository().getSetting(GLOBAL_CONFIGS));
+        populateConfigs(getSettingsRepository().getSetting(TEAM_CONFIGS));
     }
 
-    private void populateGlobalConfigs(@NonNull Setting setting) {
+    private void populateConfigs(@NonNull Setting setting) {
         if (setting == null) {
             return;
         }
@@ -258,7 +259,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
                 String value = jsonObject.optString(VALUE, null);
                 String key = jsonObject.optString(KEY, null);
                 if (value != null && key != null) {
-                    globalConfigs.put(key, value);
+                    serverConfigs.put(key, value);
                 }
             }
         } catch (JSONException e) {
@@ -266,8 +267,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         }
     }
 
-    public Map<String, String> getGlobalConfigs() {
-        return globalConfigs;
+    public Map<String, String> getServerConfigs() {
+        return serverConfigs;
     }
 
     public FamilyMetadata getMetadata() {
