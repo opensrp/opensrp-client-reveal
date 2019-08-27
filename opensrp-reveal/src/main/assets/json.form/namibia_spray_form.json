@@ -344,7 +344,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Were you able to spray this structure on the first visit?",
+        "label": "Were you able to spray this household on a first visit or re-visit?",
         "options": [
           {
             "key": "yes",
@@ -1145,7 +1145,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Reason for not spraying this homestead",
+        "label": "Reason for not spraying this household",
         "options": [
           {
             "key": "refused",
