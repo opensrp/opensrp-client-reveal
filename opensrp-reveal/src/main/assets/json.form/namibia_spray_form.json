@@ -965,8 +965,7 @@
           "value": "nSprayedTotalMop",
           "related_fields": [
             "nSprayedDDTMop",
-            "nSprayedDeltaMop",
-            "nSprayedActellicMop"
+            "nSprayedDeltaMop"
           ],
           "err": "The sum of DDT, Delta and Actellic must equal total sprayed during mop-up"
         },
