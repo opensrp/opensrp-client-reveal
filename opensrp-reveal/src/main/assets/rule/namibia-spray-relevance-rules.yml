@@ -62,6 +62,13 @@ condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSpra
 actions:
   - "isRelevant = true"
 ---
+name: step1_ableToSprayFirst
+description: step1_ableToSprayFirst
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0 "
+actions:
+  - "isRelevant = true"
+---
 name: step1_nSprayedTotalFirst
 description: step1_nSprayedTotalFirst
 priority: 1

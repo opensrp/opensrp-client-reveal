@@ -360,6 +360,13 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
