@@ -240,7 +240,7 @@ actions:
 name: step1_unsprayedReasonHH
 description: step1_unsprayedReasonHH
 priority: 1
-condition: "step1_householdAccessible.equals('no') && step1_ableToSprayFirst.equals('no') && step1_mopUpVisit.equals('no')"
+condition: "step1_householdAccessible.equals('no') || ( step1_ableToSprayFirst.equals('no') && step1_mopUpVisit.equals('no'))"
 actions:
   - "isRelevant = true"
 ---
