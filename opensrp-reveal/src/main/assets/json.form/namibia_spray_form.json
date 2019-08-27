@@ -74,19 +74,6 @@
         }
       },
       {
-        "key": "villageName",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Village Name",
-        "text_size": "8sp",
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        }
-      },
-      {
         "key": "nSprayableTotal",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
