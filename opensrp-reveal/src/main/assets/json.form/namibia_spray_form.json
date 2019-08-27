@@ -660,7 +660,6 @@
             "nUnsprayedZincFirst",
             "nUnsprayedTradFirst",
             "nUnsprayedModFirst",
-            "nUnsprayedCanopyFirst"
           ],
           "err": "The sum of unsprayed zinc, traditional, modern and canopy structures must equal total unsprayed structures"
         },
