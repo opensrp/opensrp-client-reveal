@@ -488,8 +488,7 @@
           "value": "nSprayableTotalFirst",
           "related_fields": [
             "nSprayedDDTFirst",
-            "nSprayedDeltaFirst",
-            "nSprayedActellicFirst"
+            "nSprayedDeltaFirst"
           ],
           "err": "The sum of DDT, Delta and Actellic must equal total sprayed"
         },
