@@ -226,8 +226,7 @@
           "related_fields": [
             "nSprayableZinc",
             "nSprayableTrad",
-            "nSprayableMod",
-            "nSprayableCanopy"
+            "nSprayableMod"
           ],
           "err": "The sum of Zinc, traditional, modern, canopy must equal total number of sprayable structures"
         },
