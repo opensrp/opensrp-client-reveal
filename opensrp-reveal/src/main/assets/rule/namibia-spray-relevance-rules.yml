@@ -233,7 +233,7 @@ actions:
 name: step1_nPeopleProtected
 description: step1_nPeopleProtected
 priority: 1
-condition: "step1_householdAccessible.equals('yes')"
+condition: "step1_householdAccessible.equals('yes') &&  (helper.ifNull(step1_nSprayedTotalFirst,0) >0  ||  helper.ifNull(step1_nSprayedTotalMop,0) > 0 )"
 actions:
   - "isRelevant = true"
 ---
