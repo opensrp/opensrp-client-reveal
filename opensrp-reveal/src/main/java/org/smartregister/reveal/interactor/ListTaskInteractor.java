@@ -117,9 +117,13 @@ public class ListTaskInteractor extends BaseInteractor {
             Cursor cursor = null;
             try {
                 cursor = eventClientRepository.getWritableDatabase().rawQuery(
-                        String.format("select * from %s where %s = ?", SPRAYED_STRUCTURES, BASE_ENTITY_ID), new String[]{structureId});
-                CommonPersonObject commonPersonObject = commonRepository.getCommonPersonObjectFromCursor(cursor);
-                ((SprayCardDetails) cardDetails).setCommonPersonObject(commonPersonObject);
+                        String.format("select s.*, id as _id from %s s where %s = ?", SPRAYED_STRUCTURES, BASE_ENTITY_ID), new String[]{structureId});
+                if (cursor.moveToFirst()) {
+                    CommonPersonObject commonPersonObject = commonRepository.getCommonPersonObjectFromCursor(cursor);
+                    ((SprayCardDetails) cardDetails).setCommonPersonObject(commonPersonObject);
+                }
+            } catch (Exception e) {
+                Timber.e(e);
             } finally {
                 if (cursor != null) {
                     cursor.close();

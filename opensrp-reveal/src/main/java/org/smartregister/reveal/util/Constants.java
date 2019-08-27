@@ -171,6 +171,7 @@ public interface Constants {
         String FAMILY_REGISTERED = "Family Registered";
         String BEDNET_DISTRIBUTED = "Bednet Distributed";
         String BLOOD_SCREENING_COMPLETE = "Blood Screening Complete";
+        String PARTIALLY_SPRAYED ="Partially Sprayed";
     }
 
 

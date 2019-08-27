@@ -262,14 +262,14 @@ public class RevealJsonFormUtils {
     }
 
     public void populateSprayForm(CommonPersonObject commonPersonObject, JSONObject formJson) {
-        if (commonPersonObject == null)
+        if (commonPersonObject == null || commonPersonObject.getDetails() == null)
             return;
         JSONArray fields = JsonFormUtils.fields(formJson);
         for (int i = 0; i < fields.length(); i++) {
             try {
                 JSONObject field = fields.getJSONObject(i);
-                if (commonPersonObject.getColumnmaps().containsKey(field.getString(KEY))) {
-                    field.put(VALUE, commonPersonObject.getColumnmaps().get(field.getString(KEY)));
+                if (commonPersonObject.getDetails().containsKey(field.getString(KEY))) {
+                    field.put(VALUE, commonPersonObject.getDetails().get(field.getString(KEY)));
                 }
             } catch (JSONException e) {
                 Timber.e(e);
