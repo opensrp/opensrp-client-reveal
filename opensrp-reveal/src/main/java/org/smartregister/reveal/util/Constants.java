@@ -53,6 +53,7 @@ public interface Constants {
     interface CONFIGURATION {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";
+        String TEAM_CONFIGS = "team_configs";
         String KEY = "key";
         String VALUE = "value";
         String SETTINGS = "settings";
@@ -367,9 +368,9 @@ public interface Constants {
 
         String GROUPED_TASKS = "grouped_tasks";
 
-        String LAST_UPDATED_DATE ="last_updated_date";
+        String LAST_UPDATED_DATE = "last_updated_date";
 
-        String PAOT_STATUS ="paot_status";
+        String PAOT_STATUS = "paot_status";
 
         String PAOT_COMMENTS = "paot_comments";
 

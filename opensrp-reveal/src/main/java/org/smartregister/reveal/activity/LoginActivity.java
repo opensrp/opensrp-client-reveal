@@ -32,7 +32,7 @@ public class LoginActivity extends BaseLoginActivity implements BaseLoginContrac
 
         finish();
 
-        RevealApplication.getInstance().processGlobalConfigs();
+        RevealApplication.getInstance().processServerConfigs();
 
     }
 

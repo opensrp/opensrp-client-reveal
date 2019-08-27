@@ -20,7 +20,7 @@ public class RevealSettingsSyncIntentService extends SettingsSyncIntentService {
         super.onHandleIntent(intent);
         Bundle data = intent.getExtras();
         if (data != null && data.getInt(AllConstants.INTENT_KEY.SYNC_TOTAL_RECORDS, 0) > 0) {
-            RevealApplication.getInstance().processGlobalConfigs();
+            RevealApplication.getInstance().processServerConfigs();
             // broadcast sync event
             Intent refreshGeoWidgetIntent = new Intent(STRUCTURE_TASK_SYNCED);
             refreshGeoWidgetIntent.putExtra(UPDATE_LOCATION_BUFFER_RADIUS, true);
