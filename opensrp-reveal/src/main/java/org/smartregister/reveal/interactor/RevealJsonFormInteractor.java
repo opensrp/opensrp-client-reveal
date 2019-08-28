@@ -2,6 +2,8 @@ package org.smartregister.reveal.interactor;
 
 import com.vijay.jsonwizard.interactors.JsonFormInteractor;
 
+import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
 import org.smartregister.reveal.widget.RevealEditTextFactory;
 import org.smartregister.reveal.widget.RevealLabelFactory;
@@ -28,7 +30,13 @@ public class RevealJsonFormInteractor extends JsonFormInteractor {
     @Override
     protected void registerWidgets() {
         super.registerWidgets();
-        map.put(GEOWIDGET, new GeoWidgetFactory());
+
+        if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
+            map.put(GEOWIDGET, new GeoWidgetFactory());
+        } else {
+            map.put(GEOWIDGET, new GeoWidgetFactory(false));
+        }
+
         map.put(EDIT_TEXT, new RevealEditTextFactory());
         map.put(NATIVE_RADIO_BUTTON, new RevealRadioButtonFactory());
         map.put(LABEL, new RevealLabelFactory());

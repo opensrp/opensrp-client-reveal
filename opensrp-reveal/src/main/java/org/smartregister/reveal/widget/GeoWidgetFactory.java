@@ -46,8 +46,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Map;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.reveal.validators.MinZoomValidator;
@@ -93,6 +93,15 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
     private ImageButton myLocationButton;
 
     private RevealMapHelper mapHelper = new RevealMapHelper();
+
+    private boolean autoSizeGeoWidget = true;
+
+    public GeoWidgetFactory() {
+    }
+
+    public GeoWidgetFactory(boolean autoSizeGeoWidget) {
+        this.autoSizeGeoWidget = autoSizeGeoWidget;
+    }
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView, RevealMapView mapView, JsonFormFragmentPresenter presenter) {
 
@@ -280,10 +289,15 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
         ((JsonApi) context).addFormDataView(mapView);
 
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        int mapViewHeight = displayMetrics.heightPixels / 2;
+        if (autoSizeGeoWidget) {
+            mapView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1));
+        } else {
+            DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+            int mapViewHeight = displayMetrics.heightPixels / 2;
 
-        mapView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  mapViewHeight));
+            mapView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,  mapViewHeight));
+        }
+
 
         addMaximumZoomLevel(jsonObject, mapView);
         addWithinOperationalAreaValidator(context);

@@ -269,6 +269,8 @@ public interface Constants {
 
         String SELECTED_OPERATIONAL_AREA_NAME = "selectedOpAreaName";
 
+        String NAMIBIA_ADD_STRUCTURE_FORM = "json.form/namibia_add_structure.json";
+
     }
 
     interface DateFormat {
