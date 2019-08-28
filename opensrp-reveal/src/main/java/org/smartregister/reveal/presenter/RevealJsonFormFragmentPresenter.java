@@ -18,10 +18,13 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
+import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
+
+import io.ona.kujaku.listeners.BaseLocationListener;
 
 /**
  * Created by samuelgithengi on 1/30/19.
@@ -38,6 +41,11 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
 
     private ValidateUserLocationPresenter locationPresenter;
 
+    private LocationUtils locationUtils;
+
+    private Location lastLocation;
+
+    private BaseLocationListener locationListener;
 
     public RevealJsonFormFragmentPresenter(JsonFormFragment formFragment, JsonFormInteractor jsonFormInteractor) {
         super(formFragment, jsonFormInteractor);
@@ -45,7 +53,14 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         passwordDialog = PasswordDialogUtils.initPasswordDialog(formFragment.getActivity(), this);
         jsonFormView = (RevealJsonFormActivity) formFragment.getActivity();
         locationPresenter = new ValidateUserLocationPresenter(jsonFormView, this);
-
+        locationUtils = new LocationUtils(jsonFormView);
+        locationListener = new BaseLocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                lastLocation = location;
+            }
+        };
+        locationUtils.requestLocationUpdates(locationListener);
     }
 
     @Override
@@ -134,14 +149,20 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         onLocationValidated();
     }
 
-
-    public RevealMapView getMapView() {
-        return mapView;
-    }
-
     @Override
     public ValidateUserLocationPresenter getLocationPresenter() {
         return locationPresenter;
     }
 
+    public LocationUtils getLocationUtils() {
+        return locationUtils;
+    }
+
+    public Location getLastLocation() {
+        return lastLocation;
+    }
+
+    public BaseLocationListener getLocationListener() {
+        return locationListener;
+    }
 }

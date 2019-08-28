@@ -13,7 +13,6 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.fragment.RevealJsonFormFragment;
 
-import io.ona.kujaku.interfaces.ILocationClient;
 import io.ona.kujaku.utils.Constants;
 
 /**
@@ -32,7 +31,6 @@ public class RevealJsonFormActivity extends JsonFormActivity implements UserLoca
         super.onCreate(savedInstanceState);
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
-
     }
 
     @Override
@@ -46,6 +44,7 @@ public class RevealJsonFormActivity extends JsonFormActivity implements UserLoca
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.RequestCode.LOCATION_SETTINGS && requestedLocation) {
             if (resultCode == RESULT_OK) {
+                formFragment.getPresenter().getLocationUtils().requestLocationUpdates(formFragment.getPresenter().getLocationListener());
                 formFragment.getPresenter().getLocationPresenter().waitForUserLocation();
             } else if (resultCode == RESULT_CANCELED) {
                 formFragment.getPresenter().getLocationPresenter().onGetUserLocationFailed();
@@ -64,8 +63,7 @@ public class RevealJsonFormActivity extends JsonFormActivity implements UserLoca
 
     @Override
     public Location getUserCurrentLocation() {
-        ILocationClient client = formFragment.getPresenter().getMapView().getLocationClient();
-        return client == null ? null : client.getLastLocation();
+        return formFragment.getPresenter().getLastLocation();
     }
 
     @Override
@@ -77,7 +75,6 @@ public class RevealJsonFormActivity extends JsonFormActivity implements UserLoca
         }
     }
 
-
     @Override
     public void hideProgressDialog() {
         if (progressDialog != null) {
@@ -87,10 +84,13 @@ public class RevealJsonFormActivity extends JsonFormActivity implements UserLoca
 
     @Override
     public void requestUserLocation() {
-        formFragment.getPresenter().getMapView().setWarmGps(true,
-                getString(R.string.location_service_disabled), getString(R.string.location_services_disabled_add));
+        formFragment.getPresenter().getLocationUtils().checkLocationSettingsAndStartLocationServices(this, formFragment.getPresenter().getLocationListener());
         requestedLocation = true;
-
     }
 
+    @Override
+    protected void onStop() {
+        formFragment.getPresenter().getLocationUtils().stopLocationClient();
+        super.onStop();
+    }
 }
