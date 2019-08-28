@@ -23,6 +23,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBL
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -56,6 +57,10 @@ public class CardDetailsUtil {
                 cardDetails.setStatusColor(R.color.unsprayable);
                 cardDetails.setStatusMessage(R.string.details_not_sprayable);
                 cardDetails.setReason(null);
+                break;
+            case PARTIALLY_SPRAYED:
+                cardDetails.setStatusColor(R.color.partially_sprayed);
+                cardDetails.setStatusMessage(R.string.partially_sprayed);
                 break;
             default:
                 Timber.w("business status not defined :" + cardDetails.getStatus());
@@ -150,6 +155,8 @@ public class CardDetailsUtil {
                 return context.getString(R.string.not_eligible);
             case IN_PROGRESS:
                 return context.getString(R.string.in_progress);
+            case PARTIALLY_SPRAYED:
+                return context.getString(R.string.partially_sprayed);
             default:
                 return businessStatus;
         }
