@@ -448,8 +448,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void displaySelectedFeature(Feature feature, LatLng point) {
-        adjustFocusPoint(point);
-        kujakuMapView.centerMap(point, ANIMATE_TO_LOCATION_DURATION, mMapboxMap.getCameraPosition().zoom);
+        displaySelectedFeature(feature, point, mMapboxMap.getCameraPosition().zoom);
+    }
+
+    @Override
+    public void displaySelectedFeature(Feature feature, LatLng clickedPoint, double zoomlevel) {
+        adjustFocusPoint(clickedPoint);
+        kujakuMapView.centerMap(clickedPoint, ANIMATE_TO_LOCATION_DURATION, zoomlevel);
         if (selectedGeoJsonSource != null) {
             selectedGeoJsonSource.setGeoJson(FeatureCollection.fromFeature(feature));
         }

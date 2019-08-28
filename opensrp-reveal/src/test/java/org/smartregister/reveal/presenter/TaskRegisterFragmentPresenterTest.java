@@ -342,7 +342,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnStructureAdded() {
-        presenter.onStructureAdded(null, null);
+        presenter.onStructureAdded(null, null, 17);
         verify(view).getContext();
         verifyNoMoreInteractions(view);
         verifyNoMoreInteractions(interactor);

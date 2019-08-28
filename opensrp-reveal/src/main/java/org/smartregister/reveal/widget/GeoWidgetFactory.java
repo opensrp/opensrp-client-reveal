@@ -80,7 +80,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
     private static final String TAG = "GeoWidgetFactory";
 
-    private static final String ZOOM_LEVEL = "zoom_level";
+    public static final String ZOOM_LEVEL = "zoom_level";
 
     private static final String MAX_ZOOM_LEVEL = "v_zoom_max";
 

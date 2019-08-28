@@ -96,7 +96,7 @@ public class TaskRegisterPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnStructureAdded() {
-        presenter.onStructureAdded(null, new JSONArray());
+        presenter.onStructureAdded(null, new JSONArray(), 17);
         verify(view).hideProgressDialog();
         verifyNoMoreInteractions(view);
     }
