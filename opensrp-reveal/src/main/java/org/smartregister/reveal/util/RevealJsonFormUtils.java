@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Location;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
@@ -262,4 +263,20 @@ public class RevealJsonFormUtils {
         }
     }
 
+    public void populateSprayForm(CommonPersonObject commonPersonObject, JSONObject formJson) {
+        if (commonPersonObject == null || commonPersonObject.getDetails() == null)
+            return;
+        JSONArray fields = JsonFormUtils.fields(formJson);
+        for (int i = 0; i < fields.length(); i++) {
+            try {
+                JSONObject field = fields.getJSONObject(i);
+                if (commonPersonObject.getDetails().containsKey(field.getString(KEY))) {
+                    field.put(VALUE, commonPersonObject.getDetails().get(field.getString(KEY)));
+                }
+            } catch (JSONException e) {
+                Timber.e(e);
+            }
+
+        }
+    }
 }

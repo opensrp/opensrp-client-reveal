@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task.TaskStatus;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
@@ -31,6 +32,7 @@ import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -239,7 +241,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     onLocationValidated();
                 }
             } else if (IRS.equals(code) &&
-                    (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus) || PARTIALLY_SPRAYED.equals(businessStatus))) {
+                    (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus)) || PARTIALLY_SPRAYED.equals(businessStatus)) {
                 listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
             } else if ((MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code))
                     && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
@@ -324,6 +326,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 , formName, feature, sprayStatus, familyHead);
         if (cardDetails instanceof MosquitoHarvestCardDetails && PAOT.equals(((MosquitoHarvestCardDetails) cardDetails).getInterventionType())) {
             jsonFormUtils.populatePAOTForm((MosquitoHarvestCardDetails) cardDetails, formJson);
+        } else if (cardDetails instanceof SprayCardDetails && Country.NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
+            jsonFormUtils.populateSprayForm(((SprayCardDetails) cardDetails).getCommonPersonObject(), formJson);
         }
         listTaskView.startJsonForm(formJson);
     }
