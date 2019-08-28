@@ -485,7 +485,7 @@
           "err": "Must be greater than or equal to 0"
         },
         "v_cumulative_total": {
-          "value": "nSprayableTotalFirst",
+          "value": "nSprayedTotalFirst",
           "related_fields": [
             "nSprayedDDTFirst",
             "nSprayedDeltaFirst"
