@@ -107,28 +107,28 @@ actions:
 name: step1_nUnsprayedZincFirst
 description:
 priority: 1
-condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayable,0) > 0 && step1_ableToSprayFirst.equals('yes') && helper.ifNull(step1_nSprayableZinc,0) > 0"
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayedTotalFirst,0) > 0 && step1_ableToSprayFirst.equals('yes') && helper.ifNull(step1_nSprayableZinc,0) > 0"
 actions:
   - "isRelevant = true"
 ---
 name: step1_nUnsprayedTradFirst
 description: step1_nUnsprayedTradFirst
 priority: 1
-condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayable,0) > 0 && step1_ableToSprayFirst.equals('yes')  && helper.ifNull(step1_nSprayableTrad,0) > 0"
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayedTotalFirst,0) > 0 && step1_ableToSprayFirst.equals('yes')  && helper.ifNull(step1_nSprayableTrad,0) > 0"
 actions:
   - "isRelevant = true"
 ---
 name: step1_nUnsprayedModFirst
 description: step1_nUnsprayedModFirst
 priority: 1
-condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayable,0) > 0 && step1_ableToSprayFirst.equals('yes')  && helper.ifNull(step1_nSprayableMod,0) > 0"
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayedTotalFirst,0) > 0 && step1_ableToSprayFirst.equals('yes')  && helper.ifNull(step1_nSprayableMod,0) > 0"
 actions:
   - "isRelevant = true"
 ---
 name: step1_nUnsprayedCanopyFirst
 description: step1_nUnsprayedCanopyFirst
 priority: 1
-condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayable,0) > 0 && step1_ableToSprayFirst.equals('yes')  && helper.ifNull(step1_nSprayableCanopy,0) > 0"
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayedTotalFirst,0) > 0 && step1_ableToSprayFirst.equals('yes')  && helper.ifNull(step1_nSprayableCanopy,0) > 0"
 actions:
   - "isRelevant = true"
 ---
