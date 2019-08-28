@@ -368,7 +368,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         listTaskView.setGeoJsonSource(featureCollection, null, isChangeMapPosition());
         try {
             clickedPoint = new LatLng(featureCoordinates.getDouble(1), featureCoordinates.getDouble(0));
-            listTaskView.displaySelectedFeature(feature, clickedPoint,zoomlevel);
+            listTaskView.displaySelectedFeature(feature, clickedPoint, zoomlevel);
 
         } catch (JSONException e) {
             Timber.e(e, "error extracting coordinates of added structure");
@@ -466,7 +466,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if (!revealApplication.isMyLocationComponentEnabled() && listTaskView.isMyLocationComponentActive()
                 || !listTaskView.isMyLocationComponentActive()) {
             listTaskView.focusOnUserLocation(false);
-            listTaskView.setGeoJsonSource(featureCollection, operationalArea, true);
+            listTaskView.setGeoJsonSource(featureCollection, operationalArea, false);
         }
     }
 
