@@ -63,7 +63,7 @@ public class TaskRegisterPresenter implements TaskRegisterContract.Presenter, Ba
     }
 
     @Override
-    public void onStructureAdded(Feature feature, JSONArray featureCoordinates) {
+    public void onStructureAdded(Feature feature, JSONArray featureCoordinates, double zoomlevel) {
         view.hideProgressDialog();//register will refresh on resume
     }
 

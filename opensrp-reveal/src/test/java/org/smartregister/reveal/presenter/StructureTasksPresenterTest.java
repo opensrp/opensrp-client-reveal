@@ -159,7 +159,7 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnStructureAdded() {
-        presenter.onStructureAdded(null, null);
+        presenter.onStructureAdded(null, null, 17);
         verifyNoMoreInteractions(interactor);
         verifyNoMoreInteractions(view);
     }

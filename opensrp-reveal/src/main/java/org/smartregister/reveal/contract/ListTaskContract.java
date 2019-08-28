@@ -36,7 +36,7 @@ public interface ListTaskContract {
 
         void registerFamily();
 
-        void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea,  boolean maintainUsersCurrentMapCameraPosition);
+        void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea,  boolean changeMapPosition);
 
         void displayNotification(int title, @StringRes int message, Object... formatArgs);
 
@@ -48,6 +48,8 @@ public interface ListTaskContract {
 
         void displaySelectedFeature(Feature feature, LatLng clickedPoint);
 
+        void displaySelectedFeature(Feature feature, LatLng clickedPoint, double zoomlevel);
+
         void clearSelectedFeature();
 
         void displayToast(@StringRes int resourceId);
@@ -57,6 +59,7 @@ public interface ListTaskContract {
         void focusOnUserLocation(boolean focusOnUserLocation);
 
         boolean isMyLocationComponentActive();
+
     }
 
     interface Presenter extends BaseContract.BasePresenter {
@@ -65,7 +68,7 @@ public interface ListTaskContract {
 
         void onDrawerClosed();
 
-        void onStructureAdded(Feature feature, JSONArray featureCoordinates);
+        void onStructureAdded(Feature feature, JSONArray featureCoordinates, double zoomlevel);
 
         void onFormSaveFailure(String eventType);
 

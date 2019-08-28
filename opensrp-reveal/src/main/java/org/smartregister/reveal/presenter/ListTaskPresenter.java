@@ -362,14 +362,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
-    public void onStructureAdded(Feature feature, JSONArray featureCoordinates) {
+    public void onStructureAdded(Feature feature, JSONArray featureCoordinates, double zoomlevel) {
         listTaskView.hideProgressDialog();
         featureCollection.features().add(feature);
         setChangeMapPosition(false);
         listTaskView.setGeoJsonSource(featureCollection, null, isChangeMapPosition());
         try {
             clickedPoint = new LatLng(featureCoordinates.getDouble(1), featureCoordinates.getDouble(0));
-            listTaskView.displaySelectedFeature(feature, clickedPoint);
+            listTaskView.displaySelectedFeature(feature, clickedPoint, zoomlevel);
 
         } catch (JSONException e) {
             Timber.e(e, "error extracting coordinates of added structure");
@@ -467,7 +467,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if (!revealApplication.isMyLocationComponentEnabled() && listTaskView.isMyLocationComponentActive()
                 || !listTaskView.isMyLocationComponentActive()) {
             listTaskView.focusOnUserLocation(false);
-            listTaskView.setGeoJsonSource(featureCollection, operationalArea, true);
+            listTaskView.setGeoJsonSource(featureCollection, operationalArea, false);
         }
     }
 
