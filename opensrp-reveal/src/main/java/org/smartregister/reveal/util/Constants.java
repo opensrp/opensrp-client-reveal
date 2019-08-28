@@ -38,7 +38,7 @@ public interface Constants {
 
     double MY_LOCATION_ZOOM_LEVEL = 17.5; // modifying this will also necessitate modifying the VERTICAL_OFFSET
 
-    double VERTICAL_OFFSET = -0.0003;
+    double VERTICAL_OFFSET = 0.0;
 
     double REFRESH_MAP_MINIMUM_DISTANCE = 5;
 
