@@ -31,6 +31,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBL
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -86,6 +87,14 @@ public class CardDetailsUtilTest extends BaseUnitTest {
         formatCardDetails(cardDetails);
         assertEquals(cardDetails.getStatusColor().intValue(), R.color.unsprayable);
         assertEquals(cardDetails.getStatusMessage(), R.string.details_not_sprayable);
+    }
+
+    @Test
+    public void testFormatCardDetailsPartiallySprayedShouldSetCorrectStatusAndColor() {
+        CardDetails cardDetails = new CardDetails(PARTIALLY_SPRAYED);
+        formatCardDetails(cardDetails);
+        assertEquals(cardDetails.getStatusColor().intValue(), R.color.partially_sprayed);
+        assertEquals(cardDetails.getStatusMessage(), R.string.partially_sprayed);
     }
 
     @Test

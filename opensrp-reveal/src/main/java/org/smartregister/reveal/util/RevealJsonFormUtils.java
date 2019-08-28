@@ -225,6 +225,8 @@ public class RevealJsonFormUtils {
         } else if (REGISTER_STRUCTURE_EVENT.equals(encounterType)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_ADD_STRUCTURE_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
+                formName = JsonForm.NAMIBIA_ADD_STRUCTURE_FORM;
             } else {
                 formName = JsonForm.ADD_STRUCTURE_FORM;
             }

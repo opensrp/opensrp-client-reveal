@@ -8,8 +8,6 @@ import org.smartregister.reveal.job.LocationTaskServiceJob;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.view.contract.BaseLoginContract;
 
-import java.util.concurrent.TimeUnit;
-
 public class LoginInteractor extends BaseLoginInteractor implements BaseLoginContract.Interactor {
 
     public LoginInteractor(BaseLoginContract.Presenter loginPresenter) {
@@ -18,11 +16,11 @@ public class LoginInteractor extends BaseLoginInteractor implements BaseLoginCon
 
     @Override
     protected void scheduleJobsPeriodically() {
-        LocationTaskServiceJob.scheduleJob(LocationTaskServiceJob.TAG, TimeUnit.MINUTES.toMillis(
-                BuildConfig.SYNC_INTERVAL_IN_MINUTES), getFlexValue(BuildConfig.SYNC_INTERVAL_IN_MINUTES));
+        LocationTaskServiceJob.scheduleJob(LocationTaskServiceJob.TAG,
+                BuildConfig.SYNC_INTERVAL_IN_MINUTES, getFlexValue((int) BuildConfig.SYNC_INTERVAL_IN_MINUTES));
 
-        PullUniqueIdsServiceJob.scheduleJob(SyncServiceJob.TAG, TimeUnit.MINUTES.toMillis(
-                BuildConfig.PULL_UNIQUE_IDS_MINUTES), getFlexValue(BuildConfig.PULL_UNIQUE_IDS_MINUTES));
+        PullUniqueIdsServiceJob.scheduleJob(SyncServiceJob.TAG,
+                BuildConfig.PULL_UNIQUE_IDS_MINUTES, getFlexValue((int) BuildConfig.PULL_UNIQUE_IDS_MINUTES));
     }
 
     @Override

@@ -171,7 +171,7 @@ public interface Constants {
         String FAMILY_REGISTERED = "Family Registered";
         String BEDNET_DISTRIBUTED = "Bednet Distributed";
         String BLOOD_SCREENING_COMPLETE = "Blood Screening Complete";
-        String PARTIALLY_SPRAYED ="Partially Sprayed";
+        String PARTIALLY_SPRAYED = "Partially Sprayed";
     }
 
 
@@ -268,6 +268,8 @@ public interface Constants {
         String LAST_UPDATED_DATE = "lastUpdatedDate";
 
         String SELECTED_OPERATIONAL_AREA_NAME = "selectedOpAreaName";
+
+        String NAMIBIA_ADD_STRUCTURE_FORM = "json.form/namibia_add_structure.json";
 
     }
 
