@@ -62,6 +62,8 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
 
     private Button detectCaseButton;
 
+    private List<StructureTaskDetails> taskDetailsList;
+
     public static StructureTasksFragment newInstance(Bundle bundle, Context context) {
         StructureTasksFragment fragment = new StructureTasksFragment();
         if (bundle != null) {
@@ -98,6 +100,9 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     private void initializeAdapter() {
         adapter = new StructureTaskAdapter(onClickListener);
         taskRecyclerView.setAdapter(adapter);
+        if (taskDetailsList != null) {
+            setTaskDetailsList(taskDetailsList);
+        }
     }
 
     private void setUpViews(View view) {
@@ -178,8 +183,13 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
 
     @Override
     public void setTaskDetailsList(List<StructureTaskDetails> taskDetailsList) {
-        adapter.setTaskDetailsList(taskDetailsList);
-        updateNumberOfTasks();
+        if (adapter == null) {
+            this.taskDetailsList = taskDetailsList;
+        } else {
+            adapter.setTaskDetailsList(taskDetailsList);
+            updateNumberOfTasks();
+            this.taskDetailsList = null;
+        }
     }
 
     @Override
