@@ -74,19 +74,6 @@
         }
       },
       {
-        "key": "villageName",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Village Name",
-        "text_size": "8sp",
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        }
-      },
-      {
         "key": "nSprayableTotal",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -239,8 +226,7 @@
           "related_fields": [
             "nSprayableZinc",
             "nSprayableTrad",
-            "nSprayableMod",
-            "nSprayableCanopy"
+            "nSprayableMod"
           ],
           "err": "The sum of Zinc, traditional, modern, canopy must equal total number of sprayable structures"
         },
@@ -358,7 +344,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Were you able to spray this structure on the first visit?",
+        "label": "Were you able to spray this household on a first visit or re-visit?",
         "options": [
           {
             "key": "yes",
@@ -373,6 +359,13 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -492,11 +485,10 @@
           "err": "Must be greater than or equal to 0"
         },
         "v_cumulative_total": {
-          "value": "nSprayableTotalFirst",
+          "value": "nSprayedTotalFirst",
           "related_fields": [
             "nSprayedDDTFirst",
-            "nSprayedDeltaFirst",
-            "nSprayedActellicFirst"
+            "nSprayedDeltaFirst"
           ],
           "err": "The sum of DDT, Delta and Actellic must equal total sprayed"
         },
@@ -667,8 +659,7 @@
           "related_fields": [
             "nUnsprayedZincFirst",
             "nUnsprayedTradFirst",
-            "nUnsprayedModFirst",
-            "nUnsprayedCanopyFirst"
+            "nUnsprayedModFirst"
           ],
           "err": "The sum of unsprayed zinc, traditional, modern and canopy structures must equal total unsprayed structures"
         },
@@ -973,8 +964,7 @@
           "value": "nSprayedTotalMop",
           "related_fields": [
             "nSprayedDDTMop",
-            "nSprayedDeltaMop",
-            "nSprayedActellicMop"
+            "nSprayedDeltaMop"
           ],
           "err": "The sum of DDT, Delta and Actellic must equal total sprayed during mop-up"
         },
@@ -1152,7 +1142,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Reason for not spraying this homestead",
+        "label": "Reason for not spraying this household",
         "options": [
           {
             "key": "refused",
