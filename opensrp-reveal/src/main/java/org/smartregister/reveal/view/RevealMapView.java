@@ -44,7 +44,7 @@ public class RevealMapView extends KujakuMapView {
 
     @Override
     public void centerMap(@NonNull LatLng point, int animateToNewTargetDuration, double newZoom) {
-        super.centerMap(point, animateToNewTargetDuration, MY_LOCATION_ZOOM_LEVEL);
+        super.centerMap(point, animateToNewTargetDuration, newZoom > MY_LOCATION_ZOOM_LEVEL ? newZoom : MY_LOCATION_ZOOM_LEVEL);
     }
 
 

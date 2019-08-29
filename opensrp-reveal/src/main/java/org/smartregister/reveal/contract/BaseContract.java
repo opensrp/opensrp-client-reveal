@@ -18,7 +18,7 @@ public interface BaseContract {
         void onFormSaved(@NonNull String structureId,
                          String taskID, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType);
 
-        void onStructureAdded(Feature feature, JSONArray featureCoordinates);
+        void onStructureAdded(Feature feature, JSONArray featureCoordinates, double zoomlevel);
 
         void onFormSaveFailure(String eventType);
 

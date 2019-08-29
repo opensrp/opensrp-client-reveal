@@ -254,7 +254,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     }
 
     @Override
-    public void onStructureAdded(Feature feature, JSONArray featureCoordinates) {
+    public void onStructureAdded(Feature feature, JSONArray featureCoordinates, double zoomlevel) {
         //not used
     }
 

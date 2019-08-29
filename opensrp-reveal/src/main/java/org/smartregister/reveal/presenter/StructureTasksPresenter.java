@@ -116,7 +116,7 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     }
 
     @Override
-    public void onStructureAdded(Feature feature, JSONArray featureCoordinates) {//not used
+    public void onStructureAdded(Feature feature, JSONArray featureCoordinates, double zoomlevel) {//not used
     }
 
     @Override

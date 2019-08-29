@@ -50,6 +50,7 @@ import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.reveal.widget.GeoWidgetFactory;
 import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
@@ -329,7 +330,11 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                             boolean myLocationActive = myLocationActiveObs != null && Boolean.valueOf(myLocationActiveObs.getValue().toString());
                             getInstance().setMyLocationComponentEnabled(myLocationActive);
 
-                            presenterCallBack.onStructureAdded(Feature.fromJson(gson.toJson(structure)), featureCoordinates);
+
+                            Obs zoomObs = event.findObs(null, false, GeoWidgetFactory.ZOOM_LEVEL);
+                            double zoomLevel=Double.parseDouble(zoomObs.getValue().toString());
+
+                            presenterCallBack.onStructureAdded(Feature.fromJson(gson.toJson(structure)), featureCoordinates,zoomLevel);
                         }
                     });
                 } catch (JSONException e) {

@@ -524,7 +524,7 @@ public class ListTaskPresenterTest {
 
         Assert.assertTrue(listTaskPresenter.isChangeMapPosition());
 
-        listTaskPresenter.onStructureAdded(null, featureCoordinates);
+        listTaskPresenter.onStructureAdded(null, featureCoordinates, 17);
 
         assertFalse(listTaskPresenter.isChangeMapPosition());
     }
