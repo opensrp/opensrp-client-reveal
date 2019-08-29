@@ -18,7 +18,6 @@ import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.CardDetailsUtil;
-import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Constants.GeoJSON;
 import org.smartregister.reveal.util.GeoJsonUtils;
 import org.smartregister.reveal.util.Utils;
@@ -55,7 +54,7 @@ public class ListTaskInteractor extends BaseInteractor {
 
     public ListTaskInteractor(ListTaskContract.Presenter presenter) {
         super(presenter);
-        commonRepository = RevealApplication.getInstance().getContext().commonrepository(DatabaseKeys.SPRAYED_STRUCTURES);
+        commonRepository = RevealApplication.getInstance().getContext().commonrepository(SPRAYED_STRUCTURES);
     }
 
 
