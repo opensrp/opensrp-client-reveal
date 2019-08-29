@@ -1,5 +1,7 @@
 package org.smartregister.reveal.model;
 
+import org.smartregister.commonregistry.CommonPersonObject;
+
 /**
  * @author Vincent Karuri
  */
@@ -9,6 +11,7 @@ public class SprayCardDetails extends CardDetails {
     private String sprayDate;
     private String sprayOperator;
     private String familyHead;
+    private CommonPersonObject commonPersonObject;
 
     public SprayCardDetails(String status, String propertyType, String sprayDate, String sprayOperator, String familyHead, String reason) {
         super(status);
@@ -51,4 +54,11 @@ public class SprayCardDetails extends CardDetails {
         this.familyHead = familyHead;
     }
 
+    public CommonPersonObject getCommonPersonObject() {
+        return commonPersonObject;
+    }
+
+    public void setCommonPersonObject(CommonPersonObject commonPersonObject) {
+        this.commonPersonObject = commonPersonObject;
+    }
 }
