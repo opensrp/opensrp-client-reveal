@@ -150,8 +150,6 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
 
         verify(userLocationPresenter).requestUserLocation();
 
-        assertEquals(mapView, presenter.getMapView());
-
     }
 
     @Test
@@ -237,7 +235,6 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
 
         verify(userLocationPresenter).requestUserLocation();
 
-        assertEquals(mapView, presenter.getMapView());
 
     }
 
