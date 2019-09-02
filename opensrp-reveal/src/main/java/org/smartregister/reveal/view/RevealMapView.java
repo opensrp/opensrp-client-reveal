@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
+import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.MapboxMapOptions;
@@ -71,6 +72,14 @@ public class RevealMapView extends KujakuMapView {
     public Double getMapboxMapZoom() {
         if (mapboxMap != null)
             return mapboxMap.getCameraPosition().zoom;
+        else
+            return null;
+    }
+
+
+    public CameraPosition getCameraPosition() {
+        if (mapboxMap != null)
+            return mapboxMap.getCameraPosition();
         else
             return null;
     }
