@@ -135,21 +135,21 @@ actions:
 name: step1_unsprayedReasonFirst
 description: step1_unsprayedReasonFirst
 priority: 1
-condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayable,0) > 0 && step1_ableToSprayFirst.equals('yes')"
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayedTotalFirst,0) > 0 && step1_ableToSprayFirst.equals('yes')"
 actions:
   - "isRelevant = true"
 ---
 name: step1_refusalReasonFirst
 description: step1_refusalReasonFirst
 priority: 1
-condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayable,0) > 0 && step1_ableToSprayFirst.equals('yes') && step1_unsprayedReasonFirst.equals('refused')"
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayedTotalFirst,0) > 0 && step1_ableToSprayFirst.equals('yes') && step1_unsprayedReasonFirst.equals('refused')"
 actions:
   - "isRelevant = true"
 ---
 name: step1_refusalReasonOtherFirst
 description: step1_refusalReasonOtherFirst
 priority: 1
-condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayable,0) > 0 && step1_ableToSprayFirst.equals('yes') && step1_refusalReasonFirst.equals('other')"
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nUnsprayedTotalFirst,0) > 0 && step1_ableToSprayFirst.equals('yes') && step1_refusalReasonFirst.equals('other')"
 actions:
   - "isRelevant = true"
 ---
