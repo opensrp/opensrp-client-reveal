@@ -79,7 +79,7 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
         presenter = formFragment.getPresenter();
         when(imageButton.getDrawable()).thenReturn(context.getDrawable(R.drawable.ic_cross_hair_blue));
         when(mapView.findViewById(R.id.ib_mapview_focusOnMyLocationIcon)).thenReturn(imageButton);
-        private CameraPosition cameraPosition = new CameraPosition.Builder().zoom(20).target(new LatLng()).build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().zoom(20).target(new LatLng()).build();
         when(mapView.getCameraPosition()).thenReturn(cameraPosition);
 
     }
