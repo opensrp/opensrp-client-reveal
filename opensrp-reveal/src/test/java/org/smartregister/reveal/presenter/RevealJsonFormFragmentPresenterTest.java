@@ -3,7 +3,10 @@ package org.smartregister.reveal.presenter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
+import android.widget.ImageButton;
 
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.rengwuxian.materialedittext.validation.METValidator;
 import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
@@ -16,6 +19,7 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.fragment.RevealJsonFormFragment;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -29,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -63,6 +66,9 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
     @Mock
     private WithinOperationAreaValidator withinOperationAreaValidator;
 
+    @Mock
+    private ImageButton imageButton;
+
 
     private void setUpFormActivity(String formName) {
         Intent intent = new Intent();
@@ -71,6 +77,10 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
         formFragment = RevealJsonFormFragment.getFormFragment("step1");
         jsonFormActivity.getSupportFragmentManager().beginTransaction().add(formFragment, null).commit();
         presenter = formFragment.getPresenter();
+        when(imageButton.getDrawable()).thenReturn(context.getDrawable(R.drawable.ic_cross_hair_blue));
+        when(mapView.findViewById(R.id.ib_mapview_focusOnMyLocationIcon)).thenReturn(imageButton);
+        CameraPosition cameraPosition = new CameraPosition.Builder().zoom(20).target(new LatLng()).build();
+        when(mapView.getCameraPosition()).thenReturn(cameraPosition);
 
     }
 
@@ -162,7 +172,6 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
         JsonFormFragmentView view = spy(Whitebox.getInternalState(presenter, JsonFormFragmentView.class));
         Whitebox.setInternalState(presenter, "viewRef", new WeakReference<>(view));
         doReturn(false).when(presenter).validateFarStructures();
-
         presenter.onSaveClick(formFragment.getMainView());
 
         verify(presenter).validateAndWriteValues();
