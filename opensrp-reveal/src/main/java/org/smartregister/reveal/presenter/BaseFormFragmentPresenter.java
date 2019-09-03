@@ -12,7 +12,9 @@ import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Location;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
@@ -39,6 +41,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Country.NAMIBIA;
 
 /**
  * Created by samuelgithengi on 4/18/19.
@@ -105,6 +108,8 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
                 if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
                     interactor.findMemberDetails(taskDetails.getStructureId(), formJSON);
                     return;
+                } if (IRS.equals(taskDetails.getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)){
+                    interactor.findSprayDetails(IRS, structure.getId(), formJSON);
                 } else {
                     getView().startForm(formJSON);
                 }
@@ -172,6 +177,12 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
         } catch (JSONException e) {
             Timber.e(e, "Error updating family members");
         }
+        getView().startForm(formJSON);
+    }
+
+    @Override
+    public void onFetchedSprayDetails(CommonPersonObject commonPersonObject, JSONObject formJSON) {
+        getView().getJsonFormUtils().populateSprayForm(commonPersonObject, formJSON);
         getView().startForm(formJSON);
     }
 
