@@ -52,10 +52,12 @@ public class ListTaskInteractor extends BaseInteractor {
 
 
     private CommonRepository commonRepository;
+    private InteractorUtils interactorUtils;
 
     public ListTaskInteractor(ListTaskContract.Presenter presenter) {
         super(presenter);
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(SPRAYED_STRUCTURES);
+        interactorUtils = new InteractorUtils();
     }
 
 
@@ -113,7 +115,7 @@ public class ListTaskInteractor extends BaseInteractor {
     }
 
     private void getSprayDetails(String interventionType, String structureId, CardDetails cardDetails) {
-        CommonPersonObject commonPersonObject = InteractorUtils.fetchSprayDetails(interventionType, structureId,
+        CommonPersonObject commonPersonObject = interactorUtils.fetchSprayDetails(interventionType, structureId,
                 eventClientRepository, commonRepository);
         ((SprayCardDetails) cardDetails).setCommonPersonObject(commonPersonObject);
     }

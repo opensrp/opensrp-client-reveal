@@ -13,7 +13,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 
 public class InteractorUtils {
 
-    public static CommonPersonObject fetchSprayDetails(String interventionType, String structureId, EventClientRepository eventClientRepository, CommonRepository commonRepository) {
+    public CommonPersonObject fetchSprayDetails(String interventionType, String structureId, EventClientRepository eventClientRepository, CommonRepository commonRepository) {
         CommonPersonObject commonPersonObject = null;
         if (IRS.equals(interventionType)) {
             Cursor cursor = null;

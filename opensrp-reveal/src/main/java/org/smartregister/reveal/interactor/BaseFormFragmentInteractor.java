@@ -39,12 +39,15 @@ public class BaseFormFragmentInteractor implements BaseFormFragmentContract.Inte
 
     protected EventClientRepository eventClientRepository;
 
+    private InteractorUtils interactorUtils;
+
     public BaseFormFragmentInteractor(BaseFormFragmentContract.Presenter presenter) {
         this.presenter = presenter;
         this.commonRepository = RevealApplication.getInstance().getContext().commonrepository(metadata().familyMemberRegister.tableName);
         appExecutors = RevealApplication.getInstance().getAppExecutors();
         sqLiteDatabase = RevealApplication.getInstance().getRepository().getReadableDatabase();
         eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+        interactorUtils = new InteractorUtils();
     }
 
     @Override
@@ -96,7 +99,7 @@ public class BaseFormFragmentInteractor implements BaseFormFragmentContract.Inte
                 Cursor cursor = null;
                 try {
 
-                    CommonPersonObject commonPersonObject = InteractorUtils.fetchSprayDetails(interventionType, structureId,
+                    CommonPersonObject commonPersonObject = interactorUtils.fetchSprayDetails(interventionType, structureId,
                             eventClientRepository, commonRepository);
 
                     appExecutors.mainThread().execute(() -> {
