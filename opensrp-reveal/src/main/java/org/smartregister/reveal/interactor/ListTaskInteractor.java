@@ -97,9 +97,8 @@ public class ListTaskInteractor extends BaseInteractor {
                     @Override
                     public void run() {
                         if (isForForm) {
-                            ((ListTaskPresenter) presenterCallBack).onInterventionFormDetailsFetched(CARD_DETAILS);
                             getSprayDetails(interventionType, featureId, CARD_DETAILS);
-
+                            ((ListTaskPresenter) presenterCallBack).onInterventionFormDetailsFetched(CARD_DETAILS);
                         } else {
                             ((ListTaskPresenter) presenterCallBack).onCardDetailsFetched(CARD_DETAILS);
                         }
