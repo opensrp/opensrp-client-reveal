@@ -96,24 +96,12 @@ public class BaseFormFragmentInteractor implements BaseFormFragmentContract.Inte
         if (IRS.equals(interventionType)) {
 
             appExecutors.diskIO().execute(() -> {
-                Cursor cursor = null;
-                try {
-
                     CommonPersonObject commonPersonObject = interactorUtils.fetchSprayDetails(interventionType, structureId,
                             eventClientRepository, commonRepository);
 
                     appExecutors.mainThread().execute(() -> {
                         presenter.onFetchedSprayDetails(commonPersonObject, formJSON);
                     });
-
-                } catch (Exception e) {
-                    Timber.e(e);
-                } finally {
-                    if (cursor != null) {
-                        cursor.close();
-                    }
-                }
-
             });
         }
     }
