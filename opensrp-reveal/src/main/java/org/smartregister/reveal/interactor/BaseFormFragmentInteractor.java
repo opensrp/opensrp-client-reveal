@@ -11,9 +11,7 @@ import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.util.AppExecutors;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.smartregister.reveal.util.InteractorUtils;
 
 import timber.log.Timber;
 
@@ -23,7 +21,6 @@ import static org.smartregister.family.util.Utils.metadata;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FIRST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 
@@ -97,14 +94,15 @@ public class BaseFormFragmentInteractor implements BaseFormFragmentContract.Inte
 
             appExecutors.diskIO().execute(() -> {
                 Cursor cursor = null;
-                List<CommonPersonObject> list = new ArrayList<>();
                 try {
-                    cursor = eventClientRepository.getWritableDatabase().rawQuery(
-                            String.format("select s.*, id as _id from %s s where %s = ?", SPRAYED_STRUCTURES, BASE_ENTITY_ID), new String[]{structureId});
-                    if (cursor.moveToFirst()) {
-                        CommonPersonObject commonPersonObject = commonRepository.getCommonPersonObjectFromCursor(cursor);
-                        list.add(commonPersonObject);
-                    }
+
+                    CommonPersonObject commonPersonObject = InteractorUtils.fetchSprayDetails(interventionType, structureId,
+                            eventClientRepository, commonRepository);
+
+                    appExecutors.mainThread().execute(() -> {
+                        presenter.onFetchedSprayDetails(commonPersonObject, formJSON);
+                    });
+
                 } catch (Exception e) {
                     Timber.e(e);
                 } finally {
@@ -113,9 +111,6 @@ public class BaseFormFragmentInteractor implements BaseFormFragmentContract.Inte
                     }
                 }
 
-                appExecutors.mainThread().execute(() -> {
-                    presenter.onFetchedSprayDetails(list.get(0), formJSON);
-                });
             });
         }
     }
