@@ -20,6 +20,7 @@ import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.GeoJSON;
 import org.smartregister.reveal.util.GeoJsonUtils;
+import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.List;
@@ -51,10 +52,12 @@ public class ListTaskInteractor extends BaseInteractor {
 
 
     private CommonRepository commonRepository;
+    private InteractorUtils interactorUtils;
 
     public ListTaskInteractor(ListTaskContract.Presenter presenter) {
         super(presenter);
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(SPRAYED_STRUCTURES);
+        interactorUtils = new InteractorUtils();
     }
 
 
@@ -111,23 +114,9 @@ public class ListTaskInteractor extends BaseInteractor {
     }
 
     private void getSprayDetails(String interventionType, String structureId, CardDetails cardDetails) {
-        if (IRS.equals(interventionType)) {
-            Cursor cursor = null;
-            try {
-                cursor = eventClientRepository.getWritableDatabase().rawQuery(
-                        String.format("select s.*, id as _id from %s s where %s = ?", SPRAYED_STRUCTURES, BASE_ENTITY_ID), new String[]{structureId});
-                if (cursor.moveToFirst()) {
-                    CommonPersonObject commonPersonObject = commonRepository.getCommonPersonObjectFromCursor(cursor);
-                    ((SprayCardDetails) cardDetails).setCommonPersonObject(commonPersonObject);
-                }
-            } catch (Exception e) {
-                Timber.e(e);
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
-            }
-        }
+        CommonPersonObject commonPersonObject = interactorUtils.fetchSprayDetails(interventionType, structureId,
+                eventClientRepository, commonRepository);
+        ((SprayCardDetails) cardDetails).setCommonPersonObject(commonPersonObject);
     }
 
     private CardDetails createCardDetails(Cursor cursor, String interventionType) {

@@ -17,16 +17,21 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
+import org.smartregister.reveal.util.InteractorUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -36,6 +41,7 @@ import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FIRST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 
 /**
  * Created by samuelgithengi on 6/18/19.
@@ -54,10 +60,19 @@ public class FormFragmentInteractorTest extends BaseUnitTest {
     @Mock
     private SQLiteDatabase sqLiteDatabase;
 
+    @Mock
+    InteractorUtils interactorUtils;
+
     @Captor
     private ArgumentCaptor<JSONArray> jsonArgumentCaptor;
 
+    @Captor
+    private ArgumentCaptor<CommonPersonObject> commonPersonObjectCaptor;
+
     private BaseFormFragmentInteractor interactor;
+
+    private static final String CASEID = "caseId";
+    private static final String RELATIONID = "relationalid";
 
     @Before
     public void setUp() {
@@ -65,6 +80,7 @@ public class FormFragmentInteractorTest extends BaseUnitTest {
         interactor = new BaseFormFragmentInteractor(presenter);
         Whitebox.setInternalState(interactor, "commonRepository", commonRepository);
         Whitebox.setInternalState(interactor, "sqLiteDatabase", sqLiteDatabase);
+        Whitebox.setInternalState(interactor, "interactorUtils", interactorUtils);
     }
 
     @Test
@@ -91,6 +107,23 @@ public class FormFragmentInteractorTest extends BaseUnitTest {
 
     }
 
+    @Test
+    public void findSprayDetails() {
+        JSONObject form = new JSONObject();
+        String structureId = UUID.randomUUID().toString();
+        CommonPersonObject commonPersonObject = createCommonPersonObject();
+        when(interactorUtils.fetchSprayDetails(anyString(), anyString(), any(), any())).thenReturn(commonPersonObject);
+        interactor.findSprayDetails(IRS, structureId, form);
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onFetchedSprayDetails(commonPersonObjectCaptor.capture(), eq(form));
+        assertNotNull( commonPersonObjectCaptor.getValue());
+        assertEquals("case-id", commonPersonObjectCaptor.getValue().getCaseId());
+        assertEquals("relation-id", commonPersonObjectCaptor.getValue().getRelationalId());
+        assertNotNull( commonPersonObjectCaptor.getValue().getDetails());
+        assertEquals("4", commonPersonObjectCaptor.getValue().getDetails().get("nSprayedDeltaMop"));
+        assertEquals("3", commonPersonObjectCaptor.getValue().getDetails().get("nPeopleProtected"));
+
+    }
+
     private Cursor createCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{
                 BASE_ENTITY_ID,
@@ -105,4 +138,13 @@ public class FormFragmentInteractorTest extends BaseUnitTest {
         return cursor;
     }
 
+    private CommonPersonObject createCommonPersonObject() {
+        Map<String, String> details = new HashMap<>();
+        details.put("nSprayedDeltaMop", "4");
+        details.put("nPeopleProtected", "3");
+
+        CommonPersonObject commonPersonObject = new CommonPersonObject("case-id",
+                "relation-id", details, "IRS");
+        return commonPersonObject;
+    }
 }
