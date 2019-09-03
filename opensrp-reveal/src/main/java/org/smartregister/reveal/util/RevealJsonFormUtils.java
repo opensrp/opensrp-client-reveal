@@ -287,7 +287,8 @@ public class RevealJsonFormUtils {
                     String value = commonPersonObject.getDetails().get(key);
                     field.put(VALUE, value);
                     if (nonEditablefields.contains(key) && "Yes".equalsIgnoreCase(value)) {
-                        field.put(JsonFormConstants.TYPE, "hidden");
+                        field.put(JsonFormConstants.READ_ONLY, true);
+                        field.remove(JsonFormConstants.RELEVANCE);
                     }
                 }
             } catch (JSONException e) {
