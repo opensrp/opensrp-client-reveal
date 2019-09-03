@@ -5,10 +5,13 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.InteractorUtils;
 
 import timber.log.Timber;
 
@@ -19,6 +22,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_I
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FIRST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 
 /**
  * Created by samuelgithengi on 6/14/19.
@@ -33,11 +37,17 @@ public class BaseFormFragmentInteractor implements BaseFormFragmentContract.Inte
 
     private SQLiteDatabase sqLiteDatabase;
 
+    protected EventClientRepository eventClientRepository;
+
+    private InteractorUtils interactorUtils;
+
     public BaseFormFragmentInteractor(BaseFormFragmentContract.Presenter presenter) {
         this.presenter = presenter;
         this.commonRepository = RevealApplication.getInstance().getContext().commonrepository(metadata().familyMemberRegister.tableName);
         appExecutors = RevealApplication.getInstance().getAppExecutors();
         sqLiteDatabase = RevealApplication.getInstance().getRepository().getReadableDatabase();
+        eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+        interactorUtils = new InteractorUtils();
     }
 
     @Override
@@ -79,6 +89,21 @@ public class BaseFormFragmentInteractor implements BaseFormFragmentContract.Inte
                 presenter.onFetchedFamilyMembers(familyMembers, formJSON);
             });
         });
+    }
+
+    @Override
+    public void findSprayDetails(String interventionType, String structureId, JSONObject formJSON) {
+        if (IRS.equals(interventionType)) {
+
+            appExecutors.diskIO().execute(() -> {
+                    CommonPersonObject commonPersonObject = interactorUtils.fetchSprayDetails(interventionType, structureId,
+                            eventClientRepository, commonRepository);
+
+                    appExecutors.mainThread().execute(() -> {
+                        presenter.onFetchedSprayDetails(commonPersonObject, formJSON);
+                    });
+            });
+        }
     }
 
 
