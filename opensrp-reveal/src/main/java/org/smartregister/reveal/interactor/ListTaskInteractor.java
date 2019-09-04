@@ -114,6 +114,8 @@ public class ListTaskInteractor extends BaseInteractor {
     }
 
     private void getSprayDetails(String interventionType, String structureId, CardDetails cardDetails) {
+        if (!IRS.equals(interventionType))
+            return;
         CommonPersonObject commonPersonObject = interactorUtils.fetchSprayDetails(interventionType, structureId,
                 eventClientRepository, commonRepository);
         ((SprayCardDetails) cardDetails).setCommonPersonObject(commonPersonObject);
