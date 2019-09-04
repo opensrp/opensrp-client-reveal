@@ -315,7 +315,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         when(jsonFormUtils.getFormName(null, taskDetails.getTaskCode())).thenReturn(Constants.JsonForm.SPRAY_FORM);
         presenter = spy(presenter);
         doReturn(false).when(presenter).validateFarStructures();
-        presenter.onStructureFound(null, taskDetails);
+        presenter.onStructureFound(new org.smartregister.domain.Location(), taskDetails);
         verify(view).startForm(any());
         verify(view).hideProgressDialog();
     }
