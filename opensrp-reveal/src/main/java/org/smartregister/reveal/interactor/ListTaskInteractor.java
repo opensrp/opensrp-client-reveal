@@ -100,9 +100,8 @@ public class ListTaskInteractor extends BaseInteractor {
                     @Override
                     public void run() {
                         if (isForForm) {
-                            ((ListTaskPresenter) presenterCallBack).onInterventionFormDetailsFetched(CARD_DETAILS);
                             getSprayDetails(interventionType, featureId, CARD_DETAILS);
-
+                            ((ListTaskPresenter) presenterCallBack).onInterventionFormDetailsFetched(CARD_DETAILS);
                         } else {
                             ((ListTaskPresenter) presenterCallBack).onCardDetailsFetched(CARD_DETAILS);
                         }
@@ -115,6 +114,8 @@ public class ListTaskInteractor extends BaseInteractor {
     }
 
     private void getSprayDetails(String interventionType, String structureId, CardDetails cardDetails) {
+        if (!IRS.equals(interventionType))
+            return;
         CommonPersonObject commonPersonObject = interactorUtils.fetchSprayDetails(interventionType, structureId,
                 eventClientRepository, commonRepository);
         ((SprayCardDetails) cardDetails).setCommonPersonObject(commonPersonObject);

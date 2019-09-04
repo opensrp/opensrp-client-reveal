@@ -271,6 +271,10 @@ public interface Constants {
 
         String NAMIBIA_ADD_STRUCTURE_FORM = "json.form/namibia_add_structure.json";
 
+        String HOUSEHOLD_ACCESSIBLE = "householdAccessible";
+        String ABLE_TO_SPRAY_FIRST =  "ableToSprayFirst";
+        String MOP_UP_VISIT = "mopUpVisit";
+
     }
 
     interface DateFormat {

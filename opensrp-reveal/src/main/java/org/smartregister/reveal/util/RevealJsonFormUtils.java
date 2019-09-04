@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.mapbox.geojson.Feature;
+import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -22,6 +23,10 @@ import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.JsonFormUtils;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import timber.log.Timber;
 
@@ -46,6 +51,13 @@ import static org.smartregister.reveal.util.Utils.getPropertyValue;
  * Created by samuelgithengi on 3/22/19.
  */
 public class RevealJsonFormUtils {
+
+    private Set<String> nonEditablefields;
+
+    public RevealJsonFormUtils() {
+        nonEditablefields = new HashSet<>(Arrays.asList(JsonForm.HOUSEHOLD_ACCESSIBLE,
+                JsonForm.ABLE_TO_SPRAY_FIRST, JsonForm.MOP_UP_VISIT));
+    }
 
     public JSONObject getFormJSON(Context context, String formName, Feature feature, String sprayStatus, String familyHead) {
 
@@ -270,8 +282,14 @@ public class RevealJsonFormUtils {
         for (int i = 0; i < fields.length(); i++) {
             try {
                 JSONObject field = fields.getJSONObject(i);
-                if (commonPersonObject.getDetails().containsKey(field.getString(KEY))) {
-                    field.put(VALUE, commonPersonObject.getDetails().get(field.getString(KEY)));
+                String key = field.getString(KEY);
+                if (commonPersonObject.getDetails().containsKey(key)) {
+                    String value = commonPersonObject.getDetails().get(key);
+                    field.put(VALUE, value);
+                    if (nonEditablefields.contains(key) && "Yes".equalsIgnoreCase(value)) {
+                        field.put(JsonFormConstants.READ_ONLY, true);
+                        field.remove(JsonFormConstants.RELEVANCE);
+                    }
                 }
             } catch (JSONException e) {
                 Timber.e(e);
