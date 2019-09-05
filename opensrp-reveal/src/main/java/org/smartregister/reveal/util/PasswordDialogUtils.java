@@ -68,6 +68,8 @@ public class PasswordDialogUtils {
                 passwordDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        adminPassEditText.setText(null);
+                        adminPassEditText.setError(null);
                         passwordDialog.dismiss();
                     }
                 });
