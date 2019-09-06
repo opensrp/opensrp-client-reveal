@@ -92,6 +92,7 @@ public class LocationUtils {
      * Clear location client
      */
     public void destroy() {
+        stopLocationClient();
         locationClient = null;
     }
 
