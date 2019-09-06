@@ -40,9 +40,13 @@ public class LocationUtils {
         return locationClient.getLastLocation();
     }
 
+    /**
+     * Stop the location client and unregister from receiving updates
+     */
     public void stopLocationClient() {
-        locationClient.close();
-        locationClient = null;
+        if (locationClient != null) {
+            locationClient.close();
+        }
     }
 
 
@@ -82,6 +86,13 @@ public class LocationUtils {
         } else {
             Timber.e("KujakuMapView is not started in an Activity and can therefore not start location services");
         }
+    }
+
+    /**
+     * Clear location client
+     */
+    public void destroy() {
+        locationClient = null;
     }
 
 
