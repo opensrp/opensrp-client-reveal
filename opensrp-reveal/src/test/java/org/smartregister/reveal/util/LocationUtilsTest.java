@@ -16,6 +16,7 @@ import io.ona.kujaku.listeners.BaseLocationListener;
 import io.ona.kujaku.utils.LocationSettingsHelper;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -56,6 +57,13 @@ public class LocationUtilsTest {
     @Test
     public void testStopLocationClient() {
         locationUtils.stopLocationClient();
+        verify(locationClient).close();
+        assertNotNull(Whitebox.getInternalState(locationUtils, "locationClient"));
+    }
+
+    @Test
+    public void testDestroyLocationClient() {
+        locationUtils.destroy();
         verify(locationClient).close();
         assertNull(Whitebox.getInternalState(locationUtils, "locationClient"));
     }
