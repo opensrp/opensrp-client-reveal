@@ -5,7 +5,7 @@ buildscript {
         maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:3.1.2"
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
         classpath 'io.fabric.tools:gradle:1.25.4'
     }
@@ -121,7 +121,7 @@ android {
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
             buildConfigField "long", "SYNC_INTERVAL_IN_MINUTES", '15'
-            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.NAMIBIA"
+            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.ZAMBIA"
             buildConfigField "long", "PULL_UNIQUE_IDS_MINUTES", '15'
             buildConfigField "String", "ADMIN_PASSWORD_NOT_NEAR_STRUCTURES", '"AdminPass1"'
             buildConfigField "float", "MY_LOCATION_BUFFER", '25'

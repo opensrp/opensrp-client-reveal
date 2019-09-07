@@ -190,7 +190,7 @@ public class RevealJsonFormUtils {
             } else if (BuildConfig.BUILD_COUNTRY == Country.BOTSWANA) {
                 formName = JsonForm.SPRAY_FORM_BOTSWANA;
             } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
-                formName = JsonForm.SPRAY_FORM;
+                formName = JsonForm.SPRAY_FORM_ZAMBIA;
             } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_SPRAY_FORM;
             }

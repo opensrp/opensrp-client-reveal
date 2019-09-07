@@ -1,0 +1,21 @@
+---
+name: step1_sprayed_totalpop
+description: step1_sprayed_totalpop
+priority: 1
+condition: "true"
+actions:
+- "calculation =  helper.ifNull(step1_sprayed_males,0) + helper.ifNull(step1_sprayed_females,0)"
+---
+name: step1_sprayed_totalpop
+description: step1_sprayed_totalpop
+priority: 1
+condition: "true"
+actions:
+- "calculation =  helper.ifNull(step1_sprayed_males,0) + helper.ifNull(step1_sprayed_females,0)"
+---
+name: step1_sprayed_totalpop
+description: step1_sprayed_totalpop
+priority: 1
+condition: "true"
+actions:
+- "calculation =  helper.ifNull(step1_sprayed_males,0) + helper.ifNull(step1_sprayed_females,0)"
