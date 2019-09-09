@@ -91,7 +91,13 @@ public class RevealJsonFormActivity extends JsonFormActivity implements UserLoca
 
     @Override
     protected void onStop() {
-        formFragment.getPresenter().getLocationUtils().stopLocationClient();
         super.onStop();
+        formFragment.getPresenter().getLocationUtils().stopLocationClient();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        formFragment.getPresenter().getLocationUtils().destroy();
     }
 }

@@ -287,8 +287,8 @@
           "err": "Must be a number"
         },
         "v_min": {
-          "value": "0",
-          "err": "Must be greater than or equal to 0"
+          "value": "1",
+          "err": "Must be greater than 0"
         },
         "v_max": {
           "value": "99",
@@ -654,14 +654,9 @@
           "value": "0",
           "err": "Must be greater than or equal to 0"
         },
-        "v_cumulative_total": {
-          "value": "nUnsprayedTotalFirst",
-          "related_fields": [
-            "nUnsprayedZincFirst",
-            "nUnsprayedTradFirst",
-            "nUnsprayedModFirst"
-          ],
-          "err": "The sum of unsprayed zinc, traditional, modern and canopy structures must equal total unsprayed structures"
+        "v_relative_max": {
+          "value": "nSprayableCanopy",
+          "err": "Cannot be more than # of structures of this type"
         },
         "relevance": {
           "rules-engine": {
