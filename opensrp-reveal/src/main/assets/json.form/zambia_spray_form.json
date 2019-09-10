@@ -57,6 +57,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
+        "text_size": "8sp",
         "label": "Is this a residential structure?",
         "options": [
           {
@@ -80,6 +81,13 @@
         "openmrs_entity_id": "",
         "type": "native_radio",
         "label": "What type of non-residential structure is this?",
+        "text_size": "8sp",
+        "relevance": {
+          "step1:structure_type": {
+            "type": "string",
+            "ex": "equalTo(., \"nonResidential\")"
+          }
+        },
         "options": [
           {
             "key": "kitchen",
@@ -142,6 +150,7 @@
         "openmrs_entity_id": "",
         "type": "native_radio",
         "label": "Is this structure eligible?",
+        "text_size": "8sp",
         "options": [
           {
             "key": "eligible",
@@ -164,6 +173,7 @@
         "openmrs_entity_id": "",
         "type": "native_radio",
         "label": "Why is this residential structure not eligible?",
+        "text_size": "8sp",
         "options": [
           {
             "key": "notSprayableMaterial",
@@ -182,6 +192,13 @@
             "text": "Other"
           }
         ],
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-relevance-rules.yml"
+            }
+          }
+        },
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -194,6 +211,7 @@
         "openmrs_entity_id": "",
         "type": "native_radio",
         "label": "Why is this Non-Residential structure eligible?",
+        "text_size": "8sp",
         "options": [
           {
             "key": "boardingSchool",
@@ -216,6 +234,13 @@
             "text": "Other"
           }
         ],
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-relevance-rules.yml"
+            }
+          }
+        },
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -249,6 +274,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "(TODO) Select the spray operator code who collected data against this structure",
+        "text_size": "8sp",
         "relevance": {
           "step1:eligibility": {
             "type": "string",
@@ -263,6 +289,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "(TODO) Confirm this is the correct spray operator?",
+        "text_size": "8sp",
         "relevance": {
           "step1:eligibility": {
             "type": "string",
@@ -277,6 +304,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "(TODO) What is the location/zone in which this structure resides?",
+        "text_size": "8sp",
         "relevance": {
           "step1:eligibility": {
             "type": "string",
@@ -306,6 +334,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Head of household name?",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -318,6 +347,7 @@
         "openmrs_entity_id": "",
         "type": "native_radio",
         "label": "Head of household gender?",
+        "text_size": "8sp",
         "options": [
           {
             "key": "male",
@@ -341,6 +371,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint":  "Structure Identification Number",
+        "text_size": "8sp",
         "v_numeric": {
           "value": "true",
           "err": "Please enter a number"
@@ -371,6 +402,7 @@
         "openmrs_entity_id": "",
         "type": "native_radio",
         "label": "Were any rooms in this structure sprayed",
+        "text_size": "8sp",
         "options": [
           {
             "key": "yes",
@@ -412,6 +444,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Number of eligible rooms",
+        "text_size": "8sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -444,7 +477,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Number of rooms sprayed in TOTAL",
-        "shortened_hint": "If this is a mop-up or revisit, please record TOTAL rooms sprayed",
+        "text_size": "8sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -475,12 +508,31 @@
         }
       },
       {
+        "key": "rooms_sprayed_hint",
+        "type": "label",
+        "text": "If this is a mop-up or revisit, please record TOTAL rooms sprayed",
+        "read_only": false,
+        "hint_on_text": true,
+        "text_color" : "#BDBDBD",
+        "text_size": "6sp",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "relevance": {
+          "step1:structure_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"yes\")"
+          }
+        }
+      },
+      {
         "key": "partiallysprayed_reason",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
         "label": "Main reason why some eligible rooms in this structure were not sprayed?",
+        "text_size": "8sp",
         "options": [
           {
             "key": "refused",
@@ -527,6 +579,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Male Population",
+        "text_size": "8sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -563,6 +616,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Female Population",
+        "text_size": "8sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -597,6 +651,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "hidden",
+        "text_size": "8sp",
         "calculation": {
           "rules-engine": {
             "ex-rules": {
@@ -614,6 +669,7 @@
         "text": "You can not enter a population of 0 for a sprayed structure",
         "text_color": "#CF0800",
         "toaster_type": "problem",
+        "text_size": "8sp",
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -631,6 +687,7 @@
         "edit_type": "number",
         "hint": "Pregnant Women",
         "is_mandatory": true,
+        "text_size": "8sp",
         "v_required": {
           "value": true,
           "err": "Pregnant Women is mandatory"
@@ -667,6 +724,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Children <5 years",
+        "text_size": "8sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -700,6 +758,7 @@
         "type": "toaster_notes",
         "text": "Children <5 years must be less than Total Population AND Less than the Total Population minus Pregnant Women",
         "text_color": "#CF0800",
+        "text_size": "8sp",
         "toaster_type": "problem",
         "relevance": {
           "rules-engine": {
@@ -718,6 +777,7 @@
         "edit_type": "number",
         "hint": "Total Number of Nets Available",
         "is_mandatory": true,
+        "text_size": "8sp",
         "v_required": {
           "value": true,
           "err": "Total Number of Nets Available is mandatory"
@@ -750,6 +810,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Total Number of Nets Hanging and in Use",
+        "text_size": "8sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -781,7 +842,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "Total Number of Nets Hanging and in Use must be less than or equal to the total population (females + males).",
+        "text": "Total Number of Nets Hanging and in Use must be less than or equal to the total population (females + males). Also, it must be less than total available nets.",
+        "text_size": "8sp",
         "text_color": "#CF0800",
         "toaster_type": "problem",
         "relevance": {
@@ -800,6 +862,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Total Number of Residents Sleeping Under Nets",
+        "text_size": "8sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -832,6 +895,7 @@
         "openmrs_entity_id": "",
         "type": "toaster_notes",
         "text": "Total Number of Residents Sleeping Under Nets must be equal to or less than Total Population AND equal to or more than Total Nets in Use.",
+        "text_size": "8sp",
         "text_color": "#CF0800",
         "toaster_type": "problem",
         "relevance": {
@@ -850,6 +914,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Number of Pregnant Women Sleeping Under Net",
+        "text_size": "8sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -882,6 +947,7 @@
         "openmrs_entity_id": "",
         "type": "toaster_notes",
         "text": "Number of Pregnant Women Sleeping Under Net must be equal or less than Children <5 years and Total Population Sleeping Under Nets",
+        "text_size": "8sp",
         "text_color": "#CF0800",
         "toaster_type": "problem",
         "relevance": {
@@ -900,6 +966,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Number of Children Under 5 Yrs Sleeping Under Net",
+        "text_size": "8sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -932,6 +999,7 @@
         "openmrs_entity_id": "",
         "type": "toaster_notes",
         "text": "Number of Children Under 5 Yrs Sleeping Under Net must be equal or less than Children <5 years and Total Population Sleeping Under Nets",
+        "text_size": "8sp",
         "text_color": "#CF0800",
         "toaster_type": "problem",
         "relevance": {
@@ -949,6 +1017,7 @@
         "openmrs_entity_id": "",
         "type": "native_radio",
         "label": "Was a new incecticide sachet mixed at this structure?",
+        "text_size": "8sp",
         "options": [
           {
             "key": "yes",
@@ -974,6 +1043,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Sachet Serial Number",
+        "text_size": "8sp",
         "is_mandatory": true,
         "v_numeric": {
           "value": "true",
@@ -984,9 +1054,10 @@
           "err": "Sachet Serial Number must be a whole number"
         },
         "relevance": {
-          "step1:structure_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"yes\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -1037,6 +1108,7 @@
         "openmrs_entity_id": "",
         "type": "native_radio",
         "label": "Why was this structure not sprayed?",
+        "text_size": "8sp",
         "options": [
           {
             "key": "refused",
@@ -1082,6 +1154,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Number of eligible rooms",
+        "text_size": "8sp",
         "v_numeric": {
           "value": "true",
           "err": "Number of eligible rooms must be a number"
@@ -1109,7 +1182,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Number of rooms sprayed in TOTAL",
-        "shortened_hint": "If this is a mop-up or revisit, please record TOTAL rooms sprayed",
+        "text_size": "8sp",
         "v_numeric": {
           "value": "true",
           "err": "Number of rooms sprayed must be a number"
@@ -1135,6 +1208,24 @@
         }
       },
       {
+        "key": "notsprayedrooms_sprayed_hint",
+        "type": "label",
+        "text": "If this is a mop-up or revisit, please record TOTAL rooms sprayed",
+        "read_only": false,
+        "hint_on_text": true,
+        "text_color" : "#BDBDBD",
+        "text_size": "6sp",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "relevance": {
+          "step1:structure_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"no\")"
+          }
+        }
+      },
+      {
         "key": "notsprayed_males",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1142,6 +1233,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Male Population",
+        "text_size": "8sp",
         "v_numeric": {
           "value": "true",
           "err": "Male population must be a number"
@@ -1173,6 +1265,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Female Population",
+        "text_size": "8sp",
         "v_numeric": {
           "value": "true",
           "err": "Female population must be a number"
@@ -1202,6 +1295,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "hidden",
+        "text_size": "8sp",
         "calculation": {
           "rules-engine": {
             "ex-rules": {
@@ -1219,6 +1313,7 @@
         "text": "You can not enter a population of 0 for a sprayed structure",
         "text_color": "#CF0800",
         "toaster_type": "problem",
+        "text_size": "8sp",
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -1234,6 +1329,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
+        "text_size": "8sp",
         "hint": "Pregnant Women",
         "v_numeric": {
           "value": "true",
@@ -1267,6 +1363,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Children <5 years",
+        "text_size": "8sp",
         "v_numeric": {
           "value": "true",
           "err": "Children <5 years must be a number"
@@ -1295,6 +1392,7 @@
         "type": "toaster_notes",
         "text": "Children <5 years must be less than Total Population AND Less than the Total Population minus Pregnant Women",
         "text_color": "#CF0800",
+        "text_size": "8sp",
         "toaster_type": "problem",
         "relevance": {
           "rules-engine": {
@@ -1312,6 +1410,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Total Number of Nets Available",
+        "text_size": "8sp",
         "v_numeric": {
           "value": "true",
           "err": "Total Number of Nets Available must be a number"
@@ -1340,6 +1439,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Total Number of Nets Hanging and in Use",
+        "text_size": "8sp",
         "v_numeric": {
           "value": "true",
           "err": "Total Number of Nets Hanging and in Use must be a number"
@@ -1366,8 +1466,9 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "Total Number of Nets Hanging and in Use must be less than or equal to the total population (females + males).",
+        "text": "Total Number of Nets Hanging and in Use must be less than or equal to the total population (females + males). Also, it must be less than total available nets.",
         "text_color": "#CF0800",
+        "text_size": "8sp",
         "toaster_type": "problem",
         "relevance": {
           "rules-engine": {
@@ -1385,6 +1486,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Total Number of Residents Sleeping Under Nets",
+        "text_size": "8sp",
         "v_numeric": {
           "value": "true",
           "err": "Total Number of Residents Sleeping Under Nets must be a number"
@@ -1413,6 +1515,7 @@
         "type": "toaster_notes",
         "text": "Total Number of Residents Sleeping Under Nets must be equal to or less than Total Population AND equal to or more than Total Nets in Use.",
         "text_color": "#CF0800",
+        "text_size": "8sp",
         "toaster_type": "problem",
         "relevance": {
           "rules-engine": {
@@ -1430,6 +1533,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Number of Pregnant Women Sleeping Under Net",
+        "text_size": "8sp",
         "v_numeric": {
           "value": "true",
           "err": "Number of Pregnant Women Sleeping Under Net must be a number"
@@ -1457,6 +1561,7 @@
         "openmrs_entity_id": "",
         "type": "toaster_notes",
         "text": "Number of Pregnant Women Sleeping Under Net must be equal or less than Children <5 years and Total Population Sleeping Under Nets",
+        "text_size": "8sp",
         "text_color": "#CF0800",
         "toaster_type": "problem",
         "relevance": {
@@ -1475,6 +1580,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Number of Children Under 5 Yrs Sleeping Under Net",
+        "text_size": "8sp",
         "v_numeric": {
           "value": "true",
           "err": "Number of Children Under 5 Yrs Sleeping Under Net must be a number"
@@ -1503,6 +1609,7 @@
         "type": "toaster_notes",
         "text": "Number of Children Under 5 Yrs Sleeping Under Net must be equal or less than Children <5 years and Total Population Sleeping Under Nets",
         "text_color": "#CF0800",
+        "text_size": "8sp",
         "toaster_type": "problem",
         "relevance": {
           "rules-engine": {
@@ -1531,6 +1638,7 @@
         "openmrs_entity_id": "",
         "type": "native_radio",
         "label": "Was this part of a formal Mop-Up operation?",
+        "text_size": "8sp",
         "options": [
           {
             "key": "yes",
