@@ -24,6 +24,7 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.Constants.StructureType;
@@ -238,7 +239,7 @@ public class RevealMapHelper {
         // add mask
         FillLayer maskLayer = new FillLayer(OUT_OF_BOUNDARY_LAYER, outOfBoundarySource.getId());
         maskLayer.withProperties(fillColor(context.getResources().getColor(R.color.outside_area_mask)),
-                fillOpacity(0f));
+                fillOpacity(BuildConfig.OUTSIDE_OPERATIONAL_AREA_MASK_OPACITY));
         mMapboxMapStyle.addLayer(maskLayer);
 
     }

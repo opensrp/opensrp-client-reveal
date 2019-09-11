@@ -111,6 +111,7 @@ android {
             buildConfigField "float", "MY_LOCATION_BUFFER", '25'
             buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'false'
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '90'
+            buildConfigField "float", "OUTSIDE_OPERATIONAL_AREA_MASK_OPACITY", '0f'
 
         }
 
@@ -127,6 +128,7 @@ android {
             buildConfigField "float", "MY_LOCATION_BUFFER", '25'
             buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '60'
+            buildConfigField "float", "OUTSIDE_OPERATIONAL_AREA_MASK_OPACITY", '0f'
 
             testCoverageEnabled true
         }
