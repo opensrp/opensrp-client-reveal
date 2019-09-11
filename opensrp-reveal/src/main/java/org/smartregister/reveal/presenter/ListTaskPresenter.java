@@ -367,6 +367,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onStructureAdded(Feature feature, JSONArray featureCoordinates, double zoomlevel) {
+        listTaskView.closeAllCardViews();
         listTaskView.hideProgressDialog();
         featureCollection.features().add(feature);
         setChangeMapPosition(false);
