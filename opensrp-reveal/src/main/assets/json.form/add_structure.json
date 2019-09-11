@@ -113,46 +113,6 @@
         }
       },
       {
-        "key": "physicalType",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Location Physical Type",
-        "options": [
-          {
-            "key": "Home",
-            "text": "Home"
-          },
-          {
-            "key": "Hut",
-            "text": "Hut"
-          }
-        ],
-        "value": "Home",
-        "relevance": {
-          "step1:structureType": {
-            "type": "string",
-            "ex": "equalTo(., \"Residential Structure\")"
-          }
-        }
-      },
-      {
-        "key": "structureName",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Name of structure",
-        "edit_type": "name",
-        "relevance": {
-          "step1:structureType": {
-            "type": "string",
-            "ex": "equalTo(., \"Residential Structure\")"
-          }
-        }
-      },
-      {
         "key": "zoom_level",
         "type": "hidden",
         "openmrs_entity_parent": "",

@@ -4,18 +4,25 @@ description: step1_sprayed_totalpop
 priority: 1
 condition: "true"
 actions:
-- "calculation =  helper.ifNull(step1_sprayed_males,0) + helper.ifNull(step1_sprayed_females,0)"
+- "calculation =  Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0))"
 ---
-name: step1_sprayed_totalpop
-description: step1_sprayed_totalpop
+name: step1_sprayed_totalpop_toaster_info
+description: step1_sprayed_totalpop_toaster_info
 priority: 1
 condition: "true"
 actions:
-- "calculation =  helper.ifNull(step1_sprayed_males,0) + helper.ifNull(step1_sprayed_females,0)"
+  - "calculation = ['sprayed_totalpop' : step1_sprayed_totalpop]"
 ---
-name: step1_sprayed_totalpop
-description: step1_sprayed_totalpop
+name: step1_sprayed_totalpop_approve
+description: step1_sprayed_totalpop_approve
 priority: 1
 condition: "true"
 actions:
-- "calculation =  helper.ifNull(step1_sprayed_males,0) + helper.ifNull(step1_sprayed_females,0)"
+  - "calculation = ['sprayed_totalpop' : step1_sprayed_totalpop]"
+---
+name: step1_business_status
+description: Task business status
+priority: 1
+condition: "true"
+actions:
+  - "calculation = (true)"

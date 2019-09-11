@@ -34,6 +34,20 @@ condition: "step1_structure_sprayed.equals('yes') && (Integer.valueOf(helper.ifN
 actions:
   - "isRelevant = true"
 ---
+name: step1_sprayed_totalpop_toaster_info
+description: step1_sprayed_totalpop_toaster_info
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0)) > 0)"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayed_totalpop_approve
+description: step1_sprayed_totalpop_approve
+priority: 1
+condition: "step1_structure_sprayed.equals('yes') && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0)) > 0)"
+actions:
+  - "isRelevant = true"
+---
 name: step1_sprayed_pregwomen
 description: step1_sprayed_pregwomen
 priority: 1
