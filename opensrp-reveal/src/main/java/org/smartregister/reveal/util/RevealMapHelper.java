@@ -238,7 +238,7 @@ public class RevealMapHelper {
         // add mask
         FillLayer maskLayer = new FillLayer(OUT_OF_BOUNDARY_LAYER, outOfBoundarySource.getId());
         maskLayer.withProperties(fillColor(context.getResources().getColor(R.color.outside_area_mask)),
-                fillOpacity(.65f));
+                fillOpacity(0f));
         mMapboxMapStyle.addLayer(maskLayer);
 
     }
