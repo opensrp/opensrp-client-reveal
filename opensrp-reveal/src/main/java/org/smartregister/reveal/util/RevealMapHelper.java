@@ -51,6 +51,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_GEO_JSON_CIRCLE_SIDES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.INDEX_CASE_CIRCLE_RADIUS_IN_METRES;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.OUTSIDE_OPERATIONAL_AREA_MASK_OPACITY;
 import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
 import static org.smartregister.reveal.util.Constants.GeoJSON.TYPE;
 import static org.smartregister.reveal.util.Utils.createCircleFeature;
@@ -238,7 +239,7 @@ public class RevealMapHelper {
         // add mask
         FillLayer maskLayer = new FillLayer(OUT_OF_BOUNDARY_LAYER, outOfBoundarySource.getId());
         maskLayer.withProperties(fillColor(context.getResources().getColor(R.color.outside_area_mask)),
-                fillOpacity(.65f));
+                fillOpacity(OUTSIDE_OPERATIONAL_AREA_MASK_OPACITY));
         mMapboxMapStyle.addLayer(maskLayer);
 
     }
