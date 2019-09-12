@@ -605,6 +605,15 @@
           "value": "nSprayableCanopy",
           "err": "Cannot be more than # of structures of this type"
         },
+        "v_cumulative_total": {
+          "value": "nUnsprayedTotalFirst",
+          "related_fields": [
+            "nUnsprayedZincFirst",
+            "nUnsprayedTradFirst",
+            "nUnsprayedModFirst"
+          ],
+          "err": "The sum of unsprayed Zinc, traditional, modern, canopy must equal total number of unsprayed structures"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
