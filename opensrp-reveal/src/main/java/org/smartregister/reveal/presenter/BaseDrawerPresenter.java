@@ -89,7 +89,8 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
                 } else {
                     level = CANTON;
                 }
-                view.setFacility(defaultLocation.get(1), level);
+                if (defaultLocation.size() > 1)
+                    view.setFacility(defaultLocation.get(1), level);
             }
         } else {
             populateLocationsFromPreferences();

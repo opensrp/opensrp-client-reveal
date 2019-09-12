@@ -271,59 +271,6 @@
         }
       },
       {
-        "key": "popTotal",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "# total people living in the homestead/house",
-        "text_size": "8sp",
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Must be a number"
-        },
-        "v_min": {
-          "value": "1",
-          "err": "Must be greater than 0"
-        },
-        "v_max": {
-          "value": "99",
-          "err": "Cannot be greater than 99"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "nameHoH",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Head of household name",
-        "text_size": "8sp",
-        "is_mandatory": "true",
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "firstVisitGroupHeading",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1100,38 +1047,6 @@
         }
       },
       {
-        "key": "nPeopleProtected",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "# people sleeping in sprayed rooms",
-        "text_size": "8sp",
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Must be a number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Must be greater than or equal to 0"
-        },
-        "v_relative_max": {
-          "value": "popTotal",
-          "err": "Population protected cannot be greater than total population"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "namibia-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "unsprayedReasonHH",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1212,6 +1127,89 @@
         "v_required": {
           "value": "true",
           "err": "A reason must be entered"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },{
+        "key": "popTotal",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# total people living in the homestead/house",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "1",
+          "err": "Must be greater than 0"
+        },
+        "v_max": {
+          "value": "99",
+          "err": "Cannot be greater than 99"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },{
+        "key": "nPeopleProtected",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# people sleeping in sprayed rooms",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "popTotal",
+          "err": "Population protected cannot be greater than total population"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "nameHoH",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Head of household name",
+        "text_size": "8sp",
+        "is_mandatory": "true",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
         },
         "relevance": {
           "rules-engine": {
