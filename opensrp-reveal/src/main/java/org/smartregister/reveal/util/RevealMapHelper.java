@@ -24,7 +24,6 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.Constants.StructureType;
