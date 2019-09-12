@@ -161,6 +161,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         try {
             JSONObject jsonForm = new JSONObject(json);
             String encounterType = jsonForm.getString(ENCOUNTER_TYPE);
+            boolean refreshMapOnEventSaved = true;
             if (REGISTER_STRUCTURE_EVENT.equals(encounterType)) {
                 saveRegisterStructureForm(jsonForm);
             } else if (BLOOD_SCREENING_EVENT.equals(encounterType)) {
@@ -169,8 +170,9 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 saveCaseConfirmation(jsonForm, encounterType);
             } else {
                 saveLocationInterventionForm(jsonForm);
+                refreshMapOnEventSaved = false;
             }
-            getInstance().setRefreshMapOnEventSaved(true);
+            getInstance().setRefreshMapOnEventSaved(refreshMapOnEventSaved);
         } catch (Exception e) {
             Timber.e(e, "Error saving Json Form data");
         }
