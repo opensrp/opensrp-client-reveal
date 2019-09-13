@@ -72,4 +72,14 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     public boolean isSyncSettings() {
         return true;
     }
+
+    @Override
+    public int getConnectTimeout() {
+        return 120000;
+    }
+
+    @Override
+    public int getReadTimeout() {
+        return 120000;
+    }
 }
