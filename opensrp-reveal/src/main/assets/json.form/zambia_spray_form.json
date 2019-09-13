@@ -1689,7 +1689,7 @@
         "text": "If this is a mop-up or revisit, please record TOTAL rooms sprayed",
         "read_only": false,
         "hint_on_text": true,
-        "text_color" : "#BDBDBD",
+        "text_color" : "#B9A000",
         "text_size": "6sp",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -2444,7 +2444,7 @@
         "text": "If this is a mop-up or revisit, please record TOTAL rooms sprayed",
         "read_only": false,
         "hint_on_text": true,
-        "text_color" : "#BDBDBD",
+        "text_color" : "#B9A000",
         "text_size": "6sp",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -2891,6 +2891,24 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-calculation.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "business_status_toaster",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "New Structure Status: {business_status}",
+        "text_color": "#CF0800",
+        "toaster_type": "info",
+        "text_size": "8sp",
         "calculation": {
           "rules-engine": {
             "ex-rules": {

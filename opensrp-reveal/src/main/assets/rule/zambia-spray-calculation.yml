@@ -4,7 +4,7 @@ description: step1_sprayed_totalpop
 priority: 1
 condition: "true"
 actions:
-- "calculation =  Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0))"
+- "calculation = Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0))"
 ---
 name: step1_sprayed_totalpop_toaster_info
 description: step1_sprayed_totalpop_toaster_info
@@ -25,4 +25,11 @@ description: Task business status
 priority: 1
 condition: "true"
 actions:
-  - "calculation = (true)"
+  - "calculation = (helper.ifNull(step1_structure_sprayed,'no') == 'no') ? 'Not sprayed' : (Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) > 0 && Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) == Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0))) ? 'Fully sprayed' : (Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) > 0 && Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) > Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0))) ? 'Partially sprayed' : (helper.ifNull(step1_eligibility,'null') == 'notEligible') ? 'Not Eligible' : 'Not visited yet'"
+---
+name: step1_business_status_toaster
+description: step1_business_status_toaster
+priority: 1
+condition: "true"
+actions:
+  - "calculation = ['business_status' : step1_business_status]"

@@ -1,0 +1,35 @@
+---
+name: step1_bottles_empty_err
+description: step1_bottles_empty_err
+priority: 1
+condition: "(step1_bottles_start != null && step1_bottles_full != null) && (Integer.valueOf(helper.ifNull(step1_bottles_start,0)) - Integer.valueOf(helper.ifNull(step1_bottles_full,0)) < Integer.valueOf(helper.ifNull(step1_bottles_empty,0)))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_bottles_lostdamaged_err
+description: step1_bottles_lostdamaged_err
+priority: 1
+condition: "(step1_bottles_start != null && step1_bottles_full != null && step1_bottles_empty != null && step1_bottles_lostdamaged != null) && (Integer.valueOf(helper.ifNull(step1_bottles_start,0)) - Integer.valueOf(helper.ifNull(step1_bottles_full,0)) - Integer.valueOf(helper.ifNull(step1_bottles_empty,0)) < Integer.valueOf(helper.ifNull(step1_bottles_lostdamaged,0)))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_bottles_lostdamaged_err
+description: step1_bottles_lostdamaged_err
+priority: 1
+condition: "(step1_bottles_start != null && step1_bottles_full != null && step1_bottles_empty != null && step1_bottles_lostdamaged != null) && (Integer.valueOf(helper.ifNull(step1_bottles_start,0)) - Integer.valueOf(helper.ifNull(step1_bottles_full,0)) - Integer.valueOf(helper.ifNull(step1_bottles_empty,0)) < Integer.valueOf(helper.ifNull(step1_bottles_lostdamaged,0)))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_bottles_accounted_approve
+description: step1_bottles_accounted_approve
+priority: 1
+condition: "(step1_bottles_start != null && step1_bottles_full != null && step1_bottles_empty != null && step1_bottles_lostdamaged != null) && (Integer.valueOf(helper.ifNull(step1_bottles_start,0)) - Integer.valueOf(helper.ifNull(step1_bottles_full,0)) - Integer.valueOf(helper.ifNull(step1_bottles_empty,0)) - Integer.valueOf(helper.ifNull(step1_bottles_lostdamaged,0))) > 0"
+actions:
+  - "isRelevant = true"
+---
+name: step1_bottles_reasontext
+description: step1_bottles_reasontext
+priority: 1
+condition: "(step1_bottles_start != null && step1_bottles_full != null && step1_bottles_empty != null && step1_bottles_lostdamaged != null) && (Integer.valueOf(helper.ifNull(step1_bottles_start,0)) - Integer.valueOf(helper.ifNull(step1_bottles_full,0)) - Integer.valueOf(helper.ifNull(step1_bottles_empty,0)) - Integer.valueOf(helper.ifNull(step1_bottles_lostdamaged,0))) > 0"
+actions:
+  - "isRelevant = true"

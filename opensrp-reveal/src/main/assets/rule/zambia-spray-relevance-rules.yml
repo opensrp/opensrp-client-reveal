@@ -30,21 +30,21 @@ actions:
 name: step1_sprayed_totalpop_toaster_error
 description: step1_sprayed_totalpop_toaster_error
 priority: 1
-condition: "step1_structure_sprayed.equals('yes') && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0)) == 0)"
+condition: "step1_structure_sprayed.equals('yes') && step1_sprayed_males != null && step1_sprayed_females != null && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0)) == 0)"
 actions:
   - "isRelevant = true"
 ---
 name: step1_sprayed_totalpop_toaster_info
 description: step1_sprayed_totalpop_toaster_info
 priority: 1
-condition: "step1_structure_sprayed.equals('yes') && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0)) > 0)"
+condition: "step1_structure_sprayed.equals('yes') && step1_sprayed_males != null && step1_sprayed_females != null && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0)) > 0)"
 actions:
   - "isRelevant = true"
 ---
 name: step1_sprayed_totalpop_approve
 description: step1_sprayed_totalpop_approve
 priority: 1
-condition: "step1_structure_sprayed.equals('yes') && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0)) > 0)"
+condition: "step1_structure_sprayed.equals('yes') && step1_sprayed_males != null && step1_sprayed_females != null && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0)) > 0)"
 actions:
   - "isRelevant = true"
 ---
@@ -155,7 +155,7 @@ actions:
 name: step1_notsprayed_totalpop_toaster_error
 description: step1_notsprayed_totalpop_toaster_error
 priority: 1
-condition: "step1_structure_sprayed.equals('no') && (Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0)) == 0)"
+condition: "step1_structure_sprayed.equals('no') && step1_notsprayed_males != null && step1_notsprayed_females != null && (Integer.valueOf(helper.ifNull(step1_notsprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_notsprayed_females,0)) == 0)"
 actions:
   - "isRelevant = true"
 ---

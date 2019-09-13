@@ -277,6 +277,11 @@ public interface Constants {
         String ABLE_TO_SPRAY_FIRST =  "ableToSprayFirst";
         String MOP_UP_VISIT = "mopUpVisit";
 
+
+        /**
+         * Non-Task Related Forms
+         */
+        String DAILY_SUMMARY_ZAMBIA = "json.form/zambia_daily_summary.json";
     }
 
     interface DateFormat {

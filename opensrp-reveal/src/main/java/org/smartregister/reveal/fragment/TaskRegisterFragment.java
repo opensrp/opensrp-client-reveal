@@ -6,12 +6,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -58,7 +59,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     private RevealJsonFormUtils jsonFormUtils;
     private ProgressDialog progressDialog;
-    private TextView interventionTypeTv;
+    private Button interventionType;
 
     private LocationUtils locationUtils;
 
@@ -88,14 +89,47 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     public void setupViews(View view) {
         super.setupViews(view);
-        interventionTypeTv = view.findViewById(R.id.intervention_type);
+        interventionType = view.findViewById(R.id.intervention_type);
         if (getActivity() != null) {
-            interventionTypeTv.setText(
+            interventionType.setText(
                     getActivity().getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
         }
+
+        setUpOtherForms(view);
+
         view.findViewById(R.id.txt_map_label).setOnClickListener(v -> startMapActivity());
         view.findViewById(R.id.drawerMenu).setOnClickListener(v -> drawerView.openDrawerLayout());
         drawerView.onResume();
+    }
+
+    private void setUpOtherForms(View view)
+    {
+        Button otherForms = view.findViewById(R.id.other_forms_button);
+        otherForms.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //getPresenter().showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.DAILY_SUMMARY_ZAMBIA);
+                view.findViewById(R.id.task_group).setVisibility(View.GONE);
+                interventionType.setBackgroundColor(Color.parseColor("#59595A"));
+                view.findViewById(R.id.other_forms_group).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.other_forms_button).setBackgroundColor(Color.parseColor("#8F8F8F"));
+            }
+        });
+        interventionType.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //getPresenter().showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.DAILY_SUMMARY_ZAMBIA);
+                view.findViewById(R.id.task_group).setVisibility(View.VISIBLE);
+                interventionType.setBackgroundColor(Color.parseColor("#8F8F8F"));
+                view.findViewById(R.id.other_forms_group).setVisibility(View.GONE);
+                view.findViewById(R.id.other_forms_button).setBackgroundColor(Color.parseColor("#59595A"));
+            }
+        });
+
+        Button daily_summary = view.findViewById(R.id.other_daily_summary);
+        daily_summary.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                getPresenter().showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.DAILY_SUMMARY_ZAMBIA);
+            }
+        });
     }
 
     private void startMapActivity() {
@@ -253,7 +287,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     @Override
     public void setInventionType(int interventionLabel) {
-        interventionTypeTv.setText(getString(interventionLabel));
+        interventionType.setText(getString(interventionLabel));
     }
 
     @Override

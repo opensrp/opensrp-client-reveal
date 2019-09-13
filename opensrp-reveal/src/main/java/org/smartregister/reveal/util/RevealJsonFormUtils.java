@@ -86,15 +86,15 @@ public class RevealJsonFormUtils {
 
     public JSONObject getFormJSON(Context context, String formName, BaseTaskDetails task, Location structure) {
 
-        String taskBusinessStatus = task.getBusinessStatus();
-        String taskIdentifier = task.getTaskId();
-        String taskStatus = task.getTaskStatus();
+        String taskBusinessStatus = task == null ? "" : task.getBusinessStatus();
+        String taskIdentifier = task == null ? "" : task.getTaskId();
+        String taskStatus = task == null ? "" : task.getTaskStatus();
 
-        String entityId = task.getTaskEntity();
-        String structureId = structure.getId();
-        String structureUUID = structure.getProperties().getUid();
-        int structureVersion = structure.getProperties().getVersion();
-        String structureType = structure.getProperties().getType();
+        String entityId = task == null ? "" : task.getTaskEntity();
+        String structureId = structure == null ? "" : structure.getId();
+        String structureUUID = structure == null ? "" : structure.getProperties().getUid();
+        int structureVersion = structure == null ? 0 : structure.getProperties().getVersion();
+        String structureType = structure == null ? "" : structure.getProperties().getType();
 
         String sprayStatus = null;
         String familyHead = null;

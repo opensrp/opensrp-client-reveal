@@ -19,6 +19,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.model.BaseTaskDetails;
+import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -116,6 +117,12 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
             }
         }
         getView().hideProgressDialog();
+    }
+
+    public void showBasicForm(String formName)
+    {
+        JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(context, formName, null, null);
+        getView().startForm(formJSON);
     }
 
     @Override

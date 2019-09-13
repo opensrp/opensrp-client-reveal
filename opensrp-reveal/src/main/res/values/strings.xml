@@ -105,6 +105,7 @@
     <string name="map">Map</string>
     <string name="hamburger_menu">Hamburger menu</string>
     <string name="focus_investigation">Focus Investigation</string>
+    <string name="other_forms">Other Forms</string>
     <string name="irs">IRS</string>
     <string name="task_icon">Task Icon</string>
     <string name="distance_from_structure">%1.0f m away</string>
@@ -209,6 +210,9 @@
     <string name="register">Register</string>
     <string name="cancel">Cancel</string>
     <string name="partially_sprayed">Partially Sprayed</string>
+    <string name="daily_summary">Enter Daily Summary Form</string>
+    <string name="team_leader_dos">Enter Team Leader DOS Form</string>
+    <string name="cb_spray_area">Enter CB Spray Area Visit Form</string>
 
 
 </resources>
