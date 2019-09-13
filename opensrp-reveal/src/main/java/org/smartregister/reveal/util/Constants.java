@@ -73,6 +73,7 @@ public interface Constants {
         String ADMIN_PASSWORD_NOT_NEAR_STRUCTURES = "admin_password_not_near_structures";
         String DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG = "display_add_structure_out_of_boundary_warning_dialog";
         Boolean DEFAULT_DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG = false;
+        Float OUTSIDE_OPERATIONAL_AREA_MASK_OPACITY = 0.65f;
     }
 
     interface Preferences {

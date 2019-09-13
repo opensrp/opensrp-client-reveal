@@ -46,7 +46,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 28
         versionCode 3
-        versionName "2.4.2"
+        versionName "2.4.3"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -111,6 +111,7 @@ android {
             buildConfigField "float", "MY_LOCATION_BUFFER", '25'
             buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'false'
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '90'
+            buildConfigField "boolean", "DISPLAY_OUTSIDE_OPERATIONAL_AREA_MASK", 'false'
 
         }
 
@@ -127,6 +128,7 @@ android {
             buildConfigField "float", "MY_LOCATION_BUFFER", '25'
             buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '60'
+            buildConfigField "boolean", "DISPLAY_OUTSIDE_OPERATIONAL_AREA_MASK", 'false'
 
             testCoverageEnabled true
         }
@@ -185,7 +187,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:1.6.37-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-native-form:1.6.40-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'cardview-v7'
