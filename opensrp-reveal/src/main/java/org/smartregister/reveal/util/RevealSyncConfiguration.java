@@ -75,11 +75,11 @@ public class RevealSyncConfiguration extends SyncConfiguration {
 
     @Override
     public int getConnectTimeout() {
-        return 240000;
+        return 300000;
     }
 
     @Override
     public int getReadTimeout() {
-        return 240000;
+        return 300000;
     }
 }
