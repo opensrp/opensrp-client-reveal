@@ -130,6 +130,27 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                 getPresenter().showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.DAILY_SUMMARY_ZAMBIA);
             }
         });
+
+        Button team_leader_dos = view.findViewById(R.id.other_team_leader_dos);
+        team_leader_dos.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                getPresenter().showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.TEAM_LEADER_DOS_ZAMBIA);
+            }
+        });
+
+        Button cb_spray_area = view.findViewById(R.id.other_cb_spray_area);
+        cb_spray_area.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                getPresenter().showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.CB_SPRAY_AREA_ZAMBIA);
+            }
+        });
+
+        Button irs_sa_decision = view.findViewById(R.id.other_irs_sa_decision);
+        irs_sa_decision.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                getPresenter().showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.IRS_SA_DECISION_ZAMBIA);
+            }
+        });
     }
 
     private void startMapActivity() {

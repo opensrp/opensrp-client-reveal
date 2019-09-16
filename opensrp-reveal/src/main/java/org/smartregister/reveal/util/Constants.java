@@ -283,6 +283,12 @@ public interface Constants {
          * Non-Task Related Forms
          */
         String DAILY_SUMMARY_ZAMBIA = "json.form/zambia_daily_summary.json";
+
+        String TEAM_LEADER_DOS_ZAMBIA = "json.form/zambia_team_leader_dos.json";
+
+        String CB_SPRAY_AREA_ZAMBIA = "json.form/zambia_cb_spray_area.json";
+
+        String IRS_SA_DECISION_ZAMBIA = "json.form/zambia_irs_sa_decision.json";
     }
 
     interface DateFormat {
