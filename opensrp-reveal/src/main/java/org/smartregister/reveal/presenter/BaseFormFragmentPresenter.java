@@ -19,7 +19,6 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.model.BaseTaskDetails;
-import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
