@@ -339,6 +339,10 @@
           "value": "99",
           "err": "Cannot be greater than 99"
         },
+        "v_relative_max": {
+          "value": "nSprayableTotal",
+          "err": "Cannot be more than # of total sprayable structures"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
