@@ -27,8 +27,8 @@ condition: "(step1_bottles_start != null && step1_bottles_full != null && step1_
 actions:
   - "isRelevant = true"
 ---
-name: step1_bottles_reasontext
-description: step1_bottles_reasontext
+name: step1_bottles_reason
+description: step1_bottles_reason
 priority: 1
 condition: "(step1_bottles_start != null && step1_bottles_full != null && step1_bottles_empty != null && step1_bottles_lostdamaged != null) && (Integer.valueOf(helper.ifNull(step1_bottles_start,0)) - Integer.valueOf(helper.ifNull(step1_bottles_full,0)) - Integer.valueOf(helper.ifNull(step1_bottles_empty,0)) - Integer.valueOf(helper.ifNull(step1_bottles_lostdamaged,0))) > 0"
 actions:

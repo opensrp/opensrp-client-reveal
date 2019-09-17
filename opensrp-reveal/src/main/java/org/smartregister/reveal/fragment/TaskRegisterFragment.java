@@ -151,6 +151,27 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                 getPresenter().showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.IRS_SA_DECISION_ZAMBIA);
             }
         });
+
+        Button mobilization = view.findViewById(R.id.other_mobilization_form);
+        mobilization.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                getPresenter().showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.MOBILIZATION_FORM_ZAMBIA);
+            }
+        });
+
+        Button irs_field_officer = view.findViewById(R.id.other_irs_field_officer);
+        irs_field_officer.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                getPresenter().showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.IRS_FIELD_OFFICER_ZAMBIA);
+            }
+        });
+
+        Button verification_form = view.findViewById(R.id.other_verification_form);
+        verification_form.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                getPresenter().showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.VERIFICATION_FORM_ZAMBIA);
+            }
+        });
     }
 
     private void startMapActivity() {

@@ -1690,6 +1690,40 @@
         }
       },
       {
+        "key": "bottles_reason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Select a reason for the unaccounted bottles",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "lost",
+            "text": "Lost"
+          },
+          {
+            "key": "damaged",
+            "text": "Damaged"
+          },
+          {
+            "key": "other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia_daily_summary_relevance.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "bottles_reasontext",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1702,10 +1736,9 @@
           "err": "Required field"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia_daily_summary_relevance.yml"
-            }
+          "step1:bottles_reason": {
+            "type": "string",
+            "ex": "equalTo(., \"other\")"
           }
         }
       }

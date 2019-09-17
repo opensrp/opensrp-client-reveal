@@ -289,6 +289,12 @@ public interface Constants {
         String CB_SPRAY_AREA_ZAMBIA = "json.form/zambia_cb_spray_area.json";
 
         String IRS_SA_DECISION_ZAMBIA = "json.form/zambia_irs_sa_decision.json";
+
+        String MOBILIZATION_FORM_ZAMBIA = "json.form/zambia_mobilization_form.json";
+
+        String IRS_FIELD_OFFICER_ZAMBIA = "json.form/zambia_irs_field_officer.json";
+
+        String VERIFICATION_FORM_ZAMBIA = "json.form/zambia_verification_form.json";
     }
 
     interface DateFormat {
