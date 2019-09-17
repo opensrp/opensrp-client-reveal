@@ -25,7 +25,7 @@ description: Task business status
 priority: 1
 condition: "true"
 actions:
-  - "calculation = (helper.ifNull(step1_structure_sprayed,'no') == 'no') ? 'Not sprayed' : (Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) > 0 && Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) == Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0))) ? 'Fully sprayed' : (Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) > 0 && Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) > Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0))) ? 'Partially sprayed' : (helper.ifNull(step1_eligibility,'null') == 'notEligible') ? 'Not Eligible' : 'Not visited yet'"
+  - "calculation = (helper.ifNull(step1_structure_sprayed,'no') == 'no') ? 'Not Sprayed' : (Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) > 0 && Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) == Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0))) ? 'Complete' : (Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) > 0 && Integer.valueOf(helper.ifNull(step1_rooms_eligible,0)) > Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0))) ? 'Partially Sprayed' : (helper.ifNull(step1_eligibility,'null') == 'notEligible') ? 'Not Eligible' : 'Not Visited'"
 ---
 name: step1_business_status_toaster
 description: step1_business_status_toaster
