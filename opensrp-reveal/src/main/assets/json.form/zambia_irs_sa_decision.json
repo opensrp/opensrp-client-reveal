@@ -244,16 +244,20 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "What was the main reason for not reaching 90% spray effectiveness?",
+        "label": "What was the main reason for not reaching 90% spray effectiveness? (Not Found or Not Sprayed?)",
         "text_size": "8sp",
         "options": [
           {
-            "key": "notFound",
-            "text": "Not Found"
+            "key": "lowCoverage",
+            "text": "Low Found Coverage"
           },
           {
-            "key": "notSprayed",
-            "text": "Not Sprayed"
+            "key": "lowSuccess",
+            "text": "Low Spray Success Rate"
+          },
+          {
+            "key": "both",
+            "text": "Both of the Above"
           }
         ],
         "v_required": {
@@ -278,24 +282,24 @@
         "text_size": "8sp",
         "options": [
           {
-            "key": "refused",
-            "text": "Refused"
+            "key": "sick",
+            "text": "Sick"
           },
           {
             "key": "locked",
             "text": "Locked"
           },
           {
-            "key": "noOneHome",
-            "text": "No One Home"
-          },
-          {
-            "key": "sick",
-            "text": "Sick"
-          },
-          {
             "key": "funeral",
             "text": "Funeral"
+          },
+          {
+            "key": "refused",
+            "text": "Refused"
+          },
+          {
+            "key": "noOneHome",
+            "text": "No One Home/Missed"
           },
           {
             "key": "other",

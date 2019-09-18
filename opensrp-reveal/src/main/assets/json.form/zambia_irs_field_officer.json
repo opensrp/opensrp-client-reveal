@@ -525,7 +525,7 @@
         "options": [
           {
             "key": "falseSpray",
-            "text": "Reports od structure marked as sprayed when not-sprayed",
+            "text": "Reports of structure marked as sprayed when not-sprayed",
             "value": false,
             "openmrs_choice_id": ""
           },
@@ -582,27 +582,22 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Please select TLAs with forms involved in data falsification.",
+        "type": "edit_text",
+        "hint": "Please enter TLAs with forms involved in data falsification.",
         "text_size": "8sp",
-        "options": [
-          {
-            "key": "yes",
-            "text": "Yes"
-          },
-          {
-            "key": "no",
-            "text": "No"
-          }
-        ],
         "v_required": {
           "value": "true",
           "err": "Required field"
         },
         "relevance": {
-          "step1:datafals": {
-            "type": "string",
-            "ex": "equalTo(., \"4\")"
+          "step1:datafals_type": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "falsePaper"
+                ]
+              }
+            ]
           }
         }
       },

@@ -96,16 +96,20 @@
         "text_size": "8sp",
         "options": [
           {
-            "key": "Fully sprayed",
-            "text": "Fully sprayed"
+            "key": "Fully Sprayed",
+            "text": "Fully Sprayed"
           },
           {
-            "key": "Not sprayed",
-            "text": "Not sprayed"
+            "key": "Partially Sprayed",
+            "text": "Not Sprayed"
           },
           {
-            "key": "Not visited yet",
-            "text": "Not visited yet"
+            "key": "Not Sprayed",
+            "text": "Not Sprayed"
+          },
+          {
+            "key": "Not Visited Yet",
+            "text": "Not Visited Yet"
           },
           {
             "key": "Not Eligible",
@@ -155,6 +159,12 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "step1:spray_status": {
+            "type": "string",
+            "ex": "equalTo(., \"Not Sprayed\")"
+          }
         }
       },
       {
