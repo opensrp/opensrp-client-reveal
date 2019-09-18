@@ -572,8 +572,13 @@
         },
         "relevance": {
           "step1:datafals_type": {
-            "type": "string",
-            "ex": "equalTo(., \"other\")"
+            "ex-checkbox": [
+              {
+                "or": [
+                  "other"
+                ]
+              }
+            ]
           }
         }
       },
