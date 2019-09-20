@@ -1,7 +1,5 @@
 package org.smartregister.reveal.interactor;
 
-import android.util.TimingLogger;
-
 import com.mapbox.geojson.Feature;
 
 import net.sqlcipher.Cursor;
