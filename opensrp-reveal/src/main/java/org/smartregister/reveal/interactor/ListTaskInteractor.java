@@ -1,5 +1,7 @@
 package org.smartregister.reveal.interactor;
 
+import android.util.TimingLogger;
+
 import com.mapbox.geojson.Feature;
 
 import net.sqlcipher.Cursor;
@@ -11,6 +13,7 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.model.CardDetails;
@@ -44,6 +47,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Tables.LARVAL_DIPPINGS_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.MOSQUITO_COLLECTIONS_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.PAOT_TABLE;
+import static org.smartregister.reveal.util.Utils.getInterventionLabel;
 
 /**
  * Created by samuelgithengi on 11/27/18.
@@ -171,18 +175,22 @@ public class ListTaskInteractor extends BaseInteractor {
 
     public void fetchLocations(String plan, String operationalArea) {
         Runnable runnable = new Runnable() {
+
             @Override
             public void run() {
                 JSONObject featureCollection = null;
+
                 Location operationalAreaLocation = Utils.getOperationalAreaLocation(operationalArea);
                 try {
                     featureCollection = createFeatureCollection();
                     if (operationalAreaLocation != null) {
                         Map<String, Set<Task>> tasks = taskRepository.getTasksByPlanAndGroup(plan, operationalAreaLocation.getId());
                         List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
-                        String indexCase = getIndexCaseStructure(plan);
-                        featureCollection.put(GeoJSON.FEATURES, new JSONArray(GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, indexCase)));
-                        Timber.d("features:" + featureCollection.toString());
+                        String indexCase = null;
+                        if (getInterventionLabel() == R.string.focus_investigation)
+                            indexCase = getIndexCaseStructure(plan);
+                        String features = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, indexCase);
+                        featureCollection.put(GeoJSON.FEATURES, new JSONArray(features));
 
                     }
                 } catch (Exception e) {
@@ -201,8 +209,11 @@ public class ListTaskInteractor extends BaseInteractor {
                         }
                     }
                 });
+
             }
+
         };
+
 
         appExecutors.diskIO().execute(runnable);
     }
@@ -211,8 +222,10 @@ public class ListTaskInteractor extends BaseInteractor {
         Cursor cursor = null;
         String structureId = null;
         try {
-            cursor = getDatabase().rawQuery(getMemberTasksSelect(String.format("%s=? AND %s=?",
-                    PLAN_ID, CODE), new String[]{}), new String[]{planId, CASE_CONFIRMATION});
+            String query = getMemberTasksSelect(String.format("%s=? AND %s=?",
+                    PLAN_ID, CODE), new String[]{});
+            Timber.d(query);
+            cursor = getDatabase().rawQuery(query, new String[]{planId, CASE_CONFIRMATION});
             if (cursor.moveToNext()) {
                 structureId = cursor.getString(0);
             }
