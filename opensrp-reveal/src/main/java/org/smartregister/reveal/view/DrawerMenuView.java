@@ -297,10 +297,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     public void startP2PActivity() {
         if (PermissionUtils.isPermissionGranted(getContext()
                 , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}
-                , Constants.RQ_CODE.STORAGE_PERMISIONS)) {
+                , Constants.RQCODE.STORAGE_PERMISIONS)) {
             getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
         }
     }
-
-
 }
