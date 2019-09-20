@@ -1,7 +1,9 @@
 package org.smartregister.reveal.view;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -19,13 +21,16 @@ import com.vijay.jsonwizard.customviews.TreeViewDialog;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.smartregister.p2p.activity.P2pModeSelectActivity;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.presenter.BaseDrawerPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Tags;
+import org.smartregister.util.PermissionUtils;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -129,6 +134,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
         headerView.findViewById(R.id.logout_button).setOnClickListener(this);
         headerView.findViewById(R.id.sync_button).setOnClickListener(this);
+
+        registerDeviceToDeviceSync(headerView);
 
     }
 
@@ -274,6 +281,25 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     @Override
     public void onResume() {
         presenter.onViewResumed();
+    }
+
+
+    private void registerDeviceToDeviceSync(View rootView) {
+        rootView.findViewById(R.id.btn_navMenu_p2pSyncBtn)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startP2PActivity();
+                    }
+                });
+    }
+
+    public void startP2PActivity() {
+        if (PermissionUtils.isPermissionGranted(getContext()
+                , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}
+                , Constants.RQ_CODE.STORAGE_PERMISIONS)) {
+            getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
+        }
     }
 
 

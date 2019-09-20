@@ -395,4 +395,7 @@ public interface Constants {
         String INTERVENTION_TYPE = "interventionType";
     }
 
+    public static final class RQ_CODE {
+        public static final int STORAGE_PERMISIONS = 1;
+    }
 }
