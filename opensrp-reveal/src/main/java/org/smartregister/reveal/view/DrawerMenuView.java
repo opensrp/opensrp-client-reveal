@@ -134,8 +134,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
         headerView.findViewById(R.id.logout_button).setOnClickListener(this);
         headerView.findViewById(R.id.sync_button).setOnClickListener(this);
-
-        registerDeviceToDeviceSync(headerView);
+        headerView.findViewById(R.id.btn_navMenu_p2pSyncBtn).setOnClickListener(this);
 
     }
 
@@ -267,6 +266,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             presenter.onShowPlanSelector();
         else if (v.getId() == R.id.logout_button)
             RevealApplication.getInstance().logoutCurrentUser();
+        else if (v.getId() == R.id.btn_navMenu_p2pSyncBtn)
+            startP2PActivity();
         else if (v.getId() == R.id.sync_button) {
             org.smartregister.reveal.util.Utils.startImmediateSync();
             closeDrawerLayout();
@@ -283,21 +284,10 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         presenter.onViewResumed();
     }
 
-
-    private void registerDeviceToDeviceSync(View rootView) {
-        rootView.findViewById(R.id.btn_navMenu_p2pSyncBtn)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startP2PActivity();
-                    }
-                });
-    }
-
-    public void startP2PActivity() {
+    private void startP2PActivity() {
         if (PermissionUtils.isPermissionGranted(getContext()
                 , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}
-                , Constants.RQCODE.STORAGE_PERMISIONS)) {
+                , Constants.STORAGE_PERMISSIONS)) {
             getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
         }
     }
