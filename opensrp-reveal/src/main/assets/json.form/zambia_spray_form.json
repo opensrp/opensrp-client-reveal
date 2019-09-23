@@ -2424,57 +2424,6 @@
         }
       },
       {
-        "key": "notsprayedrooms_sprayed",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Number of rooms sprayed in TOTAL",
-        "text_size": "8sp",
-        "v_numeric": {
-          "value": "true",
-          "err": "Number of rooms sprayed must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Number of rooms sprayed must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Number of eligible rooms must be greater than or equal to 0"
-        },
-        "v_relative_max": {
-          "value": "notsprayedrooms_eligible",
-          "err": "Number of rooms sprayed cannot be greater than number of eligible rooms."
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "notsprayedrooms_sprayed_hint",
-        "type": "label",
-        "text": "If this is a mop-up or revisit, please record TOTAL rooms sprayed",
-        "read_only": false,
-        "hint_on_text": true,
-        "text_color" : "#B9A000",
-        "text_size": "6sp",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "relevance": {
-          "step1:structure_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"no\")"
-          }
-        }
-      },
-      {
         "key": "notsprayed_males",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",

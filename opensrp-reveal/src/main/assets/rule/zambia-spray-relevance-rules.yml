@@ -72,7 +72,7 @@ actions:
 name: step1_sprayed_nets_use
 description: step1_sprayed_nets_use
 priority: 1
-condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible')"
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && Integer.valueOf(helper.ifNull(step1_sprayed_nets_available,0)) > 0"
 actions:
   - "isRelevant = true"
 ---
@@ -145,13 +145,6 @@ actions:
 
 
 ---
-name: step1_notsprayedrooms_sprayed
-description: step1_notsprayedrooms_sprayed
-priority: 1
-condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible')"
-actions:
-  - "isRelevant = true"
----
 name: step1_notsprayed_totalpop_toaster_error
 description: step1_notsprayed_totalpop_toaster_error
 priority: 1
@@ -183,7 +176,7 @@ actions:
 name: step1_notsprayed_nets_use
 description: step1_notsprayed_nets_use
 priority: 1
-condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible')"
+condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('eligible') && Integer.valueOf(helper.ifNull(step1_notsprayed_nets_available,0)) > 0"
 actions:
   - "isRelevant = true"
 ---
