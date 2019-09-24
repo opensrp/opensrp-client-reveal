@@ -83,6 +83,6 @@ public interface BaseDrawerContract {
 
     interface Interactor {
 
-        void fetchPlans();
+        void fetchPlans(String jurisdictionName);
     }
 }
