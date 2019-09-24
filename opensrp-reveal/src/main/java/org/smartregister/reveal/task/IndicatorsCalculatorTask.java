@@ -55,8 +55,12 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, Map<String, 
 
     @Override
     protected void onPostExecute(Map<String, Integer> map) {
-        int sprayed = map.get(org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED);
-        int notSprayed = map.get(org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED);
+
+        Integer sprayedValue = map.get(Constants.BusinessStatus.SPRAYED);
+        Integer notSprayedValue = map.get(Constants.BusinessStatus.NOT_SPRAYED);
+
+        int sprayed = sprayedValue != null ? sprayedValue : 0;
+        int notSprayed = notSprayedValue != null ? notSprayedValue : 0;
         int totalStructures = this.tasks.size();
         int progress = totalStructures > 0 ? Math.round(sprayed * 100 / totalStructures) : 0;
 
@@ -73,5 +77,6 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, Map<String, 
 
         progressIndicator3.setProgress(progress3);
         progressIndicator3.setTitle(progress3 + "%");
+
     }
 }

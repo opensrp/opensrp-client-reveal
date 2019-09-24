@@ -129,6 +129,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private CardView mosquitoCollectionCardView;
     private CardView larvalBreedingCardView;
     private CardView potentialAreaOfTransmissionCardView;
+    private CardView indicatorsCardView;
 
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
@@ -241,6 +242,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         findViewById(R.id.btn_collapse_paot_card_view).setOnClickListener(this);
 
         findViewById(R.id.btn_edit_paot_details).setOnClickListener(this);
+
+
+        indicatorsCardView = findViewById(R.id.indicators_card_view);
     }
 
     @Override
@@ -373,11 +377,15 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     private void openIndicatorsActivity() {
-        Intent intent = new Intent(this, IndicatorsActivity.class);
+        /*Intent intent = new Intent(this, IndicatorsActivity.class);
         if (getUserCurrentLocation() != null) {
             intent.putExtra(TaskRegister.LAST_USER_LOCATION, getUserCurrentLocation());
         }
-        startActivity(intent);
+        startActivity(intent);*/
+
+
+        setViewVisibility(sprayCardView, false);
+        setViewVisibility(mosquitoCollectionCardView, false);
     }
 
 
