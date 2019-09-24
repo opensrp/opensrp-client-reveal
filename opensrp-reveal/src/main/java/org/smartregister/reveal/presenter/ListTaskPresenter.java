@@ -63,7 +63,6 @@ import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
-import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
@@ -242,7 +241,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 }
             } else if (IRS.equals(code) &&
                     (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus)) || PARTIALLY_SPRAYED.equals(businessStatus)
-                        || COMPLETE.equals(businessStatus) || NOT_ELIGIBLE.equals(businessStatus) || NOT_VISITED.equals(businessStatus)) {
+                    || COMPLETE.equals(businessStatus) || NOT_ELIGIBLE.equals(businessStatus) || NOT_VISITED.equals(businessStatus)) {
                 listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
             } else if ((MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code))
                     && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
@@ -395,7 +394,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         try {
             JSONObject formJson = new JSONObject(jsonFormUtils.getFormString(listTaskView.getContext(), formName, null));
             formJson.put(OPERATIONAL_AREA_TAG, operationalArea.toJson());
-            formJson.put(STRUCTURES_TAG, featureCollection.toJson());
+            revealApplication.setFeatureCollection(featureCollection);
             jsonFormUtils.populateField(formJson, Constants.JsonForm.SELECTED_OPERATIONAL_AREA_NAME, prefsUtil.getCurrentOperationalArea(), TEXT);
             formJson.put(LOCATION_COMPONENT_ACTIVE, myLocationComponentActive);
             listTaskView.startJsonForm(formJson);
