@@ -211,6 +211,14 @@
     <string name="partially_sprayed">Partially Sprayed</string>
     <string name="found_cov">Found Cov.</string>
     <string name="sprayed_cov">Sprayed Cov.</string>
-
+    <string name="spray_coverage">Spray Coverage</string>
+    <string name="structures_remaining_90">Structures Remaining 90%</string>
+    <string name="total_structures">Total Structures</string>
+    <string name="structures_not_visited">Structures Not Visited</string>
+    <string name="structures_visited_found">Structures Visited/Found</string>
+    <string name="structures_sprayed">Structures Sprayed</string>
+    <string name="structures_not_sprayed">Structures Not Sprayed</string>
+    <string name="room_coverage">Room Coverage</string>
+    <string name="n_percent">%1$d U+0025</string>
 
 </resources>

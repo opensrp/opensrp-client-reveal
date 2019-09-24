@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.Gravity;
@@ -73,6 +72,7 @@ import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
+import org.smartregister.reveal.util.DBQueryHelper;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
@@ -199,16 +199,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private void fetchTaskDetails() {
 
 
-        taskRegisterFragmentInteractor.findTasks(getMainCondition(), getUserCurrentLocation(), getOperationalAreaCenter(), this.getContext().getString(R.string.house));
-    }
-
-    private Pair<String, String[]> getMainCondition() {
-        org.smartregister.domain.Location operationalArea = org.smartregister.reveal.util.Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
-        String whereClause = String.format("%s.%s = ? AND %s.%s = ? AND %s.%s != ?",
-                org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE, org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPID, org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE, org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID,
-                org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE, org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS);
-        return new Pair<>(whereClause, new String[]{operationalArea == null ?
-                null : operationalArea.getId(), PreferencesUtil.getInstance().getCurrentPlanId(), Task.TaskStatus.CANCELLED.name()});
+        taskRegisterFragmentInteractor.findTasks(DBQueryHelper.getMainCondition(), getUserCurrentLocation(), getOperationalAreaCenter(), this.getContext().getString(R.string.house));
     }
 
     private void initializeCardViews() {
@@ -677,6 +668,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void onTaskSelected(TaskDetails details, boolean isActionClicked) {
 
+        //Overriden
     }
 
     @Override
@@ -687,6 +679,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void onIndexCaseFound(JSONObject indexCase, boolean isLinkedToJurisdiction) {
 
+        //Overriden
     }
 
     @Override
@@ -712,51 +705,61 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void onFormSaved(@NonNull String structureId, String taskID, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
 
+        //Overriden
     }
 
     @Override
     public void onStructureAdded(Feature feature, JSONArray featureCoordinates, double zoomlevel) {
 
+        //Overriden
     }
 
     @Override
     public void onFormSaveFailure(String eventType) {
 
+        //Overriden
     }
 
     @Override
     public void onFamilyFound(CommonPersonObjectClient finalFamily) {
 
+        //Overriden
     }
 
     @Override
     public void onStructureFound(org.smartregister.domain.Location structure, BaseTaskDetails details) {
 
+        //Overriden
     }
 
     @Override
     public void onFetchedMembersCount(int numberOfMembers, JSONObject formJSON) {
 
+        //Overriden
     }
 
     @Override
     public void onFetchedFamilyMembers(JSONArray familyMembers, JSONObject formJSON) {
 
+        //Overriden
     }
 
     @Override
     public void onFetchedSprayDetails(CommonPersonObject commonPersonObject, JSONObject formJSON) {
 
+        //Overriden
     }
 
     @Override
     public void onPasswordVerified() {
 
+        //Overriden
     }
 
     @Override
     public void onLocationValidated() {
 
+        //Overriden
     }
 
     @Override
@@ -767,6 +770,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void requestUserPassword() {
 
+        //Overriden
     }
 
     @Override
@@ -777,21 +781,25 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void processViewConfigurations() {
 
+        //Overriden
     }
 
     @Override
     public void initializeQueries(String s) {
 
+        //Overriden
     }
 
     @Override
     public void startSync() {
 
+        //Overriden
     }
 
     @Override
     public void searchGlobally(String s) {
 
+        //Overriden
     }
 
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {
