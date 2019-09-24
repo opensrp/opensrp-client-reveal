@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.mapbox.geojson.Feature;
@@ -20,7 +21,6 @@ import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.DBQueryHelper;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
@@ -99,7 +99,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
 
         getView().showProgressView();
 
-        interactor.findTasks(DBQueryHelper.getMainCondition(), lastLocation, getOperationalAreaCenter(), getView().getContext().getString(R.string.house));
+        interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter(), getView().getContext().getString(R.string.house));
 
     }
 
@@ -171,8 +171,22 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public void onDrawerClosed() {
         getView().showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
-        interactor.findTasks(DBQueryHelper.getMainCondition(), lastLocation, getOperationalAreaCenter(), getView().getContext().getString(R.string.house));
+        interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter(), getView().getContext().getString(R.string.house));
         getView().setInventionType(getInterventionLabel());
+    }
+
+    /**
+     * Gets the where clause for the task register, filters by operational area and campaign
+     *
+     * @return pair of filter clause and values for filter
+     */
+    private Pair<String, String[]> getMainCondition() {
+        Location operationalArea = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
+        String whereClause = String.format("%s.%s = ? AND %s.%s = ? AND %s.%s != ?",
+                Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.GROUPID, Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.PLAN_ID,
+                Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.STATUS);
+        return new Pair<>(whereClause, new String[]{operationalArea == null ?
+                null : operationalArea.getId(), prefsUtil.getCurrentPlanId(), Task.TaskStatus.CANCELLED.name()});
     }
 
     @Override
