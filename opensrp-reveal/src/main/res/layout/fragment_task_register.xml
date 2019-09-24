@@ -65,4 +65,8 @@
             android:visibility="gone" />
     </FrameLayout>
 
+    <include
+        android:id="@+id/progressIndicatorsGroupView"
+        layout="@layout/progress_indicators_view" />
+
 </LinearLayout>

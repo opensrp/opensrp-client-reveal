@@ -209,6 +209,8 @@
     <string name="register">Register</string>
     <string name="cancel">Cancel</string>
     <string name="partially_sprayed">Partially Sprayed</string>
+    <string name="found_cov">Found Cov.</string>
+    <string name="sprayed_cov">Sprayed Cov.</string>
 
 
 </resources>
