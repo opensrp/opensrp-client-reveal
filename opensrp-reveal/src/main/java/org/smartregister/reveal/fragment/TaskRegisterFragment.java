@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
+import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
@@ -32,6 +34,7 @@ import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.DrawerMenuView;
+import org.smartregister.reveal.view.IndicatorsActivity;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.reveal.view.TaskRegisterActivity;
 import org.smartregister.view.activity.BaseRegisterActivity;
@@ -96,6 +99,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         view.findViewById(R.id.txt_map_label).setOnClickListener(v -> startMapActivity());
         view.findViewById(R.id.drawerMenu).setOnClickListener(v -> drawerView.openDrawerLayout());
         drawerView.onResume();
+
+        initializeProgressIndicatorViews(view);
     }
 
     private void startMapActivity() {
@@ -179,6 +184,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     public void setTaskDetails(List<TaskDetails> tasks) {
         taskAdapter.setTaskDetails(tasks);
+        new IndicatorsCalculatorTask(getActivity(), tasks).execute();
     }
 
     @Override
@@ -324,5 +330,24 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         public void onReceive(Context context, Intent intent) {
             getPresenter().initializeQueries(getMainCondition());
         }
+    }
+
+
+    private void initializeProgressIndicatorViews(View view) {
+        LinearLayout progressIndicatorsGroupView = view.findViewById(R.id.progressIndicatorsGroupView);
+        progressIndicatorsGroupView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openIndicatorsActivity();
+            }
+        });
+    }
+
+    private void openIndicatorsActivity() {
+        Intent intent = new Intent(getActivity(), IndicatorsActivity.class);
+        if (getUserCurrentLocation() != null) {
+            intent.putExtra(TaskRegister.LAST_USER_LOCATION, getUserCurrentLocation());
+        }
+        startActivity(intent);
     }
 }
