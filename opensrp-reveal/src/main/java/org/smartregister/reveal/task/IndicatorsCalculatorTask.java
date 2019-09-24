@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import org.smartregister.reporting.view.ProgressIndicatorView;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.util.Constants;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +43,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, Map<String, 
 
         for (int i = 0; i < this.tasks.size(); i++) {
 
-            String key = this.tasks.get(i).getSprayStatus() == null ? "NULL" : this.tasks.get(i).getSprayStatus();
+            String key = this.tasks.get(i).getSprayStatus() == null ? Constants.NULL_KEY : this.tasks.get(i).getSprayStatus();
 
             int newValue = map.get(key) != null ? map.get(key) + 1 : 1;
 

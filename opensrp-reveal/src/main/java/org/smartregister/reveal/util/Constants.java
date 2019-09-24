@@ -50,6 +50,8 @@ public interface Constants {
 
     String COMMA = ",";
 
+    String NULL_KEY = "NULL";
+
     interface CONFIGURATION {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";
@@ -273,7 +275,7 @@ public interface Constants {
         String NAMIBIA_ADD_STRUCTURE_FORM = "json.form/namibia_add_structure.json";
 
         String HOUSEHOLD_ACCESSIBLE = "householdAccessible";
-        String ABLE_TO_SPRAY_FIRST =  "ableToSprayFirst";
+        String ABLE_TO_SPRAY_FIRST = "ableToSprayFirst";
         String MOP_UP_VISIT = "mopUpVisit";
 
     }

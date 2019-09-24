@@ -3,7 +3,6 @@ package org.smartregister.reveal.view;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,6 +26,7 @@ import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.ValidateUserLocationPresenter;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.DBQueryHelper;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.PropertiesConverter;
@@ -79,7 +79,7 @@ public class IndicatorsActivity extends Activity implements TaskRegisterFragment
 
         for (int i = 0; i < tasks.size(); i++) {
 
-            String key = tasks.get(i).getSprayStatus() == null ? "NULL" : tasks.get(i).getSprayStatus();
+            String key = tasks.get(i).getSprayStatus() == null ? Constants.NULL_KEY : tasks.get(i).getSprayStatus();
 
             int newValue = map.get(key) != null ? map.get(key) + 1 : 1;
 
@@ -87,38 +87,38 @@ public class IndicatorsActivity extends Activity implements TaskRegisterFragment
 
         }
 
-
         int sprayed = map.get(org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED);
         int notSprayed = map.get(org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED);
         int totalStructures = tasks.size();
         int progress = totalStructures > 0 ? Math.round(sprayed * 100 / totalStructures) : 0;
-        int notVisited = map.get("NULL") != null ? map.get("NULL") : 0;
+        int notVisited = map.get(Constants.NULL_KEY) != null ? map.get(Constants.NULL_KEY) : 0;
 
-        sprayIndicator.add("Spray Coverage");
-        sprayIndicator.add(progress + "%");
+        sprayIndicator.add(getResources().getString(R.string.spray_coverage));
+        sprayIndicator.add(getResources().getString(R.string.n_percent, progress));
 
         int totalFound = (sprayed + notSprayed);
 
-        sprayIndicator.add("Remaining 90%");
+        sprayIndicator.add(getResources().getString(R.string.structures_remaining_90));
         sprayIndicator.add(String.valueOf(Math.round(totalStructures * 0.9) - sprayed));
 
 
-        sprayIndicator.add("Total Structures");
+        sprayIndicator.add(getResources().getString(R.string.total_structures));
         sprayIndicator.add(String.valueOf(totalStructures));
 
 
-        sprayIndicator.add("Not Visited");
+        sprayIndicator.add(getResources().getString(R.string.structures_not_visited));
         sprayIndicator.add(String.valueOf(notVisited));
 
 
-        sprayIndicator.add("Visited/Found");
+        sprayIndicator.add(getResources().getString(R.string.structures_visited_found));
         sprayIndicator.add(String.valueOf(totalFound));
 
-        sprayIndicator.add("Structures Sprayed");
+
+        sprayIndicator.add(getResources().getString(R.string.sprayed));
         sprayIndicator.add(String.valueOf(sprayed));
 
 
-        sprayIndicator.add("Structures Not Sprayed");
+        sprayIndicator.add(getResources().getString(R.string.structures_not_sprayed));
         sprayIndicator.add(String.valueOf(notSprayed));
 
 
@@ -142,12 +142,13 @@ public class IndicatorsActivity extends Activity implements TaskRegisterFragment
 
     @Override
     public void onDrawerClosed() {
-
+        //Overriden
     }
 
     @Override
     public void onTaskSelected(TaskDetails details, boolean isActionClicked) {
 
+        //Overriden
     }
 
     @Override
@@ -158,41 +159,49 @@ public class IndicatorsActivity extends Activity implements TaskRegisterFragment
     @Override
     public void onIndexCaseFound(JSONObject indexCase, boolean isLinkedToJurisdiction) {
 
+        //Overriden
     }
 
     @Override
     public void onFormSaved(@NonNull String structureId, String taskID, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
 
+        //Overriden
     }
 
     @Override
     public void onStructureAdded(Feature feature, JSONArray featureCoordinates, double zoomlevel) {
 
+        //Overriden
     }
 
     @Override
     public void onFormSaveFailure(String eventType) {
 
+        //Overriden
     }
 
     @Override
     public void onFamilyFound(CommonPersonObjectClient finalFamily) {
 
+        //Overriden
     }
 
     @Override
     public void onStructureFound(Location structure, BaseTaskDetails details) {
 
+        //Overriden
     }
 
     @Override
     public void onFetchedMembersCount(int numberOfMembers, JSONObject formJSON) {
 
+        //Overriden
     }
 
     @Override
     public void onFetchedFamilyMembers(JSONArray familyMembers, JSONObject formJSON) {
 
+        //Overriden
     }
 
     @Override
@@ -203,11 +212,13 @@ public class IndicatorsActivity extends Activity implements TaskRegisterFragment
     @Override
     public void onPasswordVerified() {
 
+        //Overriden
     }
 
     @Override
     public void onLocationValidated() {
 
+        //Overriden
     }
 
     @Override
@@ -218,6 +229,7 @@ public class IndicatorsActivity extends Activity implements TaskRegisterFragment
     @Override
     public void requestUserPassword() {
 
+        //Overriden
     }
 
     @Override
@@ -228,21 +240,25 @@ public class IndicatorsActivity extends Activity implements TaskRegisterFragment
     @Override
     public void processViewConfigurations() {
 
+        //Overriden
     }
 
     @Override
     public void initializeQueries(String s) {
 
+        //Overriden
     }
 
     @Override
     public void startSync() {
 
+        //Overriden
     }
 
     @Override
     public void searchGlobally(String s) {
 
+        //Overriden
     }
 
     private android.location.Location getOperationalAreaCenter() {
@@ -252,19 +268,9 @@ public class IndicatorsActivity extends Activity implements TaskRegisterFragment
         return new RevealMappingHelper().getCenter(gson.toJson(operationalAreaLocation.getGeometry()));
     }
 
-    private Pair<String, String[]> getMainCondition() {
-        org.smartregister.domain.Location operationalArea = org.smartregister.reveal.util.Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
-        String whereClause = String.format("%s.%s = ? AND %s.%s = ? AND %s.%s != ?",
-                org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE, org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPID, org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE, org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID,
-                org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE, org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS);
-        return new Pair<>(whereClause, new String[]{operationalArea == null ?
-                null : operationalArea.getId(), PreferencesUtil.getInstance().getCurrentPlanId(), Task.TaskStatus.CANCELLED.name()});
-    }
-
     private void fetchTaskDetails() {
 
-
-        taskRegisterFragmentInteractor.findTasks(getMainCondition(), currentLocation, getOperationalAreaCenter(), this.getString(R.string.house));
+        taskRegisterFragmentInteractor.findTasks(DBQueryHelper.getMainCondition(), currentLocation, getOperationalAreaCenter(), this.getString(R.string.house));
     }
 
 
