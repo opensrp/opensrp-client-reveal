@@ -1,5 +1,8 @@
 package org.smartregister.reveal.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 public interface Constants {
 
     String VIEW_CONFIGURATION_PREFIX = "ViewConfiguration_";
@@ -177,6 +180,12 @@ public interface Constants {
         String PARTIALLY_SPRAYED = "Partially Sprayed";
     }
 
+    interface BusinessStatusWrapper {
+        List<String> SPRAYED = Arrays.asList(new String[]{BusinessStatus.SPRAYED, BusinessStatus.COMPLETE});
+        List<String> NOT_SPRAYED = Arrays.asList(new String[]{BusinessStatus.NOT_SPRAYED, BusinessStatus.IN_PROGRESS, BusinessStatus.INCOMPLETE});
+        List<String> NOT_ELIGIBLE = Arrays.asList(new String[]{BusinessStatus.NOT_SPRAYABLE, BusinessStatus.NOT_ELIGIBLE});
+        List<String> NOT_VISITED = Arrays.asList(new String[]{BusinessStatus.NOT_VISITED});
+    }
 
     interface Map {
         int MAX_SELECT_ZOOM_LEVEL = 16;
