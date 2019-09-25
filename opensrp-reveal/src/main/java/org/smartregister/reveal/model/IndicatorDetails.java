@@ -7,12 +7,12 @@ import java.util.List;
  */
 public class IndicatorDetails {
 
-    int sprayed;
-    int notSprayed;
-    int totalStructures;
-    int progress;
-    int notVisited;
-    List<String> sprayIndicatorList;
+    private int sprayed;
+    private int notSprayed;
+    private int totalStructures;
+    private int progress;
+    private int notVisited;
+    private List<String> sprayIndicatorList;
 
     public int getSprayed() {
         return sprayed;

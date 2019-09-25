@@ -24,7 +24,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
     private ProgressIndicatorView progressIndicator3;
     private Activity activity;
     private List<TaskDetails> tasks;
-    TableView tableView;
+    private TableView tableView;
 
     public IndicatorsCalculatorTask(Activity context, List<TaskDetails> tasks) {
         this.activity = context;
@@ -46,61 +46,62 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
 
         IndicatorDetails indicatorDetails = new IndicatorDetails();
 
-        for (int i = 0; i < this.tasks.size(); i++) {
+        if (this.tasks != null) {
+            for (int i = 0; i < this.tasks.size(); i++) {
 
 
-            if (Constants.BusinessStatus.SPRAYED.equals(this.tasks.get(i).getSprayStatus())) {
+                if (Constants.BusinessStatus.SPRAYED.equals(this.tasks.get(i).getSprayStatus())) {
 
-                indicatorDetails.setSprayed(indicatorDetails.getSprayed() + 1);
+                    indicatorDetails.setSprayed(indicatorDetails.getSprayed() + 1);
 
-            } else if (Constants.BusinessStatus.NOT_SPRAYED.equals(this.tasks.get(i).getSprayStatus())) {
+                } else if (Constants.BusinessStatus.NOT_SPRAYED.equals(this.tasks.get(i).getSprayStatus())) {
 
-                indicatorDetails.setNotSprayed(indicatorDetails.getNotSprayed() + 1);
+                    indicatorDetails.setNotSprayed(indicatorDetails.getNotSprayed() + 1);
 
-            } else {
+                } else {
 
-                indicatorDetails.setNotVisited(indicatorDetails.getNotVisited() + 1);
+                    indicatorDetails.setNotVisited(indicatorDetails.getNotVisited() + 1);
+                }
+
             }
 
+            int totalStructures = this.tasks.size();
+            int progress = totalStructures > 0 ? Math.round(indicatorDetails.getSprayed() * 100 / totalStructures) : 0;
+
+            indicatorDetails.setTotalStructures(totalStructures);
+            indicatorDetails.setProgress(progress);
+
+            List<String> sprayIndicator = new ArrayList<>();
+
+            sprayIndicator.add(this.activity.getResources().getString(R.string.spray_coverage));
+            sprayIndicator.add(this.activity.getResources().getString(R.string.n_percent, progress));
+
+            int totalFound = (indicatorDetails.getSprayed() + indicatorDetails.getNotSprayed());
+
+            sprayIndicator.add(this.activity.getResources().getString(R.string.structures_remaining_90));
+            sprayIndicator.add(String.valueOf(Math.round(totalStructures * 0.9) - indicatorDetails.getSprayed()));
+
+
+            sprayIndicator.add(this.activity.getResources().getString(R.string.total_structures));
+            sprayIndicator.add(String.valueOf(totalStructures));
+
+
+            sprayIndicator.add(this.activity.getResources().getString(R.string.structures_not_visited));
+            sprayIndicator.add(String.valueOf(indicatorDetails.getNotVisited()));
+
+
+            sprayIndicator.add(this.activity.getResources().getString(R.string.structures_visited_found));
+            sprayIndicator.add(String.valueOf(totalFound));
+
+
+            sprayIndicator.add(this.activity.getResources().getString(R.string.sprayed));
+            sprayIndicator.add(String.valueOf(indicatorDetails.getSprayed()));
+
+            sprayIndicator.add(this.activity.getResources().getString(R.string.structures_not_sprayed));
+            sprayIndicator.add(String.valueOf(indicatorDetails.getNotSprayed()));
+
+            indicatorDetails.setSprayIndicatorList(sprayIndicator);
         }
-
-        int totalStructures = this.tasks.size();
-        int progress = totalStructures > 0 ? Math.round(indicatorDetails.getSprayed() * 100 / totalStructures) : 0;
-
-
-        indicatorDetails.setTotalStructures(totalStructures);
-        indicatorDetails.setProgress(progress);
-
-        List<String> sprayIndicator = new ArrayList<>();
-
-        sprayIndicator.add(this.activity.getResources().getString(R.string.spray_coverage));
-        sprayIndicator.add(this.activity.getResources().getString(R.string.n_percent, progress));
-
-        int totalFound = (indicatorDetails.getSprayed() + indicatorDetails.getNotSprayed());
-
-        sprayIndicator.add(this.activity.getResources().getString(R.string.structures_remaining_90));
-        sprayIndicator.add(String.valueOf(Math.round(totalStructures * 0.9) - indicatorDetails.getSprayed()));
-
-
-        sprayIndicator.add(this.activity.getResources().getString(R.string.total_structures));
-        sprayIndicator.add(String.valueOf(totalStructures));
-
-
-        sprayIndicator.add(this.activity.getResources().getString(R.string.structures_not_visited));
-        sprayIndicator.add(String.valueOf(indicatorDetails.getNotVisited()));
-
-
-        sprayIndicator.add(this.activity.getResources().getString(R.string.structures_visited_found));
-        sprayIndicator.add(String.valueOf(totalFound));
-
-
-        sprayIndicator.add(this.activity.getResources().getString(R.string.sprayed));
-        sprayIndicator.add(String.valueOf(indicatorDetails.getSprayed()));
-
-        sprayIndicator.add(this.activity.getResources().getString(R.string.structures_not_sprayed));
-        sprayIndicator.add(String.valueOf(indicatorDetails.getNotSprayed()));
-
-        indicatorDetails.setSprayIndicatorList(sprayIndicator);
 
         return indicatorDetails;
     }
