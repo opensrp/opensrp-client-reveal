@@ -219,6 +219,8 @@
     <string name="structures_sprayed">Structures Sprayed</string>
     <string name="structures_not_sprayed">Structures Not Sprayed</string>
     <string name="room_coverage">Room Coverage</string>
-    <string name="n_percent">%1$d U+0025</string>
+    <string name="n_percent">%1$d%%</string>
+    <string name="indicator">Indicator</string>
+    <string name="value">Value</string>
 
 </resources>
