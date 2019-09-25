@@ -24,8 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -38,15 +36,10 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
-import org.joda.time.DateTime;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.FetchStatus;
-import org.smartregister.domain.LocationProperty;
-import org.smartregister.domain.Task;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
@@ -55,32 +48,20 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
-import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
-import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
-import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
-import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
-import org.smartregister.reveal.presenter.ValidateUserLocationPresenter;
 import org.smartregister.reveal.repository.RevealMappingHelper;
-import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
-import org.smartregister.reveal.util.DBQueryHelper;
-import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.util.AssetHandler;
-import org.smartregister.util.DateTimeTypeConverter;
-import org.smartregister.util.PropertiesConverter;
-
-import java.util.List;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
@@ -107,7 +88,7 @@ import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
  * Created by samuelgithengi on 11/20/18.
  */
 public class ListTasksActivity extends BaseMapActivity implements ListTaskContract.ListTaskView,
-        View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener, UserLocationView, OnLocationComponentInitializedCallback, TaskRegisterFragmentContract.Presenter {
+        View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener, UserLocationView, OnLocationComponentInitializedCallback {
 
     private ListTaskPresenter listTaskPresenter;
 
@@ -121,10 +102,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private MapboxMap mMapboxMap;
 
-
-    private CardView sprayCardView;
     private TextView tvReason;
 
+    private CardView sprayCardView;
     private CardView mosquitoCollectionCardView;
     private CardView larvalBreedingCardView;
     private CardView potentialAreaOfTransmissionCardView;
@@ -149,13 +129,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private LinearLayout progressIndicatorsGroupView;
 
-    private TaskRegisterFragmentInteractor taskRegisterFragmentInteractor;
-
-
-    public static final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-            .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
-            .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,9 +140,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         revealMapHelper = new RevealMapHelper();
 
         listTaskPresenter = new ListTaskPresenter(this, drawerView.getPresenter());
-
-
-        this.taskRegisterFragmentInteractor = new TaskRegisterFragmentInteractor(this);
 
         rootView = findViewById(R.id.content_frame);
 
@@ -187,19 +157,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         initializeCardViews();
 
         syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
-    }
-
-    private android.location.Location getOperationalAreaCenter() {
-        org.smartregister.domain.Location operationalAreaLocation = org.smartregister.reveal.util.Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
-        if (operationalAreaLocation == null)
-            return null;
-        return new RevealMappingHelper().getCenter(gson.toJson(operationalAreaLocation.getGeometry()));
-    }
-
-    private void fetchTaskDetails() {
-
-
-        taskRegisterFragmentInteractor.findTasks(DBQueryHelper.getMainCondition(), getUserCurrentLocation(), getOperationalAreaCenter(), this.getContext().getString(R.string.house));
     }
 
     private void initializeCardViews() {
@@ -450,7 +407,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             if (operationalArea != null) {
                 CameraPosition cameraPosition = mMapboxMap.getCameraForGeometry(operationalArea.geometry());
 
-                if (getInterventionLabel() == R.string.focus_investigation) {
+                if (listTaskPresenter.getInterventionLabel() == R.string.focus_investigation) {
                     Feature indexCase = revealMapHelper.getIndexCase(featureCollection);
                     if (indexCase != null) {
                         Location center = new RevealMappingHelper().getCenter(indexCase.geometry().toJson());
@@ -473,7 +430,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 }
 
-                if (getInterventionLabel() == R.string.focus_investigation && revealMapHelper.getIndexCaseLineLayer() == null) {
+                if (listTaskPresenter.getInterventionLabel() == R.string.focus_investigation && revealMapHelper.getIndexCaseLineLayer() == null) {
                     revealMapHelper.addIndexCaseLayers(mMapboxMap, getContext(), featureCollection);
                 } else {
                     revealMapHelper.updateIndexCaseLayers(mMapboxMap, featureCollection, this);
@@ -610,12 +567,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void onTasksFound(List<TaskDetails> tasks, int structuresWithinBuffer) {
-        progressIndicatorsGroupView.setTag(tasks);
-        new IndicatorsCalculatorTask(getActivity(), tasks).execute();
-    }
-
-    @Override
     public void onDestroy() {
         listTaskPresenter = null;
         super.onDestroy();
@@ -654,7 +605,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(refreshGeowidgetReceiver, filter);
         drawerView.onResume();
         listTaskPresenter.onResume();
-        fetchTaskDetails();
     }
 
     @Override
@@ -668,23 +618,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void onDrawerClosed() {
         listTaskPresenter.onDrawerClosed();
-    }
-
-    @Override
-    public void onTaskSelected(TaskDetails details, boolean isActionClicked) {
-
-        //Overriden
-    }
-
-    @Override
-    public int getInterventionLabel() {
-        return 0;
-    }
-
-    @Override
-    public void onIndexCaseFound(JSONObject indexCase, boolean isLinkedToJurisdiction) {
-
-        //Overriden
     }
 
     @Override
@@ -705,106 +638,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public boolean isMyLocationComponentActive() {
         return revealMapHelper.isMyLocationComponentActive(this, myLocationButton);
-    }
-
-    @Override
-    public void onFormSaved(@NonNull String structureId, String taskID, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
-
-        //Overriden
-    }
-
-    @Override
-    public void onStructureAdded(Feature feature, JSONArray featureCoordinates, double zoomlevel) {
-
-        //Overriden
-    }
-
-    @Override
-    public void onFormSaveFailure(String eventType) {
-
-        //Overriden
-    }
-
-    @Override
-    public void onFamilyFound(CommonPersonObjectClient finalFamily) {
-
-        //Overriden
-    }
-
-    @Override
-    public void onStructureFound(org.smartregister.domain.Location structure, BaseTaskDetails details) {
-
-        //Overriden
-    }
-
-    @Override
-    public void onFetchedMembersCount(int numberOfMembers, JSONObject formJSON) {
-
-        //Overriden
-    }
-
-    @Override
-    public void onFetchedFamilyMembers(JSONArray familyMembers, JSONObject formJSON) {
-
-        //Overriden
-    }
-
-    @Override
-    public void onFetchedSprayDetails(CommonPersonObject commonPersonObject, JSONObject formJSON) {
-
-        //Overriden
-    }
-
-    @Override
-    public void onPasswordVerified() {
-
-        //Overriden
-    }
-
-    @Override
-    public void onLocationValidated() {
-
-        //Overriden
-    }
-
-    @Override
-    public LatLng getTargetCoordinates() {
-        return null;
-    }
-
-    @Override
-    public void requestUserPassword() {
-
-        //Overriden
-    }
-
-    @Override
-    public ValidateUserLocationPresenter getLocationPresenter() {
-        return null;
-    }
-
-    @Override
-    public void processViewConfigurations() {
-
-        //Overriden
-    }
-
-    @Override
-    public void initializeQueries(String s) {
-
-        //Overriden
-    }
-
-    @Override
-    public void startSync() {
-
-        //Overriden
-    }
-
-    @Override
-    public void searchGlobally(String s) {
-
-        //Overriden
     }
 
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {
