@@ -314,4 +314,9 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         }
     }
 
+    @Override
+    public void onShowOfflineMaps() {
+        getView().openOfflineMapsView();
+    }
+
 }

@@ -23,6 +23,7 @@
     <string name="campaign">Plan</string>
     <string name="operational_area">Operational Area</string>
 
+    <string name="offline_maps">Offline Maps</string>
     <string name="app_version">Version %1$s</string>
     <string name="app_updated">Updated %1$s</string>
     <string name="district">District:</string>
@@ -209,6 +210,11 @@
     <string name="register">Register</string>
     <string name="cancel">Cancel</string>
     <string name="partially_sprayed">Partially Sprayed</string>
+
+    <string name="available">available</string>
+    <string name="downloaded">Downloaded</string>
+    <string name="download">Download</string>
+    <string name="downloading">Downloading</string>
 
 
 </resources>

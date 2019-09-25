@@ -51,6 +51,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/application_updated" />
 
+    <TextView
+        android:id="@+id/offline_maps_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:text="@string/offline_maps"
+        android:textColor="@color/button_blue"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sync_button" />
+
 
     <View
         android:id="@+id/header_separator"

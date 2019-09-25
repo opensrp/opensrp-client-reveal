@@ -2,6 +2,7 @@ package org.smartregister.reveal.view;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -129,6 +130,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
         headerView.findViewById(R.id.logout_button).setOnClickListener(this);
         headerView.findViewById(R.id.sync_button).setOnClickListener(this);
+        headerView.findViewById(R.id.offline_maps_button).setOnClickListener(this);
 
     }
 
@@ -260,6 +262,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             presenter.onShowPlanSelector();
         else if (v.getId() == R.id.logout_button)
             RevealApplication.getInstance().logoutCurrentUser();
+        else if (v.getId() == R.id.offline_maps_button)
+            presenter.onShowOfflineMaps();
         else if (v.getId() == R.id.sync_button) {
             org.smartregister.reveal.util.Utils.startImmediateSync();
             closeDrawerLayout();
@@ -274,6 +278,12 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     @Override
     public void onResume() {
         presenter.onViewResumed();
+    }
+
+    @Override
+    public void openOfflineMapsView() {
+        Intent intent = new Intent(getContext(), OfflineMapsActivity.class);
+        getContext().startActivity(intent);
     }
 
 

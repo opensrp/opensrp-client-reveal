@@ -33,4 +33,6 @@
 
     <color name="outside_area_mask">#313131</color>
 
+    <color name="download_map">#68BB0C</color>
+
 </resources>
