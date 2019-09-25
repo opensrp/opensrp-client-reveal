@@ -13,7 +13,10 @@ import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
+
+import java.util.List;
 
 /**
  * Created by samuelgithengi on 11/27/18.
@@ -36,7 +39,7 @@ public interface ListTaskContract {
 
         void registerFamily();
 
-        void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea,  boolean changeMapPosition);
+        void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea, boolean changeMapPosition);
 
         void displayNotification(int title, @StringRes int message, Object... formatArgs);
 
@@ -64,7 +67,7 @@ public interface ListTaskContract {
 
     interface Presenter extends BaseContract.BasePresenter {
 
-        void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea);
+        void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea, List<TaskDetails> taskDetailsList);
 
         void onDrawerClosed();
 

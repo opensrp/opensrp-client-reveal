@@ -49,12 +49,11 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
         if (this.tasks != null) {
             for (int i = 0; i < this.tasks.size(); i++) {
 
-
-                if (Constants.BusinessStatus.SPRAYED.equals(this.tasks.get(i).getSprayStatus())) {
+                if (Constants.BusinessStatusWrapper.SPRAYED.contains(this.tasks.get(i).getBusinessStatus())) {
 
                     indicatorDetails.setSprayed(indicatorDetails.getSprayed() + 1);
 
-                } else if (Constants.BusinessStatus.NOT_SPRAYED.equals(this.tasks.get(i).getSprayStatus())) {
+                } else if (Constants.BusinessStatusWrapper.NOT_SPRAYED.contains(this.tasks.get(i).getBusinessStatus())) {
 
                     indicatorDetails.setNotSprayed(indicatorDetails.getNotSprayed() + 1);
 
