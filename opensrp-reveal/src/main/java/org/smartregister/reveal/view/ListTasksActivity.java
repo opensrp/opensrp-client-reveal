@@ -96,7 +96,6 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
-import static org.smartregister.reveal.util.Constants.Map;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
@@ -243,8 +242,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.btn_edit_paot_details).setOnClickListener(this);
 
-
         indicatorsCardView = findViewById(R.id.indicators_card_view);
+        indicatorsCardView.setOnClickListener(this);
+
+        findViewById(R.id.btn_collapse_indicators_card_view).setOnClickListener(this);
     }
 
     @Override
@@ -257,6 +258,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             setViewVisibility(larvalBreedingCardView, false);
         } else if (id == R.id.btn_collapse_paot_card_view) {
             setViewVisibility(potentialAreaOfTransmissionCardView, false);
+        } else if (id == R.id.btn_collapse_indicators_card_view) {
+            setViewVisibility(indicatorsCardView, false);
         }
     }
 
@@ -266,6 +269,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         setViewVisibility(mosquitoCollectionCardView, false);
         setViewVisibility(larvalBreedingCardView, false);
         setViewVisibility(potentialAreaOfTransmissionCardView, false);
+        setViewVisibility(indicatorsCardView, false);
     }
 
     private void setViewVisibility(View view, boolean isVisible) {
@@ -365,29 +369,22 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             registerFamily();
         } else if (v.getId() == R.id.btn_collapse_mosquito_collection_card_view
                 || v.getId() == R.id.btn_collapse_larval_breeding_card_view
-                || v.getId() == R.id.btn_collapse_paot_card_view) {
+                || v.getId() == R.id.btn_collapse_paot_card_view
+                || v.getId() == R.id.btn_collapse_indicators_card_view) {
             closeCardView(v.getId());
         } else if (v.getId() == R.id.task_register) {
             openTaskRegister();
         } else if (v.getId() == R.id.drawerMenu) {
             drawerView.openDrawerLayout();
         } else if (v.getId() == R.id.progressIndicatorsGroupView) {
-            openIndicatorsActivity();
+            openIndicatorsCardView();
         }
     }
 
-    private void openIndicatorsActivity() {
-        /*Intent intent = new Intent(this, IndicatorsActivity.class);
-        if (getUserCurrentLocation() != null) {
-            intent.putExtra(TaskRegister.LAST_USER_LOCATION, getUserCurrentLocation());
-        }
-        startActivity(intent);*/
+    private void openIndicatorsCardView() {
 
-
-        setViewVisibility(sprayCardView, false);
-        setViewVisibility(mosquitoCollectionCardView, false);
+        setViewVisibility(indicatorsCardView, true);
     }
-
 
     private void openTaskRegister() {
         Intent intent = new Intent(this, TaskRegisterActivity.class);
@@ -487,7 +484,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private BoundaryLayer createBoundaryLayer(Feature operationalArea) {
         return new BoundaryLayer.Builder(FeatureCollection.fromFeature(operationalArea))
-                .setLabelProperty(Map.NAME_PROPERTY)
+                .setLabelProperty(org.smartregister.reveal.util.Constants.Map.NAME_PROPERTY)
                 .setLabelTextSize(getResources().getDimension(R.dimen.operational_area_boundary_text_size))
                 .setLabelColorInt(Color.WHITE)
                 .setBoundaryColor(Color.WHITE)

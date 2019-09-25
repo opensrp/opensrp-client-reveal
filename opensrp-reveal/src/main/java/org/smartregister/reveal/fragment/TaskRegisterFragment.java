@@ -10,6 +10,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,7 +35,6 @@ import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.DrawerMenuView;
-import org.smartregister.reveal.view.IndicatorsActivity;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.reveal.view.TaskRegisterActivity;
 import org.smartregister.view.activity.BaseRegisterActivity;
@@ -68,6 +68,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     private boolean hasRequestedLocation;
 
     private RefreshRegisterReceiver refreshRegisterReceiver = new RefreshRegisterReceiver();
+
+    private CardView indicatorsCardView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -308,11 +310,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         }
     }
 
-
     @Override
     public void onPause() {
         if (getContext() != null)
             LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(refreshRegisterReceiver);
+        setViewVisibility(indicatorsCardView, false);
         super.onPause();
     }
 
@@ -332,22 +334,33 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         }
     }
 
-
     private void initializeProgressIndicatorViews(View view) {
+
+        indicatorsCardView = view.findViewById(R.id.indicators_card_view);
+        indicatorsCardView.findViewById(R.id.btn_collapse_indicators_card_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setViewVisibility(indicatorsCardView, false);
+            }
+        });
+
         LinearLayout progressIndicatorsGroupView = view.findViewById(R.id.progressIndicatorsGroupView);
         progressIndicatorsGroupView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openIndicatorsActivity();
+                openIndicatorsCardView();
             }
         });
     }
 
-    private void openIndicatorsActivity() {
-        Intent intent = new Intent(getActivity(), IndicatorsActivity.class);
-        if (getUserCurrentLocation() != null) {
-            intent.putExtra(TaskRegister.LAST_USER_LOCATION, getUserCurrentLocation());
-        }
-        startActivity(intent);
+    private void openIndicatorsCardView() {
+
+        setViewVisibility(indicatorsCardView, true);
     }
+
+
+    private void setViewVisibility(View view, boolean isVisible) {
+        view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
 }
