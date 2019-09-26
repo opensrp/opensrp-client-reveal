@@ -24,10 +24,11 @@
         android:id="@+id/view_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_view"
+        android:padding="8dp"
+        android:src="@drawable/ic_edit_task"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/task_action" />
+        app:layout_constraintEnd_toStartOf="@id/task_action"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/task_action"
