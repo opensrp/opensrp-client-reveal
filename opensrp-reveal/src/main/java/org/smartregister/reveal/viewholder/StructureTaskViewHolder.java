@@ -56,11 +56,15 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
         if (BusinessStatus.COMPLETE.equals(taskDetails.getBusinessStatus()) &&
                 (Intervention.BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode()) || Intervention.BLOOD_SCREENING.equals(taskDetails.getTaskCode()))) {
             viewEditImageView.setVisibility(View.VISIBLE);
-            viewEditImageView.setOnClickListener(onClickListener);
+            setClickHandler(onClickListener, taskDetails, viewEditImageView);
         } else {
             viewEditImageView.setVisibility(View.GONE);
         }
-        actionTextView.setOnClickListener(onClickListener);
-        actionTextView.setTag(R.id.task_details, taskDetails);
+        setClickHandler(onClickListener, taskDetails, actionTextView);
+    }
+
+    private void setClickHandler(View.OnClickListener onClickListener, StructureTaskDetails taskDetails, View view) {
+        view.setOnClickListener(onClickListener);
+        view.setTag(R.id.task_details, taskDetails);
     }
 }

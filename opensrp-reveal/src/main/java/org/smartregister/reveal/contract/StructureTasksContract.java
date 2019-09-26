@@ -19,13 +19,14 @@ public interface StructureTasksContract {
 
         void onTasksFound(List<StructureTaskDetails> taskDetailsList, StructureTaskDetails incompleteIndexCase);
 
-        void onTaskSelected(StructureTaskDetails details);
+        void onTaskSelected(StructureTaskDetails details, boolean isEdit);
 
         void saveJsonForm(String json);
 
         void onDetectCase();
 
         void onIndexConfirmationFormSaved(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks);
+
     }
 
     interface Interactor extends BaseContract.BaseInteractor {

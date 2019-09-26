@@ -70,16 +70,22 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     }
 
     @Override
-    public void onTaskSelected(StructureTaskDetails details) {
+    public void onTaskSelected(StructureTaskDetails details, boolean isEdit) {
         if (details != null) {
             if (TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
-                getView().displayToast("Task Completed");
+                if (isEdit) {
+                    getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
+                    interactor.getStructure(details);
+                } else {
+                    getView().displayToast("Task Completed");
+                }
             } else {
                 getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
                 interactor.getStructure(details);
             }
         }
     }
+
 
     public StructureTasksContract.View getView() {
         return view.get();
