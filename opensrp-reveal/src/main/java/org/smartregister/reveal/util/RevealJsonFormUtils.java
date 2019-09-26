@@ -33,7 +33,10 @@ import java.util.Set;
 
 import timber.log.Timber;
 
+import static com.vijay.jsonwizard.constants.JsonFormConstants.CHECK_BOX;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.RADIO_BUTTON;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.TYPE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
@@ -310,8 +313,11 @@ public class RevealJsonFormUtils {
                 JSONObject field = fields.getJSONObject(i);
                 String key = field.getString(KEY);
                 Obs obs = event.findObs(null, false, key);
-                if (obs != null && obs.getValue() != null) {
-                    field.put(VALUE, obs.getValue());
+                if (obs != null && obs.getValues() != null) {
+                    if (CHECK_BOX.equals(field.getString(TYPE)))
+                        field.put(VALUE, new JSONArray(obs.getValues()));
+                    else
+                        field.put(VALUE, obs.getValue());
                 }
             } catch (JSONException e) {
                 Timber.e(e);
