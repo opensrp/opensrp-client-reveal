@@ -13,6 +13,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.db.Event;
+import org.smartregister.domain.db.Obs;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.model.BaseTaskDetails;
@@ -295,6 +298,24 @@ public class RevealJsonFormUtils {
                 Timber.e(e);
             }
 
+        }
+    }
+
+    public void populateForm(Event event, JSONObject formJSON) {
+        if (event == null)
+            return;
+        JSONArray fields = JsonFormUtils.fields(formJSON);
+        for (int i = 0; i < fields.length(); i++) {
+            try {
+                JSONObject field = fields.getJSONObject(i);
+                String key = field.getString(KEY);
+                Obs obs = event.findObs(null, false, key);
+                if (obs != null && obs.getValue() != null) {
+                    field.put(VALUE, obs.getValue());
+                }
+            } catch (JSONException e) {
+                Timber.e(e);
+            }
         }
     }
 }

@@ -3,16 +3,21 @@ package org.smartregister.reveal.interactor;
 import android.support.annotation.VisibleForTesting;
 
 import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
+import org.smartregister.domain.db.Event;
 import org.smartregister.family.util.Utils;
+import org.smartregister.repository.EventClientRepository;
+import org.smartregister.repository.EventClientRepository.event_column;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 
 import java.util.ArrayList;
@@ -120,6 +125,32 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
             appExecutors.mainThread().execute(() -> {
                 presenter.onStructureFound(structure, details);
             });
+        });
+    }
+
+    @Override
+    public void findLastEvent(StructureTaskDetails taskDetails) {
+
+        appExecutors.diskIO().execute(() -> {
+            String eventType = taskDetails.getTaskCode().equals(Intervention.BLOOD_SCREENING) ? Constants.BLOOD_SCREENING_EVENT : Constants.BEDNET_DISTRIBUTION_EVENT;
+            String events = String.format("select %s from %s where %s = ? and %s =? order by serverVersion desc",
+                    event_column.json, EventClientRepository.Table.event.name(), event_column.baseEntityId, event_column.eventType);
+            Cursor cursor = null;
+            try {
+                cursor = database.rawQuery(events, new String[]{taskDetails.getTaskEntity(), eventType});
+                if (cursor.moveToFirst()) {
+                    String eventJSON = cursor.getString(0);
+                    boolean isEdited = !cursor.isLast();
+                    presenter.onEventFound(  eventClientRepository.convert(eventJSON, Event.class),isEdited);
+
+                }
+            } catch (SQLException e) {
+                Timber.e(e);
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
         });
     }
 

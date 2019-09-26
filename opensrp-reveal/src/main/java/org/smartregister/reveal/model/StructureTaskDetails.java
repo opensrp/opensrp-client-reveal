@@ -11,6 +11,8 @@ public class StructureTaskDetails extends BaseTaskDetails {
 
     private String taskAction;
 
+    private boolean edit;
+
     public StructureTaskDetails(@NonNull String taskId) {
         super(taskId);
     }
@@ -31,4 +33,11 @@ public class StructureTaskDetails extends BaseTaskDetails {
         this.taskAction = taskAction;
     }
 
+    public boolean isEdit() {
+        return edit;
+    }
+
+    public void setEdit(boolean edit) {
+        this.edit = edit;
+    }
 }
