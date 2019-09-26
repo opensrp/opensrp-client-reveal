@@ -15,7 +15,6 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.db.Event;
 import org.smartregister.domain.db.Obs;
-import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.model.BaseTaskDetails;
@@ -28,16 +27,19 @@ import org.smartregister.util.AssetHandler;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import timber.log.Timber;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.CHECK_BOX;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
-import static com.vijay.jsonwizard.constants.JsonFormConstants.RADIO_BUTTON;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TYPE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
+import static org.smartregister.AllConstants.OPTIONS;
+import static org.smartregister.AllConstants.TEXT;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
@@ -314,9 +316,19 @@ public class RevealJsonFormUtils {
                 String key = field.getString(KEY);
                 Obs obs = event.findObs(null, false, key);
                 if (obs != null && obs.getValues() != null) {
-                    if (CHECK_BOX.equals(field.getString(TYPE)))
-                        field.put(VALUE, new JSONArray(obs.getValues()));
-                    else
+                    if (CHECK_BOX.equals(field.getString(TYPE))) {
+                        JSONArray options = field.getJSONArray(OPTIONS);
+                        Map<String, String> optionsKeyValue = new HashMap<>();
+                        for (int j = 0; j < options.length(); j++) {
+                            JSONObject option = options.getJSONObject(j);
+                            optionsKeyValue.put(option.getString(TEXT), option.getString(KEY));
+                        }
+                        JSONArray keys = new JSONArray();
+                        for (Object value : obs.getValues()) {
+                            keys.put(optionsKeyValue.get(value.toString()));
+                        }
+                        field.put(VALUE, keys);
+                    } else
                         field.put(VALUE, obs.getValue());
                 }
             } catch (JSONException e) {
