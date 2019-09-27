@@ -8,11 +8,8 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
-<<<<<<< HEAD
-import org.smartregister.domain.db.Event;
-=======
 import org.smartregister.domain.Task;
->>>>>>> master
+import org.smartregister.domain.db.Event;
 import org.smartregister.family.util.Utils;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.EventClientRepository.event_column;
@@ -52,6 +49,8 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TA
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
+
+
 
 /**
  * Created by samuelgithengi on 4/12/19.

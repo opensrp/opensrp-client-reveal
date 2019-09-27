@@ -3,11 +3,8 @@ package org.smartregister.reveal.contract;
 import android.content.Context;
 
 import org.smartregister.domain.Task;
-<<<<<<< HEAD
 import org.smartregister.domain.db.Event;
-=======
 import org.smartregister.reveal.model.EventTask;
->>>>>>> master
 import org.smartregister.reveal.model.StructureTaskDetails;
 
 import java.util.List;
