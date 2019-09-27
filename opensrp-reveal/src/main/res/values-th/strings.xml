@@ -196,4 +196,5 @@
     <string name="cancel">Cancel</string>
     <string name="partially_sprayed">Partially Sprayed</string>
 
-    </resources>
+    <string name="opensrp_url" translatable="false">@string/opensrp_base_url</string>
+</resources>
