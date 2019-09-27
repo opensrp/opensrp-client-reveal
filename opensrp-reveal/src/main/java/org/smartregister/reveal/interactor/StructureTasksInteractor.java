@@ -51,7 +51,6 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 
 
-
 /**
  * Created by samuelgithengi on 4/12/19.
  */
@@ -141,15 +140,14 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
 
         appExecutors.diskIO().execute(() -> {
             String eventType = taskDetails.getTaskCode().equals(Intervention.BLOOD_SCREENING) ? Constants.BLOOD_SCREENING_EVENT : Constants.BEDNET_DISTRIBUTION_EVENT;
-            String events = String.format("select %s from %s where %s = ? and %s =? order by serverVersion desc",
-                    event_column.json, EventClientRepository.Table.event.name(), event_column.baseEntityId, event_column.eventType);
+            String events = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
+                    event_column.json, EventClientRepository.Table.event.name(), event_column.baseEntityId, event_column.eventType, event_column.updatedAt);
             Cursor cursor = null;
             try {
                 cursor = database.rawQuery(events, new String[]{taskDetails.getTaskEntity(), eventType});
                 if (cursor.moveToFirst()) {
                     String eventJSON = cursor.getString(0);
-                    boolean isEdited = !cursor.isLast();
-                    presenter.onEventFound(eventClientRepository.convert(eventJSON, Event.class), isEdited);
+                    presenter.onEventFound(eventClientRepository.convert(eventJSON, Event.class));
 
                 }
             } catch (SQLException e) {
@@ -170,7 +168,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
 
             Cursor cursor = null;
             try {
-                for (Task task: tasks) {
+                for (Task task : tasks) {
                     EventTask eventTask = new EventTask();
 
                     cursor = database.rawQuery("SELECT count(*) as events_per_task FROM event_task WHERE task_id = ?",
@@ -190,7 +188,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                 }
 
             } catch (Exception e) {
-                Timber.e(e, "Error querying events counts " );
+                Timber.e(e, "Error querying events counts ");
             } finally {
                 if (cursor != null) {
                     cursor.close();
@@ -201,7 +199,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     }
 
 
-        private String getTaskSelect(String mainCondition) {
+    private String getTaskSelect(String mainCondition) {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
         queryBuilder.selectInitiateMainTable(TASK_TABLE, getStructureColumns(), ID);
         return queryBuilder.mainCondition(mainCondition);

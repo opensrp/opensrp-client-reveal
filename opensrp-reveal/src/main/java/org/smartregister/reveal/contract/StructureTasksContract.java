@@ -30,7 +30,7 @@ public interface StructureTasksContract {
 
         void onIndexConfirmationFormSaved(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks);
 
-        void onEventFound(Event event, boolean isEdited);
+        void onEventFound(Event event);
     }
 
     interface Interactor extends BaseContract.BaseInteractor {

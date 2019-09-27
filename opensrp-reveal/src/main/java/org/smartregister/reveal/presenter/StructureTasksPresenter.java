@@ -132,7 +132,7 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     }
 
     @Override
-    public void onEventFound(Event event, boolean isEdited) {
+    public void onEventFound(Event event) {
         String formName = getView().getJsonFormUtils().getFormName(null, getTaskDetails().getTaskCode());
         if (StringUtils.isBlank(formName)) {
             getView().displayError(R.string.opening_form_title, R.string.form_not_found);
