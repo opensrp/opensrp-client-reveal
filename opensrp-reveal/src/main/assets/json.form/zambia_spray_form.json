@@ -1919,6 +1919,9 @@
         "text_color": "#CF0800",
         "toaster_type": "problem",
         "text_size": "8sp",
+        "v_required": {
+          "value": "true"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -2009,6 +2012,9 @@
         "text_color": "#CF0800",
         "text_size": "8sp",
         "toaster_type": "problem",
+        "v_required": {
+          "value": "true"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -2095,6 +2101,9 @@
         "text_size": "8sp",
         "text_color": "#CF0800",
         "toaster_type": "problem",
+        "v_required": {
+          "value": "true"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -2144,6 +2153,9 @@
         "openmrs_entity_id": "",
         "type": "toaster_notes",
         "text": "Total Number of Residents Sleeping Under Nets must be equal to or less than Total Population AND equal to or more than Total Nets in Use.",
+        "v_required": {
+          "value": "true"
+        },
         "text_size": "8sp",
         "text_color": "#CF0800",
         "toaster_type": "problem",
@@ -2196,6 +2208,9 @@
         "openmrs_entity_id": "",
         "type": "toaster_notes",
         "text": "Number of Pregnant Women Sleeping Under Net must be equal or less than Children <5 years and Total Population Sleeping Under Nets",
+        "v_required": {
+          "value": "true"
+        },
         "text_size": "8sp",
         "text_color": "#CF0800",
         "toaster_type": "problem",
@@ -2251,6 +2266,9 @@
         "text_size": "8sp",
         "text_color": "#CF0800",
         "toaster_type": "problem",
+        "v_required": {
+          "value": "true"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -2512,6 +2530,9 @@
         "text_color": "#CF0800",
         "toaster_type": "problem",
         "text_size": "8sp",
+        "v_required": {
+          "value": "true"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -2592,6 +2613,9 @@
         "text_color": "#CF0800",
         "text_size": "8sp",
         "toaster_type": "problem",
+        "v_required": {
+          "value": "true"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -2668,6 +2692,9 @@
         "text_color": "#CF0800",
         "text_size": "8sp",
         "toaster_type": "problem",
+        "v_required": {
+          "value": "true"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -2715,6 +2742,9 @@
         "text_color": "#CF0800",
         "text_size": "8sp",
         "toaster_type": "problem",
+        "v_required": {
+          "value": "true"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -2762,6 +2792,9 @@
         "text_size": "8sp",
         "text_color": "#CF0800",
         "toaster_type": "problem",
+        "v_required": {
+          "value": "true"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -2809,6 +2842,9 @@
         "text_color": "#CF0800",
         "text_size": "8sp",
         "toaster_type": "problem",
+        "v_required": {
+          "value": "true"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {

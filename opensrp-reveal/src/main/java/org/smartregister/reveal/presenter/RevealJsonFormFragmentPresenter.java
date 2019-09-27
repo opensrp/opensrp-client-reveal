@@ -6,8 +6,10 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interactors.JsonFormInteractor;
@@ -23,6 +25,7 @@ import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
+import org.smartregister.reveal.widget.RevealToasterNotesFactory;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
 
@@ -84,6 +87,14 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                 }
                 this.mapView = mapView;
                 break;//exit loop, assumption; there will be only 1 map per form.
+            } else if (childAt instanceof TextView && ! (childAt instanceof MaterialEditText)) {
+                ValidationStatus validationStatus = RevealToasterNotesFactory.validate(formFragment, (TextView) childAt);
+                String address = (String) childAt.getTag(com.vijay.jsonwizard.R.id.address);
+                if (!validationStatus.isValid()) {
+                    getInvalidFields().put(address, validationStatus);
+                } else {
+                    getInvalidFields().remove(address);
+                }
             }
         }
         if (isFormValid()) {// if form is valid and did not have a map, if it had a map view it will be handled above
