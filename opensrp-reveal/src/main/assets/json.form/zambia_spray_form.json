@@ -2512,6 +2512,10 @@
         "text_color": "#CF0800",
         "toaster_type": "problem",
         "text_size": "8sp",
+        "v_required_1": {
+          "value": "true",
+          "err": "You can not enter a population of 0 for a sprayed structure"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -2592,6 +2596,10 @@
         "text_color": "#CF0800",
         "text_size": "8sp",
         "toaster_type": "problem",
+        "v_required": {
+          "value": "true",
+          "err": "Children <5 years must be less than Total Population AND Less than the Total Population minus Pregnant Women"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -2668,6 +2676,10 @@
         "text_color": "#CF0800",
         "text_size": "8sp",
         "toaster_type": "problem",
+        "v_required": {
+          "value": "true",
+          "err": "Total Number of Nets Hanging and in Use must be less than or equal to the total population (females + males). Also, it must be less than total available nets."
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -2715,6 +2727,10 @@
         "text_color": "#CF0800",
         "text_size": "8sp",
         "toaster_type": "problem",
+        "v_required": {
+          "value": "true",
+          "err": "Total Number of Residents Sleeping Under Nets must be equal to or less than Total Population AND equal to or more than Total Nets in Use."
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -2762,6 +2778,10 @@
         "text_size": "8sp",
         "text_color": "#CF0800",
         "toaster_type": "problem",
+        "v_required": {
+          "value": "true",
+          "err": "Number of Pregnant Women Sleeping Under Net must be equal or less than Children <5 years and Total Population Sleeping Under Nets"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
@@ -2809,6 +2829,10 @@
         "text_color": "#CF0800",
         "text_size": "8sp",
         "toaster_type": "problem",
+        "v_required": {
+          "value": "true",
+          "err": "Number of Children Under 5 Yrs Sleeping Under Net must be equal or less than Children <5 years and Total Population Sleeping Under Nets"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
