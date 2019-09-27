@@ -65,7 +65,8 @@
             "field": "eventType",
             "field_value": "bednet_distribution",
             "creates_case": [
-              "bednet_distribution"
+              "bednet_distribution",
+              "event_task"
             ]
           },
           {
@@ -73,6 +74,13 @@
             "field_value": "PAOT",
             "creates_case": [
               "potential_area_of_transmission"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "blood_screening",
+            "creates_case": [
+              "event_task"
             ]
           }
         ]

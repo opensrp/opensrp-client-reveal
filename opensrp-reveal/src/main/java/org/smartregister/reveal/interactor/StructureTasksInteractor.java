@@ -7,16 +7,20 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
+import org.smartregister.domain.Task;
 import org.smartregister.family.util.Utils;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.StructureTasksContract;
+import org.smartregister.reveal.model.EventTask;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants.Intervention;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -28,6 +32,8 @@ import static org.smartregister.family.util.DBConstants.KEY.LAST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.MIDDLE_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENTS_PER_TASK;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_DATE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
@@ -121,6 +127,43 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                 presenter.onStructureFound(structure, details);
             });
         });
+    }
+
+    @Override
+    public Map<String, EventTask> findEventsPerTask(List<Task> tasks) {
+        HashMap<String, EventTask> eventTaskHashMap = new HashMap<>();
+        appExecutors.diskIO().execute(() -> {
+
+            Cursor cursor = null;
+            try {
+                for (Task task: tasks) {
+                    EventTask eventTask = new EventTask();
+
+                    cursor = database.rawQuery("SELECT count(*) as events_per_task FROM event_task WHERE task_id = ?",
+                            new String[]{task.getIdentifier()});
+                    while (cursor.moveToNext()) {
+                        eventTask.setEventsPerTask(cursor.getInt(cursor.getColumnIndex(EVENTS_PER_TASK)));
+                    }
+
+                    cursor.close();
+                    cursor = database.rawQuery("SELECT event_date FROM event_task WHERE task_id = ? ORDER by event_date desc LIMIT 1",
+                            new String[]{task.getIdentifier()});
+                    while (cursor.moveToNext()) {
+                        eventTask.setLastEventDate(cursor.getString(cursor.getColumnIndex(EVENT_DATE)));
+                    }
+
+                    eventTaskHashMap.put(task.getIdentifier(), eventTask);
+                }
+
+            } catch (Exception e) {
+                Timber.e(e, "Error querying events counts " );
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        });
+        return eventTaskHashMap;
     }
 
 
