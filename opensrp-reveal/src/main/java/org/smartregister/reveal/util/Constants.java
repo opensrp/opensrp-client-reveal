@@ -50,6 +50,8 @@ public interface Constants {
 
     String COMMA = ",";
 
+    int STORAGE_PERMISSIONS = 1;
+
     interface CONFIGURATION {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";
@@ -423,5 +425,4 @@ public interface Constants {
     interface UseContextCode {
         String INTERVENTION_TYPE = "interventionType";
     }
-
 }

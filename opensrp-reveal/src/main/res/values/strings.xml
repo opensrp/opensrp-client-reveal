@@ -211,6 +211,7 @@
     <string name="cancel">Cancel</string>
     <string name="partially_sprayed">Partially Sprayed</string>
 
+
     <string name="daily_summary">Enter Daily Summary Form</string>
     <string name="team_leader_dos">Enter Team Leader DOS Form</string>
     <string name="cb_spray_area">Enter CB Spray Area Visit Form</string>
@@ -220,6 +221,6 @@
     <string name="other_verification_form">Enter Verification Form</string>
 
     <string name="last_edited">Edited %1s</string>
-
+    <string name="device_to_device_sync">P2P Sync</string>
 
 </resources>

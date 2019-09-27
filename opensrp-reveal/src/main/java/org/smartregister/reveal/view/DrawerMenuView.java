@@ -1,7 +1,9 @@
 package org.smartregister.reveal.view;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -19,13 +21,16 @@ import com.vijay.jsonwizard.customviews.TreeViewDialog;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.smartregister.p2p.activity.P2pModeSelectActivity;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.presenter.BaseDrawerPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Tags;
+import org.smartregister.util.PermissionUtils;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -129,6 +134,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
         headerView.findViewById(R.id.logout_button).setOnClickListener(this);
         headerView.findViewById(R.id.sync_button).setOnClickListener(this);
+        headerView.findViewById(R.id.btn_navMenu_p2pSyncBtn).setOnClickListener(this);
 
     }
 
@@ -260,6 +266,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             presenter.onShowPlanSelector();
         else if (v.getId() == R.id.logout_button)
             RevealApplication.getInstance().logoutCurrentUser();
+        else if (v.getId() == R.id.btn_navMenu_p2pSyncBtn)
+            startP2PActivity();
         else if (v.getId() == R.id.sync_button) {
             org.smartregister.reveal.util.Utils.startImmediateSync();
             closeDrawerLayout();
@@ -276,5 +284,11 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         presenter.onViewResumed();
     }
 
-
+    private void startP2PActivity() {
+        if (PermissionUtils.isPermissionGranted(getContext()
+                , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}
+                , Constants.STORAGE_PERMISSIONS)) {
+            getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
+        }
+    }
 }
