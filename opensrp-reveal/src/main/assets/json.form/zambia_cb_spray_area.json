@@ -99,7 +99,6 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "hint": "Communicated date of spray:",
-        "max_date": "today",
         "v_required": {
           "value": true,
           "err": "This field is required"

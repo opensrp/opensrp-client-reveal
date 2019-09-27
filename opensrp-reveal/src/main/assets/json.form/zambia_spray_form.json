@@ -1558,19 +1558,19 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint":  "Structure Identification Number",
+        "hint":  "IRS number",
         "text_size": "8sp",
         "v_numeric": {
           "value": "true",
           "err": "Please enter a number"
         },
-        "v_min": {
-          "value": "10000000",
-          "err": "Structure Identification Number must be 8 digits long."
+        "v_min_length": {
+          "value": "8",
+          "err": "Must be 8 digits long."
         },
-        "v_max": {
-          "value": "99999999",
-          "err": "Structure Identification Number must be 8 digits long."
+        "v_max_length": {
+          "value": "8",
+          "err": "Must be 8 digits long."
         },
         "v_required": {
           "value": "true",
@@ -1637,7 +1637,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "Number of eligible rooms",
+        "hint": "Number of ELIGIBLE rooms",
         "text_size": "8sp",
         "is_mandatory": true,
         "v_required": {
@@ -1725,7 +1725,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Main reason why some eligible rooms in this structure were not sprayed?",
+        "label": "Main reason why some ELIGIBLE rooms in this structure were not sprayed?",
         "text_size": "8sp",
         "options": [
           {
@@ -2283,7 +2283,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Was a new incecticide sachet mixed at this structure?",
+        "label": "Was a new insecticide sachet mixed at this structure?",
         "text_size": "8sp",
         "options": [
           {
@@ -2420,19 +2420,19 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "Number of eligible rooms",
+        "hint": "Number of ELIGIBLE rooms",
         "text_size": "8sp",
         "v_numeric": {
           "value": "true",
-          "err": "Number of eligible rooms must be a number"
+          "err": "Must be a number"
         },
         "v_numeric_integer": {
           "value": "true",
-          "err": "Number of eligible rooms must be a whole number"
+          "err": "Must be a whole number"
         },
         "v_min": {
           "value": "0",
-          "err": "Number of eligible rooms must be greater than or equal to 0"
+          "err": "Must be greater than or equal to 0"
         },
         "relevance": {
           "step1:structure_sprayed": {
@@ -2530,9 +2530,6 @@
         "text_color": "#CF0800",
         "toaster_type": "problem",
         "text_size": "8sp",
-        "v_required": {
-          "value": "true"
-        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {

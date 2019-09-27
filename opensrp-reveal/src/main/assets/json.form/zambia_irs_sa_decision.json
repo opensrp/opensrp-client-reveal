@@ -70,7 +70,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "How many structures are in this Spray Area? (structures on ground as listed on the mSpray dashboard)",
+        "hint": "How many structures are in this Spray Area? (structures on ground as listed on the Reveal dashboard)",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -129,7 +129,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "How many structures were sprayed? (as listed on the mSpray dashboard)",
+        "hint": "How many structures were sprayed? (as listed on the Reveal dashboard)",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -304,6 +304,10 @@
           {
             "key": "other",
             "text": "Other"
+          },
+          {
+            "key": "na",
+            "text": "N/A"
           }
         ],
         "v_required": {
@@ -497,7 +501,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "How many SUP teams need to return to this Spray Area?",
+        "hint": "How many SOP teams need to return to this Spray Area?",
         "is_mandatory": true,
         "v_required": {
           "value": true,

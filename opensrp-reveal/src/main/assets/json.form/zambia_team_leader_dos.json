@@ -1464,29 +1464,6 @@
         }
       },
       {
-        "key": "CFV",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Spray Technique: Is the SO spraying with a pump fitted with a CFV?",
-        "text_size": "8sp",
-        "options": [
-          {
-            "key": "yes",
-            "text": "Yes"
-          },
-          {
-            "key": "no",
-            "text": "No"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        }
-      },
-      {
         "key": "correct_removal",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1663,6 +1640,14 @@
           {
             "key": "no",
             "text": "No"
+          },
+          {
+            "key": "no",
+            "text": "No"
+          },
+          {
+            "key": "na",
+            "text": "N/A"
           }
         ],
         "v_required": {
