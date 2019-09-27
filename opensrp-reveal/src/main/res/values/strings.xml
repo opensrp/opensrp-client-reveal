@@ -210,6 +210,7 @@
     <string name="register">Register</string>
     <string name="cancel">Cancel</string>
     <string name="partially_sprayed">Partially Sprayed</string>
+
     <string name="daily_summary">Enter Daily Summary Form</string>
     <string name="team_leader_dos">Enter Team Leader DOS Form</string>
     <string name="cb_spray_area">Enter CB Spray Area Visit Form</string>
@@ -217,6 +218,8 @@
     <string name="other_mobilization_form">Enter Mobilization Form</string>
     <string name="other_irs_field_officer">Enter IRS Field Officer Form</string>
     <string name="other_verification_form">Enter Verification Form</string>
+
+    <string name="last_edited">Edited %1s</string>
 
 
 </resources>
