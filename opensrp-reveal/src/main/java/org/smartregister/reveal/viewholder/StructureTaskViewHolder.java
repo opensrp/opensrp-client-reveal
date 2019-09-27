@@ -65,7 +65,7 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
 
             viewEditImageView.setVisibility(View.VISIBLE);
             setClickHandler(onClickListener, taskDetails, viewEditImageView);
-            Date lastEdited = new Date();
+            Date lastEdited = taskDetails.getLastEdited();
             if (lastEdited != null) {
                 lastEditedTextView.setVisibility(View.VISIBLE);
                 lastEditedTextView.setText(context.getString(R.string.last_edited, dateFormat.format(lastEdited)));

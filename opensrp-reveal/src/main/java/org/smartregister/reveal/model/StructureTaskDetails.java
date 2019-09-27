@@ -2,6 +2,8 @@ package org.smartregister.reveal.model;
 
 import android.support.annotation.NonNull;
 
+import java.util.Date;
+
 /**
  * Created by samuelgithengi on 4/11/19.
  */
@@ -12,6 +14,8 @@ public class StructureTaskDetails extends BaseTaskDetails {
     private String taskAction;
 
     private boolean edit;
+
+    private Date lastEdited;
 
     public StructureTaskDetails(@NonNull String taskId) {
         super(taskId);
@@ -39,5 +43,13 @@ public class StructureTaskDetails extends BaseTaskDetails {
 
     public void setEdit(boolean edit) {
         this.edit = edit;
+    }
+
+    public Date getLastEdited() {
+        return lastEdited;
+    }
+
+    public void setLastEdited(Date lastEdited) {
+        this.lastEdited = lastEdited;
     }
 }
