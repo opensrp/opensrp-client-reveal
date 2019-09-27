@@ -66,6 +66,13 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     }
 
     @Override
+    public void refreshTasks() {
+        if (structureId != null)
+            findTasks(structureId);
+    }
+
+
+    @Override
     public void onTasksFound(List<StructureTaskDetails> taskDetailsList, StructureTaskDetails incompleteIndexCase) {
         indexCase = incompleteIndexCase;
         getView().setTaskDetailsList(taskDetailsList);
