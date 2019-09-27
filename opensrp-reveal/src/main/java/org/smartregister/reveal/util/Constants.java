@@ -382,7 +382,7 @@ public interface Constants {
 
         String PAOT_COMMENTS = "paot_comments";
 
-        String TASK_EVENT_TABLE = "task_event";
+        String EVENT_TASK_TABLE = "event_task";
 
         String EVENT_ID = "event_id";
 

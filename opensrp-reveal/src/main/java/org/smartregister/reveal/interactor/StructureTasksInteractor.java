@@ -139,14 +139,14 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                 for (Task task: tasks) {
                     EventTask eventTask = new EventTask();
 
-                    cursor = database.rawQuery("SELECT count(*) as events_per_task FROM task_event WHERE task_id = ?",
+                    cursor = database.rawQuery("SELECT count(*) as events_per_task FROM event_task WHERE task_id = ?",
                             new String[]{task.getIdentifier()});
                     while (cursor.moveToNext()) {
                         eventTask.setEventsPerTask(cursor.getInt(cursor.getColumnIndex(EVENTS_PER_TASK)));
                     }
 
                     cursor.close();
-                    cursor = database.rawQuery("SELECT event_date FROM task_event WHERE task_id = ? ORDER by event_date desc LIMIT 1",
+                    cursor = database.rawQuery("SELECT event_date FROM event_task WHERE task_id = ? ORDER by event_date desc LIMIT 1",
                             new String[]{task.getIdentifier()});
                     while (cursor.moveToNext()) {
                         eventTask.setLastEventDate(cursor.getString(cursor.getColumnIndex(EVENT_DATE)));
