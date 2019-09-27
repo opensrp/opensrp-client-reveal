@@ -40,8 +40,6 @@ public interface StructureTasksContract {
         void getStructure(StructureTaskDetails details);
 
         void findLastEvent(StructureTaskDetails taskDetails);
-
-        Map<String, EventTask> findEventsPerTask(List<Task> tasks);
     }
 
     interface View extends UserLocationContract.UserLocationView, BaseFormFragmentContract.View {

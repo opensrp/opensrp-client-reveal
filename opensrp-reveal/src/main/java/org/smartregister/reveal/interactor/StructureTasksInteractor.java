@@ -7,8 +7,8 @@ import net.sqlcipher.SQLException;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.smartregister.clientandeventmodel.DateUtil;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
-import org.smartregister.domain.Task;
 import org.smartregister.domain.db.Event;
 import org.smartregister.family.util.Utils;
 import org.smartregister.repository.EventClientRepository;
@@ -23,9 +23,7 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import timber.log.Timber;
 
@@ -112,6 +110,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                 }
             }
             StructureTaskDetails finalIndexCase = incompleteIndexCase;
+            populateEventsPerTask(taskDetailsList);
             appExecutors.mainThread().execute(() -> {
                 presenter.onTasksFound(taskDetailsList, finalIndexCase);
             });
@@ -161,41 +160,41 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
 
     }
 
-    @Override
-    public Map<String, EventTask> findEventsPerTask(List<Task> tasks) {
-        HashMap<String, EventTask> eventTaskHashMap = new HashMap<>();
-        appExecutors.diskIO().execute(() -> {
 
-            Cursor cursor = null;
-            try {
-                for (Task task : tasks) {
-                    EventTask eventTask = new EventTask();
+    private void populateEventsPerTask(List<StructureTaskDetails> tasks) {
 
-                    cursor = database.rawQuery("SELECT count(*) as events_per_task FROM event_task WHERE task_id = ?",
-                            new String[]{task.getIdentifier()});
-                    while (cursor.moveToNext()) {
-                        eventTask.setEventsPerTask(cursor.getInt(cursor.getColumnIndex(EVENTS_PER_TASK)));
-                    }
 
-                    cursor.close();
-                    cursor = database.rawQuery("SELECT event_date FROM event_task WHERE task_id = ? ORDER by event_date desc LIMIT 1",
-                            new String[]{task.getIdentifier()});
-                    while (cursor.moveToNext()) {
-                        eventTask.setLastEventDate(cursor.getString(cursor.getColumnIndex(EVENT_DATE)));
-                    }
+        Cursor cursor = null;
+        try {
+            for (StructureTaskDetails task : tasks) {
+                EventTask eventTask = new EventTask();
 
-                    eventTaskHashMap.put(task.getIdentifier(), eventTask);
+                cursor = database.rawQuery("SELECT count(*) as events_per_task FROM event_task WHERE task_id = ?",
+                        new String[]{task.getTaskId()});
+                while (cursor.moveToNext()) {
+                    eventTask.setEventsPerTask(cursor.getInt(cursor.getColumnIndex(EVENTS_PER_TASK)));
                 }
 
-            } catch (Exception e) {
-                Timber.e(e, "Error querying events counts ");
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
+                cursor.close();
+                cursor = database.rawQuery("SELECT event_date FROM event_task WHERE task_id = ? ORDER by event_date desc LIMIT 1",
+                        new String[]{task.getTaskId()});
+                while (cursor.moveToNext()) {
+                    eventTask.setLastEventDate(cursor.getString(cursor.getColumnIndex(EVENT_DATE)));
                 }
+
+                if (eventTask.getEventsPerTask() > 1)
+                    task.setLastEdited(DateUtil.parseDate(eventTask.getLastEventDate()));
+
             }
-        });
-        return eventTaskHashMap;
+
+        } catch (Exception e) {
+            Timber.e(e, "Error querying events counts ");
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
     }
 
 
