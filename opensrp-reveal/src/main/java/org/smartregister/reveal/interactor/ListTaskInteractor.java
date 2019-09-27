@@ -22,10 +22,10 @@ import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.GeoJSON;
 import org.smartregister.reveal.util.GeoJsonUtils;
+import org.smartregister.reveal.util.IndicatorUtils;
 import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,7 +39,6 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_COMMENTS
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
-import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -187,7 +186,7 @@ public class ListTaskInteractor extends BaseInteractor {
                     if (operationalAreaLocation != null) {
                         Map<String, Set<Task>> tasks = taskRepository.getTasksByPlanAndGroup(plan, operationalAreaLocation.getId());
                         List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
-                        taskDetailsList = processTaskDetails(tasks);
+                        taskDetailsList = IndicatorUtils.processTaskDetails(tasks);
                         String indexCase = null;
                         if (getInterventionLabel() == R.string.focus_investigation)
                             indexCase = getIndexCaseStructure(plan);
@@ -219,48 +218,6 @@ public class ListTaskInteractor extends BaseInteractor {
 
 
         appExecutors.diskIO().execute(runnable);
-    }
-
-    private List<TaskDetails> processTaskDetails(Map<String, Set<Task>> map) {
-
-        List<TaskDetails> taskDetailsList = new ArrayList<>();
-
-        for (Map.Entry<String, Set<Task>> entry : map.entrySet()) {
-
-            for (Task task : entry.getValue()) {
-
-                taskDetailsList.add(convertToTaskDetails(task));
-            }
-
-        }
-
-        return taskDetailsList;
-
-    }
-
-    private TaskDetails convertToTaskDetails(Task task) {
-
-        TaskDetails taskDetails = new TaskDetails(task.getIdentifier());
-
-        taskDetails.setTaskCode(task.getCode());
-        taskDetails.setTaskEntity(task.getForEntity());
-        taskDetails.setBusinessStatus(task.getBusinessStatus());
-        taskDetails.setTaskStatus(task.getStatus().name());
-
-        if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
-
-            taskDetails.setReasonReference(task.getReasonReference());
-
-        } else if (!BCC.equals(taskDetails.getTaskCode())) {
-
-            taskDetails.setSprayStatus(task.getBusinessStatus());
-
-        }
-
-        taskDetails.setStructureId(task.getStructureId());
-
-        return taskDetails;
-
     }
 
     private String getIndexCaseStructure(String planId) {

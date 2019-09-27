@@ -336,19 +336,19 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     private void initializeProgressIndicatorViews(View view) {
 
-        indicatorsCardView = view.findViewById(R.id.indicators_card_view);
-        indicatorsCardView.findViewById(R.id.btn_collapse_indicators_card_view).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setViewVisibility(indicatorsCardView, false);
-            }
-        });
-
         LinearLayout progressIndicatorsGroupView = view.findViewById(R.id.progressIndicatorsGroupView);
         progressIndicatorsGroupView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openIndicatorsCardView();
+            }
+        });
+
+        indicatorsCardView = view.findViewById(R.id.indicators_card_view);
+        indicatorsCardView.findViewById(R.id.btn_collapse_indicators_card_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setViewVisibility(indicatorsCardView, false);
             }
         });
     }

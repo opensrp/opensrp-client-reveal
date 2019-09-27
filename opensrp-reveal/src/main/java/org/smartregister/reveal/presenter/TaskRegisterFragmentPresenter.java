@@ -119,6 +119,20 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     public void searchGlobally(String uniqueId) {//do nothing, tasks not searchable globally
     }
 
+    /**
+     * Gets the where clause for the task register, filters by operational area and campaign
+     *
+     * @return pair of filter clause and values for filter
+     */
+    private Pair<String, String[]> getMainCondition() {
+        Location operationalArea = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
+        String whereClause = String.format("%s.%s = ? AND %s.%s = ? AND %s.%s != ?",
+                Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.GROUPID, Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.PLAN_ID,
+                Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.STATUS);
+        return new Pair<>(whereClause, new String[]{operationalArea == null ?
+                null : operationalArea.getId(), prefsUtil.getCurrentPlanId(), Task.TaskStatus.CANCELLED.name()});
+    }
+
     @Override
     protected TaskRegisterFragmentContract.View getView() {
         return view.get();
@@ -173,20 +187,6 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         getView().showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
         interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter(), getView().getContext().getString(R.string.house));
         getView().setInventionType(getInterventionLabel());
-    }
-
-    /**
-     * Gets the where clause for the task register, filters by operational area and campaign
-     *
-     * @return pair of filter clause and values for filter
-     */
-    private Pair<String, String[]> getMainCondition() {
-        Location operationalArea = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
-        String whereClause = String.format("%s.%s = ? AND %s.%s = ? AND %s.%s != ?",
-                Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.GROUPID, Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.PLAN_ID,
-                Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.STATUS);
-        return new Pair<>(whereClause, new String[]{operationalArea == null ?
-                null : operationalArea.getId(), prefsUtil.getCurrentPlanId(), Task.TaskStatus.CANCELLED.name()});
     }
 
     @Override

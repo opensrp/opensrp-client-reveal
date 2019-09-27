@@ -143,7 +143,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         rootView = findViewById(R.id.content_frame);
 
-
         initializeProgressIndicatorViews();
 
         initializeMapView(savedInstanceState);
@@ -294,7 +293,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         if (myLocationButton != null) {
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
             params.gravity = Gravity.BOTTOM | Gravity.END;
-            params.bottomMargin = progressIndicatorsGroupView.getHeight() + 40;
+            params.bottomMargin = org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? progressIndicatorsGroupView.getHeight() + 40 : params.topMargin;
             params.topMargin = 0;
             myLocationButton.setLayoutParams(params);
         }
@@ -305,7 +304,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         progressIndicatorsGroupView.setBackgroundColor(this.getResources().getColor(R.color.transluscent_white));
         progressIndicatorsGroupView.setOnClickListener(this);
     }
-
 
     @Override
     public void onClick(View v) {
