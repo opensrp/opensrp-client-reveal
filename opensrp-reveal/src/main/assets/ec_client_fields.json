@@ -531,7 +531,7 @@
           "column_name": "event_date",
           "type": "Event",
           "json_mapping": {
-            "field": "dateCreated"
+            "field": "eventDate"
           }
         }
       ]

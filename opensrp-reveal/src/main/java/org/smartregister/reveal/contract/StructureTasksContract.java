@@ -6,8 +6,8 @@ import org.smartregister.domain.Task;
 import org.smartregister.reveal.model.EventTask;
 import org.smartregister.reveal.model.StructureTaskDetails;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -36,7 +36,7 @@ public interface StructureTasksContract {
 
         void getStructure(StructureTaskDetails details);
 
-        List<HashMap<String, EventTask>> findEventsPerTask(List<Task> tasks);
+        Map<String, EventTask> findEventsPerTask(List<Task> tasks);
     }
 
     interface View extends UserLocationContract.UserLocationView, BaseFormFragmentContract.View {

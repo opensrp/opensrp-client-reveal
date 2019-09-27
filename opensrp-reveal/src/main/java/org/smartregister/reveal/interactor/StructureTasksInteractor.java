@@ -20,6 +20,7 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -129,15 +130,15 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     }
 
     @Override
-    public List<HashMap<String, EventTask>> findEventsPerTask(List<Task> tasks) {
-        List<HashMap<String, EventTask>> eventTaskHashMaps = new ArrayList<>();
+    public Map<String, EventTask> findEventsPerTask(List<Task> tasks) {
+        HashMap<String, EventTask> eventTaskHashMap = new HashMap<>();
         appExecutors.diskIO().execute(() -> {
 
             Cursor cursor = null;
             try {
                 for (Task task: tasks) {
                     EventTask eventTask = new EventTask();
-                    HashMap<String, EventTask> eventTaskHashMap = new HashMap<>();
+
                     cursor = database.rawQuery("SELECT count(*) as events_per_task FROM task_event WHERE task_id = ?",
                             new String[]{task.getIdentifier()});
                     while (cursor.moveToNext()) {
@@ -152,8 +153,6 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                     }
 
                     eventTaskHashMap.put(task.getIdentifier(), eventTask);
-                    eventTaskHashMaps.add(eventTaskHashMap);
-
                 }
 
             } catch (Exception e) {
@@ -164,7 +163,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                 }
             }
         });
-        return eventTaskHashMaps;
+        return eventTaskHashMap;
     }
 
 
