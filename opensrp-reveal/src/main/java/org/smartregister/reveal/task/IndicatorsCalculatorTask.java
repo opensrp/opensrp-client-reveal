@@ -2,15 +2,19 @@ package org.smartregister.reveal.task;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import org.smartregister.reporting.view.ProgressIndicatorView;
 import org.smartregister.reporting.view.TableView;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.IndicatorDetails;
 import org.smartregister.reveal.model.TaskDetails;
-import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.IndicatorUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,70 +48,17 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
     @Override
     protected IndicatorDetails doInBackground(Void... params) {
 
-        IndicatorDetails indicatorDetails = new IndicatorDetails();
+        IndicatorDetails indicatorDetails = IndicatorUtils.processIndicators(this.tasks);
 
-        if (this.tasks != null) {
-            for (int i = 0; i < this.tasks.size(); i++) {
-
-                if (Constants.BusinessStatusWrapper.SPRAYED.contains(this.tasks.get(i).getBusinessStatus())) {
-
-                    indicatorDetails.setSprayed(indicatorDetails.getSprayed() + 1);
-
-                } else if (Constants.BusinessStatusWrapper.NOT_SPRAYED.contains(this.tasks.get(i).getBusinessStatus())) {
-
-                    indicatorDetails.setNotSprayed(indicatorDetails.getNotSprayed() + 1);
-
-                } else {
-
-                    indicatorDetails.setNotVisited(indicatorDetails.getNotVisited() + 1);
-                }
-
-            }
-
-            int totalStructures = this.tasks.size();
-            int progress = totalStructures > 0 ? Math.round(indicatorDetails.getSprayed() * 100 / totalStructures) : 0;
-
-            indicatorDetails.setTotalStructures(totalStructures);
-            indicatorDetails.setProgress(progress);
-
-            List<String> sprayIndicator = new ArrayList<>();
-
-            sprayIndicator.add(this.activity.getResources().getString(R.string.spray_coverage));
-            sprayIndicator.add(this.activity.getResources().getString(R.string.n_percent, progress));
-
-            int totalFound = (indicatorDetails.getSprayed() + indicatorDetails.getNotSprayed());
-
-            sprayIndicator.add(this.activity.getResources().getString(R.string.structures_remaining_90));
-            sprayIndicator.add(String.valueOf(Math.round(totalStructures * 0.9) - indicatorDetails.getSprayed()));
-
-
-            sprayIndicator.add(this.activity.getResources().getString(R.string.total_structures));
-            sprayIndicator.add(String.valueOf(totalStructures));
-
-
-            sprayIndicator.add(this.activity.getResources().getString(R.string.structures_not_visited));
-            sprayIndicator.add(String.valueOf(indicatorDetails.getNotVisited()));
-
-
-            sprayIndicator.add(this.activity.getResources().getString(R.string.structures_visited_found));
-            sprayIndicator.add(String.valueOf(totalFound));
-
-
-            sprayIndicator.add(this.activity.getResources().getString(R.string.sprayed));
-            sprayIndicator.add(String.valueOf(indicatorDetails.getSprayed()));
-
-            sprayIndicator.add(this.activity.getResources().getString(R.string.structures_not_sprayed));
-            sprayIndicator.add(String.valueOf(indicatorDetails.getNotSprayed()));
-
-            indicatorDetails.setSprayIndicatorList(sprayIndicator);
-        }
+        List<String> sprayIndicator = IndicatorUtils.populateSprayIndicators(this.activity, indicatorDetails);
+        indicatorDetails.setSprayIndicatorList(sprayIndicator);
 
         return indicatorDetails;
+
     }
 
     @Override
     protected void onPostExecute(IndicatorDetails indicatorDetails) {
-
 
         progressIndicator.setProgress(indicatorDetails.getProgress());
         progressIndicator.setTitle(this.activity.getString(R.string.n_percent, indicatorDetails.getProgress()));
@@ -125,5 +76,20 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
 
         tableView.setTableData(Arrays.asList(new String[]{this.activity.getString(R.string.indicator), this.activity.getString(R.string.value)}), indicatorDetails.getSprayIndicatorList());
 
+        //Show or hide depending on plan
+
+        ((View) progressIndicator.getParent()).setVisibility(org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? View.VISIBLE : View.GONE);
+
+        //Reset the location button
+        ImageButton myLocationButton = this.activity.findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
+        if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs && myLocationButton != null) {
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
+            params.gravity = Gravity.BOTTOM | Gravity.END;
+            params.bottomMargin = org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? ((ViewGroup) progressIndicator.getParent()).getHeight() + 40 : params.topMargin;
+            params.topMargin = 0;
+            myLocationButton.setLayoutParams(params);
+        }
     }
+
+
 }
