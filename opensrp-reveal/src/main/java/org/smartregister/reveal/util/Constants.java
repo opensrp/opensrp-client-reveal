@@ -401,6 +401,16 @@ public interface Constants {
 
         String PAOT_COMMENTS = "paot_comments";
 
+        String EVENT_TASK_TABLE = "event_task";
+
+        String EVENT_ID = "event_id";
+
+        String TASK_ID = "task_id";
+
+        String EVENT_DATE = "event_date";
+
+        String EVENTS_PER_TASK = "events_per_task";
+
     }
 
     interface PlanDefinitionStatus {

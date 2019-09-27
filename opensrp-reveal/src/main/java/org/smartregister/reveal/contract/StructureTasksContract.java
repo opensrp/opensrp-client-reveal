@@ -3,9 +3,11 @@ package org.smartregister.reveal.contract;
 import android.content.Context;
 
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.model.EventTask;
 import org.smartregister.reveal.model.StructureTaskDetails;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -16,6 +18,8 @@ public interface StructureTasksContract {
     interface Presenter extends BaseContract.BasePresenter, BaseFormFragmentContract.Presenter {
 
         void findTasks(String structureId);
+
+        void refreshTasks();
 
         void onTasksFound(List<StructureTaskDetails> taskDetailsList, StructureTaskDetails incompleteIndexCase);
 
@@ -33,6 +37,8 @@ public interface StructureTasksContract {
         void findTasks(String structureId, String currentPlanId, String operationalAreaId);
 
         void getStructure(StructureTaskDetails details);
+
+        Map<String, EventTask> findEventsPerTask(List<Task> tasks);
     }
 
     interface View extends UserLocationContract.UserLocationView, BaseFormFragmentContract.View {

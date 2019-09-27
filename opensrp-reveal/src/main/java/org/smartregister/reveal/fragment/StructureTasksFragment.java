@@ -96,6 +96,12 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.refreshTasks();
+    }
+
     private void initializeAdapter() {
         adapter = new StructureTaskAdapter(onClickListener);
         taskRecyclerView.setAdapter(adapter);
