@@ -2,7 +2,6 @@ package org.smartregister.reveal.widget;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.vijay.jsonwizard.constants.JsonFormConstants;
@@ -19,9 +18,8 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import timber.log.Timber;
-
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.V_REQUIRED;
 
 /**
  * Created by samuelgithengi on 9/26/19.
@@ -30,12 +28,8 @@ public class RevealToasterNotesFactory extends ToasterNotesFactory {
 
     public static ValidationStatus validate(JsonFormFragmentView formFragmentView,
                                             TextView textView) {
-        View view = (View) textView.getTag();
+        View view = (View) textView.getParent().getParent();
         RequiredValidator validator = (RequiredValidator) textView.getTag(com.vijay.jsonwizard.R.id.v_required);
-        if (validator != null) {
-
-            Timber.d("%s %s, %s", textView.isShown(), view.getVisibility() == View.VISIBLE, validator.getErrorMessage());
-        }
         if (validator != null && view.getVisibility() == View.VISIBLE) {
             return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, textView);
         }
@@ -56,24 +50,15 @@ public class RevealToasterNotesFactory extends ToasterNotesFactory {
         textView.setTag(com.vijay.jsonwizard.R.id.key, jsonObject.getString(KEY));
         addRequiredValidator(jsonObject, textView);
         ((JsonApi) context).addFormDataView(textView);
-        textView.setTag(linearLayout);
-        linearLayout.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                Timber.d("onSystemUiVisibilityChange");
-            }
-        });
-
-        Timber.d("%s, %s", linearLayout.getVisibility() == View.VISIBLE, jsonObject.getString(KEY));
         return views;
     }
 
     private void addRequiredValidator(JSONObject jsonObject, TextView textView) throws JSONException {
-        JSONObject requiredObject = jsonObject.optJSONObject("v_required_1");
+        JSONObject requiredObject = jsonObject.optJSONObject(V_REQUIRED);
         if (requiredObject != null) {
             boolean requiredValue = requiredObject.getBoolean(JsonFormConstants.VALUE);
             if (Boolean.TRUE.equals(requiredValue)) {
-                textView.setTag(com.vijay.jsonwizard.R.id.v_required, new RequiredValidator(requiredObject.getString(JsonFormConstants.ERR)));
+                textView.setTag(com.vijay.jsonwizard.R.id.v_required, new RequiredValidator(requiredObject.optString(JsonFormConstants.ERR)));
             }
         }
     }
