@@ -170,7 +170,9 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 saveCaseConfirmation(jsonForm, encounterType);
             } else {
                 saveLocationInterventionForm(jsonForm);
-                refreshMapOnEventSaved = false;
+                if (!encounterType.equals(BEDNET_DISTRIBUTION_EVENT)) {
+                    refreshMapOnEventSaved = false;
+                }
             }
             getInstance().setRefreshMapOnEventSaved(refreshMapOnEventSaved);
         } catch (Exception e) {

@@ -3,10 +3,15 @@ package org.smartregister.reveal.contract;
 import android.content.Context;
 
 import org.smartregister.domain.Task;
+<<<<<<< HEAD
 import org.smartregister.domain.db.Event;
+=======
+import org.smartregister.reveal.model.EventTask;
+>>>>>>> master
 import org.smartregister.reveal.model.StructureTaskDetails;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -38,6 +43,8 @@ public interface StructureTasksContract {
         void getStructure(StructureTaskDetails details);
 
         void findLastEvent(StructureTaskDetails taskDetails);
+
+        Map<String, EventTask> findEventsPerTask(List<Task> tasks);
     }
 
     interface View extends UserLocationContract.UserLocationView, BaseFormFragmentContract.View {
