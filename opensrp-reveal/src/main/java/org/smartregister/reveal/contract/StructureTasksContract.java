@@ -19,6 +19,8 @@ public interface StructureTasksContract {
 
         void findTasks(String structureId);
 
+        void refreshTasks();
+
         void onTasksFound(List<StructureTaskDetails> taskDetailsList, StructureTaskDetails incompleteIndexCase);
 
         void onTaskSelected(StructureTaskDetails details);
