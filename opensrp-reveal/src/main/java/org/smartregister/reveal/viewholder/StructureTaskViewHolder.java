@@ -11,15 +11,19 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.CardDetailsUtil;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by samuelgithengi on 4/11/19.
  */
 public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
 
+    private static SimpleDateFormat dateFormat = new SimpleDateFormat("M/dd", Locale.getDefault());
     private Context context;
 
     private TextView nameTextView;
@@ -28,12 +32,15 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
 
     private ImageView viewEditImageView;
 
+    private TextView lastEditedTextView;
+
     public StructureTaskViewHolder(@NonNull View itemView) {
         super(itemView);
         context = itemView.getContext();
         nameTextView = itemView.findViewById(R.id.task_name);
         actionTextView = itemView.findViewById(R.id.task_action);
         viewEditImageView = itemView.findViewById(R.id.view_edit);
+        lastEditedTextView = itemView.findViewById(R.id.last_edited);
     }
 
     public void setTaskName(String name) {
@@ -55,12 +62,23 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
 
         if (BusinessStatus.COMPLETE.equals(taskDetails.getBusinessStatus()) &&
                 (Intervention.BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode()) || Intervention.BLOOD_SCREENING.equals(taskDetails.getTaskCode()))) {
+
             viewEditImageView.setVisibility(View.VISIBLE);
             setClickHandler(onClickListener, taskDetails, viewEditImageView);
+            Date lastEdited = new Date();
+            if (lastEdited != null) {
+                lastEditedTextView.setVisibility(View.VISIBLE);
+                lastEditedTextView.setText(context.getString(R.string.last_edited, dateFormat.format(lastEdited)));
+                actionTextView.setPadding(0, 0, 0, 0);
+            } else {
+                lastEditedTextView.setVisibility(View.GONE);
+            }
         } else {
             viewEditImageView.setVisibility(View.GONE);
+            lastEditedTextView.setVisibility(View.GONE);
         }
         setClickHandler(onClickListener, taskDetails, actionTextView);
+
     }
 
     private void setClickHandler(View.OnClickListener onClickListener, StructureTaskDetails taskDetails, View view) {

@@ -209,6 +209,7 @@
     <string name="register">Register</string>
     <string name="cancel">Cancel</string>
     <string name="partially_sprayed">Partially Sprayed</string>
+    <string name="last_edited">Edited %1s</string>
 
 
 </resources>

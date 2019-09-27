@@ -43,10 +43,24 @@
         android:textAllCaps="true"
         android:textColor="#FAAB00"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/last_edited"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/task_name"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/last_edited"
+        android:layout_width="@dimen/task_register_action_width"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:gravity="center_horizontal"
+        android:paddingBottom="@dimen/task_register_padding"
+        android:textColor="#C7CDD0"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/task_name"
+        app:layout_constraintTop_toBottomOf="@id/task_action" />
 
 
     <View
@@ -58,7 +72,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/task_action" />
+        app:layout_constraintTop_toBottomOf="@id/last_edited" />
 
 
 </android.support.constraint.ConstraintLayout>
