@@ -45,6 +45,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
     private String houseNumber;
 
+    private boolean familyRegTaskExists;
+
     public TaskDetails(@NonNull String taskId) {
         super(taskId);
     }
@@ -145,10 +147,19 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         this.bloodScreeningDone = bloodScreeningDone;
     }
 
+    public boolean isFamilyRegTaskExists() {
+        return familyRegTaskExists;
+    }
+
+    public void setFamilyRegTaskExists(boolean familyRegTaskExists) {
+        this.familyRegTaskExists = familyRegTaskExists;
+    }
+
     public void setGroupedTaskCodeStatus(String groupedTaskCodeStatusString) {
         setFamilyRegistered(false);
         setBednetDistributed(false);
         setBloodScreeningDone(false);
+        setFamilyRegTaskExists(false);
         if (StringUtils.isEmpty(groupedTaskCodeStatusString)) {
             return;
         }
@@ -159,7 +170,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
             if (taskCodeStatusArray == null || taskCodeStatusArray.length != 2) {
                 continue;
             }
-            if (REGISTER_FAMILY.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
+            setFamilyRegTaskExists(REGISTER_FAMILY.equals(taskCodeStatusArray[0]));
+            if (isFamilyRegTaskExists() && COMPLETE.equals(taskCodeStatusArray[1])) {
                 setFamilyRegistered(true);
             } else if (BEDNET_DISTRIBUTION.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
                 setBednetDistributed(true);
