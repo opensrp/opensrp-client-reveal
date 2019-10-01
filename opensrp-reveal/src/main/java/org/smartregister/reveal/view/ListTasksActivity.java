@@ -11,6 +11,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -103,14 +104,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private MapboxMap mMapboxMap;
 
-
     private CardView sprayCardView;
     private TextView tvReason;
 
     private CardView mosquitoCollectionCardView;
     private CardView larvalBreedingCardView;
     private CardView potentialAreaOfTransmissionCardView;
-
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
 
@@ -127,6 +126,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private RevealMapHelper revealMapHelper;
 
     private ImageButton myLocationButton;
+
+    private FloatingActionButton layerSwitcherFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,6 +226,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         myLocationButton = findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
 
+        layerSwitcherFab = findViewById(R.id.fab_mapview_layerSwitcher);
+
         kujakuMapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
 
         kujakuMapView.onCreate(savedInstanceState);
@@ -293,12 +296,20 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
 
     private void displayMyLocationAtButtom() {
+        int myLocationBottomMargin = 0;
         if (myLocationButton != null) {
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
             params.gravity = Gravity.BOTTOM | Gravity.END;
             params.bottomMargin = params.topMargin;
             params.topMargin = 0;
             myLocationButton.setLayoutParams(params);
+            myLocationBottomMargin = params.bottomMargin;
+        }
+
+        if (layerSwitcherFab != null) {
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) layerSwitcherFab.getLayoutParams();
+            params.bottomMargin = myLocationButton.getMeasuredWidth() + myLocationBottomMargin * 2;
+            layerSwitcherFab.setLayoutParams(params);
         }
     }
 
@@ -405,6 +416,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 }
 
                 if (cameraPosition != null && (boundaryLayer == null || isChangeMapPosition)) {
+
+                    cameraPosition = new CameraPosition.Builder()
+                            .target(new LatLng(-14.1666, 32.4794))
+                            .zoom(15)
+                            .build();
                     mMapboxMap.setCameraPosition(cameraPosition);
                 }
 
