@@ -406,11 +406,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 }
 
                 if (cameraPosition != null && (boundaryLayer == null || isChangeMapPosition)) {
-
-                    cameraPosition = new CameraPosition.Builder()
-                            .target(new LatLng(-14.1666, 32.4794))
-                            .zoom(15)
-                            .build();
                     mMapboxMap.setCameraPosition(cameraPosition);
                 }
 
