@@ -42,12 +42,13 @@ import org.smartregister.domain.FetchStatus;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
+import org.smartregister.reveal.layer.DigitalGlobeLayer;
+import org.smartregister.reveal.layer.MapBoxLayer;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
@@ -60,17 +61,16 @@ import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
-import org.smartregister.util.AssetHandler;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
+import io.ona.kujaku.plugin.switcher.BaseLayerSwitcherPlugin;
 import io.ona.kujaku.utils.Constants;
 import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
-import static org.smartregister.reveal.util.Constants.DIGITAL_GLOBE_CONNECT_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -240,15 +240,30 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
-                String mapBoxStyle = AssetHandler.readFileFromAssetsFolder(getString(R.string.reveal_satellite_style), ListTasksActivity.this);
-                Style.Builder builder = new Style.Builder().fromJson(mapBoxStyle.replace(DIGITAL_GLOBE_CONNECT_ID, BuildConfig.DG_CONNECT_ID));
+                Style.Builder builder = new Style.Builder().fromUri(getString(R.string.reveal_satellite_style));
                 mapboxMap.setStyle(builder, new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
+
+                        BaseLayerSwitcherPlugin baseLayerSwitcherPlugin = new BaseLayerSwitcherPlugin(kujakuMapView, style);
+
+                        DigitalGlobeLayer digitalGlobeLayer = new DigitalGlobeLayer();
+                        MapBoxLayer mapBoxLayer = new MapBoxLayer();
+
+
+                        baseLayerSwitcherPlugin.addBaseLayer(digitalGlobeLayer, true);
+                        baseLayerSwitcherPlugin.addBaseLayer(mapBoxLayer, false);
+
+                        kujakuMapView.getMbTilesHelper().setMBTileLayers(ListTasksActivity.this, baseLayerSwitcherPlugin);
+
                         geoJsonSource = style.getSourceAs(getString(R.string.reveal_datasource_name));
 
                         selectedGeoJsonSource = style.getSourceAs(getString(R.string.selected_datasource_name));
                         RevealMapHelper.addCustomLayers(style, ListTasksActivity.this);
+
+                        baseLayerSwitcherPlugin.show();
+
+
                     }
                 });
 
@@ -375,7 +390,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea, boolean isChangeMapPosition) {
         if (geoJsonSource != null) {
-            double currentZoom=mMapboxMap.getCameraPosition().zoom;
+            double currentZoom = mMapboxMap.getCameraPosition().zoom;
             geoJsonSource.setGeoJson(featureCollection);
             if (operationalArea != null) {
                 CameraPosition cameraPosition = mMapboxMap.getCameraForGeometry(operationalArea.geometry());

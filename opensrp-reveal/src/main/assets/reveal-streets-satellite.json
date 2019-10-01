@@ -18,11 +18,6 @@
   "bearing": 0,
   "pitch": 0,
   "sources": {
-    "mapbox://mapbox.satellite": {
-      "url": "mapbox://mapbox.satellite",
-      "type": "raster",
-      "tileSize": 256
-    },
     "mapbox://ona.aami3tqv": {
       "url": "mapbox://ona.aami3tqv",
       "type": "raster",
@@ -110,14 +105,6 @@
       "url": "mapbox://ona.9yx4phdp",
       "type": "raster",
       "tileSize": 256
-    },
-    "diimagery": {
-      "type": "raster",
-      "scheme": "tms",
-      "tiles": [
-        "https://earthwatch.digitalglobe.com/earthservice/tmsaccess/tms/1.0.0/DigitalGlobe:ImageryTileService@EPSG:3857@png/{z}/{x}/{y}.png?connectId=DG_CONNECT_ID"
-      ],
-      "tileSize": 256
     }
   },
   "sprite": "mapbox://sprites/ona/cjp461odq3oq22sp60oxq1qwz",
@@ -129,22 +116,6 @@
       "paint": {
         "background-color": "rgba(0,0,0,0)"
       }
-    },
-    {
-      "id": "mapbox-satellite",
-      "type": "raster",
-      "metadata": {},
-      "source": "mapbox://mapbox.satellite",
-      "layout": {},
-      "paint": {}
-    },
-    {
-      "id": "Thailand EarthWatch Imagery",
-      "type": "raster",
-      "metadata": {},
-      "source": "diimagery",
-      "layout": {},
-      "paint": {}
     },
     {
       "id": "ona-aami3tqv",
