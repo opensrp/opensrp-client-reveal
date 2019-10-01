@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -281,23 +282,22 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
 
     private void displayMyLocationAtButtom() {
-        int myLocationBottomMargin = 0;
+        FrameLayout.LayoutParams myLocationButtonParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
         if (myLocationButton != null) {
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
-            params.gravity = Gravity.BOTTOM | Gravity.END;
-            params.bottomMargin = params.topMargin;
-            params.topMargin = 0;
-            myLocationButton.setLayoutParams(params);
-            myLocationBottomMargin = params.bottomMargin;
+            myLocationButtonParams.gravity = Gravity.BOTTOM | Gravity.END;
+            myLocationButtonParams.bottomMargin = myLocationButtonParams.topMargin;
+            myLocationButtonParams.topMargin = 0;
+            myLocationButton.setLayoutParams(myLocationButtonParams);
         }
 
         if (layerSwitcherFab != null) {
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) layerSwitcherFab.getLayoutParams();
             //position the layer selector above location button and with similar bottom margin
-            params.bottomMargin = myLocationButton.getMeasuredWidth() + myLocationBottomMargin * 2;
+            params.bottomMargin = myLocationButton.getMeasuredWidth() + myLocationButtonParams.bottomMargin * 2;
             //Make the layer selector is same size as my location button
             params.height = myLocationButton.getMeasuredHeight();
             params.width = myLocationButton.getMeasuredWidth();
+            params.rightMargin = getResources().getDimensionPixelOffset(R.dimen.my_location_btn_margin);
             layerSwitcherFab.setScaleType(FloatingActionButton.ScaleType.CENTER);
             layerSwitcherFab.setLayoutParams(params);
         }
