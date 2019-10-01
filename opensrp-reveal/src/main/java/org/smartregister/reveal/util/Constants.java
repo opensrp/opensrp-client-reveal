@@ -75,6 +75,10 @@ public interface Constants {
         String DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG = "display_add_structure_out_of_boundary_warning_dialog";
         Boolean DEFAULT_DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG = false;
         Float OUTSIDE_OPERATIONAL_AREA_MASK_OPACITY = 0.65f;
+        String SPRAY_OPERATORS = "spray_operators";
+        String CODE = "code";
+        String NAME = "name";
+
     }
 
     interface Preferences {
@@ -276,6 +280,8 @@ public interface Constants {
         String HOUSEHOLD_ACCESSIBLE = "householdAccessible";
         String ABLE_TO_SPRAY_FIRST =  "ableToSprayFirst";
         String MOP_UP_VISIT = "mopUpVisit";
+
+        String SPRAY_OPERATOR_CODE = "sprayop_code";
 
     }
 

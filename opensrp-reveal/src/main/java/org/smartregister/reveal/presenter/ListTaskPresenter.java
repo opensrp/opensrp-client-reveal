@@ -328,6 +328,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if (cardDetails instanceof SprayCardDetails && Country.NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
             jsonFormUtils.populateSprayForm(((SprayCardDetails) cardDetails).getCommonPersonObject(), formJson);
         }
+        else if (cardDetails instanceof SprayCardDetails && Country.ZAMBIA.equals(BuildConfig.BUILD_COUNTRY)) {
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson);
+        }
         listTaskView.startJsonForm(formJson);
     }
 
