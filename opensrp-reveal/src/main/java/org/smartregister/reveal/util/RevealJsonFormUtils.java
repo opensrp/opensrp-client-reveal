@@ -317,8 +317,8 @@ public class RevealJsonFormUtils {
                 String name = operator.optString(CONFIGURATION.NAME);
                 if (code == null)
                     continue;
-                sprayOperatorCodes.put(code + ":" + operator.optString(CONFIGURATION.NAME));
-                sprayOperatorValues.put(code + " - " + operator.optString(CONFIGURATION.NAME));
+                sprayOperatorCodes.put(code + ":" + name);
+                sprayOperatorValues.put(code + " - " + name);
             }
             JSONArray fields = JsonFormUtils.fields(formJson);
             JSONObject field = JsonFormUtils.getFieldJSONObject(fields, JsonForm.SPRAY_OPERATOR_CODE);
