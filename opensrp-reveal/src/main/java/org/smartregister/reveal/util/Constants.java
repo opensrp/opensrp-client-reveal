@@ -56,6 +56,7 @@ public interface Constants {
         String TEAM_CONFIGS = "team_configs";
         String KEY = "key";
         String VALUE = "value";
+        String VALUES = "values";
         String SETTINGS = "settings";
         String LOCATION_BUFFER_RADIUS_IN_METRES = "location_buffer_radius_in_metres";
         String UPDATE_LOCATION_BUFFER_RADIUS = "update_location_buffer_radius";
