@@ -210,8 +210,7 @@
     <string name="register">Register</string>
     <string name="cancel">Cancel</string>
     <string name="partially_sprayed">Partially Sprayed</string>
-    <string name="found_cov">Found Cov.</string>
-    <string name="sprayed_cov">Sprayed Cov.</string>
+    <string name="found_coverage">Found Coverage</string>
     <string name="spray_coverage">Spray Coverage</string>
     <string name="structures_remaining_90">Structures Remaining 90%</string>
     <string name="total_structures">Total Structures</string>
@@ -234,5 +233,7 @@
 
     <string name="last_edited">Edited %1s</string>
     <string name="device_to_device_sync">P2P Sync</string>
+
+    <string name="spray_success_rate">Spray Success Rate</string>
 
 </resources>

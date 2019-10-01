@@ -107,6 +107,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         drawerView.onResume();
 
         initializeProgressIndicatorViews(view);
+
     }
 
     private void setUpOtherForms(View view) {
@@ -178,6 +179,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                 getPresenter().showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.VERIFICATION_FORM_ZAMBIA);
             }
         });
+
     }
 
     private void startMapActivity() {
