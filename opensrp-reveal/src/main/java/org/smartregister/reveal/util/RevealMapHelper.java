@@ -25,12 +25,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.layer.DigitalGlobeLayer;
+import org.smartregister.reveal.layer.MapBoxLayer;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.Constants.StructureType;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.ona.kujaku.plugin.switcher.BaseLayerSwitcherPlugin;
+import io.ona.kujaku.views.KujakuMapView;
 import timber.log.Timber;
 
 import static com.mapbox.mapboxsdk.style.expressions.Expression.eq;
@@ -246,6 +250,20 @@ public class RevealMapHelper {
 
     public boolean isMyLocationComponentActive(Context context, ImageButton myLocationButton) {
         return context.getResources().getDrawable(R.drawable.ic_cross_hair_blue).getConstantState().equals(myLocationButton.getDrawable().getConstantState());
+    }
+
+    public static void addBaseLayers(KujakuMapView kujakuMapView, Style style, Context context) {
+        BaseLayerSwitcherPlugin baseLayerSwitcherPlugin = new BaseLayerSwitcherPlugin(kujakuMapView, style);
+
+        DigitalGlobeLayer digitalGlobeLayer = new DigitalGlobeLayer();
+        MapBoxLayer mapBoxLayer = new MapBoxLayer();
+
+
+        baseLayerSwitcherPlugin.addBaseLayer(digitalGlobeLayer, true);
+        baseLayerSwitcherPlugin.addBaseLayer(mapBoxLayer, false);
+        kujakuMapView.getMbTilesHelper().setMBTileLayers(context, baseLayerSwitcherPlugin);
+
+        baseLayerSwitcherPlugin.show();
     }
 
 }
