@@ -295,11 +295,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
 
-    private void displayMyLocationAtButtom() {
+    public void displayMyLocationAtButtom() {
+        int progressHeight = getResources().getDimensionPixelSize(R.dimen.progress_height);
         FrameLayout.LayoutParams myLocationButtonParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
         if (myLocationButton != null) {
             myLocationButtonParams.gravity = Gravity.BOTTOM | Gravity.END;
-            myLocationButtonParams.bottomMargin = org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? progressIndicatorsGroupView.getHeight() + 40 : myLocationButtonParams.topMargin;
+            myLocationButtonParams.bottomMargin = org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? progressHeight + 40 : 40;
             myLocationButtonParams.topMargin = 0;
             myLocationButton.setLayoutParams(myLocationButtonParams);
         }
@@ -307,7 +308,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         if (layerSwitcherFab != null) {
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) layerSwitcherFab.getLayoutParams();
             //position the layer selector above location button and with similar bottom margin
-            params.bottomMargin = myLocationButton.getMeasuredHeight() + myLocationButtonParams.bottomMargin * 2;
+            if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs)
+                params.bottomMargin = myLocationButton.getMeasuredHeight() + progressHeight + 80;
+            else
+                params.bottomMargin = myLocationButton.getMeasuredHeight() + myLocationButtonParams.bottomMargin + 40;
             //Make the layer selector is same size as my location button
             params.height = myLocationButton.getMeasuredHeight();
             params.width = myLocationButton.getMeasuredWidth();
