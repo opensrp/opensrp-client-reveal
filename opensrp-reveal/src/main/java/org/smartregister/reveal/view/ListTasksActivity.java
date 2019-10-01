@@ -308,7 +308,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         if (layerSwitcherFab != null) {
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) layerSwitcherFab.getLayoutParams();
+            //position the layer selector above location button and with similar bottom margin
             params.bottomMargin = myLocationButton.getMeasuredWidth() + myLocationBottomMargin * 2;
+            //Make the layer selector is same size as my location button
+            params.height = myLocationButton.getMeasuredHeight();
+            params.width = myLocationButton.getMeasuredWidth();
+            layerSwitcherFab.setScaleType(FloatingActionButton.ScaleType.CENTER);
             layerSwitcherFab.setLayoutParams(params);
         }
     }
