@@ -48,8 +48,6 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
-import org.smartregister.reveal.layer.DigitalGlobeLayer;
-import org.smartregister.reveal.layer.MapBoxLayer;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
@@ -65,7 +63,6 @@ import org.smartregister.reveal.util.RevealMapHelper;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
-import io.ona.kujaku.plugin.switcher.BaseLayerSwitcherPlugin;
 import io.ona.kujaku.utils.Constants;
 import timber.log.Timber;
 
@@ -248,24 +245,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
 
-                        BaseLayerSwitcherPlugin baseLayerSwitcherPlugin = new BaseLayerSwitcherPlugin(kujakuMapView, style);
-
-                        DigitalGlobeLayer digitalGlobeLayer = new DigitalGlobeLayer();
-                        MapBoxLayer mapBoxLayer = new MapBoxLayer();
-
-
-                        baseLayerSwitcherPlugin.addBaseLayer(digitalGlobeLayer, true);
-                        baseLayerSwitcherPlugin.addBaseLayer(mapBoxLayer, false);
-
-                        kujakuMapView.getMbTilesHelper().setMBTileLayers(ListTasksActivity.this, baseLayerSwitcherPlugin);
-
                         geoJsonSource = style.getSourceAs(getString(R.string.reveal_datasource_name));
 
                         selectedGeoJsonSource = style.getSourceAs(getString(R.string.selected_datasource_name));
                         RevealMapHelper.addCustomLayers(style, ListTasksActivity.this);
 
-                        baseLayerSwitcherPlugin.show();
-
+                        RevealMapHelper.addBaseLayers(kujakuMapView, style, ListTasksActivity.this);
 
                     }
                 });

@@ -47,14 +47,11 @@ import org.json.JSONObject;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.layer.DigitalGlobeLayer;
-import org.smartregister.reveal.layer.MapBoxLayer;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Map;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.reveal.validators.MinZoomValidator;
 import org.smartregister.reveal.validators.WithinOperationAreaValidator;
-import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
@@ -64,7 +61,6 @@ import java.util.List;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
-import io.ona.kujaku.plugin.switcher.BaseLayerSwitcherPlugin;
 import timber.log.Timber;
 
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
