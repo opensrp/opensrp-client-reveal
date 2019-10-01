@@ -314,9 +314,10 @@ public class RevealJsonFormUtils {
                 if (operator == null)
                     continue;
                 String code = operator.optString(CONFIGURATION.CODE, null);
+                String name = operator.optString(CONFIGURATION.NAME);
                 if (code == null)
                     continue;
-                sprayOperatorCodes.put(code);
+                sprayOperatorCodes.put(code + ":" + operator.optString(CONFIGURATION.NAME));
                 sprayOperatorValues.put(code + " - " + operator.optString(CONFIGURATION.NAME));
             }
             JSONArray fields = JsonFormUtils.fields(formJson);
