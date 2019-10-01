@@ -65,6 +65,7 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.KEY;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.SETTINGS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.TEAM_CONFIGS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.VALUE;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.VALUES;
 import static org.smartregister.reveal.util.FamilyConstants.CONFIGURATION;
 import static org.smartregister.reveal.util.FamilyConstants.EventType;
 import static org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
@@ -83,7 +84,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     private PlanDefinitionRepository planDefinitionRepository;
     private PlanDefinitionSearchRepository planDefinitionSearchRepository;
 
-    private Map<String, String> serverConfigs;
+    private Map<String, Object> serverConfigs;
 
     private static CommonFtsObject commonFtsObject;
 
@@ -263,8 +264,11 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
                 JSONObject jsonObject = settingsArray.getJSONObject(i);
                 String value = jsonObject.optString(VALUE, null);
                 String key = jsonObject.optString(KEY, null);
+                JSONArray values = jsonObject.optJSONArray(VALUES);
                 if (value != null && key != null) {
                     serverConfigs.put(key, value);
+                } else if (values != null && key != null) {
+                    serverConfigs.put(key, values);
                 }
             }
         } catch (JSONException e) {
@@ -272,7 +276,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         }
     }
 
-    public Map<String, String> getServerConfigs() {
+    public Map<String, Object> getServerConfigs() {
         return serverConfigs;
     }
 

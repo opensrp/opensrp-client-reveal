@@ -20,6 +20,7 @@ import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
@@ -36,8 +37,10 @@ import timber.log.Timber;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.CHECK_BOX;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.KEYS;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TYPE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUES;
 import static org.smartregister.AllConstants.OPTIONS;
 import static org.smartregister.AllConstants.TEXT;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
@@ -336,4 +339,34 @@ public class RevealJsonFormUtils {
             }
         }
     }
+
+    public void populateServerOptions(Map<String, Object> serverConfigs, JSONObject formJson) {
+        if (serverConfigs == null)
+            return;
+        JSONArray sprayOperators = (JSONArray) serverConfigs.get(CONFIGURATION.SPRAY_OPERATORS);
+        if (sprayOperators != null) {
+            JSONArray sprayOperatorCodes = new JSONArray();
+            JSONArray sprayOperatorValues = new JSONArray();
+            for (int i = 0; i < sprayOperators.length(); i++) {
+                JSONObject operator = sprayOperators.optJSONObject(i);
+                if (operator == null)
+                    continue;
+                String code = operator.optString(CONFIGURATION.CODE, null);
+                String name = operator.optString(CONFIGURATION.NAME);
+                if (code == null)
+                    continue;
+                sprayOperatorCodes.put(code + ":" + name);
+                sprayOperatorValues.put(code + " - " + name);
+            }
+            JSONArray fields = JsonFormUtils.fields(formJson);
+            JSONObject field = JsonFormUtils.getFieldJSONObject(fields, JsonForm.SPRAY_OPERATOR_CODE);
+            try {
+                field.put(KEYS, sprayOperatorCodes);
+                field.put(VALUES, sprayOperatorValues);
+            } catch (JSONException e) {
+                Timber.e(e, "Error populating spray Operators ");
+            }
+        }
+    }
+
 }
