@@ -40,7 +40,7 @@ public class MapBoxLayer extends BaseLayer {
     @NonNull
     @Override
     public String getDisplayName() {
-        return "Mapbox";
+        return "Mapbox Satellite";
     }
 
     @NonNull
