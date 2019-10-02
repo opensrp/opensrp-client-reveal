@@ -209,6 +209,18 @@
     <string name="register">Register</string>
     <string name="cancel">Cancel</string>
     <string name="partially_sprayed">Partially Sprayed</string>
-
+    <string name="found_coverage">Found Coverage</string>
+    <string name="spray_coverage">Spray Coverage</string>
+    <string name="structures_remaining_90">Structures Remaining 90%</string>
+    <string name="total_structures">Total Structures</string>
+    <string name="structures_not_visited">Structures Not Visited</string>
+    <string name="structures_visited_found">Structures Visited/Found</string>
+    <string name="structures_sprayed">Structures Sprayed</string>
+    <string name="structures_not_sprayed">Structures Not Sprayed</string>
+    <string name="room_coverage">Room Coverage</string>
+    <string name="n_percent">%1$d%%</string>
+    <string name="indicator">Indicator</string>
+    <string name="value">Value</string>
+    <string name="spray_success_rate">Spray Success Rate</string>
 
 </resources>
