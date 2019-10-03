@@ -254,7 +254,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     @Override
     public void onShowPlanSelector() {
-        interactor.fetchPlans();
+        interactor.fetchPlans(prefsUtil.getInstance().getCurrentOperationalArea());
     }
 
 

@@ -29,7 +29,9 @@ import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
+import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
+import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Country;
@@ -63,7 +65,6 @@ import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
-import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
@@ -150,7 +151,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
-    public void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea) {
+    public void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea, List<TaskDetails> taskDetailsList) {
         listTaskView.hideProgressDialog();
         setChangeMapPosition(drawerPresenter.isChangedCurrentSelection() || (drawerPresenter.isChangedCurrentSelection() && changeMapPosition));
         drawerPresenter.setChangedCurrentSelection(false);
@@ -172,6 +173,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             } catch (JSONException e) {
                 Timber.e("error resetting structures");
             }
+        }
+
+        if (taskDetailsList != null) {
+
+            new IndicatorsCalculatorTask(listTaskView.getActivity(), taskDetailsList).execute();
         }
     }
 
@@ -394,7 +400,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         try {
             JSONObject formJson = new JSONObject(jsonFormUtils.getFormString(listTaskView.getContext(), formName, null));
             formJson.put(OPERATIONAL_AREA_TAG, operationalArea.toJson());
-            formJson.put(STRUCTURES_TAG, featureCollection.toJson());
+            revealApplication.setFeatureCollection(featureCollection);
             jsonFormUtils.populateField(formJson, Constants.JsonForm.SELECTED_OPERATIONAL_AREA_NAME, prefsUtil.getCurrentOperationalArea(), TEXT);
             formJson.put(LOCATION_COMPONENT_ACTIVE, myLocationComponentActive);
             listTaskView.startJsonForm(formJson);

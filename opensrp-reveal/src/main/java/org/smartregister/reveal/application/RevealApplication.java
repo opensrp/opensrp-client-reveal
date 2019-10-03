@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.evernote.android.job.JobManager;
+import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.vijay.jsonwizard.activities.JsonWizardFormActivity;
 
@@ -59,10 +60,10 @@ import java.util.Map;
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
-import static org.smartregister.reveal.util.Constants.CONFIGURATION.TEAM_CONFIGS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.GLOBAL_CONFIGS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KEY;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.SETTINGS;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.TEAM_CONFIGS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.VALUE;
 import static org.smartregister.reveal.util.FamilyConstants.CONFIGURATION;
 import static org.smartregister.reveal.util.FamilyConstants.EventType;
@@ -91,6 +92,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     private boolean refreshMapOnEventSaved;
 
     private boolean myLocationComponentEnabled;
+
+    private FeatureCollection featureCollection;
 
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
@@ -365,5 +368,13 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     public void setMyLocationComponentEnabled(boolean myLocationComponentEnabled) {
         this.myLocationComponentEnabled = myLocationComponentEnabled;
+    }
+
+    public FeatureCollection getFeatureCollection() {
+        return featureCollection;
+    }
+
+    public void setFeatureCollection(FeatureCollection featureCollection) {
+        this.featureCollection = featureCollection;
     }
 }

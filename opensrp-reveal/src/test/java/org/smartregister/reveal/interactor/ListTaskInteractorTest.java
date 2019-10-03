@@ -25,6 +25,7 @@ import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
+import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
@@ -38,6 +39,7 @@ import org.smartregister.util.Cache;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -81,6 +83,9 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
     @Captor
     private ArgumentCaptor<Feature> featureArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<List<TaskDetails>> taskDetailsCaptor;
 
     private ListTaskInteractor listTaskInteractor;
 
@@ -191,7 +196,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         listTaskInteractor.fetchLocations(plan, operationAreaId);
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).getTasksByPlanAndGroup(plan, operationAreaId);
         verify(structureRepository, timeout(ASYNC_TIMEOUT)).getLocationsByParentId(operationAreaId);
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(jsonArgumentCaptor.capture(), featureArgumentCaptor.capture());
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(jsonArgumentCaptor.capture(), featureArgumentCaptor.capture(), taskDetailsCaptor.capture());
         assertEquals(operationAreaId, featureArgumentCaptor.getValue().id());
         FeatureCollection featureCollection = FeatureCollection.fromJson(jsonArgumentCaptor.getValue().toString());
         assertEquals("FeatureCollection", featureCollection.type());
@@ -215,7 +220,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         listTaskInteractor.fetchLocations(plan, operationAreaId);
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).getTasksByPlanAndGroup(plan, operationAreaId);
         verify(structureRepository, timeout(ASYNC_TIMEOUT)).getLocationsByParentId(operationAreaId);
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(jsonArgumentCaptor.capture(), featureArgumentCaptor.capture());
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(jsonArgumentCaptor.capture(), featureArgumentCaptor.capture(),taskDetailsCaptor.capture());
         verify(database).rawQuery(anyString(), eq(new String[]{plan, CASE_CONFIRMATION}));
         assertEquals(operationAreaId, featureArgumentCaptor.getValue().id());
         FeatureCollection featureCollection = FeatureCollection.fromJson(jsonArgumentCaptor.getValue().toString());
