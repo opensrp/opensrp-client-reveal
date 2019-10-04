@@ -17,10 +17,12 @@ import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
+import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.GeoJSON;
 import org.smartregister.reveal.util.GeoJsonUtils;
+import org.smartregister.reveal.util.IndicatorUtils;
 import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.Utils;
 
@@ -52,7 +54,6 @@ import static org.smartregister.reveal.util.Utils.getInterventionLabel;
  */
 public class ListTaskInteractor extends BaseInteractor {
 
-
     private CommonRepository commonRepository;
     private InteractorUtils interactorUtils;
 
@@ -61,7 +62,6 @@ public class ListTaskInteractor extends BaseInteractor {
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(SPRAYED_STRUCTURES);
         interactorUtils = new InteractorUtils();
     }
-
 
     public void fetchInterventionDetails(String interventionType, String featureId, boolean isForForm) {
         String sql = "SELECT status, start_date, end_date FROM %s WHERE id=?";
@@ -179,11 +179,14 @@ public class ListTaskInteractor extends BaseInteractor {
                 JSONObject featureCollection = null;
 
                 Location operationalAreaLocation = Utils.getOperationalAreaLocation(operationalArea);
+                List<TaskDetails> taskDetailsList = null;
+
                 try {
                     featureCollection = createFeatureCollection();
                     if (operationalAreaLocation != null) {
                         Map<String, Set<Task>> tasks = taskRepository.getTasksByPlanAndGroup(plan, operationalAreaLocation.getId());
                         List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
+                        taskDetailsList = IndicatorUtils.processTaskDetails(tasks);
                         String indexCase = null;
                         if (getInterventionLabel() == R.string.focus_investigation)
                             indexCase = getIndexCaseStructure(plan);
@@ -195,15 +198,16 @@ public class ListTaskInteractor extends BaseInteractor {
                     Timber.e(e);
                 }
                 JSONObject finalFeatureCollection = featureCollection;
+                List<TaskDetails> finalTaskDetailsList = taskDetailsList;
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
                         if (operationalAreaLocation != null) {
                             operationalAreaId = operationalAreaLocation.getId();
                             Feature operationalAreaFeature = Feature.fromJson(gson.toJson(operationalAreaLocation));
-                            getPresenter().onStructuresFetched(finalFeatureCollection, operationalAreaFeature);
+                            getPresenter().onStructuresFetched(finalFeatureCollection, operationalAreaFeature, finalTaskDetailsList);
                         } else {
-                            getPresenter().onStructuresFetched(finalFeatureCollection, null);
+                            getPresenter().onStructuresFetched(finalFeatureCollection, null, null);
                         }
                     }
                 });

@@ -10,7 +10,9 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.CardView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
+import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
@@ -66,6 +69,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     private RefreshRegisterReceiver refreshRegisterReceiver = new RefreshRegisterReceiver();
 
+    private CardView indicatorsCardView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +101,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         view.findViewById(R.id.txt_map_label).setOnClickListener(v -> startMapActivity());
         view.findViewById(R.id.drawerMenu).setOnClickListener(v -> drawerView.openDrawerLayout());
         drawerView.onResume();
+
+        initializeProgressIndicatorViews(view);
     }
 
     private void startMapActivity() {
@@ -179,6 +186,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     public void setTaskDetails(List<TaskDetails> tasks) {
         taskAdapter.setTaskDetails(tasks);
+        new IndicatorsCalculatorTask(getActivity(), tasks).execute();
     }
 
     @Override
@@ -302,11 +310,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         }
     }
 
-
     @Override
     public void onPause() {
         if (getContext() != null)
             LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(refreshRegisterReceiver);
+        setViewVisibility(indicatorsCardView, false);
         super.onPause();
     }
 
@@ -325,4 +333,34 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
             getPresenter().initializeQueries(getMainCondition());
         }
     }
+
+    private void initializeProgressIndicatorViews(View view) {
+
+        LinearLayout progressIndicatorsGroupView = view.findViewById(R.id.progressIndicatorsGroupView);
+        progressIndicatorsGroupView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openIndicatorsCardView();
+            }
+        });
+
+        indicatorsCardView = view.findViewById(R.id.indicators_card_view);
+        indicatorsCardView.findViewById(R.id.btn_collapse_indicators_card_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setViewVisibility(indicatorsCardView, false);
+            }
+        });
+    }
+
+    private void openIndicatorsCardView() {
+
+        setViewVisibility(indicatorsCardView, true);
+    }
+
+
+    private void setViewVisibility(View view, boolean isVisible) {
+        view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
 }

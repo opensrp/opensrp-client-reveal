@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
+
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.COMMA;
 import static org.smartregister.reveal.util.Constants.HYPHEN;
@@ -15,7 +17,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMI
 /**
  * Created by samuelgithengi on 3/20/19.
  */
-public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetails> {
+public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetails> , Serializable {
 
     private Location location;
 
