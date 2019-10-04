@@ -1,6 +1,5 @@
 package org.smartregister.reveal.view;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,9 +27,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.presenter.BaseDrawerPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Tags;
-import org.smartregister.util.PermissionUtils;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -285,10 +282,6 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     }
 
     private void startP2PActivity() {
-        if (PermissionUtils.isPermissionGranted(getContext()
-                , new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}
-                , Constants.STORAGE_PERMISSIONS)) {
-            getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
-        }
+        getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
     }
 }

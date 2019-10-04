@@ -210,6 +210,8 @@
     <string name="register">Register</string>
     <string name="cancel">Cancel</string>
     <string name="partially_sprayed">Partially Sprayed</string>
+
+
     <string name="found_coverage">Found Coverage</string>
     <string name="spray_coverage">Spray Coverage</string>
     <string name="structures_remaining_90">Structures Remaining 90%</string>
