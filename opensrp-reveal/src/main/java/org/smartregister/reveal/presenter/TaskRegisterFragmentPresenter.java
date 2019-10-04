@@ -21,7 +21,6 @@ import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
@@ -128,8 +127,8 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     private Pair<String, String[]> getMainCondition() {
         Location operationalArea = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
         String whereClause = String.format("%s.%s = ? AND %s.%s = ? AND %s.%s != ?",
-                DatabaseKeys.TASK_TABLE, DatabaseKeys.GROUPID, DatabaseKeys.TASK_TABLE, DatabaseKeys.PLAN_ID,
-                DatabaseKeys.TASK_TABLE, DatabaseKeys.STATUS);
+                Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.GROUPID, Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.PLAN_ID,
+                Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.STATUS);
         return new Pair<>(whereClause, new String[]{operationalArea == null ?
                 null : operationalArea.getId(), prefsUtil.getCurrentPlanId(), Task.TaskStatus.CANCELLED.name()});
     }

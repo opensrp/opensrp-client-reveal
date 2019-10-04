@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
+
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.COMMA;
 import static org.smartregister.reveal.util.Constants.HYPHEN;
@@ -15,7 +17,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMI
 /**
  * Created by samuelgithengi on 3/20/19.
  */
-public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetails> {
+public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetails> , Serializable {
 
     private Location location;
 
@@ -44,6 +46,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
     private String reasonReference;
 
     private String houseNumber;
+
+    private boolean familyRegTaskExists;
 
     public TaskDetails(@NonNull String taskId) {
         super(taskId);
@@ -145,10 +149,19 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         this.bloodScreeningDone = bloodScreeningDone;
     }
 
+    public boolean isFamilyRegTaskExists() {
+        return familyRegTaskExists;
+    }
+
+    public void setFamilyRegTaskExists(boolean familyRegTaskExists) {
+        this.familyRegTaskExists = familyRegTaskExists;
+    }
+
     public void setGroupedTaskCodeStatus(String groupedTaskCodeStatusString) {
         setFamilyRegistered(false);
         setBednetDistributed(false);
         setBloodScreeningDone(false);
+        setFamilyRegTaskExists(false);
         if (StringUtils.isEmpty(groupedTaskCodeStatusString)) {
             return;
         }
@@ -159,7 +172,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
             if (taskCodeStatusArray == null || taskCodeStatusArray.length != 2) {
                 continue;
             }
-            if (REGISTER_FAMILY.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
+            setFamilyRegTaskExists(REGISTER_FAMILY.equals(taskCodeStatusArray[0]));
+            if (isFamilyRegTaskExists() && COMPLETE.equals(taskCodeStatusArray[1])) {
                 setFamilyRegistered(true);
             } else if (BEDNET_DISTRIBUTION.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
                 setBednetDistributed(true);

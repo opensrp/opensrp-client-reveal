@@ -1,5 +1,8 @@
 package org.smartregister.reveal.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 public interface Constants {
 
     String VIEW_CONFIGURATION_PREFIX = "ViewConfiguration_";
@@ -49,6 +52,9 @@ public interface Constants {
     String HYPHEN = "-";
 
     String COMMA = ",";
+
+    int STORAGE_PERMISSIONS = 1;
+    String NULL_KEY = "NULL";
 
     interface CONFIGURATION {
         String LOGIN = "login";
@@ -175,6 +181,12 @@ public interface Constants {
         String PARTIALLY_SPRAYED = "Partially Sprayed";
     }
 
+    interface BusinessStatusWrapper {
+        List<String> SPRAYED = Arrays.asList(new String[]{BusinessStatus.SPRAYED, BusinessStatus.COMPLETE, BusinessStatus.PARTIALLY_SPRAYED});
+        List<String> NOT_SPRAYED = Arrays.asList(new String[]{BusinessStatus.NOT_SPRAYED, BusinessStatus.IN_PROGRESS, BusinessStatus.INCOMPLETE});
+        List<String> NOT_ELIGIBLE = Arrays.asList(new String[]{BusinessStatus.NOT_SPRAYABLE, BusinessStatus.NOT_ELIGIBLE});
+        List<String> NOT_VISITED = Arrays.asList(new String[]{BusinessStatus.NOT_VISITED});
+    }
 
     interface Map {
         int MAX_SELECT_ZOOM_LEVEL = 16;
@@ -275,7 +287,7 @@ public interface Constants {
         String NAMIBIA_ADD_STRUCTURE_FORM = "json.form/namibia_add_structure.json";
 
         String HOUSEHOLD_ACCESSIBLE = "householdAccessible";
-        String ABLE_TO_SPRAY_FIRST =  "ableToSprayFirst";
+        String ABLE_TO_SPRAY_FIRST = "ableToSprayFirst";
         String MOP_UP_VISIT = "mopUpVisit";
 
 
@@ -423,5 +435,4 @@ public interface Constants {
     interface UseContextCode {
         String INTERVENTION_TYPE = "interventionType";
     }
-
 }
