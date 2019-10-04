@@ -44,12 +44,14 @@ public class GeoJsonUtils {
             boolean familyRegistered = false;
             boolean bednetDistributed = false;
             boolean bloodScreeningDone = false;
+            boolean familyRegTaskExists = false;
             if (taskSet == null)
                 continue;
             for (Task task : taskSet) {
                 if (Utils.isResidentialStructure(task.getCode())) {
 
-                    if (task.getCode().equals(REGISTER_FAMILY) && task.getBusinessStatus().equals(COMPLETE)) {
+                    familyRegTaskExists = task.getCode().equals(REGISTER_FAMILY);
+                    if (familyRegTaskExists && task.getBusinessStatus().equals(COMPLETE)) {
                         familyRegistered = true;
                     } else if (task.getCode().equals(BEDNET_DISTRIBUTION) && task.getBusinessStatus().equals(COMPLETE)) {
                         bednetDistributed = true;
@@ -82,12 +84,16 @@ public class GeoJsonUtils {
 
             }
 
+            // The assumption is that a register structure task always exists if the structure has
+            // atleast one bednet distribution or blood screening task
             if (Utils.isResidentialStructure(taskProperties.get(TASK_CODE)) && getInterventionLabel() == R.string.focus_investigation) {
-                if (familyRegistered && bednetDistributed && bloodScreeningDone) {
+
+                boolean familyRegTaskMissingOrFamilyRegComplete = familyRegistered || !familyRegTaskExists;
+                if (familyRegTaskMissingOrFamilyRegComplete && bednetDistributed && bloodScreeningDone) {
                     taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
-                } else if (familyRegistered && !bednetDistributed && !bloodScreeningDone) {
+                } else if (familyRegTaskMissingOrFamilyRegComplete && !bednetDistributed && !bloodScreeningDone) {
                     taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
-                } else if (bednetDistributed && familyRegistered) {
+                } else if (bednetDistributed && familyRegTaskMissingOrFamilyRegComplete) {
                     taskProperties.put(TASK_BUSINESS_STATUS, BEDNET_DISTRIBUTED);
                 } else if (bloodScreeningDone) {
                     taskProperties.put(TASK_BUSINESS_STATUS, BLOOD_SCREENING_COMPLETE);
