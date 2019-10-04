@@ -316,7 +316,6 @@ public interface Constants {
         String VERIFICATION_FORM_ZAMBIA = "json.form/zambia_verification_form.json";
 
         String SPRAY_OPERATOR_CODE = "sprayop_code";
-
     }
 
     interface DateFormat {
