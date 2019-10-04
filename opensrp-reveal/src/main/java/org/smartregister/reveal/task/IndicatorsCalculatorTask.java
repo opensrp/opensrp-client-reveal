@@ -2,6 +2,7 @@ package org.smartregister.reveal.task;
 
 import android.app.Activity;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.IndicatorDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.IndicatorUtils;
+import org.smartregister.reveal.view.ListTasksActivity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -80,15 +82,34 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
 
         ((View) progressIndicator.getParent()).setVisibility(org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? View.VISIBLE : View.GONE);
 
+        if(activity instanceof  ListTasksActivity)
+        ((ListTasksActivity)activity).displayMyLocationAtButtom();
         //Reset the location button
-        ImageButton myLocationButton = this.activity.findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
+       /*  ImageButton myLocationButton = this.activity.findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
+       FrameLayout.LayoutParams myLocationButtonParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
         if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs && myLocationButton != null) {
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
-            params.gravity = Gravity.BOTTOM | Gravity.END;
-            params.bottomMargin = org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? ((ViewGroup) progressIndicator.getParent()).getHeight() + 40 : params.topMargin;
-            params.topMargin = 0;
-            myLocationButton.setLayoutParams(params);
+
+            myLocationButtonParams.gravity = Gravity.BOTTOM | Gravity.END;
+            myLocationButtonParams.bottomMargin = org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? ((ViewGroup) progressIndicator.getParent()).getHeight() + 40 : myLocationButtonParams.topMargin;
+            myLocationButtonParams.topMargin = 0;
+            myLocationButton.setLayoutParams(myLocationButtonParams);
         }
+        FloatingActionButton layerSwitcherFab=this.activity.findViewById(R.id.fab_mapview_layerSwitcher);
+
+        if (layerSwitcherFab != null) {
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) layerSwitcherFab.getLayoutParams();
+            //position the layer selector above location button and with similar bottom margin
+            if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs)
+                params.bottomMargin = myLocationButton.getMeasuredHeight() +  ((ViewGroup) progressIndicator.getParent()).getHeight() + 80 ;
+            else
+                params.bottomMargin = myLocationButton.getMeasuredHeight() + myLocationButtonParams.bottomMargin + 40;
+            //Make the layer selector is same size as my location button
+            params.height = myLocationButton.getMeasuredHeight();
+            params.width = myLocationButton.getMeasuredWidth();
+            params.rightMargin = activity.getResources().getDimensionPixelOffset(R.dimen.my_location_btn_margin);
+            layerSwitcherFab.setScaleType(FloatingActionButton.ScaleType.CENTER);
+            layerSwitcherFab.setLayoutParams(params);
+        }*/
     }
 
 

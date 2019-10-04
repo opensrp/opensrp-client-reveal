@@ -3,24 +3,27 @@ package org.smartregister.reveal.interactor;
 import android.support.annotation.VisibleForTesting;
 
 import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.smartregister.clientandeventmodel.DateUtil;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
-import org.smartregister.domain.Task;
+import org.smartregister.domain.db.Event;
 import org.smartregister.family.util.Utils;
+import org.smartregister.repository.EventClientRepository;
+import org.smartregister.repository.EventClientRepository.event_column;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.model.EventTask;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import timber.log.Timber;
 
@@ -44,6 +47,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TA
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
+
 
 /**
  * Created by samuelgithengi on 4/12/19.
@@ -106,6 +110,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                 }
             }
             StructureTaskDetails finalIndexCase = incompleteIndexCase;
+            populateEventsPerTask(taskDetailsList);
             appExecutors.mainThread().execute(() -> {
                 presenter.onTasksFound(taskDetailsList, finalIndexCase);
             });
@@ -130,40 +135,66 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     }
 
     @Override
-    public Map<String, EventTask> findEventsPerTask(List<Task> tasks) {
-        HashMap<String, EventTask> eventTaskHashMap = new HashMap<>();
-        appExecutors.diskIO().execute(() -> {
+    public void findLastEvent(StructureTaskDetails taskDetails) {
 
+        appExecutors.diskIO().execute(() -> {
+            String eventType = taskDetails.getTaskCode().equals(Intervention.BLOOD_SCREENING) ? Constants.BLOOD_SCREENING_EVENT : Constants.BEDNET_DISTRIBUTION_EVENT;
+            String events = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
+                    event_column.json, EventClientRepository.Table.event.name(), event_column.baseEntityId, event_column.eventType, event_column.updatedAt);
             Cursor cursor = null;
             try {
-                for (Task task: tasks) {
-                    EventTask eventTask = new EventTask();
+                cursor = database.rawQuery(events, new String[]{taskDetails.getTaskEntity(), eventType});
+                if (cursor.moveToFirst()) {
+                    String eventJSON = cursor.getString(0);
+                    presenter.onEventFound(eventClientRepository.convert(eventJSON, Event.class));
 
-                    cursor = database.rawQuery("SELECT count(*) as events_per_task FROM event_task WHERE task_id = ?",
-                            new String[]{task.getIdentifier()});
-                    while (cursor.moveToNext()) {
-                        eventTask.setEventsPerTask(cursor.getInt(cursor.getColumnIndex(EVENTS_PER_TASK)));
-                    }
-
-                    cursor.close();
-                    cursor = database.rawQuery("SELECT event_date FROM event_task WHERE task_id = ? ORDER by event_date desc LIMIT 1",
-                            new String[]{task.getIdentifier()});
-                    while (cursor.moveToNext()) {
-                        eventTask.setLastEventDate(cursor.getString(cursor.getColumnIndex(EVENT_DATE)));
-                    }
-
-                    eventTaskHashMap.put(task.getIdentifier(), eventTask);
                 }
-
-            } catch (Exception e) {
-                Timber.e(e, "Error querying events counts " );
+            } catch (SQLException e) {
+                Timber.e(e);
             } finally {
                 if (cursor != null) {
                     cursor.close();
                 }
             }
         });
-        return eventTaskHashMap;
+
+    }
+
+
+    private void populateEventsPerTask(List<StructureTaskDetails> tasks) {
+
+
+        Cursor cursor = null;
+        try {
+            for (StructureTaskDetails task : tasks) {
+                EventTask eventTask = new EventTask();
+
+                cursor = database.rawQuery("SELECT count(*) as events_per_task FROM event_task WHERE task_id = ?",
+                        new String[]{task.getTaskId()});
+                while (cursor.moveToNext()) {
+                    eventTask.setEventsPerTask(cursor.getInt(cursor.getColumnIndex(EVENTS_PER_TASK)));
+                }
+
+                cursor.close();
+                cursor = database.rawQuery("SELECT event_date FROM event_task WHERE task_id = ? ORDER by event_date desc LIMIT 1",
+                        new String[]{task.getTaskId()});
+                while (cursor.moveToNext()) {
+                    eventTask.setLastEventDate(cursor.getString(cursor.getColumnIndex(EVENT_DATE)));
+                }
+
+                if (eventTask.getEventsPerTask() > 1)
+                    task.setLastEdited(DateUtil.parseDate(eventTask.getLastEventDate()));
+
+            }
+
+        } catch (Exception e) {
+            Timber.e(e, "Error querying events counts ");
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
     }
 
 

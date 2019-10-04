@@ -13,11 +13,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.db.Event;
+import org.smartregister.domain.db.Obs;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
@@ -25,13 +28,21 @@ import org.smartregister.util.AssetHandler;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import timber.log.Timber;
 
+import static com.vijay.jsonwizard.constants.JsonFormConstants.CHECK_BOX;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.KEYS;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.TYPE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUES;
+import static org.smartregister.AllConstants.OPTIONS;
+import static org.smartregister.AllConstants.TEXT;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
@@ -297,4 +308,65 @@ public class RevealJsonFormUtils {
 
         }
     }
+
+    public void populateForm(Event event, JSONObject formJSON) {
+        if (event == null)
+            return;
+        JSONArray fields = JsonFormUtils.fields(formJSON);
+        for (int i = 0; i < fields.length(); i++) {
+            try {
+                JSONObject field = fields.getJSONObject(i);
+                String key = field.getString(KEY);
+                Obs obs = event.findObs(null, false, key);
+                if (obs != null && obs.getValues() != null) {
+                    if (CHECK_BOX.equals(field.getString(TYPE))) {
+                        JSONArray options = field.getJSONArray(OPTIONS);
+                        Map<String, String> optionsKeyValue = new HashMap<>();
+                        for (int j = 0; j < options.length(); j++) {
+                            JSONObject option = options.getJSONObject(j);
+                            optionsKeyValue.put(option.getString(TEXT), option.getString(KEY));
+                        }
+                        JSONArray keys = new JSONArray();
+                        for (Object value : obs.getValues()) {
+                            keys.put(optionsKeyValue.get(value.toString()));
+                        }
+                        field.put(VALUE, keys);
+                    } else
+                        field.put(VALUE, obs.getValue());
+                }
+            } catch (JSONException e) {
+                Timber.e(e);
+            }
+        }
+    }
+
+    public void populateServerOptions(Map<String, Object> serverConfigs, JSONObject formJson) {
+        if (serverConfigs == null)
+            return;
+        JSONArray sprayOperators = (JSONArray) serverConfigs.get(CONFIGURATION.SPRAY_OPERATORS);
+        if (sprayOperators != null) {
+            JSONArray sprayOperatorCodes = new JSONArray();
+            JSONArray sprayOperatorValues = new JSONArray();
+            for (int i = 0; i < sprayOperators.length(); i++) {
+                JSONObject operator = sprayOperators.optJSONObject(i);
+                if (operator == null)
+                    continue;
+                String code = operator.optString(CONFIGURATION.CODE, null);
+                String name = operator.optString(CONFIGURATION.NAME);
+                if (code == null)
+                    continue;
+                sprayOperatorCodes.put(code + ":" + name);
+                sprayOperatorValues.put(code + " - " + name);
+            }
+            JSONArray fields = JsonFormUtils.fields(formJson);
+            JSONObject field = JsonFormUtils.getFieldJSONObject(fields, JsonForm.SPRAY_OPERATOR_CODE);
+            try {
+                field.put(KEYS, sprayOperatorCodes);
+                field.put(VALUES, sprayOperatorValues);
+            } catch (JSONException e) {
+                Timber.e(e, "Error populating spray Operators ");
+            }
+        }
+    }
+
 }

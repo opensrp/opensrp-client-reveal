@@ -54,6 +54,7 @@ public interface Constants {
     String COMMA = ",";
 
     int STORAGE_PERMISSIONS = 1;
+
     String NULL_KEY = "NULL";
 
     interface CONFIGURATION {
@@ -62,6 +63,7 @@ public interface Constants {
         String TEAM_CONFIGS = "team_configs";
         String KEY = "key";
         String VALUE = "value";
+        String VALUES = "values";
         String SETTINGS = "settings";
         String LOCATION_BUFFER_RADIUS_IN_METRES = "location_buffer_radius_in_metres";
         String UPDATE_LOCATION_BUFFER_RADIUS = "update_location_buffer_radius";
@@ -80,6 +82,10 @@ public interface Constants {
         String DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG = "display_add_structure_out_of_boundary_warning_dialog";
         Boolean DEFAULT_DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG = false;
         Float OUTSIDE_OPERATIONAL_AREA_MASK_OPACITY = 0.65f;
+        String SPRAY_OPERATORS = "spray_operators";
+        String CODE = "code";
+        String NAME = "name";
+
     }
 
     interface Preferences {
@@ -182,6 +188,7 @@ public interface Constants {
     }
 
     interface BusinessStatusWrapper {
+
         List<String> SPRAYED = Arrays.asList(new String[]{BusinessStatus.SPRAYED, BusinessStatus.COMPLETE, BusinessStatus.PARTIALLY_SPRAYED});
         List<String> NOT_SPRAYED = Arrays.asList(new String[]{BusinessStatus.NOT_SPRAYED, BusinessStatus.IN_PROGRESS, BusinessStatus.INCOMPLETE});
         List<String> NOT_ELIGIBLE = Arrays.asList(new String[]{BusinessStatus.NOT_SPRAYABLE, BusinessStatus.NOT_ELIGIBLE});
@@ -307,6 +314,8 @@ public interface Constants {
         String IRS_FIELD_OFFICER_ZAMBIA = "json.form/zambia_irs_field_officer.json";
 
         String VERIFICATION_FORM_ZAMBIA = "json.form/zambia_verification_form.json";
+
+        String SPRAY_OPERATOR_CODE = "sprayop_code";
     }
 
     interface DateFormat {

@@ -237,6 +237,7 @@
         </FrameLayout>
     </LinearLayout>
 
+
     <include
         android:id="@+id/indicators_card_view"
         android:layout_width="match_parent"

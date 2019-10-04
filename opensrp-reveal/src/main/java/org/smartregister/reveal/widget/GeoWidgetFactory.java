@@ -66,7 +66,6 @@ import timber.log.Timber;
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
-import static org.smartregister.reveal.util.Constants.DIGITAL_GLOBE_CONNECT_ID;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
@@ -221,8 +220,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
 
-                String mapBoxStyle = AssetHandler.readFileFromAssetsFolder(context.getString(R.string.reveal_satellite_style), context);
-                Style.Builder builder = new Style.Builder().fromJson(mapBoxStyle.replace(DIGITAL_GLOBE_CONNECT_ID, BuildConfig.DG_CONNECT_ID));
+                Style.Builder builder = new Style.Builder().fromUri(context.getString(R.string.reveal_satellite_style));
 
                 mapboxMap.setStyle(builder, new Style.OnStyleLoaded() {
                     @Override
@@ -243,6 +241,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         RevealMapHelper.addCustomLayers(style, context);
 
                         mapView.setMapboxMap(mapboxMap);
+
+                        RevealMapHelper.addBaseLayers(mapView, style, context);
                     }
                 });
 

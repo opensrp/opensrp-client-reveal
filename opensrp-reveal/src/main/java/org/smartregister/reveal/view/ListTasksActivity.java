@@ -11,6 +11,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -43,7 +44,6 @@ import org.smartregister.domain.FetchStatus;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
@@ -61,7 +61,6 @@ import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
-import org.smartregister.util.AssetHandler;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
@@ -71,7 +70,6 @@ import timber.log.Timber;
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
-import static org.smartregister.reveal.util.Constants.DIGITAL_GLOBE_CONNECT_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -102,14 +100,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private MapboxMap mMapboxMap;
 
+    private CardView sprayCardView;
+
     private TextView tvReason;
 
-    private CardView sprayCardView;
     private CardView mosquitoCollectionCardView;
     private CardView larvalBreedingCardView;
     private CardView potentialAreaOfTransmissionCardView;
     private CardView indicatorsCardView;
-
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
 
@@ -128,6 +126,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private ImageButton myLocationButton;
 
     private LinearLayout progressIndicatorsGroupView;
+
+    private FloatingActionButton layerSwitcherFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,6 +237,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         myLocationButton = findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
 
+        layerSwitcherFab = findViewById(R.id.fab_mapview_layerSwitcher);
+
         kujakuMapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
 
         kujakuMapView.onCreate(savedInstanceState);
@@ -252,15 +254,18 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
-                String mapBoxStyle = AssetHandler.readFileFromAssetsFolder(getString(R.string.reveal_satellite_style), ListTasksActivity.this);
-                Style.Builder builder = new Style.Builder().fromJson(mapBoxStyle.replace(DIGITAL_GLOBE_CONNECT_ID, BuildConfig.DG_CONNECT_ID));
+                Style.Builder builder = new Style.Builder().fromUri(getString(R.string.reveal_satellite_style));
                 mapboxMap.setStyle(builder, new Style.OnStyleLoaded() {
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
+
                         geoJsonSource = style.getSourceAs(getString(R.string.reveal_datasource_name));
 
                         selectedGeoJsonSource = style.getSourceAs(getString(R.string.selected_datasource_name));
                         RevealMapHelper.addCustomLayers(style, ListTasksActivity.this);
+
+                        RevealMapHelper.addBaseLayers(kujakuMapView, style, ListTasksActivity.this);
+
                     }
                 });
 
@@ -283,19 +288,36 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 });
 
-                displayMyLocationAtButton();
+                displayMyLocationAtButtom();
             }
         });
 
     }
 
-    private void displayMyLocationAtButton() {
+
+    public void displayMyLocationAtButtom() {
+        int progressHeight = getResources().getDimensionPixelSize(R.dimen.progress_height);
+        FrameLayout.LayoutParams myLocationButtonParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
         if (myLocationButton != null) {
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
-            params.gravity = Gravity.BOTTOM | Gravity.END;
-            params.bottomMargin = org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? progressIndicatorsGroupView.getHeight() + 40 : params.topMargin;
-            params.topMargin = 0;
-            myLocationButton.setLayoutParams(params);
+            myLocationButtonParams.gravity = Gravity.BOTTOM | Gravity.END;
+            myLocationButtonParams.bottomMargin = org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? progressHeight + 40 : 40;
+            myLocationButtonParams.topMargin = 0;
+            myLocationButton.setLayoutParams(myLocationButtonParams);
+        }
+
+        if (layerSwitcherFab != null) {
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) layerSwitcherFab.getLayoutParams();
+            //position the layer selector above location button and with similar bottom margin
+            if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs)
+                params.bottomMargin = myLocationButton.getMeasuredHeight() + progressHeight + 80;
+            else
+                params.bottomMargin = myLocationButton.getMeasuredHeight() + myLocationButtonParams.bottomMargin + 40;
+            //Make the layer selector is same size as my location button
+            params.height = myLocationButton.getMeasuredHeight();
+            params.width = myLocationButton.getMeasuredWidth();
+            params.rightMargin = getResources().getDimensionPixelOffset(R.dimen.my_location_btn_margin);
+            layerSwitcherFab.setScaleType(FloatingActionButton.ScaleType.CENTER);
+            layerSwitcherFab.setLayoutParams(params);
         }
     }
 

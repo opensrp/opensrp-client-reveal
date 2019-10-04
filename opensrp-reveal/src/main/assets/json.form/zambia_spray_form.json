@@ -264,25 +264,6 @@
           "err": "Required field"
         }
       },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       {
         "key": "location",
         "openmrs_entity_parent": "",
@@ -301,7 +282,7 @@
           "value": "true",
           "err": "Required field"
         }
-      },
+   
       {
         "key": "datacollector",
         "openmrs_entity_parent": "",

@@ -38,7 +38,7 @@
     <string name="select_campaign_operational_area_title">Plan and Operational area set</string>
     <string name="select_campaign_operational_area">Plan and Operational area not set. Select from the hamburger menu</string>
 
-    <string name="reveal_satellite_style" translatable="false">reveal-streets-satellite.json</string>
+    <string name="reveal_satellite_style" translatable="false">asset://reveal-streets-satellite.json</string>
     <string name="reveal_streets_style" translatable="false">reveal-streets-style.json</string>
     <string name="reveal_datasource_name" translatable="false">reveal-data-set</string>
     <string name="reveal_layer_polygons" translatable="false">reveal-data-polygons</string>
@@ -218,7 +218,7 @@
     <string name="other_irs_field_officer">Enter IRS Field Officer Form</string>
     <string name="other_verification_form">Enter Verification Form</string>
 
-    <string name="device_to_device_sync">P2P Sync</string>
+
     <string name="found_coverage">Found Coverage</string>
     <string name="spray_coverage">Spray Coverage</string>
     <string name="structures_remaining_90">Structures Remaining 90%</string>
@@ -231,5 +231,18 @@
     <string name="n_percent">%1$d%%</string>
     <string name="indicator">Indicator</string>
     <string name="value">Value</string>
+
+    <string name="daily_summary">Enter Daily Summary Form</string>
+    <string name="team_leader_dos">Enter Team Leader DOS Form</string>
+    <string name="cb_spray_area">Enter CB Spray Area Visit Form</string>
+    <string name="irs_sa_decision">Enter IRS SA Decision Form</string>
+    <string name="other_mobilization_form">Enter Mobilization Form</string>
+    <string name="other_irs_field_officer">Enter IRS Field Officer Form</string>
+    <string name="other_verification_form">Enter Verification Form</string>
+
+    <string name="last_edited">Edited %1s</string>
+    <string name="device_to_device_sync">P2P Sync</string>
+
     <string name="spray_success_rate">Spray Success Rate</string>
+
 </resources>
