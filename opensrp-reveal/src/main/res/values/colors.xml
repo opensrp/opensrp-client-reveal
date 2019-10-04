@@ -33,4 +33,6 @@
 
     <color name="outside_area_mask">#313131</color>
 
+    <color name="transluscent_white">#80FFFFFF</color>
+
 </resources>

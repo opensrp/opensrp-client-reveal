@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import org.joda.time.DateTime;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.smartregister.reveal.shadow.CustomFontTextViewShadow;
 import org.smartregister.util.DateTimeTypeConverter;
@@ -20,7 +21,10 @@ public abstract class BaseUnitTest {
 
     protected final int ASYNC_TIMEOUT = 2000;
 
-
     protected static Gson taskGson = new GsonBuilder().registerTypeAdapter(DateTime.class, new DateTimeTypeConverter("yyyy-MM-dd'T'HHmm"))
             .serializeNulls().create();
+
+    protected static String getString(int stringResourceId) {
+        return RuntimeEnvironment.application.getResources().getString(stringResourceId);
+    }
 }
