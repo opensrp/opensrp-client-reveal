@@ -1,0 +1,1947 @@
+[
+  {
+    "datacollector": "CD2",
+    "sop_name": "Matthews Banda",
+    "sop_code": "ZM-SOP-2019-01001"
+  },
+  {
+    "datacollector": "CD2",
+    "sop_name": "Lebetina Banda",
+    "sop_code": "ZM-SOP-2019-01002"
+  },
+  {
+    "datacollector": "CD2",
+    "sop_name": "Stephen Banda",
+    "sop_code": "ZM-SOP-2019-01003"
+  },
+  {
+    "datacollector": "CD2",
+    "sop_name": "Honeso Mwale",
+    "sop_code": "ZM-SOP-2019-01004"
+  },
+  {
+    "datacollector": "CD3",
+    "sop_name": "Benson Phiri",
+    "sop_code": "ZM-SOP-2019-01005"
+  },
+  {
+    "datacollector": "CD3",
+    "sop_name": "Innocent Phiri",
+    "sop_code": "ZM-SOP-2019-01006"
+  },
+  {
+    "datacollector": "CD3",
+    "sop_name": "David Mtonga",
+    "sop_code": "ZM-SOP-2019-01007"
+  },
+  {
+    "datacollector": "CD3",
+    "sop_name": "Dorothy Nyambe",
+    "sop_code": "ZM-SOP-2019-01008"
+  },
+  {
+    "datacollector": "CD4",
+    "sop_name": "Daniel Banda",
+    "sop_code": "ZM-SOP-2019-01009"
+  },
+  {
+    "datacollector": "CD4",
+    "sop_name": "Thomas Mbewe",
+    "sop_code": "ZM-SOP-2019-01010"
+  },
+  {
+    "datacollector": "CD4",
+    "sop_name": "Dennis Thole",
+    "sop_code": "ZM-SOP-2019-01011"
+  },
+  {
+    "datacollector": "CD4",
+    "sop_name": "Rosemary Chulu",
+    "sop_code": "ZM-SOP-2019-01012"
+  },
+  {
+    "datacollector": "CD5",
+    "sop_name": "Hardy Fletch",
+    "sop_code": "ZM-SOP-2019-01013"
+  },
+  {
+    "datacollector": "CD5",
+    "sop_name": "Stephen Zulu",
+    "sop_code": "ZM-SOP-2019-01014"
+  },
+  {
+    "datacollector": "CD5",
+    "sop_name": "Alfred Banda",
+    "sop_code": "ZM-SOP-2019-01015"
+  },
+  {
+    "datacollector": "CD5",
+    "sop_name": "Geoffrey Mbukwa",
+    "sop_code": "ZM-SOP-2019-01016"
+  },
+  {
+    "datacollector": "CD6",
+    "sop_name": "Abadenego Tembo",
+    "sop_code": "ZM-SOP-2019-01017"
+  },
+  {
+    "datacollector": "CD6",
+    "sop_name": "Hellen Phiri",
+    "sop_code": "ZM-SOP-2019-01018"
+  },
+  {
+    "datacollector": "CD6",
+    "sop_name": "Nicolas Zulu",
+    "sop_code": "ZM-SOP-2019-01019"
+  },
+  {
+    "datacollector": "CD6",
+    "sop_name": "Boston Mbewe",
+    "sop_code": "ZM-SOP-2019-01020"
+  },
+  {
+    "datacollector": "CD8",
+    "sop_name": "Moses Phiri",
+    "sop_code": "ZM-SOP-2019-01021"
+  },
+  {
+    "datacollector": "CD8",
+    "sop_name": "Maulero Uleriano",
+    "sop_code": "ZM-SOP-2019-01022"
+  },
+  {
+    "datacollector": "CD8",
+    "sop_name": "Raphael Phiri",
+    "sop_code": "ZM-SOP-2019-01023"
+  },
+  {
+    "datacollector": "CD8",
+    "sop_name": "Elomasi Banda",
+    "sop_code": "ZM-SOP-2019-01024"
+  },
+  {
+    "datacollector": "CD9",
+    "sop_name": "Samson Zulu",
+    "sop_code": "ZM-SOP-2019-01025"
+  },
+  {
+    "datacollector": "CD9",
+    "sop_name": "Perhaps Banda",
+    "sop_code": "ZM-SOP-2019-01026"
+  },
+  {
+    "datacollector": "CD9",
+    "sop_name": "Naomi Miti",
+    "sop_code": "ZM-SOP-2019-01027"
+  },
+  {
+    "datacollector": "CD9",
+    "sop_name": "Jackson Phiri",
+    "sop_code": "ZM-SOP-2019-01028"
+  },
+  {
+    "datacollector": "CD10",
+    "sop_name": "Folomansio Jere",
+    "sop_code": "ZM-SOP-2019-01029"
+  },
+  {
+    "datacollector": "CD10",
+    "sop_name": "Charles Phiri",
+    "sop_code": "ZM-SOP-2019-01030"
+  },
+  {
+    "datacollector": "CD10",
+    "sop_name": "Severiano Zulu",
+    "sop_code": "ZM-SOP-2019-01031"
+  },
+  {
+    "datacollector": "CD10",
+    "sop_name": "Misheck Phiri",
+    "sop_code": "ZM-SOP-2019-01032"
+  },
+  {
+    "datacollector": "CD11",
+    "sop_name": "Patricia Banda",
+    "sop_code": "ZM-SOP-2019-01033"
+  },
+  {
+    "datacollector": "CD11",
+    "sop_name": "Chempino Sakala",
+    "sop_code": "ZM-SOP-2019-01034"
+  },
+  {
+    "datacollector": "CD11",
+    "sop_name": "Dismass Phiri",
+    "sop_code": "ZM-SOP-2019-01035"
+  },
+  {
+    "datacollector": "CD11",
+    "sop_name": "Edward Mulenga",
+    "sop_code": "ZM-SOP-2019-01036"
+  },
+  {
+    "datacollector": "CD12",
+    "sop_name": "Bertha Zulu",
+    "sop_code": "ZM-SOP-2019-01037"
+  },
+  {
+    "datacollector": "CD12",
+    "sop_name": "Lingson Banda",
+    "sop_code": "ZM-SOP-2019-01038"
+  },
+  {
+    "datacollector": "CD12",
+    "sop_name": "Mbanandi Banda",
+    "sop_code": "ZM-SOP-2019-01039"
+  },
+  {
+    "datacollector": "CD12",
+    "sop_name": "Paul Banda",
+    "sop_code": "ZM-SOP-2019-01040"
+  },
+  {
+    "datacollector": "CD13",
+    "sop_name": "Frederick Phiri",
+    "sop_code": "ZM-SOP-2019-01041"
+  },
+  {
+    "datacollector": "CD13",
+    "sop_name": "Assan Lungu",
+    "sop_code": "ZM-SOP-2019-01042"
+  },
+  {
+    "datacollector": "CD14",
+    "sop_name": "Comfort Phiri",
+    "sop_code": "ZM-SOP-2019-01043"
+  },
+  {
+    "datacollector": "CD14",
+    "sop_name": "Vincent Banda",
+    "sop_code": "ZM-SOP-2019-01044"
+  },
+  {
+    "datacollector": "CD14",
+    "sop_name": "Steven Phiri",
+    "sop_code": "ZM-SOP-2019-01045"
+  },
+  {
+    "datacollector": "CD14",
+    "sop_name": "Gideon Banda",
+    "sop_code": "ZM-SOP-2019-01046"
+  },
+  {
+    "datacollector": "CD15",
+    "sop_name": "Rabson Zulu",
+    "sop_code": "ZM-SOP-2019-01047"
+  },
+  {
+    "datacollector": "CD15",
+    "sop_name": "Isaac Mwanza",
+    "sop_code": "ZM-SOP-2019-01048"
+  },
+  {
+    "datacollector": "CD15",
+    "sop_name": "Andrew Phiri",
+    "sop_code": "ZM-SOP-2019-01049"
+  },
+  {
+    "datacollector": "CD15",
+    "sop_name": "Alinah Mandah",
+    "sop_code": "ZM-SOP-2019-01050"
+  },
+  {
+    "datacollector": "CD16",
+    "sop_name": "Ganizani Phiri",
+    "sop_code": "ZM-SOP-2019-01051"
+  },
+  {
+    "datacollector": "CD16",
+    "sop_name": "Musa Tembo",
+    "sop_code": "ZM-SOP-2019-01052"
+  },
+  {
+    "datacollector": "CD16",
+    "sop_name": "Mary Zulu",
+    "sop_code": "ZM-SOP-2019-01053"
+  },
+  {
+    "datacollector": "CD16",
+    "sop_name": "David Banda",
+    "sop_code": "ZM-SOP-2019-01054"
+  },
+  {
+    "datacollector": "CD1",
+    "sop_name": "CDSOP Name 1",
+    "sop_code": "ZM-SOP-2019-01055"
+  },
+  {
+    "datacollector": "CD1",
+    "sop_name": "CDSOP Name 2",
+    "sop_code": "ZM-SOP-2019-01056"
+  },
+  {
+    "datacollector": "CD1",
+    "sop_name": "CDSOP Name 3",
+    "sop_code": "ZM-SOP-2019-01057"
+  },
+  {
+    "datacollector": "CD1",
+    "sop_name": "CDSOP Name 4",
+    "sop_code": "ZM-SOP-2019-01058"
+  },
+  {
+    "datacollector": "CD7",
+    "sop_name": "CDSOP Name 25",
+    "sop_code": "ZM-SOP-2019-01059"
+  },
+  {
+    "datacollector": "CD7",
+    "sop_name": "CDSOP Name 26",
+    "sop_code": "ZM-SOP-2019-01060"
+  },
+  {
+    "datacollector": "CD7",
+    "sop_name": "CDSOP Name 27",
+    "sop_code": "ZM-SOP-2019-01061"
+  },
+  {
+    "datacollector": "CD7",
+    "sop_name": "CDSOP Name 28",
+    "sop_code": "ZM-SOP-2019-01062"
+  },
+  {
+    "datacollector": "",
+    "sop_name": "",
+    "sop_code": ""
+  },
+  {
+    "datacollector": "KT1",
+    "sop_name": "Lazarous Banda",
+    "sop_code": "ZM-SOP-2019-04033"
+  },
+  {
+    "datacollector": "KT1",
+    "sop_name": "Mathews Mtonga",
+    "sop_code": "ZM-SOP-2019-04034"
+  },
+  {
+    "datacollector": "KT1",
+    "sop_name": "David Banda",
+    "sop_code": "ZM-SOP-2019-04035"
+  },
+  {
+    "datacollector": "KT1",
+    "sop_name": "Joshua Wilima",
+    "sop_code": "ZM-SOP-2019-04036"
+  },
+  {
+    "datacollector": "KT2",
+    "sop_name": "Jackson Phiri",
+    "sop_code": "ZM-SOP-2019-04037"
+  },
+  {
+    "datacollector": "KT2",
+    "sop_name": "Andrew Mwanza",
+    "sop_code": "ZM-SOP-2019-04038"
+  },
+  {
+    "datacollector": "KT2",
+    "sop_name": "Njobvu Siphorian",
+    "sop_code": "ZM-SOP-2019-04039"
+  },
+  {
+    "datacollector": "KT2",
+    "sop_name": "Raphael Phiri",
+    "sop_code": "ZM-SOP-2019-04040"
+  },
+  {
+    "datacollector": "KT3",
+    "sop_name": "Ackson Banda",
+    "sop_code": "ZM-SOP-2019-04041"
+  },
+  {
+    "datacollector": "KT3",
+    "sop_name": "Rabecca Zulu",
+    "sop_code": "ZM-SOP-2019-04042"
+  },
+  {
+    "datacollector": "KT3",
+    "sop_name": "Gerald Azele Sakala",
+    "sop_code": "ZM-SOP-2019-04043"
+  },
+  {
+    "datacollector": "KT3",
+    "sop_name": "Stephen Mvula",
+    "sop_code": "ZM-SOP-2019-04044"
+  },
+  {
+    "datacollector": "KT4",
+    "sop_name": "Kelvin Phiri",
+    "sop_code": "ZM-SOP-2019-04045"
+  },
+  {
+    "datacollector": "KT4",
+    "sop_name": "Anderson Phiri",
+    "sop_code": "ZM-SOP-2019-04046"
+  },
+  {
+    "datacollector": "KT4",
+    "sop_name": "Betty Mwanza",
+    "sop_code": "ZM-SOP-2019-04047"
+  },
+  {
+    "datacollector": "KT4",
+    "sop_name": "Alex Junior Mudenda",
+    "sop_code": "ZM-SOP-2019-04048"
+  },
+  {
+    "datacollector": "KT5",
+    "sop_name": "Mwanza Joshua",
+    "sop_code": "ZM-SOP-2019-04049"
+  },
+  {
+    "datacollector": "KT5",
+    "sop_name": "Alick Phiri",
+    "sop_code": "ZM-SOP-2019-04050"
+  },
+  {
+    "datacollector": "KT5",
+    "sop_name": "Madrine Phiri",
+    "sop_code": "ZM-SOP-2019-04051"
+  },
+  {
+    "datacollector": "KT5",
+    "sop_name": "Magret Mwale",
+    "sop_code": "ZM-SOP-2019-04052"
+  },
+  {
+    "datacollector": "KT6",
+    "sop_name": "Edina Sakala",
+    "sop_code": "ZM-SOP-2019-04053"
+  },
+  {
+    "datacollector": "KT6",
+    "sop_name": "Stamp Banda",
+    "sop_code": "ZM-SOP-2019-04054"
+  },
+  {
+    "datacollector": "KT6",
+    "sop_name": "Victor Zulu",
+    "sop_code": "ZM-SOP-2019-04055"
+  },
+  {
+    "datacollector": "KT6",
+    "sop_name": "Erick Mulambi",
+    "sop_code": "ZM-SOP-2019-04056"
+  },
+  {
+    "datacollector": "KT7",
+    "sop_name": "Precious Mwanza",
+    "sop_code": "ZM-SOP-2019-04057"
+  },
+  {
+    "datacollector": "KT7",
+    "sop_name": "Joseph Nkhandu",
+    "sop_code": "ZM-SOP-2019-04058"
+  },
+  {
+    "datacollector": "KT7",
+    "sop_name": "Mahelebe Nyambi",
+    "sop_code": "ZM-SOP-2019-04059"
+  },
+  {
+    "datacollector": "KT7",
+    "sop_name": "William Phiri",
+    "sop_code": "ZM-SOP-2019-04060"
+  },
+  {
+    "datacollector": "KT8",
+    "sop_name": "Magret Kalito",
+    "sop_code": "ZM-SOP-2019-04061"
+  },
+  {
+    "datacollector": "KT8",
+    "sop_name": "Acklas Banda",
+    "sop_code": "ZM-SOP-2019-04062"
+  },
+  {
+    "datacollector": "KT8",
+    "sop_name": "Selita Banda",
+    "sop_code": "ZM-SOP-2019-04063"
+  },
+  {
+    "datacollector": "KT8",
+    "sop_name": "Daniel Banda",
+    "sop_code": "ZM-SOP-2019-04064"
+  },
+  {
+    "datacollector": "KT9",
+    "sop_name": "Brenda Mumba",
+    "sop_code": "ZM-SOP-2019-04065"
+  },
+  {
+    "datacollector": "KT9",
+    "sop_name": "Isaac Zulu",
+    "sop_code": "ZM-SOP-2019-04066"
+  },
+  {
+    "datacollector": "KT9",
+    "sop_name": "Florence Nkhoma",
+    "sop_code": "ZM-SOP-2019-04067"
+  },
+  {
+    "datacollector": "KT9",
+    "sop_name": "Monica Nyirenda",
+    "sop_code": "ZM-SOP-2019-04068"
+  },
+  {
+    "datacollector": "KT10",
+    "sop_name": "Enia Phiri",
+    "sop_code": "ZM-SOP-2019-04069"
+  },
+  {
+    "datacollector": "KT10",
+    "sop_name": "Collins Tembo",
+    "sop_code": "ZM-SOP-2019-04070"
+  },
+  {
+    "datacollector": "KT10",
+    "sop_name": "Patricia Bwalya",
+    "sop_code": "ZM-SOP-2019-04071"
+  },
+  {
+    "datacollector": "KT10",
+    "sop_name": "Size Banda",
+    "sop_code": "ZM-SOP-2019-04072"
+  },
+  {
+    "datacollector": "KT11",
+    "sop_name": "Peter Zulu",
+    "sop_code": "ZM-SOP-2019-04073"
+  },
+  {
+    "datacollector": "KT11",
+    "sop_name": "Benson Mbewe",
+    "sop_code": "ZM-SOP-2019-04074"
+  },
+  {
+    "datacollector": "KT11",
+    "sop_name": "Yotam Phiri",
+    "sop_code": "ZM-SOP-2019-04075"
+  },
+  {
+    "datacollector": "KT11",
+    "sop_name": "Cosam Zulu",
+    "sop_code": "ZM-SOP-2019-04076"
+  },
+  {
+    "datacollector": "KT12",
+    "sop_name": "Tisanke Phiri",
+    "sop_code": "ZM-SOP-2019-04077"
+  },
+  {
+    "datacollector": "KT12",
+    "sop_name": "Redson Phiri",
+    "sop_code": "ZM-SOP-2019-04078"
+  },
+  {
+    "datacollector": "KT12",
+    "sop_name": "Jason Banda",
+    "sop_code": "ZM-SOP-2019-04079"
+  },
+  {
+    "datacollector": "KT12",
+    "sop_name": "Anderson Phiri",
+    "sop_code": "ZM-SOP-2019-04080"
+  },
+  {
+    "datacollector": "KT13",
+    "sop_name": "Lanandon Emmanuel",
+    "sop_code": "ZM-SOP-2019-04081"
+  },
+  {
+    "datacollector": "KT13",
+    "sop_name": "George Lungu",
+    "sop_code": "ZM-SOP-2019-04082"
+  },
+  {
+    "datacollector": "KT13",
+    "sop_name": "Lydia Mwanza",
+    "sop_code": "ZM-SOP-2019-04083"
+  },
+  {
+    "datacollector": "KT13",
+    "sop_name": "John Banda",
+    "sop_code": "ZM-SOP-2019-04084"
+  },
+  {
+    "datacollector": "KT13",
+    "sop_name": "Josesph Phiri",
+    "sop_code": "ZM-SOP-2019-04085"
+  },
+  {
+    "datacollector": "KT14",
+    "sop_name": "Levy Chongwe",
+    "sop_code": "ZM-SOP-2019-04001"
+  },
+  {
+    "datacollector": "KT14",
+    "sop_name": "Sinai Chongwe",
+    "sop_code": "ZM-SOP-2019-04002"
+  },
+  {
+    "datacollector": "KT14",
+    "sop_name": "Adson Phiri",
+    "sop_code": "ZM-SOP-2019-04003"
+  },
+  {
+    "datacollector": "KT14",
+    "sop_name": "Lameck Phiri",
+    "sop_code": "ZM-SOP-2019-04004"
+  },
+  {
+    "datacollector": "KT15",
+    "sop_name": "Magret Lungu",
+    "sop_code": "ZM-SOP-2019-04005"
+  },
+  {
+    "datacollector": "KT15",
+    "sop_name": "Samuel Zulu",
+    "sop_code": "ZM-SOP-2019-04006"
+  },
+  {
+    "datacollector": "KT15",
+    "sop_name": "Simbeleko Banda",
+    "sop_code": "ZM-SOP-2019-04007"
+  },
+  {
+    "datacollector": "KT15",
+    "sop_name": "Jackson Mvula",
+    "sop_code": "ZM-SOP-2019-04008"
+  },
+  {
+    "datacollector": "KT16",
+    "sop_name": "Charles Phiri",
+    "sop_code": "ZM-SOP-2019-04009"
+  },
+  {
+    "datacollector": "KT16",
+    "sop_name": "Fridah Nyoni",
+    "sop_code": "ZM-SOP-2019-04010"
+  },
+  {
+    "datacollector": "KT16",
+    "sop_name": "Porscilio Mwale",
+    "sop_code": "ZM-SOP-2019-04011"
+  },
+  {
+    "datacollector": "KT16",
+    "sop_name": "Demeciano Mbewe",
+    "sop_code": "ZM-SOP-2019-04012"
+  },
+  {
+    "datacollector": "KT17",
+    "sop_name": "Jennipher Njobvu",
+    "sop_code": "ZM-SOP-2019-04013"
+  },
+  {
+    "datacollector": "KT17",
+    "sop_name": "Daliso Banda",
+    "sop_code": "ZM-SOP-2019-04014"
+  },
+  {
+    "datacollector": "KT17",
+    "sop_name": "Isaac Phiri",
+    "sop_code": "ZM-SOP-2019-04015"
+  },
+  {
+    "datacollector": "KT17",
+    "sop_name": "Dimas Zulu",
+    "sop_code": "ZM-SOP-2019-04016"
+  },
+  {
+    "datacollector": "KT18",
+    "sop_name": "Julius Daka",
+    "sop_code": "ZM-SOP-2019-04017"
+  },
+  {
+    "datacollector": "KT18",
+    "sop_name": "Lazarous Phiri",
+    "sop_code": "ZM-SOP-2019-04018"
+  },
+  {
+    "datacollector": "KT18",
+    "sop_name": "Daniel Mbewe",
+    "sop_code": "ZM-SOP-2019-04019"
+  },
+  {
+    "datacollector": "KT18",
+    "sop_name": "Joseph Mwanza",
+    "sop_code": "ZM-SOP-2019-04020"
+  },
+  {
+    "datacollector": "KT19",
+    "sop_name": "Francis Mwanza",
+    "sop_code": "ZM-SOP-2019-04021"
+  },
+  {
+    "datacollector": "KT19",
+    "sop_name": "Ackson Mwale",
+    "sop_code": "ZM-SOP-2019-04022"
+  },
+  {
+    "datacollector": "KT19",
+    "sop_name": "Abilon Banda",
+    "sop_code": "ZM-SOP-2019-04023"
+  },
+  {
+    "datacollector": "KT19",
+    "sop_name": "Tedson Zulu",
+    "sop_code": "ZM-SOP-2019-04024"
+  },
+  {
+    "datacollector": "KT20",
+    "sop_name": "Ruth Banda",
+    "sop_code": "ZM-SOP-2019-04025"
+  },
+  {
+    "datacollector": "KT20",
+    "sop_name": "Veronica Phiri",
+    "sop_code": "ZM-SOP-2019-04026"
+  },
+  {
+    "datacollector": "KT20",
+    "sop_name": "Harriet Phiri",
+    "sop_code": "ZM-SOP-2019-04027"
+  },
+  {
+    "datacollector": "KT20",
+    "sop_name": "Vasty Phiri",
+    "sop_code": "ZM-SOP-2019-04028"
+  },
+  {
+    "datacollector": "KT21",
+    "sop_name": "Peter Phiri",
+    "sop_code": "ZM-SOP-2019-04029"
+  },
+  {
+    "datacollector": "KT21",
+    "sop_name": "Raston Banda",
+    "sop_code": "ZM-SOP-2019-04030"
+  },
+  {
+    "datacollector": "KT21",
+    "sop_name": "Berthar Lungu",
+    "sop_code": "ZM-SOP-2019-04031"
+  },
+  {
+    "datacollector": "KT21",
+    "sop_name": "Elizabeth Lungu",
+    "sop_code": "ZM-SOP-2019-04032"
+  },
+  {
+    "datacollector": "KTspare1",
+    "sop_name": "GIFT ZULU",
+    "sop_code": "ZM-SOP-2019-04086"
+  },
+  {
+    "datacollector": "KTspare1",
+    "sop_name": "PEPULANI PHIRI",
+    "sop_code": "ZM-SOP-2019-04087"
+  },
+  {
+    "datacollector": "KTspare1",
+    "sop_name": "APITON PHIRI",
+    "sop_code": "ZM-SOP-2019-04088"
+  },
+  {
+    "datacollector": "KTspare1",
+    "sop_name": "GABRIEL PHIRI",
+    "sop_code": "ZM-SOP-2019-04089"
+  },
+  {
+    "datacollector": "KTspare2",
+    "sop_name": "MADRINE PHIRI",
+    "sop_code": "ZM-SOP-2019-04090"
+  },
+  {
+    "datacollector": "KTspare2",
+    "sop_name": "KTSOP Name 91",
+    "sop_code": "ZM-SOP-2019-04091"
+  },
+  {
+    "datacollector": "KTspare2",
+    "sop_name": "KTSOP Name 92",
+    "sop_code": "ZM-SOP-2019-04092"
+  },
+  {
+    "datacollector": "KTspare2",
+    "sop_name": "KTSOP Name 93",
+    "sop_code": "ZM-SOP-2019-04093"
+  },
+  {
+    "datacollector": "KTspare3",
+    "sop_name": "KTSOP Name 94",
+    "sop_code": "ZM-SOP-2019-04094"
+  },
+  {
+    "datacollector": "KTspare4",
+    "sop_name": "KTSOP Name 95",
+    "sop_code": "ZM-SOP-2019-04095"
+  },
+  {
+    "datacollector": "",
+    "sop_name": "",
+    "sop_code": ""
+  },
+  {
+    "datacollector": "SD1",
+    "sop_name": "Reuben Lungu",
+    "sop_code": "ZM-SOP-2019-09001"
+  },
+  {
+    "datacollector": "SD1",
+    "sop_name": "Malina Mbewe",
+    "sop_code": "ZM-SOP-2019-09002"
+  },
+  {
+    "datacollector": "SD1",
+    "sop_name": "John Lungu",
+    "sop_code": "ZM-SOP-2019-09003"
+  },
+  {
+    "datacollector": "SD1",
+    "sop_name": "Nolia Sakala",
+    "sop_code": "ZM-SOP-2019-09004"
+  },
+  {
+    "datacollector": "SD2",
+    "sop_name": "Derrick Banda",
+    "sop_code": "ZM-SOP-2019-09005"
+  },
+  {
+    "datacollector": "SD2",
+    "sop_name": "Abudullah Nkhoma",
+    "sop_code": "ZM-SOP-2019-09006"
+  },
+  {
+    "datacollector": "SD2",
+    "sop_name": "Esau Mushanga",
+    "sop_code": "ZM-SOP-2019-09007"
+  },
+  {
+    "datacollector": "SD2",
+    "sop_name": "Alice Lungu",
+    "sop_code": "ZM-SOP-2019-09008"
+  },
+  {
+    "datacollector": "SD3",
+    "sop_name": "Iwell Phiri",
+    "sop_code": "ZM-SOP-2019-09009"
+  },
+  {
+    "datacollector": "SD3",
+    "sop_name": "Taonga Nyerenda",
+    "sop_code": "ZM-SOP-2019-09010"
+  },
+  {
+    "datacollector": "SD3",
+    "sop_name": "Blessings Miti",
+    "sop_code": "ZM-SOP-2019-09011"
+  },
+  {
+    "datacollector": "SD3",
+    "sop_name": "Jacob Phiri",
+    "sop_code": "ZM-SOP-2019-09012"
+  },
+  {
+    "datacollector": "SD4",
+    "sop_name": "Mathews Banda",
+    "sop_code": "ZM-SOP-2019-09013"
+  },
+  {
+    "datacollector": "SD4",
+    "sop_name": "Rabecca Banda",
+    "sop_code": "ZM-SOP-2019-09014"
+  },
+  {
+    "datacollector": "SD4",
+    "sop_name": "Brown Mbewe",
+    "sop_code": "ZM-SOP-2019-09015"
+  },
+  {
+    "datacollector": "SD4",
+    "sop_name": "Joseph Phiri",
+    "sop_code": "ZM-SOP-2019-09016"
+  },
+  {
+    "datacollector": "SD5",
+    "sop_name": "Daniel Phiri",
+    "sop_code": "ZM-SOP-2019-09017"
+  },
+  {
+    "datacollector": "SD5",
+    "sop_name": "Ariel Ngoma",
+    "sop_code": "ZM-SOP-2019-09018"
+  },
+  {
+    "datacollector": "SD5",
+    "sop_name": "Evans Mtonga",
+    "sop_code": "ZM-SOP-2019-09019"
+  },
+  {
+    "datacollector": "SD5",
+    "sop_name": "Samson Phiri",
+    "sop_code": "ZM-SOP-2019-09020"
+  },
+  {
+    "datacollector": "SD6",
+    "sop_name": "Jimmy Phiri",
+    "sop_code": "ZM-SOP-2019-09021"
+  },
+  {
+    "datacollector": "SD6",
+    "sop_name": "Ackson Mwale",
+    "sop_code": "ZM-SOP-2019-09022"
+  },
+  {
+    "datacollector": "SD6",
+    "sop_name": "Fridah Mbewe",
+    "sop_code": "ZM-SOP-2019-09023"
+  },
+  {
+    "datacollector": "SD6",
+    "sop_name": "Josphat Phiri",
+    "sop_code": "ZM-SOP-2019-09024"
+  },
+  {
+    "datacollector": "SD7",
+    "sop_name": "Andifuna Soko",
+    "sop_code": "ZM-SOP-2019-09025"
+  },
+  {
+    "datacollector": "SD7",
+    "sop_name": "Yvonne Sakala",
+    "sop_code": "ZM-SOP-2019-09026"
+  },
+  {
+    "datacollector": "SD7",
+    "sop_name": "Micheal Mwanza",
+    "sop_code": "ZM-SOP-2019-09027"
+  },
+  {
+    "datacollector": "SD7",
+    "sop_name": "James Banda",
+    "sop_code": "ZM-SOP-2019-09028"
+  },
+  {
+    "datacollector": "SD8",
+    "sop_name": "Beatrice Nkata",
+    "sop_code": "ZM-SOP-2019-09029"
+  },
+  {
+    "datacollector": "SD8",
+    "sop_name": "Titamenji Lungu",
+    "sop_code": "ZM-SOP-2019-09030"
+  },
+  {
+    "datacollector": "SD8",
+    "sop_name": "Mercy lungu",
+    "sop_code": "ZM-SOP-2019-09031"
+  },
+  {
+    "datacollector": "SD8",
+    "sop_name": "Ackim Phiri",
+    "sop_code": "ZM-SOP-2019-09032"
+  },
+  {
+    "datacollector": "SD9",
+    "sop_name": "Malizani Banda",
+    "sop_code": "ZM-SOP-2019-09033"
+  },
+  {
+    "datacollector": "SD9",
+    "sop_name": "Phalecia Nkhoma",
+    "sop_code": "ZM-SOP-2019-09034"
+  },
+  {
+    "datacollector": "SD9",
+    "sop_name": "Hardson Simbeye",
+    "sop_code": "ZM-SOP-2019-09035"
+  },
+  {
+    "datacollector": "SD9",
+    "sop_name": "Suleko Phiri",
+    "sop_code": "ZM-SOP-2019-09036"
+  },
+  {
+    "datacollector": "SD10",
+    "sop_name": "Joyce Phiri",
+    "sop_code": "ZM-SOP-2019-09037"
+  },
+  {
+    "datacollector": "SD10",
+    "sop_name": "Monica Banda",
+    "sop_code": "ZM-SOP-2019-09038"
+  },
+  {
+    "datacollector": "SD10",
+    "sop_name": "Chabota Mawere",
+    "sop_code": "ZM-SOP-2019-09039"
+  },
+  {
+    "datacollector": "SD10",
+    "sop_name": "Charles Phiri",
+    "sop_code": "ZM-SOP-2019-09040"
+  },
+  {
+    "datacollector": "SD11",
+    "sop_name": "Mumange Phiri",
+    "sop_code": "ZM-SOP-2019-09041"
+  },
+  {
+    "datacollector": "SD11",
+    "sop_name": "Ailes banda",
+    "sop_code": "ZM-SOP-2019-09042"
+  },
+  {
+    "datacollector": "SD11",
+    "sop_name": "Yona Banda",
+    "sop_code": "ZM-SOP-2019-09043"
+  },
+  {
+    "datacollector": "SD11",
+    "sop_name": "Winfred Sakala",
+    "sop_code": "ZM-SOP-2019-09044"
+  },
+  {
+    "datacollector": "SD12",
+    "sop_name": "Chitsoka Nkhoma",
+    "sop_code": "ZM-SOP-2019-09045"
+  },
+  {
+    "datacollector": "SD12",
+    "sop_name": "Medrinah Chalwe",
+    "sop_code": "ZM-SOP-2019-09046"
+  },
+  {
+    "datacollector": "SD12",
+    "sop_name": "Mary Mwale",
+    "sop_code": "ZM-SOP-2019-09047"
+  },
+  {
+    "datacollector": "SD12",
+    "sop_name": "Job Palata",
+    "sop_code": "ZM-SOP-2019-09048"
+  },
+  {
+    "datacollector": "SD13",
+    "sop_name": "Dorika Banda",
+    "sop_code": "ZM-SOP-2019-09049"
+  },
+  {
+    "datacollector": "SD13",
+    "sop_name": "Ellen Mwale",
+    "sop_code": "ZM-SOP-2019-09050"
+  },
+  {
+    "datacollector": "SD13",
+    "sop_name": "Ellen Banda",
+    "sop_code": "ZM-SOP-2019-09051"
+  },
+  {
+    "datacollector": "SD13",
+    "sop_name": "Donaliah .C. Maseko",
+    "sop_code": "ZM-SOP-2019-09052"
+  },
+  {
+    "datacollector": "SD14",
+    "sop_name": "Charles Mwale",
+    "sop_code": "ZM-SOP-2019-09053"
+  },
+  {
+    "datacollector": "SD14",
+    "sop_name": "Lameck Zulu",
+    "sop_code": "ZM-SOP-2019-09054"
+  },
+  {
+    "datacollector": "SD14",
+    "sop_name": "Donald Chisulo",
+    "sop_code": "ZM-SOP-2019-09055"
+  },
+  {
+    "datacollector": "SD14",
+    "sop_name": "Patrick Phiri",
+    "sop_code": "ZM-SOP-2019-09056"
+  },
+  {
+    "datacollector": "SD15",
+    "sop_name": "Loizio Njobvu",
+    "sop_code": "ZM-SOP-2019-09057"
+  },
+  {
+    "datacollector": "SD15",
+    "sop_name": "Elizabeth Zulu",
+    "sop_code": "ZM-SOP-2019-09058"
+  },
+  {
+    "datacollector": "SD15",
+    "sop_name": "Samuel Banda",
+    "sop_code": "ZM-SOP-2019-09059"
+  },
+  {
+    "datacollector": "SD15",
+    "sop_name": "Alick Phiri",
+    "sop_code": "ZM-SOP-2019-09060"
+  },
+  {
+    "datacollector": "SD16",
+    "sop_name": "Bathrumel Zulu",
+    "sop_code": "ZM-SOP-2019-09061"
+  },
+  {
+    "datacollector": "SD16",
+    "sop_name": "Naomi Banda",
+    "sop_code": "ZM-SOP-2019-09062"
+  },
+  {
+    "datacollector": "SD16",
+    "sop_name": "Mary Phiri",
+    "sop_code": "ZM-SOP-2019-09063"
+  },
+  {
+    "datacollector": "SD16",
+    "sop_name": "Given Simwaka",
+    "sop_code": "ZM-SOP-2019-09064"
+  },
+  {
+    "datacollector": "SD17",
+    "sop_name": "Mabvuto Zulu",
+    "sop_code": "ZM-SOP-2019-09065"
+  },
+  {
+    "datacollector": "SD17",
+    "sop_name": "Aliness Mbewe",
+    "sop_code": "ZM-SOP-2019-09066"
+  },
+  {
+    "datacollector": "SD17",
+    "sop_name": "Nedson Phiri",
+    "sop_code": "ZM-SOP-2019-09067"
+  },
+  {
+    "datacollector": "SD17",
+    "sop_name": "Jatson Banda",
+    "sop_code": "ZM-SOP-2019-09068"
+  },
+  {
+    "datacollector": "SD20",
+    "sop_name": "John Mwale",
+    "sop_code": "ZM-SOP-2019-09069"
+  },
+  {
+    "datacollector": "SD20",
+    "sop_name": "Luka Zulu",
+    "sop_code": "ZM-SOP-2019-09070"
+  },
+  {
+    "datacollector": "SD20",
+    "sop_name": "Mervis Banda",
+    "sop_code": "ZM-SOP-2019-09071"
+  },
+  {
+    "datacollector": "SD20",
+    "sop_name": "Faides Phiri",
+    "sop_code": "ZM-SOP-2019-09072"
+  },
+  {
+    "datacollector": "SD21",
+    "sop_name": "Naomi Daka",
+    "sop_code": "ZM-SOP-2019-09073"
+  },
+  {
+    "datacollector": "SD21",
+    "sop_name": "Nelia Tembo",
+    "sop_code": "ZM-SOP-2019-09074"
+  },
+  {
+    "datacollector": "SD21",
+    "sop_name": "Matias Zulu",
+    "sop_code": "ZM-SOP-2019-09075"
+  },
+  {
+    "datacollector": "SD21",
+    "sop_name": "Priscar Banda",
+    "sop_code": "ZM-SOP-2019-09076"
+  },
+  {
+    "datacollector": "SD22",
+    "sop_name": "Faston Zulu",
+    "sop_code": "ZM-SOP-2019-09077"
+  },
+  {
+    "datacollector": "SD22",
+    "sop_name": "Smoke Banda",
+    "sop_code": "ZM-SOP-2019-09078"
+  },
+  {
+    "datacollector": "SD22",
+    "sop_name": "Assneli Banda",
+    "sop_code": "ZM-SOP-2019-09079"
+  },
+  {
+    "datacollector": "SD22",
+    "sop_name": "William Banda",
+    "sop_code": "ZM-SOP-2019-09080"
+  },
+  {
+    "datacollector": "SD23",
+    "sop_name": "Micheal Kaliwa",
+    "sop_code": "ZM-SOP-2019-09081"
+  },
+  {
+    "datacollector": "SD23",
+    "sop_name": "Susan Mwanza",
+    "sop_code": "ZM-SOP-2019-09082"
+  },
+  {
+    "datacollector": "SD23",
+    "sop_name": "Misheck Angel Shawa",
+    "sop_code": "ZM-SOP-2019-09083"
+  },
+  {
+    "datacollector": "SD23",
+    "sop_name": "Benjamin Phiri",
+    "sop_code": "ZM-SOP-2019-09084"
+  },
+  {
+    "datacollector": "SD24",
+    "sop_name": "Mary Daka",
+    "sop_code": "ZM-SOP-2019-09085"
+  },
+  {
+    "datacollector": "SD24",
+    "sop_name": "John Saulo",
+    "sop_code": "ZM-SOP-2019-09086"
+  },
+  {
+    "datacollector": "SD24",
+    "sop_name": "Hellen Phiri",
+    "sop_code": "ZM-SOP-2019-09087"
+  },
+  {
+    "datacollector": "SD24",
+    "sop_name": "Brian Phiri",
+    "sop_code": "ZM-SOP-2019-09088"
+  },
+  {
+    "datacollector": "SD25",
+    "sop_name": "Tatson Kaisala",
+    "sop_code": "ZM-SOP-2019-09089"
+  },
+  {
+    "datacollector": "SD25",
+    "sop_name": "Esau Ndhlovu",
+    "sop_code": "ZM-SOP-2019-09090"
+  },
+  {
+    "datacollector": "SD25",
+    "sop_name": "Killion Banda",
+    "sop_code": "ZM-SOP-2019-09091"
+  },
+  {
+    "datacollector": "SD25",
+    "sop_name": "Dominick Banda",
+    "sop_code": "ZM-SOP-2019-09092"
+  },
+  {
+    "datacollector": "SD26",
+    "sop_name": "Andreck Zulu",
+    "sop_code": "ZM-SOP-2019-09093"
+  },
+  {
+    "datacollector": "SD26",
+    "sop_name": "Devison Njobvu",
+    "sop_code": "ZM-SOP-2019-09094"
+  },
+  {
+    "datacollector": "SD26",
+    "sop_name": "Eletina Phiri",
+    "sop_code": "ZM-SOP-2019-09095"
+  },
+  {
+    "datacollector": "SD26",
+    "sop_name": "Mourice Sakala",
+    "sop_code": "ZM-SOP-2019-09096"
+  },
+  {
+    "datacollector": "SD27",
+    "sop_name": "Prosperous Chizinga",
+    "sop_code": "ZM-SOP-2019-09097"
+  },
+  {
+    "datacollector": "SD27",
+    "sop_name": "Geoffrey Phiri",
+    "sop_code": "ZM-SOP-2019-09098"
+  },
+  {
+    "datacollector": "SD27",
+    "sop_name": "Margret Banda",
+    "sop_code": "ZM-SOP-2019-09099"
+  },
+  {
+    "datacollector": "SD27",
+    "sop_name": "Rapheal Banda",
+    "sop_code": "ZM-SOP-2019-09100"
+  },
+  {
+    "datacollector": "SD28",
+    "sop_name": "Paul Phiri",
+    "sop_code": "ZM-SOP-2019-09101"
+  },
+  {
+    "datacollector": "SD28",
+    "sop_name": "Dokezia Luhango",
+    "sop_code": "ZM-SOP-2019-09102"
+  },
+  {
+    "datacollector": "SD28",
+    "sop_name": "Juliet Ngoma",
+    "sop_code": "ZM-SOP-2019-09103"
+  },
+  {
+    "datacollector": "SD28",
+    "sop_name": "Edinah Phiri",
+    "sop_code": "ZM-SOP-2019-09104"
+  },
+  {
+    "datacollector": "SD29",
+    "sop_name": "Mabvuto Mvula",
+    "sop_code": "ZM-SOP-2019-09105"
+  },
+  {
+    "datacollector": "SD29",
+    "sop_name": "Elias Mushimbei",
+    "sop_code": "ZM-SOP-2019-09106"
+  },
+  {
+    "datacollector": "SD29",
+    "sop_name": "Falecy Banda",
+    "sop_code": "ZM-SOP-2019-09107"
+  },
+  {
+    "datacollector": "SD29",
+    "sop_name": "Daniel Zulu",
+    "sop_code": "ZM-SOP-2019-09108"
+  },
+  {
+    "datacollector": "SD30",
+    "sop_name": "Charles Daka",
+    "sop_code": "ZM-SOP-2019-09109"
+  },
+  {
+    "datacollector": "SD30",
+    "sop_name": "Rabson Phiri",
+    "sop_code": "ZM-SOP-2019-09110"
+  },
+  {
+    "datacollector": "SD30",
+    "sop_name": "Loveness Banda",
+    "sop_code": "ZM-SOP-2019-09111"
+  },
+  {
+    "datacollector": "SD30",
+    "sop_name": "Falen Banda",
+    "sop_code": "ZM-SOP-2019-09112"
+  },
+  {
+    "datacollector": "SD31",
+    "sop_name": "Melody Zulu",
+    "sop_code": "ZM-SOP-2019-09113"
+  },
+  {
+    "datacollector": "SD31",
+    "sop_name": "Micheal Banda",
+    "sop_code": "ZM-SOP-2019-09114"
+  },
+  {
+    "datacollector": "SD31",
+    "sop_name": "Stella Phiri",
+    "sop_code": "ZM-SOP-2019-09115"
+  },
+  {
+    "datacollector": "SD31",
+    "sop_name": "Tasila Daka",
+    "sop_code": "ZM-SOP-2019-09116"
+  },
+  {
+    "datacollector": "SD32",
+    "sop_name": "Greater Banda",
+    "sop_code": "ZM-SOP-2019-09117"
+  },
+  {
+    "datacollector": "SD32",
+    "sop_name": "Bridget Banda",
+    "sop_code": "ZM-SOP-2019-09118"
+  },
+  {
+    "datacollector": "SD32",
+    "sop_name": "Dickson Daka",
+    "sop_code": "ZM-SOP-2019-09119"
+  },
+  {
+    "datacollector": "SD32",
+    "sop_name": "Aswell Phiri",
+    "sop_code": "ZM-SOP-2019-09120"
+  },
+  {
+    "datacollector": "SD18",
+    "sop_name": "Sangulukani Chirwa",
+    "sop_code": "ZM-SOP-2019-09121"
+  },
+  {
+    "datacollector": "SD19",
+    "sop_name": "Tetiwe Banda",
+    "sop_code": "ZM-SOP-2019-09122"
+  },
+  {
+    "datacollector": "SD19",
+    "sop_name": "Regina Phiri",
+    "sop_code": "ZM-SOP-2019-09123"
+  },
+  {
+    "datacollector": "SD33",
+    "sop_name": "Lucia Ngoma",
+    "sop_code": "ZM-SOP-2019-09124"
+  },
+  {
+    "datacollector": "SD33",
+    "sop_name": "Nolia Sakala",
+    "sop_code": "ZM-SOP-2019-09125"
+  },
+  {
+    "datacollector": "SD33",
+    "sop_name": "Rabson Phiri",
+    "sop_code": "ZM-SOP-2019-09126"
+  },
+  {
+    "datacollector": "SD33",
+    "sop_name": "Ednah Banda",
+    "sop_code": "ZM-SOP-2019-09127"
+  },
+  {
+    "datacollector": "",
+    "sop_name": "",
+    "sop_code": ""
+  },
+  {
+    "datacollector": "NL1",
+    "sop_name": "Kaputo James",
+    "sop_code": "ZM-SOP-2019-21001"
+  },
+  {
+    "datacollector": "NL1",
+    "sop_name": "Chikwa Derrick",
+    "sop_code": "ZM-SOP-2019-21002"
+  },
+  {
+    "datacollector": "NL1",
+    "sop_name": "Bwale Fanwell",
+    "sop_code": "ZM-SOP-2019-21003"
+  },
+  {
+    "datacollector": "NL2",
+    "sop_name": "Kafumbe Billy",
+    "sop_code": "ZM-SOP-2019-21004"
+  },
+  {
+    "datacollector": "NL2",
+    "sop_name": "Mubanga Mukupa",
+    "sop_code": "ZM-SOP-2019-21005"
+  },
+  {
+    "datacollector": "NL2",
+    "sop_name": "Chama Aubrey",
+    "sop_code": "ZM-SOP-2019-21006"
+  },
+  {
+    "datacollector": "NL3",
+    "sop_name": "Fredrick Manda",
+    "sop_code": "ZM-SOP-2019-21007"
+  },
+  {
+    "datacollector": "NL3",
+    "sop_name": "Lukwesa Abraham",
+    "sop_code": "ZM-SOP-2019-21008"
+  },
+  {
+    "datacollector": "NL3",
+    "sop_name": "Sanford Chishala",
+    "sop_code": "ZM-SOP-2019-21009"
+  },
+  {
+    "datacollector": "NL4",
+    "sop_name": "Mwewa Grace",
+    "sop_code": "ZM-SOP-2019-21010"
+  },
+  {
+    "datacollector": "NL4",
+    "sop_name": "Moses Mwewa",
+    "sop_code": "ZM-SOP-2019-21011"
+  },
+  {
+    "datacollector": "NL4",
+    "sop_name": "Chipili Leonard",
+    "sop_code": "ZM-SOP-2019-21012"
+  },
+  {
+    "datacollector": "NL5",
+    "sop_name": "Mwansa Holiness",
+    "sop_code": "ZM-SOP-2019-21013"
+  },
+  {
+    "datacollector": "NL5",
+    "sop_name": "Mpundu Collins",
+    "sop_code": "ZM-SOP-2019-21014"
+  },
+  {
+    "datacollector": "NL5",
+    "sop_name": "Malama Benson",
+    "sop_code": "ZM-SOP-2019-21015"
+  },
+  {
+    "datacollector": "NL6",
+    "sop_name": "Katebe Samue",
+    "sop_code": "ZM-SOP-2019-21016"
+  },
+  {
+    "datacollector": "NL6",
+    "sop_name": "Chomba Gladys",
+    "sop_code": "ZM-SOP-2019-21017"
+  },
+  {
+    "datacollector": "NL6",
+    "sop_name": "Justine Kapambwe",
+    "sop_code": "ZM-SOP-2019-21018"
+  },
+  {
+    "datacollector": "NL7",
+    "sop_name": "Chama Haggai",
+    "sop_code": "ZM-SOP-2019-21019"
+  },
+  {
+    "datacollector": "NL7",
+    "sop_name": "Sinkala Joseph",
+    "sop_code": "ZM-SOP-2019-21020"
+  },
+  {
+    "datacollector": "NL7",
+    "sop_name": "Davies Illunga",
+    "sop_code": "ZM-SOP-2019-21021"
+  },
+  {
+    "datacollector": "NL8",
+    "sop_name": "Kabanshi Davies",
+    "sop_code": "ZM-SOP-2019-21022"
+  },
+  {
+    "datacollector": "NL8",
+    "sop_name": "Mercy Mubanga",
+    "sop_code": "ZM-SOP-2019-21023"
+  },
+  {
+    "datacollector": "NL8",
+    "sop_name": "Fridah Chola",
+    "sop_code": "ZM-SOP-2019-21024"
+  },
+  {
+    "datacollector": "NL9",
+    "sop_name": "Maxildah Chibwe",
+    "sop_code": "ZM-SOP-2019-21025"
+  },
+  {
+    "datacollector": "NL9",
+    "sop_name": "Chishala Sapheries",
+    "sop_code": "ZM-SOP-2019-21026"
+  },
+  {
+    "datacollector": "NL9",
+    "sop_name": "Mbai Brian",
+    "sop_code": "ZM-SOP-2019-21027"
+  },
+  {
+    "datacollector": "NL10",
+    "sop_name": "Chinama Peter",
+    "sop_code": "ZM-SOP-2019-21028"
+  },
+  {
+    "datacollector": "NL10",
+    "sop_name": "Michael Chilufya",
+    "sop_code": "ZM-SOP-2019-21029"
+  },
+  {
+    "datacollector": "NL10",
+    "sop_name": "Rabecca Ngosa",
+    "sop_code": "ZM-SOP-2019-21030"
+  },
+  {
+    "datacollector": "NL11",
+    "sop_name": "Mulenga Goodhope",
+    "sop_code": "ZM-SOP-2019-21031"
+  },
+  {
+    "datacollector": "NL11",
+    "sop_name": "Musonda Cecilia",
+    "sop_code": "ZM-SOP-2019-21032"
+  },
+  {
+    "datacollector": "NL11",
+    "sop_name": "Musonda Dorothyster",
+    "sop_code": "ZM-SOP-2019-21033"
+  },
+  {
+    "datacollector": "NL12",
+    "sop_name": "Mulewa Violet",
+    "sop_code": "ZM-SOP-2019-21034"
+  },
+  {
+    "datacollector": "NL12",
+    "sop_name": "Champemba Kelvin",
+    "sop_code": "ZM-SOP-2019-21035"
+  },
+  {
+    "datacollector": "NL12",
+    "sop_name": "Marvellous Kaoma",
+    "sop_code": "ZM-SOP-2019-21036"
+  },
+  {
+    "datacollector": "NL13",
+    "sop_name": "Mubanga Mukupa",
+    "sop_code": "ZM-SOP-2019-21037"
+  },
+  {
+    "datacollector": "NL13",
+    "sop_name": "Chibwe Prince",
+    "sop_code": "ZM-SOP-2019-21038"
+  },
+  {
+    "datacollector": "NL13",
+    "sop_name": "Mwachade ruth",
+    "sop_code": "ZM-SOP-2019-21039"
+  },
+  {
+    "datacollector": "NL14",
+    "sop_name": "Bwalya Joseph",
+    "sop_code": "ZM-SOP-2019-21040"
+  },
+  {
+    "datacollector": "NL14",
+    "sop_name": "Mwaba Hendrix",
+    "sop_code": "ZM-SOP-2019-21041"
+  },
+  {
+    "datacollector": "NL14",
+    "sop_name": "Kabeli Gladys",
+    "sop_code": "ZM-SOP-2019-21042"
+  },
+  {
+    "datacollector": "NL15",
+    "sop_name": "Chishala John",
+    "sop_code": "ZM-SOP-2019-21043"
+  },
+  {
+    "datacollector": "NL15",
+    "sop_name": "Musonda Naomi",
+    "sop_code": "ZM-SOP-2019-21044"
+  },
+  {
+    "datacollector": "NL15",
+    "sop_name": "Mukanshi Peter",
+    "sop_code": "ZM-SOP-2019-21045"
+  },
+  {
+    "datacollector": "NL16",
+    "sop_name": "Kapya Josephy",
+    "sop_code": "ZM-SOP-2019-21046"
+  },
+  {
+    "datacollector": "NL16",
+    "sop_name": "Malama Mary",
+    "sop_code": "ZM-SOP-2019-21047"
+  },
+  {
+    "datacollector": "NL16",
+    "sop_name": "Chama Mark",
+    "sop_code": "ZM-SOP-2019-21048"
+  },
+  {
+    "datacollector": "NL17",
+    "sop_name": "Bilton Kalonge",
+    "sop_code": "ZM-SOP-2019-21049"
+  },
+  {
+    "datacollector": "NL17",
+    "sop_name": "Chiwele Blessings",
+    "sop_code": "ZM-SOP-2019-21050"
+  },
+  {
+    "datacollector": "NL17",
+    "sop_name": "Killien Chabala",
+    "sop_code": "ZM-SOP-2019-21051"
+  },
+  {
+    "datacollector": "NL18",
+    "sop_name": "Musonda Joseph",
+    "sop_code": "ZM-SOP-2019-21052"
+  },
+  {
+    "datacollector": "NL18",
+    "sop_name": "Chansa Stephen",
+    "sop_code": "ZM-SOP-2019-21053"
+  },
+  {
+    "datacollector": "NL18",
+    "sop_name": "Mwimba Julius",
+    "sop_code": "ZM-SOP-2019-21054"
+  },
+  {
+    "datacollector": "NL19",
+    "sop_name": "Mwaba Bright",
+    "sop_code": "ZM-SOP-2019-21055"
+  },
+  {
+    "datacollector": "NL19",
+    "sop_name": "Mukushi Enock",
+    "sop_code": "ZM-SOP-2019-21056"
+  },
+  {
+    "datacollector": "NL19",
+    "sop_name": "Chimpampe Lydia",
+    "sop_code": "ZM-SOP-2019-21057"
+  },
+  {
+    "datacollector": "NL20",
+    "sop_name": "Mwape Fridah",
+    "sop_code": "ZM-SOP-2019-21058"
+  },
+  {
+    "datacollector": "NL20",
+    "sop_name": "Musonda Kashita",
+    "sop_code": "ZM-SOP-2019-21059"
+  },
+  {
+    "datacollector": "NL20",
+    "sop_name": "NLSOP Name 63",
+    "sop_code": "ZM-SOP-2019-21060"
+  },
+  {
+    "datacollector": "NL21",
+    "sop_name": "Killen Mbao",
+    "sop_code": "ZM-SOP-2019-21061"
+  },
+  {
+    "datacollector": "NL21",
+    "sop_name": "Hamwiinga Kennidy",
+    "sop_code": "ZM-SOP-2019-21062"
+  },
+  {
+    "datacollector": "NL21",
+    "sop_name": "Mulenga Edward",
+    "sop_code": "ZM-SOP-2019-21063"
+  },
+  {
+    "datacollector": "NL22",
+    "sop_name": "Chansa Lumbwe",
+    "sop_code": "ZM-SOP-2019-21064"
+  },
+  {
+    "datacollector": "NL22",
+    "sop_name": "Kalumba Jonas",
+    "sop_code": "ZM-SOP-2019-21065"
+  },
+  {
+    "datacollector": "NL22",
+    "sop_name": "Ilunga Threaser",
+    "sop_code": "ZM-SOP-2019-21066"
+  },
+  {
+    "datacollector": "NL23",
+    "sop_name": "Katongo Mwepya",
+    "sop_code": "ZM-SOP-2019-21067"
+  },
+  {
+    "datacollector": "NL23",
+    "sop_name": "Makulu David",
+    "sop_code": "ZM-SOP-2019-21068"
+  },
+  {
+    "datacollector": "NL23",
+    "sop_name": "Evetty Kafwimbe",
+    "sop_code": "ZM-SOP-2019-21069"
+  },
+  {
+    "datacollector": "NL24",
+    "sop_name": "Justine Mwape",
+    "sop_code": "ZM-SOP-2019-21070"
+  },
+  {
+    "datacollector": "NL24",
+    "sop_name": "Mwaba Benson",
+    "sop_code": "ZM-SOP-2019-21071"
+  },
+  {
+    "datacollector": "NL24",
+    "sop_name": "Musonda Kangwa Boas",
+    "sop_code": "ZM-SOP-2019-21072"
+  },
+  {
+    "datacollector": "NL25",
+    "sop_name": "Mulenga Emmanuel",
+    "sop_code": "ZM-SOP-2019-21073"
+  },
+  {
+    "datacollector": "NL25",
+    "sop_name": "Mwape Judith",
+    "sop_code": "ZM-SOP-2019-21074"
+  },
+  {
+    "datacollector": "NL25",
+    "sop_name": "Chishala Layne Mulandwe",
+    "sop_code": "ZM-SOP-2019-21075"
+  },
+  {
+    "datacollector": "NL26",
+    "sop_name": "Kalobwe Daniel",
+    "sop_code": "ZM-SOP-2019-21076"
+  },
+  {
+    "datacollector": "NL26",
+    "sop_name": "Chrispine Imasiku",
+    "sop_code": "ZM-SOP-2019-21077"
+  },
+  {
+    "datacollector": "NL26",
+    "sop_name": "Chola Pilias",
+    "sop_code": "ZM-SOP-2019-21078"
+  },
+  {
+    "datacollector": "NL27",
+    "sop_name": "Mulenga Beatrice",
+    "sop_code": "ZM-SOP-2019-21079"
+  },
+  {
+    "datacollector": "NL27",
+    "sop_name": "Mwaba Mwape",
+    "sop_code": "ZM-SOP-2019-21080"
+  },
+  {
+    "datacollector": "NL27",
+    "sop_name": "Makungu Mathews",
+    "sop_code": "ZM-SOP-2019-21081"
+  },
+  {
+    "datacollector": "NL28",
+    "sop_name": "Matipa Jonathan",
+    "sop_code": "ZM-SOP-2019-21082"
+  },
+  {
+    "datacollector": "NL28",
+    "sop_name": "Kalumba Bonardy",
+    "sop_code": "ZM-SOP-2019-21083"
+  },
+  {
+    "datacollector": "NL28",
+    "sop_name": "Kanyala Donald",
+    "sop_code": "ZM-SOP-2019-21084"
+  },
+  {
+    "datacollector": "NL29",
+    "sop_name": "Nsama Timothy",
+    "sop_code": "ZM-SOP-2019-21085"
+  },
+  {
+    "datacollector": "NL29",
+    "sop_name": "Levy Nsakalimba",
+    "sop_code": "ZM-SOP-2019-21086"
+  },
+  {
+    "datacollector": "NL29",
+    "sop_name": "Sashi Emmanuel",
+    "sop_code": "ZM-SOP-2019-21087"
+  },
+  {
+    "datacollector": "NL30",
+    "sop_name": "Chomba Alexcious",
+    "sop_code": "ZM-SOP-2019-21088"
+  },
+  {
+    "datacollector": "NL30",
+    "sop_name": "Kalumba Samson",
+    "sop_code": "ZM-SOP-2019-21089"
+  },
+  {
+    "datacollector": "NL30",
+    "sop_name": "Peter Nkole",
+    "sop_code": "ZM-SOP-2019-21090"
+  },
+  {
+    "datacollector": "NLSpare1",
+    "sop_name": "NLSOP Name 94",
+    "sop_code": "ZM-SOP-2019-21091"
+  },
+  {
+    "datacollector": "NLSpare1",
+    "sop_name": "NLSOP Name 95",
+    "sop_code": "ZM-SOP-2019-21092"
+  },
+  {
+    "datacollector": "NLSpare1",
+    "sop_name": "NLSOP Name 96",
+    "sop_code": "ZM-SOP-2019-21093"
+  },
+  {
+    "datacollector": "NLSpare2",
+    "sop_name": "NLSOP Name 97",
+    "sop_code": "ZM-SOP-2019-21094"
+  },
+  {
+    "datacollector": "NLSpare2",
+    "sop_name": "NLSOP Name 98",
+    "sop_code": "ZM-SOP-2019-21095"
+  },
+  {
+    "datacollector": "NLSpare2",
+    "sop_name": "NLSOP Name 99",
+    "sop_code": "ZM-SOP-2019-21096"
+  },
+  {
+    "datacollector": "NLSpare3",
+    "sop_name": "NLSOP Name 100",
+    "sop_code": "ZM-SOP-2019-21097"
+  },
+  {
+    "datacollector": "NLSpare3",
+    "sop_name": "NLSOP Name 101",
+    "sop_code": "ZM-SOP-2019-21098"
+  },
+  {
+    "datacollector": "NLSpare3",
+    "sop_name": "NLSOP Name 102",
+    "sop_code": "ZM-SOP-2019-21099"
+  },
+  {
+    "datacollector": "NLSpare4",
+    "sop_name": "NLSOP Name 103",
+    "sop_code": "ZM-SOP-2019-21100"
+  },
+  {
+    "datacollector": "NLSpare4",
+    "sop_name": "NLSOP Name 104",
+    "sop_code": "ZM-SOP-2019-21101"
+  },
+  {
+    "datacollector": "NLSpare4",
+    "sop_name": "NLSOP Name 105",
+    "sop_code": "ZM-SOP-2019-21102"
+  }
+]

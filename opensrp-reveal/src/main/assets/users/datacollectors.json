@@ -1,0 +1,542 @@
+[
+  {
+    "district": "Chadiza",
+    "datacollector": "CD2",
+    "datacollectorname": "David Banda"
+  },
+  {
+    "district": "Chadiza",
+    "datacollector": "CD3",
+    "datacollectorname": "David Mtonga"
+  },
+  {
+    "district": "Chadiza",
+    "datacollector": "CD4",
+    "datacollectorname": "Dickson Banda"
+  },
+  {
+    "district": "Chadiza",
+    "datacollector": "CD5",
+    "datacollectorname": "Matthews Lungu"
+  },
+  {
+    "district": "Chadiza",
+    "datacollector": "CD6",
+    "datacollectorname": "Elizabeth Lungu"
+  },
+  {
+    "district": "Chadiza",
+    "datacollector": "CD8",
+    "datacollectorname": "Kubangu Palata"
+  },
+  {
+    "district": "Chadiza",
+    "datacollector": "CD9",
+    "datacollectorname": "Lackwell Nundwe"
+  },
+  {
+    "district": "Chadiza",
+    "datacollector": "CD10",
+    "datacollectorname": "Letticia Banda"
+  },
+  {
+    "district": "Chadiza",
+    "datacollector": "CD11",
+    "datacollectorname": "Mechana Mphatso"
+  },
+  {
+    "district": "Chadiza",
+    "datacollector": "CD12",
+    "datacollectorname": "Oscar Banda"
+  },
+  {
+    "district": "Chadiza",
+    "datacollector": "CD13",
+    "datacollectorname": "Kelvin Banda"
+  },
+  {
+    "district": "Chadiza",
+    "datacollector": "CD14",
+    "datacollectorname": "Steven Phiri"
+  },
+  {
+    "district": "Chadiza",
+    "datacollector": "CD15",
+    "datacollectorname": "Thomas Tonga"
+  },
+  {
+    "district": "Chadiza",
+    "datacollector": "CD16",
+    "datacollectorname": "Wezy Zimba"
+  },
+  {
+    "district": "Chadiza",
+    "datacollector": "CD1",
+    "datacollectorname": "Chisenga Chilufya"
+  },
+  {
+    "district": "Chadiza",
+    "datacollector": "CD7",
+    "datacollectorname": "Josephine Zimba"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT1",
+    "datacollectorname": "JACKSON CHONGO"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT2",
+    "datacollectorname": "CHILAMBWE CHANGOPA"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT3",
+    "datacollectorname": "GIFT DAKA"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT4",
+    "datacollectorname": "VUYO DLAMINI"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT5",
+    "datacollectorname": "EMELIA MBEWE"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT6",
+    "datacollectorname": "JEREMIAH BANDA"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT7",
+    "datacollectorname": "TITUS NKHOMA"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT8",
+    "datacollectorname": "CHIPALO MUKOPO"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT9",
+    "datacollectorname": "TIMOTHY MWALE"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT10",
+    "datacollectorname": "NEWTON KAMANGA"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT11",
+    "datacollectorname": "FELIX MBEWE"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT12",
+    "datacollectorname": "ESTER DUMA"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT13",
+    "datacollectorname": "HAGGAI MAKUKULA"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT14",
+    "datacollectorname": "JAMES KHONDOWE"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT15",
+    "datacollectorname": "MARTIN PHIRI"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT16",
+    "datacollectorname": "MAKAIKA MWANZA"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT17",
+    "datacollectorname": "LACKSON SAKALA"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT18",
+    "datacollectorname": "JOHN NYIKA"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT19",
+    "datacollectorname": "JOHN MWALE"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT20",
+    "datacollectorname": "CHILAZA NJOBVU"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KT21",
+    "datacollectorname": "MISHECK PHIRI"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KTspare1",
+    "datacollectorname": "GIFT MWALE"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KTspare2",
+    "datacollectorname": "JACOB MWALE"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KTspare3",
+    "datacollectorname": "Katete Spare DC 3"
+  },
+  {
+    "district": "Katete",
+    "datacollector": "KTspare4",
+    "datacollectorname": "Katete Spare DC 4"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD1",
+    "datacollectorname": "Mathews Phiri"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD2",
+    "datacollectorname": "Francis Mutale"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD3",
+    "datacollectorname": "Joseph Banda"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD4",
+    "datacollectorname": "Reuben Banda"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD5",
+    "datacollectorname": "Christopher Paul Phiri"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD6",
+    "datacollectorname": "Sybil Phiri"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD7",
+    "datacollectorname": "Lizzy Kumwenda"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD8",
+    "datacollectorname": "Peter Banda"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD9",
+    "datacollectorname": "Chestey Siankonje"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD10",
+    "datacollectorname": "Brenda Mbewe"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD11",
+    "datacollectorname": "Jackson Mwanza"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD12",
+    "datacollectorname": "Haggai Zulu"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD13",
+    "datacollectorname": "Emeldah Phiri"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD14",
+    "datacollectorname": "Robson Njovu"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD15",
+    "datacollectorname": "Chimwemwe Sakala"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD16",
+    "datacollectorname": "Sonkhani Muhone"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD17",
+    "datacollectorname": "Mutengwa Nkhoma"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD20",
+    "datacollectorname": "Stephen Mwale"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD21",
+    "datacollectorname": "Njavwani Simbeye"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD22",
+    "datacollectorname": "Doreen Banda"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD23",
+    "datacollectorname": "Donald Musiaka"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD24",
+    "datacollectorname": "Ackson Phiri"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD25",
+    "datacollectorname": "Jonathan Sakala"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD26",
+    "datacollectorname": "Ndanji Nambeya"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD27",
+    "datacollectorname": "Nedson Simwaba"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD28",
+    "datacollectorname": "Oscar Bwalya"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD29",
+    "datacollectorname": "John Phiri"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD30",
+    "datacollectorname": "Lot Daka"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD31",
+    "datacollectorname": "Jeffrey Banda"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD32",
+    "datacollectorname": "Alice Banda"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD18",
+    "datacollectorname": "Sinda Data Collector 18"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD19",
+    "datacollectorname": "Sinda Data Collector 19"
+  },
+  {
+    "district": "Sinda",
+    "datacollector": "SD33",
+    "datacollectorname": "Sinda Data Collector 33"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL1",
+    "datacollectorname": "Mukutwa Felix"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL2",
+    "datacollectorname": "Lupiya Anastazia"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL3",
+    "datacollectorname": "Chishimba Fenny"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL4",
+    "datacollectorname": "Chilufya lameck"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL5",
+    "datacollectorname": "Chikonde Haggai"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL6",
+    "datacollectorname": "Lillian Mulubwa"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL7",
+    "datacollectorname": "Musama Ethel"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL8",
+    "datacollectorname": "Raphael chilufya"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL9",
+    "datacollectorname": "Stephen Banda"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL10",
+    "datacollectorname": "Malama Reuben"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL11",
+    "datacollectorname": "Romeo Chimese"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL12",
+    "datacollectorname": "Simon Lupiya"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL13",
+    "datacollectorname": "Kaunda Jasper"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL14",
+    "datacollectorname": "Kashimbo Betshebah"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL15",
+    "datacollectorname": "Phelisters Musonda"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL16",
+    "datacollectorname": "Mpundu Cleophas"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL17",
+    "datacollectorname": "Nkandu Ronald"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL18",
+    "datacollectorname": "Kalumba Joshua"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL19",
+    "datacollectorname": "Timothy Situnyama"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL20",
+    "datacollectorname": "Musonda Kennedy"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL21",
+    "datacollectorname": "Chileshe Silombe"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL22",
+    "datacollectorname": "Kabwe Ernest"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL23",
+    "datacollectorname": "Lengwe Newton"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL24",
+    "datacollectorname": "Kabengele Mukonkoto"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL25",
+    "datacollectorname": "Chilombo Dickson"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL26",
+    "datacollectorname": "Kamoya Comfort"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL27",
+    "datacollectorname": "Chipili Moses"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL28",
+    "datacollectorname": "Chibale Martha"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL29",
+    "datacollectorname": "Kabaso Efford"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NL30",
+    "datacollectorname": "Reagan Kamwanya"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NLSpare1",
+    "datacollectorname": "Sydney kapenda"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NLSpare2",
+    "datacollectorname": "Chansa Astridah"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NLSpare3",
+    "datacollectorname": "Nchelenge Spare DC 3"
+  },
+  {
+    "district": "Nchelenge",
+    "datacollector": "NLSpare4",
+    "datacollectorname": "Nchelenge Spare DC 4"
+  }
+]
