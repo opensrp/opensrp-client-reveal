@@ -340,10 +340,10 @@ public class RevealJsonFormUtils {
         }
     }
 
-    public void populateServerOptions(Map<String, Object> serverConfigs, JSONObject formJson) {
+    public void populateServerOptions(Map<String, Object> serverConfigs, JSONObject formJson, String configKey, String formKey) {
         if (serverConfigs == null)
             return;
-        JSONArray sprayOperators = (JSONArray) serverConfigs.get(CONFIGURATION.SPRAY_OPERATORS);
+        JSONArray sprayOperators = (JSONArray) serverConfigs.get(configKey);
         if (sprayOperators != null) {
             JSONArray sprayOperatorCodes = new JSONArray();
             JSONArray sprayOperatorValues = new JSONArray();
@@ -359,12 +359,12 @@ public class RevealJsonFormUtils {
                 sprayOperatorValues.put(code + " - " + name);
             }
             JSONArray fields = JsonFormUtils.fields(formJson);
-            JSONObject field = JsonFormUtils.getFieldJSONObject(fields, JsonForm.SPRAY_OPERATOR_CODE);
+            JSONObject field = JsonFormUtils.getFieldJSONObject(fields, formKey);
             try {
                 field.put(KEYS, sprayOperatorCodes);
                 field.put(VALUES, sprayOperatorValues);
             } catch (JSONException e) {
-                Timber.e(e, "Error populating spray Operators ");
+                Timber.e(e, "Error populating %s Operators ", formKey);
             }
         }
     }

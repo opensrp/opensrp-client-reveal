@@ -83,6 +83,7 @@ public interface Constants {
         Boolean DEFAULT_DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG = false;
         Float OUTSIDE_OPERATIONAL_AREA_MASK_OPACITY = 0.65f;
         String SPRAY_OPERATORS = "spray_operators";
+        String DATA_COLLECTORS = "data_collectors";
         String CODE = "code";
         String NAME = "name";
 
@@ -316,6 +317,8 @@ public interface Constants {
         String VERIFICATION_FORM_ZAMBIA = "json.form/zambia_verification_form.json";
 
         String SPRAY_OPERATOR_CODE = "sprayop_code";
+
+        String DATA_COLLECTOR = "datacollector";
     }
 
     interface DateFormat {
