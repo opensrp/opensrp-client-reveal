@@ -3,29 +3,40 @@ package org.smartregister.reveal.presenter;
 import android.content.Intent;
 import android.location.Location;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
+import com.vijay.jsonwizard.customviews.MaterialSpinner;
 import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interactors.JsonFormInteractor;
 import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 import com.vijay.jsonwizard.utils.ValidationStatus;
 
+import org.json.JSONArray;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.PasswordDialogUtils;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
 import org.smartregister.reveal.widget.RevealToasterNotesFactory;
+import org.smartregister.util.JsonFormUtils;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
 
@@ -50,6 +61,8 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
 
     private BaseLocationListener locationListener;
 
+    private RevealJsonFormUtils jsonFormUtils;
+
     public RevealJsonFormFragmentPresenter(JsonFormFragment formFragment, JsonFormInteractor jsonFormInteractor) {
         super(formFragment, jsonFormInteractor);
         this.formFragment = formFragment;
@@ -64,6 +77,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
             }
         };
         locationUtils.requestLocationUpdates(locationListener);
+        jsonFormUtils = new RevealJsonFormUtils();
     }
 
     @Override
@@ -87,7 +101,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                 }
                 this.mapView = mapView;
                 break;//exit loop, assumption; there will be only 1 map per form.
-            } else if (childAt instanceof TextView && ! (childAt instanceof MaterialEditText)) {
+            } else if (childAt instanceof TextView && !(childAt instanceof MaterialEditText)) {
                 ValidationStatus validationStatus = RevealToasterNotesFactory.validate(formFragment, (TextView) childAt);
                 String address = (String) childAt.getTag(com.vijay.jsonwizard.R.id.address);
                 if (!validationStatus.isValid()) {
@@ -175,5 +189,26 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
 
     public BaseLocationListener getLocationListener() {
         return locationListener;
+    }
+
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        super.onItemSelected(parent, view, position, id);
+        String key = (String) parent.getTag(R.id.key);
+        if (Constants.JsonForm.DATA_COLLECTOR.equals(key)) {
+            String value = JsonFormUtils.getFieldValue(getView().getCurrentJsonState(), key);
+            if (!TextUtils.isEmpty(value)) {
+                Pair<JSONArray, JSONArray> options = jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        jsonFormView.getmJSONObject(), Constants.CONFIGURATION.SPRAY_OPERATORS, Constants.JsonForm.SPRAY_OPERATOR_CODE, value.split(":")[0]);
+                if (options != null) {
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getView().getContext(), R.layout.native_form_simple_list_item_1, new Gson().fromJson(options.second.toString(), String[].class));
+                    MaterialSpinner spinner = (MaterialSpinner) jsonFormView.getFormDataView(JsonFormConstants.STEP1 + ":" + Constants.JsonForm.SPRAY_OPERATOR_CODE);
+                    spinner.setAdapter(adapter);
+                    spinner.setOnItemSelectedListener(formFragment.getCommonListener());
+                    spinner.setTag(R.id.keys, options.first);
+                }
+            }
+        }
     }
 }
