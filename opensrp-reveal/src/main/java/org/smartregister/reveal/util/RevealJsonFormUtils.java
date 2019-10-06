@@ -346,6 +346,8 @@ public class RevealJsonFormUtils {
         JSONArray serverConfig = (JSONArray) serverConfigs.get(seetingsConfigKey);
         if (serverConfig != null && !serverConfig.isNull(0)) {
             JSONArray options = serverConfig.optJSONObject(0).optJSONArray(filterKey);
+            if (options == null)
+                return;
             JSONArray codes = new JSONArray();
             JSONArray values = new JSONArray();
             for (int i = 0; i < options.length(); i++) {
