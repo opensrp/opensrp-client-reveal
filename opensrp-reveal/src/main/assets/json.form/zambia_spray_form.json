@@ -313,9 +313,10 @@
           "err": "Please enter the spray operator code"
         },
         "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-relevance-rules.yml"
+            }
           }
         }
       },
