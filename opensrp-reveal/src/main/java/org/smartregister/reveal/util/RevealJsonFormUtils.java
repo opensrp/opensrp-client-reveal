@@ -3,6 +3,7 @@ package org.smartregister.reveal.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.util.Pair;
 
 import com.mapbox.geojson.Feature;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
@@ -340,14 +341,14 @@ public class RevealJsonFormUtils {
         }
     }
 
-    public void populateServerOptions(Map<String, Object> serverConfigs, JSONObject formJson, String seetingsConfigKey, String formKey, String filterKey) {
+    public Pair<JSONArray, JSONArray> populateServerOptions(Map<String, Object> serverConfigs, JSONObject formJson, String seetingsConfigKey, String formKey, String filterKey) {
         if (serverConfigs == null)
-            return;
+            return null;
         JSONArray serverConfig = (JSONArray) serverConfigs.get(seetingsConfigKey);
         if (serverConfig != null && !serverConfig.isNull(0)) {
             JSONArray options = serverConfig.optJSONObject(0).optJSONArray(filterKey);
             if (options == null)
-                return;
+                return null;
             JSONArray codes = new JSONArray();
             JSONArray values = new JSONArray();
             for (int i = 0; i < options.length(); i++) {
@@ -369,7 +370,9 @@ public class RevealJsonFormUtils {
             } catch (JSONException e) {
                 Timber.e(e, "Error populating %s Operators ", formKey);
             }
+            return new Pair<>(codes, values);
         }
+        return null;
     }
 
 }
