@@ -338,8 +338,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if (cardDetails instanceof SprayCardDetails && Country.NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
             jsonFormUtils.populateSprayForm(((SprayCardDetails) cardDetails).getCommonPersonObject(), formJson);
         } else if (JsonForm.SPRAY_FORM_ZAMBIA.equals(formName)) {
-            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR);
-            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.SPRAY_OPERATORS, JsonForm.SPRAY_OPERATOR_CODE);
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR,prefsUtil.getCurrentDistrict());
+            //jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.SPRAY_OPERATORS, JsonForm.SPRAY_OPERATOR_CODE);
         }
         listTaskView.startJsonForm(formJson);
     }

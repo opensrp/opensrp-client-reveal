@@ -340,29 +340,30 @@ public class RevealJsonFormUtils {
         }
     }
 
-    public void populateServerOptions(Map<String, Object> serverConfigs, JSONObject formJson, String configKey, String formKey) {
+    public void populateServerOptions(Map<String, Object> serverConfigs, JSONObject formJson, String seetingsConfigKey, String formKey, String filterKey) {
         if (serverConfigs == null)
             return;
-        JSONArray sprayOperators = (JSONArray) serverConfigs.get(configKey);
-        if (sprayOperators != null) {
-            JSONArray sprayOperatorCodes = new JSONArray();
-            JSONArray sprayOperatorValues = new JSONArray();
-            for (int i = 0; i < sprayOperators.length(); i++) {
-                JSONObject operator = sprayOperators.optJSONObject(i);
+        JSONArray serverConfig = (JSONArray) serverConfigs.get(seetingsConfigKey);
+        if (serverConfig != null && !serverConfig.isNull(0)) {
+            JSONArray options = serverConfig.optJSONObject(0).optJSONArray(filterKey);
+            JSONArray codes = new JSONArray();
+            JSONArray values = new JSONArray();
+            for (int i = 0; i < options.length(); i++) {
+                JSONObject operator = options.optJSONObject(i);
                 if (operator == null)
                     continue;
                 String code = operator.optString(CONFIGURATION.CODE, null);
                 String name = operator.optString(CONFIGURATION.NAME);
                 if (code == null)
                     continue;
-                sprayOperatorCodes.put(code + ":" + name);
-                sprayOperatorValues.put(code + " - " + name);
+                codes.put(code + ":" + name);
+                values.put(code + " - " + name);
             }
             JSONArray fields = JsonFormUtils.fields(formJson);
             JSONObject field = JsonFormUtils.getFieldJSONObject(fields, formKey);
             try {
-                field.put(KEYS, sprayOperatorCodes);
-                field.put(VALUES, sprayOperatorValues);
+                field.put(KEYS, codes);
+                field.put(VALUES, values);
             } catch (JSONException e) {
                 Timber.e(e, "Error populating %s Operators ", formKey);
             }
