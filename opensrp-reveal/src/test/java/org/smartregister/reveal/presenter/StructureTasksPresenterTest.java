@@ -107,7 +107,7 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
     @Test
     public void testOnTaskSelectedFetchesStructureDetails() {
         StructureTaskDetails task = TestingUtils.getStructureTaskDetails();
-        presenter.onTaskSelected(task);
+        presenter.onTaskSelected(task, false);
         verify(interactor).getStructure(task);
         verify(view).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
     }
@@ -117,7 +117,7 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
     public void testOnTaskSelectedCompletedTaskDisplayMessage() {
         StructureTaskDetails task = TestingUtils.getStructureTaskDetails();
         task.setTaskStatus(Task.TaskStatus.COMPLETED.name());
-        presenter.onTaskSelected(task);
+        presenter.onTaskSelected(task, false);
         verify(interactor, never()).getStructure(task);
         verify(view, never()).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
         verify(view).displayToast(anyString());
@@ -127,7 +127,7 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
     public void testOnTaskSelectedBCCTaskGetStructureDetails() {
         StructureTaskDetails task = TestingUtils.getStructureTaskDetails();
         task.setTaskCode(Intervention.BCC);
-        presenter.onTaskSelected(task);
+        presenter.onTaskSelected(task, false);
         verify(interactor).getStructure(task);
         verify(view).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
     }
