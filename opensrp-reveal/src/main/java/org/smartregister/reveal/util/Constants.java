@@ -53,6 +53,7 @@ public interface Constants {
 
     String COMMA = ",";
 
+    int STORAGE_PERMISSIONS = 1;
     String NULL_KEY = "NULL";
 
     interface CONFIGURATION {
@@ -415,5 +416,4 @@ public interface Constants {
     interface UseContextCode {
         String INTERVENTION_TYPE = "interventionType";
     }
-
 }

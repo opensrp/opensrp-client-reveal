@@ -51,6 +51,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/application_updated" />
 
+    <TextView
+        android:id="@+id/btn_navMenu_p2pSyncBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:text="@string/device_to_device_sync"
+        android:textColor="@color/button_blue"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sync_button" />
+
 
     <View
         android:id="@+id/header_separator"
@@ -61,7 +73,7 @@
         android:background="#DEDEDE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sync_button" />
+        app:layout_constraintTop_toBottomOf="@id/btn_navMenu_p2pSyncBtn" />
 
 
 
