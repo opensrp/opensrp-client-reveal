@@ -130,7 +130,7 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         @Override
         public void onClick(View view) {
             StructureTaskDetails details = (StructureTaskDetails) view.getTag(R.id.task_details);
-            presenter.onTaskSelected(details);
+            presenter.onTaskSelected(details, R.id.view_edit == view.getId());
         }
     };
 
