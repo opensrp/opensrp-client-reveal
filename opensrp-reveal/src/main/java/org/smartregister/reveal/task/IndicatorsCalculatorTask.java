@@ -2,11 +2,7 @@ package org.smartregister.reveal.task;
 
 import android.app.Activity;
 import android.os.AsyncTask;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 
 import org.smartregister.reporting.view.ProgressIndicatorView;
 import org.smartregister.reporting.view.TableView;
@@ -14,6 +10,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.IndicatorDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.IndicatorUtils;
+import org.smartregister.reveal.view.ListTasksActivity;
 
 import java.util.Arrays;
 import java.util.List;
@@ -81,14 +78,8 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
         ((View) progressIndicator.getParent()).setVisibility(org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? View.VISIBLE : View.GONE);
 
         //Reset the location button
-        ImageButton myLocationButton = this.activity.findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
-        if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs && myLocationButton != null) {
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
-            params.gravity = Gravity.BOTTOM | Gravity.END;
-            params.bottomMargin = org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? ((ViewGroup) progressIndicator.getParent()).getHeight() + 40 : params.topMargin;
-            params.topMargin = 0;
-            myLocationButton.setLayoutParams(params);
-        }
+        if(activity instanceof ListTasksActivity)
+            ((ListTasksActivity)activity).displayMyLocationAtButtom();
     }
 
 
