@@ -3,6 +3,7 @@ package org.smartregister.reveal.contract;
 import android.content.Context;
 
 import org.smartregister.domain.Task;
+import org.smartregister.domain.db.Event;
 import org.smartregister.reveal.model.EventTask;
 import org.smartregister.reveal.model.StructureTaskDetails;
 
@@ -23,13 +24,15 @@ public interface StructureTasksContract {
 
         void onTasksFound(List<StructureTaskDetails> taskDetailsList, StructureTaskDetails incompleteIndexCase);
 
-        void onTaskSelected(StructureTaskDetails details);
+        void onTaskSelected(StructureTaskDetails details, boolean isEdit);
 
         void saveJsonForm(String json);
 
         void onDetectCase();
 
         void onIndexConfirmationFormSaved(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks);
+
+        void onEventFound(Event event);
     }
 
     interface Interactor extends BaseContract.BaseInteractor {
@@ -38,7 +41,7 @@ public interface StructureTasksContract {
 
         void getStructure(StructureTaskDetails details);
 
-        Map<String, EventTask> findEventsPerTask(List<Task> tasks);
+        void findLastEvent(StructureTaskDetails taskDetails);
     }
 
     interface View extends UserLocationContract.UserLocationView, BaseFormFragmentContract.View {

@@ -193,4 +193,8 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
     public void setTaskDetails(BaseTaskDetails taskDetails) {
         this.taskDetails = taskDetails;
     }
+
+    public Location getStructure() {
+        return structure;
+    }
 }
