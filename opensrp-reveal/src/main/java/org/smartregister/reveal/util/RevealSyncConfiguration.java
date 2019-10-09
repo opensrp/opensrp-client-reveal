@@ -82,4 +82,9 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     public int getReadTimeout() {
         return 300000;
     }
+
+    @Override
+    public boolean isSyncUsingPost() {
+        return true;
+    }
 }
