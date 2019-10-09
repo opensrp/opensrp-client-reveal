@@ -1,24 +1,19 @@
 package org.smartregister.reveal.util;
 
+import android.text.TextUtils;
+
 import org.smartregister.SyncConfiguration;
 import org.smartregister.SyncFilter;
-import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
+
+import java.util.List;
 
 /**
  * Created by samuelgithengi on 11/29/18.
  */
 public class RevealSyncConfiguration extends SyncConfiguration {
 
-    private AllSharedPreferences sharedPreferences;
-
-    public RevealSyncConfiguration() {
-    }
-
-    public RevealSyncConfiguration(AllSharedPreferences sharedPreferences) {
-        this.sharedPreferences = sharedPreferences;
-    }
 
     @Override
     public int getSyncMaxRetries() {
@@ -27,15 +22,13 @@ public class RevealSyncConfiguration extends SyncConfiguration {
 
     @Override
     public SyncFilter getSyncFilterParam() {
-        return SyncFilter.TEAM_ID;
+        return SyncFilter.LOCATION;
     }
 
     @Override
     public String getSyncFilterValue() {
-        if (sharedPreferences == null) {
-            sharedPreferences = RevealApplication.getInstance().getContext().userService().getAllSharedPreferences();
-        }
-        return sharedPreferences.fetchDefaultTeamId(sharedPreferences.fetchRegisteredANM());
+        List jurisdictions = RevealApplication.getInstance().getLocationRepository().getAllLocationIds();
+        return TextUtils.join(",", jurisdictions);
     }
 
     @Override
