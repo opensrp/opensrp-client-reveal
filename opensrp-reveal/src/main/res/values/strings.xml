@@ -225,4 +225,7 @@
     <string name="indicator">Indicator</string>
     <string name="value">Value</string>
     <string name="spray_success_rate">Spray Success Rate</string>
+
+    <string name="do_not_edit_client_records_until_complete">Do not edit records until complete.</string>
+    <string name="processing_disclaimer">Records will be processed for up to 10 minutes before your records will be updated. Do not edit records until the process is complete.</string>
 </resources>
