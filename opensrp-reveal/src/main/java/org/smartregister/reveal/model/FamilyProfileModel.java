@@ -7,7 +7,6 @@ import org.smartregister.family.model.BaseFamilyProfileModel;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
 import org.smartregister.reveal.BuildConfig;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.FormUtils;
@@ -54,7 +53,7 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
     private void tagEventClientDetails(FamilyEventClient eventClient) {
         if (structureId != null) {
             eventClient.getClient().addAttribute(RESIDENCE, structureId);
-            eventClient.getEvent().addDetails(Constants.Properties.LOCATION_UUID, structureId);
+            eventClient.getEvent().addDetails(Constants.Properties.LOCATION_ID, structureId);
         }
         eventClient.getEvent().addDetails(Constants.Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
         eventClient.getEvent().setLocationId(org.smartregister.reveal.util.Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea()).getId());
