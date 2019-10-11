@@ -6,8 +6,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.smartregister.SyncFilter;
-import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BuildConfig;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -21,13 +23,13 @@ import static org.mockito.Mockito.when;
 public class RevealSyncConfigurationTest {
 
     @Mock
-    private AllSharedPreferences allSharedPreferences;
+    private LocationRepository locationRepository;
 
     private RevealSyncConfiguration syncConfiguration;
 
     @Before
     public void setUp() {
-        syncConfiguration = new RevealSyncConfiguration(allSharedPreferences);
+        syncConfiguration = new RevealSyncConfiguration(locationRepository);
     }
 
     @Test
@@ -42,9 +44,8 @@ public class RevealSyncConfigurationTest {
 
     @Test
     public void getSyncFilterValue() {
-        when(allSharedPreferences.fetchRegisteredANM()).thenReturn("user1");
-        when(allSharedPreferences.fetchDefaultTeamId("user1")).thenReturn("team_123");
-        assertEquals("team_123", syncConfiguration.getSyncFilterValue());
+        when(locationRepository.getAllLocationIds()).thenReturn(Arrays.asList(new String[]{"123", "122132"}));
+        assertEquals("123,122132", syncConfiguration.getSyncFilterValue());
     }
 
     @Test

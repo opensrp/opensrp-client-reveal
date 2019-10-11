@@ -4,16 +4,19 @@ import android.text.TextUtils;
 
 import org.smartregister.SyncConfiguration;
 import org.smartregister.SyncFilter;
+import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BuildConfig;
-import org.smartregister.reveal.application.RevealApplication;
-
-import java.util.List;
 
 /**
  * Created by samuelgithengi on 11/29/18.
  */
 public class RevealSyncConfiguration extends SyncConfiguration {
 
+    private LocationRepository locationRepository;
+
+    public RevealSyncConfiguration(LocationRepository locationRepository) {
+        this.locationRepository = locationRepository;
+    }
 
     @Override
     public int getSyncMaxRetries() {
@@ -27,8 +30,7 @@ public class RevealSyncConfiguration extends SyncConfiguration {
 
     @Override
     public String getSyncFilterValue() {
-        List jurisdictions = RevealApplication.getInstance().getLocationRepository().getAllLocationIds();
-        return TextUtils.join(",", jurisdictions);
+        return TextUtils.join(",", locationRepository.getAllLocationIds());
     }
 
     @Override
