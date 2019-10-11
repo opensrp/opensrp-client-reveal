@@ -6,6 +6,7 @@ import org.smartregister.SyncConfiguration;
 import org.smartregister.SyncFilter;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.application.RevealApplication;
 
 /**
  * Created by samuelgithengi on 11/29/18.
@@ -16,6 +17,9 @@ public class RevealSyncConfiguration extends SyncConfiguration {
 
     public RevealSyncConfiguration(LocationRepository locationRepository) {
         this.locationRepository = locationRepository;
+    }
+
+    public RevealSyncConfiguration() {
     }
 
     @Override
@@ -30,6 +34,9 @@ public class RevealSyncConfiguration extends SyncConfiguration {
 
     @Override
     public String getSyncFilterValue() {
+        if (locationRepository == null) {
+            locationRepository = RevealApplication.getInstance().getLocationRepository();
+        }
         return TextUtils.join(",", locationRepository.getAllLocationIds());
     }
 

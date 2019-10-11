@@ -120,7 +120,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         // Initialize Modules
         Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
         P2POptions p2POptions = new P2POptions(true);
-        CoreLibrary.init(context, new RevealSyncConfiguration(getLocationRepository()), BuildConfig.BUILD_TIMESTAMP, p2POptions);
+        CoreLibrary.init(context, new RevealSyncConfiguration(), BuildConfig.BUILD_TIMESTAMP, p2POptions);
         if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
             CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.NAMIBIA_EC_CLIENT_FIELDS);
         } else if (BuildConfig.BUILD_COUNTRY == Country.BOTSWANA) {
