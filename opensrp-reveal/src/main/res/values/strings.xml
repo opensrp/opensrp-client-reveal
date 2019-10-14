@@ -219,6 +219,10 @@
     <string name="other_verification_form">Enter Verification Form</string>
 
 
+    <string name="last_edited">Edited %1s</string>
+    <string name="device_to_device_sync">P2P Sync</string>
+
+
     <string name="found_coverage">Found Coverage</string>
     <string name="spray_coverage">Spray Coverage</string>
     <string name="structures_remaining_90">Structures Remaining 90%</string>
@@ -236,5 +240,9 @@
     <string name="device_to_device_sync">P2P Sync</string>
 
     <string name="spray_success_rate">Spray Success Rate</string>
+
+
+    <string name="do_not_edit_client_records_until_complete">Do not edit records until complete.</string>
+    <string name="processing_disclaimer">Records will be processed for up to 10 minutes before your records will be updated. Do not edit records until the process is complete.</string>
 
 </resources>

@@ -1,8 +1,10 @@
 package org.smartregister.reveal.util;
 
+import android.text.TextUtils;
+
 import org.smartregister.SyncConfiguration;
 import org.smartregister.SyncFilter;
-import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 
@@ -11,13 +13,13 @@ import org.smartregister.reveal.application.RevealApplication;
  */
 public class RevealSyncConfiguration extends SyncConfiguration {
 
-    private AllSharedPreferences sharedPreferences;
+    private LocationRepository locationRepository;
 
-    public RevealSyncConfiguration() {
+    public RevealSyncConfiguration(LocationRepository locationRepository) {
+        this.locationRepository = locationRepository;
     }
 
-    public RevealSyncConfiguration(AllSharedPreferences sharedPreferences) {
-        this.sharedPreferences = sharedPreferences;
+    public RevealSyncConfiguration() {
     }
 
     @Override
@@ -27,15 +29,15 @@ public class RevealSyncConfiguration extends SyncConfiguration {
 
     @Override
     public SyncFilter getSyncFilterParam() {
-        return SyncFilter.TEAM_ID;
+        return SyncFilter.LOCATION;
     }
 
     @Override
     public String getSyncFilterValue() {
-        if (sharedPreferences == null) {
-            sharedPreferences = RevealApplication.getInstance().getContext().userService().getAllSharedPreferences();
+        if (locationRepository == null) {
+            locationRepository = RevealApplication.getInstance().getLocationRepository();
         }
-        return sharedPreferences.fetchDefaultTeamId(sharedPreferences.fetchRegisteredANM());
+        return TextUtils.join(",", locationRepository.getAllLocationIds());
     }
 
     @Override
@@ -81,5 +83,10 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     @Override
     public int getReadTimeout() {
         return 300000;
+    }
+
+    @Override
+    public boolean isSyncUsingPost() {
+        return true;
     }
 }

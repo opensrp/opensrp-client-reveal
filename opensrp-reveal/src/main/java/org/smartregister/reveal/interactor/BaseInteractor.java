@@ -187,7 +187,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
         FormTag formTag = new FormTag();
         formTag.providerId = sharedPreferences.fetchRegisteredANM();
-        formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
+        formTag.locationId = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId();
         formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
         formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
         formTag.databaseVersion = BuildConfig.DATABASE_VERSION;

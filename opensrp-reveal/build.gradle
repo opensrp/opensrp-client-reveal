@@ -168,14 +168,9 @@ dependencies {
 
     implementation('io.ona.kujaku:library:0.8.1') {
         exclude group: 'com.android.volley'
-        exclude group: 'kujaku', module : 'utils'
     }
 
-    implementation('io.ona.kujaku:utils:0.8.1') {
-        exclude group: 'com.android.volley'
-    }
-
-    implementation('org.smartregister:opensrp-client-core:1.7.30-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.7.31-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.guava', module: 'guava'
