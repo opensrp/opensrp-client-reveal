@@ -45,6 +45,7 @@ import org.smartregister.domain.FetchStatus;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
@@ -60,6 +61,7 @@ import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
 
@@ -266,6 +268,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         RevealMapHelper.addCustomLayers(style, ListTasksActivity.this);
 
                         RevealMapHelper.addBaseLayers(kujakuMapView, style, ListTasksActivity.this);
+
+                        if (BuildConfig.BUILD_COUNTRY != Country.ZAMBIA) {
+                            layerSwitcherFab.setVisibility(View.GONE);
+                        }
 
                     }
                 });

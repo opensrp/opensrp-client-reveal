@@ -6,9 +6,11 @@ import android.view.View;
 
 import org.smartregister.reporting.view.ProgressIndicatorView;
 import org.smartregister.reporting.view.TableView;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.IndicatorDetails;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.IndicatorUtils;
 import org.smartregister.reveal.view.ListTasksActivity;
 
@@ -73,9 +75,11 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
 
         tableView.setTableData(Arrays.asList(new String[]{this.activity.getString(R.string.indicator), this.activity.getString(R.string.value)}), indicatorDetails.getSprayIndicatorList());
 
-        //Show or hide depending on plan
+        //Show or hide depending on plan and build country
+        boolean showProgressIndicator = org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs
+                && BuildConfig.BUILD_COUNTRY == Country.ZAMBIA;
 
-        ((View) progressIndicator.getParent()).setVisibility(org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? View.VISIBLE : View.GONE);
+        ((View) progressIndicator.getParent()).setVisibility( showProgressIndicator ? View.VISIBLE : View.GONE);
 
         //Reset the location button
         if(activity instanceof ListTasksActivity)
