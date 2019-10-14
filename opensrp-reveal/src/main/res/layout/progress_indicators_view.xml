@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="3"
         app:progress="0"
-        app:subTitle="@string/spray_coverage" />
+        app:subTitle="@string/spray_success_rate" />
 
     <org.smartregister.reporting.view.ProgressIndicatorView
         android:id="@+id/progressIndicatorView2"
@@ -39,6 +39,6 @@
         android:layout_weight="1"
         app:progressBarBackgroundColor="@color/text_black"
         app:progressBarForegroundColor="@color/colorPastelGreen"
-        app:subTitle="@string/spray_success_rate" />
+        app:subTitle="@string/spray_coverage" />
 
 </LinearLayout>
