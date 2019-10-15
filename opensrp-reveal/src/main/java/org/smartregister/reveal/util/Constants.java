@@ -297,6 +297,7 @@ public interface Constants {
         String HOUSEHOLD_ACCESSIBLE = "householdAccessible";
         String ABLE_TO_SPRAY_FIRST = "ableToSprayFirst";
         String MOP_UP_VISIT = "mopUpVisit";
+        String DISTRICT_NAME = "districtName";
 
 
         /**

@@ -2010,43 +2010,23 @@
         }
       },
       {
+        "key": "districtName",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "value": "Test district"
+      },
+      {
         "key": "district",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "What district are you in?",
+        "type": "toaster_notes",
+        "text": "You are in  {districtName} District",
+        "text_color": "#CF0800",
+        "toaster_type": "info",
         "text_size": "8sp",
-        "options": [
-          {
-            "key": "siavonga",
-            "text": "Siavonga"
-          },
-          {
-            "key": "gwembe",
-            "text": "Gwembe"
-          },
-          {
-            "key": "sinazongwe",
-            "text": "Sinazongwe"
-          },
-          {
-            "key": "nkeyema",
-            "text": "Nkeyema"
-          },
-          {
-            "key": "luampa",
-            "text": "Luampa"
-          },
-          {
-            "key": "mulobezi",
-            "text": "Mulobezi"
-          },
-          {
-            "key": "Lusaka",
-            "text": "lusaka"
-          }
-        ],
         "v_required": {
           "value": "false",
           "err": "Required field"
@@ -2055,6 +2035,13 @@
           "step1:health_service": {
             "type": "string",
             "ex": "equalTo(., \"Yes\")"
+          }
+        },
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-calculation.yml"
+            }
           }
         }
       },

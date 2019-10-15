@@ -236,9 +236,6 @@
     <string name="indicator">Indicator</string>
     <string name="value">Value</string>
 
-    <string name="last_edited">Edited %1s</string>
-    <string name="device_to_device_sync">P2P Sync</string>
-
     <string name="spray_success_rate">Spray Success Rate</string>
 
 
