@@ -90,12 +90,16 @@ public class IndicatorUtils {
 
                     indicatorDetails.setNotVisited(indicatorDetails.getNotVisited() + 1);
 
+                } else if (Constants.BusinessStatusWrapper.NOT_ELIGIBLE.contains(entry.getValue().getBusinessStatus())) {
+
+                    indicatorDetails.setIneligible(indicatorDetails.getIneligible() + 1);
+
                 }
             }
 
         }
 
-        indicatorDetails.setTotalStructures(indicatorDetailsMap.size());
+        indicatorDetails.setTotalStructures(indicatorDetailsMap.size() - indicatorDetails.getIneligible());
         indicatorDetails.setProgress(indicatorDetails.getTotalStructures() > 0 ? Math.round(indicatorDetails.getSprayed() * 100 / indicatorDetails.getTotalStructures()) : 0);
 
         return indicatorDetails;

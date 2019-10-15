@@ -12,6 +12,7 @@ public class IndicatorDetails {
     private int totalStructures;
     private int progress;
     private int notVisited;
+    private int ineligible;
     private List<String> sprayIndicatorList;
 
     public int getSprayed() {
@@ -60,5 +61,13 @@ public class IndicatorDetails {
 
     public void setSprayIndicatorList(List<String> sprayIndicatorList) {
         this.sprayIndicatorList = sprayIndicatorList;
+    }
+
+    public int getIneligible() {
+        return ineligible;
+    }
+
+    public void setIneligible(int ineligible) {
+        this.ineligible = ineligible;
     }
 }
