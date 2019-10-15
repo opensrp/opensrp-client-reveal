@@ -2063,59 +2063,9 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "When you or someone in your household is ill with a fever, which facility do you seek care from?",
+        "type": "spinner",
+        "hint": "When you or someone in your household is ill with a fever, which facility do you seek care from?",
         "text_size": "8sp",
-        "options": [
-          {
-            "key": "chaangaRHC",
-            "text": "Chaanga RHC"
-          },
-          {
-            "key": "dambweHP",
-            "text": "Dambwe HP"
-          },
-          {
-            "key": "karibaRHC",
-            "text": "Kariba RHC"
-          },
-          {
-            "key": "karibaHACH",
-            "text": "Kariba HACH"
-          },
-          {
-            "key": "manchanvwaRHC",
-            "text": "Manchanvwa RHC"
-          },
-          {
-            "key": "matuaRHC",
-            "text": "Matua RHC"
-          },
-          {
-            "key": "munyamaRHC",
-            "text": "Munyama RHC"
-          },
-          {
-            "key": "nabuteziRHC",
-            "text": "Nabutezi RHC"
-          },
-          {
-            "key": "namoombaRHC",
-            "text": "Namoomba RHC"
-          },
-          {
-            "key": "sianyoloRHC",
-            "text": "Sianyolo RHC"
-          },
-          {
-            "key": "kalelezyiSRHC",
-            "text": "KalelezyiS RHC"
-          },
-          {
-            "key": "other",
-            "text": "Other"
-          }
-        ],
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -2151,59 +2101,9 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "In which health facility catchment area do you reside?",
+        "type": "spinner",
+        "hint": "In which health facility catchment area do you reside?",
         "text_size": "8sp",
-        "options": [
-          {
-            "key": "chaangaRHC",
-            "text": "Chaanga RHC"
-          },
-          {
-            "key": "dambweHP",
-            "text": "Dambwe HP"
-          },
-          {
-            "key": "karibaRHC",
-            "text": "Kariba RHC"
-          },
-          {
-            "key": "karibaHACH",
-            "text": "Kariba HACH"
-          },
-          {
-            "key": "manchanvwaRHC",
-            "text": "Manchanvwa RHC"
-          },
-          {
-            "key": "matuaRHC",
-            "text": "Matua RHC"
-          },
-          {
-            "key": "munyamaRHC",
-            "text": "Munyama RHC"
-          },
-          {
-            "key": "nabuteziRHC",
-            "text": "Nabutezi RHC"
-          },
-          {
-            "key": "namoombaRHC",
-            "text": "Namoomba RHC"
-          },
-          {
-            "key": "sianyoloRHC",
-            "text": "Sianyolo RHC"
-          },
-          {
-            "key": "kalelezyiSRHC",
-            "text": "KalelezyiS RHC"
-          },
-          {
-            "key": "other",
-            "text": "Other"
-          }
-        ],
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -2272,27 +2172,9 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "What is the name of name of your community health worker ?",
+        "type": "spinner",
+        "hint": "What is the name of name of your community health worker ?",
         "text_size": "8sp",
-        "options": [
-          {
-            "key": "wilsonKapupulala",
-            "text": "Wilson Kapupulala"
-          },
-          {
-            "key": "julietChibwalu",
-            "text": "Juliet Chibwalu"
-          },
-          {
-            "key": "violetChushi",
-            "text": "Violet Chushi"
-          },
-          {
-            "key": "other",
-            "text": "Other"
-          }
-        ],
         "v_required": {
           "value": "true",
           "err": "Required field"
