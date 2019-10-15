@@ -375,7 +375,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint":  "IRS number",
+        "hint": "IRS number",
         "text_size": "8sp",
         "v_numeric": {
           "value": "true",
@@ -394,9 +394,10 @@
           "err": "Required field"
         },
         "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -1269,9 +1270,10 @@
           "err": "Required field"
         },
         "relevance": {
-          "step1:structure_sprayed": {
-            "type": "string",
-            "ex": "equalTo(., \"no\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -1284,8 +1286,14 @@
         "hint": "Specify other reason:",
         "text_size": "8sp",
         "v_required": {
-          "value": "true",
+          "value": "false",
           "err": "Required field"
+        },
+        "relevance": {
+          "step1:refused_reason": {
+            "type": "string",
+            "ex": "equalTo(., \"other\")"
+          }
         }
       },
       {
@@ -1789,9 +1797,10 @@
           "err": "Required field"
         },
         "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -2003,9 +2012,10 @@
           "err": "Required field"
         },
         "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -2014,8 +2024,7 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "hidden",
-        "value": "Test district"
+        "type": "hidden"
       },
       {
         "key": "district",
@@ -2073,7 +2082,7 @@
         "hint": "Specify other health facility:",
         "text_size": "8sp",
         "v_required": {
-          "value": "true",
+          "value": "false",
           "err": "Required field"
         },
         "relevance": {
