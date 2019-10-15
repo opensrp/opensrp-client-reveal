@@ -88,6 +88,8 @@ public interface Constants {
         String SUPERVISORS = "supervisors";
         String TEAM_LEADERS = "team_leaders";
         String FIELD_OFFICERS = "field_officers";
+        String HEALTH_FACILITIES = "health_facilities";
+        String COMMUNITY_HEALTH_WORKERS = "community_health_workers";
         String CODE = "code";
         String NAME = "name";
 
@@ -331,6 +333,12 @@ public interface Constants {
         String SUPERVISOR = "supervisor";
 
         String TEAM_LEADER = "teamLeader";
+
+        String HFC_SEEK = "hfc_seek";
+
+        String HFC_BELONG = "hfc_belong";
+
+        String CHW = "chw";
 
     }
 
