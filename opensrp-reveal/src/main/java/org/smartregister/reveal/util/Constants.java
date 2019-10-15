@@ -86,6 +86,9 @@ public interface Constants {
         String DATA_COLLECTORS = "data_collectors";
         String SUPERVISORS = "supervisors";
         String TEAM_LEADERS = "team_leaders";
+        String FIELD_OFFICERS = "field_officers";
+        String HEALTH_FACILITIES = "health_facilities";
+        String COMMUNITY_HEALTH_WORKERS = "community_health_workers";
         String CODE = "code";
         String NAME = "name";
 
@@ -94,6 +97,7 @@ public interface Constants {
     interface Preferences {
         String CURRENT_FACILITY = "CURRENT_FACILITY";
         String CURRENT_DISTRICT = "CURRENT_DISTRICT";
+        String CURRENT_PROVINCE = "CURRENT_PROVINCE";
         String CURRENT_PLAN = "CURRENT_PLAN";
         String CURRENT_PLAN_ID = "CURRENT_PLAN_ID";
         String FACILITY_LEVEL = "FACILITY_LEVEL";
@@ -299,6 +303,8 @@ public interface Constants {
         String HOUSEHOLD_ACCESSIBLE = "householdAccessible";
         String ABLE_TO_SPRAY_FIRST = "ableToSprayFirst";
         String MOP_UP_VISIT = "mopUpVisit";
+        String DISTRICT_NAME = "districtName";
+        String PROVINCE_NAME = "provinceName";
 
 
         /**
@@ -327,6 +333,12 @@ public interface Constants {
         String SUPERVISOR = "supervisor";
 
         String TEAM_LEADER = "teamLeader";
+
+        String HFC_SEEK = "hfc_seek";
+
+        String HFC_BELONG = "hfc_belong";
+
+        String CHW_NAME = "chw_name";
 
     }
 

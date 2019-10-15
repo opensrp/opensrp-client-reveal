@@ -196,14 +196,19 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         super.onItemSelected(parent, view, position, id);
         String key = (String) parent.getTag(R.id.key);
-        if (Constants.JsonForm.DATA_COLLECTOR.equals(key)) {
+        cascadeSelect(key,Constants.JsonForm.DATA_COLLECTOR,Constants.CONFIGURATION.SPRAY_OPERATORS,Constants.JsonForm.SPRAY_OPERATOR_CODE);
+        cascadeSelect(key,Constants.JsonForm.HFC_SEEK,Constants.CONFIGURATION.COMMUNITY_HEALTH_WORKERS,Constants.JsonForm.CHW_NAME);
+    }
+
+    private void cascadeSelect(String key, String parentWidget, String configurationKey,String childWidget){
+        if (parentWidget.equals(key)) {
             String value = JsonFormUtils.getFieldValue(getView().getCurrentJsonState(), key);
             if (!TextUtils.isEmpty(value)) {
                 Pair<JSONArray, JSONArray> options = jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        jsonFormView.getmJSONObject(), Constants.CONFIGURATION.SPRAY_OPERATORS, Constants.JsonForm.SPRAY_OPERATOR_CODE, value.split(":")[0]);
+                        jsonFormView.getmJSONObject(), configurationKey, childWidget, value.split(":")[0]);
                 if (options != null) {
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getView().getContext(), R.layout.native_form_simple_list_item_1, new Gson().fromJson(options.second.toString(), String[].class));
-                    MaterialSpinner spinner = (MaterialSpinner) jsonFormView.getFormDataView(JsonFormConstants.STEP1 + ":" + Constants.JsonForm.SPRAY_OPERATOR_CODE);
+                    MaterialSpinner spinner = (MaterialSpinner) jsonFormView.getFormDataView(JsonFormConstants.STEP1 + ":" + childWidget);
                     spinner.setAdapter(adapter);
                     spinner.setOnItemSelectedListener(formFragment.getCommonListener());
                     spinner.setTag(R.id.keys, options.first);
@@ -211,4 +216,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
             }
         }
     }
+
+
+
 }

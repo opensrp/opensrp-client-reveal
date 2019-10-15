@@ -375,7 +375,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint":  "IRS number",
+        "hint": "IRS number",
         "text_size": "8sp",
         "v_numeric": {
           "value": "true",
@@ -394,9 +394,10 @@
           "err": "Required field"
         },
         "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -1231,6 +1232,71 @@
         }
       },
       {
+        "key": "refused_reason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Why did they refuse IRS?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "notSafeFearOfChemical",
+            "text": "Not safe / fear of chemical"
+          },
+          {
+            "key": "locked",
+            "text": "Locked"
+          },
+          {
+            "key": "notWorthInconvinience",
+            "text": "Not worth the inconvenience"
+          },
+          {
+            "key": "makesBugsAppear",
+            "text": "Makes bugs appear"
+          },
+          {
+            "key": "religiousObjection",
+            "text": "Religious objection"
+          },
+          {
+            "key": "other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "other_refused_reason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Specify other reason:",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "false",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:refused_reason": {
+            "type": "string",
+            "ex": "equalTo(., \"other\")"
+          }
+        }
+      },
+      {
         "key": "notsprayedrooms_eligible",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1705,6 +1771,446 @@
           "step1:eligibility": {
             "type": "string",
             "ex": "equalTo(., \"eligible\")"
+          }
+        }
+      },
+      {
+        "key": "sbc",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Can you ask 4 questions on health seeking behaviour?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "about_malaria",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Have you heard or seen messages / information about malaria in the past year?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:sbc": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "information",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "What type of message / information did you see or hear?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "malariaIsDangerous",
+            "text": "Malaria is dangerous"
+          },
+          {
+            "key": "mosquitosSpreadMalaria",
+            "text": "Mosquitoes spread malaria"
+          },
+          {
+            "key": "houseSprayingImportance",
+            "text": "Importance of house spraying"
+          },
+          {
+            "key": "mDAImportance",
+            "text": "Importance of mass drug administration"
+          },
+          {
+            "key": "sleepingUnderLLINImportance",
+            "text": "Importance of sleeping under mosquito net"
+          },
+          {
+            "key": "seekFeverTesting",
+            "text": "Seek testing for fever"
+          },
+          {
+            "key": "seekFeverTreatment",
+            "text": "Seek treatment for fever"
+          },
+          {
+            "key": "malariaEliminationPossible",
+            "text": "Malaria elimination is possible"
+          },
+          {
+            "key": "malariaEndsWithMe",
+            "text": "Malaria ends with me"
+          },
+          {
+            "key": "other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:about_malaria": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "other_information",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Specify other information message:",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:information": {
+            "ex-checkbox": [
+              {
+                "or": ["other"]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "preferred_source",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "What is your preferred source(s) of malaria messages / information?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "healthFacility",
+            "text": "Health Facility"
+          },
+          {
+            "key": "cHW",
+            "text": "Community Health Worker"
+          },
+          {
+            "key": "villageMeeting",
+            "text": "Village Meeting"
+          },
+          {
+            "key": "friendFamily",
+            "text": "Friend/Family"
+          },
+          {
+            "key": "church",
+            "text": "Church"
+          },
+          {
+            "key": "school",
+            "text": "School"
+          },
+          {
+            "key": "radio",
+            "text": "Radio"
+          },
+          {
+            "key": "tv",
+            "text": "TV"
+          },
+          {
+            "key": "other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:eligibility": {
+            "type": "string",
+            "ex": "equalTo(., \"eligible\")"
+          }
+        }
+      },
+      {
+        "key": "other_preferred_source",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Specify other information source:",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:preferred_source": {
+            "ex-checkbox": [
+              {
+                "or": ["other"]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "health_service",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Can you ask 5 Social Behaviour Change questions?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "districtName",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden"
+      },
+      {
+        "key": "provinceName",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden"
+      },
+      {
+        "key": "district",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "You are in  {districtName}",
+        "text_color": "#CF0800",
+        "toaster_type": "info",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "false",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:health_service": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        },
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-calculation.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "hfc_seek",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "When you or someone in your household is ill with a fever, which facility do you seek care from?",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:health_service": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "hfc_seek_other",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Specify other health facility:",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "false",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:hfc_seek": {
+            "type": "string",
+            "ex": "equalTo(., \"other\")"
+          }
+        }
+      },
+      {
+        "key": "hfc_belong",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "In which health facility catchment area do you reside?",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:health_service": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "hfc_belong_other",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Specify other health facility:",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "false",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:hfc_belong": {
+            "type": "string",
+            "ex": "equalTo(., \"other\")"
+          }
+        }
+      },
+      {
+        "key": "chw",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Do you have a community health worker working in your community?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          },
+          {
+            "key": "dontKnow",
+            "text": "Don't Know"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:health_service": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "chw_name",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "What is the name of name of your community health worker ?",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:chw": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "chw_name_other",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Specify other community health worker:",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "false",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:hfc_belong": {
+            "type": "chw_name",
+            "ex": "equalTo(., \"other\")"
           }
         }
       },

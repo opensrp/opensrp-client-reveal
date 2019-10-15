@@ -33,3 +33,10 @@ priority: 1
 condition: "true"
 actions:
   - "calculation = ['business_status' : step1_business_status]"
+---
+name: step1_district
+description: step1_district_toaster
+priority: 1
+condition: "true"
+actions:
+  - "calculation = ['districtName' : step1_districtName]"

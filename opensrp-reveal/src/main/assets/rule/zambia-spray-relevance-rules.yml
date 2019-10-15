@@ -242,4 +242,32 @@ priority: 1
 condition: "step1_datacollector != '' "
 actions:
   - "isRelevant = true"
+---
+name: step1_structure_num
+description: step1_structure_num
+priority: 1
+condition: "step1_eligibility.equals('eligible') && ( step1_provinceName.equals('Copperbelt') || step1_provinceName.equals('Luapula') || step1_provinceName.equals('Eastern') || step1_provinceName.equals('Lusaka')  )"
+actions:
+  - "isRelevant = true"
+---
+name: step1_refused_reason
+description: step1_refused_reason
+priority: 1
+condition: "step1_notsprayed_reason.equals('refused') && ( step1_provinceName.equals('Western') || step1_provinceName.equals('Southern') || step1_provinceName.equals('Lusaka') )"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sbc
+description: step1_sbc
+priority: 1
+condition: "step1_eligibility.equals('eligible') && ( step1_provinceName.equals('Western') || step1_provinceName.equals('Southern') || step1_provinceName.equals('Lusaka') )"
+actions:
+  - "isRelevant = true"
+---
+name: step1_health_service
+description: step1_health_service
+priority: 1
+condition: "step1_eligibility.equals('eligible') && ( step1_provinceName.equals('Western') || step1_provinceName.equals('Southern') || step1_provinceName.equals('Lusaka') )"
+actions:
+  - "isRelevant = true"
 
