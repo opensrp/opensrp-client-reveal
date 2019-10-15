@@ -130,9 +130,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private LinearLayout progressIndicatorsGroupView;
 
-    private FloatingActionButton layerSwitcherFab;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

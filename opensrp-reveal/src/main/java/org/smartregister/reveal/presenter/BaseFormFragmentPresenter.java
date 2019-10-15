@@ -16,13 +16,17 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Location;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.PasswordDialogUtils;
+import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.JsonFormUtils;
@@ -66,6 +70,8 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
     protected Gson gson = new GsonBuilder().setDateFormat(EVENT_DATE_FORMAT_Z)
             .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
 
+    private RevealJsonFormUtils jsonFormUtils = new RevealJsonFormUtils();
+
     protected BaseFormFragmentPresenter(BaseFormFragmentContract.View view, Context context) {
         this.context = context;
         this.view = new WeakReference<>(view);
@@ -108,7 +114,8 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
                 if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
                     interactor.findMemberDetails(taskDetails.getStructureId(), formJSON);
                     return;
-                } if (IRS.equals(taskDetails.getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)){
+                }
+                if (IRS.equals(taskDetails.getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
                     interactor.findSprayDetails(IRS, structure.getId(), formJSON);
                 } else {
                     getView().startForm(formJSON);
@@ -118,9 +125,27 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
         getView().hideProgressDialog();
     }
 
-    public void showBasicForm(String formName)
-    {
+    public void showBasicForm(String formName) {
         JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(context, formName, null, null);
+        if (JsonForm.DAILY_SUMMARY_ZAMBIA.equals(formName)) {
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                    formJSON, Constants.CONFIGURATION.DISTRICT_MANAGERS, JsonForm.DISTRICT_MANAGER,
+                    PreferencesUtil.getInstance().getCurrentDistrict());
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                    formJSON, Constants.CONFIGURATION.SUPERVISORS, JsonForm.SUPERVISOR,
+                    PreferencesUtil.getInstance().getCurrentDistrict());
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                    formJSON, Constants.CONFIGURATION.TEAM_LEADERS, JsonForm.TEAM_LEADER,
+                    PreferencesUtil.getInstance().getCurrentDistrict());
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                    formJSON, Constants.CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR,
+                    PreferencesUtil.getInstance().getCurrentDistrict());
+        }
+        if (JsonForm.IRS_SA_DECISION_ZAMBIA.equals(formName)) {
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                    formJSON, Constants.CONFIGURATION.SUPERVISORS, JsonForm.SUPERVISOR,
+                    PreferencesUtil.getInstance().getCurrentDistrict());
+        }
         getView().startForm(formJSON);
     }
 
