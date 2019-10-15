@@ -1,10 +1,8 @@
 package org.smartregister.reveal.util;
 
-import android.text.TextUtils;
-
 import org.smartregister.SyncConfiguration;
 import org.smartregister.SyncFilter;
-import org.smartregister.repository.LocationRepository;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 
@@ -13,13 +11,13 @@ import org.smartregister.reveal.application.RevealApplication;
  */
 public class RevealSyncConfiguration extends SyncConfiguration {
 
-    private LocationRepository locationRepository;
-
-    public RevealSyncConfiguration(LocationRepository locationRepository) {
-        this.locationRepository = locationRepository;
-    }
+    private AllSharedPreferences sharedPreferences;
 
     public RevealSyncConfiguration() {
+    }
+
+    public RevealSyncConfiguration(AllSharedPreferences sharedPreferences) {
+        this.sharedPreferences = sharedPreferences;
     }
 
     @Override
@@ -29,15 +27,15 @@ public class RevealSyncConfiguration extends SyncConfiguration {
 
     @Override
     public SyncFilter getSyncFilterParam() {
-        return SyncFilter.LOCATION;
+        return SyncFilter.TEAM_ID;
     }
 
     @Override
     public String getSyncFilterValue() {
-        if (locationRepository == null) {
-            locationRepository = RevealApplication.getInstance().getLocationRepository();
+        if (sharedPreferences == null) {
+            sharedPreferences = RevealApplication.getInstance().getContext().userService().getAllSharedPreferences();
         }
-        return TextUtils.join(",", locationRepository.getAllLocationIds());
+        return sharedPreferences.fetchDefaultTeamId(sharedPreferences.fetchRegisteredANM());
     }
 
     @Override
@@ -87,6 +85,6 @@ public class RevealSyncConfiguration extends SyncConfiguration {
 
     @Override
     public boolean isSyncUsingPost() {
-        return true;
+        return false;
     }
 }
