@@ -21,7 +21,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +44,7 @@ import org.smartregister.domain.FetchStatus;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
@@ -60,6 +60,7 @@ import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
 
@@ -267,6 +268,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
                         RevealMapHelper.addBaseLayers(kujakuMapView, style, ListTasksActivity.this);
 
+                        if (BuildConfig.BUILD_COUNTRY != Country.ZAMBIA) {
+                            layerSwitcherFab.setVisibility(View.GONE);
+                        }
+
                     }
                 });
 
@@ -289,36 +294,48 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 });
 
-                displayMyLocationAtButtom();
+                positionMyLocationAndLayerSwitcher();
             }
         });
 
     }
 
 
-    public void displayMyLocationAtButtom() {
-        int progressHeight = getResources().getDimensionPixelSize(R.dimen.progress_height);
-        FrameLayout.LayoutParams myLocationButtonParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
+    private void positionMyLocationAndLayerSwitcher(FrameLayout.LayoutParams myLocationButtonParams, int bottomMargin) {
+
         if (myLocationButton != null) {
             myLocationButtonParams.gravity = Gravity.BOTTOM | Gravity.END;
-            myLocationButtonParams.bottomMargin = org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? progressHeight + 40 : 40;
+            myLocationButtonParams.bottomMargin = bottomMargin;
             myLocationButtonParams.topMargin = 0;
             myLocationButton.setLayoutParams(myLocationButtonParams);
         }
 
-        if (layerSwitcherFab != null) {
-            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) layerSwitcherFab.getLayoutParams();
-            //position the layer selector above location button and with similar bottom margin
-            if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs)
-                params.bottomMargin = myLocationButton.getMeasuredHeight() + progressHeight + 80;
-            else
-                params.bottomMargin = myLocationButton.getMeasuredHeight() + myLocationButtonParams.bottomMargin + 40;
-            //Make the layer selector is same size as my location button
-            params.height = myLocationButton.getMeasuredHeight();
-            params.width = myLocationButton.getMeasuredWidth();
-            params.rightMargin = getResources().getDimensionPixelOffset(R.dimen.my_location_btn_margin);
-            layerSwitcherFab.setScaleType(FloatingActionButton.ScaleType.CENTER);
-            layerSwitcherFab.setLayoutParams(params);
+    }
+
+    public void positionMyLocationAndLayerSwitcher() {
+        FrameLayout.LayoutParams myLocationButtonParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
+        if (BuildConfig.BUILD_COUNTRY != Country.ZAMBIA) {
+            positionMyLocationAndLayerSwitcher(myLocationButtonParams, myLocationButtonParams.topMargin);
+        } else {
+            int progressHeight = getResources().getDimensionPixelSize(R.dimen.progress_height);
+
+            int bottomMargin = org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? progressHeight + 40 : 40;
+            positionMyLocationAndLayerSwitcher(myLocationButtonParams, bottomMargin);
+
+            if (layerSwitcherFab != null) {
+                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) layerSwitcherFab.getLayoutParams();
+                //position the layer selector above location button and with similar bottom margin
+                if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs)
+                    params.bottomMargin = myLocationButton.getMeasuredHeight() + progressHeight + 80;
+                else
+                    params.bottomMargin = myLocationButton.getMeasuredHeight() + bottomMargin + 40;
+                //Make the layer selector is same size as my location button
+                params.height = myLocationButton.getMeasuredHeight();
+                params.width = myLocationButton.getMeasuredWidth();
+                params.rightMargin = getResources().getDimensionPixelOffset(R.dimen.my_location_btn_margin);
+                layerSwitcherFab.setScaleType(FloatingActionButton.ScaleType.CENTER);
+                layerSwitcherFab.setLayoutParams(params);
+            }
         }
     }
 

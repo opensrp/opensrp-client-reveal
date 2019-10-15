@@ -123,6 +123,19 @@ public class IndicatorUtilsTest extends BaseUnitTest {
         task.setForEntity("my-base-entity-id");
         tasks.add(task);
         taskTestMap.put(task.getStructureId(), tasks);
+
+
+        task = new Task();
+        task.setStructureId("struct-id-7");
+        task.setAuthoredOn(new DateTime());
+        task.setBusinessStatus(Constants.BusinessStatus.NOT_ELIGIBLE);
+        task.setCode(Constants.Intervention.IRS);
+        task.setDescription("random descriptions 7");
+        task.setPlanIdentifier("plan-id-1");
+        task.setStatus(Task.TaskStatus.READY);
+        task.setForEntity("my-base-entity-id");
+        tasks.add(task);
+        taskTestMap.put(task.getStructureId(), tasks);
     }
 
 
@@ -142,7 +155,7 @@ public class IndicatorUtilsTest extends BaseUnitTest {
 
         assertNotNull(taskDetailsList);
         assertTrue(taskDetailsList.size() > 0);
-        assertEquals(11, taskDetailsList.size());
+        assertEquals(14, taskDetailsList.size());
 
     }
 
@@ -159,6 +172,7 @@ public class IndicatorUtilsTest extends BaseUnitTest {
         assertEquals(2, indicatorDetails.getNotVisited());
         assertEquals(50, indicatorDetails.getProgress());
         assertEquals(6, indicatorDetails.getTotalStructures());
+        assertEquals(1, indicatorDetails.getIneligible());
 
     }
 
