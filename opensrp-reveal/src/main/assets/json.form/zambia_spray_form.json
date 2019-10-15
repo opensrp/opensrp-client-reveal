@@ -2045,7 +2045,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "You are in  {districtName} District",
+        "text": "You are in  {districtName}",
         "text_color": "#CF0800",
         "toaster_type": "info",
         "text_size": "8sp",
