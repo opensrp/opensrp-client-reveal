@@ -28,6 +28,7 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.presenter.BaseDrawerPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Tags;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -49,6 +50,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     private TextView districtTextView;
     private TextView facilityTextView;
     private TextView operatorTextView;
+    private TextView p2pSyncTextView;
 
     private DrawerLayout mDrawerLayout;
 
@@ -124,14 +126,19 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         districtTextView = headerView.findViewById(R.id.district_label);
         facilityTextView = headerView.findViewById(R.id.facility_label);
         operatorTextView = headerView.findViewById(R.id.operator_label);
+        p2pSyncTextView = headerView.findViewById(R.id.btn_navMenu_p2pSyncBtn);
 
         operationalAreaTextView.setOnClickListener(this);
 
         planTextView.setOnClickListener(this);
 
+        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) { // Enable P2P sync
+            p2pSyncTextView.setVisibility(View.VISIBLE);
+            p2pSyncTextView.setOnClickListener(this);
+        }
+
         headerView.findViewById(R.id.logout_button).setOnClickListener(this);
         headerView.findViewById(R.id.sync_button).setOnClickListener(this);
-        headerView.findViewById(R.id.btn_navMenu_p2pSyncBtn).setOnClickListener(this);
 
     }
 
