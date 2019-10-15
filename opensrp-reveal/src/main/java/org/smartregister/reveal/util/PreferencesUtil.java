@@ -8,6 +8,7 @@ import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_FACILI
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PLAN;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PLAN_ID;
+import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PROVINCE;
 import static org.smartregister.reveal.util.Constants.Preferences.FACILITY_LEVEL;
 
 /**
@@ -53,6 +54,14 @@ public class PreferencesUtil {
 
     public String getCurrentDistrict() {
         return allSharedPreferences.getPreference(CURRENT_DISTRICT);
+    }
+
+    public void setCurrentProvince(String province) {
+        allSharedPreferences.savePreference(CURRENT_PROVINCE, province);
+    }
+
+    public String getCurrentProvince() {
+        return allSharedPreferences.getPreference(CURRENT_PROVINCE);
     }
 
     public void setCurrentPlan(String campaign) {

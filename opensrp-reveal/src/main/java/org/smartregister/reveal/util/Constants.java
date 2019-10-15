@@ -98,6 +98,7 @@ public interface Constants {
     interface Preferences {
         String CURRENT_FACILITY = "CURRENT_FACILITY";
         String CURRENT_DISTRICT = "CURRENT_DISTRICT";
+        String CURRENT_PROVINCE = "CURRENT_PROVINCE";
         String CURRENT_PLAN = "CURRENT_PLAN";
         String CURRENT_PLAN_ID = "CURRENT_PLAN_ID";
         String FACILITY_LEVEL = "FACILITY_LEVEL";

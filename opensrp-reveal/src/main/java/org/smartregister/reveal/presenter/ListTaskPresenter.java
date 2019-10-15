@@ -342,7 +342,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if (JsonForm.SPRAY_FORM_ZAMBIA.equals(formName)) {
             try {
                 jsonFormUtils.populateField(formJson, DISTRICT_NAME, prefsUtil.getCurrentDistrict().trim(), VALUE);
-                jsonFormUtils.populateField(formJson, PROVINCE_NAME, prefsUtil.getCurrentDistrict().trim(), VALUE);
+                jsonFormUtils.populateField(formJson, PROVINCE_NAME, prefsUtil.getCurrentProvince().trim(), VALUE);
             } catch (JSONException e) {
                 Timber.e(e);
             }
