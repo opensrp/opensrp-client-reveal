@@ -84,7 +84,6 @@ public interface Constants {
         Float OUTSIDE_OPERATIONAL_AREA_MASK_OPACITY = 0.65f;
         String SPRAY_OPERATORS = "spray_operators";
         String DATA_COLLECTORS = "data_collectors";
-        String DISTRICT_MANAGERS = "district_managers";
         String SUPERVISORS = "supervisors";
         String TEAM_LEADERS = "team_leaders";
         String FIELD_OFFICERS = "field_officers";

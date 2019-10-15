@@ -129,9 +129,6 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
         JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(context, formName, null, null);
         if (JsonForm.DAILY_SUMMARY_ZAMBIA.equals(formName)) {
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                    formJSON, Constants.CONFIGURATION.DISTRICT_MANAGERS, JsonForm.DISTRICT_MANAGER,
-                    PreferencesUtil.getInstance().getCurrentDistrict());
-            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                     formJSON, Constants.CONFIGURATION.SUPERVISORS, JsonForm.SUPERVISOR,
                     PreferencesUtil.getInstance().getCurrentDistrict());
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),

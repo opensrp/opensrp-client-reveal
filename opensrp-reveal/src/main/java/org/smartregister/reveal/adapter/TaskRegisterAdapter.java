@@ -51,7 +51,7 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
         boolean hasIcon = false;
         if (Intervention.IRS.equals(task.getTaskCode())) {
             if (name == null) {
-                name = task.getFamilyName() != null ? task.getFamilyName() : context.getString(R.string.unenumerated_structure);
+                name = task.getFamilyName() != null ? task.getFamilyName() : task.getStructureName() != null ? task.getStructureName() : context.getString(R.string.unenumerated_structure);
             }
             action = context.getString(R.string.record_status);
         } else if (Intervention.MOSQUITO_COLLECTION.equals(task.getTaskCode())) {
