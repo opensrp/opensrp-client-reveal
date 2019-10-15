@@ -155,7 +155,7 @@ public class IndicatorUtilsTest extends BaseUnitTest {
 
         assertNotNull(taskDetailsList);
         assertTrue(taskDetailsList.size() > 0);
-        assertEquals(11, taskDetailsList.size());
+        assertEquals(14, taskDetailsList.size());
 
     }
 
