@@ -69,7 +69,8 @@ public class IndicatorUtils {
 
             for (int i = 0; i < tasks.size(); i++) {
 
-                if (Constants.Intervention.IRS.equals(tasks.get(i).getTaskCode())) {
+                if (Constants.Intervention.IRS.equals(tasks.get(i).getTaskCode()) &&
+                        !Constants.BusinessStatusWrapper.NOT_ELIGIBLE.contains(tasks.get(i).getBusinessStatus())) {
 
                     indicatorDetailsMap.put(tasks.get(i).getStructureId(), tasks.get(i));
                 }
