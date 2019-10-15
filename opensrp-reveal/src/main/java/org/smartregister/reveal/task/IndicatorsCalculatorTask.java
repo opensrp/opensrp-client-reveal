@@ -79,7 +79,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
 
         //Reset the location button
         if(activity instanceof ListTasksActivity)
-            ((ListTasksActivity)activity).displayMyLocationAtButtom();
+            ((ListTasksActivity)activity).positionMyLocationAndLayerSwitcher();
     }
 
 
