@@ -69,8 +69,7 @@ public class IndicatorUtils {
 
             for (int i = 0; i < tasks.size(); i++) {
 
-                if (Constants.Intervention.IRS.equals(tasks.get(i).getTaskCode()) &&
-                        !Constants.BusinessStatusWrapper.NOT_ELIGIBLE.contains(tasks.get(i).getBusinessStatus())) {
+                if (Constants.Intervention.IRS.equals(tasks.get(i).getTaskCode())) {
 
                     indicatorDetailsMap.put(tasks.get(i).getStructureId(), tasks.get(i));
                 }
@@ -96,7 +95,7 @@ public class IndicatorUtils {
 
         }
 
-        indicatorDetails.setTotalStructures(indicatorDetailsMap.size());
+        indicatorDetails.setTotalStructures(indicatorDetails.getSprayed() + indicatorDetails.getNotSprayed() + indicatorDetails.getNotVisited());
         indicatorDetails.setProgress(indicatorDetails.getTotalStructures() > 0 ? Math.round(indicatorDetails.getSprayed() * 100 / indicatorDetails.getTotalStructures()) : 0);
 
         return indicatorDetails;
