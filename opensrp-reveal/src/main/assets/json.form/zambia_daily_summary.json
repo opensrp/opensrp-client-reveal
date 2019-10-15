@@ -102,12 +102,24 @@
         }
       },
       {
-        "key": "datacollector",
+        "key": "teamLeader",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "spinner",
         "hint": "Name of Team Leader who conducted observation:",
+        "v_required": {
+          "value": "true",
+          "err": "This field is required."
+        }
+      },
+      {
+        "key": "datacollector",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of TLA completing form",
         "v_required": {
           "value": "true",
           "err": "Please enter the data collector."

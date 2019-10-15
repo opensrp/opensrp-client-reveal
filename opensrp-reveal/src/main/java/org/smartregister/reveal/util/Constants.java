@@ -328,7 +328,7 @@ public interface Constants {
 
         String SUPERVISOR = "supervisor";
 
-        String TEAM_LEADER = "team_leader";
+        String TEAM_LEADER = "teamLeader";
 
     }
 
