@@ -130,7 +130,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private LinearLayout progressIndicatorsGroupView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

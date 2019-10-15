@@ -84,6 +84,10 @@ public interface Constants {
         Float OUTSIDE_OPERATIONAL_AREA_MASK_OPACITY = 0.65f;
         String SPRAY_OPERATORS = "spray_operators";
         String DATA_COLLECTORS = "data_collectors";
+        String DISTRICT_MANAGERS = "district_managers";
+        String SUPERVISORS = "supervisors";
+        String TEAM_LEADERS = "team_leaders";
+        String FIELD_OFFICERS = "field_officers";
         String CODE = "code";
         String NAME = "name";
 
@@ -320,6 +324,13 @@ public interface Constants {
         String SPRAY_OPERATOR_CODE = "sprayop_code";
 
         String DATA_COLLECTOR = "datacollector";
+
+        String DISTRICT_MANAGER = "district_manager";
+
+        String SUPERVISOR = "supervisor";
+
+        String TEAM_LEADER = "teamLeader";
+
     }
 
     interface DateFormat {
