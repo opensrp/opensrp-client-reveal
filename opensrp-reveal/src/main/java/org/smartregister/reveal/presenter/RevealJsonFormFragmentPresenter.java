@@ -197,7 +197,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         super.onItemSelected(parent, view, position, id);
         String key = (String) parent.getTag(R.id.key);
         cascadeSelect(key,Constants.JsonForm.DATA_COLLECTOR,Constants.CONFIGURATION.SPRAY_OPERATORS,Constants.JsonForm.SPRAY_OPERATOR_CODE);
-        cascadeSelect(key,Constants.JsonForm.HFC_SEEK,Constants.CONFIGURATION.COMMUNITY_HEALTH_WORKERS,Constants.JsonForm.CHW);
+        cascadeSelect(key,Constants.JsonForm.HFC_SEEK,Constants.CONFIGURATION.COMMUNITY_HEALTH_WORKERS,Constants.JsonForm.CHW_NAME);
     }
 
     private void cascadeSelect(String key, String parentWidget, String configurationKey,String childWidget){

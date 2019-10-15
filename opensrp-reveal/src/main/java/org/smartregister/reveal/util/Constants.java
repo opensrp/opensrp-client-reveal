@@ -339,7 +339,7 @@ public interface Constants {
 
         String HFC_BELONG = "hfc_belong";
 
-        String CHW = "chw";
+        String CHW_NAME = "chw_name";
 
     }
 
