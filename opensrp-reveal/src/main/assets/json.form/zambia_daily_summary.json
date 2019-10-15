@@ -84,6 +84,12 @@
         "openmrs_entity_id": "",
         "type": "spinner",
         "hint": "District Manager name",
+        "values": [
+          "Roderick Siwale"
+        ],
+        "keys": [
+          "Roderick Siwale"
+        ],
         "v_required": {
           "value": "true",
           "err": "This field is required."
@@ -173,7 +179,7 @@
         "text": "Check this matches with the total number recorded on the SOP paper form",
         "read_only": false,
         "hint_on_text": true,
-        "text_color" : "#B9A000",
+        "text_color": "#B9A000",
         "text_size": "6sp",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -215,15 +221,12 @@
         "text": "Check this matches with the number recorded on the SOP paper form",
         "read_only": false,
         "hint_on_text": true,
-        "text_color" : "#B9A000",
+        "text_color": "#B9A000",
         "text_size": "6sp",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": ""
       },
-
-
-
       {
         "key": "bottles_start",
         "openmrs_entity_parent": "",
