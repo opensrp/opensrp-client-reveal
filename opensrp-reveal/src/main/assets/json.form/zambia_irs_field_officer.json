@@ -51,6 +51,20 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "fieldOfficer",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of Field Officer",
+        "values": [
+          "Anita Tembo"
+        ],
+        "keys": [
+          "Anita Tembo"
+        ]
+      },
+      {
         "key": "health_facility",
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
@@ -59,7 +73,6 @@
         "type": "tree",
         "hint": "Which Health Facility Catchment Area was visited today?",
         "tree": [
-
         ],
         "v_required": {
           "value": true,
@@ -521,7 +534,9 @@
         "label": "Please select type of falsification witnessed",
         "label_text_size": "8sp",
         "hint": "Please select type of falsification witnessed",
-        "exclusive": ["none"],
+        "exclusive": [
+          "none"
+        ],
         "options": [
           {
             "key": "falseSpray",
