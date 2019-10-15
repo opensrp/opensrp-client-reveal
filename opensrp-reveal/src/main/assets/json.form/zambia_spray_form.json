@@ -1908,8 +1908,11 @@
         },
         "relevance": {
           "step1:information": {
-            "type": "string",
-            "ex": "equalTo(., \"other\")"
+            "ex-checkbox": [
+              {
+                "or": ["other"]
+              }
+            ]
           }
         }
       },
@@ -1984,8 +1987,11 @@
         },
         "relevance": {
           "step1:preferred_source": {
-            "type": "string",
-            "ex": "equalTo(., \"other\")"
+            "ex-checkbox": [
+              {
+                "or": ["other"]
+              }
+            ]
           }
         }
       },
