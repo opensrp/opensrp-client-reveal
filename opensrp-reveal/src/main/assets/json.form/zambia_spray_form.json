@@ -2033,6 +2033,13 @@
         "type": "hidden"
       },
       {
+        "key": "provinceName",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden"
+      },
+      {
         "key": "district",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",

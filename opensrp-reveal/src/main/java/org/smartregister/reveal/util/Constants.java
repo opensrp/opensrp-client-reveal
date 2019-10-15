@@ -302,6 +302,7 @@ public interface Constants {
         String ABLE_TO_SPRAY_FIRST = "ableToSprayFirst";
         String MOP_UP_VISIT = "mopUpVisit";
         String DISTRICT_NAME = "districtName";
+        String PROVINCE_NAME = "provinceName";
 
 
         /**

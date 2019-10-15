@@ -68,6 +68,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMI
 import static org.smartregister.reveal.util.Constants.JsonForm.DISTRICT_NAME;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
+import static org.smartregister.reveal.util.Constants.JsonForm.PROVINCE_NAME;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
@@ -341,6 +342,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if (JsonForm.SPRAY_FORM_ZAMBIA.equals(formName)) {
             try {
                 jsonFormUtils.populateField(formJson, DISTRICT_NAME, prefsUtil.getCurrentDistrict().replace("District", "").trim(), VALUE);
+                jsonFormUtils.populateField(formJson, PROVINCE_NAME, prefsUtil.getCurrentDistrict().replace("Province", "").trim(), VALUE);
             } catch (JSONException e) {
                 Timber.e(e);
             }
