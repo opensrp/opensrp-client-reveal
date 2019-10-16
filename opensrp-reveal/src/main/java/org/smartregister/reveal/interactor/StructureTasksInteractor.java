@@ -176,6 +176,8 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                 }
 
                 cursor.close();
+                cursor=null;
+
                 cursor = database.rawQuery("SELECT event_date FROM event_task WHERE task_id = ? ORDER by event_date desc LIMIT 1",
                         new String[]{task.getTaskId()});
                 while (cursor.moveToNext()) {
