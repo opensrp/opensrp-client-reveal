@@ -1,6 +1,8 @@
 package org.smartregister.reveal.interactor;
 
 
+import android.support.v4.util.Pair;
+
 import net.sqlcipher.Cursor;
 import net.sqlcipher.MatrixCursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -85,12 +87,14 @@ public class FormFragmentInteractorTest extends BaseUnitTest {
 
     @Test
     public void testFindNumberOfMembers() {
-        when(commonRepository.countSearchIds(anyString())).thenReturn(12);
+
         String structureId = UUID.randomUUID().toString();
+        String query = "SELECT count(*),SUM(CASE WHEN sleeps_outdoors='Yes' THEN 1 ELSE 0 END) FROM ec_family_member WHERE structure_id = ?";
+        when(sqLiteDatabase.rawQuery(query, new String[]{structureId})).thenReturn(createNumberOfMembersCursor());
         JSONObject form = new JSONObject();
         interactor.findNumberOfMembers(structureId, form);
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onFetchedMembersCount(12, form);
-        verify(commonRepository, timeout(ASYNC_TIMEOUT)).countSearchIds(anyString());
+        verify(sqLiteDatabase, timeout(ASYNC_TIMEOUT)).rawQuery(query, new String[]{structureId});
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onFetchedMembersCount(new Pair<>(12, 4), form);
     }
 
     @Test
@@ -115,10 +119,10 @@ public class FormFragmentInteractorTest extends BaseUnitTest {
         when(interactorUtils.fetchSprayDetails(anyString(), anyString(), any(), any())).thenReturn(commonPersonObject);
         interactor.findSprayDetails(IRS, structureId, form);
         verify(presenter, timeout(ASYNC_TIMEOUT)).onFetchedSprayDetails(commonPersonObjectCaptor.capture(), eq(form));
-        assertNotNull( commonPersonObjectCaptor.getValue());
+        assertNotNull(commonPersonObjectCaptor.getValue());
         assertEquals("case-id", commonPersonObjectCaptor.getValue().getCaseId());
         assertEquals("relation-id", commonPersonObjectCaptor.getValue().getRelationalId());
-        assertNotNull( commonPersonObjectCaptor.getValue().getDetails());
+        assertNotNull(commonPersonObjectCaptor.getValue().getDetails());
         assertEquals("4", commonPersonObjectCaptor.getValue().getDetails().get("nSprayedDeltaMop"));
         assertEquals("3", commonPersonObjectCaptor.getValue().getDetails().get("nPeopleProtected"));
 
@@ -146,5 +150,15 @@ public class FormFragmentInteractorTest extends BaseUnitTest {
         CommonPersonObject commonPersonObject = new CommonPersonObject("case-id",
                 "relation-id", details, "IRS");
         return commonPersonObject;
+    }
+
+
+    private MatrixCursor createNumberOfMembersCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[2]);
+        cursor.addRow(new Object[]{
+                12,
+                4
+        });
+        return cursor;
     }
 }
