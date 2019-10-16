@@ -163,8 +163,9 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
     @Override
     public void onFetchedMembersCount(Pair<Integer, Integer> numberOfMembers, JSONObject formJSON) {
         try {
-            getView().startForm(new JSONObject(formJSON.toString().replace(JsonForm.NUMBER_OF_FAMILY_MEMBERS, numberOfMembers.first + "")));
-            getView().startForm(new JSONObject(formJSON.toString().replace(JsonForm.NUMBER_OF_FAMILY_MEMBERS_SLEEPING_OUTDOORS, numberOfMembers.second + "")));
+            String jsonStr = formJSON.toString().replace(JsonForm.NUMBER_OF_FAMILY_MEMBERS, numberOfMembers.first + "");
+            jsonStr = jsonStr.replace(JsonForm.NUMBER_OF_FAMILY_MEMBERS_SLEEPING_OUTDOORS, numberOfMembers.second + "");
+            getView().startForm(new JSONObject(jsonStr));
         } catch (JSONException e) {
             Timber.e(e, "Error updating Number of members");
             getView().startForm(formJSON);
