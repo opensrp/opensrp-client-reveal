@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 
 import com.google.gson.Gson;
@@ -108,7 +109,8 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
                 if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
                     interactor.findMemberDetails(taskDetails.getStructureId(), formJSON);
                     return;
-                } if (IRS.equals(taskDetails.getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)){
+                }
+                if (IRS.equals(taskDetails.getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
                     interactor.findSprayDetails(IRS, structure.getId(), formJSON);
                 } else {
                     getView().startForm(formJSON);
@@ -159,9 +161,10 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
     }
 
     @Override
-    public void onFetchedMembersCount(int numberOfMembers, JSONObject formJSON) {
+    public void onFetchedMembersCount(Pair<Integer, Integer> numberOfMembers, JSONObject formJSON) {
         try {
-            getView().startForm(new JSONObject(formJSON.toString().replace(JsonForm.NUMBER_OF_FAMILY_MEMBERS, numberOfMembers + "")));
+            getView().startForm(new JSONObject(formJSON.toString().replace(JsonForm.NUMBER_OF_FAMILY_MEMBERS, numberOfMembers.first + "")));
+            getView().startForm(new JSONObject(formJSON.toString().replace(JsonForm.NUMBER_OF_FAMILY_MEMBERS_SLEEPING_OUTDOORS, numberOfMembers.second + "")));
         } catch (JSONException e) {
             Timber.e(e, "Error updating Number of members");
             getView().startForm(formJSON);
