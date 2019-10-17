@@ -619,7 +619,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void onSyncInProgress(FetchStatus fetchStatus) {
-        if (FetchStatus.fetched.equals(fetchStatus) && !syncProgressSnackbar.isShown()) {
+        if (FetchStatus.fetched.equals(fetchStatus)) {
             syncProgressSnackbar.show();
             return;
         }
