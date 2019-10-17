@@ -619,11 +619,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void onSyncInProgress(FetchStatus fetchStatus) {
+        if (FetchStatus.fetched.equals(fetchStatus) && !syncProgressSnackbar.isShown()) {
+            syncProgressSnackbar.show();
+            return;
+        }
         syncProgressSnackbar.dismiss();
         if (fetchStatus.equals(FetchStatus.fetchedFailed)) {
             Snackbar.make(rootView, org.smartregister.R.string.sync_failed, Snackbar.LENGTH_LONG).show();
-        } else if (fetchStatus.equals(FetchStatus.fetched)
-                || fetchStatus.equals(FetchStatus.nothingFetched)) {
+        } else if (fetchStatus.equals(FetchStatus.nothingFetched)) {
             Snackbar.make(rootView, org.smartregister.R.string.sync_complete, Snackbar.LENGTH_LONG).show();
         } else if (fetchStatus.equals(FetchStatus.noConnection)) {
             Snackbar.make(rootView, org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_LONG).show();
