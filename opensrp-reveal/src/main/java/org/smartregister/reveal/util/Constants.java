@@ -214,6 +214,8 @@ public interface Constants {
 
         String NUMBER_OF_FAMILY_MEMBERS = "[num_fam_members]";
 
+        String NUMBER_OF_FAMILY_MEMBERS_SLEEPING_OUTDOORS = "[num_sleeps_outdoors]";
+
         String SPRAY_FORM = "json.form/spray_form.json";
 
         String MOSQUITO_COLLECTION_FORM = "json.form/mosquito_collection_form.json";
