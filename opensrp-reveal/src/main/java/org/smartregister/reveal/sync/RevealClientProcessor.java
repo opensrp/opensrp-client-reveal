@@ -248,7 +248,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             }
             taskRepository.addOrUpdate(task);
             operationalAreaId = task.getGroupIdentifier();
-        } else if(!localEvents) {
+        } else if (!localEvents) {
             eventClientRepository.markEventAsTaskUnprocessed(event.getFormSubmissionId());
         }
         return operationalAreaId;
@@ -271,5 +271,10 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 return sprayStatus == null ? null : sprayStatus.getValue().toString();
             }
         }
+    }
+
+    @Override
+    protected void updateRegisterCount(String entityId) {
+        //do nothing. Save performance on unrequired functionality
     }
 }
