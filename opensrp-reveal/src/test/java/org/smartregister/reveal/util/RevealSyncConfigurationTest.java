@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.smartregister.SyncFilter;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.BuildConfig;
@@ -29,11 +30,14 @@ public class RevealSyncConfigurationTest extends BaseUnitTest {
     @Mock
     private LocationRepository locationRepository;
 
+    @Mock
+    private AllSharedPreferences allSharedPreferences;
+
     private RevealSyncConfiguration syncConfiguration;
 
     @Before
     public void setUp() {
-        syncConfiguration = new RevealSyncConfiguration(locationRepository);
+        syncConfiguration = new RevealSyncConfiguration(locationRepository, allSharedPreferences);
     }
 
     @Test
