@@ -147,6 +147,10 @@ public interface Constants {
         String FI = "FI";
 
         String PAOT = "PAOT";
+
+        String MDA_DISPENSE = "MDA Dispense";
+
+        String MDA_ADHERENCE = "MDA Adherence";
     }
 
 
