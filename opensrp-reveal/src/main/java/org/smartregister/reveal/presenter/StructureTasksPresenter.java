@@ -14,7 +14,9 @@ import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.domain.db.Event;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.contract.StructureTasksContract;
+import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.interactor.StructureTasksInteractor;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.Constants;
@@ -44,10 +46,13 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
     private String structureId;
 
+    private BaseFormFragmentContract.Interactor formInteractor;
+
 
     public StructureTasksPresenter(StructureTasksContract.View view, Context context) {
         this(view, context, null, PreferencesUtil.getInstance());
         interactor = new StructureTasksInteractor(this);
+        formInteractor = new BaseFormFragmentInteractor(this);
     }
 
     @VisibleForTesting
@@ -102,7 +107,7 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
     @Override
     public void onLocationValidated() {
-        StructureTaskDetails taskDetails= (StructureTaskDetails) getTaskDetails();
+        StructureTaskDetails taskDetails = (StructureTaskDetails) getTaskDetails();
         if (taskDetails.isEdit() && (Constants.Intervention.BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode()) || BLOOD_SCREENING.equals(taskDetails.getTaskCode()))) {
             interactor.findLastEvent(taskDetails);
         } else {
@@ -140,13 +145,18 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
     @Override
     public void onEventFound(Event event) {
+
         String formName = getView().getJsonFormUtils().getFormName(null, getTaskDetails().getTaskCode());
         if (StringUtils.isBlank(formName)) {
             getView().displayError(R.string.opening_form_title, R.string.form_not_found);
         } else {
             JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), formName, getTaskDetails(), getStructure());
-            getView().getJsonFormUtils().populateForm(event,formJSON);
-            getView().startForm(formJSON);
+            getView().getJsonFormUtils().populateForm(event, formJSON);
+            if (Constants.Intervention.BEDNET_DISTRIBUTION.equals(getTaskDetails().getTaskCode())) {
+                formInteractor.findNumberOfMembers(getTaskDetails().getTaskEntity(), formJSON);
+            } else {
+                getView().startForm(formJSON);
+            }
         }
         getView().hideProgressDialog();
 

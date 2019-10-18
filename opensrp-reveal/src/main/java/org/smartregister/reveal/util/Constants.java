@@ -160,6 +160,10 @@ public interface Constants {
         String FI = "FI";
 
         String PAOT = "PAOT";
+
+        String MDA_DISPENSE = "MDA Dispense";
+
+        String MDA_ADHERENCE = "MDA Adherence";
     }
 
 
@@ -228,6 +232,8 @@ public interface Constants {
 
         String NUMBER_OF_FAMILY_MEMBERS = "[num_fam_members]";
 
+        String NUMBER_OF_FAMILY_MEMBERS_SLEEPING_OUTDOORS = "[num_sleeps_outdoors]";
+
         String SPRAY_FORM = "json.form/spray_form.json";
 
         String MOSQUITO_COLLECTION_FORM = "json.form/mosquito_collection_form.json";
@@ -269,6 +275,10 @@ public interface Constants {
         String THAILAND_BEHAVIOUR_CHANGE_COMMUNICATION_FORM = "json.form/thailand_behaviour_change_communication.json";
 
         String THAILAND_PAOT_FORM = "json.form/thailand_paot.json";
+
+        String ZAMBIA_MDA_DISPENSE_FORM = "json.form/zambia_mda_dispense.json";
+
+        String ZAMBIA_MDA_ADHERENCE_FORM = "json.form/zambia_mda_adherence.json";
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 
