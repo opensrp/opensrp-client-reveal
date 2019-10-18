@@ -183,6 +183,10 @@ public interface Constants {
         String BEDNET_DISTRIBUTED = "Bednet Distributed";
         String BLOOD_SCREENING_COMPLETE = "Blood Screening Complete";
         String PARTIALLY_SPRAYED = "Partially Sprayed";
+        String FULLY_RECEIVED = "Fully Received";
+        String NONE_RECEIVED = "None Received";
+        String NOT_VISITED_ = "Not Visited YET";
+        String ADHERENCE_VISIT_DONE = "Adherence Visit Done";
     }
 
     interface BusinessStatusWrapper {
