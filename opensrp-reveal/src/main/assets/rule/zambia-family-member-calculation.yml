@@ -1,0 +1,7 @@
+---
+name: step1_surname_calculation
+description: surname calculation
+priority: 1
+condition: "true"
+actions:
+ - "calculation = step1_same_as_fam_name.contains('same_as_fam_name')? step1_fam_name : step1_surname"
