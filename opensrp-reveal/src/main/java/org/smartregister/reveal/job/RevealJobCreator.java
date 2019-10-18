@@ -10,7 +10,7 @@ import org.smartregister.job.ExtendedSyncServiceJob;
 import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.job.SyncServiceJob;
 import org.smartregister.job.ValidateSyncDataServiceJob;
-import org.smartregister.sync.intent.SyncIntentService;
+import org.smartregister.reveal.sync.RevealSyncIntentService;
 
 import timber.log.Timber;
 
@@ -23,7 +23,7 @@ public class RevealJobCreator implements JobCreator {
     public Job create(@NonNull String tag) {
         switch (tag) {
             case SyncServiceJob.TAG:
-                return new SyncServiceJob(SyncIntentService.class);
+                return new SyncServiceJob(RevealSyncIntentService.class);
             case LocationTaskServiceJob.TAG:
                 return new LocationTaskServiceJob();
             case RevealSyncSettingsServiceJob.TAG:
