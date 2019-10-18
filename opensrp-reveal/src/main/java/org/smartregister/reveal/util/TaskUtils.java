@@ -93,4 +93,13 @@ public class TaskUtils {
 
     }
 
+    public void generateMDADispenseTask(Context context, String entityId, String structureId) {
+        generateTask(context, entityId, structureId, BusinessStatus.NOT_VISITED, Intervention.MDA_DISPENSE,
+                R.string.mda_dispense_desciption);
+    }
+
+    public void generateMDAAdherenceTask(Context context, String entityId, String structureId) {
+        generateTask(context, entityId, structureId, BusinessStatus.NOT_VISITED, Intervention.MDA_ADHERENCE,
+                R.string.mda_adherence_desciption);
+    }
 }

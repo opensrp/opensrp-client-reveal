@@ -22,6 +22,7 @@ import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.TaskUtils;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.ClientProcessorForJava;
 import org.smartregister.util.JsonFormUtils;
 
@@ -64,8 +65,10 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     @Override
     public void generateTasks(Context applicationContext, String baseEntityId, String structureId) {
         appExecutors.diskIO().execute(() -> {
-            taskUtils.generateBloodScreeningTask(applicationContext,
-                    baseEntityId, structureId);
+            if (Utils.isFocusInvestigation())
+                taskUtils.generateBloodScreeningTask(applicationContext, baseEntityId, structureId);
+            else if (Utils.isMDA())
+                taskUtils.generateMDADispenseTask(applicationContext, baseEntityId, structureId);
             appExecutors.mainThread().execute(() -> {
                 presenter.onTasksGenerated();
             });

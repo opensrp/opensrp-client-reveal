@@ -278,4 +278,12 @@ public class Utils {
     public static Boolean displayAddStructureOutOfBoundaryWarningDialog() {
         return Boolean.valueOf(getGlobalConfig(CONFIGURATION.DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG, CONFIGURATION.DEFAULT_DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG.toString()));
     }
+
+    public static boolean isFocusInvestigation() {
+        return getInterventionLabel() == R.string.focus_investigation;
+    }
+
+    public static boolean isMDA() {
+        return getInterventionLabel() == R.string.mda;
+    }
 }
