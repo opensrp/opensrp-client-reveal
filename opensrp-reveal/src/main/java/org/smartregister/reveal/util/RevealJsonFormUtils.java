@@ -259,13 +259,9 @@ public class RevealJsonFormUtils {
                 formName = JsonForm.PAOT_FORM;
             }
         } else if (Intervention.MDA_ADHERENCE.equals(taskCode)) {
-            if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
-                formName = JsonForm.ZAMBIA_MDA_ADHERENCE_FORM;
-            }
+            formName = JsonForm.ZAMBIA_MDA_ADHERENCE_FORM;
         } else if (Intervention.MDA_DISPENSE.equals(taskCode)) {
-            if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
-                formName = JsonForm.ZAMBIA_MDA_DISPENSE_FORM;
-            }
+            formName = JsonForm.ZAMBIA_MDA_DISPENSE_FORM;
         }
         return formName;
     }
