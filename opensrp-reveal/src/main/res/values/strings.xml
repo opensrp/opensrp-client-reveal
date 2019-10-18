@@ -106,6 +106,7 @@
     <string name="hamburger_menu">Hamburger menu</string>
     <string name="focus_investigation">Focus Investigation</string>
     <string name="irs">IRS</string>
+    <string name="mda">MDA</string>
     <string name="task_icon">Task Icon</string>
     <string name="distance_from_structure">%1.0f m away</string>
     <string name="distance_from_center">%1.0f m from %2s center </string>
