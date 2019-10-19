@@ -22,6 +22,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.Event;
 import org.smartregister.domain.db.EventClient;
@@ -32,14 +33,19 @@ import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.TestingUtils;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.AssetHandler;
+import org.smartregister.util.Cache;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -119,6 +125,9 @@ public class BaseInteractorTest extends BaseUnitTest {
 
     @Test
     public void testSavePaotForm() throws JSONException {
+        Cache<Location> cache = mock(Cache.class);
+        when(cache.get(anyString(), any())).thenReturn(mock(Location.class));
+        Whitebox.setInternalState(Utils.class, cache);
         String form = AssetHandler.readFileFromAssetsFolder(org.smartregister.reveal.util.Constants.JsonForm.PAOT_FORM, context);
         JSONObject formObject = new JSONObject(form);
         String structureId = UUID.randomUUID().toString();
