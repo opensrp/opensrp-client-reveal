@@ -12,6 +12,8 @@ import static org.smartregister.reveal.util.Constants.COMMA;
 import static org.smartregister.reveal.util.Constants.HYPHEN;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 
 /**
@@ -48,6 +50,10 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
     private String houseNumber;
 
     private boolean familyRegTaskExists;
+
+    private boolean mdaDispensed;
+
+    private boolean mdaAdhered;
 
     public TaskDetails(@NonNull String taskId) {
         super(taskId);
@@ -157,6 +163,22 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         this.familyRegTaskExists = familyRegTaskExists;
     }
 
+    public boolean isMdaDispensed() {
+        return mdaDispensed;
+    }
+
+    public void setMdaDispensed(boolean mdaDispensed) {
+        this.mdaDispensed = mdaDispensed;
+    }
+
+    public boolean isMdaAdhered() {
+        return mdaAdhered;
+    }
+
+    public void setMdaAdhered(boolean mdaAdhered) {
+        this.mdaAdhered = mdaAdhered;
+    }
+
     public void setGroupedTaskCodeStatus(String groupedTaskCodeStatusString) {
         setFamilyRegistered(false);
         setBednetDistributed(false);
@@ -179,6 +201,10 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
                 setBednetDistributed(true);
             }  else if (BLOOD_SCREENING.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
                 setBloodScreeningDone(true);
+            } else if (MDA_ADHERENCE.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
+                setMdaAdhered(true);
+            } else if (MDA_DISPENSE.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
+                setMdaDispensed(true);
             }
         }
     }

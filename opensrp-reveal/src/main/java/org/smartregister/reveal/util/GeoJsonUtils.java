@@ -18,6 +18,8 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED
 import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
@@ -45,6 +47,8 @@ public class GeoJsonUtils {
             boolean bednetDistributed = false;
             boolean bloodScreeningDone = false;
             boolean familyRegTaskExists = false;
+            boolean mdaAdhered = false;
+            boolean mdaDispensed = false;
             if (taskSet == null)
                 continue;
             for (Task task : taskSet) {
@@ -57,6 +61,10 @@ public class GeoJsonUtils {
                         bednetDistributed = true;
                     } else if (task.getCode().equals(BLOOD_SCREENING) && task.getBusinessStatus().equals(COMPLETE)) {
                         bloodScreeningDone = true;
+                    } else if (task.getCode().equals(MDA_ADHERENCE) && task.getBusinessStatus().equals(COMPLETE)) {
+                        mdaAdhered = true;
+                    } else if (task.getCode().equals(MDA_DISPENSE) && task.getBusinessStatus().equals(COMPLETE)) {
+                        mdaDispensed = true;
                     }
 
                 }
@@ -89,9 +97,13 @@ public class GeoJsonUtils {
             if (Utils.isResidentialStructure(taskProperties.get(TASK_CODE)) && getInterventionLabel() == R.string.focus_investigation) {
 
                 boolean familyRegTaskMissingOrFamilyRegComplete = familyRegistered || !familyRegTaskExists;
-                if (familyRegTaskMissingOrFamilyRegComplete && bednetDistributed && bloodScreeningDone) {
+                if (familyRegTaskMissingOrFamilyRegComplete &&
+                        (bednetDistributed && bloodScreeningDone) ||
+                        (mdaAdhered && mdaDispensed)) {
                     taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
-                } else if (familyRegTaskMissingOrFamilyRegComplete && !bednetDistributed && !bloodScreeningDone) {
+                } else if (familyRegTaskMissingOrFamilyRegComplete &&
+                        !bednetDistributed && !bloodScreeningDone &&
+                        !mdaAdhered && !mdaDispensed) {
                     taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
                 } else if (bednetDistributed && familyRegTaskMissingOrFamilyRegComplete) {
                     taskProperties.put(TASK_BUSINESS_STATUS, BEDNET_DISTRIBUTED);
