@@ -50,6 +50,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -316,7 +317,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         presenter = spy(presenter);
         doReturn(false).when(presenter).validateFarStructures();
         presenter.onStructureFound(new org.smartregister.domain.Location(), taskDetails);
-        verify(view).startForm(any());
+        verify(view,timeout(ASYNC_TIMEOUT)).startForm(any());
         verify(view).hideProgressDialog();
     }
 

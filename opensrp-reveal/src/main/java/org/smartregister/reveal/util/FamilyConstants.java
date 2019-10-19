@@ -29,6 +29,10 @@ public interface FamilyConstants {
         String THAILAND_FAMILY_REGISTER = "thailand_family_register";
         String THAILAND_FAMILY_UPDATE = "thailand_family_update";
         String THAILAND_FAMILY_MEMBER_REGISTER = "thailand_family_member_register";
+
+        String ZAMBIA_FAMILY_REGISTER = "zambia_family_register";
+        String ZAMBIA_FAMILY_UPDATE = "zambia_family_update";
+        String ZAMBIA_FAMILY_MEMBER_REGISTER = "zambia_family_member_register";
     }
 
     interface RELATIONSHIP {
