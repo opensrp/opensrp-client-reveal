@@ -23,7 +23,6 @@ import org.smartregister.domain.Task;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BaseUnitTest;
-import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
@@ -57,7 +56,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
-import static org.smartregister.reveal.util.Utils.getInterventionLabel;
 
 /**
  * Created by samuelgithengi on 5/22/19.
