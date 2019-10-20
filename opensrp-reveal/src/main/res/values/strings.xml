@@ -106,6 +106,7 @@
     <string name="hamburger_menu">Hamburger menu</string>
     <string name="focus_investigation">Focus Investigation</string>
     <string name="irs">IRS</string>
+    <string name="mda">MDA</string>
     <string name="task_icon">Task Icon</string>
     <string name="distance_from_structure">%1.0f m away</string>
     <string name="distance_from_center">%1.0f m from %2s center </string>
@@ -161,6 +162,8 @@
     <string name="blood_screening_description">Perform blood screening on the family member</string>
     <string name="bednet_distribution_description">Visit the residential structure and provide nets</string>
     <string name="register_family_description">Visit the residential structure and register each family member</string>
+    <string name="mda_dispense_desciption">Visit all residential structures (100%) dispense prophylaxis to each registered person</string>
+    <string name="mda_adherence_desciption">"Visit all residential structures (100%) and confirm adherence of each registered person</string>
     <string name="house">House</string>
 
     <string name="unenumerated_structure">Unenumerated Structure</string>
