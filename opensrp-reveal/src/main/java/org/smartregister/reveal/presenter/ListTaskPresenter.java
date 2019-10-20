@@ -257,7 +257,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
             } else if (PAOT.equals(code)) {
                 listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
-            } else if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.focus_investigation) {
+            } else if (org.smartregister.reveal.util.Utils.isFocusInvestigation() || org.smartregister.reveal.util.Utils.isMDA()) {
                 listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
             }
         }
