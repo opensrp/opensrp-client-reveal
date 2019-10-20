@@ -293,7 +293,8 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     structureRepository.addOrUpdate(structure);
                     Context applicationContext = getInstance().getApplicationContext();
                     Task task = null;
-                    if (StructureType.RESIDENTIAL.equals(structureType) && Utils.getInterventionLabel() == R.string.focus_investigation) {
+                    if (StructureType.RESIDENTIAL.equals(structureType) &&
+                            (Utils.isFocusInvestigation() || Utils.isMDA())) {
                         task = taskUtils.generateRegisterFamilyTask(applicationContext, structure.getId());
                     } else {
                         if (StructureType.RESIDENTIAL.equals(structureType)) {
@@ -336,9 +337,9 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
 
                             Obs zoomObs = event.findObs(null, false, GeoWidgetFactory.ZOOM_LEVEL);
-                            double zoomLevel=Double.parseDouble(zoomObs.getValue().toString());
+                            double zoomLevel = Double.parseDouble(zoomObs.getValue().toString());
 
-                            presenterCallBack.onStructureAdded(Feature.fromJson(gson.toJson(structure)), featureCoordinates,zoomLevel);
+                            presenterCallBack.onStructureAdded(Feature.fromJson(gson.toJson(structure)), featureCoordinates, zoomLevel);
                         }
                     });
                 } catch (JSONException e) {

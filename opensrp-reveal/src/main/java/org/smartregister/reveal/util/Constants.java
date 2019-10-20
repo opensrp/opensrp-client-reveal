@@ -164,6 +164,8 @@ public interface Constants {
         String MDA_DISPENSE = "MDA Dispense";
 
         String MDA_ADHERENCE = "MDA Adherence";
+
+        String MDA = "MDA";
     }
 
 
