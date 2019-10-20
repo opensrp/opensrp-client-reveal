@@ -47,6 +47,7 @@ import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_
 import static org.smartregister.reveal.util.Constants.Intervention.FI;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 
@@ -152,6 +153,8 @@ public class Utils {
             return R.string.focus_investigation;
         else if (interventionType.equals(IRS))
             return R.string.irs;
+        else if (interventionType.equals(MDA))
+            return R.string.mda;
         else
             return R.string.irs;
     }
