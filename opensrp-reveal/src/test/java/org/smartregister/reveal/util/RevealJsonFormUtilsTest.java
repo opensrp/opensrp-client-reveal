@@ -35,12 +35,14 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     @Before
     public void setUp() {
         revealJsonFormUtils = new RevealJsonFormUtils();
-        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
     }
 
     @Test
     public void testGetFormNameShouldReturnThailandLarvalDippingFormForLarvalDippingEvent() {
-        assertEquals(revealJsonFormUtils.getFormName(LARVAL_DIPPING_EVENT, null), JsonForm.LARVAL_DIPPING_FORM);
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        assertEquals(JsonForm.LARVAL_DIPPING_FORM, revealJsonFormUtils.getFormName(LARVAL_DIPPING_EVENT, null));
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
@@ -50,7 +52,10 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
 
     @Test
     public void testGetFormNameShouldReturnThailandMosquitoCollectionFormForLarvalDippingEvent() {
-        assertEquals(revealJsonFormUtils.getFormName(MOSQUITO_COLLECTION_EVENT, null), JsonForm.MOSQUITO_COLLECTION_FORM);
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        assertEquals(JsonForm.MOSQUITO_COLLECTION_FORM, revealJsonFormUtils.getFormName(MOSQUITO_COLLECTION_EVENT, null));
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
@@ -65,8 +70,10 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
 
     @Test
     public void testGetFormNameShouldReturnThailandPAOTForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
         assertEquals(JsonForm.THAILAND_PAOT_FORM, revealJsonFormUtils.getFormName(null, Constants.EventType.PAOT_EVENT));
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
 
@@ -82,9 +89,9 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public  void testPopulateField() throws JSONException {
+    public void testPopulateField() throws JSONException {
         JSONObject form = new JSONObject(AssetHandler.readFileFromAssetsFolder(JsonForm.ADD_STRUCTURE_FORM, context));
-        assertEquals("",JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), JsonForm.SELECTED_OPERATIONAL_AREA_NAME).get(TEXT).toString());
+        assertEquals("", JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), JsonForm.SELECTED_OPERATIONAL_AREA_NAME).get(TEXT).toString());
 
         revealJsonFormUtils.populateField(form, Constants.JsonForm.SELECTED_OPERATIONAL_AREA_NAME, "TLV1", TEXT);
         assertEquals("TLV1", JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), JsonForm.SELECTED_OPERATIONAL_AREA_NAME).get(TEXT));

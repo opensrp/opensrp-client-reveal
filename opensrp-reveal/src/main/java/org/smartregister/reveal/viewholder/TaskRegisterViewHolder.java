@@ -106,6 +106,8 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
                     } else if (task.isBloodScreeningDone()) {
                         actionView.setBackground(context.getResources().getDrawable(R.drawable.blood_screening_complete_bg));
                         actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                    } else if (familyRegTaskMissingOrFamilyRegComplete &&  task.isMdaDispensed() && task.isMdaAdhered()) {
+                        showTasksCompleteActionView();
                     } else {
                         actionView.setBackground(context.getResources().getDrawable(R.drawable.no_task_complete_bg));
                         actionView.setTextColor(context.getResources().getColor(R.color.text_black));
