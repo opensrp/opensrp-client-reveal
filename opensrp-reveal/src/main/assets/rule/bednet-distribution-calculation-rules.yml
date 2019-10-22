@@ -53,7 +53,7 @@ description: Population minus existing notes
 priority: 1
 condition: "true"
 actions:
-- "calculation = helper.ifNull(step1_totPopulation-step1_calcExistingNets,0) < 1 ? 0 : calculation = helper.ifNull(step1_totPopulation-step1_calcExistingNets,0)"
+- "calculation = helper.ifNull(step1_totPopulation-step1_calcExistingNets,0) < 1 ? 0 : helper.ifNull(step1_totPopulation-step1_calcExistingNets,0)"
 ---
 name: step1_calcNumNetsToDistribute
 description: Number of nets to give
