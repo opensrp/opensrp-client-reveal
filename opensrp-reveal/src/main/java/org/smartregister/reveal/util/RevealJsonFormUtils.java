@@ -365,7 +365,7 @@ public class RevealJsonFormUtils {
                 String name = operator.optString(CONFIGURATION.NAME);
                 if (code == null)
                     continue;
-                if (StringUtils.isBlank(code) && code.equalsIgnoreCase(name)) {
+                if (StringUtils.isBlank(code) || code.equalsIgnoreCase(name)) {
                     codes.put(name);
                     values.put(name);
                 } else {
