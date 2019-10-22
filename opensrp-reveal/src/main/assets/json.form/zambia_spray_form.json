@@ -1780,7 +1780,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Can you ask 4 questions on health seeking behaviour?",
+        "label": "Can you ask 5 Social Behaviour Change questions?",
         "text_size": "8sp",
         "options": [
           {
@@ -2001,7 +2001,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Can you ask 5 Social Behaviour Change questions?",
+        "label": "Can you ask questions on health seeking behaviour?",
         "text_size": "8sp",
         "options": [
           {
