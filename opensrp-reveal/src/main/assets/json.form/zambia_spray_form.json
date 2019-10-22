@@ -430,24 +430,6 @@
           }
         }
       },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       {
         "key": "rooms_eligible",
         "openmrs_entity_parent": "",
@@ -525,7 +507,7 @@
         "text": "If this is a mop-up or revisit, please record TOTAL rooms sprayed",
         "read_only": false,
         "hint_on_text": true,
-        "text_color" : "#B9A000",
+        "text_color": "#B9A000",
         "text_size": "6sp",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1146,46 +1128,6 @@
           }
         }
       },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       {
         "key": "notsprayed_reason",
         "openmrs_entity_parent": "",
@@ -1733,18 +1675,6 @@
           }
         }
       },
-
-
-
-
-
-
-
-
-
-
-
-
       {
         "key": "mopup",
         "openmrs_entity_parent": "",
@@ -1910,7 +1840,9 @@
           "step1:information": {
             "ex-checkbox": [
               {
-                "or": ["other"]
+                "or": [
+                  "other"
+                ]
               }
             ]
           }
@@ -1967,9 +1899,10 @@
           "err": "Required field"
         },
         "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -1989,7 +1922,9 @@
           "step1:preferred_source": {
             "ex-checkbox": [
               {
-                "or": ["other"]
+                "or": [
+                  "other"
+                ]
               }
             ]
           }
