@@ -389,7 +389,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 task.setForEntity(baseEntityId);
                 task.setBusinessStatus(businessStatus);
                 task.setStatus(Task.TaskStatus.COMPLETED);
-                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                task.setSyncStatus(BaseRepository.TYPE_Created);
                 taskRepository.addOrUpdate(task);
                 Set<Task> removedTasks = new HashSet<>();
                 for (Task bloodScreeningTask : taskRepository.getTasksByEntityAndCode(prefsUtil.getCurrentPlanId(),
