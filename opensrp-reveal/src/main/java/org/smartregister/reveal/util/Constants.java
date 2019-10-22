@@ -87,6 +87,7 @@ public interface Constants {
         String SUPERVISORS = "supervisors";
         String TEAM_LEADERS = "team_leaders";
         String FIELD_OFFICERS = "field_officers";
+        String DISTRICT_MANAGERS = "district_managers";
         String HEALTH_FACILITIES = "health_facilities";
         String COMMUNITY_HEALTH_WORKERS = "community_health_workers";
         String CODE = "code";
@@ -349,6 +350,8 @@ public interface Constants {
         String SUPERVISOR = "supervisor";
 
         String TEAM_LEADER = "teamLeader";
+
+        String FIELD_OFFICER = "fieldOfficer";
 
         String HFC_SEEK = "hfc_seek";
 

@@ -56,13 +56,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "spinner",
-        "hint": "Name of Field Officer",
-        "values": [
-          "Anita Tembo"
-        ],
-        "keys": [
-          "Anita Tembo"
-        ]
+        "hint": "Name of Field Officer"
       },
       {
         "key": "health_facility",

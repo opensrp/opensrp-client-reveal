@@ -84,12 +84,6 @@
         "openmrs_entity_id": "",
         "type": "spinner",
         "hint": "District Manager name",
-        "values": [
-          "Roderick Siwale"
-        ],
-        "keys": [
-          "Roderick Siwale"
-        ],
         "v_required": {
           "value": "true",
           "err": "This field is required."
