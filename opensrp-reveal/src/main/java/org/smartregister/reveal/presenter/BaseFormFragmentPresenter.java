@@ -162,6 +162,17 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
                         PreferencesUtil.getInstance().getCurrentDistrict());
 
                 break;
+
+            case JsonForm.VERIFICATION_FORM_ZAMBIA:
+                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.FIELD_OFFICERS, JsonForm.FIELD_OFFICER,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+
+                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+
+                break;
             default:
                 break;
         }
