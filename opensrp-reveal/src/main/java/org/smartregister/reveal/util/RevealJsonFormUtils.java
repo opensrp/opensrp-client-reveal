@@ -205,7 +205,7 @@ public class RevealJsonFormUtils {
                 formName = JsonForm.SPRAY_FORM_ZAMBIA;
             } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_SPRAY_FORM;
-            }else{
+            } else {
                 formName = JsonForm.SPRAY_FORM;
             }
         } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)
@@ -365,8 +365,13 @@ public class RevealJsonFormUtils {
                 String name = operator.optString(CONFIGURATION.NAME);
                 if (code == null)
                     continue;
-                codes.put(code + ":" + name);
-                values.put(code + " - " + name);
+                if (StringUtils.isBlank(code) && code.equalsIgnoreCase(name)) {
+                    codes.put(name);
+                    values.put(name);
+                } else {
+                    codes.put(code + ":" + name);
+                    values.put(code + " - " + name);
+                }
             }
             JSONArray fields = JsonFormUtils.fields(formJson);
             JSONObject field = JsonFormUtils.getFieldJSONObject(fields, formKey);
