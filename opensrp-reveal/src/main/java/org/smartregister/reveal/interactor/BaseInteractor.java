@@ -293,8 +293,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     structureRepository.addOrUpdate(structure);
                     Context applicationContext = getInstance().getApplicationContext();
                     Task task = null;
-                    if (StructureType.RESIDENTIAL.equals(structureType) &&
-                            (Utils.isFocusInvestigation() || Utils.isMDA())) {
+                    if (StructureType.RESIDENTIAL.equals(structureType) && Utils.isFocusInvestigationOrMDA()) {
                         task = taskUtils.generateRegisterFamilyTask(applicationContext, structure.getId());
                     } else {
                         if (StructureType.RESIDENTIAL.equals(structureType)) {
