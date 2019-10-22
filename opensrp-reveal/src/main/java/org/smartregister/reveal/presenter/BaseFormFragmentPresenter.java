@@ -141,8 +141,9 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                     formJSON, Constants.CONFIGURATION.DISTRICT_MANAGERS, JsonForm.DISTRICT_MANAGER,
                     PreferencesUtil.getInstance().getCurrentDistrict());
-        }
-        if (JsonForm.IRS_SA_DECISION_ZAMBIA.equals(formName)) {
+        } else if (JsonForm.IRS_SA_DECISION_ZAMBIA.equals(formName)
+                || JsonForm.CB_SPRAY_AREA_ZAMBIA.equals(formName)
+                || JsonForm.MOBILIZATION_FORM_ZAMBIA.equals(formName)) {
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                     formJSON, Constants.CONFIGURATION.SUPERVISORS, JsonForm.SUPERVISOR,
                     PreferencesUtil.getInstance().getCurrentDistrict());
