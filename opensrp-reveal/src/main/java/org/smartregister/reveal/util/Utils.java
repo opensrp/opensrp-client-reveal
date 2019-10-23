@@ -289,4 +289,8 @@ public class Utils {
     public static boolean isMDA() {
         return getInterventionLabel() == R.string.mda;
     }
+
+    public static boolean isFocusInvestigationOrMDA() {
+        return isFocusInvestigation() || isMDA();
+    }
 }

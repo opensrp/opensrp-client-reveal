@@ -108,7 +108,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
     @Override
     public void onRegistrationSaved(boolean isEdit) {
-        if (!isEdit && Utils.getInterventionLabel() == R.string.focus_investigation) {
+        if (!isEdit && Utils.isFocusInvestigationOrMDA()) {
             getInteractor().generateTasks(getView().getApplicationContext(),
                     getModel().getEventClient().getEvent().getBaseEntityId(), structureId);
             return;

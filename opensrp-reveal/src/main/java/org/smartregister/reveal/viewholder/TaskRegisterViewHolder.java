@@ -88,7 +88,7 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         actionView.setText(actionLabel);
 
         // registered family with multiple tasks
-        if (cardDetails != null && task.getTaskCount() != null && Utils.getInterventionLabel() == R.string.focus_investigation) { // task grouping only for FI
+        if (cardDetails != null && task.getTaskCount() != null && Utils.isFocusInvestigationOrMDA()) { // task grouping only for FI
             if (task.getTaskCount() > 1) {
                 if (task.getTaskCount() != task.getCompleteTaskCount()) {
 
