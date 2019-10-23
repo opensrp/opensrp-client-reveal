@@ -88,29 +88,45 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         actionView.setText(actionLabel);
 
         // registered family with multiple tasks
-        if (cardDetails != null && task.getTaskCount() != null && Utils.isFocusInvestigationOrMDA()) { // task grouping only for FI
+        if (cardDetails != null && task.getTaskCount() != null) { // task grouping only for FI
             if (task.getTaskCount() > 1) {
                 if (task.getTaskCount() != task.getCompleteTaskCount()) {
 
                     // The assumption is that a register structure task always exists if the structure has
                     // atleast one bednet distribution or blood screening task
                     boolean familyRegTaskMissingOrFamilyRegComplete = task.isFamilyRegistered() || !task.isFamilyRegTaskExists();
-                    if (familyRegTaskMissingOrFamilyRegComplete && task.isBednetDistributed() && task.isBloodScreeningDone()) {
-                        showTasksCompleteActionView();
-                    } else if (familyRegTaskMissingOrFamilyRegComplete && !task.isBednetDistributed() && !task.isBloodScreeningDone()) {
-                        actionView.setBackground(context.getResources().getDrawable(R.drawable.family_registered_bg));
-                        actionView.setTextColor(context.getResources().getColor(R.color.text_black));
-                    } else if (familyRegTaskMissingOrFamilyRegComplete && task.isBednetDistributed()) {
-                        actionView.setBackground(context.getResources().getDrawable(R.drawable.bednet_distributed_bg));
-                        actionView.setTextColor(context.getResources().getColor(R.color.text_black));
-                    } else if (task.isBloodScreeningDone()) {
-                        actionView.setBackground(context.getResources().getDrawable(R.drawable.blood_screening_complete_bg));
-                        actionView.setTextColor(context.getResources().getColor(R.color.text_black));
-                    } else if (familyRegTaskMissingOrFamilyRegComplete &&  task.isMdaDispensed() && task.isMdaAdhered()) {
-                        showTasksCompleteActionView();
-                    } else {
-                        actionView.setBackground(context.getResources().getDrawable(R.drawable.no_task_complete_bg));
-                        actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+
+                    if (Utils.isFocusInvestigation()) {
+                        if (familyRegTaskMissingOrFamilyRegComplete && task.isBednetDistributed() && task.isBloodScreeningDone()) {
+                            showTasksCompleteActionView();
+                        } else if (familyRegTaskMissingOrFamilyRegComplete && !task.isBednetDistributed() && !task.isBloodScreeningDone()) {
+                            actionView.setBackground(context.getResources().getDrawable(R.drawable.family_registered_bg));
+                            actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                        } else if (familyRegTaskMissingOrFamilyRegComplete && task.isBednetDistributed()) {
+                            actionView.setBackground(context.getResources().getDrawable(R.drawable.bednet_distributed_bg));
+                            actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                        } else if (task.isBloodScreeningDone()) {
+                            actionView.setBackground(context.getResources().getDrawable(R.drawable.blood_screening_complete_bg));
+                            actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                        } else if (familyRegTaskMissingOrFamilyRegComplete &&  task.isMdaDispensed() && task.isMdaAdhered()) {
+                            showTasksCompleteActionView();
+                        } else {
+                            actionView.setBackground(context.getResources().getDrawable(R.drawable.no_task_complete_bg));
+                            actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                        }
+                    } else if (Utils.isMDA()){
+                        if (familyRegTaskMissingOrFamilyRegComplete && task.isMdaDispensed() && task.isMdaAdhered()) {
+                            showTasksCompleteActionView();
+                        } else if (familyRegTaskMissingOrFamilyRegComplete && task.isMdaDispensed()) {
+                            actionView.setBackground(context.getResources().getDrawable(R.drawable.mda_dispensed_bg));
+                            actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                        } else if (familyRegTaskMissingOrFamilyRegComplete && !task.isMdaDispensed() && !task.isMdaAdhered()) {
+                            actionView.setBackground(context.getResources().getDrawable(R.drawable.family_registered_bg));
+                            actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                        } else {
+                            actionView.setBackground(context.getResources().getDrawable(R.drawable.no_task_complete_bg));
+                            actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                        }
                     }
 
                     actionView.setText(context.getText(R.string.view_tasks));
@@ -160,7 +176,11 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void showTasksCompleteActionView() {
-        actionView.setBackground(context.getResources().getDrawable(R.drawable.tasks_complete_bg));
+        if (Utils.isFocusInvestigation()) {
+            actionView.setBackground(context.getResources().getDrawable(R.drawable.tasks_complete_bg));
+        } else if (Utils.isMDA()){
+            actionView.setBackground(context.getResources().getDrawable(R.drawable.mda_adhered_bg));
+        }
         actionView.setTextColor(context.getResources().getColor(R.color.text_black));
         actionView.setText(context.getText(R.string.tasks_complete));
     }
