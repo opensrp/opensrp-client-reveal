@@ -35,14 +35,13 @@ import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
+import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
@@ -87,7 +86,6 @@ import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENI
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
-import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
@@ -107,7 +105,7 @@ import static org.smartregister.util.JsonFormUtils.getJSONObject;
 import static org.smartregister.util.JsonFormUtils.getString;
 
 
-/**
+/** di
  * Created by samuelgithengi on 3/25/19.
  */
 public class BaseInteractor implements BaseContract.BaseInteractor {
@@ -167,7 +165,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             boolean refreshMapOnEventSaved = true;
             if (REGISTER_STRUCTURE_EVENT.equals(encounterType)) {
                 saveRegisterStructureForm(jsonForm);
-            } else if (BLOOD_SCREENING_EVENT.equals(encounterType)) {
+            } else if (BLOOD_SCREENING_EVENT.equals(encounterType) || MDA_DISPENSE.equals(encounterType) || EventType.MDA_ADHERENCE.equals(encounterType)) {
                 saveMemberForm(jsonForm, encounterType, BLOOD_SCREENING);
             } else if (CASE_CONFIRMATION_EVENT.equals(encounterType)) {
                 saveCaseConfirmation(jsonForm, encounterType);
@@ -217,12 +215,12 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 interventionType = BEDNET_DISTRIBUTION;
             } else if (encounterType.equals(BEHAVIOUR_CHANGE_COMMUNICATION)) {
                 interventionType = BCC;
-            } else if (encounterType.equals(Constants.EventType.PAOT_EVENT)) {
+            } else if (encounterType.equals(EventType.PAOT_EVENT)) {
                 interventionType = PAOT;
-            } else if (encounterType.equals(Constants.EventType.MDA_DISPENSE)) {
+            } else if (encounterType.equals(EventType.MDA_DISPENSE)) {
                 interventionType = Intervention.MDA_DISPENSE;
-            } else if (encounterType.equals(Constants.EventType.MDA_ADHERENCE)) {
-                interventionType = MDA_ADHERENCE;
+            } else if (encounterType.equals(EventType.MDA_ADHERENCE)) {
+                interventionType = Intervention.MDA_ADHERENCE;
             }
         } catch (JSONException e) {
             Timber.e(e);
