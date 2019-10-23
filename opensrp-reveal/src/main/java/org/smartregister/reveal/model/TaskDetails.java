@@ -262,8 +262,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
         setFullyReceived(fullyReceivedCount == mdaDispenseTaskCount);
         setNoneReceived(nonReceivedCount == mdaDispenseTaskCount);
-        setPartiallyReceived(!isFullyReceived() && nonReceivedCount > 0);
         setNotEligible(nonEligibleCount == mdaDispenseTaskCount);
+        setPartiallyReceived(!isFullyReceived() && !isNoneReceived() && !isNotEligible());
 
     }
 

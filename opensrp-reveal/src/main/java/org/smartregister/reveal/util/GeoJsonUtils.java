@@ -142,8 +142,8 @@ public class GeoJsonUtils {
 
                     fullyReceived = (fullyReceivedCount == mdaDispenseTaskCount);
                     nonReceived = (nonReceivedCount == mdaDispenseTaskCount);
-                    partiallyReceived = (!fullyReceived && nonReceivedCount > 0);
                     nonEligible = (nonEligibleCount == mdaDispenseTaskCount);
+                    partiallyReceived = (!fullyReceived && !nonReceived && !nonEligible);
 
                     if (familyRegTaskMissingOrFamilyRegComplete && mdaAdhered) {
                         taskProperties.put(TASK_BUSINESS_STATUS, ADHERENCE_VISIT_DONE);
