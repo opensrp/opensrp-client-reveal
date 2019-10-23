@@ -93,6 +93,12 @@ public interface Constants {
         String CODE = "code";
         String NAME = "name";
 
+
+        String MDA_CORDINATORS = "mda_coordinators";
+        String MDA_DATA_COLLECTORS_ = "mda_data_collectors";
+        String MDA_COMMUNITY_HEALTH_WORKERS = "mda_community_health_workers";
+        String MDA_ADHERENCE_OFFICERS = "mda_adherence_officers";
+
     }
 
     interface Preferences {
@@ -168,7 +174,7 @@ public interface Constants {
 
         String MDA = "MDA";
 
-        List<String> PERSON_INTERVENTIONS = Arrays.asList(BLOOD_SCREENING,CASE_CONFIRMATION,MDA_DISPENSE,MDA_ADHERENCE);
+        List<String> PERSON_INTERVENTIONS = Arrays.asList(BLOOD_SCREENING, CASE_CONFIRMATION, MDA_DISPENSE, MDA_ADHERENCE);
 
 
     }
@@ -370,6 +376,11 @@ public interface Constants {
         String HFC_BELONG = "hfc_belong";
 
         String CHW_NAME = "chw_name";
+
+        String COORDINATOR_NAME = "coordinator_name";
+
+        String ADHERENCE_NAME = "adherence_name";
+
 
     }
 
