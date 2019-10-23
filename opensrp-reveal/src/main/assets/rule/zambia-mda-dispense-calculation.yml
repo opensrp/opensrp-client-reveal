@@ -4,4 +4,4 @@ description: Business status calculation
 priority: 1
 condition: "true"
 actions:
-  - "calculation = ('received'.equals(step1_treatment)  &&  'Yes'.equals(step1_eligible)) ? 'Fully received' : ('refused'.equals(step1_treatment)  &&  'Yes'.equals(step1_eligible)) ? 'None received': 'Not Eligible'"
+  - "calculation = ('received'.equals(step1_treatment)  &&  'Yes'.equals(step1_eligible)) ? 'Fully received' : ('refused'.equals(step1_treatment)  &&  'Yes'.equals(step1_eligible)) ? 'None Received': 'Not Eligible'"
