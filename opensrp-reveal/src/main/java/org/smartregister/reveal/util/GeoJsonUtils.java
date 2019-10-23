@@ -2,7 +2,6 @@ package org.smartregister.reveal.util;
 
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
-import org.smartregister.reveal.R;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,10 +9,12 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.smartregister.reveal.interactor.ListTaskInteractor.gson;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.ADHERENCE_VISIT_DONE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.BEDNET_DISTRIBUTED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.BLOOD_SCREENING_COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_REGISTERED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.FULLY_RECEIVED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
@@ -30,7 +31,6 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_S
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
-import static org.smartregister.reveal.util.Utils.getInterventionLabel;
 
 /**
  * Created by samuelgithengi on 1/7/19.
@@ -94,24 +94,41 @@ public class GeoJsonUtils {
 
             // The assumption is that a register structure task always exists if the structure has
             // atleast one bednet distribution or blood screening task
-            if (Utils.isResidentialStructure(taskProperties.get(TASK_CODE)) && Utils.isFocusInvestigationOrMDA()) {
+            if ( Utils.isResidentialStructure(taskProperties.get(TASK_CODE)) ) {
 
                 boolean familyRegTaskMissingOrFamilyRegComplete = familyRegistered || !familyRegTaskExists;
-                if (familyRegTaskMissingOrFamilyRegComplete &&
-                        ((bednetDistributed && bloodScreeningDone) ||
-                        (mdaAdhered && mdaDispensed))) {
-                    taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
-                } else if (familyRegTaskMissingOrFamilyRegComplete &&
-                        !bednetDistributed && !bloodScreeningDone &&
-                        !mdaAdhered && !mdaDispensed) {
-                    taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
-                } else if (bednetDistributed && familyRegTaskMissingOrFamilyRegComplete) {
-                    taskProperties.put(TASK_BUSINESS_STATUS, BEDNET_DISTRIBUTED);
-                } else if (bloodScreeningDone) {
-                    taskProperties.put(TASK_BUSINESS_STATUS, BLOOD_SCREENING_COMPLETE);
-                } else {
-                    taskProperties.put(TASK_BUSINESS_STATUS, NOT_VISITED);
+
+                if (Utils.isFocusInvestigation()) {
+
+                    if (familyRegTaskMissingOrFamilyRegComplete &&
+                            bednetDistributed && bloodScreeningDone) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
+                    }  else if (familyRegTaskMissingOrFamilyRegComplete &&
+                            !bednetDistributed && !bloodScreeningDone ) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
+                    } else if (bednetDistributed && familyRegTaskMissingOrFamilyRegComplete) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, BEDNET_DISTRIBUTED);
+                    } else if (bloodScreeningDone) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, BLOOD_SCREENING_COMPLETE);
+                    } else {
+                        taskProperties.put(TASK_BUSINESS_STATUS, NOT_VISITED);
+                    }
+
+                } else if (Utils.isMDA()) {
+
+                    if (familyRegTaskMissingOrFamilyRegComplete && mdaDispensed && mdaAdhered) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, ADHERENCE_VISIT_DONE);
+                    } else if (familyRegTaskMissingOrFamilyRegComplete && mdaDispensed ) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, FULLY_RECEIVED);
+                    }  else if (familyRegTaskMissingOrFamilyRegComplete &&
+                            !mdaAdhered && !mdaDispensed) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
+                    } else {
+                        taskProperties.put(TASK_BUSINESS_STATUS, NOT_VISITED);
+                    }
+
                 }
+
             }
 
             structure.getProperties().setCustomProperties(taskProperties);
