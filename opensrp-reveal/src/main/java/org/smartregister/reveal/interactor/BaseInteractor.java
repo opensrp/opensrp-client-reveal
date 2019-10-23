@@ -35,6 +35,7 @@ import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.contract.StructureTasksContract;
@@ -79,7 +80,6 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TA
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT;
-import static org.smartregister.reveal.util.Constants.EventType.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
@@ -105,7 +105,8 @@ import static org.smartregister.util.JsonFormUtils.getJSONObject;
 import static org.smartregister.util.JsonFormUtils.getString;
 
 
-/** di
+/**
+ *
  * Created by samuelgithengi on 3/25/19.
  */
 public class BaseInteractor implements BaseContract.BaseInteractor {
@@ -163,17 +164,28 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             JSONObject jsonForm = new JSONObject(json);
             String encounterType = jsonForm.getString(ENCOUNTER_TYPE);
             boolean refreshMapOnEventSaved = true;
-            if (REGISTER_STRUCTURE_EVENT.equals(encounterType)) {
-                saveRegisterStructureForm(jsonForm);
-            } else if (BLOOD_SCREENING_EVENT.equals(encounterType) || MDA_DISPENSE.equals(encounterType) || EventType.MDA_ADHERENCE.equals(encounterType)) {
-                saveMemberForm(jsonForm, encounterType, BLOOD_SCREENING);
-            } else if (CASE_CONFIRMATION_EVENT.equals(encounterType)) {
-                saveCaseConfirmation(jsonForm, encounterType);
-            } else {
-                saveLocationInterventionForm(jsonForm);
-                if (!encounterType.equals(BEDNET_DISTRIBUTION_EVENT)) {
-                    refreshMapOnEventSaved = false;
-                }
+            switch (encounterType) {
+                case REGISTER_STRUCTURE_EVENT:
+                    saveRegisterStructureForm(jsonForm);
+                    break;
+                case EventType.MDA_DISPENSE:
+                    taskUtils.generateMDAAdherenceTask(RevealApplication.getInstance().getApplicationContext(),
+                            getString(jsonForm, ENTITY_ID), getJSONObject(jsonForm, DETAILS).getString(Properties.LOCATION_ID));
+
+                case BLOOD_SCREENING_EVENT:
+                case EventType.MDA_ADHERENCE:
+                    saveMemberForm(jsonForm, encounterType, BLOOD_SCREENING);
+                    break;
+
+                case CASE_CONFIRMATION_EVENT:
+                    saveCaseConfirmation(jsonForm, encounterType);
+                    break;
+                default:
+                    saveLocationInterventionForm(jsonForm);
+                    if (!encounterType.equals(BEDNET_DISTRIBUTION_EVENT)) {
+                        refreshMapOnEventSaved = false;
+                    }
+                    break;
             }
             getInstance().setRefreshMapOnEventSaved(refreshMapOnEventSaved);
         } catch (Exception e) {
