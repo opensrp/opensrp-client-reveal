@@ -542,7 +542,13 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "hidden",
-        "value": "Complete"
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-mda-dispense-calculation.yml"
+            }
+          }
+        }
       }
     ]
   }

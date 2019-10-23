@@ -43,11 +43,13 @@ public class CardDetailsUtil {
             case BusinessStatus.NOT_SPRAYED:
             case BusinessStatus.INCOMPLETE:
             case BusinessStatus.IN_PROGRESS:
+            case BusinessStatus.NONE_RECEIVED:
                 cardDetails.setStatusColor(R.color.unsprayed);
                 cardDetails.setStatusMessage(R.string.details_not_sprayed);
                 break;
             case BusinessStatus.SPRAYED:
             case BusinessStatus.COMPLETE:
+            case BusinessStatus.FULLY_RECEIVED:
                 cardDetails.setStatusColor(R.color.sprayed);
                 cardDetails.setStatusMessage(R.string.details_sprayed);
                 cardDetails.setReason(null);
