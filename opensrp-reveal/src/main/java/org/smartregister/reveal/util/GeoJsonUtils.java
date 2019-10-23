@@ -70,7 +70,7 @@ public class GeoJsonUtils {
                 }
                 taskProperties = new HashMap<>();
                 taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
-                if (Utils.isResidentialStructure(task.getCode()) && getInterventionLabel() == R.string.focus_investigation) { // used to determine color of structure displayed on map
+                if (Utils.isResidentialStructure(task.getCode()) && Utils.isFocusInvestigationOrMDA()) { // used to determine color of structure displayed on map
                     taskProperties.put(TASK_BUSINESS_STATUS, groupedStructureTasksBusinessStatus);
                 } else {
                     taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());

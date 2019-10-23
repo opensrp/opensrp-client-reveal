@@ -163,6 +163,10 @@ public interface Constants {
         String CASE_DETAILS_EVENT = "Case Details";
 
         String PAOT_EVENT = "PAOT";
+
+        String MDA_DISPENSE = "mda_dispense";
+
+        String MDA_ADHERENCE = "mda_adherence";
     }
 
     interface Tables {
@@ -180,15 +184,19 @@ public interface Constants {
         String INCOMPLETE = "Incomplete";
         String NOT_ELIGIBLE = "Not Eligible";
         String IN_PROGRESS = "In Progress";
+
+
+        String FULLY_RECEIVED = "Fully Received";
+        String NONE_RECEIVED = "None Received";
+        String NOT_VISITED_ = "Not Visited YET";
+        String ADHERENCE_VISIT_DONE = "Adherence Visit Done";
+
         // Following are for grouped structure tasks. Not synced to server
         String FAMILY_REGISTERED = "Family Registered";
         String BEDNET_DISTRIBUTED = "Bednet Distributed";
         String BLOOD_SCREENING_COMPLETE = "Blood Screening Complete";
         String PARTIALLY_SPRAYED = "Partially Sprayed";
-        String FULLY_RECEIVED = "Fully Received";
-        String NONE_RECEIVED = "None Received";
-        String NOT_VISITED_ = "Not Visited YET";
-        String ADHERENCE_VISIT_DONE = "Adherence Visit Done";
+
     }
 
     interface BusinessStatusWrapper {

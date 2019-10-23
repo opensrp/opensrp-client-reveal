@@ -249,7 +249,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     onLocationValidated();
                 }
             } else if (IRS.equals(code) &&
-                    (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus)) || PARTIALLY_SPRAYED.equals(businessStatus)) {
+                    (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus) || PARTIALLY_SPRAYED.equals(businessStatus))) {
                 listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
             } else if ((MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code))
                     && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
@@ -257,7 +257,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
             } else if (PAOT.equals(code)) {
                 listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
-            } else if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.focus_investigation) {
+            } else if (org.smartregister.reveal.util.Utils.isFocusInvestigationOrMDA()) {
                 listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
             }
         }
