@@ -78,6 +78,7 @@ public class GeoJsonUtils {
                         }
                     } else if (Utils.isMDA()){
                         if (MDA_DISPENSE.equals(task.getCode())) {
+                            mdaDispenseTaskCount++;
                             if ( FULLY_RECEIVED.equals(task.getBusinessStatus())) {
                                 fullyReceivedCount++;
                             } else if ( NONE_RECEIVED.equals(task.getBusinessStatus())) {
