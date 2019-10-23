@@ -94,12 +94,12 @@ public class GeoJsonUtils {
 
             // The assumption is that a register structure task always exists if the structure has
             // atleast one bednet distribution or blood screening task
-            if (Utils.isResidentialStructure(taskProperties.get(TASK_CODE)) && getInterventionLabel() == R.string.focus_investigation) {
+            if (Utils.isResidentialStructure(taskProperties.get(TASK_CODE)) && Utils.isFocusInvestigationOrMDA()) {
 
                 boolean familyRegTaskMissingOrFamilyRegComplete = familyRegistered || !familyRegTaskExists;
                 if (familyRegTaskMissingOrFamilyRegComplete &&
-                        (bednetDistributed && bloodScreeningDone) ||
-                        (mdaAdhered && mdaDispensed)) {
+                        ((bednetDistributed && bloodScreeningDone) ||
+                        (mdaAdhered && mdaDispensed))) {
                     taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
                 } else if (familyRegTaskMissingOrFamilyRegComplete &&
                         !bednetDistributed && !bloodScreeningDone &&
