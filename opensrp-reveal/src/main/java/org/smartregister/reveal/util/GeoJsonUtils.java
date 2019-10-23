@@ -15,7 +15,10 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.BLOOD_SCREE
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_REGISTERED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FULLY_RECEIVED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NONE_RECEIVED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_RECEIVED;
 import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
@@ -48,7 +51,15 @@ public class GeoJsonUtils {
             boolean bloodScreeningDone = false;
             boolean familyRegTaskExists = false;
             boolean mdaAdhered = false;
-            boolean mdaDispensed = false;
+            boolean fullyReceived = false;
+            boolean nonReceived = false;
+            boolean nonEligible = false;
+            boolean partiallyReceived = false;
+            int taskCount = taskSet.size();
+            int fullyReceivedCount = 0;
+            int nonReceivedCount = 0;
+            int nonEligibleCount = 0;
+
             if (taskSet == null)
                 continue;
             for (Task task : taskSet) {
@@ -57,14 +68,24 @@ public class GeoJsonUtils {
                     familyRegTaskExists = task.getCode().equals(REGISTER_FAMILY);
                     if (familyRegTaskExists && task.getBusinessStatus().equals(COMPLETE)) {
                         familyRegistered = true;
-                    } else if (task.getCode().equals(BEDNET_DISTRIBUTION) && task.getBusinessStatus().equals(COMPLETE)) {
-                        bednetDistributed = true;
-                    } else if (task.getCode().equals(BLOOD_SCREENING) && task.getBusinessStatus().equals(COMPLETE)) {
-                        bloodScreeningDone = true;
-                    } else if (task.getCode().equals(MDA_ADHERENCE) && task.getBusinessStatus().equals(COMPLETE)) {
-                        mdaAdhered = true;
-                    } else if (task.getCode().equals(MDA_DISPENSE) && task.getBusinessStatus().equals(COMPLETE)) {
-                        mdaDispensed = true;
+                    }
+
+                    if (Utils.isFocusInvestigation()) {
+                        if (task.getCode().equals(BEDNET_DISTRIBUTION) && task.getBusinessStatus().equals(COMPLETE)) {
+                            bednetDistributed = true;
+                        } else if (task.getCode().equals(BLOOD_SCREENING) && task.getBusinessStatus().equals(COMPLETE)) {
+                            bloodScreeningDone = true;
+                        }
+                    } else if (Utils.isMDA()){
+                        if (MDA_DISPENSE.equals(task.getCode()) && FULLY_RECEIVED.equals(task.getBusinessStatus())) {
+                            fullyReceivedCount++;
+                        } else if (MDA_DISPENSE.equals(task.getCode()) && NONE_RECEIVED.equals(task.getBusinessStatus())) {
+                            nonReceivedCount++;
+                        } else if(MDA_DISPENSE.equals(task.getCode()) && NOT_ELIGIBLE.equals(task.getBusinessStatus())) {
+                            nonEligibleCount++;
+                        } else if(MDA_ADHERENCE.equals(task.getCode()) && COMPLETE.equals(task.getBusinessStatus())) {
+                            mdaAdhered = true;
+                        }
                     }
 
                 }
@@ -116,12 +137,23 @@ public class GeoJsonUtils {
 
                 } else if (Utils.isMDA()) {
 
-                    if (familyRegTaskMissingOrFamilyRegComplete && mdaDispensed && mdaAdhered) {
+                    fullyReceived = (fullyReceivedCount == taskCount);
+                    nonReceived = (nonReceivedCount == taskCount);
+                    partiallyReceived = (!fullyReceived && nonReceivedCount > 0);
+                    nonEligible = (nonEligibleCount == taskCount);
+
+                    if (familyRegTaskMissingOrFamilyRegComplete && mdaAdhered) {
                         taskProperties.put(TASK_BUSINESS_STATUS, ADHERENCE_VISIT_DONE);
-                    } else if (familyRegTaskMissingOrFamilyRegComplete && mdaDispensed ) {
+                    } else if (familyRegTaskMissingOrFamilyRegComplete && fullyReceived ) {
                         taskProperties.put(TASK_BUSINESS_STATUS, FULLY_RECEIVED);
-                    }  else if (familyRegTaskMissingOrFamilyRegComplete &&
-                            !mdaAdhered && !mdaDispensed) {
+                    } else if (familyRegTaskMissingOrFamilyRegComplete && partiallyReceived ) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, PARTIALLY_RECEIVED);
+                    } else if (familyRegTaskMissingOrFamilyRegComplete && nonReceived ) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, NONE_RECEIVED);
+                    } else if (familyRegTaskMissingOrFamilyRegComplete && nonEligible ) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
+                    } else if (familyRegTaskMissingOrFamilyRegComplete &&
+                            !mdaAdhered ) {
                         taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
                     } else {
                         taskProperties.put(TASK_BUSINESS_STATUS, NOT_VISITED);

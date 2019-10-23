@@ -175,12 +175,18 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
                 actionBg = context.getResources().getDrawable(R.drawable.no_task_complete_bg);
             }
         } else if (Utils.isMDA()){
-            if (familyRegTaskMissingOrFamilyRegComplete && task.isMdaDispensed() && task.isMdaAdhered()) {
+            if (familyRegTaskMissingOrFamilyRegComplete && task.isMdaAdhered()) {
                 actionBg = context.getResources().getDrawable(R.drawable.mda_adhered_bg);
                 actionText = context.getText(R.string.tasks_complete).toString();
-            } else if (familyRegTaskMissingOrFamilyRegComplete && task.isMdaDispensed()) {
+            } else if (familyRegTaskMissingOrFamilyRegComplete && task.isFullyReceived()) {
                 actionBg = context.getResources().getDrawable(R.drawable.mda_dispensed_bg);
-            } else if (familyRegTaskMissingOrFamilyRegComplete && !task.isMdaDispensed() && !task.isMdaAdhered()) {
+            } else if (familyRegTaskMissingOrFamilyRegComplete && task.isPartiallyReceived()) {
+                actionBg = context.getResources().getDrawable(R.drawable.mda_partially_received_bg);
+            } else if (familyRegTaskMissingOrFamilyRegComplete && task.isNoneReceived()) {
+                actionBg = context.getResources().getDrawable(R.drawable.mda_none_received_bg);
+            } else if (familyRegTaskMissingOrFamilyRegComplete && task.isNotEligible()) {
+                actionBg = context.getResources().getDrawable(R.drawable.mda_not_eligible_bg);
+            } else if (familyRegTaskMissingOrFamilyRegComplete && !task.isMdaAdhered()) {
                 actionBg = context.getResources().getDrawable(R.drawable.family_registered_bg);
             } else {
                 actionBg = context.getResources().getDrawable(R.drawable.no_task_complete_bg);
