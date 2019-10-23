@@ -153,6 +153,10 @@ public interface Constants {
         String MDA_ADHERENCE = "MDA Adherence";
 
         String MDA = "MDA";
+
+        List<String> PERSON_INTERVENTIONS = Arrays.asList(BLOOD_SCREENING,CASE_CONFIRMATION,MDA_DISPENSE,MDA_ADHERENCE);
+
+
     }
 
 
