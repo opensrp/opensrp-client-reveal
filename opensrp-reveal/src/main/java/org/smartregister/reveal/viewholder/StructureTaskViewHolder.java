@@ -1,8 +1,11 @@
 package org.smartregister.reveal.viewholder;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +37,8 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
 
     private TextView lastEditedTextView;
 
+    private TextView detailsTextView;
+
     public StructureTaskViewHolder(@NonNull View itemView) {
         super(itemView);
         context = itemView.getContext();
@@ -41,10 +46,19 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
         actionTextView = itemView.findViewById(R.id.task_action);
         viewEditImageView = itemView.findViewById(R.id.view_edit);
         lastEditedTextView = itemView.findViewById(R.id.last_edited);
+        detailsTextView = itemView.findViewById(R.id.task_details);
     }
 
     public void setTaskName(String name) {
         nameTextView.setText(name);
+        detailsTextView.setVisibility(View.GONE);
+    }
+
+    public void setTaskName(String taskName, String taskCode) {
+        nameTextView.setText(taskName);
+        detailsTextView.setText(taskCode);
+        detailsTextView.setVisibility(View.VISIBLE);
+
     }
 
     public void setTaskAction(StructureTaskDetails taskDetails, View.OnClickListener onClickListener) {
@@ -85,4 +99,6 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
         view.setOnClickListener(onClickListener);
         view.setTag(R.id.task_details, taskDetails);
     }
+
+
 }
