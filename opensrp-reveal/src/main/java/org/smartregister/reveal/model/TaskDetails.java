@@ -222,10 +222,10 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
             return;
         }
         String[] groupedTaskCodeStatusArray = groupedTaskCodeStatusString.split(COMMA);
-        int taskCount = groupedTaskCodeStatusArray.length;
         int fullyReceivedCount = 0;
         int nonReceivedCount = 0;
         int nonEligibleCount = 0;
+        int mdaDispenseTaskCount = 0;
         for (int i = 0; i < groupedTaskCodeStatusArray.length; i++) {
             String[] taskCodeStatusArray = groupedTaskCodeStatusArray[i].split(HYPHEN);
 
@@ -244,22 +244,26 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
                     setBloodScreeningDone(true);
                 }
             } else if (Utils.isMDA()){
-                if (MDA_DISPENSE.equals(taskCodeStatusArray[0]) && FULLY_RECEIVED.equals(taskCodeStatusArray[1])) {
-                    fullyReceivedCount++;
-                } else if (MDA_DISPENSE.equals(taskCodeStatusArray[0]) && NONE_RECEIVED.equals(taskCodeStatusArray[1])) {
-                    nonReceivedCount++;
-                } else if(MDA_DISPENSE.equals(taskCodeStatusArray[0]) && NOT_ELIGIBLE.equals(taskCodeStatusArray[1])) {
-                    nonEligibleCount++;
-                } else if (MDA_ADHERENCE.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
+                if (MDA_DISPENSE.equals(taskCodeStatusArray[0]) ) {
+                    mdaDispenseTaskCount++;
+                    if (FULLY_RECEIVED.equals(taskCodeStatusArray[1])) {
+                        fullyReceivedCount++;
+                    } else if ( NONE_RECEIVED.equals(taskCodeStatusArray[1])) {
+                        nonReceivedCount++;
+                    } else if(NOT_ELIGIBLE.equals(taskCodeStatusArray[1])) {
+                        nonEligibleCount++;
+                    }
+                }
+                 else if (MDA_ADHERENCE.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
                     setMdaAdhered(true);
                 }
             }
         }
 
-        setFullyReceived(fullyReceivedCount == taskCount);
-        setNoneReceived(nonReceivedCount == taskCount);
+        setFullyReceived(fullyReceivedCount == mdaDispenseTaskCount);
+        setNoneReceived(nonReceivedCount == mdaDispenseTaskCount);
         setPartiallyReceived(!isFullyReceived() && nonReceivedCount > 0);
-        setNotEligible(nonEligibleCount == taskCount);
+        setNotEligible(nonEligibleCount == mdaDispenseTaskCount);
 
     }
 

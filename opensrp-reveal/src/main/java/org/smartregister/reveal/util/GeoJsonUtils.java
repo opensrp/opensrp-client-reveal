@@ -51,11 +51,11 @@ public class GeoJsonUtils {
             boolean bloodScreeningDone = false;
             boolean familyRegTaskExists = false;
             boolean mdaAdhered = false;
-            boolean fullyReceived = false;
-            boolean nonReceived = false;
-            boolean nonEligible = false;
-            boolean partiallyReceived = false;
-            int taskCount = taskSet.size();
+            boolean fullyReceived;
+            boolean nonReceived;
+            boolean nonEligible;
+            boolean partiallyReceived;
+            int mdaDispenseTaskCount = 0 ;
             int fullyReceivedCount = 0;
             int nonReceivedCount = 0;
             int nonEligibleCount = 0;
@@ -77,12 +77,14 @@ public class GeoJsonUtils {
                             bloodScreeningDone = true;
                         }
                     } else if (Utils.isMDA()){
-                        if (MDA_DISPENSE.equals(task.getCode()) && FULLY_RECEIVED.equals(task.getBusinessStatus())) {
-                            fullyReceivedCount++;
-                        } else if (MDA_DISPENSE.equals(task.getCode()) && NONE_RECEIVED.equals(task.getBusinessStatus())) {
-                            nonReceivedCount++;
-                        } else if(MDA_DISPENSE.equals(task.getCode()) && NOT_ELIGIBLE.equals(task.getBusinessStatus())) {
-                            nonEligibleCount++;
+                        if (MDA_DISPENSE.equals(task.getCode())) {
+                            if ( FULLY_RECEIVED.equals(task.getBusinessStatus())) {
+                                fullyReceivedCount++;
+                            } else if ( NONE_RECEIVED.equals(task.getBusinessStatus())) {
+                                nonReceivedCount++;
+                            } else if( NOT_ELIGIBLE.equals(task.getBusinessStatus())) {
+                                nonEligibleCount++;
+                            }
                         } else if(MDA_ADHERENCE.equals(task.getCode()) && COMPLETE.equals(task.getBusinessStatus())) {
                             mdaAdhered = true;
                         }
@@ -137,10 +139,10 @@ public class GeoJsonUtils {
 
                 } else if (Utils.isMDA()) {
 
-                    fullyReceived = (fullyReceivedCount == taskCount);
-                    nonReceived = (nonReceivedCount == taskCount);
+                    fullyReceived = (fullyReceivedCount == mdaDispenseTaskCount);
+                    nonReceived = (nonReceivedCount == mdaDispenseTaskCount);
                     partiallyReceived = (!fullyReceived && nonReceivedCount > 0);
-                    nonEligible = (nonEligibleCount == taskCount);
+                    nonEligible = (nonEligibleCount == mdaDispenseTaskCount);
 
                     if (familyRegTaskMissingOrFamilyRegComplete && mdaAdhered) {
                         taskProperties.put(TASK_BUSINESS_STATUS, ADHERENCE_VISIT_DONE);
