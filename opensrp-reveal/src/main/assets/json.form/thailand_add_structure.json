@@ -60,6 +60,28 @@
         }
       },
       {
+        "key": "selectedOpAreaLabel",
+        "type": "label",
+        "text": "พื้นที่ปฏิบัติการที่เลือก",
+        "read_only": false,
+        "hint_on_text": false,
+        "text_color" : "#000000",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
+      },
+      {
+        "key": "selectedOpAreaName",
+        "type": "label",
+        "text": "",
+        "read_only": false,
+        "hint_on_text": true,
+        "text_color" : "#000000",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
+      },
+      {
         "key": "structureType",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
