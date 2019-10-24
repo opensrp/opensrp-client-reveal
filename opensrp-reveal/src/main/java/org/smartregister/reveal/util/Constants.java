@@ -95,7 +95,7 @@ public interface Constants {
 
 
         String MDA_CORDINATORS = "mda_coordinators";
-        String MDA_DATA_COLLECTORS_ = "mda_data_collectors";
+        String MDA_DATA_COLLECTORS = "mda_data_collectors";
         String MDA_COMMUNITY_HEALTH_WORKERS = "mda_community_health_workers";
         String MDA_ADHERENCE_OFFICERS = "mda_adherence_officers";
         String MDA_CATCHMENT_AREAS = "mda_catchment_areas";

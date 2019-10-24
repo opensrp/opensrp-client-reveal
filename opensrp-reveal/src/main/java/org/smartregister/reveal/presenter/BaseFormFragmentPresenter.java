@@ -121,16 +121,8 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
                     return;
                 } else if (IRS.equals(taskDetails.getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
                     interactor.findSprayDetails(IRS, structure.getId(), formJSON);
-                } else if (MDA_DISPENSE.equals(taskDetails.getTaskCode())|| MDA_ADHERENCE.equals(taskDetails.getTaskCode())) {
+                } else if (MDA_DISPENSE.equals(taskDetails.getTaskCode()) || MDA_ADHERENCE.equals(taskDetails.getTaskCode())) {
                     jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJSON, Constants.CONFIGURATION.MDA_CATCHMENT_AREAS, JsonForm.CATCHMENT_AREA, prefsUtil.getCurrentDistrict());
-                    jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJSON, Constants.CONFIGURATION.MDA_CORDINATORS, JsonForm.COORDINATOR_NAME, prefsUtil.getCurrentFacility());
-                    jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJSON, Constants.CONFIGURATION.MDA_ADHERENCE_OFFICERS, JsonForm.ADHERENCE_NAME, prefsUtil.getCurrentFacility());
-                    jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJSON, Constants.CONFIGURATION.MDA_COMMUNITY_HEALTH_WORKERS, JsonForm.CHW_NAME, prefsUtil.getCurrentFacility());
-                    getView().startForm(formJSON);
-                } else if (MDA_ADHERENCE.equals(taskDetails.getTaskCode())) {
-                    jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJSON, Constants.CONFIGURATION.MDA_CATCHMENT_AREAS, JsonForm.CATCHMENT_AREA, prefsUtil.getCurrentDistrict());
-                    jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJSON, Constants.CONFIGURATION.MDA_CORDINATORS, JsonForm.COORDINATOR_NAME, prefsUtil.getCurrentFacility());
-                    jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJSON, Constants.CONFIGURATION.MDA_ADHERENCE_OFFICERS, JsonForm.ADHERENCE_NAME, prefsUtil.getCurrentFacility());
                     getView().startForm(formJSON);
                 } else {
                     getView().startForm(formJSON);
