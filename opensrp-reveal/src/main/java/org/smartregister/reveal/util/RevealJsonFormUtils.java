@@ -347,11 +347,15 @@ public class RevealJsonFormUtils {
         }
     }
 
-    public Pair<JSONArray, JSONArray> populateServerOptions(Map<String, Object> serverConfigs, JSONObject formJson, String seetingsConfigKey, String formKey, String filterKey) {
+    public Pair<JSONArray, JSONArray> populateServerOptions(Map<String, Object> serverConfigs, JSONObject formJson, String settingsConfigKey, String formKey, String filterKey) {
         if (serverConfigs == null)
             return null;
-        JSONArray serverConfig = (JSONArray) serverConfigs.get(seetingsConfigKey);
+        JSONArray serverConfig = (JSONArray) serverConfigs.get(settingsConfigKey);
         if (serverConfig != null && !serverConfig.isNull(0)) {
+            JSONArray fields = JsonFormUtils.fields(formJson);
+            JSONObject field = JsonFormUtils.getFieldJSONObject(fields, formKey);
+            if (field == null)
+                return null;
             JSONArray options = serverConfig.optJSONObject(0).optJSONArray(filterKey);
             if (options == null)
                 return null;
@@ -371,8 +375,6 @@ public class RevealJsonFormUtils {
                     values.put(code + " - " + name);
                 }
             }
-            JSONArray fields = JsonFormUtils.fields(formJson);
-            JSONObject field = JsonFormUtils.getFieldJSONObject(fields, formKey);
             try {
                 field.put(KEYS, codes);
                 field.put(VALUES, values);
