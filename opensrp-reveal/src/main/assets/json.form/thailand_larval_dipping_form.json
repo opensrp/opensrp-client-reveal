@@ -95,7 +95,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "thailand-larval-dipping-relevance-rules.yml"
+              "rules-file": "larval-dipping-relevance-rules.yml"
             }
           }
         }
@@ -109,7 +109,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "thailand-larval-dipping-calculation-rules.yml"
+              "rules-file": "larval-dipping-calculation-rules.yml"
             }
           }
         }

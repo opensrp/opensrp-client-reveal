@@ -71,8 +71,8 @@
       {
         "key": "first_name",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "first_name",
         "type": "edit_text",
         "hint": "First name",
         "edit_type": "name",
@@ -101,8 +101,8 @@
       {
         "key": "surname",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "last_name",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Surname",
         "edit_type": "name",
@@ -110,6 +110,13 @@
         "v_required": {
           "value": "true",
           "err": "Please enter the surname"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-family-member-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -128,7 +135,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-family-register-calculation.yml"
+              "rules-file": "zambia-family-member-calculation.yml"
             }
           }
         }
@@ -219,7 +226,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-family-register-relevance.yml"
+              "rules-file": "zambia-family-member-relevance.yml"
             }
           }
         },
