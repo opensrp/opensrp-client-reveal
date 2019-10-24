@@ -74,7 +74,11 @@
             "key": "Complete",
             "text": "Complete"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "Please specify status"
+        }
       },
       {
         "key": "trap_start",

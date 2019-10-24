@@ -138,6 +138,7 @@ public interface Constants {
         String BASE_ENTITY_ID = "baseEntityId";
         String STRUCTURE_NAME = "structure_name";
         String APP_VERSION_NAME = "appVersionName";
+        String FORM_VERSION = "form_version";
     }
 
 
@@ -215,6 +216,7 @@ public interface Constants {
         String NONE_RECEIVED = "None Received";
         String NOT_VISITED_ = "Not Visited YET";
         String ADHERENCE_VISIT_DONE = "Adherence Visit Done";
+        String PARTIALLY_RECEIVED = "Partially Received";
 
         // Following are for grouped structure tasks. Not synced to server
         String FAMILY_REGISTERED = "Family Registered";
