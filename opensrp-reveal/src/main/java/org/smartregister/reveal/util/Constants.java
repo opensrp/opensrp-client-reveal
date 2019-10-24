@@ -98,6 +98,7 @@ public interface Constants {
         String MDA_DATA_COLLECTORS_ = "mda_data_collectors";
         String MDA_COMMUNITY_HEALTH_WORKERS = "mda_community_health_workers";
         String MDA_ADHERENCE_OFFICERS = "mda_adherence_officers";
+        String MDA_CATCHMENT_AREAS = "mda_catchment_areas";
 
     }
 
@@ -380,6 +381,8 @@ public interface Constants {
         String COORDINATOR_NAME = "coordinator_name";
 
         String ADHERENCE_NAME = "adherence_name";
+
+        String CATCHMENT_AREA = "catchment_area";
 
 
     }
