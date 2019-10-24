@@ -309,7 +309,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "thailand-spray-calculation-rules.yml"
+              "rules-file": "spray-calculation-rules.yml"
             }
           }
         }
