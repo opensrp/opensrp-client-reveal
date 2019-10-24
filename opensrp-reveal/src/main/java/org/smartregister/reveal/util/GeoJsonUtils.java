@@ -94,6 +94,8 @@ public class GeoJsonUtils {
                                     mdaStatusMap.put(NOT_ELIGIBLE, mdaStatusMap.get(NOT_ELIGIBLE) + 1);
                                     break;
                             }
+                        default:
+                            break;
 
                     }
 
@@ -150,7 +152,7 @@ public class GeoJsonUtils {
                     fullyReceived = (mdaStatusMap.get(FULLY_RECEIVED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
                     nonReceived = ( mdaStatusMap.get(NONE_RECEIVED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
                     nonEligible = ( mdaStatusMap.get(NOT_ELIGIBLE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
-                    partiallyReceived = (!fullyReceived && !nonReceived && !nonEligible);
+                    partiallyReceived = (!fullyReceived && (mdaStatusMap.get(FULLY_RECEIVED) > 0));
 
                     if (familyRegTaskMissingOrFamilyRegComplete) {
                         if (mdaAdhered) {
@@ -163,7 +165,7 @@ public class GeoJsonUtils {
                             taskProperties.put(TASK_BUSINESS_STATUS, NONE_RECEIVED);
                         } else if (nonEligible ) {
                             taskProperties.put(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
-                        } else if (!mdaAdhered ) {
+                        } else {
                             taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
                         }
                     } else {

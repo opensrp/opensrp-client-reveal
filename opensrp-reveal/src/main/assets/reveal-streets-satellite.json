@@ -96,7 +96,8 @@
           ],
           "hsl(262, 100%, 68%)",
           [
-            "Partially Sprayed"
+            "Partially Sprayed",
+            "Partially Received"
           ],
           "hsl(26, 84%, 56%)",
           "hsl(0, 0%, 78%)"
@@ -196,7 +197,8 @@
           ],
           "hsl(262, 100%, 68%)",
           [
-            "Partially Sprayed"
+            "Partially Sprayed",
+            "Partially Received"
           ],
           "hsl(26, 84%, 56%)",
           "hsl(0, 0%, 78%)"

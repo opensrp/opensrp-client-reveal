@@ -244,10 +244,10 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
                     this.familyRegistered = COMPLETE.equals(taskCodeStatusArray[1]) ? true : false;
                     break;
                 case BEDNET_DISTRIBUTION:
-                    setBednetDistributed(true);
+                    this.bednetDistributed = COMPLETE.equals(taskCodeStatusArray[1]) ? true : false;
                     break;
                 case BLOOD_SCREENING:
-                    setBloodScreeningDone(true);
+                    this.bloodScreeningDone = COMPLETE.equals(taskCodeStatusArray[1]) ? true : false;
                     break;
                 case MDA_ADHERENCE:
                     this.mdaAdhered = COMPLETE.equals(taskCodeStatusArray[1]) ? true: false;
@@ -265,13 +265,15 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
                             mdaStatusMap.put(NOT_ELIGIBLE, mdaStatusMap.get(NOT_ELIGIBLE) + 1);
                             break;
                     }
+                default:
+                    break;
             }
         }
 
         setFullyReceived(mdaStatusMap.get(FULLY_RECEIVED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) );
         setNoneReceived( mdaStatusMap.get(NONE_RECEIVED)  == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
         setNotEligible(mdaStatusMap.get(NOT_ELIGIBLE)  == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
-        setPartiallyReceived(!isFullyReceived() && !isNoneReceived() && !isNotEligible());
+        setPartiallyReceived(!isFullyReceived() && (mdaStatusMap.get(FULLY_RECEIVED) > 0));
 
     }
 

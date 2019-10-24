@@ -186,7 +186,7 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
                 actionBg = context.getResources().getDrawable(R.drawable.mda_none_received_bg);
             } else if (familyRegTaskMissingOrFamilyRegComplete && task.isNotEligible()) {
                 actionBg = context.getResources().getDrawable(R.drawable.mda_not_eligible_bg);
-            } else if (familyRegTaskMissingOrFamilyRegComplete && !task.isMdaAdhered()) {
+            } else if (familyRegTaskMissingOrFamilyRegComplete) {
                 actionBg = context.getResources().getDrawable(R.drawable.family_registered_bg);
             } else {
                 actionBg = context.getResources().getDrawable(R.drawable.no_task_complete_bg);
