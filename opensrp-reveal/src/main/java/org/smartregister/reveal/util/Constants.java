@@ -117,6 +117,7 @@ public interface Constants {
         String BASE_ENTITY_ID = "baseEntityId";
         String STRUCTURE_NAME = "structure_name";
         String APP_VERSION_NAME = "appVersionName";
+        String FORM_VERSION = "form_version";
     }
 
 
