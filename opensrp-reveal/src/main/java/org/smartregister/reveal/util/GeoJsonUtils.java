@@ -55,40 +55,46 @@ public class GeoJsonUtils {
             boolean nonReceived;
             boolean nonEligible;
             boolean partiallyReceived;
-            int mdaDispenseTaskCount = 0 ;
-            int fullyReceivedCount = 0;
-            int nonReceivedCount = 0;
-            int nonEligibleCount = 0;
+            String MDA_DISPENSE_TASK_COUNT = "mda_dispense_task_count";
+
+            Map<String, Integer> mdaStatusMap = new HashMap<>();
+            mdaStatusMap.put(FULLY_RECEIVED, 0);
+            mdaStatusMap.put(NONE_RECEIVED, 0);
+            mdaStatusMap.put(NOT_ELIGIBLE, 0);
+            mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, 0);
 
             if (taskSet == null)
                 continue;
             for (Task task : taskSet) {
                 if (Utils.isResidentialStructure(task.getCode())) {
-
-                    familyRegTaskExists = task.getCode().equals(REGISTER_FAMILY);
-                    if (familyRegTaskExists && task.getBusinessStatus().equals(COMPLETE)) {
-                        familyRegistered = true;
-                    }
-
-                    if (Utils.isFocusInvestigation()) {
-                        if (task.getCode().equals(BEDNET_DISTRIBUTION) && task.getBusinessStatus().equals(COMPLETE)) {
-                            bednetDistributed = true;
-                        } else if (task.getCode().equals(BLOOD_SCREENING) && task.getBusinessStatus().equals(COMPLETE)) {
-                            bloodScreeningDone = true;
-                        }
-                    } else if (Utils.isMDA()){
-                        if (MDA_DISPENSE.equals(task.getCode())) {
-                            mdaDispenseTaskCount++;
-                            if ( FULLY_RECEIVED.equals(task.getBusinessStatus())) {
-                                fullyReceivedCount++;
-                            } else if ( NONE_RECEIVED.equals(task.getBusinessStatus())) {
-                                nonReceivedCount++;
-                            } else if( NOT_ELIGIBLE.equals(task.getBusinessStatus())) {
-                                nonEligibleCount++;
+                    switch (task.getCode()) {
+                        case REGISTER_FAMILY:
+                            familyRegTaskExists = true;
+                            familyRegistered = COMPLETE.equals(task.getBusinessStatus()) ? true : false;
+                            break;
+                        case BEDNET_DISTRIBUTION:
+                            bednetDistributed = COMPLETE.equals(task.getBusinessStatus()) ? true: false;
+                            break;
+                        case BLOOD_SCREENING:
+                            bloodScreeningDone = COMPLETE.equals(task.getBusinessStatus())? true: false;
+                            break;
+                        case MDA_ADHERENCE:
+                            mdaAdhered = COMPLETE.equals(task.getBusinessStatus()) ? true: false;
+                            break;
+                        case MDA_DISPENSE:
+                            mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) + 1);
+                            switch (task.getBusinessStatus()) {
+                                case FULLY_RECEIVED :
+                                    mdaStatusMap.put(FULLY_RECEIVED, mdaStatusMap.get(FULLY_RECEIVED) + 1);
+                                    break;
+                                case NONE_RECEIVED:
+                                    mdaStatusMap.put(NONE_RECEIVED, mdaStatusMap.get(NONE_RECEIVED) + 1);
+                                    break;
+                                case NOT_ELIGIBLE:
+                                    mdaStatusMap.put(NOT_ELIGIBLE, mdaStatusMap.get(NOT_ELIGIBLE) + 1);
+                                    break;
                             }
-                        } else if(MDA_ADHERENCE.equals(task.getCode()) && COMPLETE.equals(task.getBusinessStatus())) {
-                            mdaAdhered = true;
-                        }
+
                     }
 
                 }
@@ -140,24 +146,26 @@ public class GeoJsonUtils {
 
                 } else if (Utils.isMDA()) {
 
-                    fullyReceived = (fullyReceivedCount == mdaDispenseTaskCount);
-                    nonReceived = (nonReceivedCount == mdaDispenseTaskCount);
-                    nonEligible = (nonEligibleCount == mdaDispenseTaskCount);
+
+                    fullyReceived = (mdaStatusMap.get(FULLY_RECEIVED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+                    nonReceived = ( mdaStatusMap.get(NONE_RECEIVED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+                    nonEligible = ( mdaStatusMap.get(NOT_ELIGIBLE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
                     partiallyReceived = (!fullyReceived && !nonReceived && !nonEligible);
 
-                    if (familyRegTaskMissingOrFamilyRegComplete && mdaAdhered) {
-                        taskProperties.put(TASK_BUSINESS_STATUS, ADHERENCE_VISIT_DONE);
-                    } else if (familyRegTaskMissingOrFamilyRegComplete && fullyReceived ) {
-                        taskProperties.put(TASK_BUSINESS_STATUS, FULLY_RECEIVED);
-                    } else if (familyRegTaskMissingOrFamilyRegComplete && partiallyReceived ) {
-                        taskProperties.put(TASK_BUSINESS_STATUS, PARTIALLY_RECEIVED);
-                    } else if (familyRegTaskMissingOrFamilyRegComplete && nonReceived ) {
-                        taskProperties.put(TASK_BUSINESS_STATUS, NONE_RECEIVED);
-                    } else if (familyRegTaskMissingOrFamilyRegComplete && nonEligible ) {
-                        taskProperties.put(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
-                    } else if (familyRegTaskMissingOrFamilyRegComplete &&
-                            !mdaAdhered ) {
-                        taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
+                    if (familyRegTaskMissingOrFamilyRegComplete) {
+                        if (mdaAdhered) {
+                            taskProperties.put(TASK_BUSINESS_STATUS, ADHERENCE_VISIT_DONE);
+                        } else if (fullyReceived ) {
+                            taskProperties.put(TASK_BUSINESS_STATUS, FULLY_RECEIVED);
+                        } else if (partiallyReceived ) {
+                            taskProperties.put(TASK_BUSINESS_STATUS, PARTIALLY_RECEIVED);
+                        } else if (nonReceived ) {
+                            taskProperties.put(TASK_BUSINESS_STATUS, NONE_RECEIVED);
+                        } else if (nonEligible ) {
+                            taskProperties.put(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
+                        } else if (!mdaAdhered ) {
+                            taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
+                        }
                     } else {
                         taskProperties.put(TASK_BUSINESS_STATUS, NOT_VISITED);
                     }

@@ -4,9 +4,10 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
-import org.smartregister.reveal.util.Utils;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FULLY_RECEIVED;
@@ -222,47 +223,54 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
             return;
         }
         String[] groupedTaskCodeStatusArray = groupedTaskCodeStatusString.split(COMMA);
-        int fullyReceivedCount = 0;
-        int nonReceivedCount = 0;
-        int nonEligibleCount = 0;
-        int mdaDispenseTaskCount = 0;
+        String MDA_DISPENSE_TASK_COUNT = "mda_dispense_task_count";
+
+        Map<String, Integer> mdaStatusMap = new HashMap<>();
+        mdaStatusMap.put(FULLY_RECEIVED, 0);
+        mdaStatusMap.put(NONE_RECEIVED, 0);
+        mdaStatusMap.put(NOT_ELIGIBLE, 0);
+        mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, 0);
+
         for (int i = 0; i < groupedTaskCodeStatusArray.length; i++) {
             String[] taskCodeStatusArray = groupedTaskCodeStatusArray[i].split(HYPHEN);
 
             if (taskCodeStatusArray == null || taskCodeStatusArray.length != 2) {
                 continue;
             }
-            setFamilyRegTaskExists(REGISTER_FAMILY.equals(taskCodeStatusArray[0]));
-            if (isFamilyRegTaskExists() && COMPLETE.equals(taskCodeStatusArray[1])) {
-                setFamilyRegistered(true);
-            }
 
-            if (Utils.isFocusInvestigation()) {
-               if (BEDNET_DISTRIBUTION.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
+            switch (taskCodeStatusArray[0]) {
+                case REGISTER_FAMILY:
+                    setFamilyRegTaskExists(true);
+                    this.familyRegistered = COMPLETE.equals(taskCodeStatusArray[1]) ? true : false;
+                    break;
+                case BEDNET_DISTRIBUTION:
                     setBednetDistributed(true);
-                }  else if (BLOOD_SCREENING.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
+                    break;
+                case BLOOD_SCREENING:
                     setBloodScreeningDone(true);
-                }
-            } else if (Utils.isMDA()){
-                if (MDA_DISPENSE.equals(taskCodeStatusArray[0]) ) {
-                    mdaDispenseTaskCount++;
-                    if (FULLY_RECEIVED.equals(taskCodeStatusArray[1])) {
-                        fullyReceivedCount++;
-                    } else if ( NONE_RECEIVED.equals(taskCodeStatusArray[1])) {
-                        nonReceivedCount++;
-                    } else if(NOT_ELIGIBLE.equals(taskCodeStatusArray[1])) {
-                        nonEligibleCount++;
+                    break;
+                case MDA_ADHERENCE:
+                    this.mdaAdhered = COMPLETE.equals(taskCodeStatusArray[1]) ? true: false;
+                    break;
+                case MDA_DISPENSE:
+                    mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) + 1);
+                    switch (taskCodeStatusArray[1]) {
+                        case FULLY_RECEIVED :
+                            mdaStatusMap.put(FULLY_RECEIVED, mdaStatusMap.get(FULLY_RECEIVED) + 1);
+                            break;
+                        case NONE_RECEIVED:
+                            mdaStatusMap.put(NONE_RECEIVED, mdaStatusMap.get(NONE_RECEIVED) + 1);
+                            break;
+                        case NOT_ELIGIBLE:
+                            mdaStatusMap.put(NOT_ELIGIBLE, mdaStatusMap.get(NOT_ELIGIBLE) + 1);
+                            break;
                     }
-                }
-                 else if (MDA_ADHERENCE.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
-                    setMdaAdhered(true);
-                }
             }
         }
 
-        setFullyReceived(fullyReceivedCount == mdaDispenseTaskCount);
-        setNoneReceived(nonReceivedCount == mdaDispenseTaskCount);
-        setNotEligible(nonEligibleCount == mdaDispenseTaskCount);
+        setFullyReceived(mdaStatusMap.get(FULLY_RECEIVED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) );
+        setNoneReceived( mdaStatusMap.get(NONE_RECEIVED)  == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+        setNotEligible(mdaStatusMap.get(NOT_ELIGIBLE)  == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
         setPartiallyReceived(!isFullyReceived() && !isNoneReceived() && !isNotEligible());
 
     }
