@@ -44,6 +44,8 @@ import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENI
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Country.NAMIBIA;
@@ -68,6 +70,8 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
 
     private BaseFormFragmentInteractor interactor;
 
+    private PreferencesUtil prefsUtil;
+
     protected Gson gson = new GsonBuilder().setDateFormat(EVENT_DATE_FORMAT_Z)
             .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
 
@@ -80,6 +84,7 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
         locationPresenter = new ValidateUserLocationPresenter(view, this);
         mappingHelper = new RevealMappingHelper();
         interactor = new BaseFormFragmentInteractor(this);
+        prefsUtil = PreferencesUtil.getInstance();
     }
 
     protected boolean validateFarStructures() {
@@ -111,13 +116,14 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
                 if (Intervention.BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode())) {
                     interactor.findNumberOfMembers(taskDetails.getTaskEntity(), formJSON);
                     return;
-                }
-                if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
+                } else if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
                     interactor.findMemberDetails(taskDetails.getStructureId(), formJSON);
                     return;
-                }
-                if (IRS.equals(taskDetails.getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
+                } else if (IRS.equals(taskDetails.getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
                     interactor.findSprayDetails(IRS, structure.getId(), formJSON);
+                } else if (MDA_DISPENSE.equals(taskDetails.getTaskCode()) || MDA_ADHERENCE.equals(taskDetails.getTaskCode())) {
+                    jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJSON, Constants.CONFIGURATION.MDA_CATCHMENT_AREAS, JsonForm.CATCHMENT_AREA, prefsUtil.getCurrentDistrict());
+                    getView().startForm(formJSON);
                 } else {
                     getView().startForm(formJSON);
                 }
