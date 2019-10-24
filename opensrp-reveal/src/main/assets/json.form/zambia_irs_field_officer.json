@@ -528,6 +528,7 @@
         "label": "Please select type of falsification witnessed",
         "label_text_size": "8sp",
         "hint": "Please select type of falsification witnessed",
+        "combine_checkbox_option_values" : "true",
         "exclusive": [
           "none"
         ],

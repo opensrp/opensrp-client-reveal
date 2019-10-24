@@ -1771,6 +1771,7 @@
         "type": "check_box",
         "label": "What type of message / information did you see or hear?",
         "text_size": "8sp",
+        "combine_checkbox_option_values" : "true",
         "options": [
           {
             "key": "malariaIsDangerous",
@@ -1856,6 +1857,7 @@
         "type": "check_box",
         "label": "What is your preferred source(s) of malaria messages / information?",
         "text_size": "8sp",
+        "combine_checkbox_option_values" : "true",
         "options": [
           {
             "key": "healthFacility",
