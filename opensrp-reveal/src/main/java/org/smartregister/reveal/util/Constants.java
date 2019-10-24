@@ -195,6 +195,7 @@ public interface Constants {
         String NONE_RECEIVED = "None Received";
         String NOT_VISITED_ = "Not Visited YET";
         String ADHERENCE_VISIT_DONE = "Adherence Visit Done";
+        String PARTIALLY_RECEIVED = "Partially Received";
 
         // Following are for grouped structure tasks. Not synced to server
         String FAMILY_REGISTERED = "Family Registered";
