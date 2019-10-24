@@ -1,6 +1,7 @@
 {
   "count": "1",
   "encounter_type": "blood_screening",
+  "form_version": "0.0.1",
   "entity_id": "",
   "metadata": {
     "start": {
@@ -267,6 +268,7 @@
         "openmrs_entity_id": "",
         "type": "check_box",
         "label": "ผลตรวจจากกล้องจุลทรรศน์",
+        "combine_checkbox_option_values" : "true",
         "options": [
           {
             "key": "Negative",
