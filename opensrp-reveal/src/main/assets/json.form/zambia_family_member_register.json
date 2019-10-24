@@ -226,7 +226,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-family-register-relevance.yml"
+              "rules-file": "zambia-family-member-relevance.yml"
             }
           }
         },
