@@ -91,7 +91,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "thailand-mosquito-collection-relevance-rules.yml"
+              "rules-file": "mosquito-collection-relevance-rules.yml"
             }
           }
         }
@@ -105,7 +105,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "thailand-mosquito-collection-calculation-rules.yml"
+              "rules-file": "mosquito-collection-calculation-rules.yml"
             }
           }
         }
