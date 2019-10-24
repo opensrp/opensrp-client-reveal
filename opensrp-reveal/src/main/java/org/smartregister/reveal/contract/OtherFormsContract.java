@@ -10,6 +10,10 @@ public interface OtherFormsContract {
 
         void saveJsonForm(String json);
 
+        void showProgressDialog(int titleIdentifier);
+
+        void hideProgressDialog();
+
     }
 
     interface Presenter extends BaseContract.BasePresenter {

@@ -1,5 +1,6 @@
 package org.smartregister.reveal.view;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,6 +27,7 @@ public class OtherFormsActivity extends AppCompatActivity implements OtherFormsC
     private OtherFormsFragment otherFormsFragment;
     private RevealJsonFormUtils jsonFormUtils;
     private ViewPagerAdapter adapter;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,6 +76,23 @@ public class OtherFormsActivity extends AppCompatActivity implements OtherFormsC
     @Override
     public void saveJsonForm(String json) {
 
+    }
+
+    @Override
+    public void showProgressDialog(int titleIdentifier) {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setCancelable(false);
+        progressDialog.setTitle(titleIdentifier);
+        progressDialog.setMessage(getString(R.string.please_wait_message));
+        if (!isFinishing())
+            progressDialog.show();
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 
     private OtherFormsContract.Presenter getPresenter() {

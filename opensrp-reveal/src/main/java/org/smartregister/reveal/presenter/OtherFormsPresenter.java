@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.OtherFormsContract;
 import org.smartregister.reveal.interactor.OtherFormsInteractor;
 
@@ -30,13 +31,13 @@ public class OtherFormsPresenter implements OtherFormsContract.Presenter {
 
     @Override
     public void saveJsonForm(String json) {
-        //view.showProgressDialog(R.string.saving_dialog_title);
+        view.showProgressDialog(R.string.saving_dialog_title);
         interactor.saveJsonForm(json);
     }
 
     @Override
     public void onFormSaved(@NonNull String structureId, String taskID, @NonNull Task.TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
-        //view.hideProgressDialog();
+        view.hideProgressDialog();
     }
 
     @Override
@@ -46,7 +47,7 @@ public class OtherFormsPresenter implements OtherFormsContract.Presenter {
 
     @Override
     public void onFormSaveFailure(String eventType) {
-        //view.hideProgressDialog();
+        view.hideProgressDialog();
     }
 
     @Override
