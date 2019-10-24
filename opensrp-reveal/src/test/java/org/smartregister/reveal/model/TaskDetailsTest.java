@@ -75,4 +75,69 @@ public class TaskDetailsTest {
         assertTrue(taskDetails.isBloodScreeningDone());
     }
 
+    @Test
+    public void testSetGroupedTaskCodeStatusForAdherenceVisitDone() {
+        String groupedTaskCodeStatusString = "MDA Dispense-Fully Received,MDA Adherence-Complete";
+        TaskDetails taskDetails = new TaskDetails("task1");
+
+        assertFalse(taskDetails.isMdaAdhered());
+
+        taskDetails.setGroupedTaskCodeStatus(groupedTaskCodeStatusString);
+
+        assertTrue(taskDetails.isMdaAdhered());
+
+    }
+
+    @Test
+    public void testSetGroupedTaskCodeStatusForMDADispenseFullyReceived() {
+        String groupedTaskCodeStatusString = "MDA Dispense-Fully Received,MDA Dispense-Fully Received";
+        TaskDetails taskDetails = new TaskDetails("task1");
+
+        assertFalse(taskDetails.isFullyReceived());
+
+        taskDetails.setGroupedTaskCodeStatus(groupedTaskCodeStatusString);
+
+        assertTrue(taskDetails.isFullyReceived());
+
+    }
+
+    @Test
+    public void testSetGroupedTaskCodeStatusForMDADispensePartiallyReceived() {
+        String groupedTaskCodeStatusString = "MDA Dispense-Fully Received,MDA Dispense-None Received, MDA Dispense-Not Eligible";
+        TaskDetails taskDetails = new TaskDetails("task1");
+
+        assertFalse(taskDetails.isPartiallyReceived());
+
+        taskDetails.setGroupedTaskCodeStatus(groupedTaskCodeStatusString);
+
+        assertTrue(taskDetails.isPartiallyReceived());
+
+    }
+
+    @Test
+    public void testSetGroupedTaskCodeStatusForMDADispenseNoneReceived() {
+        String groupedTaskCodeStatusString = "MDA Dispense-None Received,MDA Dispense-None Received";
+        TaskDetails taskDetails = new TaskDetails("task1");
+
+        assertFalse(taskDetails.isNoneReceived());
+
+        taskDetails.setGroupedTaskCodeStatus(groupedTaskCodeStatusString);
+
+        assertTrue(taskDetails.isNoneReceived());
+
+    }
+
+    @Test
+    public void testSetGroupedTaskCodeStatusForMDADispenseNotElligible() {
+        String groupedTaskCodeStatusString = "MDA Dispense-Not Eligible,MDA Dispense-Not Eligible";
+        TaskDetails taskDetails = new TaskDetails("task1");
+
+        assertFalse(taskDetails.isNotEligible());
+
+        taskDetails.setGroupedTaskCodeStatus(groupedTaskCodeStatusString);
+
+        assertTrue(taskDetails.isNotEligible());
+
+    }
+
 }

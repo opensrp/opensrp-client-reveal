@@ -174,7 +174,7 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
             } else {
                 actionBg = context.getResources().getDrawable(R.drawable.no_task_complete_bg);
             }
-        } else if (Utils.isMDA()){
+        } else if (Utils.isMDA()) {
             if (familyRegTaskMissingOrFamilyRegComplete && task.isMdaAdhered()) {
                 actionBg = context.getResources().getDrawable(R.drawable.mda_adhered_bg);
                 actionText = context.getText(R.string.tasks_complete).toString();
