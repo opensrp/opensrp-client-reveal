@@ -199,7 +199,7 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         cascadeSelect(key, Constants.JsonForm.DATA_COLLECTOR, Constants.CONFIGURATION.SPRAY_OPERATORS, Constants.JsonForm.SPRAY_OPERATOR_CODE);
         cascadeSelect(key, Constants.JsonForm.HFC_BELONG, Constants.CONFIGURATION.COMMUNITY_HEALTH_WORKERS, Constants.JsonForm.CHW_NAME);
         cascadeSelect(key, Constants.JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_CORDINATORS, Constants.JsonForm.COORDINATOR_NAME);
-        cascadeSelect(key, Constants.JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_DATA_COLLECTORS, Constants.JsonForm.DATA_COLLECTOR);
+        cascadeSelect(key, Constants.JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_ENUMERATORS, Constants.JsonForm.DATA_COLLECTOR);
         cascadeSelect(key, Constants.JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_COMMUNITY_HEALTH_WORKERS, Constants.JsonForm.CHW_NAME);
         cascadeSelect(key, Constants.JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_ADHERENCE_OFFICERS, Constants.JsonForm.ADHERENCE_NAME);
     }
