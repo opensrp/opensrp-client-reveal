@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -115,6 +116,50 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
 
     }
 
+    @Test
+    public void testIsPlanAndOperationalAreaSelectedReturnsTrueWHenBothSelected() {
+        PreferencesUtil preferencesUtil = mockPreferencesUtil();
+
+        when(preferencesUtil.getCurrentPlanId()).thenReturn("planid");
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn("OA");
+
+        assertTrue(presenter.isPlanAndOperationalAreaSelected());
+
+    }
+
+    @Test
+    public void testIsPlanAndOperationalAreaSelectedReturnsFalseWhenPlanNotSelected() {
+        PreferencesUtil preferencesUtil = mockPreferencesUtil();
+
+        when(preferencesUtil.getCurrentPlanId()).thenReturn(null);
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn("OA");
+
+        assertFalse(presenter.isPlanAndOperationalAreaSelected());
+
+    }
+
+    @Test
+    public void testIsPlanAndOperationalAreaSelectedReturnsFalseWhenJurisdictionNotSelected() {
+        PreferencesUtil preferencesUtil = mockPreferencesUtil();
+
+        when(preferencesUtil.getCurrentPlanId()).thenReturn("planid");
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn(null);
+
+        assertFalse(presenter.isPlanAndOperationalAreaSelected());
+
+    }
+
+    @Test
+    public void testIsPlanAndOperationalAreaSelectedReturnsFalseWhenNonSelected() {
+        PreferencesUtil preferencesUtil = mockPreferencesUtil();
+
+        when(preferencesUtil.getCurrentPlanId()).thenReturn(null);
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn(null);
+
+        assertFalse(presenter.isPlanAndOperationalAreaSelected());
+
+    }
+
     private void mockStaticMethods() {
         mockStatic(PreferencesUtil.class);
         mockStatic(RevealApplication.class);
@@ -127,5 +172,11 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
         AppExecutors appExecutors = mock(AppExecutors.class);
         when(application.getAppExecutors()).thenReturn(appExecutors);
 
+    }
+
+    private PreferencesUtil mockPreferencesUtil() {
+        PreferencesUtil preferencesUtil = mock(PreferencesUtil.class);
+        PowerMockito.when(PreferencesUtil.getInstance()).thenReturn(preferencesUtil);
+        return preferencesUtil;
     }
 }
