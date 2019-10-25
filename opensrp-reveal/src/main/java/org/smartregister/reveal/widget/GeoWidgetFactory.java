@@ -340,9 +340,14 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         if (markerPosition == null)
             return;
         try {
-            formFragmentView.writeValue(stepName, key, markerPosition.toJSON().toString(), openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
-            formFragmentView.writeValue(stepName, ZOOM_LEVEL, zoomLevel + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
-            formFragmentView.writeValue(stepName, LOCATION_COMPONENT_ACTIVE, finalLocationComponentActive + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
+            if (((JsonFormFragment) formFragmentView).getJsonApi() != null) {
+                formFragmentView.writeValue(stepName, key, markerPosition.toJSON().toString(), openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
+                formFragmentView.writeValue(stepName, ZOOM_LEVEL, zoomLevel + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
+                formFragmentView.writeValue(stepName, LOCATION_COMPONENT_ACTIVE, finalLocationComponentActive + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
+            }
+            else{
+                Timber.w("cannot write values JsonApi is null");
+            }
         } catch (JSONException e) {
             Timber.e(e, "error writing Geowidget values");
         }
