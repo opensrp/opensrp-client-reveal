@@ -79,6 +79,8 @@ public interface BaseDrawerContract {
         View getView();
 
         void onViewResumed();
+
+        boolean isPlanAndOperationalAreaSelected();
     }
 
     interface Interactor {

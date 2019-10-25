@@ -277,12 +277,10 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     }
 
     private void unlockDrawerLayout() {
-        String planId = PreferencesUtil.getInstance().getCurrentPlanId();
-        String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
-        if (StringUtils.isNotBlank(planId) &&
-                StringUtils.isNotBlank(operationalArea)) {
+        if (isPlanAndOperationalAreaSelected()) {
             view.unlockNavigationDrawer();
         }
+
     }
 
     @Override
@@ -312,6 +310,19 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             initializeDrawerLayout();
             viewInitialized = true;
         }
+    }
+
+
+    @Override
+    public boolean isPlanAndOperationalAreaSelected() {
+        String planId = PreferencesUtil.getInstance().getCurrentPlanId();
+        String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
+        if (StringUtils.isNotBlank(planId) &&
+                StringUtils.isNotBlank(operationalArea)) {
+            return true;
+        }
+
+        return false;
     }
 
 }
