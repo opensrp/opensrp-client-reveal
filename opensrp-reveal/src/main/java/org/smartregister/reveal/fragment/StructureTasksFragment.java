@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -111,9 +112,8 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     }
 
     private void setUpViews(View view) {
-        Button interventionType = view.findViewById(R.id.intervention_type);
+        TextView interventionType = view.findViewById(R.id.intervention_type);
         interventionType.setText(getString(Utils.getInterventionLabel()));
-
         taskRecyclerView = view.findViewById(R.id.task_recyclerView);
 
         progressDialog = new ProgressDialog(getContext());
