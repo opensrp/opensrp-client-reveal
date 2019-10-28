@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import org.json.JSONObject;
 import org.smartregister.family.adapter.ViewPagerAdapter;
@@ -33,6 +35,17 @@ public class SummaryFormsActivity extends AppCompatActivity implements OtherForm
 
         setContentView(R.layout.activity_summary_forms);
         presenter = new OtherFormsPresenter(this);
+
+        Toolbar toolbar = (Toolbar) this.findViewById(R.id.summary_toolbar);
+        this.setSupportActionBar(toolbar);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         setupViews();
     }
 
