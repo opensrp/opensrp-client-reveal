@@ -52,6 +52,6 @@ public class OtherFormsPresenter implements OtherFormsContract.Presenter {
 
     @Override
     public void onFamilyFound(CommonPersonObjectClient finalFamily) {
-
+        // Do nothing
     }
 }

@@ -153,6 +153,7 @@ public class OtherFormsFragment extends Fragment implements OtherFormsfragmentCo
 
     @Override
     public void requestUserLocation() {
+        // Do nothing
     }
 
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {
