@@ -1,8 +1,10 @@
 package org.smartregister.reveal.viewholder;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -88,30 +90,15 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
         actionView.setText(actionLabel);
 
         // registered family with multiple tasks
-        if (cardDetails != null && task.getTaskCount() != null && Utils.getInterventionLabel() == R.string.focus_investigation) { // task grouping only for FI
+        if (cardDetails != null && task.getTaskCount() != null) { // task grouping only for FI
             if (task.getTaskCount() > 1) {
                 if (task.getTaskCount() != task.getCompleteTaskCount()) {
 
-                    // The assumption is that a register structure task always exists if the structure has
-                    // atleast one bednet distribution or blood screening task
-                    boolean familyRegTaskMissingOrFamilyRegComplete = task.isFamilyRegistered() || !task.isFamilyRegTaskExists();
-                    if (familyRegTaskMissingOrFamilyRegComplete && task.isBednetDistributed() && task.isBloodScreeningDone()) {
-                        showTasksCompleteActionView();
-                    } else if (familyRegTaskMissingOrFamilyRegComplete && !task.isBednetDistributed() && !task.isBloodScreeningDone()) {
-                        actionView.setBackground(context.getResources().getDrawable(R.drawable.family_registered_bg));
-                        actionView.setTextColor(context.getResources().getColor(R.color.text_black));
-                    } else if (familyRegTaskMissingOrFamilyRegComplete && task.isBednetDistributed()) {
-                        actionView.setBackground(context.getResources().getDrawable(R.drawable.bednet_distributed_bg));
-                        actionView.setTextColor(context.getResources().getColor(R.color.text_black));
-                    } else if (task.isBloodScreeningDone()) {
-                        actionView.setBackground(context.getResources().getDrawable(R.drawable.blood_screening_complete_bg));
-                        actionView.setTextColor(context.getResources().getColor(R.color.text_black));
-                    } else {
-                        actionView.setBackground(context.getResources().getDrawable(R.drawable.no_task_complete_bg));
-                        actionView.setTextColor(context.getResources().getColor(R.color.text_black));
-                    }
 
-                    actionView.setText(context.getText(R.string.view_tasks));
+                    Pair<Drawable, String > actionViewPair = getActionDrawable(task);
+                    actionView.setTextColor(context.getResources().getColor(R.color.text_black));
+                    actionView.setBackground(actionViewPair.first);
+                    actionView.setText(actionViewPair.second);
                 } else if (task.getTaskCount() == task.getCompleteTaskCount()) {
                     showTasksCompleteActionView();
                 }
@@ -158,8 +145,54 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void showTasksCompleteActionView() {
-        actionView.setBackground(context.getResources().getDrawable(R.drawable.tasks_complete_bg));
+        if (Utils.isFocusInvestigation()) {
+            actionView.setBackground(context.getResources().getDrawable(R.drawable.tasks_complete_bg));
+        } else if (Utils.isMDA()){
+            actionView.setBackground(context.getResources().getDrawable(R.drawable.mda_adhered_bg));
+        }
         actionView.setTextColor(context.getResources().getColor(R.color.text_black));
         actionView.setText(context.getText(R.string.tasks_complete));
+    }
+
+    private Pair<Drawable, String > getActionDrawable(TaskDetails task) {
+        // The assumption is that a register structure task always exists if the structure has
+        // atleast one bednet distribution or blood screening task
+        boolean familyRegTaskMissingOrFamilyRegComplete = task.isFamilyRegistered() || !task.isFamilyRegTaskExists();
+        Drawable actionBg = null;
+        String actionText = context.getText(R.string.view_tasks).toString();
+
+        if (Utils.isFocusInvestigation()) {
+            if (familyRegTaskMissingOrFamilyRegComplete && task.isBednetDistributed() && task.isBloodScreeningDone()) {
+                actionBg = context.getResources().getDrawable(R.drawable.tasks_complete_bg);
+                actionText = context.getText(R.string.tasks_complete).toString();
+            } else if (familyRegTaskMissingOrFamilyRegComplete && !task.isBednetDistributed() && !task.isBloodScreeningDone()) {
+                actionBg = context.getResources().getDrawable(R.drawable.family_registered_bg);
+            } else if (familyRegTaskMissingOrFamilyRegComplete && task.isBednetDistributed()) {
+                actionBg = context.getResources().getDrawable(R.drawable.bednet_distributed_bg);
+            } else if (task.isBloodScreeningDone()) {
+                actionBg = context.getResources().getDrawable(R.drawable.blood_screening_complete_bg);
+            } else {
+                actionBg = context.getResources().getDrawable(R.drawable.no_task_complete_bg);
+            }
+        } else if (Utils.isMDA()) {
+            if (familyRegTaskMissingOrFamilyRegComplete && task.isMdaAdhered()) {
+                actionBg = context.getResources().getDrawable(R.drawable.mda_adhered_bg);
+                actionText = context.getText(R.string.tasks_complete).toString();
+            } else if (familyRegTaskMissingOrFamilyRegComplete && task.isFullyReceived()) {
+                actionBg = context.getResources().getDrawable(R.drawable.mda_dispensed_bg);
+            } else if (familyRegTaskMissingOrFamilyRegComplete && task.isPartiallyReceived()) {
+                actionBg = context.getResources().getDrawable(R.drawable.mda_partially_received_bg);
+            } else if (familyRegTaskMissingOrFamilyRegComplete && task.isNoneReceived()) {
+                actionBg = context.getResources().getDrawable(R.drawable.mda_none_received_bg);
+            } else if (familyRegTaskMissingOrFamilyRegComplete && task.isNotEligible()) {
+                actionBg = context.getResources().getDrawable(R.drawable.mda_not_eligible_bg);
+            } else if (familyRegTaskMissingOrFamilyRegComplete) {
+                actionBg = context.getResources().getDrawable(R.drawable.family_registered_bg);
+            } else {
+                actionBg = context.getResources().getDrawable(R.drawable.no_task_complete_bg);
+            }
+        }
+
+        return new Pair<>(actionBg, actionText);
     }
 }

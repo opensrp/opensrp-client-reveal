@@ -122,8 +122,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
         appExecutors.diskIO().execute(() -> {
 
             String structureId = details.getTaskEntity();
-            if (Intervention.BLOOD_SCREENING.equals(details.getTaskCode()) ||
-                    Intervention.CASE_CONFIRMATION.equals(details.getTaskCode())) {
+            if (Intervention.PERSON_INTERVENTIONS.contains(details.getTaskCode())) {
                 structureId = details.getStructureId();
             }
             org.smartregister.domain.Location structure =
@@ -176,6 +175,8 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                 }
 
                 cursor.close();
+                cursor = null;
+
                 cursor = database.rawQuery("SELECT event_date FROM event_task WHERE task_id = ? ORDER by event_date desc LIMIT 1",
                         new String[]{task.getTaskId()});
                 while (cursor.moveToNext()) {

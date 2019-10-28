@@ -1,5 +1,7 @@
 package org.smartregister.reveal.contract;
 
+import android.support.v4.util.Pair;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
@@ -16,7 +18,7 @@ public interface BaseFormFragmentContract {
 
         void onStructureFound(Location structure, BaseTaskDetails details);
 
-        void onFetchedMembersCount(int numberOfMembers, JSONObject formJSON);
+        void onFetchedMembersCount(Pair<Integer, Integer> numberOfMembers, JSONObject formJSON);
 
         void onFetchedFamilyMembers(JSONArray familyMembers, JSONObject formJSON);
 

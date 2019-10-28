@@ -87,10 +87,18 @@ public interface Constants {
         String SUPERVISORS = "supervisors";
         String TEAM_LEADERS = "team_leaders";
         String FIELD_OFFICERS = "field_officers";
+        String DISTRICT_MANAGERS = "district_managers";
         String HEALTH_FACILITIES = "health_facilities";
         String COMMUNITY_HEALTH_WORKERS = "community_health_workers";
         String CODE = "code";
         String NAME = "name";
+
+
+        String MDA_CORDINATORS = "mda_coordinators";
+        String MDA_ENUMERATORS = "mda_enumerators";
+        String MDA_COMMUNITY_HEALTH_WORKERS = "mda_community_health_workers";
+        String MDA_ADHERENCE_OFFICERS = "mda_adherence_officers";
+        String MDA_CATCHMENT_AREAS = "mda_catchment_areas";
 
     }
 
@@ -130,6 +138,7 @@ public interface Constants {
         String BASE_ENTITY_ID = "baseEntityId";
         String STRUCTURE_NAME = "structure_name";
         String APP_VERSION_NAME = "appVersionName";
+        String FORM_VERSION = "form_version";
     }
 
 
@@ -160,6 +169,16 @@ public interface Constants {
         String FI = "FI";
 
         String PAOT = "PAOT";
+
+        String MDA_DISPENSE = "MDA Dispense";
+
+        String MDA_ADHERENCE = "MDA Adherence";
+
+        String MDA = "MDA";
+
+        List<String> PERSON_INTERVENTIONS = Arrays.asList(BLOOD_SCREENING, CASE_CONFIRMATION, MDA_DISPENSE, MDA_ADHERENCE);
+
+
     }
 
 
@@ -170,6 +189,10 @@ public interface Constants {
         String CASE_DETAILS_EVENT = "Case Details";
 
         String PAOT_EVENT = "PAOT";
+
+        String MDA_DISPENSE = "mda_dispense";
+
+        String MDA_ADHERENCE = "mda_adherence";
     }
 
     interface Tables {
@@ -187,11 +210,20 @@ public interface Constants {
         String INCOMPLETE = "Incomplete";
         String NOT_ELIGIBLE = "Not Eligible";
         String IN_PROGRESS = "In Progress";
+
+
+        String FULLY_RECEIVED = "Fully Received";
+        String NONE_RECEIVED = "None Received";
+        String NOT_VISITED_ = "Not Visited YET";
+        String ADHERENCE_VISIT_DONE = "Adherence Visit Done";
+        String PARTIALLY_RECEIVED = "Partially Received";
+
         // Following are for grouped structure tasks. Not synced to server
         String FAMILY_REGISTERED = "Family Registered";
         String BEDNET_DISTRIBUTED = "Bednet Distributed";
         String BLOOD_SCREENING_COMPLETE = "Blood Screening Complete";
         String PARTIALLY_SPRAYED = "Partially Sprayed";
+
     }
 
     interface BusinessStatusWrapper {
@@ -227,6 +259,8 @@ public interface Constants {
         String STRUCTURE_PROPERTIES_TYPE = "[structure_type]";
 
         String NUMBER_OF_FAMILY_MEMBERS = "[num_fam_members]";
+
+        String NUMBER_OF_FAMILY_MEMBERS_SLEEPING_OUTDOORS = "[num_sleeps_outdoors]";
 
         String SPRAY_FORM = "json.form/spray_form.json";
 
@@ -269,6 +303,10 @@ public interface Constants {
         String THAILAND_BEHAVIOUR_CHANGE_COMMUNICATION_FORM = "json.form/thailand_behaviour_change_communication.json";
 
         String THAILAND_PAOT_FORM = "json.form/thailand_paot.json";
+
+        String ZAMBIA_MDA_DISPENSE_FORM = "json.form/zambia_mda_dispense.json";
+
+        String ZAMBIA_MDA_ADHERENCE_FORM = "json.form/zambia_mda_adherence.json";
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 
@@ -334,11 +372,20 @@ public interface Constants {
 
         String TEAM_LEADER = "teamLeader";
 
+        String FIELD_OFFICER = "fieldOfficer";
+
         String HFC_SEEK = "hfc_seek";
 
         String HFC_BELONG = "hfc_belong";
 
         String CHW_NAME = "chw_name";
+
+        String COORDINATOR_NAME = "coordinator_name";
+
+        String ADHERENCE_NAME = "adherence_name";
+
+        String CATCHMENT_AREA = "catchment_area";
+
 
     }
 

@@ -8,12 +8,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
+import org.smartregister.domain.Geometry;
+import org.smartregister.domain.Location;
+import org.smartregister.domain.LocationProperty;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
+import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.JsonFormUtils;
+
+import java.util.HashMap;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static org.junit.Assert.assertEquals;
@@ -35,12 +41,14 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     @Before
     public void setUp() {
         revealJsonFormUtils = new RevealJsonFormUtils();
-        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
     }
 
     @Test
     public void testGetFormNameShouldReturnThailandLarvalDippingFormForLarvalDippingEvent() {
-        assertEquals(revealJsonFormUtils.getFormName(LARVAL_DIPPING_EVENT, null), JsonForm.LARVAL_DIPPING_FORM);
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        assertEquals(JsonForm.LARVAL_DIPPING_FORM, revealJsonFormUtils.getFormName(LARVAL_DIPPING_EVENT, null));
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
@@ -50,7 +58,10 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
 
     @Test
     public void testGetFormNameShouldReturnThailandMosquitoCollectionFormForLarvalDippingEvent() {
-        assertEquals(revealJsonFormUtils.getFormName(MOSQUITO_COLLECTION_EVENT, null), JsonForm.MOSQUITO_COLLECTION_FORM);
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        assertEquals(JsonForm.MOSQUITO_COLLECTION_FORM, revealJsonFormUtils.getFormName(MOSQUITO_COLLECTION_EVENT, null));
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
@@ -65,8 +76,10 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
 
     @Test
     public void testGetFormNameShouldReturnThailandPAOTForm() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
         assertEquals(JsonForm.THAILAND_PAOT_FORM, revealJsonFormUtils.getFormName(null, Constants.EventType.PAOT_EVENT));
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
 
@@ -82,11 +95,45 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
-    public  void testPopulateField() throws JSONException {
+    public void testPopulateField() throws JSONException {
         JSONObject form = new JSONObject(AssetHandler.readFileFromAssetsFolder(JsonForm.ADD_STRUCTURE_FORM, context));
-        assertEquals("",JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), JsonForm.SELECTED_OPERATIONAL_AREA_NAME).get(TEXT).toString());
+        assertEquals("", JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), JsonForm.SELECTED_OPERATIONAL_AREA_NAME).get(TEXT).toString());
 
         revealJsonFormUtils.populateField(form, Constants.JsonForm.SELECTED_OPERATIONAL_AREA_NAME, "TLV1", TEXT);
         assertEquals("TLV1", JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), JsonForm.SELECTED_OPERATIONAL_AREA_NAME).get(TEXT));
+    }
+
+    @Test
+    public void testgetFormJSON() throws JSONException  {
+        StructureTaskDetails task = new StructureTaskDetails("d12202fb-d347-4d7a-8859-fb370304c34c");
+        task.setBusinessStatus("Not Visited");
+        task.setTaskEntity("c72310fd-9c60-403e-a6f8-e38bf5d6359b");
+        task.setStructureId("e5246812-f66c-41d9-8739-464f913b112d");
+        task.setTaskCode("Blood Screening");
+        task.setTaskStatus("READY");
+        task.setTaskName("Yogi  Feri, 9");
+        task.setTaskAction("Record\n" +"Screening");
+
+        Location structure = new Location();
+        structure.setId("e5246812-f66c-41d9-8739-464f913b112d");
+        structure.setServerVersion(1569490867604L);
+        structure.setSyncStatus("Synced");
+        structure.setType("Feature");
+        structure.setJurisdiction(false);
+
+        Geometry g = new Geometry();
+        g.setType(Geometry.GeometryType.MULTI_POLYGON);
+        structure.setGeometry(g);
+
+        LocationProperty lp = new LocationProperty();
+        lp.setParentId("6fffaf7f-f16f-4713-a1ac-0cf6e2fe7f2a");
+        HashMap<String, String> hm = new HashMap<>();
+        hm.put("houseNumber", "6533");
+        lp.setCustomProperties(hm);
+        lp.setStatus(LocationProperty.PropertyStatus.ACTIVE);
+        structure.setProperties(lp);
+
+        JSONObject jsonObject = revealJsonFormUtils.getFormJSON(context, JsonForm.BLOOD_SCREENING_FORM, task, structure);
+        assertEquals(jsonObject.getJSONObject("details").getString(Constants.Properties.FORM_VERSION), "0.0.1");
     }
 }

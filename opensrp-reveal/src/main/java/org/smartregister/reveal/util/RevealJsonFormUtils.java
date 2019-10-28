@@ -156,6 +156,7 @@ public class RevealJsonFormUtils {
         formData.put(Properties.LOCATION_UUID, structureUUID);
         formData.put(Properties.LOCATION_VERSION, structureVersion);
         formData.put(Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
+        formData.put(Properties.FORM_VERSION, formJson.optString("form_version"));
         formJson.put(DETAILS, formData);
         return formJson;
     }
@@ -205,7 +206,7 @@ public class RevealJsonFormUtils {
                 formName = JsonForm.SPRAY_FORM_ZAMBIA;
             } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_SPRAY_FORM;
-            }else{
+            } else {
                 formName = JsonForm.SPRAY_FORM;
             }
         } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)
@@ -262,6 +263,10 @@ public class RevealJsonFormUtils {
             } else {
                 formName = JsonForm.PAOT_FORM;
             }
+        } else if (Intervention.MDA_ADHERENCE.equals(taskCode)) {
+            formName = JsonForm.ZAMBIA_MDA_ADHERENCE_FORM;
+        } else if (Intervention.MDA_DISPENSE.equals(taskCode)) {
+            formName = JsonForm.ZAMBIA_MDA_DISPENSE_FORM;
         }
         return formName;
     }
@@ -343,11 +348,15 @@ public class RevealJsonFormUtils {
         }
     }
 
-    public Pair<JSONArray, JSONArray> populateServerOptions(Map<String, Object> serverConfigs, JSONObject formJson, String seetingsConfigKey, String formKey, String filterKey) {
+    public Pair<JSONArray, JSONArray> populateServerOptions(Map<String, Object> serverConfigs, JSONObject formJson, String settingsConfigKey, String formKey, String filterKey) {
         if (serverConfigs == null)
             return null;
-        JSONArray serverConfig = (JSONArray) serverConfigs.get(seetingsConfigKey);
+        JSONArray serverConfig = (JSONArray) serverConfigs.get(settingsConfigKey);
         if (serverConfig != null && !serverConfig.isNull(0)) {
+            JSONArray fields = JsonFormUtils.fields(formJson);
+            JSONObject field = JsonFormUtils.getFieldJSONObject(fields, formKey);
+            if (field == null)
+                return null;
             JSONArray options = serverConfig.optJSONObject(0).optJSONArray(filterKey);
             if (options == null)
                 return null;
@@ -359,13 +368,14 @@ public class RevealJsonFormUtils {
                     continue;
                 String code = operator.optString(CONFIGURATION.CODE, null);
                 String name = operator.optString(CONFIGURATION.NAME);
-                if (code == null)
-                    continue;
-                codes.put(code + ":" + name);
-                values.put(code + " - " + name);
+                if (StringUtils.isBlank(code) || code.equalsIgnoreCase(name)) {
+                    codes.put(name);
+                    values.put(name);
+                } else {
+                    codes.put(code + ":" + name);
+                    values.put(code + " - " + name);
+                }
             }
-            JSONArray fields = JsonFormUtils.fields(formJson);
-            JSONObject field = JsonFormUtils.getFieldJSONObject(fields, formKey);
             try {
                 field.put(KEYS, codes);
                 field.put(VALUES, values);

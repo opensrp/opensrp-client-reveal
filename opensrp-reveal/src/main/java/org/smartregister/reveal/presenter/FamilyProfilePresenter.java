@@ -108,7 +108,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
     @Override
     public void onRegistrationSaved(boolean isEdit) {
-        if (!isEdit && Utils.getInterventionLabel() == R.string.focus_investigation) {
+        if (!isEdit && Utils.isFocusInvestigationOrMDA()) {
             getInteractor().generateTasks(getView().getApplicationContext(),
                     getModel().getEventClient().getEvent().getBaseEntityId(), structureId);
             return;
@@ -155,7 +155,14 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
     @Override
     public void startFormForEdit(CommonPersonObjectClient client) {
-        String formName = BuildConfig.BUILD_COUNTRY == Country.THAILAND ? JSON_FORM.THAILAND_FAMILY_UPDATE : JSON_FORM.FAMILY_UPDATE;
+        String formName;
+        if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
+            formName = JSON_FORM.THAILAND_FAMILY_UPDATE;
+        } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+            formName = JSON_FORM.ZAMBIA_FAMILY_UPDATE;
+        } else {
+            formName = JSON_FORM.FAMILY_UPDATE;
+        }
         JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditFormString(formName,
                 client, RevealApplication.getInstance().getMetadata().familyRegister.updateEventType);
         try {

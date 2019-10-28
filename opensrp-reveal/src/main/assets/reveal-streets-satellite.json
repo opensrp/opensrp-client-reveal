@@ -67,12 +67,14 @@
           [
             "Not Sprayed",
             "Incomplete",
-            "In Progress"
+            "In Progress",
+            "None Received"
           ],
           "hsl(3, 71%, 54%)",
           [
             "Sprayed",
-            "Complete"
+            "Complete",
+            "Fully Received"
           ],
           "hsl(89, 52%, 48%)",
           [
@@ -85,7 +87,8 @@
           ],
           "hsl(335, 100%, 79%)",
           [
-            "Bednet Distributed"
+            "Bednet Distributed",
+            "Adherence Visit Done"
           ],
           "hsl(199, 68%, 55%)",
           [
@@ -93,7 +96,8 @@
           ],
           "hsl(262, 100%, 68%)",
           [
-            "Partially Sprayed"
+            "Partially Sprayed",
+            "Partially Received"
           ],
           "hsl(26, 84%, 56%)",
           "hsl(0, 0%, 78%)"
@@ -164,12 +168,14 @@
           [
             "Not Sprayed",
             "Incomplete",
-            "In Progress"
+            "In Progress",
+            "None Received"
           ],
           "hsl(3, 71%, 54%)",
           [
             "Sprayed",
-            "Complete"
+            "Complete",
+            "Fully Received"
           ],
           "hsl(89, 52%, 48%)",
           [
@@ -182,7 +188,8 @@
           ],
           "hsl(335, 100%, 79%)",
           [
-            "Bednet Distributed"
+            "Bednet Distributed",
+            "Adherence Visit Done"
           ],
           "hsl(199, 68%, 55%)",
           [
@@ -190,7 +197,8 @@
           ],
           "hsl(262, 100%, 68%)",
           [
-            "Partially Sprayed"
+            "Partially Sprayed",
+            "Partially Received"
           ],
           "hsl(26, 84%, 56%)",
           "hsl(0, 0%, 78%)"

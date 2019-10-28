@@ -1,6 +1,7 @@
 {
   "count": "1",
   "encounter_type": "blood_screening",
+  "form_version": "0.0.1",
   "entity_id": "",
   "metadata": {
     "start": {

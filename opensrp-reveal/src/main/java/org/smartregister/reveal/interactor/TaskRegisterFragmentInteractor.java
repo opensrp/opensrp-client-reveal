@@ -179,7 +179,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         List<TaskDetails> tasks = new ArrayList<>();
         appExecutors.diskIO().execute(() -> {
             structuresWithinBuffer = 0;
-            if (Utils.getInterventionLabel() == R.string.focus_investigation) { // perform task grouping
+            if (Utils.isFocusInvestigationOrMDA()) { // perform task grouping
 
                 tasks.addAll(queryTaskDetails(groupedRegisteredStructureTasksSelect(mainCondition.first),
                         mainCondition.second, lastLocation, operationalAreaCenter, houseLabel, true));

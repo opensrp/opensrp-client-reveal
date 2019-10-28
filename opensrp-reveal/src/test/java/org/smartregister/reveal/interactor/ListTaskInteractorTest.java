@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.Context;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.StructureRepository;
@@ -37,6 +38,7 @@ import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.Cache;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -97,6 +99,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
+        Context.bindtypes = new ArrayList<>();
         listTaskInteractor = new ListTaskInteractor(presenter);
         Whitebox.setInternalState(listTaskInteractor, "database", database);
         Whitebox.setInternalState(listTaskInteractor, "taskRepository", taskRepository);
@@ -216,6 +219,8 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         String plan = UUID.randomUUID().toString();
         String operationAreaId = operationArea.getId();
         setOperationArea(plan);
+        PreferencesUtil.getInstance().setCurrentPlan(plan);
+        PreferencesUtil.getInstance().setInterventionTypeForPlan(plan,"FI");
         when(database.rawQuery(anyString(), eq(new String[]{plan, CASE_CONFIRMATION}))).thenReturn(createIndexCaseCursor());
         listTaskInteractor.fetchLocations(plan, operationAreaId);
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).getTasksByPlanAndGroup(plan, operationAreaId);

@@ -430,24 +430,6 @@
           }
         }
       },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       {
         "key": "rooms_eligible",
         "openmrs_entity_parent": "",
@@ -525,7 +507,7 @@
         "text": "If this is a mop-up or revisit, please record TOTAL rooms sprayed",
         "read_only": false,
         "hint_on_text": true,
-        "text_color" : "#B9A000",
+        "text_color": "#B9A000",
         "text_size": "6sp",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1146,46 +1128,6 @@
           }
         }
       },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       {
         "key": "notsprayed_reason",
         "openmrs_entity_parent": "",
@@ -1733,18 +1675,6 @@
           }
         }
       },
-
-
-
-
-
-
-
-
-
-
-
-
       {
         "key": "mopup",
         "openmrs_entity_parent": "",
@@ -1780,7 +1710,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Can you ask 4 questions on health seeking behaviour?",
+        "label": "Can you ask 5 Social Behaviour Change questions?",
         "text_size": "8sp",
         "options": [
           {
@@ -1841,6 +1771,7 @@
         "type": "check_box",
         "label": "What type of message / information did you see or hear?",
         "text_size": "8sp",
+        "combine_checkbox_option_values" : "true",
         "options": [
           {
             "key": "malariaIsDangerous",
@@ -1910,7 +1841,9 @@
           "step1:information": {
             "ex-checkbox": [
               {
-                "or": ["other"]
+                "or": [
+                  "other"
+                ]
               }
             ]
           }
@@ -1924,6 +1857,7 @@
         "type": "check_box",
         "label": "What is your preferred source(s) of malaria messages / information?",
         "text_size": "8sp",
+        "combine_checkbox_option_values" : "true",
         "options": [
           {
             "key": "healthFacility",
@@ -1967,9 +1901,10 @@
           "err": "Required field"
         },
         "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-relevance-rules.yml"
+            }
           }
         }
       },
@@ -1989,7 +1924,9 @@
           "step1:preferred_source": {
             "ex-checkbox": [
               {
-                "or": ["other"]
+                "or": [
+                  "other"
+                ]
               }
             ]
           }
@@ -2001,7 +1938,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Can you ask 5 Social Behaviour Change questions?",
+        "label": "Can you ask questions on health seeking behaviour?",
         "text_size": "8sp",
         "options": [
           {

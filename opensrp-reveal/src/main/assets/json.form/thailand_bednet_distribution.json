@@ -507,13 +507,6 @@
         "v_min": {
           "value": "0",
           "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "bednet-distribution-relevance-rules.yml"
-            }
-          }
         }
       },
       {
@@ -538,15 +531,8 @@
           "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "v_max": {
-          "value": "1",
-          "err": "ต้องไม่มากกว่า 1"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "bednet-distribution-relevance-rules.yml"
-            }
-          }
+          "value": "[num_sleeps_outdoors]",
+          "err": "ต้องไม่เกินจำนวนสมาชิกในครอบครัวที่ใช้เวลากลางคืนข้างนอก"
         }
       },
       {
@@ -573,13 +559,6 @@
         "v_relative_max": {
           "value": "calcPopulationMinusExistingNets",
           "err": "จำนวนมุ้งไม่ควรเกินจำนวนคนในบ้าน"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "bednet-distribution-relevance-rules.yml"
-            }
-          }
         }
       },
       {
