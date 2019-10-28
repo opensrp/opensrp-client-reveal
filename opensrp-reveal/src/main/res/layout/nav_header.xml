@@ -65,12 +65,12 @@
         app:layout_constraintTop_toBottomOf="@id/sync_button" />
 
     <TextView
-        android:id="@+id/btn_navMenu_otherForms"
+        android:id="@+id/btn_navMenu_summaryForms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/drawer_margin"
         android:layout_marginTop="@dimen/drawer_margin_vertical"
-        android:text="@string/other_forms"
+        android:text="@string/summary_forms"
         android:textColor="@color/button_blue"
         android:textSize="18sp"
         android:visibility="gone"
@@ -87,7 +87,7 @@
         android:background="#DEDEDE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_navMenu_otherForms" />
+        app:layout_constraintTop_toBottomOf="@id/btn_navMenu_summaryForms" />
 
 
 

@@ -91,7 +91,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".view.OtherFormsActivity"
+            android:name=".view.SummaryFormsActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 

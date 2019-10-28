@@ -51,7 +51,6 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     private TextView facilityTextView;
     private TextView operatorTextView;
     private TextView p2pSyncTextView;
-    private TextView otherFormsTextView;
 
     private DrawerLayout mDrawerLayout;
 
@@ -128,7 +127,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         facilityTextView = headerView.findViewById(R.id.facility_label);
         operatorTextView = headerView.findViewById(R.id.operator_label);
         p2pSyncTextView = headerView.findViewById(R.id.btn_navMenu_p2pSyncBtn);
-        otherFormsTextView = headerView.findViewById(R.id.btn_navMenu_otherForms);
+
+        TextView summaryFormsTextView = headerView.findViewById(R.id.btn_navMenu_summaryForms);
 
         operationalAreaTextView.setOnClickListener(this);
 
@@ -138,8 +138,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             p2pSyncTextView.setVisibility(View.VISIBLE);
             p2pSyncTextView.setOnClickListener(this);
 
-            otherFormsTextView.setVisibility(View.VISIBLE);
-            otherFormsTextView.setOnClickListener(this);
+            summaryFormsTextView.setVisibility(View.VISIBLE);
+            summaryFormsTextView.setOnClickListener(this);
         }
 
         headerView.findViewById(R.id.logout_button).setOnClickListener(this);
@@ -277,7 +277,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             RevealApplication.getInstance().logoutCurrentUser();
         else if (v.getId() == R.id.btn_navMenu_p2pSyncBtn)
             startP2PActivity();
-        else if (v.getId() == R.id.btn_navMenu_otherForms)
+        else if (v.getId() == R.id.btn_navMenu_summaryForms)
             startOtherFormsActivity();
         else if (v.getId() == R.id.sync_button) {
             org.smartregister.reveal.util.Utils.startImmediateSync();
@@ -300,6 +300,6 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     }
 
     private void startOtherFormsActivity() {
-        getContext().startActivity(new Intent(getContext(), OtherFormsActivity.class));
+        getContext().startActivity(new Intent(getContext(), SummaryFormsActivity.class));
     }
 }

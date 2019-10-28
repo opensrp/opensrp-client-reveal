@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/other_forms_group"
+        android:id="@+id/summary_forms_group"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -19,7 +19,7 @@
             android:background="@color/light_grey" />
 
         <Button
-            android:id="@+id/other_daily_summary"
+            android:id="@+id/summary_daily_summary"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/white"
@@ -38,7 +38,7 @@
             android:background="@color/light_grey" />
 
         <Button
-            android:id="@+id/other_team_leader_dos"
+            android:id="@+id/summary_team_leader_dos"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/white"
@@ -57,7 +57,7 @@
             android:background="@color/light_grey" />
 
         <Button
-            android:id="@+id/other_cb_spray_area"
+            android:id="@+id/summary_cb_spray_area"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/white"
@@ -76,7 +76,7 @@
             android:background="@color/light_grey" />
 
         <Button
-            android:id="@+id/other_irs_sa_decision"
+            android:id="@+id/summary_irs_sa_decision"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/white"
@@ -95,7 +95,7 @@
             android:background="@color/light_grey" />
 
         <Button
-            android:id="@+id/other_mobilization_form"
+            android:id="@+id/summary_mobilization_form"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/white"
@@ -114,7 +114,7 @@
             android:background="@color/light_grey" />
 
         <Button
-            android:id="@+id/other_irs_field_officer"
+            android:id="@+id/summary_irs_field_officer"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/white"
@@ -133,13 +133,13 @@
             android:background="@color/light_grey" />
 
         <Button
-            android:id="@+id/other_verification_form"
+            android:id="@+id/summary_verification_form"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/white"
             android:gravity="center_horizontal"
             android:padding="5dp"
-            android:text="@string/other_verification_form"
+            android:text="@string/summary_verification_form"
             android:textAllCaps="false"
             android:textColor="@color/text_black"
             android:textSize="20sp" />

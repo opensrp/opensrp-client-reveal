@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.OtherFormsContract;
-import org.smartregister.reveal.fragment.OtherFormsFragment;
+import org.smartregister.reveal.fragment.SummaryFormsFragment;
 import org.smartregister.reveal.presenter.OtherFormsPresenter;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 
@@ -21,19 +21,17 @@ import timber.log.Timber;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 
-public class OtherFormsActivity extends AppCompatActivity implements OtherFormsContract.View {
+public class SummaryFormsActivity extends AppCompatActivity implements OtherFormsContract.View {
 
     private OtherFormsPresenter presenter;
-    private OtherFormsFragment otherFormsFragment;
     private RevealJsonFormUtils jsonFormUtils;
-    private ViewPagerAdapter adapter;
     private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_other_forms);
+        setContentView(R.layout.activity_summary_forms);
         presenter = new OtherFormsPresenter(this);
         setupViews();
     }
@@ -45,13 +43,13 @@ public class OtherFormsActivity extends AppCompatActivity implements OtherFormsC
     }
 
     protected ViewPager setupViewPager(ViewPager viewPager) {
-        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         jsonFormUtils = new RevealJsonFormUtils();
 
-        otherFormsFragment = OtherFormsFragment.newInstance(this.getIntent().getExtras());
+        SummaryFormsFragment otherFormsFragment;otherFormsFragment = SummaryFormsFragment.newInstance(this.getIntent().getExtras());
         otherFormsFragment.setJsonFormUtils(jsonFormUtils);
-        adapter.addFragment(otherFormsFragment, this.getString(R.string.other_forms).toUpperCase());
+        adapter.addFragment(otherFormsFragment, this.getString(R.string.summary_forms).toUpperCase());
 
 
         viewPager.setAdapter(adapter);
