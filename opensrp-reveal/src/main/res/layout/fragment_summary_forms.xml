@@ -101,7 +101,7 @@
             android:background="@color/white"
             android:gravity="center_horizontal"
             android:padding="5dp"
-            android:text="@string/other_mobilization_form"
+            android:text="@string/mobilization_form"
             android:textAllCaps="false"
             android:textColor="@color/text_black"
             android:textSize="20sp" />
@@ -120,7 +120,7 @@
             android:background="@color/white"
             android:gravity="center_horizontal"
             android:padding="5dp"
-            android:text="@string/other_irs_field_officer"
+            android:text="@string/irs_field_officer"
             android:textAllCaps="false"
             android:textColor="@color/text_black"
             android:textSize="20sp" />
@@ -139,7 +139,7 @@
             android:background="@color/white"
             android:gravity="center_horizontal"
             android:padding="5dp"
-            android:text="@string/summary_verification_form"
+            android:text="@string/verification_form"
             android:textAllCaps="false"
             android:textColor="@color/text_black"
             android:textSize="20sp" />
