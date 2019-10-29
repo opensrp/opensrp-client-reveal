@@ -37,6 +37,7 @@ public class SummaryFormsActivity extends AppCompatActivity implements OtherForm
         presenter = new OtherFormsPresenter(this);
 
         Toolbar toolbar = (Toolbar) this.findViewById(R.id.summary_toolbar);
+        toolbar.setTitle("Return");
         this.setSupportActionBar(toolbar);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
