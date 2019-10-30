@@ -47,7 +47,7 @@ public class RevealSyncConfigurationTest extends BaseUnitTest {
 
     @Test
     public void getSyncFilterParam() {
-        assertEquals(SyncFilter.LOCATION, syncConfiguration.getSyncFilterParam());
+        assertEquals(SyncFilter.TEAM_ID, syncConfiguration.getSyncFilterParam());
     }
 
     @Test

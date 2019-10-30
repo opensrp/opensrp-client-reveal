@@ -22,10 +22,12 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.model.FamilyProfileModel;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
 import org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
@@ -202,19 +204,25 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testStartFormForEdit() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.NAMIBIA);
         CommonPersonObjectClient client = TestingUtils.getCommonPersonObjectClient();
         presenter.startFormForEdit(client);
         verify(familyJsonFormUtils).getAutoPopulatedJsonEditFormString(JSON_FORM.FAMILY_UPDATE, client, EventType.UPDATE_FAMILY_REGISTRATION);
         verify(view).startFormActivity(null);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
     public void testStartFormForEditErrors() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.NAMIBIA);
         doThrow(new RuntimeException()).when(view).startFormActivity(any());
         CommonPersonObjectClient client = TestingUtils.getCommonPersonObjectClient();
         presenter.startFormForEdit(client);
         verify(familyJsonFormUtils).getAutoPopulatedJsonEditFormString(JSON_FORM.FAMILY_UPDATE, client, EventType.UPDATE_FAMILY_REGISTRATION);
         verify(view).startFormActivity(null);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
 
