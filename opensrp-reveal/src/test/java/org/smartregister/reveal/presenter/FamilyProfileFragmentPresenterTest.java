@@ -21,13 +21,16 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.family.domain.FamilyEventClient;
+import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.FamilyConstants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
 import org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
@@ -236,6 +239,9 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnAddFamilyMemberOpensFormIfFamilyHeadIsFetched() throws Exception {
+        FamilyMetadata metadata = RevealApplication.getInstance().getMetadata();
+        metadata.updateFamilyMemberRegister(FamilyConstants.JSON_FORM.FAMILY_MEMBER_REGISTER, FamilyConstants.TABLE_NAME.FAMILY_MEMBER, FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION, FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION, FamilyConstants.CONFIGURATION.FAMILY_MEMBER_REGISTER, FamilyConstants.RELATIONSHIP.FAMILY);
+
         when(model.getFamilyHeadPersonObject()).thenReturn(familyHead);
         presenter = spy(presenter);
         presenter.onAddFamilyMember();
@@ -247,6 +253,10 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnFetchFamilyHead() throws Exception {
+
+        FamilyMetadata metadata = RevealApplication.getInstance().getMetadata();
+        metadata.updateFamilyMemberRegister(FamilyConstants.JSON_FORM.FAMILY_MEMBER_REGISTER, FamilyConstants.TABLE_NAME.FAMILY_MEMBER, FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION, FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION, FamilyConstants.CONFIGURATION.FAMILY_MEMBER_REGISTER, FamilyConstants.RELATIONSHIP.FAMILY);
+
         presenter = spy(presenter);
         presenter.onFetchFamilyHead(familyHead);
         verify(model).setFamilyHeadPersonObject(familyHead);
@@ -257,6 +267,10 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnFetchFamilyHeadError() throws Exception {
+
+        FamilyMetadata metadata = RevealApplication.getInstance().getMetadata();
+        metadata.updateFamilyMemberRegister(FamilyConstants.JSON_FORM.FAMILY_MEMBER_REGISTER, FamilyConstants.TABLE_NAME.FAMILY_MEMBER, FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION, FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION, FamilyConstants.CONFIGURATION.FAMILY_MEMBER_REGISTER, FamilyConstants.RELATIONSHIP.FAMILY);
+
         presenter = spy(presenter);
         doThrow(new RuntimeException()).when(presenter).startForm(JSON_FORM.FAMILY_MEMBER_REGISTER, null, null, "");
         presenter.onFetchFamilyHead(familyHead);

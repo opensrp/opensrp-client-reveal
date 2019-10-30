@@ -96,6 +96,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     private FeatureCollection featureCollection;
 
+    private FamilyMetadata metadata;
+
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
     }
@@ -281,7 +283,13 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     }
 
     public FamilyMetadata getMetadata() {
-        FamilyMetadata metadata = new FamilyMetadata(FamilyWizardFormActivity.class, JsonWizardFormActivity.class, FamilyProfileActivity.class, CONFIGURATION.UNIQUE_ID_KEY, true);
+
+        if (metadata != null) {
+            return metadata;
+        }
+
+        metadata = new FamilyMetadata(FamilyWizardFormActivity.class, JsonWizardFormActivity.class, FamilyProfileActivity.class, CONFIGURATION.UNIQUE_ID_KEY, true);
+
         if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
             metadata.updateFamilyRegister(JSON_FORM.THAILAND_FAMILY_REGISTER, TABLE_NAME.FAMILY, EventType.FAMILY_REGISTRATION, EventType.UPDATE_FAMILY_REGISTRATION, CONFIGURATION.FAMILY_REGISTER, RELATIONSHIP.FAMILY_HEAD, RELATIONSHIP.PRIMARY_CAREGIVER);
             metadata.updateFamilyMemberRegister(JSON_FORM.THAILAND_FAMILY_MEMBER_REGISTER, TABLE_NAME.FAMILY_MEMBER, EventType.FAMILY_MEMBER_REGISTRATION, EventType.UPDATE_FAMILY_MEMBER_REGISTRATION, CONFIGURATION.FAMILY_MEMBER_REGISTER, RELATIONSHIP.FAMILY);
