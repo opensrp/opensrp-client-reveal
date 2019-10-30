@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.powermock.reflect.Whitebox;
 import org.smartregister.SyncFilter;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.LocationRepository;
@@ -45,15 +46,39 @@ public class RevealSyncConfigurationTest extends BaseUnitTest {
     }
 
     @Test
-    public void getSyncFilterParam() {
-        assertEquals(SyncFilter.TEAM_ID, syncConfiguration.getSyncFilterParam());
+    public void getLocationSyncFilterParam() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        assertEquals(SyncFilter.LOCATION, syncConfiguration.getSyncFilterParam());
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
-    public void getSyncFilterValue() {
+    public void getTeamSyncFilterParam() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        assertEquals(SyncFilter.TEAM_ID, syncConfiguration.getSyncFilterParam());
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void getLocationSyncFilterValue() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         when(allSharedPreferences.fetchRegisteredANM()).thenReturn("123");
         when(allSharedPreferences.fetchDefaultTeamId(anyString())).thenReturn("122132");
         assertEquals("122132", syncConfiguration.getSyncFilterValue());
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void getTeamSyncFilterValue() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        when(allSharedPreferences.fetchRegisteredANM()).thenReturn("123");
+        when(allSharedPreferences.fetchDefaultTeamId(anyString())).thenReturn("122132");
+        assertEquals("122132", syncConfiguration.getSyncFilterValue());
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
