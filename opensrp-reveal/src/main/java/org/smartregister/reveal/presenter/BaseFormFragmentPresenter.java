@@ -137,15 +137,7 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
         switch (formName) {
 
             case JsonForm.IRS_SA_DECISION_ZAMBIA:
-                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        formJSON, Constants.CONFIGURATION.SUPERVISORS, JsonForm.SUPERVISOR,
-                        PreferencesUtil.getInstance().getCurrentDistrict());
-                break;
             case JsonForm.CB_SPRAY_AREA_ZAMBIA:
-                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        formJSON, Constants.CONFIGURATION.SUPERVISORS, JsonForm.SUPERVISOR,
-                        PreferencesUtil.getInstance().getCurrentDistrict());
-                break;
             case JsonForm.MOBILIZATION_FORM_ZAMBIA:
                 jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         formJSON, Constants.CONFIGURATION.SUPERVISORS, JsonForm.SUPERVISOR,
