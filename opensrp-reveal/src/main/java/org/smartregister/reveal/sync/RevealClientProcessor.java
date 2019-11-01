@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty.PropertyStatus;
 import org.smartregister.domain.Task;
@@ -238,6 +239,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         if (task != null) {
             task.setBusinessStatus(calculateBusinessStatus(event));
             task.setStatus(Task.TaskStatus.COMPLETED);
+            task.setLastModified(new DateTime());
             // update task sync status to unsynced if it was already synced,
             // ignore if task status is created so that it will be created on server
             if (localEvents && BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
