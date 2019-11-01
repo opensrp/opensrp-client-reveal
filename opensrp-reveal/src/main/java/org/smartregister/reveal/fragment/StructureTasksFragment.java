@@ -114,7 +114,6 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     private void setUpViews(View view) {
         TextView interventionType = view.findViewById(R.id.intervention_type);
         interventionType.setText(getString(Utils.getInterventionLabel()));
-
         taskRecyclerView = view.findViewById(R.id.task_recyclerView);
 
         progressDialog = new ProgressDialog(getContext());

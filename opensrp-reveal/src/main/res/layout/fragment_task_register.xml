@@ -17,226 +17,53 @@
         android:orientation="horizontal"
         android:visibility="gone" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/intervention_type"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:orientation="horizontal" >
+        android:layout_height="wrap_content"
+        android:background="#59595A"
+        android:gravity="center_horizontal"
+        android:padding="5dp"
+        android:text="@string/focus_investigation"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
-        <Button
-            android:id="@+id/intervention_type"
-            android:layout_width="206dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="#8F8F8F"
-            android:gravity="center_horizontal"
-            android:padding="5dp"
-            android:text="@string/focus_investigation"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/other_forms_button"
-            android:layout_height="50dp"
-            android:layout_width="206dp"
-            android:layout_weight="1"
-            android:background="#59595A"
-            android:gravity="center_horizontal"
-            android:textAllCaps="true"
-            android:text="@string/other_forms"
-            android:textColor="@color/white"
-            android:padding="5dp"
-            android:textSize="20sp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/other_forms_group"
+    <include
+        layout="@layout/base_register_sort_filter_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:visibility="gone"
-        android:orientation="vertical" >
+        android:layout_height="30dp" />
 
-        <View
-            android:id="@+id/separator1"
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/listview_background_rounded">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/light_grey" />
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:visibility="invisible" />
 
-        <Button
-            android:id="@+id/other_daily_summary"
+        <ProgressBar
+            android:id="@+id/client_list_progress"
+            style="@android:style/Widget.Holo.Light.ProgressBar.Large.Inverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/empty_view"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@color/white"
-            android:gravity="center_horizontal"
-            android:padding="5dp"
-            android:text="@string/daily_summary"
-            android:textAllCaps="false"
-            android:textColor="@color/text_black"
-            android:textSize="20sp" />
-
-        <View
-            android:id="@+id/separator2"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/light_grey" />
-
-        <Button
-            android:id="@+id/other_team_leader_dos"
-            android:layout_height="50dp"
-            android:layout_width="match_parent"
-            android:background="@color/white"
-            android:gravity="center_horizontal"
-            android:textAllCaps="false"
-            android:text="@string/team_leader_dos"
-            android:textColor="@color/text_black"
-            android:padding="5dp"
-            android:textSize="20sp"/>
-
-        <View
-            android:id="@+id/separator3"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/light_grey" />
-
-        <Button
-            android:id="@+id/other_cb_spray_area"
-            android:layout_height="50dp"
-            android:layout_width="match_parent"
-            android:background="@color/white"
-            android:gravity="center_horizontal"
-            android:textAllCaps="false"
-            android:text="@string/cb_spray_area"
-            android:textColor="@color/text_black"
-            android:padding="5dp"
-            android:textSize="20sp"/>
-
-        <View
-            android:id="@+id/separator4"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/light_grey" />
-
-        <Button
-            android:id="@+id/other_irs_sa_decision"
-            android:layout_height="50dp"
-            android:layout_width="match_parent"
-            android:background="@color/white"
-            android:gravity="center_horizontal"
-            android:textAllCaps="false"
-            android:text="@string/irs_sa_decision"
-            android:textColor="@color/text_black"
-            android:padding="5dp"
-            android:textSize="20sp"/>
-
-        <View
-            android:id="@+id/separator5"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/light_grey" />
-
-        <Button
-            android:id="@+id/other_mobilization_form"
-            android:layout_height="50dp"
-            android:layout_width="match_parent"
-            android:background="@color/white"
-            android:gravity="center_horizontal"
-            android:textAllCaps="false"
-            android:text="@string/other_mobilization_form"
-            android:textColor="@color/text_black"
-            android:padding="5dp"
-            android:textSize="20sp"/>
-
-        <View
-            android:id="@+id/separator6"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/light_grey" />
-
-        <Button
-            android:id="@+id/other_irs_field_officer"
-            android:layout_height="50dp"
-            android:layout_width="match_parent"
-            android:background="@color/white"
-            android:gravity="center_horizontal"
-            android:textAllCaps="false"
-            android:text="@string/other_irs_field_officer"
-            android:textColor="@color/text_black"
-            android:padding="5dp"
-            android:textSize="20sp"/>
-
-        <View
-            android:id="@+id/separator7"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/light_grey" />
-
-        <Button
-            android:id="@+id/other_verification_form"
-            android:layout_height="50dp"
-            android:layout_width="match_parent"
-            android:background="@color/white"
-            android:gravity="center_horizontal"
-            android:textAllCaps="false"
-            android:text="@string/other_verification_form"
-            android:textColor="@color/text_black"
-            android:padding="5dp"
-            android:textSize="20sp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/task_group"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="visible">
-        <include
-            layout="@layout/base_register_sort_filter_bar"
-            android:layout_width="match_parent"
-            android:layout_height="30dp" />
-
-        <FrameLayout
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@drawable/listview_background_rounded">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical"
-                android:visibility="invisible" />
-
-            <ProgressBar
-                android:id="@+id/client_list_progress"
-                style="@android:style/Widget.Holo.Light.ProgressBar.Large.Inverse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="visible" />
-
-            <TextView
-                android:id="@+id/empty_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:padding="32dp"
-                android:text="@string/no_record"
-                android:visibility="gone" />
-        </FrameLayout>
-    </LinearLayout>
-
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="32dp"
+            android:text="@string/no_record"
+            android:visibility="gone" />
+    </FrameLayout>
 
     <include
         android:id="@+id/indicators_card_view"

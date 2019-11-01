@@ -105,7 +105,7 @@
     <string name="map">Map</string>
     <string name="hamburger_menu">Hamburger menu</string>
     <string name="focus_investigation">Focus Investigation</string>
-    <string name="other_forms">Other Forms</string>
+    <string name="summary_forms">Other Forms</string>
     <string name="irs">IRS</string>
     <string name="mda">MDA</string>
     <string name="task_icon">Task Icon</string>
@@ -217,9 +217,9 @@
     <string name="team_leader_dos">Enter Team Leader DOS Form</string>
     <string name="cb_spray_area">Enter CB Spray Area Visit Form</string>
     <string name="irs_sa_decision">Enter IRS SA Decision Form</string>
-    <string name="other_mobilization_form">Enter Mobilization Form</string>
-    <string name="other_irs_field_officer">Enter IRS Field Officer Form</string>
-    <string name="other_verification_form">Enter Verification Form</string>
+    <string name="mobilization_form">Enter Mobilization Form</string>
+    <string name="irs_field_officer">Enter IRS Field Officer Form</string>
+    <string name="verification_form">Enter Verification Form</string>
 
 
     <string name="last_edited">Edited %1s</string>
