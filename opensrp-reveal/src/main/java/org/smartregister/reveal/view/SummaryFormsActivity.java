@@ -37,7 +37,7 @@ public class SummaryFormsActivity extends AppCompatActivity implements OtherForm
         presenter = new OtherFormsPresenter(this);
 
         Toolbar toolbar = (Toolbar) this.findViewById(R.id.summary_toolbar);
-        toolbar.setTitle("Return");
+        toolbar.setTitle(R.string.return_to_register);
         this.setSupportActionBar(toolbar);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -61,7 +61,7 @@ public class SummaryFormsActivity extends AppCompatActivity implements OtherForm
 
         jsonFormUtils = new RevealJsonFormUtils();
 
-        SummaryFormsFragment otherFormsFragment;otherFormsFragment = SummaryFormsFragment.newInstance(this.getIntent().getExtras());
+        SummaryFormsFragment otherFormsFragment = SummaryFormsFragment.newInstance(this.getIntent().getExtras());
         otherFormsFragment.setJsonFormUtils(jsonFormUtils);
         adapter.addFragment(otherFormsFragment, this.getString(R.string.summary_forms).toUpperCase());
 
