@@ -105,7 +105,7 @@ public class RevealSyncConfiguration extends SyncConfiguration {
 
     @Override
     public boolean isSyncUsingPost() {
-        return false;
+        return true;
     }
 
     @Override
