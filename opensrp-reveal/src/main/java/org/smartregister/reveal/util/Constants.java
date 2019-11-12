@@ -290,6 +290,8 @@ public interface Constants {
 
         String REFAPP_MDA_ADHERENCE_FORM = "json.form/refapp_mda_adherence.json";
 
+        String REFAPP_BEDNET_DISTRIBUTION_FORM = "json.form/refapp_bednet_distribution.json";
+
         String OPERATIONAL_AREA_TAG = "operational_area";
 
         String STRUCTURES_TAG = "structures";

@@ -218,6 +218,8 @@ public class RevealJsonFormUtils {
                 || Intervention.BEDNET_DISTRIBUTION.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_BEDNET_DISTRIBUTION_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+                formName = JsonForm.REFAPP_BEDNET_DISTRIBUTION_FORM;
             } else {
                 formName = JsonForm.BEDNET_DISTRIBUTION_FORM;
             }
