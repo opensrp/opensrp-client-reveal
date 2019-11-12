@@ -260,6 +260,8 @@ public class RevealJsonFormUtils {
         } else if (Constants.EventType.PAOT_EVENT.equals(encounterType) || Intervention.PAOT.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_PAOT_FORM;
+            } else  if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+                formName = JsonForm.REFAPP_PAOT_FORM;
             } else {
                 formName = JsonForm.PAOT_FORM;
             }
