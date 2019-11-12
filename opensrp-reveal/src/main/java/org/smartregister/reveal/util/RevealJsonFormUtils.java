@@ -211,6 +211,8 @@ public class RevealJsonFormUtils {
                 || Intervention.MOSQUITO_COLLECTION.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+                formName = JsonForm.REFAPP_MOSQUITO_COLLECTION_FORM;
             } else {
                 formName = JsonForm.MOSQUITO_COLLECTION_FORM;
             }
