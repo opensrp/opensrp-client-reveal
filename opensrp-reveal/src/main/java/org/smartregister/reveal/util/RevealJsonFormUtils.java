@@ -240,6 +240,8 @@ public class RevealJsonFormUtils {
         } else if (LARVAL_DIPPING_EVENT.equals(encounterType) || Intervention.LARVAL_DIPPING.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_LARVAL_DIPPING_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+                formName = JsonForm.REFAPP_LARVAL_DIPPING_FORM;
             } else {
                 formName = JsonForm.LARVAL_DIPPING_FORM;
             }
