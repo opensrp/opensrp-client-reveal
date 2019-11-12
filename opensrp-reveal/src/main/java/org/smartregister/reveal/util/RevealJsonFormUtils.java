@@ -236,6 +236,8 @@ public class RevealJsonFormUtils {
                 || Intervention.BLOOD_SCREENING.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_BLOOD_SCREENING_FORM;
+            } else  if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+                formName = JsonForm.REFAPP_BLOOD_SCREENING_FORM;
             } else {
                 formName = JsonForm.BLOOD_SCREENING_FORM;
             }

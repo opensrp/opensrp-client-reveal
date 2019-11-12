@@ -298,6 +298,8 @@ public interface Constants {
 
         String REFAPP_MOSQUITO_COLLECTION_FORM = "json.form/refapp_mosquito_collection_form.json";
 
+        String REFAPP_BLOOD_SCREENING_FORM = "json.form/refapp_blood_screening.json";
+
         String OPERATIONAL_AREA_TAG = "operational_area";
 
         String STRUCTURES_TAG = "structures";
