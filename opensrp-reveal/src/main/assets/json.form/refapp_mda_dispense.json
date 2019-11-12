@@ -1,0 +1,547 @@
+{
+  "count": "1",
+  "encounter_type": "mda_dispense",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "MDA Dispense",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "coordinator_name",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of Supervisor"
+      },
+      {
+        "key": "datacollector",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Enumerator name"
+      },
+      {
+        "key": "present",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is the member present?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "about_malaria",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Have you heard or seen messages or information about malaria in the past year?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+        "rules-engine": {
+          "ex-rules": {
+            "rules-file": "refapp-mda-dispense-relevance.yml"
+          }
+        }
+      }
+      },
+      {
+        "key": "information",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "What type of message or information did you see or hear?",
+        "combine_checkbox_option_values" : "true",
+        "options": [
+          {
+            "key": "malaria_is_dangerous",
+            "text": "Malaria is dangerous"
+          },
+          {
+            "key": "mosquitoes_spread_malaria",
+            "text": "Mosquitoes spread malaria"
+          },
+          {
+            "key": "importance_of_house_spraying",
+            "text": "Importance of house spraying"
+          },
+          {
+            "key": "importance_of_mda",
+            "text": "Importance of Mass Drug Administration"
+          },
+          {
+            "key": "importance_of_sleeping_under_net",
+            "text": "Importance of sleeping under a mosquito net"
+          },
+          {
+            "key": "seek_testing_for_fever",
+            "text": "Seek testing for fever"
+          },
+          {
+            "key": "seek_treatment_for_fever",
+            "text": "Seek treatment for fever"
+          },
+          {
+            "key": "malaria_elimination_is_possible",
+            "text": "Malaria elimination is possible"
+          },
+          {
+            "key": "malaria_ends_with_me",
+            "text": "Malaria ends with me"
+          },
+          {
+            "key": "other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "refapp-mda-dispense-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "other_information",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Specify other information message",
+        "text_size": "8sp",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "refapp-mda-dispense-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "preferred_source",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "Which are your preferred sources of malaria messages or information?",
+        "combine_checkbox_option_values": "true",
+        "options": [
+          {
+            "key": "health_facility",
+            "text": "Health facility"
+          },
+          {
+            "key": "chw",
+            "text": "Community Health Worker"
+          },
+          {
+            "key": "village_meeting",
+            "text": "Village meeting"
+          },
+          {
+            "key": "friend_or_family",
+            "text": "Friend or Family"
+          },
+          {
+            "key": "church",
+            "text": "Church"
+          },
+          {
+            "key": "school",
+            "text": "School"
+          },
+          {
+            "key": "radio",
+            "text": "Radio"
+          },
+          {
+            "key": "tv",
+            "text": "TV"
+          },
+          {
+            "key": "other",
+            "text": "other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "refapp-mda-dispense-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "other_preferred_source",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Specify other information source",
+        "text_size": "8sp",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "refapp-mda-dispense-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "eligible",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this member eligible for treatment",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "ineligible_reason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Why were they ineligible?",
+        "options": [
+          {
+            "key": "pregnant",
+            "text": "Pregnant"
+          },
+          {
+            "key": "infant_less_than_3_months",
+            "text": "Infant less than 3 months old"
+          },
+          {
+            "key": "drug_contraindication",
+            "text": "Drug contraindication"
+          },
+          {
+            "key": "heart_condition",
+            "text": "Heart condition"
+          },
+          {
+            "key": "other",
+            "text": "Other reason"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "refapp-mda-dispense-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "malaria_prevention",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "Other malaria prevention received?",
+        "combine_checkbox_option_values" : "true",
+        "options": [
+          {
+            "key": "irs",
+            "text": "IRS"
+          },
+          {
+            "key": "ipt",
+            "text": "IPT"
+          },
+          {
+            "key": "itn_used",
+            "text": "ITN used"
+          },
+          {
+            "key": "none",
+            "text": "None"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "ill",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is the member currently ill?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "symptoms",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "Indicate if recipient reports any symptoms or complaints on DAY 1 prior to taking DHAp",
+        "combine_checkbox_option_values" : "true",
+        "options": [
+          {
+            "key": "current_fever",
+            "text": "Current fever"
+          },
+          {
+            "key": "fever_history_14_days",
+            "text": "History of fever in the last 14 days"
+          },
+          {
+            "key": "headache",
+            "text": "Headache"
+          },
+          {
+            "key": "cough",
+            "text": "Cough"
+          },
+          {
+            "key": "diarrhea_or_watery_stool",
+            "text": "Diarrhea or watery stool"
+          },
+          {
+            "key": "vomiting",
+            "text": "Vomiting"
+          },
+          {
+            "key": "problems_breathing",
+            "text": "Problems breathing"
+          },
+          {
+            "key": "chest_pain",
+            "text": "Chest pain"
+          },
+          {
+            "key": "no_symptoms",
+            "text": "No symptoms"
+          },
+          {
+            "key": "other",
+            "text": "Other symptoms"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "referal",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Did you refer them to the health centre",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "treatment",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Did they refuse or receive treatment?",
+        "options": [
+          {
+            "key": "refused",
+            "text": "Refused"
+          },
+          {
+            "key": "received",
+            "text": "Received"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "refapp-mda-dispense-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "day_1",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Day 1 adherence?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "refapp-mda-dispense-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "refapp-mda-dispense-calculation.yml"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

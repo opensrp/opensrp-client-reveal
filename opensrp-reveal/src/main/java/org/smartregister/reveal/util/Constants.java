@@ -286,6 +286,8 @@ public interface Constants {
 
         String ZAMBIA_MDA_ADHERENCE_FORM = "json.form/zambia_mda_adherence.json";
 
+        String REFAPP_MDA_DISPENSE_FORM = "json.form/refapp_mda_dispense.json";
+
         String OPERATIONAL_AREA_TAG = "operational_area";
 
         String STRUCTURES_TAG = "structures";
