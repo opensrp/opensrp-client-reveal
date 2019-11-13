@@ -300,6 +300,8 @@ public interface Constants {
 
         String REFAPP_BLOOD_SCREENING_FORM = "json.form/refapp_blood_screening.json";
 
+        String REFAPP_CASE_CONFIRMATION_FORM = "json.form/refapp_case_confirmation.json";
+
         String OPERATIONAL_AREA_TAG = "operational_area";
 
         String STRUCTURES_TAG = "structures";

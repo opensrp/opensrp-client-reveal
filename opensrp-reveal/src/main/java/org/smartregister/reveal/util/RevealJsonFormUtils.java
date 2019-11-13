@@ -229,6 +229,8 @@ public class RevealJsonFormUtils {
                 || Intervention.CASE_CONFIRMATION.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_CASE_CONFIRMATION_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+                formName = JsonForm.REFAPP_CASE_CONFIRMATION_FORM;
             } else {
                 formName = JsonForm.CASE_CONFIRMATION_FORM;
             }
