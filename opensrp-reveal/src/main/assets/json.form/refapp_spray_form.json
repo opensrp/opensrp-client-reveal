@@ -1683,34 +1683,6 @@
         "type": "hidden"
       },
       {
-        "key": "district",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "toaster_notes",
-        "text": "You are in  {districtName}",
-        "text_color": "#CF0800",
-        "toaster_type": "info",
-        "text_size": "8sp",
-        "v_required": {
-          "value": "false",
-          "err": "Required field"
-        },
-        "relevance": {
-          "step1:health_service": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        },
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "refapp-spray-calculation.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "business_status",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
