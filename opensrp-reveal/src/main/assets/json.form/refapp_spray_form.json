@@ -290,6 +290,30 @@
         "openmrs_entity_id": "",
         "type": "spinner",
         "hint": "Select your name as the data collector",
+        "values": [
+          "SV1 - Siavonga Data Collector 1",
+          "SV2 - Siavonga Data Collector 2",
+          "SV3 - Siavonga Data Collector 3",
+          "SV4 - Siavonga Data Collector 4",
+          "SV5 - Siavonga Data Collector 5",
+          "SV6 - Siavonga Data Collector 6",
+          "SV7 - Siavonga Data Collector 7",
+          "SV8 - Siavonga Data Collector 8",
+          "SV9 - Siavonga Data Collector 9",
+          "SV10 - Siavonga Data Collector 10"
+        ],
+        "keys": [
+          "SV1:Siavonga Data Collector 1",
+          "SV2:Siavonga Data Collector 2",
+          "SV3:Siavonga Data Collector 3",
+          "SV4:Siavonga Data Collector 4",
+          "SV5:Siavonga Data Collector 5",
+          "SV6:Siavonga Data Collector 6",
+          "SV7:Siavonga Data Collector 7",
+          "SV8:Siavonga Data Collector 8",
+          "SV9:Siavonga Data Collector 9",
+          "SV10:Siavonga Data Collector 10"
+        ],
         "v_required": {
           "value": "true",
           "err": "Please enter the data collector."
@@ -308,6 +332,30 @@
         "openmrs_entity_id": "",
         "type": "spinner",
         "hint": "Select the spray operator code who collected data against this structure",
+        "values": [
+          "SVSOP1 - SVSOP Name 1",
+          "SVSOP2 - SVSOP Name 1",
+          "SVSOP3 - SVSOP Name 1",
+          "SVSOP4 - SVSOP Name 1",
+          "SVSOP5 - SVSOP Name 1",
+          "SVSOP6 - SVSOP Name 1",
+          "SVSOP7 - SVSOP Name 1",
+          "SVSOP8 - SVSOP Name 1",
+          "SVSOP9 - SVSOP Name 1",
+          "SVSOP10 - SVSOP Name 1"
+        ],
+        "keys": [
+          "SVSOP1:SVSOP Name 1",
+          "SVSOP2:SVSOP Name 1",
+          "SVSOP3:SVSOP Name 1",
+          "SVSOP4:SVSOP Name 1",
+          "SVSOP5:SVSOP Name 1",
+          "SVSOP6:SVSOP Name 1",
+          "SVSOP7:SVSOP Name 1",
+          "SVSOP8:SVSOP Name 1",
+          "SVSOP9:SVSOP Name 1",
+          "SVSOP10:SVSOP Name 1"
+        ],
         "v_required": {
           "value": "true",
           "err": "Please enter the spray operator code"
