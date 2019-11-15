@@ -9,6 +9,6 @@ public class RevealSyncIntentService extends SyncIntentService {
 
     @Override
     public int getEventPullLimit() {
-        return 1000;
+        return 500;
     }
 }

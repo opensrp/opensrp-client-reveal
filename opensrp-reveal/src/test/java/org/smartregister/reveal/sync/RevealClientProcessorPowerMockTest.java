@@ -41,6 +41,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -71,7 +72,7 @@ public class RevealClientProcessorPowerMockTest {
 
     @Before
     public void setUp() {
-       clientProcessor = spy(Whitebox.newInstance(RevealClientProcessor.class));
+        clientProcessor = spy(Whitebox.newInstance(RevealClientProcessor.class));
     }
 
     @Test
@@ -88,7 +89,7 @@ public class RevealClientProcessorPowerMockTest {
         PowerMockito.doReturn(new ClientClassification()).when(clientProcessor, "assetJsonToJava", anyString(), any());
         clientProcessor.processClient(eventClients, true);
 
-        verifyPrivate(clientProcessor, times(1)).invoke("processEvent", eq(event), any(ClientClassification.class), anyBoolean(),eq(JsonForm.STRUCTURE_TYPE));
+        verifyPrivate(clientProcessor, times(1)).invoke("processEvent", eq(event), any(ClientClassification.class), anyBoolean(), eq(JsonForm.STRUCTURE_TYPE));
         verify(structureRepository).addOrUpdate(any(Location.class));
     }
 
@@ -117,7 +118,7 @@ public class RevealClientProcessorPowerMockTest {
 
         List<EventClient> eventClients = new ArrayList<>();
         event.setEventType(Constants.EventType.PAOT_EVENT);
-        event.withObs(new Obs("","",JsonForm.PAOT_STATUS,"", Collections.singletonList("Active"),"","",new ArrayList<>()));
+        event.withObs(new Obs("", "", JsonForm.PAOT_STATUS, "", Collections.singletonList("Active"), "", "", new ArrayList<>()));
 
         EventClient eventClient = new EventClient(event, null);
         eventClients.add(eventClient);
@@ -125,7 +126,7 @@ public class RevealClientProcessorPowerMockTest {
         PowerMockito.doReturn(new ClientClassification()).when(clientProcessor, "assetJsonToJava", anyString(), any());
         clientProcessor.processClient(eventClients, true);
 
-        verifyPrivate(clientProcessor, times(1)).invoke("processEvent", eq(event), any(ClientClassification.class), anyBoolean(),eq(JsonForm.PAOT_STATUS));
+        verifyPrivate(clientProcessor, times(1)).invoke("processEvent", eq(event), any(ClientClassification.class), anyBoolean(), eq(JsonForm.PAOT_STATUS));
         verify(structureRepository).addOrUpdate(any(Location.class));
         verify(taskRepository).addOrUpdate(any(Task.class));
     }
@@ -153,8 +154,18 @@ public class RevealClientProcessorPowerMockTest {
     }
 
     @Test
+    public void testUpdateTaskLocallyShouldNotMarkEventAsSynced() throws Exception {
+        mockRepositories();
+
+        Whitebox.invokeMethod(clientProcessor, "updateTask", event, false);
+
+        verify(eventClientRepository, never()).markEventAsSynced(eq(FORM_SUBMISSION_ID));
+    }
+
+    @Test
     public void testUpdateTaskShouldMarkEventAsSynced() throws Exception {
         mockRepositories();
+        event.setServerVersion(System.currentTimeMillis());
 
         Whitebox.invokeMethod(clientProcessor, "updateTask", event, false);
 
@@ -230,7 +241,7 @@ public class RevealClientProcessorPowerMockTest {
         doNothing().when(taskRepository).addOrUpdate(any(Task.class));
 
         // generic event client repository
-        eventClientRepository =  mock(EventClientRepository.class);
+        eventClientRepository = mock(EventClientRepository.class);
         Whitebox.setInternalState(clientProcessor, "eventClientRepository", eventClientRepository);
         doNothing().when(eventClientRepository).markEventAsTaskUnprocessed(anyString());
 
