@@ -23,7 +23,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "sprayStatus"
+            "concept": "business_status"
           }
         },
         {
@@ -69,7 +69,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "familyHeadName"
+            "concept": "nameHoH"
           }
         },
         {

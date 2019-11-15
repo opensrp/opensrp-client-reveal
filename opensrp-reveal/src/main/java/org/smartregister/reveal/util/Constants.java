@@ -405,6 +405,7 @@ public interface Constants {
     interface ECClientConfig {
         String NAMIBIA_EC_CLIENT_FIELDS = "ec_client_fields_namibia.json";
         String BOTSWANA_EC_CLIENT_FIELDS = "ec_client_fields_botswana.json";
+        String ZAMBIA_EC_CLIENT_FIELDS = "ec_client_fields_zambia.json";
     }
 
 
