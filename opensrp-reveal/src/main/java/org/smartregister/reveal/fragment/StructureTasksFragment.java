@@ -68,8 +68,8 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         StructureTasksFragment fragment = new StructureTasksFragment();
         if (bundle != null) {
             fragment.setArguments(bundle);
-            fragment.setPresenter(new StructureTasksPresenter(fragment, context));
         }
+        fragment.setPresenter(new StructureTasksPresenter(fragment, context));
         return fragment;
     }
 
