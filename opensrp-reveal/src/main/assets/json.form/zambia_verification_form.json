@@ -1,0 +1,325 @@
+{
+  "count": "1",
+  "encounter_type": "",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": ""
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": ""
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "Enter Verification Form",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "zone",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "What is the name of the zone/location that this spray area belongs to?",
+        "text_size": "6sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "fieldOfficer",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of Field Officer",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the field officer"
+        }
+      },
+      {
+        "key": "visited",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Was this structure visited?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "yes",
+            "text": "Yes"
+          },
+          {
+            "key": "no",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "spray_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Spray status",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "Fully Sprayed",
+            "text": "Fully Sprayed"
+          },
+          {
+            "key": "Partially Sprayed",
+            "text": "Not Sprayed"
+          },
+          {
+            "key": "Not Sprayed",
+            "text": "Not Sprayed"
+          },
+          {
+            "key": "Not Visited Yet",
+            "text": "Not Visited Yet"
+          },
+          {
+            "key": "Not Eligible",
+            "text": "Not Eligible"
+          }
+
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "notsprayed_reason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Why was this structure not sprayed?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "refused",
+            "text": "Refused"
+          },
+          {
+            "key": "locked",
+            "text": "Locked"
+          },
+          {
+            "key": "noOneHome",
+            "text": "No One Home"
+          },
+          {
+            "key": "sick",
+            "text": "Sick"
+          },
+          {
+            "key": "funeral",
+            "text": "Funeral"
+          },
+          {
+            "key": "other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:spray_status": {
+            "type": "string",
+            "ex": "equalTo(., \"Not Sprayed\")"
+          }
+        }
+      },
+      {
+        "key": "date_spray",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "date_picker",
+        "hint": "Date of Spray",
+        "max_date": "today",
+        "v_required": {
+          "value": true,
+          "err": "Please specify the last updated date"
+        }
+      },
+      {
+        "key": "datacollector",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of TLA completing form",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the TLA completing form"
+        }
+      },
+      {
+        "key": "sprayop_code",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Spray Operator name",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the spray operator code"
+        }
+      },
+      {
+        "key": "verify_totalpop",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Total Population",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "This field is mandatory"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This field must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "This field must be greater than or equal to 0"
+        }
+      },
+      {
+        "key": "verify_preg",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Total number of pregnant women",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "This field is mandatory"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This field must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "This field must be greater than or equal to 0"
+        }
+      },
+      {
+        "key": "verify_child5",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Total number of children under five years",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "This field is mandatory"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This field must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "This field must be greater than or equal to 0"
+        }
+      },
+      {
+        "key": "verify_nets",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Total number of nets available",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "This field is mandatory"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This field must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "This field must be greater than or equal to 0"
+        }
+      }
+    ]
+  }
+}

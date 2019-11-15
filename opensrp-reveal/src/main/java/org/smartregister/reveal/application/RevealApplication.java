@@ -65,6 +65,7 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.KEY;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.SETTINGS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.TEAM_CONFIGS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.VALUE;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.VALUES;
 import static org.smartregister.reveal.util.FamilyConstants.CONFIGURATION;
 import static org.smartregister.reveal.util.FamilyConstants.EventType;
 import static org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
@@ -83,7 +84,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     private PlanDefinitionRepository planDefinitionRepository;
     private PlanDefinitionSearchRepository planDefinitionSearchRepository;
 
-    private Map<String, String> serverConfigs;
+    private Map<String, Object> serverConfigs;
 
     private static CommonFtsObject commonFtsObject;
 
@@ -94,6 +95,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     private boolean myLocationComponentEnabled;
 
     private FeatureCollection featureCollection;
+
+    private FamilyMetadata metadata;
 
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
@@ -125,6 +128,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.NAMIBIA_EC_CLIENT_FIELDS);
         } else if (BuildConfig.BUILD_COUNTRY == Country.BOTSWANA) {
             CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.BOTSWANA_EC_CLIENT_FIELDS);
+        } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+            CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.ZAMBIA_EC_CLIENT_FIELDS);
         }
         ConfigurableViewsLibrary.init(context, getRepository());
         FamilyLibrary.init(context, getRepository(), getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
@@ -263,8 +268,11 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
                 JSONObject jsonObject = settingsArray.getJSONObject(i);
                 String value = jsonObject.optString(VALUE, null);
                 String key = jsonObject.optString(KEY, null);
+                JSONArray values = jsonObject.optJSONArray(VALUES);
                 if (value != null && key != null) {
                     serverConfigs.put(key, value);
+                } else if (values != null && key != null) {
+                    serverConfigs.put(key, values);
                 }
             }
         } catch (JSONException e) {
@@ -272,12 +280,18 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         }
     }
 
-    public Map<String, String> getServerConfigs() {
+    public Map<String, Object> getServerConfigs() {
         return serverConfigs;
     }
 
     public FamilyMetadata getMetadata() {
-        FamilyMetadata metadata = new FamilyMetadata(FamilyWizardFormActivity.class, JsonWizardFormActivity.class, FamilyProfileActivity.class, CONFIGURATION.UNIQUE_ID_KEY, true);
+
+        if (metadata != null) {
+            return metadata;
+        }
+
+        metadata = new FamilyMetadata(FamilyWizardFormActivity.class, JsonWizardFormActivity.class, FamilyProfileActivity.class, CONFIGURATION.UNIQUE_ID_KEY, true);
+
         if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
             metadata.updateFamilyRegister(JSON_FORM.THAILAND_FAMILY_REGISTER, TABLE_NAME.FAMILY, EventType.FAMILY_REGISTRATION, EventType.UPDATE_FAMILY_REGISTRATION, CONFIGURATION.FAMILY_REGISTER, RELATIONSHIP.FAMILY_HEAD, RELATIONSHIP.PRIMARY_CAREGIVER);
             metadata.updateFamilyMemberRegister(JSON_FORM.THAILAND_FAMILY_MEMBER_REGISTER, TABLE_NAME.FAMILY_MEMBER, EventType.FAMILY_MEMBER_REGISTRATION, EventType.UPDATE_FAMILY_MEMBER_REGISTRATION, CONFIGURATION.FAMILY_MEMBER_REGISTER, RELATIONSHIP.FAMILY);

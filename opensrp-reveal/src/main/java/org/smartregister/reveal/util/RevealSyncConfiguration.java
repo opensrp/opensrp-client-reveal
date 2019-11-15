@@ -14,16 +14,17 @@ import org.smartregister.reveal.application.RevealApplication;
  */
 public class RevealSyncConfiguration extends SyncConfiguration {
 
+    private AllSharedPreferences sharedPreferences;
+
     private LocationRepository locationRepository;
 
-    private AllSharedPreferences sharedPreferences;
+    public RevealSyncConfiguration() {
+    }
+
 
     public RevealSyncConfiguration(LocationRepository locationRepository, AllSharedPreferences sharedPreferences) {
         this.locationRepository = locationRepository;
         this.sharedPreferences = sharedPreferences;
-    }
-
-    public RevealSyncConfiguration() {
     }
 
     @Override
@@ -33,15 +34,28 @@ public class RevealSyncConfiguration extends SyncConfiguration {
 
     @Override
     public SyncFilter getSyncFilterParam() {
-        return SyncFilter.LOCATION;
+        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+            return SyncFilter.TEAM_ID;
+        } else {
+            return SyncFilter.LOCATION;
+        }
+
     }
 
     @Override
     public String getSyncFilterValue() {
-        if (locationRepository == null) {
-            locationRepository = RevealApplication.getInstance().getLocationRepository();
+        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+            if (sharedPreferences == null) {
+                sharedPreferences = RevealApplication.getInstance().getContext().userService().getAllSharedPreferences();
+            }
+            return sharedPreferences.fetchDefaultTeamId(sharedPreferences.fetchRegisteredANM());
+        } else {
+            if (locationRepository == null) {
+                locationRepository = RevealApplication.getInstance().getLocationRepository();
+            }
+            return TextUtils.join(",", locationRepository.getAllLocationIds());
         }
-        return TextUtils.join(",", locationRepository.getAllLocationIds());
+
     }
 
     @Override
