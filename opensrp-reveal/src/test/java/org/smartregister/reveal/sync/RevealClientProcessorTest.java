@@ -171,6 +171,23 @@ public class RevealClientProcessorTest extends BaseUnitTest {
 
 
     @Test
+    public void testProcessEventClientShouldNotMarkAsSynchedEventsWithoutServerVersion() {
+        sprayedEvent.setServerVersion(0);
+        when(taskRepository.getTaskByIdentifier(sprayedEvent.getDetails().get(Properties.TASK_IDENTIFIER))).thenReturn(task);
+        clientProcessor.processClient(Collections.singletonList(new EventClient(sprayedEvent, null)));
+
+        verify(eventClientRepository, never()).markEventAsTaskUnprocessed(sprayedEvent.getFormSubmissionId());
+        verify(eventClientRepository,never()).markEventAsSynced(sprayedEvent.getFormSubmissionId());
+
+        verify(taskRepository).addOrUpdate(taskCaptor.capture());
+
+        assertEquals("Sprayed", taskCaptor.getValue().getBusinessStatus());
+        assertEquals(Task.TaskStatus.COMPLETED, taskCaptor.getValue().getStatus());
+        assertEquals(BaseRepository.TYPE_Synced, taskCaptor.getValue().getSyncStatus());
+    }
+
+
+    @Test
     public void testProcessEventClientShouldUpdateTaskStatusAndSyncStatusOnlyForLocalEvents() {
 
         when(taskRepository.getTaskByIdentifier(sprayedEvent.getDetails().get(Properties.TASK_IDENTIFIER))).thenReturn(task);
