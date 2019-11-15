@@ -247,7 +247,9 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
                     this.bednetDistributed = COMPLETE.equals(taskCodeStatusArray[1]) ? true : false;
                     break;
                 case BLOOD_SCREENING:
-                    this.bloodScreeningDone = COMPLETE.equals(taskCodeStatusArray[1]) ? true : false;
+                    if (!this.bloodScreeningDone) {
+                        this.bloodScreeningDone = COMPLETE.equals(taskCodeStatusArray[1]) ? true : false;
+                    }
                     break;
                 case MDA_ADHERENCE:
                     this.mdaAdhered = COMPLETE.equals(taskCodeStatusArray[1]) ? true: false;

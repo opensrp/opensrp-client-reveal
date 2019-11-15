@@ -76,7 +76,9 @@ public class GeoJsonUtils {
                             bednetDistributed = COMPLETE.equals(task.getBusinessStatus()) ? true: false;
                             break;
                         case BLOOD_SCREENING:
-                            bloodScreeningDone = COMPLETE.equals(task.getBusinessStatus())? true: false;
+                            if (!bloodScreeningDone) {
+                                bloodScreeningDone = COMPLETE.equals(task.getBusinessStatus())? true: false;
+                            }
                             break;
                         case MDA_ADHERENCE:
                             mdaAdhered = COMPLETE.equals(task.getBusinessStatus()) ? true: false;
