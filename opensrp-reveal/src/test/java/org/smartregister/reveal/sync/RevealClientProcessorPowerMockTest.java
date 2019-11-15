@@ -166,7 +166,7 @@ public class RevealClientProcessorPowerMockTest {
     @Test
     public void testUpdateTaskShouldMarkEventAsSynced() throws Exception {
         mockRepositories();
-        event.setEventId(UUID.randomUUID().toString());
+        event.setServerVersion(System.currentTimeMillis());
 
         Whitebox.invokeMethod(clientProcessor, "updateTask", event, false);
 
