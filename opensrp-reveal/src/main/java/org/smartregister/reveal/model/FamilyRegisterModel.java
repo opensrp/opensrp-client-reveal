@@ -1,6 +1,7 @@
 package org.smartregister.reveal.model;
 
 import org.json.JSONObject;
+import org.smartregister.domain.Location;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.model.BaseFamilyRegisterModel;
 import org.smartregister.reveal.BuildConfig;
@@ -45,7 +46,9 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
             eventClient.getEvent().addDetails(Properties.TASK_STATUS, taskStatus);
             eventClient.getEvent().addDetails(Properties.LOCATION_UUID, structureId);
             eventClient.getEvent().addDetails(Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
-            eventClient.getEvent().setLocationId(org.smartregister.reveal.util.Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea()).getId());
+            Location operationalArea=org.smartregister.reveal.util.Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+            if (operationalArea != null)
+                eventClient.getEvent().setLocationId(operationalArea.getId());
         }
         return eventClientList;
     }
