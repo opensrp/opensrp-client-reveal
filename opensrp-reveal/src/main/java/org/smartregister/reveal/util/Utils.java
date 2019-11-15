@@ -128,9 +128,9 @@ public class Utils {
     }
 
     public static String getGlobalConfig(String key, String defaultValue) {
-        Map<String, String> globalConfigs = RevealApplication.getInstance().getServerConfigs();
-        String val = globalConfigs != null ? globalConfigs.get(key) : null;
-        return val == null ? defaultValue : val;
+        Map<String, Object> globalConfigs = RevealApplication.getInstance().getServerConfigs();
+        Object val = globalConfigs != null ? globalConfigs.get(key) : null;
+        return val == null ? defaultValue : val.toString();
     }
 
     public static Float getLocationBuffer() {

@@ -183,7 +183,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
     private void openAddMemberForm() {
         try {
-            startForm(org.smartregister.family.util.Utils.metadata().familyMemberRegister.formName, null, null, RevealApplication.getInstance().getContext().allSharedPreferences().getPreference(AllConstants.CURRENT_LOCATION_ID));
+            startForm(RevealApplication.getInstance().getMetadata().familyMemberRegister.formName, null, null, RevealApplication.getInstance().getContext().allSharedPreferences().getPreference(AllConstants.CURRENT_LOCATION_ID));
         } catch (Exception e) {
             Timber.e(e, "Error opening add member form");
         }

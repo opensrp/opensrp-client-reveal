@@ -54,6 +54,7 @@ public interface Constants {
     String COMMA = ",";
 
     int STORAGE_PERMISSIONS = 1;
+
     String NULL_KEY = "NULL";
 
     interface CONFIGURATION {
@@ -62,6 +63,7 @@ public interface Constants {
         String TEAM_CONFIGS = "team_configs";
         String KEY = "key";
         String VALUE = "value";
+        String VALUES = "values";
         String SETTINGS = "settings";
         String LOCATION_BUFFER_RADIUS_IN_METRES = "location_buffer_radius_in_metres";
         String UPDATE_LOCATION_BUFFER_RADIUS = "update_location_buffer_radius";
@@ -80,11 +82,30 @@ public interface Constants {
         String DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG = "display_add_structure_out_of_boundary_warning_dialog";
         Boolean DEFAULT_DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG = false;
         Float OUTSIDE_OPERATIONAL_AREA_MASK_OPACITY = 0.65f;
+        String SPRAY_OPERATORS = "spray_operators";
+        String DATA_COLLECTORS = "data_collectors";
+        String SUPERVISORS = "supervisors";
+        String TEAM_LEADERS = "team_leaders";
+        String FIELD_OFFICERS = "field_officers";
+        String DISTRICT_MANAGERS = "district_managers";
+        String HEALTH_FACILITIES = "health_facilities";
+        String COMMUNITY_HEALTH_WORKERS = "community_health_workers";
+        String CODE = "code";
+        String NAME = "name";
+
+
+        String MDA_CORDINATORS = "mda_coordinators";
+        String MDA_ENUMERATORS = "mda_enumerators";
+        String MDA_COMMUNITY_HEALTH_WORKERS = "mda_community_health_workers";
+        String MDA_ADHERENCE_OFFICERS = "mda_adherence_officers";
+        String MDA_CATCHMENT_AREAS = "mda_catchment_areas";
+
     }
 
     interface Preferences {
         String CURRENT_FACILITY = "CURRENT_FACILITY";
         String CURRENT_DISTRICT = "CURRENT_DISTRICT";
+        String CURRENT_PROVINCE = "CURRENT_PROVINCE";
         String CURRENT_PLAN = "CURRENT_PLAN";
         String CURRENT_PLAN_ID = "CURRENT_PLAN_ID";
         String FACILITY_LEVEL = "FACILITY_LEVEL";
@@ -155,7 +176,7 @@ public interface Constants {
 
         String MDA = "MDA";
 
-        List<String> PERSON_INTERVENTIONS = Arrays.asList(BLOOD_SCREENING,CASE_CONFIRMATION,MDA_DISPENSE,MDA_ADHERENCE);
+        List<String> PERSON_INTERVENTIONS = Arrays.asList(BLOOD_SCREENING, CASE_CONFIRMATION, MDA_DISPENSE, MDA_ADHERENCE);
 
 
     }
@@ -206,6 +227,7 @@ public interface Constants {
     }
 
     interface BusinessStatusWrapper {
+
         List<String> SPRAYED = Arrays.asList(new String[]{BusinessStatus.SPRAYED, BusinessStatus.COMPLETE, BusinessStatus.PARTIALLY_SPRAYED});
         List<String> NOT_SPRAYED = Arrays.asList(new String[]{BusinessStatus.NOT_SPRAYED, BusinessStatus.IN_PROGRESS, BusinessStatus.INCOMPLETE});
         List<String> NOT_ELIGIBLE = Arrays.asList(new String[]{BusinessStatus.NOT_SPRAYABLE, BusinessStatus.NOT_ELIGIBLE});
@@ -249,6 +271,8 @@ public interface Constants {
         String SPRAY_FORM_BOTSWANA = "json.form/botswana_spray_form.json";
 
         String SPRAY_FORM_REFAPP = "json.form/refapp_spray_form.json";
+
+        String SPRAY_FORM_ZAMBIA = "json.form/zambia_spray_form.json";
 
         String LARVAL_DIPPING_FORM = "json.form/larval_dipping_form.json";
 
@@ -335,6 +359,51 @@ public interface Constants {
         String HOUSEHOLD_ACCESSIBLE = "householdAccessible";
         String ABLE_TO_SPRAY_FIRST = "ableToSprayFirst";
         String MOP_UP_VISIT = "mopUpVisit";
+        String DISTRICT_NAME = "districtName";
+        String PROVINCE_NAME = "provinceName";
+
+
+        /**
+         * Non-Task Related Forms
+         */
+        String DAILY_SUMMARY_ZAMBIA = "json.form/zambia_daily_summary.json";
+
+        String TEAM_LEADER_DOS_ZAMBIA = "json.form/zambia_team_leader_dos.json";
+
+        String CB_SPRAY_AREA_ZAMBIA = "json.form/zambia_cb_spray_area.json";
+
+        String IRS_SA_DECISION_ZAMBIA = "json.form/zambia_irs_sa_decision.json";
+
+        String MOBILIZATION_FORM_ZAMBIA = "json.form/zambia_mobilization_form.json";
+
+        String IRS_FIELD_OFFICER_ZAMBIA = "json.form/zambia_irs_field_officer.json";
+
+        String VERIFICATION_FORM_ZAMBIA = "json.form/zambia_verification_form.json";
+
+        String SPRAY_OPERATOR_CODE = "sprayop_code";
+
+        String DATA_COLLECTOR = "datacollector";
+
+        String DISTRICT_MANAGER = "district_manager";
+
+        String SUPERVISOR = "supervisor";
+
+        String TEAM_LEADER = "teamLeader";
+
+        String FIELD_OFFICER = "fieldOfficer";
+
+        String HFC_SEEK = "hfc_seek";
+
+        String HFC_BELONG = "hfc_belong";
+
+        String CHW_NAME = "chw_name";
+
+        String COORDINATOR_NAME = "coordinator_name";
+
+        String ADHERENCE_NAME = "adherence_name";
+
+        String CATCHMENT_AREA = "catchment_area";
+
 
     }
 
@@ -354,6 +423,7 @@ public interface Constants {
     interface ECClientConfig {
         String NAMIBIA_EC_CLIENT_FIELDS = "ec_client_fields_namibia.json";
         String BOTSWANA_EC_CLIENT_FIELDS = "ec_client_fields_botswana.json";
+        String ZAMBIA_EC_CLIENT_FIELDS = "ec_client_fields_zambia.json";
     }
 
 

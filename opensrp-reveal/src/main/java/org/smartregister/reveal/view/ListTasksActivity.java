@@ -102,9 +102,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private MapboxMap mMapboxMap;
 
+    private CardView sprayCardView;
+
     private TextView tvReason;
 
-    private CardView sprayCardView;
     private CardView mosquitoCollectionCardView;
     private CardView larvalBreedingCardView;
     private CardView potentialAreaOfTransmissionCardView;
@@ -129,7 +130,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private FloatingActionButton layerSwitcherFab;
 
     private LinearLayout progressIndicatorsGroupView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
