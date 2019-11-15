@@ -51,6 +51,14 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "catchment_area",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of Catchment"
+      },
+      {
         "key": "coordinator_name",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",

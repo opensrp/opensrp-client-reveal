@@ -37,4 +37,5 @@ public class TestRevealApplication extends RevealApplication {
     public Repository getRepository() {
         return mock(Repository.class);
     }
+
 }

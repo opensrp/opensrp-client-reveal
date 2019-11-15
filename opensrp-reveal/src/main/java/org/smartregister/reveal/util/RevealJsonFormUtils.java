@@ -3,6 +3,7 @@ package org.smartregister.reveal.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.util.Pair;
 
 import com.mapbox.geojson.Feature;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
@@ -20,6 +21,7 @@ import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
@@ -36,8 +38,10 @@ import timber.log.Timber;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.CHECK_BOX;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.KEYS;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TYPE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUES;
 import static org.smartregister.AllConstants.OPTIONS;
 import static org.smartregister.AllConstants.TEXT;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
@@ -94,15 +98,28 @@ public class RevealJsonFormUtils {
 
     public JSONObject getFormJSON(Context context, String formName, BaseTaskDetails task, Location structure) {
 
-        String taskBusinessStatus = task.getBusinessStatus();
-        String taskIdentifier = task.getTaskId();
-        String taskStatus = task.getTaskStatus();
+        String taskBusinessStatus = "";
+        String taskIdentifier = "";
+        String taskStatus = "";
+        String entityId = "";
+        if (task != null) {
+            taskBusinessStatus = task.getBusinessStatus();
+            taskIdentifier = task.getTaskId();
+            taskStatus = task.getTaskStatus();
 
-        String entityId = task.getTaskEntity();
-        String structureId = structure.getId();
-        String structureUUID = structure.getProperties().getUid();
-        int structureVersion = structure.getProperties().getVersion();
-        String structureType = structure.getProperties().getType();
+            entityId = task.getTaskEntity();
+        }
+
+        String structureId = "";
+        String structureUUID = "";
+        int structureVersion = 0;
+        String structureType = "";
+        if (structure != null) {
+            structureId = structure.getId();
+            structureUUID = structure.getProperties().getUid();
+            structureVersion = structure.getProperties().getVersion();
+            structureType = structure.getProperties().getType();
+        }
 
         String sprayStatus = null;
         String familyHead = null;
@@ -199,10 +216,10 @@ public class RevealJsonFormUtils {
             } else if (BuildConfig.BUILD_COUNTRY == Country.BOTSWANA) {
                 formName = JsonForm.SPRAY_FORM_BOTSWANA;
             } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
-                formName = JsonForm.SPRAY_FORM;
+                formName = JsonForm.SPRAY_FORM_ZAMBIA;
             } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_SPRAY_FORM;
-            }else{
+            } else {
                 formName = JsonForm.SPRAY_FORM;
             }
         } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)
@@ -343,4 +360,45 @@ public class RevealJsonFormUtils {
             }
         }
     }
+
+    public Pair<JSONArray, JSONArray> populateServerOptions(Map<String, Object> serverConfigs, JSONObject formJson, String settingsConfigKey, String formKey, String filterKey) {
+        if (serverConfigs == null)
+            return null;
+        JSONArray serverConfig = (JSONArray) serverConfigs.get(settingsConfigKey);
+        if (serverConfig != null && !serverConfig.isNull(0)) {
+            JSONArray fields = JsonFormUtils.fields(formJson);
+            JSONObject field = JsonFormUtils.getFieldJSONObject(fields, formKey);
+            if (field == null)
+                return null;
+            JSONArray options = serverConfig.optJSONObject(0).optJSONArray(filterKey);
+            if (options == null)
+                return null;
+            JSONArray codes = new JSONArray();
+            JSONArray values = new JSONArray();
+            for (int i = 0; i < options.length(); i++) {
+                JSONObject operator = options.optJSONObject(i);
+                if (operator == null)
+                    continue;
+                String code = operator.optString(CONFIGURATION.CODE, null);
+                String name = operator.optString(CONFIGURATION.NAME);
+                if (StringUtils.isBlank(code) || code.equalsIgnoreCase(name)) {
+                    codes.put(name);
+                    values.put(name);
+                } else {
+                    codes.put(code + ":" + name);
+                    values.put(code + " - " + name);
+                }
+            }
+            try {
+                field.put(KEYS, codes);
+                field.put(VALUES, values);
+            } catch (JSONException e) {
+                Timber.e(e, "Error populating %s Operators ", formKey);
+            }
+            return new Pair<>(codes, values);
+        }
+        return null;
+    }
+
+
 }
