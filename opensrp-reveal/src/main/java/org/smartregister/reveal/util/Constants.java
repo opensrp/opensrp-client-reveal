@@ -424,6 +424,7 @@ public interface Constants {
         String NAMIBIA_EC_CLIENT_FIELDS = "ec_client_fields_namibia.json";
         String BOTSWANA_EC_CLIENT_FIELDS = "ec_client_fields_botswana.json";
         String ZAMBIA_EC_CLIENT_FIELDS = "ec_client_fields_zambia.json";
+        String REFAPP_EC_CLIENT_FIELDS = "ec_client_fields_refapp.json";
     }
 
 
