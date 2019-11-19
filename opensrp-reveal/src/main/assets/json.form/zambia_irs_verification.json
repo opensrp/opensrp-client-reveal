@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "",
+  "encounter_type": "irs_verification",
   "entity_id": "",
   "metadata": {
     "start": {
@@ -94,6 +94,13 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-irs-verification-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -125,6 +132,13 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-irs-verification-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -156,6 +170,13 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-irs-verification-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -187,6 +208,13 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-irs-verification-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -218,6 +246,13 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-irs-verification-relevance.yml"
+            }
+          }
         }
       }
     ]
