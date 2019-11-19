@@ -41,6 +41,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
@@ -75,6 +76,8 @@ public class ListTaskInteractor extends BaseInteractor {
         } else if (PAOT.equals(interventionType)) {
             sql = String.format("SELECT %s, %s, %s  FROM %s WHERE %s=? ", PAOT_STATUS,
                     PAOT_COMMENTS, LAST_UPDATED_DATE, PAOT_TABLE, BASE_ENTITY_ID);
+        } else if (IRS_VERIFICATION.equals(interventionType)) {
+            sql = ""; //TODO implement query
         }
 
         final String SQL = sql;
@@ -131,6 +134,8 @@ public class ListTaskInteractor extends BaseInteractor {
             cardDetails = createSprayCardDetails(cursor);
         } else if (PAOT.equals(interventionType)) {
             cardDetails = createPaotCardDetails(cursor, interventionType);
+        } else if (IRS_VERIFICATION.equals(interventionType)) {
+            cardDetails = createIRSverificationCardDetails(cursor, interventionType);
         }
 
         return cardDetails;
@@ -169,6 +174,17 @@ public class ListTaskInteractor extends BaseInteractor {
         );
         paotCardDetails.setComments(cursor.getString(cursor.getColumnIndex(PAOT_COMMENTS)));
         return paotCardDetails;
+    }
+
+    private MosquitoHarvestCardDetails createIRSverificationCardDetails(Cursor cursor, String interventionType) {
+        MosquitoHarvestCardDetails irsVerificationCardDetails = new MosquitoHarvestCardDetails(
+                "",
+                "",
+                null,
+                interventionType
+        );
+        return irsVerificationCardDetails;
+        //TODO Implement IRS Verification specific field data
     }
 
     public void fetchLocations(String plan, String operationalArea) {
