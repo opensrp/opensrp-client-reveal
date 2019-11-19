@@ -314,8 +314,13 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                         task = taskUtils.generateRegisterFamilyTask(applicationContext, structure.getId());
                     } else {
                         if (StructureType.RESIDENTIAL.equals(structureType)) {
-                            task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
-                                    BusinessStatus.NOT_VISITED, Intervention.IRS, R.string.irs_task_description);
+                            if (Utils.isIRS()) {
+                                task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
+                                        BusinessStatus.NOT_VISITED, Intervention.IRS, R.string.irs_task_description);
+                            } else if (Utils.isIRSVerification()) {
+                                task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
+                                        BusinessStatus.NOT_VISITED, Intervention.IRS_VERIFICATION, R.string.irs_verification_task_description);
+                            }
                         } else if (StructureType.MOSQUITO_COLLECTION_POINT.equals(structureType)) {
                             task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
                                     BusinessStatus.NOT_VISITED, Intervention.MOSQUITO_COLLECTION, R.string.mosquito_collection_task_description);

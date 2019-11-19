@@ -59,6 +59,8 @@ public interface Constants {
 
     String NULL_KEY = "NULL";
 
+    int IRS_VERIFICATION_PERIOD = 30;
+
     interface CONFIGURATION {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";

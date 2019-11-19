@@ -296,4 +296,13 @@ public class Utils {
     public static boolean isFocusInvestigationOrMDA() {
         return isFocusInvestigation() || isMDA();
     }
+
+    public static boolean isIRS() {
+        return getInterventionLabel() == R.string.irs;
+    }
+
+    public static boolean isIRSVerification() {
+        return getInterventionLabel() == R.string.irs_verification;
+    }
+
 }
