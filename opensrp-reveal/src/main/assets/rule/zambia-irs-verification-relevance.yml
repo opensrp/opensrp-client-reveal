@@ -1,0 +1,35 @@
+---
+name: step1_eligStruc
+description: step1_eligStruc
+priority: 1
+condition: "step1_trueStructure.equals('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_reportSpray
+description: step1_reportSpray
+priority: 1
+condition: "step1_trueStructure.equals('Yes') && step1_eligStruc.equals('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_chalkSpray
+description: step1_chalkSpray
+priority: 1
+condition: "step1_trueStructure.equals('Yes') && step1_eligStruc.equals('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_stickerSpray
+description: step1_stickerSpray
+priority: 1
+condition: "step1_trueStructure.equals('Yes') && step1_eligStruc.equals('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_cardSpray
+description: step1_cardSpray
+priority: 1
+condition: "step1_trueStructure.equals('Yes') && step1_eligStruc.equals('Yes')"
+actions:
+  - "isRelevant = true"
