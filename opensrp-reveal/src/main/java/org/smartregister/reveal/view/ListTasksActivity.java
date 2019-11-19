@@ -51,6 +51,7 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
@@ -504,6 +505,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             sprayCardView.setVisibility(View.VISIBLE);
         } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
             cardDetailsUtil.populateAndOpenMosquitoHarvestCard((MosquitoHarvestCardDetails) cardDetails, this);
+        }else if (cardDetails instanceof IRSVerificationCardDetails) {
+            cardDetailsUtil.populateAndOpenIRSVerificationCard((IRSVerificationCardDetails) cardDetails, this);
         }
     }
 

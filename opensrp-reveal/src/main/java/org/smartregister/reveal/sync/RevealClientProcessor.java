@@ -38,6 +38,7 @@ import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNC
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
+import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
@@ -104,7 +105,8 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     operationalAreaId = processEvent(event, clientClassification, localEvents, JsonForm.STRUCTURE_TYPE);
                 } else if (eventType.equals(MOSQUITO_COLLECTION_EVENT) || eventType.equals(LARVAL_DIPPING_EVENT)
                         || eventType.equals(BEDNET_DISTRIBUTION_EVENT) ||
-                        eventType.equals(BEHAVIOUR_CHANGE_COMMUNICATION)) {
+                        eventType.equals(BEHAVIOUR_CHANGE_COMMUNICATION) ||
+                        eventType.equals(IRS_VERIFICATION)) {
                     operationalAreaId = processEvent(event, clientClassification, localEvents);
                 } else if (eventType.equals(REGISTER_STRUCTURE_EVENT)) {
                     operationalAreaId = processRegisterStructureEvent(event, clientClassification);
@@ -257,7 +259,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     }
 
     public String calculateBusinessStatus(Event event) {
-        if (EventType.FAMILY_REGISTRATION.equals(event.getEventType()) || EventType.FAMILY_MEMBER_REGISTRATION.equals(event.getEventType())) {
+        if (EventType.FAMILY_REGISTRATION.equals(event.getEventType()) || EventType.FAMILY_MEMBER_REGISTRATION.equals(event.getEventType()) ) {
             return BusinessStatus.COMPLETE;
         }
         Obs businessStatusObs = event.findObs(null, false, JsonForm.BUSINESS_STATUS);

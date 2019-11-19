@@ -27,6 +27,7 @@ import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
@@ -60,7 +61,6 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_XXX;
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
-import static org.smartregister.reveal.util.Constants.IRS_VERIFICATION_EVENT;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -267,7 +267,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
             } else if (org.smartregister.reveal.util.Utils.isFocusInvestigationOrMDA()) {
                 listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
-            } else if (IRS_VERIFICATION_EVENT.equals(code) && COMPLETE.equals(businessStatus)) {
+            } else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
                 listTaskInteractor.fetchInterventionDetails(IRS_VERIFICATION, feature.id(), false);
             }
         }
@@ -305,6 +305,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             formatSprayCardDetails((SprayCardDetails) cardDetails);
             listTaskView.openCardView(cardDetails);
         } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
+            listTaskView.openCardView(cardDetails);
+        } else if (cardDetails instanceof IRSVerificationCardDetails) {
             listTaskView.openCardView(cardDetails);
         }
     }

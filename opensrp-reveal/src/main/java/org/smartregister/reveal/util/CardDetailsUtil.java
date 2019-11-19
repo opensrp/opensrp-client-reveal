@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
@@ -126,6 +128,33 @@ public class CardDetailsUtil {
             TextView lastUpdatedDateView = activity.findViewById(R.id.paot_last_updated_date);
             lastUpdatedDateView.setText(activity.getResources().getString(R.string.paot_last_updated_date_test_text) + lastUpdatedDate);
             activity.findViewById(R.id.potential_area_of_transmission_card_view).setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void populateAndOpenIRSVerificationCard(IRSVerificationCardDetails sprayCardDetails, Activity activity) {
+        try {
+            TextView tvSprayStatus = activity.findViewById(R.id.spray_status);
+            TextView tvPropertyType = activity.findViewById(R.id.property_type);
+            TextView tvSprayDate = activity.findViewById(R.id.spray_date);
+            TextView tvSprayOperator = activity.findViewById(R.id.user_id);
+            TextView tvFamilyHead = activity.findViewById(R.id.family_head);
+            TextView tvReason = activity.findViewById(R.id.reason);
+            Button changeStatus = activity.findViewById(R.id.change_spray_status);
+
+            changeStatus.setVisibility(View.GONE);
+
+            //Integer color = sprayCardDetails.getStatusColor();
+           // tvSprayStatus.setTextColor(color == null ? activity.getResources().getColor(R.color.black) : activity.getResources().getColor(color));
+
+            tvPropertyType.setText(sprayCardDetails.getReportedSpray());
+            tvSprayDate.setText(sprayCardDetails.getChalkSpray());
+            tvSprayOperator.setText(sprayCardDetails.getStickerSpray());
+            tvFamilyHead.setText(sprayCardDetails.getCardSpray());
+            tvReason.setVisibility(View.GONE);
+
+            activity.findViewById(R.id.spray_card_view).setVisibility(View.VISIBLE);
+        } catch (Resources.NotFoundException e) {
+            Timber.e(e);
         }
     }
 

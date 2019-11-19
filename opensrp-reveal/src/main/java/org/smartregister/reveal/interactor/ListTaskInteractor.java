@@ -15,6 +15,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
@@ -32,19 +33,25 @@ import java.util.Set;
 
 import timber.log.Timber;
 
+import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.CARD_SPRAY;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.CHALK_SPRAY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_UPDATED_DATE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_COMMENTS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.REPORT_SPRAY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STICKER_SPRAY;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
+import static org.smartregister.reveal.util.Constants.Tables.IRS_VERIFICATION_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.LARVAL_DIPPINGS_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.MOSQUITO_COLLECTIONS_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.PAOT_TABLE;
@@ -77,7 +84,8 @@ public class ListTaskInteractor extends BaseInteractor {
             sql = String.format("SELECT %s, %s, %s  FROM %s WHERE %s=? ", PAOT_STATUS,
                     PAOT_COMMENTS, LAST_UPDATED_DATE, PAOT_TABLE, BASE_ENTITY_ID);
         } else if (IRS_VERIFICATION.equals(interventionType)) {
-            sql = ""; //TODO implement query
+            sql = String.format("SELECT %s, %s, %s, %s FROM %s WHERE id= ?",
+                    REPORT_SPRAY, CHALK_SPRAY, STICKER_SPRAY, CARD_SPRAY, IRS_VERIFICATION_TABLE);
         }
 
         final String SQL = sql;
@@ -176,15 +184,15 @@ public class ListTaskInteractor extends BaseInteractor {
         return paotCardDetails;
     }
 
-    private MosquitoHarvestCardDetails createIRSverificationCardDetails(Cursor cursor, String interventionType) {
-        MosquitoHarvestCardDetails irsVerificationCardDetails = new MosquitoHarvestCardDetails(
-                "",
-                "",
-                null,
-                interventionType
+    private IRSVerificationCardDetails createIRSverificationCardDetails(Cursor cursor, String interventionType) {
+        IRSVerificationCardDetails irsVerificationCardDetails = new IRSVerificationCardDetails(
+                COMPLETE,
+                cursor.getString(cursor.getColumnIndex(REPORT_SPRAY)),
+                cursor.getString(cursor.getColumnIndex(CHALK_SPRAY)),
+                cursor.getString(cursor.getColumnIndex(STICKER_SPRAY)),
+                cursor.getString(cursor.getColumnIndex(CARD_SPRAY))
         );
         return irsVerificationCardDetails;
-        //TODO Implement IRS Verification specific field data
     }
 
     public void fetchLocations(String plan, String operationalArea) {

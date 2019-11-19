@@ -35,8 +35,6 @@ public interface Constants {
 
     String BEHAVIOUR_CHANGE_COMMUNICATION = "behaviour_change_communication";
 
-    String IRS_VERIFICATION_EVENT = "irs_verification";
-
     String STRUCTURE = "Structure";
 
     String FOCUS = "FOCUS";
@@ -199,12 +197,15 @@ public interface Constants {
         String MDA_DISPENSE = "mda_dispense";
 
         String MDA_ADHERENCE = "mda_adherence";
+
+        String IRS_VERIFICATION = "irs_verification";
     }
 
     interface Tables {
         String MOSQUITO_COLLECTIONS_TABLE = "mosquito_collections";
         String LARVAL_DIPPINGS_TABLE = "larval_dippings";
         String PAOT_TABLE = "potential_area_of_transmission";
+        String IRS_VERIFICATION_TABLE = "irs_verification";
     }
 
     interface BusinessStatus {
@@ -511,6 +512,14 @@ public interface Constants {
         String EVENT_DATE = "event_date";
 
         String EVENTS_PER_TASK = "events_per_task";
+
+        String REPORT_SPRAY = "report_spray";
+
+        String CHALK_SPRAY = "chalk_spray";
+
+        String STICKER_SPRAY = "sticker_spray";
+
+        String CARD_SPRAY = "card_spray";
 
     }
 

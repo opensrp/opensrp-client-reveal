@@ -82,6 +82,13 @@
             "creates_case": [
               "event_task"
             ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "irs_verification",
+            "creates_case": [
+              "irs_verification"
+            ]
           }
         ]
       }
