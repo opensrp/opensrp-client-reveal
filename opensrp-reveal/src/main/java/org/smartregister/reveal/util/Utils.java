@@ -46,6 +46,7 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.METERS_PER_K
 import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
 import static org.smartregister.reveal.util.Constants.Intervention.FI;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MDA;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -155,6 +156,8 @@ public class Utils {
             return R.string.irs;
         else if (interventionType.equals(MDA))
             return R.string.mda;
+        else if (interventionType.equals(IRS_VERIFICATION))
+            return R.string.irs_verification;
         else
             return R.string.irs;
     }

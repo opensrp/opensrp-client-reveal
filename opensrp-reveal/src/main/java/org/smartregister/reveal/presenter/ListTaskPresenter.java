@@ -61,6 +61,7 @@ import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORM
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
@@ -245,7 +246,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             String businessStatus = getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
             String code = getPropertyValue(feature, TASK_CODE);
             selectedFeatureInterventionType = code;
-            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || PAOT.equals(code) || REGISTER_FAMILY.equals(code))
+            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || PAOT.equals(code) || REGISTER_FAMILY.equals(code) || IRS_VERIFICATION.equals(code))
                     && (NOT_VISITED.equals(businessStatus) || businessStatus == null)) {
                 if (validateFarStructures()) {
                     validateUserLocation();

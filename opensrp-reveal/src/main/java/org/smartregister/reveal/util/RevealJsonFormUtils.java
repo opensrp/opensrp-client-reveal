@@ -50,6 +50,7 @@ import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT;
+import static org.smartregister.reveal.util.Constants.IRS_VERIFICATION_EVENT;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
@@ -280,6 +281,8 @@ public class RevealJsonFormUtils {
             formName = JsonForm.ZAMBIA_MDA_ADHERENCE_FORM;
         } else if (Intervention.MDA_DISPENSE.equals(taskCode)) {
             formName = JsonForm.ZAMBIA_MDA_DISPENSE_FORM;
+        } else if (IRS_VERIFICATION_EVENT.equals(encounterType) || Intervention.IRS_VERIFICATION.equals(taskCode)) {
+            formName = JsonForm.ZAMBIA_IRS_VERIFICATION_FORM;
         }
         return formName;
     }

@@ -35,6 +35,8 @@ public interface Constants {
 
     String BEHAVIOUR_CHANGE_COMMUNICATION = "behaviour_change_communication";
 
+    String IRS_VERIFICATION_EVENT = "irs_verification";
+
     String STRUCTURE = "Structure";
 
     String FOCUS = "FOCUS";
@@ -176,6 +178,8 @@ public interface Constants {
 
         String MDA = "MDA";
 
+        String IRS_VERIFICATION = "IRS Verification";
+
         List<String> PERSON_INTERVENTIONS = Arrays.asList(BLOOD_SCREENING, CASE_CONFIRMATION, MDA_DISPENSE, MDA_ADHERENCE);
 
 
@@ -307,6 +311,8 @@ public interface Constants {
         String ZAMBIA_MDA_DISPENSE_FORM = "json.form/zambia_mda_dispense.json";
 
         String ZAMBIA_MDA_ADHERENCE_FORM = "json.form/zambia_mda_adherence.json";
+
+        String ZAMBIA_IRS_VERIFICATION_FORM = "json.form/zambia_irs_verification.json";
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 

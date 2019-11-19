@@ -247,4 +247,6 @@
 
     <string name="dispense_mda">Dispense MDA</string>
     <string name="adhere_mda">Adhere MDA</string>
+
+    <string name="irs_verification">IRS Verification</string>
 </resources>
