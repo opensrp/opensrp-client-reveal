@@ -250,4 +250,11 @@
     <string name="adhere_mda">Adhere MDA</string>
 
     <string name="irs_verification">IRS Verification</string>
+    <string name="reported_spray_status">Reported Spray Status</string>
+    <string name="chalk_spray_status">Chalk Spray Status</string>
+    <string name="sticker_spray_status">Sticker Spray Status</string>
+    <string name="card_spray_status">Card Spray Status</string>
+    <string name="structure_not_found_or_visited_during_campaign">Structure not found or visited during campaign</string>
+    <string name="other">Other</string>
+
 </resources>

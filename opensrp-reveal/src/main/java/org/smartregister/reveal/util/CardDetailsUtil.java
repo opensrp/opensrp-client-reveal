@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import org.smartregister.reveal.R;
@@ -133,26 +132,18 @@ public class CardDetailsUtil {
 
     public void populateAndOpenIRSVerificationCard(IRSVerificationCardDetails sprayCardDetails, Activity activity) {
         try {
-            TextView tvSprayStatus = activity.findViewById(R.id.spray_status);
-            TextView tvPropertyType = activity.findViewById(R.id.property_type);
-            TextView tvSprayDate = activity.findViewById(R.id.spray_date);
-            TextView tvSprayOperator = activity.findViewById(R.id.user_id);
-            TextView tvFamilyHead = activity.findViewById(R.id.family_head);
-            TextView tvReason = activity.findViewById(R.id.reason);
-            Button changeStatus = activity.findViewById(R.id.change_spray_status);
 
-            changeStatus.setVisibility(View.GONE);
+            TextView tvReportedSprayStatus = activity.findViewById(R.id.reported_spray_status);
+            TextView tvChalkSprayStatus = activity.findViewById(R.id.chalk_spray_status);
+            TextView tvStickerSprayStatus = activity.findViewById(R.id.sticker_spray_status);
+            TextView tvCardSprayStatus = activity.findViewById(R.id.card_spray_status);
 
-            //Integer color = sprayCardDetails.getStatusColor();
-           // tvSprayStatus.setTextColor(color == null ? activity.getResources().getColor(R.color.black) : activity.getResources().getColor(color));
+            tvReportedSprayStatus.setText(activity.getResources().getString(R.string.reported_spray_status) + ": " + getTranslatedIRSVerificationStatus(sprayCardDetails.getReportedSprayStatus()));
+            tvChalkSprayStatus.setText(activity.getResources().getString(R.string.chalk_spray_status) + ": " + getTranslatedIRSVerificationStatus(sprayCardDetails.getChalkSprayStatus()));
+            tvStickerSprayStatus.setText(activity.getResources().getString(R.string.sticker_spray_status) + ": " + getTranslatedIRSVerificationStatus(sprayCardDetails.getStickerSprayStatus()));
+            tvCardSprayStatus.setText(activity.getResources().getString(R.string.card_spray_status) + ": " + getTranslatedIRSVerificationStatus(sprayCardDetails.getCardSprayStatus()));
 
-            tvPropertyType.setText(sprayCardDetails.getReportedSpray());
-            tvSprayDate.setText(sprayCardDetails.getChalkSpray());
-            tvSprayOperator.setText(sprayCardDetails.getStickerSpray());
-            tvFamilyHead.setText(sprayCardDetails.getCardSpray());
-            tvReason.setVisibility(View.GONE);
-
-            activity.findViewById(R.id.spray_card_view).setVisibility(View.VISIBLE);
+            activity.findViewById(R.id.irs_verification_card_view).setVisibility(View.VISIBLE);
         } catch (Resources.NotFoundException e) {
             Timber.e(e);
         }
@@ -192,7 +183,34 @@ public class CardDetailsUtil {
                 return businessStatus;
         }
 
+    }
+
+    /**
+     * Takes in a IRS intervention status and returns the translated value .
+     *
+     * @param status Status of the IRS Verification type
+     * @return status Translated status
+     */
+    public static String getTranslatedIRSVerificationStatus(String status) {
+        Context context = RevealApplication.getInstance().getApplicationContext();
+
+        if (status == null)
+            return context.getString(R.string.not_sprayed);
+        switch (status) {
+            case "sprayed":
+                return context.getString(R.string.sprayed);
+            case "notSprayed":
+                return context.getString(R.string.not_sprayed);
+            case "notFoundOrVisited":
+                return context.getString(R.string.structure_not_found_or_visited_during_campaign);
+            case "other":
+                return context.getString(R.string.other);
+            default:
+                return status;
+        }
+
 
     }
+
 
 }
