@@ -184,7 +184,7 @@ public class ListTaskInteractor extends BaseInteractor {
         return paotCardDetails;
     }
 
-    private IRSVerificationCardDetails createIRSverificationCardDetails(Cursor cursor, String interventionType) {
+    private IRSVerificationCardDetails createIRSverificationCardDetails(Cursor cursor) {
         IRSVerificationCardDetails irsVerificationCardDetails = new IRSVerificationCardDetails(
                 COMPLETE,
                 cursor.getString(cursor.getColumnIndex(REPORT_SPRAY)),
