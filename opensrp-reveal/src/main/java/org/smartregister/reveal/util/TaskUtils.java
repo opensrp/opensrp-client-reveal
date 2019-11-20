@@ -80,9 +80,6 @@ public class TaskUtils {
         task.setForEntity(entityId);
         task.setStructureId(structureId);
         task.setExecutionStartDate(now);
-        if (Utils.isIRSVerification()) {
-            task.setExecutionEndDate(now.plusDays(IRS_VERIFICATION_PERIOD));
-        }
         task.setAuthoredOn(now);
         task.setLastModified(now);
         task.setOwner(sharedPreferences.fetchRegisteredANM());

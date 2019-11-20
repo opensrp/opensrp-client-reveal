@@ -156,8 +156,6 @@ public class Utils {
             return R.string.irs;
         else if (interventionType.equals(MDA))
             return R.string.mda;
-        else if (interventionType.equals(IRS_VERIFICATION))
-            return R.string.irs_verification;
         else
             return R.string.irs;
     }
@@ -299,10 +297,6 @@ public class Utils {
 
     public static boolean isIRS() {
         return getInterventionLabel() == R.string.irs;
-    }
-
-    public static boolean isIRSVerification() {
-        return getInterventionLabel() == R.string.irs_verification;
     }
 
 }
