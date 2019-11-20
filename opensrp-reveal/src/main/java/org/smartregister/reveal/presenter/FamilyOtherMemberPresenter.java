@@ -104,7 +104,9 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
             refreshProfileView();
 
             getView().refreshList();
+
         }
+        RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
 
     }
 

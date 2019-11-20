@@ -33,6 +33,10 @@ public interface FamilyConstants {
         String ZAMBIA_FAMILY_REGISTER = "zambia_family_register";
         String ZAMBIA_FAMILY_UPDATE = "zambia_family_update";
         String ZAMBIA_FAMILY_MEMBER_REGISTER = "zambia_family_member_register";
+
+        String REFAPP_FAMILY_REGISTER = "refapp_family_register";
+        String REFAPP_FAMILY_UPDATE = "refapp_family_update";
+        String REFAPP_FAMILY_MEMBER_REGISTER = "refapp_family_member_register";
     }
 
     interface RELATIONSHIP {
