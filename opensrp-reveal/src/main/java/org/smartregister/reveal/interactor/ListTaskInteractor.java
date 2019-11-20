@@ -143,7 +143,7 @@ public class ListTaskInteractor extends BaseInteractor {
         } else if (PAOT.equals(interventionType)) {
             cardDetails = createPaotCardDetails(cursor, interventionType);
         } else if (IRS_VERIFICATION.equals(interventionType)) {
-            cardDetails = createIRSverificationCardDetails(cursor, interventionType);
+            cardDetails = createIRSverificationCardDetails(cursor);
         }
 
         return cardDetails;
