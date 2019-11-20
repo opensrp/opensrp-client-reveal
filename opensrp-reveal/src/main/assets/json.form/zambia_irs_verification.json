@@ -7,13 +7,13 @@
       "openmrs_entity_parent": "",
       "openmrs_entity": "concept",
       "openmrs_data_type": "start",
-      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      "openmrs_entity_id": ""
     },
     "end": {
       "openmrs_entity_parent": "",
       "openmrs_entity": "concept",
       "openmrs_data_type": "end",
-      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      "openmrs_entity_id": ""
     },
     "today": {
       "openmrs_entity_parent": "",
@@ -47,8 +47,222 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "Record IRS Verification",
+    "title": "IRS Verification Form",
     "display_back_button": "true",
-    "fields": []
+    "fields": [
+      {
+        "key": "trueStructure",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this a real structure on the ground?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "yes",
+            "text": "Yes"
+          },
+          {
+            "key": "no",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "eligStruc",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this structure eligible to be sprayed?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "yes",
+            "text": "Yes"
+          },
+          {
+            "key": "no",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-irs-verification-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "reportSpray",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Reported Spray Status by Head of Household or Neighbor:",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "sprayed",
+            "text": "Sprayed"
+          },
+          {
+            "key": "notSprayed",
+            "text": "Not Sprayed"
+          },
+          {
+            "key": "notFoundOrVisited",
+            "text": "Structure not found or visited during campaign"
+          },
+          {
+            "key": "other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-irs-verification-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "chalkSpray",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Chalk Spray Status:",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "sprayed",
+            "text": "Sprayed"
+          },
+          {
+            "key": "notSprayed",
+            "text": "Not Sprayed"
+          },
+          {
+            "key": "notFoundOrVisited",
+            "text": "Structure not found or visited during campaign"
+          },
+          {
+            "key": "other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-irs-verification-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "stickerSpray",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Sticker Spray Status:",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "sprayed",
+            "text": "Sprayed"
+          },
+          {
+            "key": "notSprayed",
+            "text": "Not Sprayed"
+          },
+          {
+            "key": "notFoundOrVisited",
+            "text": "Structure not found or visited during campaign"
+          },
+          {
+            "key": "other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-irs-verification-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "cardSpray",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Card Spray Status:",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "sprayed",
+            "text": "Sprayed"
+          },
+          {
+            "key": "notSprayed",
+            "text": "Not Sprayed"
+          },
+          {
+            "key": "notFoundOrVisited",
+            "text": "Structure not found or visited during campaign"
+          },
+          {
+            "key": "other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-irs-verification-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "value": "Complete"
+      }
+    ]
   }
 }
