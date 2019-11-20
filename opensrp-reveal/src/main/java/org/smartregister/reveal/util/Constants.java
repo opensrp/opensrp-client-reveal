@@ -533,4 +533,11 @@ public interface Constants {
     interface UseContextCode {
         String INTERVENTION_TYPE = "interventionType";
     }
+
+    interface IRSVerificationStatus {
+        String SPRAYED = "sprayed";
+        String NOT_SPRAYED = "notSprayed";
+        String NOT_FOUND_OR_VISITED = "notFoundOrVisited";
+        String OTHER = "other";
+    }
 }

@@ -197,13 +197,13 @@ public class CardDetailsUtil {
         if (status == null)
             return context.getString(R.string.not_sprayed);
         switch (status) {
-            case "sprayed":
+            case Constants.IRSVerificationStatus.SPRAYED:
                 return context.getString(R.string.sprayed);
-            case "notSprayed":
+            case Constants.IRSVerificationStatus.NOT_SPRAYED:
                 return context.getString(R.string.not_sprayed);
-            case "notFoundOrVisited":
+            case Constants.IRSVerificationStatus.NOT_FOUND_OR_VISITED:
                 return context.getString(R.string.structure_not_found_or_visited_during_campaign);
-            case "other":
+            case Constants.IRSVerificationStatus.OTHER:
                 return context.getString(R.string.other);
             default:
                 return status;
