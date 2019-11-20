@@ -1,0 +1,409 @@
+{
+  "count": "1",
+  "encounter_type": "bednet_distribution",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "Bednet Distribution",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "totPopulation",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many people live in this structure?",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "The number of people living in this structure is required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "1",
+          "err": "There must be greater than or equal to 1"
+        },
+        "v_max": {
+          "value": "[num_fam_members]",
+          "err": "Cannot be more than number of registered members"
+        }
+      },
+      {
+        "key": "existingLLINs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many existing LLINs?",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "The total number of existing LLINs is required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        }
+      },
+      {
+        "key": "existingLLIHNs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many existing LLIHNs?",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "The total number of existing LLIHNs is required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        }
+      },
+      {
+        "key": "existingITNs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many existing normal (conventional) nets?",
+        "shortened_hint": "Normal (conventional) nets?",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "The number of existing normal (conventional) nets is required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        }
+      },
+      {
+        "key": "existingITNDipped",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many normal nets that were dipped in the last 6 months?",
+        "shortened_hint": "Normal nets dipped < 6 months",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "How many normal nets that were dipped in the last 6 months?"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "existingITNs",
+          "err": "Number nets dipped < 6 months cannot be greater that total normal nets"
+        }
+      },
+      {
+        "key": "calcExistingNets",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "displayCalcExistingNets",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "The house has {calcExistingNets} total nets",
+        "text_color": "#000000",
+        "toaster_type": "info",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "calcNumNetsNeeded",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "calcNumNetsToDistribute",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "displayRecommendedNumNetsToDistribute",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "{calcNumNetsToDistribute} nets should be distributed",
+        "text_color": "#000000",
+        "toaster_type": "info",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "distributedLLINs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Total number of LLINs distributed",
+        "shortened_hint": "Distributed LLINs",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "The total number of LLINs distributed is required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "totPopulation",
+          "err": "Cannot be more than number of people in the house"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        }
+      },
+      {
+        "key": "distributedLLIHNs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Total number of LLIHNs distributed",
+        "shortened_hint": "Distributed LLIHNs",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "The total number of LLIHNs distributed is required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_max": {
+          "value": "[num_sleeps_outdoors]",
+          "err": "Cannot be more than number of family members  who spend the night outdoors"
+        }
+      },
+      {
+        "key": "distributedITNs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Total normal nets distributed",
+        "shortened_hint": "Distributed ITNs",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "The total number of ITNs distributed is required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "calcPopulationMinusExistingNets",
+          "err": "Cannot be more than total Population subtract existing nets"
+        }
+      },
+      {
+        "key": "calcPopulationMinusExistingNets",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "calcTotalNetsDistributed",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "calcDistributedRecommendation",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "redippedITNs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "The number of nets redipped",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "The number of nets redipped required"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
+        "v_relative_max": {
+          "value": "calcNumNetsToRedip",
+          "err": "Cannot be more than Total nets eligible for redipping"
+        }
+      },
+      {
+        "key": "comment",
+        "label_info_text": "Reasons why more or less nets were distributed, or other comments",
+        "label_info_title": "Comments",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Comment"
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "value": "Complete"
+      }
+    ]
+  }
+}

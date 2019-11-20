@@ -270,6 +270,8 @@ public interface Constants {
 
         String SPRAY_FORM_BOTSWANA = "json.form/botswana_spray_form.json";
 
+        String SPRAY_FORM_REFAPP = "json.form/refapp_spray_form.json";
+
         String SPRAY_FORM_ZAMBIA = "json.form/zambia_spray_form.json";
 
         String LARVAL_DIPPING_FORM = "json.form/larval_dipping_form.json";
@@ -307,6 +309,22 @@ public interface Constants {
         String ZAMBIA_MDA_DISPENSE_FORM = "json.form/zambia_mda_dispense.json";
 
         String ZAMBIA_MDA_ADHERENCE_FORM = "json.form/zambia_mda_adherence.json";
+
+        String REFAPP_MDA_DISPENSE_FORM = "json.form/refapp_mda_dispense.json";
+
+        String REFAPP_MDA_ADHERENCE_FORM = "json.form/refapp_mda_adherence.json";
+
+        String REFAPP_BEDNET_DISTRIBUTION_FORM = "json.form/refapp_bednet_distribution.json";
+
+        String REFAPP_PAOT_FORM = "json.form/refapp_paot.json";
+
+        String REFAPP_LARVAL_DIPPING_FORM = "json.form/refapp_larval_dipping_form.json";
+
+        String REFAPP_MOSQUITO_COLLECTION_FORM = "json.form/refapp_mosquito_collection_form.json";
+
+        String REFAPP_BLOOD_SCREENING_FORM = "json.form/refapp_blood_screening.json";
+
+        String REFAPP_CASE_CONFIRMATION_FORM = "json.form/refapp_case_confirmation.json";
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 
@@ -406,6 +424,7 @@ public interface Constants {
         String NAMIBIA_EC_CLIENT_FIELDS = "ec_client_fields_namibia.json";
         String BOTSWANA_EC_CLIENT_FIELDS = "ec_client_fields_botswana.json";
         String ZAMBIA_EC_CLIENT_FIELDS = "ec_client_fields_zambia.json";
+        String REFAPP_EC_CLIENT_FIELDS = "ec_client_fields_refapp.json";
     }
 
 
