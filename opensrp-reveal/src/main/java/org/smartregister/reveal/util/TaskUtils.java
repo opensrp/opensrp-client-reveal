@@ -18,8 +18,6 @@ import org.smartregister.reveal.util.Constants.Intervention;
 
 import java.util.UUID;
 
-import static org.smartregister.reveal.util.Constants.IRS_VERIFICATION_PERIOD;
-
 /**
  * Created by samuelgithengi on 4/14/19.
  */
