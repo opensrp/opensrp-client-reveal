@@ -11,7 +11,7 @@ public class IRSVerificationCardDetails extends CardDetails {
     private String stickerSprayStatus;
     private String cardSprayStatus;
 
-    public IRSVerificationCardDetails(String trueStructure, String eligibleStructure, String status, String reportedSS, String chalkSS, String stickerSS, String cardSS) {
+    public IRSVerificationCardDetails(String status, String trueStructure, String eligibleStructure, String reportedSS, String chalkSS, String stickerSS, String cardSS) {
         super(status);
         this.trueStructure = trueStructure;
         this.eligibleStructure = eligibleStructure;
