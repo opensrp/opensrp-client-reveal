@@ -51,6 +51,7 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
@@ -110,6 +111,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private CardView larvalBreedingCardView;
     private CardView potentialAreaOfTransmissionCardView;
     private CardView indicatorsCardView;
+    private CardView irsVerificationCardView;
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
 
@@ -176,6 +178,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         potentialAreaOfTransmissionCardView = findViewById(R.id.potential_area_of_transmission_card_view);
 
+        irsVerificationCardView = findViewById(R.id.irs_verification_card_view);
+
         findViewById(R.id.btn_add_structure).setOnClickListener(this);
 
         findViewById(R.id.btn_collapse_spray_card_view).setOnClickListener(this);
@@ -200,6 +204,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.btn_edit_paot_details).setOnClickListener(this);
 
+        findViewById(R.id.btn_collapse_irs_verification_card_view).setOnClickListener(this);
+
         indicatorsCardView = findViewById(R.id.indicators_card_view);
         indicatorsCardView.setOnClickListener(this);
 
@@ -218,6 +224,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             setViewVisibility(potentialAreaOfTransmissionCardView, false);
         } else if (id == R.id.btn_collapse_indicators_card_view) {
             setViewVisibility(indicatorsCardView, false);
+        } else if (id == R.id.btn_collapse_irs_verification_card_view) {
+            setViewVisibility(irsVerificationCardView, false);
         }
     }
 
@@ -228,6 +236,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         setViewVisibility(larvalBreedingCardView, false);
         setViewVisibility(potentialAreaOfTransmissionCardView, false);
         setViewVisibility(indicatorsCardView, false);
+        setViewVisibility(irsVerificationCardView, false);
     }
 
     private void setViewVisibility(View view, boolean isVisible) {
@@ -365,7 +374,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (v.getId() == R.id.btn_collapse_mosquito_collection_card_view
                 || v.getId() == R.id.btn_collapse_larval_breeding_card_view
                 || v.getId() == R.id.btn_collapse_paot_card_view
-                || v.getId() == R.id.btn_collapse_indicators_card_view) {
+                || v.getId() == R.id.btn_collapse_indicators_card_view
+                || v.getId() == R.id.btn_collapse_irs_verification_card_view) {
             closeCardView(v.getId());
         } else if (v.getId() == R.id.task_register) {
             openTaskRegister();
@@ -504,6 +514,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             sprayCardView.setVisibility(View.VISIBLE);
         } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
             cardDetailsUtil.populateAndOpenMosquitoHarvestCard((MosquitoHarvestCardDetails) cardDetails, this);
+        }else if (cardDetails instanceof IRSVerificationCardDetails) {
+            cardDetailsUtil.populateAndOpenIRSVerificationCard((IRSVerificationCardDetails) cardDetails, this);
         }
     }
 

@@ -293,4 +293,5 @@ public class Utils {
     public static boolean isFocusInvestigationOrMDA() {
         return isFocusInvestigation() || isMDA();
     }
+
 }

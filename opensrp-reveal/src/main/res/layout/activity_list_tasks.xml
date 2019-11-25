@@ -108,6 +108,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|left" />
+
+            <include
+                android:id="@+id/irs_verification_card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/irs_verification_card_view"
+                android:visibility="gone"/>
+
         </LinearLayout>
 
     </FrameLayout>

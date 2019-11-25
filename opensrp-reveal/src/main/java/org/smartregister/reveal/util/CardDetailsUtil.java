@@ -10,6 +10,7 @@ import android.widget.TextView;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
@@ -129,6 +130,36 @@ public class CardDetailsUtil {
         }
     }
 
+    public void populateAndOpenIRSVerificationCard(IRSVerificationCardDetails sprayCardDetails, Activity activity) {
+        try {
+
+            TextView tvReportedSprayLabel = activity.findViewById(R.id.reported_spray_label);
+            TextView tvReportedSprayStatus = activity.findViewById(R.id.reported_spray_status);
+            TextView tvChalkSprayLabel = activity.findViewById(R.id.chalk_spray_label);
+            TextView tvChalkSprayStatus = activity.findViewById(R.id.chalk_spray_status);
+            TextView tvStickerSprayLabel = activity.findViewById(R.id.sticker_spray_label);
+            TextView tvStickerSprayStatus = activity.findViewById(R.id.sticker_spray_status);
+            TextView tvCardSprayLabel = activity.findViewById(R.id.card_spray_label);
+            TextView tvCardSprayStatus = activity.findViewById(R.id.card_spray_status);
+
+            tvReportedSprayLabel.setText(activity.getResources().getString(R.string.reported_spray_status) + ":");
+            tvReportedSprayStatus.setText(getTranslatedIRSVerificationStatus(sprayCardDetails.getReportedSprayStatus()));
+
+            tvChalkSprayLabel.setText(activity.getResources().getString(R.string.chalk_spray_status)+ ":");
+            tvChalkSprayStatus.setText(getTranslatedIRSVerificationStatus(sprayCardDetails.getChalkSprayStatus()));
+
+            tvStickerSprayLabel.setText(activity.getResources().getString(R.string.sticker_spray_status)+ ":");
+            tvStickerSprayStatus.setText(getTranslatedIRSVerificationStatus(sprayCardDetails.getStickerSprayStatus()));
+
+            tvCardSprayLabel.setText(activity.getResources().getString(R.string.card_spray_status)+ ":");
+            tvCardSprayStatus.setText(getTranslatedIRSVerificationStatus(sprayCardDetails.getCardSprayStatus()));
+
+            activity.findViewById(R.id.irs_verification_card_view).setVisibility(View.VISIBLE);
+        } catch (Resources.NotFoundException e) {
+            Timber.e(e);
+        }
+    }
+
     /**
      * Takes in a business status and returns the translated value according to locale set.
      *
@@ -163,7 +194,34 @@ public class CardDetailsUtil {
                 return businessStatus;
         }
 
+    }
+
+    /**
+     * Takes in a IRS intervention status and returns the translated value .
+     *
+     * @param status Status of the IRS Verification type
+     * @return status Translated status
+     */
+    public static String getTranslatedIRSVerificationStatus(String status) {
+        Context context = RevealApplication.getInstance().getApplicationContext();
+
+        if (status == null)
+            return context.getString(R.string.not_sprayed);
+        switch (status) {
+            case Constants.IRSVerificationStatus.SPRAYED:
+                return context.getString(R.string.sprayed);
+            case Constants.IRSVerificationStatus.NOT_SPRAYED:
+                return context.getString(R.string.not_sprayed);
+            case Constants.IRSVerificationStatus.NOT_FOUND_OR_VISITED:
+                return context.getString(R.string.structure_not_found_or_visited_during_campaign);
+            case Constants.IRSVerificationStatus.OTHER:
+                return context.getString(R.string.other);
+            default:
+                return status;
+        }
+
 
     }
+
 
 }

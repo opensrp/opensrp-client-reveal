@@ -535,6 +535,51 @@
           }
         }
       ]
+    },
+    {
+      "name": "irs_verification",
+      "columns": [
+        {
+          "column_name": "base_entity_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "baseEntityId"
+          }
+        },
+        {
+          "column_name": "report_spray",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "reportSpray"
+          }
+        },
+        {
+          "column_name": "chalk_spray",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "chalkSpray"
+          }
+        },
+        {
+          "column_name": "sticker_spray",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "stickerSpray"
+          }
+        },
+        {
+          "column_name": "card_spray",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "cardSpray"
+          }
+        }
+      ]
     }
+
   ]
 }

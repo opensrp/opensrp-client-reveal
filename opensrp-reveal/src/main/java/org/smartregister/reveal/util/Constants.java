@@ -57,6 +57,8 @@ public interface Constants {
 
     String NULL_KEY = "NULL";
 
+    int IRS_VERIFICATION_PERIOD = 30;
+
     interface CONFIGURATION {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";
@@ -176,6 +178,8 @@ public interface Constants {
 
         String MDA = "MDA";
 
+        String IRS_VERIFICATION = "IRS Verification";
+
         List<String> PERSON_INTERVENTIONS = Arrays.asList(BLOOD_SCREENING, CASE_CONFIRMATION, MDA_DISPENSE, MDA_ADHERENCE);
 
 
@@ -193,12 +197,15 @@ public interface Constants {
         String MDA_DISPENSE = "mda_dispense";
 
         String MDA_ADHERENCE = "mda_adherence";
+
+        String IRS_VERIFICATION = "irs_verification";
     }
 
     interface Tables {
         String MOSQUITO_COLLECTIONS_TABLE = "mosquito_collections";
         String LARVAL_DIPPINGS_TABLE = "larval_dippings";
         String PAOT_TABLE = "potential_area_of_transmission";
+        String IRS_VERIFICATION_TABLE = "irs_verification";
     }
 
     interface BusinessStatus {
@@ -310,6 +317,8 @@ public interface Constants {
 
         String ZAMBIA_MDA_ADHERENCE_FORM = "json.form/zambia_mda_adherence.json";
 
+        String ZAMBIA_IRS_VERIFICATION_FORM = "json.form/zambia_irs_verification.json";
+
         String REFAPP_MDA_DISPENSE_FORM = "json.form/refapp_mda_dispense.json";
 
         String REFAPP_MDA_ADHERENCE_FORM = "json.form/refapp_mda_adherence.json";
@@ -325,6 +334,7 @@ public interface Constants {
         String REFAPP_BLOOD_SCREENING_FORM = "json.form/refapp_blood_screening.json";
 
         String REFAPP_CASE_CONFIRMATION_FORM = "json.form/refapp_case_confirmation.json";
+
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 
@@ -523,6 +533,14 @@ public interface Constants {
 
         String EVENTS_PER_TASK = "events_per_task";
 
+        String REPORT_SPRAY = "report_spray";
+
+        String CHALK_SPRAY = "chalk_spray";
+
+        String STICKER_SPRAY = "sticker_spray";
+
+        String CARD_SPRAY = "card_spray";
+
     }
 
     interface PlanDefinitionStatus {
@@ -534,5 +552,12 @@ public interface Constants {
 
     interface UseContextCode {
         String INTERVENTION_TYPE = "interventionType";
+    }
+
+    interface IRSVerificationStatus {
+        String SPRAYED = "sprayed";
+        String NOT_SPRAYED = "notSprayed";
+        String NOT_FOUND_OR_VISITED = "notFoundOrVisited";
+        String OTHER = "other";
     }
 }

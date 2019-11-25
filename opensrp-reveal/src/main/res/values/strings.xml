@@ -55,6 +55,7 @@
 
     <string name="irs_task_description"> Visit the structure, assess and perform spray activities.</string>
     <string name="poat_task_description"> Update Potential Areas of Transmission</string>
+    <string name="irs_verification_task_description"> Visit each structure in the operational area and verify status</string>
 
     <string name="form_save_failure_title">Error Saving Form</string>
     <string name="spray_form_save_failure">Error saving spray form</string>
@@ -247,4 +248,13 @@
 
     <string name="dispense_mda">Dispense MDA</string>
     <string name="adhere_mda">Adhere MDA</string>
+
+    <string name="irs_verification">IRS Verification</string>
+    <string name="reported_spray_status">Reported Spray Status</string>
+    <string name="chalk_spray_status">Chalk Spray Status</string>
+    <string name="sticker_spray_status">Sticker Spray Status</string>
+    <string name="card_spray_status">Card Spray Status</string>
+    <string name="structure_not_found_or_visited_during_campaign">Structure not found or visited during campaign</string>
+    <string name="other">Other</string>
+
 </resources>
