@@ -2,13 +2,19 @@ package org.smartregister.reveal.model;
 
 public class IRSVerificationCardDetails extends CardDetails {
 
+
+    private String trueStructure;
+    private String eligibleStructure;
+
     private String reportedSprayStatus;
     private String chalkSprayStatus;
     private String stickerSprayStatus;
     private String cardSprayStatus;
 
-    public IRSVerificationCardDetails(String status, String reportedSS, String chalkSS, String stickerSS, String cardSS) {
+    public IRSVerificationCardDetails(String trueStructure, String eligibleStructure, String status, String reportedSS, String chalkSS, String stickerSS, String cardSS) {
         super(status);
+        this.trueStructure = trueStructure;
+        this.eligibleStructure = eligibleStructure;
         this.reportedSprayStatus = reportedSS;
         this.chalkSprayStatus = chalkSS;
         this.stickerSprayStatus = stickerSS;
@@ -45,5 +51,21 @@ public class IRSVerificationCardDetails extends CardDetails {
 
     public void setCardSprayStatus(String cardSprayStatus) {
         this.cardSprayStatus = cardSprayStatus;
+    }
+
+    public String getTrueStructure() {
+        return trueStructure;
+    }
+
+    public void setTrueStructure(String trueStructure) {
+        this.trueStructure = trueStructure;
+    }
+
+    public String getEligStruc() {
+        return eligibleStructure;
+    }
+
+    public void setEligStruc(String eligibleStructure) {
+        this.eligibleStructure = eligibleStructure;
     }
 }
