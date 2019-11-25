@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.smartregister.reveal.R;
@@ -133,26 +134,44 @@ public class CardDetailsUtil {
     public void populateAndOpenIRSVerificationCard(IRSVerificationCardDetails sprayCardDetails, Activity activity) {
         try {
 
-            TextView tvReportedSprayLabel = activity.findViewById(R.id.reported_spray_label);
-            TextView tvReportedSprayStatus = activity.findViewById(R.id.reported_spray_status);
-            TextView tvChalkSprayLabel = activity.findViewById(R.id.chalk_spray_label);
-            TextView tvChalkSprayStatus = activity.findViewById(R.id.chalk_spray_status);
-            TextView tvStickerSprayLabel = activity.findViewById(R.id.sticker_spray_label);
-            TextView tvStickerSprayStatus = activity.findViewById(R.id.sticker_spray_status);
-            TextView tvCardSprayLabel = activity.findViewById(R.id.card_spray_label);
-            TextView tvCardSprayStatus = activity.findViewById(R.id.card_spray_status);
+            TextView tvIneligibleStructuresLabel = activity.findViewById(R.id.ineligible_structures_label);
+            ScrollView svEligibleStructuresScrollView = activity.findViewById(R.id.eligible_structures_scrollview);
 
-            tvReportedSprayLabel.setText(activity.getResources().getString(R.string.reported_spray_status) + ":");
-            tvReportedSprayStatus.setText(getTranslatedIRSVerificationStatus(sprayCardDetails.getReportedSprayStatus()));
+            if(sprayCardDetails.getTrueStructure().equalsIgnoreCase("no")) {
 
-            tvChalkSprayLabel.setText(activity.getResources().getString(R.string.chalk_spray_status)+ ":");
-            tvChalkSprayStatus.setText(getTranslatedIRSVerificationStatus(sprayCardDetails.getChalkSprayStatus()));
+                tvIneligibleStructuresLabel.setText(activity.getResources().getString(R.string.not_true_structure));
+                tvIneligibleStructuresLabel.setVisibility(View.VISIBLE);
+                svEligibleStructuresScrollView.setVisibility(View.GONE);
+            } else if(sprayCardDetails.getEligStruc().equalsIgnoreCase("no")) {
 
-            tvStickerSprayLabel.setText(activity.getResources().getString(R.string.sticker_spray_status)+ ":");
-            tvStickerSprayStatus.setText(getTranslatedIRSVerificationStatus(sprayCardDetails.getStickerSprayStatus()));
+                tvIneligibleStructuresLabel.setText(activity.getResources().getString(R.string.structure_ineligible));
+                tvIneligibleStructuresLabel.setVisibility(View.VISIBLE);
+                svEligibleStructuresScrollView.setVisibility(View.GONE);
+            } else {
 
-            tvCardSprayLabel.setText(activity.getResources().getString(R.string.card_spray_status)+ ":");
-            tvCardSprayStatus.setText(getTranslatedIRSVerificationStatus(sprayCardDetails.getCardSprayStatus()));
+                tvIneligibleStructuresLabel.setVisibility(View.GONE);
+                svEligibleStructuresScrollView.setVisibility(View.VISIBLE);
+                TextView tvReportedSprayLabel = activity.findViewById(R.id.reported_spray_label);
+                TextView tvReportedSprayStatus = activity.findViewById(R.id.reported_spray_status);
+                TextView tvChalkSprayLabel = activity.findViewById(R.id.chalk_spray_label);
+                TextView tvChalkSprayStatus = activity.findViewById(R.id.chalk_spray_status);
+                TextView tvStickerSprayLabel = activity.findViewById(R.id.sticker_spray_label);
+                TextView tvStickerSprayStatus = activity.findViewById(R.id.sticker_spray_status);
+                TextView tvCardSprayLabel = activity.findViewById(R.id.card_spray_label);
+                TextView tvCardSprayStatus = activity.findViewById(R.id.card_spray_status);
+
+                tvReportedSprayLabel.setText(activity.getResources().getString(R.string.reported_spray_status) + ":");
+                tvReportedSprayStatus.setText(getTranslatedIRSVerificationStatus(sprayCardDetails.getReportedSprayStatus()));
+
+                tvChalkSprayLabel.setText(activity.getResources().getString(R.string.chalk_spray_status) + ":");
+                tvChalkSprayStatus.setText(getTranslatedIRSVerificationStatus(sprayCardDetails.getChalkSprayStatus()));
+
+                tvStickerSprayLabel.setText(activity.getResources().getString(R.string.sticker_spray_status) + ":");
+                tvStickerSprayStatus.setText(getTranslatedIRSVerificationStatus(sprayCardDetails.getStickerSprayStatus()));
+
+                tvCardSprayLabel.setText(activity.getResources().getString(R.string.card_spray_status) + ":");
+                tvCardSprayStatus.setText(getTranslatedIRSVerificationStatus(sprayCardDetails.getCardSprayStatus()));
+            }
 
             activity.findViewById(R.id.irs_verification_card_view).setVisibility(View.VISIBLE);
         } catch (Resources.NotFoundException e) {
