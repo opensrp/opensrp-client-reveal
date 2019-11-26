@@ -18,6 +18,7 @@
             android:layout_height="match_parent"
             app:mapbox_uiAttributionGravity="center_horizontal|bottom"
             app:mapbox_uiLogoGravity="center_horizontal|bottom"
+            app:locationClient="android_gps_client"
             app:mapbox_uiLogoMarginRight="30dp"
             app:mapbox_uiRotateGestures="false" />
 
