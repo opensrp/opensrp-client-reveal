@@ -159,12 +159,12 @@
             "text": "Not Sprayed"
           },
           {
-            "key": "notFoundOrVisited",
-            "text": "Structure not found or visited during campaign"
+            "key": "noChalk",
+            "text": "No chalk"
           },
           {
-            "key": "other",
-            "text": "Other"
+            "key": "notFoundOrVisited",
+            "text": "Structure not found or visited during campaign"
           }
         ],
         "v_required": {
@@ -197,12 +197,12 @@
             "text": "Not Sprayed"
           },
           {
-            "key": "notFoundOrVisited",
-            "text": "Structure not found or visited during campaign"
+            "key": "noSticker",
+            "text": "No sticker"
           },
           {
-            "key": "other",
-            "text": "Other"
+            "key": "notFoundOrVisited",
+            "text": "Structure not found or visited during campaign"
           }
         ],
         "v_required": {
@@ -235,12 +235,12 @@
             "text": "Not Sprayed"
           },
           {
-            "key": "notFoundOrVisited",
-            "text": "Structure not found or visited during campaign"
+            "key": "noCard",
+            "text": "No card"
           },
           {
-            "key": "other",
-            "text": "Other"
+            "key": "notFoundOrVisited",
+            "text": "Structure not found or visited during campaign"
           }
         ],
         "v_required": {
