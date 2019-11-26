@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import org.smartregister.AllConstants;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.CardDetails;
@@ -137,12 +138,12 @@ public class CardDetailsUtil {
             TextView tvIneligibleStructuresLabel = activity.findViewById(R.id.ineligible_structures_label);
             ScrollView svEligibleStructuresScrollView = activity.findViewById(R.id.eligible_structures_scrollview);
 
-            if(sprayCardDetails.getTrueStructure().equalsIgnoreCase("no")) {
+            if(sprayCardDetails.getTrueStructure().equalsIgnoreCase(AllConstants.BOOLEAN_FALSE)) {
 
                 tvIneligibleStructuresLabel.setText(activity.getResources().getString(R.string.not_true_structure));
                 tvIneligibleStructuresLabel.setVisibility(View.VISIBLE);
                 svEligibleStructuresScrollView.setVisibility(View.GONE);
-            } else if(sprayCardDetails.getEligStruc().equalsIgnoreCase("no")) {
+            } else if(sprayCardDetails.getEligStruc().equalsIgnoreCase(AllConstants.BOOLEAN_FALSE)) {
 
                 tvIneligibleStructuresLabel.setText(activity.getResources().getString(R.string.structure_ineligible));
                 tvIneligibleStructuresLabel.setVisibility(View.VISIBLE);
