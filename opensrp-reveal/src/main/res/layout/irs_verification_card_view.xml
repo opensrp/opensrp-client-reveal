@@ -20,7 +20,17 @@
             android:background="@color/white"
             android:src="@drawable/ic_keyboard_arrow_down" />
 
+        <TextView
+            android:id="@+id/ineligible_structures_label"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/structure_info_card_scroll_layout_height"
+            android:gravity="center_horizontal"
+            android:textAllCaps="false"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/structure_info_card_text_size" />
+
         <ScrollView
+            android:id="@+id/eligible_structures_scrollview"
             android:layout_width="match_parent"
             android:layout_height="@dimen/structure_info_card_scroll_layout_height">
 

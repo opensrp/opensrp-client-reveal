@@ -547,6 +547,22 @@
           }
         },
         {
+          "column_name": "true_structure",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "trueStructure"
+          }
+        },
+        {
+          "column_name": "eligible_structure",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "eligStruc"
+          }
+        },
+        {
           "column_name": "report_spray",
           "type": "Event",
           "json_mapping": {

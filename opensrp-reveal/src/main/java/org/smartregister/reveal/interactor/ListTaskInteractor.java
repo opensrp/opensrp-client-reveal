@@ -38,6 +38,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_I
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CARD_SPRAY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CHALK_SPRAY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.ELIGIBLE_STRUCTURE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_UPDATED_DATE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_COMMENTS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_STATUS;
@@ -45,6 +46,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.REPORT_SPRAY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STICKER_SPRAY;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.TRUE_STRUCTURE;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICATION;
@@ -84,8 +86,8 @@ public class ListTaskInteractor extends BaseInteractor {
             sql = String.format("SELECT %s, %s, %s  FROM %s WHERE %s=? ", PAOT_STATUS,
                     PAOT_COMMENTS, LAST_UPDATED_DATE, PAOT_TABLE, BASE_ENTITY_ID);
         } else if (IRS_VERIFICATION.equals(interventionType)) {
-            sql = String.format("SELECT %s, %s, %s, %s FROM %s WHERE id= ?",
-                    REPORT_SPRAY, CHALK_SPRAY, STICKER_SPRAY, CARD_SPRAY, IRS_VERIFICATION_TABLE);
+            sql = String.format("SELECT %s, %s, %s, %s, %s, %s FROM %s WHERE id= ?",
+                    TRUE_STRUCTURE, ELIGIBLE_STRUCTURE, REPORT_SPRAY, CHALK_SPRAY, STICKER_SPRAY, CARD_SPRAY, IRS_VERIFICATION_TABLE);
         }
 
         final String SQL = sql;
@@ -187,6 +189,8 @@ public class ListTaskInteractor extends BaseInteractor {
     private IRSVerificationCardDetails createIRSverificationCardDetails(Cursor cursor) {
         IRSVerificationCardDetails irsVerificationCardDetails = new IRSVerificationCardDetails(
                 COMPLETE,
+                cursor.getString(cursor.getColumnIndex(TRUE_STRUCTURE)),
+                cursor.getString(cursor.getColumnIndex(ELIGIBLE_STRUCTURE)),
                 cursor.getString(cursor.getColumnIndex(REPORT_SPRAY)),
                 cursor.getString(cursor.getColumnIndex(CHALK_SPRAY)),
                 cursor.getString(cursor.getColumnIndex(STICKER_SPRAY)),
