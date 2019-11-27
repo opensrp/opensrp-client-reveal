@@ -97,7 +97,7 @@
         "options": [
           {
             "key": "same_as_fam_name",
-            "text": "คลิกถ้าชื่อแรกเหมือนกับโฮสต์",
+            "text": "คลิกถ้าชื่อเดียวกับเจ้าบ้าน",
             "text_size": "18px",
             "value": "false"
           }
