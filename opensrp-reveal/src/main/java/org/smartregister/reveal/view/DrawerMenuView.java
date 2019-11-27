@@ -153,8 +153,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             @Override
             public boolean onLongClick(View v) {
                 Toast.makeText(getContext(), "Exporting Database", Toast.LENGTH_LONG).show();
-                String currentTimeStamp = new SimpleDateFormat("YYYYMMddHHmmss", Locale.ENGLISH).format(new Date());
-                Utils.copyDatabase(DBNAME, COPYDBNAME+currentTimeStamp+".db", getContext());
+                String currentTimeStamp = new SimpleDateFormat("YYYY-MM-dd-HHmmss", Locale.ENGLISH).format(new Date());
+                Utils.copyDatabase(DBNAME, COPYDBNAME + "-" + currentTimeStamp + ".db", getContext());
                 return false;
             }
         });
