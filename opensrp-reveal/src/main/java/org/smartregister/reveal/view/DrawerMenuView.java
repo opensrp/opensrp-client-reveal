@@ -152,8 +152,9 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         operatorTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(getContext(), "Copying Database", Toast.LENGTH_LONG).show();
-                Utils.copyDatabase(DBNAME, COPYDBNAME, getContext());
+                Toast.makeText(getContext(), "Exporting Database", Toast.LENGTH_LONG).show();
+                String currentTimeStamp = new SimpleDateFormat("YYYYMMddHHmmss", Locale.ENGLISH).format(new Date());
+                Utils.copyDatabase(DBNAME, COPYDBNAME+currentTimeStamp+".db", getContext());
                 return false;
             }
         });

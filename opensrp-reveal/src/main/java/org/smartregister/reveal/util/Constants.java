@@ -60,7 +60,7 @@ public interface Constants {
     int IRS_VERIFICATION_PERIOD = 30;
 
     String DBNAME = "drishti.db";
-    String COPYDBNAME = "reveal.db";
+    String COPYDBNAME = "reveal";
 
     interface CONFIGURATION {
         String LOGIN = "login";
