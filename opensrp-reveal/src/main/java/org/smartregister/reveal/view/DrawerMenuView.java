@@ -40,6 +40,9 @@ import java.util.Locale;
 
 import timber.log.Timber;
 
+import static org.smartregister.reveal.util.Constants.COPYDBNAME;
+import static org.smartregister.reveal.util.Constants.DBNAME;
+
 /**
  * Created by samuelgithengi on 3/21/19.
  */
@@ -150,7 +153,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             @Override
             public boolean onLongClick(View v) {
                 Toast.makeText(getContext(), "Copying Database", Toast.LENGTH_LONG).show();
-                Utils.copyDatabase(getContext());
+                Utils.copyDatabase(DBNAME, COPYDBNAME, getContext());
                 return false;
             }
         });
