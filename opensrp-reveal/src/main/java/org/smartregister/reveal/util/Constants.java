@@ -536,6 +536,10 @@ public interface Constants {
 
         String EVENTS_PER_TASK = "events_per_task";
 
+        String TRUE_STRUCTURE = "true_structure";
+
+        String ELIGIBLE_STRUCTURE = "eligible_structure";
+
         String REPORT_SPRAY = "report_spray";
 
         String CHALK_SPRAY = "chalk_spray";
