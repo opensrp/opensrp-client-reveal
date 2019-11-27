@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vijay.jsonwizard.customviews.TreeViewDialog;
 
@@ -145,6 +146,14 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         headerView.findViewById(R.id.logout_button).setOnClickListener(this);
         headerView.findViewById(R.id.sync_button).setOnClickListener(this);
 
+        operatorTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(getContext(), "Copying Database", Toast.LENGTH_LONG).show();
+                org.smartregister.reveal.util.Utils.copyDatabase();
+                return false;
+            }
+        });
     }
 
     @Override
