@@ -3,7 +3,6 @@ package org.smartregister.reveal.util;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
@@ -34,18 +33,12 @@ import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-
-import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LATITUDE_AT_EQUITOR;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LONGITUDE_AT_EQUITOR;
@@ -300,27 +293,4 @@ public class Utils {
     public static boolean isFocusInvestigationOrMDA() {
         return isFocusInvestigation() || isMDA();
     }
-
-    public static void copyDatabase(){
-        try {
-            final String inFileName = "/data/data/org.smartregister.reveal/databases/drishti.db";
-            final String outFileName = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/drishti.db";
-            File dbFile = new File(inFileName);
-            FileInputStream fis = new FileInputStream(dbFile);
-
-            OutputStream output = new FileOutputStream(outFileName);
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = fis.read(buffer)) > 0) {
-                output.write(buffer, 0, length);
-            }
-
-            output.flush();
-            output.close();
-            fis.close();
-        }catch (Exception e){
-            Timber.e("copyDatabase: backup error " + e.toString());
-        }
-    }
-
 }

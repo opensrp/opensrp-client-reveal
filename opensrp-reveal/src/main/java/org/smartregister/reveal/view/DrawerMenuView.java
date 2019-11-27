@@ -150,7 +150,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             @Override
             public boolean onLongClick(View v) {
                 Toast.makeText(getContext(), "Copying Database", Toast.LENGTH_LONG).show();
-                org.smartregister.reveal.util.Utils.copyDatabase();
+                Utils.copyDatabase(getContext());
                 return false;
             }
         });
