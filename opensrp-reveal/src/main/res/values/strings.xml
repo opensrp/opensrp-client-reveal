@@ -259,4 +259,13 @@
     <string name="structure_not_found_or_visited_during_campaign">Structure not found or visited during campaign</string>
     <string name="other">Other</string>
 
+    <string name="synced_events">Synced events:</string>
+    <string name="unsynced_events">Unsynced events:</string>
+    <string name="synced_clients">Synced clients:</string>
+    <string name="unsynced_clients">Unsynced clients:</string>
+    <string name="validated_events">Validated events:</string>
+    <string name="validated_clients">Validated clients:</string>
+
+    <string name="refresh">Refresh</string>
+
 </resources>
