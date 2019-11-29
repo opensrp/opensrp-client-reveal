@@ -23,7 +23,7 @@ public class StatsActivity extends AppCompatActivity implements StatsContract.Vi
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_stats);
-        presenter = new StatsPresenter(this);
+        presenter = new StatsPresenter();
 
         Toolbar toolbar = this.findViewById(R.id.summary_toolbar);
         toolbar.setTitle(R.string.return_to_register);
@@ -74,7 +74,4 @@ public class StatsActivity extends AppCompatActivity implements StatsContract.Vi
         }
     }
 
-    private StatsContract.Presenter getPresenter() {
-        return (StatsContract.Presenter) presenter;
-    }
 }

@@ -1,6 +1,5 @@
 package org.smartregister.reveal.fragment;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,8 +27,6 @@ import static org.smartregister.reveal.util.Constants.SyncInfo.VALID_EVENTS;
 public class StatsFragment extends Fragment implements StatsFragmentContract.View {
     private StatsFragmentPresenter presenter;
 
-    private ProgressDialog progressDialog;
-
     private TextView tvSyncedEvents;
     private TextView tvUnSyncedEvents;
     private TextView tvSyncedClient;
@@ -51,8 +48,6 @@ public class StatsFragment extends Fragment implements StatsFragmentContract.Vie
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter = new StatsFragmentPresenter(this);
-        progressDialog = new ProgressDialog(getContext());
-        progressDialog.setCancelable(false);
     }
 
     @Nullable

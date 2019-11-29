@@ -1,8 +1,7 @@
 package org.smartregister.reveal.interactor;
 
-import net.sqlcipher.database.SQLiteDatabase;
 import net.sqlcipher.Cursor;
-import net.sqlcipher.SQLException;
+import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.reveal.application.RevealApplication;
@@ -33,6 +32,8 @@ public class StatsFragmentInteractor implements StatsFragmentContract.Interactor
 
     private StatsFragmentContract.Presenter presenter;
 
+    Map<String, Integer> syncInfoMap = new HashMap<>();
+
 
     public StatsFragmentInteractor(StatsFragmentContract.Presenter presenter) {
         this.presenter = presenter;
@@ -43,7 +44,7 @@ public class StatsFragmentInteractor implements StatsFragmentContract.Interactor
     @Override
     public void fetchECSyncInfo() {
 
-        Map<String, Integer> syncInfoMap = new HashMap<>();
+        syncInfoMap = new HashMap<>();
         syncInfoMap.put(SYNCED_EVENTS, 0);
         syncInfoMap.put(SYNCED_CLIENTS, 0);
         syncInfoMap.put(UNSYNCED_EVENTS, 0);
@@ -67,51 +68,27 @@ public class StatsFragmentInteractor implements StatsFragmentContract.Interactor
         try {
             cursor = database.rawQuery(eventSyncSql, new String[] {});
             while (cursor.moveToNext()) {
-                String syncStatus = cursor.getString(cursor.getColumnIndex(SYNC_STATUS));
-                if (BaseRepository.TYPE_Synced.equals(syncStatus)) {
-                    syncInfoMap.put(SYNCED_EVENTS, cursor.getInt(0));
-                } else if (BaseRepository.TYPE_Unsynced.equals(syncStatus)) {
-                    syncInfoMap.put(UNSYNCED_EVENTS, cursor.getInt(0));
-                } else if (BaseRepository.TYPE_Task_Unprocessed.equals(syncStatus)) {
-                    syncInfoMap.put(TASK_UNPROCESSED_EVENTS, cursor.getInt(0));
-                } else if (syncStatus == null) {
-                    syncInfoMap.put(NULL_EVENT_SYNC_STATUS, cursor.getInt(0));
-                }
+                populateEventSyncInfo(cursor);
             }
             cursor.close();
 
 
             cursor = database.rawQuery(clientSyncSql, new String[] {});
             while (cursor.moveToNext()) {
-                String syncStatus = cursor.getString(cursor.getColumnIndex(SYNC_STATUS));
-                if (BaseRepository.TYPE_Synced.equals(syncStatus)) {
-                    syncInfoMap.put(SYNCED_CLIENTS, cursor.getInt(0));
-                } else if (BaseRepository.TYPE_Unsynced.equals(syncStatus)) {
-                    syncInfoMap.put(UNSYNCED_CLIENTS, cursor.getInt(0));
-                }
+                populateClientSyncInfo(cursor);
             }
             cursor.close();
 
 
             cursor = database.rawQuery(validatedEventsSql, new String[] {});
             while (cursor.moveToNext()) {
-                String syncStatus = cursor.getString(cursor.getColumnIndex(VALIDATION_STATUS));
-                if (BaseRepository.TYPE_Valid.equals(syncStatus)) {
-                    syncInfoMap.put(VALID_EVENTS, cursor.getInt(0));
-                } else if (BaseRepository.TYPE_InValid.equals(syncStatus)) {
-                    syncInfoMap.put(INVALID_EVENTS, cursor.getInt(0));
-                }
+                populateValidatedEventsInfo(cursor);
             }
             cursor.close();
 
             cursor = database.rawQuery(validatedClientsSql, new String[] {});
             while (cursor.moveToNext()) {
-                String validationStatus = cursor.getString(cursor.getColumnIndex(VALIDATION_STATUS));
-                if (BaseRepository.TYPE_Valid.equals(validationStatus)) {
-                    syncInfoMap.put(VALID_CLIENTS, cursor.getInt(0));
-                } else if (BaseRepository.TYPE_InValid.equals(validationStatus)) {
-                    syncInfoMap.put(INVALID_CLIENTS, cursor.getInt(0));
-                }
+                populateValidatedClientsInfo(cursor);
             }
 
             cursor.close();
@@ -128,6 +105,45 @@ public class StatsFragmentInteractor implements StatsFragmentContract.Interactor
             e.printStackTrace();
         }
 
+    }
 
+    private void populateEventSyncInfo(Cursor cursor) {
+        String syncStatus = cursor.getString(cursor.getColumnIndex(SYNC_STATUS));
+        if (BaseRepository.TYPE_Synced.equals(syncStatus)) {
+            syncInfoMap.put(SYNCED_EVENTS, cursor.getInt(0));
+        } else if (BaseRepository.TYPE_Unsynced.equals(syncStatus)) {
+            syncInfoMap.put(UNSYNCED_EVENTS, cursor.getInt(0));
+        } else if (BaseRepository.TYPE_Task_Unprocessed.equals(syncStatus)) {
+            syncInfoMap.put(TASK_UNPROCESSED_EVENTS, cursor.getInt(0));
+        } else if (syncStatus == null) {
+            syncInfoMap.put(NULL_EVENT_SYNC_STATUS, cursor.getInt(0));
+        }
+    }
+
+    private void populateClientSyncInfo(Cursor cursor) {
+        String syncStatus = cursor.getString(cursor.getColumnIndex(SYNC_STATUS));
+        if (BaseRepository.TYPE_Synced.equals(syncStatus)) {
+            syncInfoMap.put(SYNCED_CLIENTS, cursor.getInt(0));
+        } else if (BaseRepository.TYPE_Unsynced.equals(syncStatus)) {
+            syncInfoMap.put(UNSYNCED_CLIENTS, cursor.getInt(0));
+        }
+    }
+
+    private void populateValidatedEventsInfo(Cursor cursor) {
+        String syncStatus = cursor.getString(cursor.getColumnIndex(VALIDATION_STATUS));
+        if (BaseRepository.TYPE_Valid.equals(syncStatus)) {
+            syncInfoMap.put(VALID_EVENTS, cursor.getInt(0));
+        } else if (BaseRepository.TYPE_InValid.equals(syncStatus)) {
+            syncInfoMap.put(INVALID_EVENTS, cursor.getInt(0));
+        }
+    }
+
+    private void populateValidatedClientsInfo(Cursor cursor) {
+        String validationStatus = cursor.getString(cursor.getColumnIndex(VALIDATION_STATUS));
+        if (BaseRepository.TYPE_Valid.equals(validationStatus)) {
+            syncInfoMap.put(VALID_CLIENTS, cursor.getInt(0));
+        } else if (BaseRepository.TYPE_InValid.equals(validationStatus)) {
+            syncInfoMap.put(INVALID_CLIENTS, cursor.getInt(0));
+        }
     }
 }
