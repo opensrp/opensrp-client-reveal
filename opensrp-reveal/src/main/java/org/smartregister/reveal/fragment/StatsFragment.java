@@ -75,6 +75,8 @@ public class StatsFragment extends Fragment implements StatsFragmentContract.Vie
                 presenter.fetchSyncInfo();
             }
         });
+
+        presenter.fetchSyncInfo();
     }
 
     @Override
@@ -89,4 +91,5 @@ public class StatsFragment extends Fragment implements StatsFragmentContract.Vie
         tvValidatedEvents.setText(syncInfoMap.get(VALID_EVENTS) + "");
         tvValidatedClients.setText(syncInfoMap.get(VALID_CLIENTS) + "");
     }
+
 }
