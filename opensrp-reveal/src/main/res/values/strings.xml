@@ -259,4 +259,6 @@
     <string name="structure_not_found_or_visited_during_campaign">Structure not found or visited during campaign</string>
     <string name="other">Other</string>
 
+    <string name="export_db_notification">Exporting Database</string>
+
 </resources>
