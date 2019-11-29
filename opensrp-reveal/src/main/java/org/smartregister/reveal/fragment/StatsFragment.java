@@ -19,6 +19,7 @@ import java.util.Map;
 
 import static org.smartregister.reveal.util.Constants.SyncInfo.SYNCED_CLIENTS;
 import static org.smartregister.reveal.util.Constants.SyncInfo.SYNCED_EVENTS;
+import static org.smartregister.reveal.util.Constants.SyncInfo.TASK_UNPROCESSED_EVENTS;
 import static org.smartregister.reveal.util.Constants.SyncInfo.UNSYNCED_CLIENTS;
 import static org.smartregister.reveal.util.Constants.SyncInfo.UNSYNCED_EVENTS;
 import static org.smartregister.reveal.util.Constants.SyncInfo.VALID_CLIENTS;
@@ -35,6 +36,7 @@ public class StatsFragment extends Fragment implements StatsFragmentContract.Vie
     private TextView tvUnSyncedClients;
     private TextView tvValidatedEvents;
     private TextView tvValidatedClients;
+    private TextView tvTaskUnprocessedEvents;
 
     public static StatsFragment newInstance(Bundle bundle) {
 
@@ -69,6 +71,7 @@ public class StatsFragment extends Fragment implements StatsFragmentContract.Vie
         tvUnSyncedClients = view.findViewById(R.id.unsynced_clients);
         tvValidatedEvents = view.findViewById(R.id.validated_events);
         tvValidatedClients = view.findViewById(R.id.validated_clients);
+        tvTaskUnprocessedEvents = view.findViewById(R.id.task_unprocessed_events);
 
 
         Button btnRefreshStats = view.findViewById(R.id.refresh_button);
@@ -83,6 +86,7 @@ public class StatsFragment extends Fragment implements StatsFragmentContract.Vie
     public void refreshECSyncInfo(Map<String, Integer> syncInfoMap) {
         tvSyncedEvents.setText(syncInfoMap.get(SYNCED_EVENTS) + "");
         tvUnSyncedEvents.setText(syncInfoMap.get(UNSYNCED_EVENTS) + "");
+        tvTaskUnprocessedEvents.setText(syncInfoMap.get(TASK_UNPROCESSED_EVENTS) + "");
 
         tvSyncedClient.setText(syncInfoMap.get(SYNCED_CLIENTS) + "");
         tvUnSyncedClients.setText(syncInfoMap.get(UNSYNCED_CLIENTS) + "");

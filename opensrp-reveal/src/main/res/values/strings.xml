@@ -265,6 +265,7 @@
     <string name="unsynced_clients">Unsynced clients:</string>
     <string name="validated_events">Validated events:</string>
     <string name="validated_clients">Validated clients:</string>
+    <string name="task_unprocessed_events">Task unprocessed events:</string>
 
     <string name="refresh">Refresh</string>
 
