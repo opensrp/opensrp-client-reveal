@@ -30,4 +30,5 @@ opensrp-reveal/fabric.properties
 opensrp-reveal/reports/
 opensrp-reveal/jacoco.exec
 jacoco.exec
+release/
 ~                 

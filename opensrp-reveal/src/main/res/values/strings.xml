@@ -268,5 +268,6 @@
     <string name="task_unprocessed_events">Task unprocessed events:</string>
 
     <string name="refresh">Refresh</string>
+    <string name="export_db_notification">Exporting Database</string>
 
 </resources>
