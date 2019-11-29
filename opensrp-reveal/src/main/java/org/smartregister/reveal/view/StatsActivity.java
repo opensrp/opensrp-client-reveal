@@ -5,17 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.StatsContract;
 import org.smartregister.reveal.fragment.StatsFragment;
-import org.smartregister.reveal.presenter.StatsPresenter;
 
 public class StatsActivity extends AppCompatActivity implements StatsContract.View {
-    private StatsPresenter presenter;
     private ProgressDialog progressDialog;
 
     @Override
@@ -23,7 +21,6 @@ public class StatsActivity extends AppCompatActivity implements StatsContract.Vi
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_stats);
-        presenter = new StatsPresenter();
 
         Toolbar toolbar = this.findViewById(R.id.summary_toolbar);
         toolbar.setTitle(R.string.return_to_register);

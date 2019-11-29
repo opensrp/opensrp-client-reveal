@@ -32,7 +32,7 @@ public class StatsFragmentInteractor implements StatsFragmentContract.Interactor
 
     private StatsFragmentContract.Presenter presenter;
 
-    Map<String, Integer> syncInfoMap = new HashMap<>();
+    private Map<String, Integer> syncInfoMap = new HashMap<>();
 
 
     public StatsFragmentInteractor(StatsFragmentContract.Presenter presenter) {
