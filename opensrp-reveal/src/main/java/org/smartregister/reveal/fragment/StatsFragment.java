@@ -9,15 +9,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.StatsFragmentContract;
 import org.smartregister.reveal.presenter.StatsFragmentPresenter;
 
+import java.util.Map;
+
+import static org.smartregister.reveal.util.Constants.SyncInfo.SYNCED_CLIENTS;
+import static org.smartregister.reveal.util.Constants.SyncInfo.SYNCED_EVENTS;
+import static org.smartregister.reveal.util.Constants.SyncInfo.UNSYNCED_CLIENTS;
+import static org.smartregister.reveal.util.Constants.SyncInfo.UNSYNCED_EVENTS;
+import static org.smartregister.reveal.util.Constants.SyncInfo.VALID_CLIENTS;
+import static org.smartregister.reveal.util.Constants.SyncInfo.VALID_EVENTS;
+
 public class StatsFragment extends Fragment implements StatsFragmentContract.View {
     private StatsFragmentPresenter presenter;
 
     private ProgressDialog progressDialog;
+
+    private TextView tvSyncedEvents;
+    private TextView tvUnSyncedEvents;
+    private TextView tvSyncedClient;
+    private TextView tvUnSyncedClients;
+    private TextView tvValidatedEvents;
+    private TextView tvValidatedClients;
 
     public static StatsFragment newInstance(Bundle bundle) {
 
@@ -46,12 +63,31 @@ public class StatsFragment extends Fragment implements StatsFragmentContract.Vie
 
     private void initializeViews(View view)
     {
-        Button daily_summary = view.findViewById(R.id.refresh_button);
-        daily_summary.setOnClickListener(new View.OnClickListener() {
+        tvSyncedEvents = view.findViewById(R.id.synced_events);
+        tvUnSyncedEvents = view.findViewById(R.id.unsynced_events);
+        tvSyncedClient = view.findViewById(R.id.synced_clients);
+        tvUnSyncedClients = view.findViewById(R.id.unsynced_clients);
+        tvValidatedEvents = view.findViewById(R.id.validated_events);
+        tvValidatedClients = view.findViewById(R.id.validated_clients);
+
+
+        Button btnRefreshStats = view.findViewById(R.id.refresh_button);
+        btnRefreshStats.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //presenter.doSomething()
+                presenter.fetchSyncInfo();
             }
         });
     }
 
+    @Override
+    public void refreshECSyncInfo(Map<String, Integer> syncInfoMap) {
+        tvSyncedEvents.setText(syncInfoMap.get(SYNCED_EVENTS) + "");
+        tvUnSyncedEvents.setText(syncInfoMap.get(UNSYNCED_EVENTS) + "");
+
+        tvSyncedClient.setText(syncInfoMap.get(SYNCED_CLIENTS) + "");
+        tvUnSyncedClients.setText(syncInfoMap.get(UNSYNCED_CLIENTS) + "");
+
+        tvValidatedEvents.setText(syncInfoMap.get(VALID_EVENTS) + "");
+        tvValidatedClients.setText(syncInfoMap.get(VALID_CLIENTS) + "");
+    }
 }
