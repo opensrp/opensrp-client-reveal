@@ -22,6 +22,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_R
 import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE;
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
@@ -44,17 +45,18 @@ public class GeoJsonUtils {
     public static String getGeoJsonFromStructuresAndTasks(List<Location> structures, Map<String, Set<Task>> tasks, String indexCase) {
         for (Location structure : structures) {
             Set<Task> taskSet = tasks.get(structure.getId());
-            String groupedStructureTasksBusinessStatus = COMPLETE;
             HashMap<String, String> taskProperties = null;
             boolean familyRegistered = false;
             boolean bednetDistributed = false;
             boolean bloodScreeningDone = false;
             boolean familyRegTaskExists = false;
+            boolean caseConfirmed = false;
             boolean mdaAdhered = false;
             boolean fullyReceived;
             boolean nonReceived;
             boolean nonEligible;
             boolean partiallyReceived;
+            boolean bloodScreeningExists=false;
             String MDA_DISPENSE_TASK_COUNT = "mda_dispense_task_count";
 
             Map<String, Integer> mdaStatusMap = new HashMap<>();
@@ -70,18 +72,21 @@ public class GeoJsonUtils {
                     switch (task.getCode()) {
                         case REGISTER_FAMILY:
                             familyRegTaskExists = true;
-                            familyRegistered = COMPLETE.equals(task.getBusinessStatus()) ? true : false;
+                            familyRegistered = COMPLETE.equals(task.getBusinessStatus());
                             break;
                         case BEDNET_DISTRIBUTION:
-                            bednetDistributed = COMPLETE.equals(task.getBusinessStatus()) ? true: false;
+                            bednetDistributed = COMPLETE.equals(task.getBusinessStatus());
                             break;
                         case BLOOD_SCREENING:
                             if (!bloodScreeningDone) {
-                                bloodScreeningDone = COMPLETE.equals(task.getBusinessStatus())? true: false;
+                                bloodScreeningDone = COMPLETE.equals(task.getBusinessStatus());
                             }
+                            bloodScreeningExists=true;
                             break;
+                        case CASE_CONFIRMATION:
+                            caseConfirmed=COMPLETE.equals(task.getBusinessStatus());
                         case MDA_ADHERENCE:
-                            mdaAdhered = COMPLETE.equals(task.getBusinessStatus()) ? true: false;
+                            mdaAdhered = COMPLETE.equals(task.getBusinessStatus());
                             break;
                         case MDA_DISPENSE:
                             mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) + 1);
@@ -104,11 +109,6 @@ public class GeoJsonUtils {
                 }
                 taskProperties = new HashMap<>();
                 taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
-                if (Utils.isResidentialStructure(task.getCode()) && Utils.isFocusInvestigationOrMDA()) { // used to determine color of structure displayed on map
-                    taskProperties.put(TASK_BUSINESS_STATUS, groupedStructureTasksBusinessStatus);
-                } else {
-                    taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
-                }
                 taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus()); // used to determine action to take when a feature is selected
                 taskProperties.put(TASK_STATUS, task.getStatus().name());
                 taskProperties.put(TASK_CODE, task.getCode());
@@ -138,7 +138,7 @@ public class GeoJsonUtils {
                             bednetDistributed && bloodScreeningDone) {
                         taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
                     }  else if (familyRegTaskMissingOrFamilyRegComplete &&
-                            !bednetDistributed && !bloodScreeningDone ) {
+                             !bednetDistributed && (!bloodScreeningDone || (!bloodScreeningExists && !caseConfirmed)) ) {
                         taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
                     } else if (bednetDistributed && familyRegTaskMissingOrFamilyRegComplete) {
                         taskProperties.put(TASK_BUSINESS_STATUS, BEDNET_DISTRIBUTED);
