@@ -85,6 +85,7 @@ public class GeoJsonUtils {
                             break;
                         case CASE_CONFIRMATION:
                             caseConfirmed=COMPLETE.equals(task.getBusinessStatus());
+                            break;
                         case MDA_ADHERENCE:
                             mdaAdhered = COMPLETE.equals(task.getBusinessStatus());
                             break;
