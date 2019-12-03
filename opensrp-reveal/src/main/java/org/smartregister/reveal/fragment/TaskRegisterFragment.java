@@ -178,7 +178,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     @Override
     public void setTotalTasks(int structuresWithinBuffer) {
-        if (headerTextDisplay != null) {
+        if (isAdded() && headerTextDisplay != null) {
             headerTextDisplay.setText(getResources().getQuantityString(R.plurals.structures,
                     taskAdapter.getItemCount(), structuresWithinBuffer, Utils.getLocationBuffer(), taskAdapter.getItemCount()));
 
