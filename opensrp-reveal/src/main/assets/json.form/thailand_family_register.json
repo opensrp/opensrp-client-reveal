@@ -222,7 +222,7 @@
         "openmrs_entity_id": "age_entered",
         "type": "edit_text",
         "hint": "อายุ",
-        "v_numeric": {
+        "v_numeric_integer": {
           "value": "true",
           "err": "กรุณาใส่เป็นตัวเลข"
         },

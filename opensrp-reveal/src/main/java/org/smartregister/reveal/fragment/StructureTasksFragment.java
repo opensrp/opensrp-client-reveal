@@ -79,6 +79,9 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         if (getActivity() != null) {
             tabLayout = getActivity().findViewById(R.id.tabs);
         }
+        if (presenter == null) {
+            presenter = new StructureTasksPresenter(this, getContext());
+        }
         initDependencies();
     }
 

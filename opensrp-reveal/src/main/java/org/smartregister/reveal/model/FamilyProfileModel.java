@@ -51,6 +51,8 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
     }
 
     private void tagEventClientDetails(FamilyEventClient eventClient) {
+        if (eventClient == null)
+            return;
         if (structureId != null) {
             eventClient.getClient().addAttribute(RESIDENCE, structureId);
             eventClient.getEvent().addDetails(Constants.Properties.LOCATION_ID, structureId);
