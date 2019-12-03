@@ -242,7 +242,7 @@
         "openmrs_entity_id": "age",
         "type": "edit_text",
         "hint": "Age",
-        "v_numeric": {
+        "v_numeric_integer": {
           "value": "true",
           "err": "Please enter a number"
         },
