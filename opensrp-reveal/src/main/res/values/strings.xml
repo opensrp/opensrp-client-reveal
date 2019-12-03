@@ -269,5 +269,6 @@
 
     <string name="refresh">Refresh</string>
     <string name="export_db_notification">Exporting Database</string>
+    <string name="operational_area_not_selected">Operational Area not selected</string>
 
 </resources>
