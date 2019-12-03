@@ -63,6 +63,8 @@ public interface ListTaskContract {
 
         boolean isMyLocationComponentActive();
 
+        void displayMarkStructureInactiveDialog();
+
     }
 
     interface Presenter extends BaseContract.BasePresenter {
@@ -83,5 +85,7 @@ public interface ListTaskContract {
 
         @StringRes
         int getInterventionLabel();
+
+        void onMarkMarkStructureInactiveConfirmed();
     }
 }
