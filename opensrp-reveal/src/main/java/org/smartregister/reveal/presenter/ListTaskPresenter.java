@@ -48,8 +48,10 @@ import timber.log.Timber;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
+import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.INACTIVE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
@@ -74,6 +76,7 @@ import static org.smartregister.reveal.util.Constants.JsonForm.PROVINCE_NAME;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
@@ -280,7 +283,15 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     private void onFeatureSelectedByLongClick(Feature feature) {
-        listTaskView.displayMarkStructureInactiveDialog();
+        String status = getPropertyValue(feature, STATUS);
+        String code = getPropertyValue(feature, TASK_CODE);
+
+        selectedFeatureInterventionType = code;
+        if (READY.equals(status)) {
+            listTaskView.displayMarkStructureInactiveDialog();
+        } else {
+            listTaskView.displayToast(R.string.cannot_make_structure_inactive);
+        }
     }
 
     private void validateUserLocation() {
@@ -491,9 +502,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
-    public void onMarkMarkStructureInactiveConfirmed() {
-        // TODO implement logic
-
+    public void onMarkStructureInactiveConfirmed() {
+        // TODO set this after db interactions ae done
+        selectedFeature.addStringProperty(STATUS, INACTIVE);
+        listTaskInteractor.markStructureAsInactive(selectedFeature);
     }
 
     @Override

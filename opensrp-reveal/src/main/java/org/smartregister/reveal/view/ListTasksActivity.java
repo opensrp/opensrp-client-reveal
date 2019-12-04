@@ -717,7 +717,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                                 dialog.dismiss();
                                 break;
                             case BUTTON_POSITIVE:
-                                listTaskPresenter.onMarkMarkStructureInactiveConfirmed();
+                                listTaskPresenter.onMarkStructureInactiveConfirmed();
                                 dialog.dismiss();
                                 break;
                             default:

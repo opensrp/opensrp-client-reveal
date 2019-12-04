@@ -11,6 +11,7 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
@@ -33,6 +34,7 @@ import java.util.Set;
 
 import timber.log.Timber;
 
+import static org.smartregister.domain.LocationProperty.PropertyStatus.INACTIVE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CARD_SPRAY;
@@ -66,11 +68,13 @@ public class ListTaskInteractor extends BaseInteractor {
 
     private CommonRepository commonRepository;
     private InteractorUtils interactorUtils;
+    private StructureRepository structureRepository;
 
     public ListTaskInteractor(ListTaskContract.Presenter presenter) {
         super(presenter);
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(SPRAYED_STRUCTURES);
         interactorUtils = new InteractorUtils();
+        structureRepository = RevealApplication.getInstance().getContext().getStructureRepository();
     }
 
     public void fetchInterventionDetails(String interventionType, String featureId, boolean isForForm) {
@@ -277,5 +281,11 @@ public class ListTaskInteractor extends BaseInteractor {
 
     private ListTaskContract.Presenter getPresenter() {
         return (ListTaskContract.Presenter) presenterCallBack;
+    }
+
+    public void markStructureAsInactive(Feature feature) {
+        Location structure = structureRepository.getLocationById(feature.id());
+        structure.getProperties().setStatus(INACTIVE);
+        structureRepository.addOrUpdate(structure);
     }
 }

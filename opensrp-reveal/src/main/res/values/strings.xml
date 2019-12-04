@@ -264,5 +264,6 @@
     <string name="mark_location_inactive">Mark Location Inactive</string>
     <string name="confirm_mark_location_inactive">Please confirm that this location should be marked inactive</string>
     <string name="confirm">Confirm</string>
+    <string name="cannot_make_structure_inactive">You can not make this structure inactive because tasks are completed against it</string>
 
 </resources>
