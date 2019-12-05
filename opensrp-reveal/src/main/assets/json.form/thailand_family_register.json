@@ -56,6 +56,29 @@
     "next": "step2",
     "fields": [
       {
+        "key": "eligible",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this location eligible to register a family?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "value" : "Yes",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
         "key": "fam_name",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
@@ -66,6 +89,12 @@
         "v_required": {
           "value": "true",
           "err": "กรุณาใส่ชื่อจริง"
+        },
+        "relevance": {
+          "step1:eligible": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -74,7 +103,13 @@
         "openmrs_entity": "person_address",
         "openmrs_entity_id": "address2",
         "type": "edit_text",
-        "hint": "เลขที่บ้าน"
+        "hint": "เลขที่บ้าน",
+        "relevance": {
+          "step1:eligible": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
       },
       {
         "key": "street",
@@ -82,7 +117,13 @@
         "openmrs_entity": "person_address",
         "openmrs_entity_id": "street",
         "type": "edit_text",
-        "hint": "ถนน"
+        "hint": "ถนน",
+        "relevance": {
+          "step1:eligible": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
       },
       {
         "key": "landmark",
@@ -90,7 +131,13 @@
         "openmrs_entity": "person_address",
         "openmrs_entity_id": "landmark",
         "type": "edit_text",
-        "hint": "สถานที่สำคัญใกล้บ้าน"
+        "hint": "สถานที่สำคัญใกล้บ้าน",
+        "relevance": {
+          "step1:eligible": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
       }
     ]
   },
@@ -108,6 +155,12 @@
         "v_required": {
           "value": "true",
           "err": "กรุณากรอกหมายเลขประจำตัว"
+        },
+        "relevance": {
+          "step1:eligible": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -144,7 +197,13 @@
             "text_size": "18px",
             "value": "false"
           }
-        ]
+        ],
+        "relevance": {
+          "step1:eligible": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
       },
       {
         "key": "surname",
@@ -157,6 +216,12 @@
         "v_required": {
           "value": "true",
           "err": "กรุณาใส่นามสกุลของครอบครัว"
+        },
+        "relevance": {
+          "step1:eligible": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -213,7 +278,13 @@
             "text_size": "18px",
             "value": "false"
           }
-        ]
+        ],
+        "relevance": {
+          "step1:eligible": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
       },
       {
         "key": "age",
@@ -266,6 +337,12 @@
         "v_required": {
           "value": "true",
           "err": "กรุณากรอกเพศ"
+        },
+        "relevance": {
+          "step1:eligible": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -282,6 +359,12 @@
         "v_regex": {
           "value": "^$|0[0-9]{8,9}",
           "err": "หมายเลขต้องประกอบด้วยตัวเลข 9 หลัก และ ต้องเริ่มต้นด้วยตัวเลข 0"
+        },
+        "relevance": {
+          "step1:eligible": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -304,6 +387,12 @@
         "v_required": {
           "value": "true",
           "err": "กรุณาเลือกว่า บุคคลนี้ค้างคืนนอกบ้านหรือไม่"
+        },
+        "relevance": {
+          "step1:eligible": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -345,6 +434,12 @@
         "v_required": {
           "value": true,
           "err": "กรุณาระบุสัญชาติ"
+        },
+        "relevance": {
+          "step1:eligible": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
