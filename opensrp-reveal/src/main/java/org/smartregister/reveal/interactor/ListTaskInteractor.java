@@ -306,5 +306,12 @@ public class ListTaskInteractor extends BaseInteractor {
             Timber.e(e);
         }
 
+        appExecutors.mainThread().execute(new Runnable() {
+            @Override
+            public void run() {
+                    ((ListTaskPresenter) presenterCallBack).onStructureMarkedInactive();
+            }
+        });
+
     }
 }

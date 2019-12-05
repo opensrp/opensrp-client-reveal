@@ -69,6 +69,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.JsonForm.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.JsonForm.DISTRICT_NAME;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
@@ -283,11 +284,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     private void onFeatureSelectedByLongClick(Feature feature) {
-        String status = getPropertyValue(feature, STATUS);
+        String taskStatus = getPropertyValue(feature, TASK_STATUS);
         String code = getPropertyValue(feature, TASK_CODE);
 
         selectedFeatureInterventionType = code;
-        if (READY.toString().equals(status)) {
+        if (READY.toString().equals(taskStatus)) {
             listTaskView.displayMarkStructureInactiveDialog();
         } else {
             listTaskView.displayToast(R.string.cannot_make_structure_inactive);
@@ -503,9 +504,15 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onMarkStructureInactiveConfirmed() {
-        // TODO set this after db interactions ae done
-        selectedFeature.addStringProperty(STATUS, INACTIVE);
         listTaskInteractor.markStructureAsInactive(selectedFeature);
+
+    }
+
+    @Override
+    public void onStructureMarkedInactive() {
+        selectedFeature.addStringProperty(STATUS, INACTIVE);
+        selectedFeature.addStringProperty(BUSINESS_STATUS, INACTIVE);
+        refreshStructures(true);
     }
 
     @Override

@@ -87,5 +87,7 @@ public interface ListTaskContract {
         int getInterventionLabel();
 
         void onMarkStructureInactiveConfirmed();
+
+        void onStructureMarkedInactive();
     }
 }
