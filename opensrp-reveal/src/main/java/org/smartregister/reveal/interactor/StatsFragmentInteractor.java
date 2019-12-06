@@ -11,6 +11,8 @@ import org.smartregister.reveal.util.AppExecutors;
 import java.util.HashMap;
 import java.util.Map;
 
+import timber.log.Timber;
+
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SYNC_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.VALIDATION_STATUS;
 import static org.smartregister.reveal.util.Constants.SyncInfo.INVALID_CLIENTS;
@@ -63,30 +65,30 @@ public class StatsFragmentInteractor implements StatsFragmentContract.Interactor
         String validatedClientsSql = "select count(*), validationStatus from client group by validationStatus";
 
 
-        Cursor cursor;
+        Cursor cursor = null;
 
         try {
-            cursor = database.rawQuery(eventSyncSql, new String[] {});
+            cursor = database.rawQuery(eventSyncSql, new String[]{});
             while (cursor.moveToNext()) {
                 populateEventSyncInfo(cursor);
             }
             cursor.close();
 
 
-            cursor = database.rawQuery(clientSyncSql, new String[] {});
+            cursor = database.rawQuery(clientSyncSql, new String[]{});
             while (cursor.moveToNext()) {
                 populateClientSyncInfo(cursor);
             }
             cursor.close();
 
 
-            cursor = database.rawQuery(validatedEventsSql, new String[] {});
+            cursor = database.rawQuery(validatedEventsSql, new String[]{});
             while (cursor.moveToNext()) {
                 populateValidatedEventsInfo(cursor);
             }
             cursor.close();
 
-            cursor = database.rawQuery(validatedClientsSql, new String[] {});
+            cursor = database.rawQuery(validatedClientsSql, new String[]{});
             while (cursor.moveToNext()) {
                 populateValidatedClientsInfo(cursor);
             }
@@ -102,7 +104,11 @@ public class StatsFragmentInteractor implements StatsFragmentContract.Interactor
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
 
     }
