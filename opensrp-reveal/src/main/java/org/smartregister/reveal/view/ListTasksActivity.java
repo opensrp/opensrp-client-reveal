@@ -727,6 +727,29 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 });
     }
 
+    @Override
+    public void displayMarkStructureIneligibleDialog() {
+        AlertDialogUtils.displayNotificationWithCallback(this, R.string.mark_location_ineligible,
+                R.string.is_structure_eligible_for_fam_reg, R.string.confirm, R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case BUTTON_NEGATIVE:
+                            case BUTTON_NEUTRAL:
+                                registerFamily();
+                                dialog.dismiss();
+                                break;
+                            case BUTTON_POSITIVE:
+                                listTaskPresenter.onMarkStructureIneligibleConfirmed();
+                                dialog.dismiss();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                });
+    }
+
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {

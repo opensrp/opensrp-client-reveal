@@ -236,6 +236,7 @@ public interface Constants {
         String PARTIALLY_SPRAYED = "Partially Sprayed";
 
         String INACTIVE = "Inactive";
+        String INELIGIBLE = "Ineligible";
 
     }
 

@@ -461,7 +461,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public void onLocationValidated() {
         if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)) {
-            listTaskView.registerFamily();
+            listTaskView.displayMarkStructureIneligibleDialog();
         } else if (cardDetails == null || !changeInterventionStatus) {
             startForm(selectedFeature, null, selectedFeatureInterventionType);
         } else {
@@ -512,6 +512,16 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void onStructureMarkedInactive() {
         selectedFeature.addStringProperty(STATUS, INACTIVE);
         selectedFeature.addStringProperty(BUSINESS_STATUS, INACTIVE);
+        refreshStructures(true);
+    }
+
+    @Override
+    public void onMarkStructureIneligibleConfirmed() {
+        listTaskInteractor.markStructureAsIneligible(selectedFeature);
+    }
+
+    @Override
+    public void onStructureMarkedIneligible() {
         refreshStructures(true);
     }
 

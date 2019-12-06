@@ -275,5 +275,7 @@
     <string name="confirm_mark_location_inactive">Please confirm that this location should be marked inactive</string>
     <string name="confirm">Confirm</string>
     <string name="cannot_make_structure_inactive">You can not make this structure inactive because tasks are completed against it</string>
+    <string name="mark_location_ineligible">Mark Location Ineligible</string>
+    <string name="is_structure_eligible_for_fam_reg">Is this location eligible to register a family?</string>
 
 </resources>

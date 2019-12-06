@@ -28,9 +28,9 @@ public class AlertDialogUtils {
         AlertDialog alert = null;
 
         if (formatArgs.length == 0)
-            alert = new AlertDialog.Builder(context).setMessage(message).setTitle(title).setPositiveButton(positiveBtnTitle, onClickListener).setNegativeButton(negativeBtnTitle,null).show();
+            alert = new AlertDialog.Builder(context).setMessage(message).setTitle(title).setPositiveButton(positiveBtnTitle, onClickListener).setNegativeButton(negativeBtnTitle,onClickListener).show();
         else
-            alert = new AlertDialog.Builder(context).setMessage(context.getString(message, formatArgs)).setTitle(title).setPositiveButton(positiveBtnTitle, onClickListener).setNegativeButton(negativeBtnTitle,null).show();
+            alert = new AlertDialog.Builder(context).setMessage(context.getString(message, formatArgs)).setTitle(title).setPositiveButton(positiveBtnTitle, onClickListener).setNegativeButton(negativeBtnTitle,onClickListener).show();
 
         return alert;
     }
