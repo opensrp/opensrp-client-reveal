@@ -2,21 +2,21 @@
 name: step2_first_name
 description: first name relevance
 priority: 1
-condition: "!step2_same_as_fam_name.contains('same_as_fam_name') && step1_eligible.equals('Yes')"
+condition: "!step2_same_as_fam_name.contains('same_as_fam_name')"
 actions:
  - "isRelevant = true"
 ---
 name: step2_dob
 description: dob relevance
 priority: 1
-condition: "!step2_dob_unknown.contains('dob_unknown') && step1_eligible.equals('Yes')"
+condition: "!step2_dob_unknown.contains('dob_unknown')"
 actions:
   - "isRelevant = true"
 ---
 name: step2_age
 description: age relevance
 priority: 1
-condition: "step2_dob_unknown.contains('dob_unknown') && step1_eligible.equals('Yes')"
+condition: "step2_dob_unknown.contains('dob_unknown')"
 actions:
   - "isRelevant = true"
 ---

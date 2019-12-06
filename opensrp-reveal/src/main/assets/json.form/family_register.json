@@ -56,29 +56,6 @@
     "next": "step2",
     "fields": [
       {
-        "key": "eligible",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Is this location eligible to register a family?",
-        "options": [
-          {
-            "key": "Yes",
-            "text": "Yes"
-          },
-          {
-            "key": "No",
-            "text": "No"
-          }
-        ],
-        "value": "Yes",
-        "v_required": {
-          "value": true,
-          "err": "This field is required"
-        }
-      },
-      {
         "key": "fam_name",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
@@ -89,12 +66,6 @@
         "v_required": {
           "value": "true",
           "err": "Please enter first name of Head of Household"
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {
@@ -103,13 +74,7 @@
         "openmrs_entity": "person_address",
         "openmrs_entity_id": "address2",
         "type": "edit_text",
-        "hint": "House Number",
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
+        "hint": "House Number"
       },
       {
         "key": "street",
@@ -117,13 +82,7 @@
         "openmrs_entity": "person_address",
         "openmrs_entity_id": "street",
         "type": "edit_text",
-        "hint": "Street",
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
+        "hint": "Street"
       },
       {
         "key": "landmark",
@@ -131,13 +90,7 @@
         "openmrs_entity": "person_address",
         "openmrs_entity_id": "landmark",
         "type": "edit_text",
-        "hint": "Landmark",
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
+        "hint": "Landmark"
       }
     ]
   },
@@ -155,12 +108,6 @@
         "v_required": {
           "value": "true",
           "err": "Please enter the ID"
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {
@@ -197,13 +144,7 @@
             "text_size": "18px",
             "value": "false"
           }
-        ],
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
+        ]
       },
       {
         "key": "surname",
@@ -216,12 +157,6 @@
         "v_required": {
           "value": "true",
           "err": "Please enter the surname"
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {
@@ -277,13 +212,7 @@
             "text_size": "18px",
             "value": "false"
           }
-        ],
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
+        ]
       },
       {
         "key": "age",
@@ -336,12 +265,6 @@
         "v_required": {
           "value": "true",
           "err": "Please enter the sex"
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {
@@ -358,12 +281,6 @@
         "v_regex": {
           "value": "^$|0[0-9]{8,9}",
           "err": "Number must be 9-10 digits and must start with 0."
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {
@@ -386,12 +303,6 @@
         "v_required": {
           "value": "true",
           "err": "Please select whether this person spends the night outdoors"
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {
@@ -433,12 +344,6 @@
         "v_required": {
           "value": true,
           "err": "Please specify the Citizenship"
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {

@@ -56,28 +56,6 @@
     "next": "step2",
     "fields": [
       {
-        "key": "eligible",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Is this location eligible to register a family?",
-        "options": [
-          {
-            "key": "Yes",
-            "text": "Yes"
-          },
-          {
-            "key": "No",
-            "text": "No"
-          }
-        ],
-        "v_required": {
-          "value": true,
-          "err": "This field is required"
-        }
-      },
-      {
         "key": "fam_name",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
@@ -88,12 +66,6 @@
         "v_required": {
           "value": "true",
           "err": "Please enter first name of Head of Household"
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {
@@ -102,13 +74,7 @@
         "openmrs_entity": "person_address",
         "openmrs_entity_id": "address2",
         "type": "edit_text",
-        "hint": "House Number",
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
+        "hint": "House Number"
       },
       {
         "key": "street",
@@ -116,13 +82,7 @@
         "openmrs_entity": "person_address",
         "openmrs_entity_id": "street",
         "type": "edit_text",
-        "hint": "Street",
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
+        "hint": "Street"
       },
       {
         "key": "landmark",
@@ -130,13 +90,7 @@
         "openmrs_entity": "person_address",
         "openmrs_entity_id": "landmark",
         "type": "edit_text",
-        "hint": "Landmark",
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
+        "hint": "Landmark"
       }
     ]
   },

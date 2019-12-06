@@ -56,29 +56,6 @@
     "next": "step2",
     "fields": [
       {
-        "key": "eligible",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Is this location eligible to register a family?",
-        "options": [
-          {
-            "key": "Yes",
-            "text": "Yes"
-          },
-          {
-            "key": "No",
-            "text": "No"
-          }
-        ],
-        "value" : "Yes",
-        "v_required": {
-          "value": true,
-          "err": "This field is required"
-        }
-      },
-      {
         "key": "hoh_structure",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -98,12 +75,6 @@
         "v_required": {
           "value": "true",
           "err": "Please respond to this question"
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {
@@ -118,12 +89,6 @@
         "v_required": {
           "value": "true",
           "err": "Please enter family name"
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {
@@ -141,12 +106,6 @@
         "v_regex": {
           "value": "^$|0[0-9]{8,9}",
           "err": "Number must be 9-10 digits and must start with 0."
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {
@@ -168,12 +127,6 @@
         "v_max": {
           "value": "99",
           "err": "Number must be equal or less than 99"
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {
@@ -195,12 +148,6 @@
         "v_max": {
           "value": "99",
           "err": "Number must be equal or less than 99"
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {
@@ -222,12 +169,6 @@
         "v_max": {
           "value": "99",
           "err": "Number must be equal or less than 99"
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {
@@ -237,13 +178,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "What is the name of this village?",
-        "text_size": "8sp",
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
+        "text_size": "8sp"
       }
     ]
   },
@@ -262,12 +197,6 @@
         "v_required": {
           "value": "true",
           "err": "Please enter the ID"
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {
@@ -282,12 +211,6 @@
         "v_required": {
           "value": "true",
           "err": "Please enter first name"
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {
@@ -304,13 +227,7 @@
             "text_size": "18px",
             "value": "true"
           }
-        ],
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
+        ]
       },
       {
         "key": "surname",
@@ -367,12 +284,6 @@
         "v_required": {
           "value": "true",
           "err": "Please enter the sex"
-        },
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
         }
       },
       {
@@ -414,13 +325,7 @@
             "text_size": "18px",
             "value": "false"
           }
-        ],
-        "relevance": {
-          "step1:eligible": {
-            "type": "string",
-            "ex": "equalTo(., \"Yes\")"
-          }
-        }
+        ]
       },
       {
         "key": "age",
