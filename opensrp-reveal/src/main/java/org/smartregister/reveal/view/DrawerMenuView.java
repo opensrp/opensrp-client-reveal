@@ -149,6 +149,14 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         headerView.findViewById(R.id.logout_button).setOnClickListener(this);
         headerView.findViewById(R.id.sync_button).setOnClickListener(this);
 
+        districtTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                startStatsActivity();
+                return true;
+            }
+        });
+
         operatorTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -316,5 +324,9 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     private void startOtherFormsActivity() {
         getContext().startActivity(new Intent(getContext(), SummaryFormsActivity.class));
+    }
+
+    private void startStatsActivity() {
+        getContext().startActivity(new Intent(getContext(), StatsActivity.class));
     }
 }

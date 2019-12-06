@@ -255,7 +255,11 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     @Override
     public void onShowPlanSelector() {
-        interactor.fetchPlans(prefsUtil.getInstance().getCurrentOperationalArea());
+        if (StringUtils.isBlank(prefsUtil.getCurrentOperationalArea())) {
+            view.displayNotification(R.string.operational_area, R.string.operational_area_not_selected);
+        } else {
+            interactor.fetchPlans(prefsUtil.getCurrentOperationalArea());
+        }
     }
 
 

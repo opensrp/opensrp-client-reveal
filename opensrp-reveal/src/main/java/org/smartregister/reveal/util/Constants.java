@@ -551,6 +551,10 @@ public interface Constants {
 
         String CARD_SPRAY = "card_spray";
 
+        String SYNC_STATUS = "syncStatus";
+
+        String VALIDATION_STATUS = "validationStatus";
+
     }
 
     interface PlanDefinitionStatus {
@@ -569,5 +573,18 @@ public interface Constants {
         String NOT_SPRAYED = "notSprayed";
         String NOT_FOUND_OR_VISITED = "notFoundOrVisited";
         String OTHER = "other";
+    }
+
+    interface SyncInfo {
+        String SYNCED_EVENTS = "syncedEvents";
+        String SYNCED_CLIENTS = "syncedClients";
+        String UNSYNCED_EVENTS = "unsyncedEvents";
+        String UNSYNCED_CLIENTS = "unsyncedClients";
+        String VALID_EVENTS = "validEvents";
+        String INVALID_EVENTS = "invalidEvents";
+        String VALID_CLIENTS = "validClients";
+        String INVALID_CLIENTS = "INValidClients";
+        String TASK_UNPROCESSED_EVENTS = "taskUnprocessedEvents";
+        String NULL_EVENT_SYNC_STATUS = "nullEventSyncStatus";
     }
 }
