@@ -96,8 +96,9 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
     public void onNoUniqueId() {//not used
     }
 
+
     @Override
-    public void onRegistrationSaved(boolean isEditMode) {
+    public void onRegistrationSaved(boolean isEditMode, boolean isSaved, FamilyEventClient familyEventClient) {
         if (isEditMode) {
             getView().hideProgressDialog();
 

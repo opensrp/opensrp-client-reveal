@@ -11,7 +11,6 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.presenter.BaseFamilyProfilePresenter;
 import org.smartregister.reveal.BuildConfig;
-import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.contract.FamilyProfileContract;
@@ -107,13 +106,12 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
     }
 
     @Override
-    public void onRegistrationSaved(boolean isEdit) {
-        if (!isEdit && Utils.isFocusInvestigationOrMDA()) {
+    public void onRegistrationSaved(boolean editMode, boolean isSaved, FamilyEventClient eventClient) {
+        if (!editMode && isSaved && Utils.isFocusInvestigationOrMDA()) {
             getInteractor().generateTasks(getView().getApplicationContext(),
-                    getModel().getEventClient().getEvent().getBaseEntityId(), structureId);
+                    eventClient.getEvent().getBaseEntityId(), structureId);
             return;
-        } else {
-            FamilyEventClient eventClient = getModel().getEventClient();
+        } else if (editMode && isSaved) {
             for (Obs obs : eventClient.getEvent().getObs()) {
                 if (obs.getFieldCode().equals(DatabaseKeys.OLD_FAMILY_NAME)) {
                     String oldSurname = obs.getValue().toString();
@@ -125,12 +123,12 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                 }
             }
         }
-        super.onRegistrationSaved(isEdit);
+        super.onRegistrationSaved(editMode, isSaved, eventClient);
     }
 
     @Override
     public void onTasksGenerated() {
-        super.onRegistrationSaved(false);
+        super.onRegistrationSaved(false, true, null);
         getView().refreshTasks(structureId);
 
     }
