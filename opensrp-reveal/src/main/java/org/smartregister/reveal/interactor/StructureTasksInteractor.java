@@ -5,6 +5,7 @@ import android.support.annotation.VisibleForTesting;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.SQLException;
 import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.smartregister.clientandeventmodel.DateUtil;
@@ -35,8 +36,6 @@ import static org.smartregister.family.util.DBConstants.KEY.LAST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.MIDDLE_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENTS_PER_TASK;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_DATE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
@@ -161,37 +160,31 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
 
 
     private void populateEventsPerTask(List<StructureTaskDetails> tasks) {
-
-
-        Cursor cursor = null;
+        SQLiteStatement eventsPerTask = database.compileStatement("SELECT count(*) as events_per_task FROM event_task WHERE task_id = ?");
+        SQLiteStatement lastEventDate = database.compileStatement("SELECT max(event_date) FROM event_task WHERE task_id = ?");
         try {
             for (StructureTaskDetails task : tasks) {
                 EventTask eventTask = new EventTask();
 
-                cursor = database.rawQuery("SELECT count(*) as events_per_task FROM event_task WHERE task_id = ?",
-                        new String[]{task.getTaskId()});
-                while (cursor.moveToNext()) {
-                    eventTask.setEventsPerTask(cursor.getInt(cursor.getColumnIndex(EVENTS_PER_TASK)));
-                }
+                eventsPerTask.bindString(1, task.getTaskId());
+                eventTask.setEventsPerTask(eventsPerTask.simpleQueryForLong());
 
-                cursor.close();
-
-                cursor = database.rawQuery("SELECT event_date FROM event_task WHERE task_id = ? ORDER by event_date desc LIMIT 1",
-                        new String[]{task.getTaskId()});
-                while (cursor.moveToNext()) {
-                    eventTask.setLastEventDate(cursor.getString(cursor.getColumnIndex(EVENT_DATE)));
-                }
-
-                if (eventTask.getEventsPerTask() > 1)
+                if (eventTask.getEventsPerTask() > 1) {
+                    lastEventDate.bindString(1, task.getTaskId());
+                    eventTask.setLastEventDate(lastEventDate.simpleQueryForString());
                     task.setLastEdited(DateUtil.parseDate(eventTask.getLastEventDate()));
+                }
 
             }
 
         } catch (Exception e) {
             Timber.e(e, "Error querying events counts ");
         } finally {
-            if (cursor != null) {
-                cursor.close();
+            if (eventsPerTask != null) {
+                eventsPerTask.close();
+            }
+            if (lastEventDate != null) {
+                lastEventDate.close();
             }
         }
 
