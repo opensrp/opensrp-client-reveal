@@ -48,8 +48,10 @@ import timber.log.Timber;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
+import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.INACTIVE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
@@ -67,6 +69,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.JsonForm.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.JsonForm.DISTRICT_NAME;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
@@ -74,6 +77,7 @@ import static org.smartregister.reveal.util.Constants.JsonForm.PROVINCE_NAME;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
@@ -201,7 +205,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
     }
 
-    public void onMapClicked(MapboxMap mapboxMap, LatLng point) {
+    public void onMapClicked(MapboxMap mapboxMap, LatLng point, boolean isLongclick) {
         double currentZoom = mapboxMap.getCameraPosition().zoom;
         if (currentZoom < MAX_SELECT_ZOOM_LEVEL) {
             Timber.w("onMapClicked Current Zoom level" + currentZoom);
@@ -221,12 +225,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     context.getString(R.string.reveal_layer_polygons), context.getString(R.string.reveal_layer_points));
             Timber.d("Selected structure after increasing click area: " + features.size());
             if (features.size() == 1) {
-                onFeatureSelected(features.get(0));
+                onFeatureSelected(features.get(0), isLongclick);
             } else {
                 Timber.d("Not Selected structure after increasing click area: " + features.size());
             }
         } else {
-            onFeatureSelected(features.get(0));
+            onFeatureSelected(features.get(0), isLongclick);
             if (features.size() > 1) {
                 Timber.w("Selected more than 1 structure: " + features.size());
             }
@@ -234,7 +238,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     }
 
-    private void onFeatureSelected(Feature feature) {
+    private void onFeatureSelected(Feature feature, boolean isLongclick) {
         this.selectedFeature = feature;
         this.changeInterventionStatus = false;
         cardDetails = null;
@@ -243,33 +247,51 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         listTaskView.displaySelectedFeature(feature, clickedPoint);
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
+        } else if (isLongclick) {
+            onFeatureSelectedByLongClick(feature);
         } else {
-            String businessStatus = getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
-            String code = getPropertyValue(feature, TASK_CODE);
-            selectedFeatureInterventionType = code;
-            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || PAOT.equals(code) || REGISTER_FAMILY.equals(code) || IRS_VERIFICATION.equals(code))
-                    && (NOT_VISITED.equals(businessStatus) || businessStatus == null)) {
-                if (validateFarStructures()) {
-                    validateUserLocation();
-                } else {
-                    onLocationValidated();
-                }
-            } else if (IRS.equals(code) &&
-                    (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus) || PARTIALLY_SPRAYED.equals(businessStatus)
-                    || COMPLETE.equals(businessStatus) || NOT_ELIGIBLE.equals(businessStatus) || NOT_VISITED.equals(businessStatus))) {
+            onFeatureSelectedByNormalClick(feature);
+        }
+    }
 
-                listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
-            } else if ((MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code))
-                    && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
-                    || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
-                listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
-            } else if (PAOT.equals(code)) {
-                listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
-            } else if (org.smartregister.reveal.util.Utils.isFocusInvestigationOrMDA()) {
-                listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
-            } else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
-                listTaskInteractor.fetchInterventionDetails(IRS_VERIFICATION, feature.id(), false);
+    private void onFeatureSelectedByNormalClick(Feature feature) {
+        String businessStatus = getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
+        String code = getPropertyValue(feature, TASK_CODE);
+        selectedFeatureInterventionType = code;
+        if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || PAOT.equals(code) || REGISTER_FAMILY.equals(code) || IRS_VERIFICATION.equals(code))
+                && (NOT_VISITED.equals(businessStatus) || businessStatus == null)) {
+            if (validateFarStructures()) {
+                validateUserLocation();
+            } else {
+                onLocationValidated();
             }
+        } else if (IRS.equals(code) &&
+                (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus) || PARTIALLY_SPRAYED.equals(businessStatus)
+                        || COMPLETE.equals(businessStatus) || NOT_ELIGIBLE.equals(businessStatus) || NOT_VISITED.equals(businessStatus))) {
+
+            listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
+        } else if ((MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code))
+                && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
+                || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
+            listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
+        } else if (PAOT.equals(code)) {
+            listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
+        } else if (org.smartregister.reveal.util.Utils.isFocusInvestigationOrMDA()) {
+            listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
+        } else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
+            listTaskInteractor.fetchInterventionDetails(IRS_VERIFICATION, feature.id(), false);
+        }
+    }
+
+    private void onFeatureSelectedByLongClick(Feature feature) {
+        String taskStatus = getPropertyValue(feature, TASK_STATUS);
+        String code = getPropertyValue(feature, TASK_CODE);
+
+        selectedFeatureInterventionType = code;
+        if (READY.toString().equals(taskStatus)) {
+            listTaskView.displayMarkStructureInactiveDialog();
+        } else {
+            listTaskView.displayToast(R.string.cannot_make_structure_inactive);
         }
     }
 
@@ -478,6 +500,19 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public int getInterventionLabel() {
         return org.smartregister.reveal.util.Utils.getInterventionLabel();
+    }
+
+    @Override
+    public void onMarkStructureInactiveConfirmed() {
+        listTaskInteractor.markStructureAsInactive(selectedFeature);
+
+    }
+
+    @Override
+    public void onStructureMarkedInactive() {
+        selectedFeature.addStringProperty(STATUS, INACTIVE);
+        selectedFeature.addStringProperty(BUSINESS_STATUS, INACTIVE);
+        refreshStructures(true);
     }
 
     @Override

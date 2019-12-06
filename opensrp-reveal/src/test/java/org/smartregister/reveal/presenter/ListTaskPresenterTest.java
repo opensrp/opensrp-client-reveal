@@ -327,7 +327,7 @@ public class ListTaskPresenterTest {
         when(listTaskViewSpy.getContext()).thenReturn(context);
         when(context.getString(anyInt(), any())).thenReturn(CUSTOM_ERROR_MESSAGE);
 
-        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
+        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature, false);
 
         verify(listTaskViewSpy, times(1)).displayNotification(eq(CUSTOM_ERROR_MESSAGE));
     }
@@ -341,7 +341,7 @@ public class ListTaskPresenterTest {
         Feature feature = mock(Feature.class);
         doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
 
-        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
+        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature, false);
 
         verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
@@ -355,7 +355,7 @@ public class ListTaskPresenterTest {
         Feature feature = mock(Feature.class);
         doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
 
-        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
+        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature, false);
 
         verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
@@ -369,7 +369,7 @@ public class ListTaskPresenterTest {
         Feature feature = mock(Feature.class);
         doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
 
-        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
+        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature, false);
 
         verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
@@ -383,7 +383,7 @@ public class ListTaskPresenterTest {
         Feature feature = mock(Feature.class);
         doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
 
-        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
+        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature, false);
 
         verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
@@ -410,7 +410,7 @@ public class ListTaskPresenterTest {
         doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
         when(Utils.validateFarStructures()).thenReturn(true);
 
-        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature);
+        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature, false);
 
         PowerMockito.verifyPrivate(listTaskPresenter, times(1)).invoke("validateUserLocation");
     }
