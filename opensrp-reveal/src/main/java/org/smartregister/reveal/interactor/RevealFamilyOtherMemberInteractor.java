@@ -5,11 +5,13 @@ import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Task;
 import org.smartregister.family.interactor.FamilyOtherMemberProfileInteractor;
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.EventClientRepository.client_column;
 import org.smartregister.repository.EventClientRepository.event_column;
@@ -17,9 +19,14 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract.Interactor;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.FamilyConstants;
+import org.smartregister.reveal.util.FamilyJsonFormUtils;
+import org.smartregister.reveal.util.Utils;
+import org.smartregister.util.JsonFormUtils;
 
 import timber.log.Timber;
 
+import static org.smartregister.repository.EventClientRepository.client_column.syncStatus;
 import static org.smartregister.reveal.application.RevealApplication.getInstance;
 
 public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileInteractor implements Interactor {
@@ -76,6 +83,17 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
             } catch (JSONException e) {
                 Timber.e(e);
             }
+
+
+            Event archiveEvent = FamilyJsonFormUtils.createFamilyEvent(client.getCaseId(), Utils.getCurrentLocationId(), null, FamilyConstants.EventType.ARCHIVE_FAMILY_MEMBER);
+            try {
+                JSONObject eventJson = new JSONObject(JsonFormUtils.gson.toJson(archiveEvent));
+                eventJson.put(event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
+                eventClientRepository.addEvent(client.getCaseId(), eventJson);
+            } catch (JSONException e) {
+                Timber.e(e);
+            }
+
         });
     }
 }
