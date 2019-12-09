@@ -4,7 +4,9 @@ package org.smartregister.reveal.interactor;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.Task;
 import org.smartregister.family.interactor.FamilyOtherMemberProfileInteractor;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract.Interactor;
 import org.smartregister.reveal.util.AppExecutors;
@@ -17,9 +19,12 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
 
     private AppExecutors appExecutors;
 
+    private TaskRepository taskRepository;
+
     public RevealFamilyOtherMemberInteractor() {
         commonRepository = getInstance().getContext().commonrepository(getInstance().getMetadata().familyMemberRegister.tableName);
         appExecutors = getInstance().getAppExecutors();
+        taskRepository = getInstance().getTaskRepository();
     }
 
     @Override
@@ -35,5 +40,8 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
     @Override
     public void archiveFamilyMember(CommonPersonObjectClient client) {
 
+        appExecutors.diskIO().execute(() -> {
+            taskRepository.cancelTasksByEntityAndStatus(client.entityId(), Task.TaskStatus.READY);
+        });
     }
 }
