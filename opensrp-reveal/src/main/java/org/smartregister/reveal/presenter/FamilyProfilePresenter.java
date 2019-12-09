@@ -179,6 +179,11 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         openAddMemberForm();
     }
 
+    @Override
+    public void onArchiveMemberCompleted(boolean isSuccessful) {
+        //not used
+    }
+
     private void openAddMemberForm() {
         try {
             startForm(RevealApplication.getInstance().getMetadata().familyMemberRegister.formName, null, null, RevealApplication.getInstance().getContext().allSharedPreferences().getPreference(AllConstants.CURRENT_LOCATION_ID));

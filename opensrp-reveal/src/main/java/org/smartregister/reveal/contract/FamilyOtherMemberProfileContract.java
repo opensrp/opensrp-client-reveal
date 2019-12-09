@@ -14,6 +14,8 @@ public interface FamilyOtherMemberProfileContract {
 
     interface BasePresenter {
         void onFetchFamilyHead(CommonPersonObject commonPersonObject);
+
+        void onArchiveMemberCompleted(boolean isSuccessful);
     }
 
     interface Presenter extends BasePresenter, FamilyOtherMemberContract.Presenter {
@@ -38,6 +40,6 @@ public interface FamilyOtherMemberProfileContract {
 
         void getFamilyHead(BasePresenter presenter, String familyHeadId);
 
-        void archiveFamilyMember(CommonPersonObjectClient client);
+        void archiveFamilyMember(BasePresenter presenter, CommonPersonObjectClient client);
     }
 }

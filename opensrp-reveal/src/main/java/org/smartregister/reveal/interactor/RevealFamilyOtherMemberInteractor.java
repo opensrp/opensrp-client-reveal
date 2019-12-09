@@ -64,7 +64,7 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
     }
 
     @Override
-    public void archiveFamilyMember(CommonPersonObjectClient client) {
+    public void archiveFamilyMember(FamilyOtherMemberProfileContract.BasePresenter presenter, CommonPersonObjectClient client) {
         appExecutors.diskIO().execute(() -> {
             taskRepository.cancelTasksByEntityAndStatus(client.getCaseId(), Task.TaskStatus.READY);
             JSONObject eventsByBaseEntityId = eventClientRepository.getEventsByBaseEntityId(client.getCaseId());
@@ -83,13 +83,15 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
                     }
                 }
             }
-            eventClientRepository.batchInsertEvents(events, 0);
+
+            boolean saved;
             try {
+                getInstance().getRepository().getWritableDatabase().beginTransaction();
+                eventClientRepository.batchInsertEvents(events, 0);
                 clientJsonObject.put("dateVoided", now);
                 clientJsonObject.remove(client_column.syncStatus.name());
                 clientJsonObject.getJSONObject("attributes").put("dateRemoved", now);
                 eventClientRepository.addorUpdateClient(client.getCaseId(), clientJsonObject);
-
 
                 Event archiveEvent = FamilyJsonFormUtils.createFamilyEvent(client.getCaseId(), Utils.getCurrentLocationId(), null, FamilyConstants.EventType.ARCHIVE_FAMILY_MEMBER);
 
@@ -100,10 +102,18 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
                 clientProcessor.processClient(Collections.singletonList(new EventClient(
                         gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class),
                         gson.fromJson(clientJsonObject.toString(), Client.class))), true);
-
+                getInstance().getRepository().getWritableDatabase().setTransactionSuccessful();
+                saved = true;
             } catch (JSONException e) {
                 Timber.e(e);
+                saved = false;
+            } finally {
+                getInstance().getRepository().getWritableDatabase().endTransaction();
             }
+            boolean finalSaved = saved;
+            appExecutors.mainThread().execute(() -> {
+                presenter.onArchiveMemberCompleted(finalSaved);
+            });
 
         });
     }

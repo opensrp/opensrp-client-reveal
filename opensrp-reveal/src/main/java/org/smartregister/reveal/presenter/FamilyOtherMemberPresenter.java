@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 
+import android.app.Activity;
 import android.content.DialogInterface;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,7 @@ import org.smartregister.family.contract.FamilyOtherMemberContract.Model;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.interactor.FamilyProfileInteractor;
 import org.smartregister.family.presenter.BaseFamilyOtherMemberProfileActivityPresenter;
+import org.smartregister.family.util.DBConstants;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
@@ -74,6 +76,22 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
     @Override
     public void onFetchFamilyHead(CommonPersonObject familyHeadPersonObject) {
         startFamilyMemberForm(familyHeadPersonObject.getColumnmaps().get(LAST_NAME), false);
+    }
+
+    @Override
+    public void onArchiveMemberCompleted(boolean isSuccessful) {
+        getView().hideProgressDialog();
+        if (!isSuccessful) {
+            AlertDialogUtils.displayNotification(getView().getContext(), R.string.archive_member,
+                    R.string.archive_member_failed, client.getColumnmaps().get(DBConstants.KEY.FIRST_NAME),
+                    client.getColumnmaps().get(DBConstants.KEY.LAST_NAME));
+        } else {
+            finishActivity();
+        }
+    }
+
+    private void finishActivity() {
+        ((Activity) getView().getContext()).finish();
     }
 
     private void startFamilyMemberForm(String familyName, boolean isFamilyHead) {
@@ -147,7 +165,8 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
     }
 
     private void archiveFamilyMember() {
-        otherMemberInteractor.archiveFamilyMember(client);
+        getView().showProgressDialog(org.smartregister.family.R.string.saving_dialog_title);
+        otherMemberInteractor.archiveFamilyMember(this, client);
     }
 
     @Override
