@@ -373,8 +373,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void onClick(View v) {
         if (v.getId() == R.id.btn_add_structure) {
             listTaskPresenter.onAddStructureClicked(revealMapHelper.isMyLocationComponentActive(this, myLocationButton));
-        } else if (v.getId() == R.id.change_spray_status
-                || v.getId() == R.id.register_family) {
+        } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeInterventionStatus(IRS);
         } else if (v.getId() == R.id.btn_record_mosquito_collection) {
             listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
@@ -387,6 +386,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             closeCardView(v.getId());
         } else if (v.getId() == R.id.register_family) {
             registerFamily();
+            closeCardView(R.id.btn_collapse_spray_card_view);
         } else if (v.getId() == R.id.btn_collapse_mosquito_collection_card_view
                 || v.getId() == R.id.btn_collapse_larval_breeding_card_view
                 || v.getId() == R.id.btn_collapse_paot_card_view

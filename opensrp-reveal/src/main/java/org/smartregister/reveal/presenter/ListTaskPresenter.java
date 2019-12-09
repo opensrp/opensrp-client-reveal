@@ -111,6 +111,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private String selectedFeatureInterventionType;
 
+    private String selectedFeatureTaskStatus;
+
     private LatLng clickedPoint;
 
     private AlertDialog passwordDialog;
@@ -260,6 +262,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         String businessStatus = getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
         String code = getPropertyValue(feature, TASK_CODE);
         selectedFeatureInterventionType = code;
+        String taskStatus = getPropertyValue(feature, TASK_STATUS);
+        selectedFeatureTaskStatus = taskStatus;
         if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || PAOT.equals(code) || REGISTER_FAMILY.equals(code) || IRS_VERIFICATION.equals(code))
                 && (NOT_VISITED.equals(businessStatus) || businessStatus == null)) {
             if (validateFarStructures()) {
@@ -272,9 +276,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                         || COMPLETE.equals(businessStatus) || NOT_ELIGIBLE.equals(businessStatus) || NOT_VISITED.equals(businessStatus))) {
 
             listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
-        } else if ((MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || REGISTER_FAMILY.equals(code))
+        } else if ((MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code))
                 && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
                 || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
+            listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
+        } else if (REGISTER_FAMILY.equals(code) && NOT_ELIGIBLE.equals(businessStatus)) {
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
         } else if (PAOT.equals(code)) {
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
@@ -287,8 +293,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private void onFeatureSelectedByLongClick(Feature feature) {
         String taskStatus = getPropertyValue(feature, TASK_STATUS);
+        selectedFeatureTaskStatus = taskStatus;
         String code = getPropertyValue(feature, TASK_CODE);
-
         selectedFeatureInterventionType = code;
         if (READY.toString().equals(taskStatus)) {
             listTaskView.displayMarkStructureInactiveDialog();
@@ -474,7 +480,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onLocationValidated() {
-        if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)) {
+        if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)
+                && READY.toString().equals(selectedFeatureTaskStatus)) {
             listTaskView.displayMarkStructureIneligibleDialog();
         } else if (cardDetails == null || !changeInterventionStatus) {
             startForm(selectedFeature, null, selectedFeatureInterventionType);
