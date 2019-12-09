@@ -76,8 +76,7 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
                     try {
                         JSONObject event = events.getJSONObject(i);
                         event.put("dateVoided", now);
-                        event.remove(event_column.syncStatus.name());
-
+                        clientJsonObject.put(client_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
                     } catch (JSONException e) {
                         Timber.e(e);
                     }
@@ -89,7 +88,7 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
                 getInstance().getRepository().getWritableDatabase().beginTransaction();
                 eventClientRepository.batchInsertEvents(events, 0);
                 clientJsonObject.put("dateVoided", now);
-                clientJsonObject.remove(client_column.syncStatus.name());
+                clientJsonObject.put(client_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
                 clientJsonObject.getJSONObject("attributes").put("dateRemoved", now);
                 eventClientRepository.addorUpdateClient(client.getCaseId(), clientJsonObject);
 
