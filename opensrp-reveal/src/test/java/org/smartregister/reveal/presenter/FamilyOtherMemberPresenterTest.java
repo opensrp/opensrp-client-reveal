@@ -114,7 +114,7 @@ public class FamilyOtherMemberPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnRegistrationSaved() {
-        otherMemberPresenter.onRegistrationSaved(false);
+        otherMemberPresenter.onRegistrationSaved(false, true, null);
         verify(view, never()).hideProgressDialog();
         verify(view, never()).refreshList();
         verify(interactor, never()).refreshProfileView(baseEntityId, otherMemberPresenter);
@@ -122,7 +122,7 @@ public class FamilyOtherMemberPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnRegistrationEdited() {
-        otherMemberPresenter.onRegistrationSaved(true);
+        otherMemberPresenter.onRegistrationSaved(true, true, null);
         verify(view).hideProgressDialog();
         verify(view).refreshList();
         verify(interactor).refreshProfileView(baseEntityId, otherMemberPresenter);

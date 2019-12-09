@@ -26,7 +26,6 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
     private final String taskStatus;
     private final String structureName;
 
-    private List<FamilyEventClient> eventClientList;
 
     public FamilyRegisterModel(String structureId, String taskId, String taskBusinessStatus, String taskStatus, String structureName) {
         this.structureId = structureId;
@@ -38,7 +37,7 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
 
     @Override
     public List<FamilyEventClient> processRegistration(String jsonString) {
-        eventClientList = super.processRegistration(jsonString);
+        List<FamilyEventClient> eventClientList = super.processRegistration(jsonString);
         for (FamilyEventClient eventClient : eventClientList) {
             eventClient.getClient().addAttribute(RESIDENCE, structureId);
             eventClient.getEvent().addDetails(Properties.TASK_IDENTIFIER, taskId);
@@ -46,7 +45,7 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
             eventClient.getEvent().addDetails(Properties.TASK_STATUS, taskStatus);
             eventClient.getEvent().addDetails(Properties.LOCATION_UUID, structureId);
             eventClient.getEvent().addDetails(Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
-            Location operationalArea=org.smartregister.reveal.util.Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+            Location operationalArea = org.smartregister.reveal.util.Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
             if (operationalArea != null)
                 eventClient.getEvent().setLocationId(operationalArea.getId());
         }
@@ -61,10 +60,6 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
             houseNumberFieldJSONObject.put(VALUE, this.structureName);
         }
         return form;
-    }
-
-    public List<FamilyEventClient> getEventClientList() {
-        return eventClientList;
     }
 
     public String getStructureId() {

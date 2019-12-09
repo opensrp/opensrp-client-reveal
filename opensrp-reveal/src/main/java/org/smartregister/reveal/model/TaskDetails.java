@@ -17,6 +17,7 @@ import static org.smartregister.reveal.util.Constants.COMMA;
 import static org.smartregister.reveal.util.Constants.HYPHEN;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE;
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
@@ -231,6 +232,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         mdaStatusMap.put(NOT_ELIGIBLE, 0);
         mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, 0);
 
+        boolean bloodScreeningExists=false;
+        boolean caseConfirmed = false;
         for (int i = 0; i < groupedTaskCodeStatusArray.length; i++) {
             String[] taskCodeStatusArray = groupedTaskCodeStatusArray[i].split(HYPHEN);
 
@@ -241,18 +244,22 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
             switch (taskCodeStatusArray[0]) {
                 case REGISTER_FAMILY:
                     setFamilyRegTaskExists(true);
-                    this.familyRegistered = COMPLETE.equals(taskCodeStatusArray[1]) ? true : false;
+                    this.familyRegistered = COMPLETE.equals(taskCodeStatusArray[1]);
                     break;
                 case BEDNET_DISTRIBUTION:
-                    this.bednetDistributed = COMPLETE.equals(taskCodeStatusArray[1]) ? true : false;
+                    this.bednetDistributed = COMPLETE.equals(taskCodeStatusArray[1]);
                     break;
                 case BLOOD_SCREENING:
                     if (!this.bloodScreeningDone) {
-                        this.bloodScreeningDone = COMPLETE.equals(taskCodeStatusArray[1]) ? true : false;
+                        this.bloodScreeningDone = COMPLETE.equals(taskCodeStatusArray[1]);
                     }
+                    bloodScreeningExists=true;
+                    break;
+                case CASE_CONFIRMATION:
+                    caseConfirmed=COMPLETE.equals(taskCodeStatusArray[1]);
                     break;
                 case MDA_ADHERENCE:
-                    this.mdaAdhered = COMPLETE.equals(taskCodeStatusArray[1]) ? true: false;
+                    this.mdaAdhered = COMPLETE.equals(taskCodeStatusArray[1]);
                     break;
                 case MDA_DISPENSE:
                     mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) + 1);
@@ -270,6 +277,10 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
                 default:
                     break;
             }
+        }
+
+        if(!bloodScreeningExists && caseConfirmed && !isBloodScreeningDone()){
+            setBloodScreeningDone(true);
         }
 
         setFullyReceived(mdaStatusMap.get(FULLY_RECEIVED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) );
