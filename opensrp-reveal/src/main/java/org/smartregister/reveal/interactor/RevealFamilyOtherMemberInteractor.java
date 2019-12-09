@@ -5,14 +5,14 @@ import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.clientandeventmodel.DateUtil;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Task;
+import org.smartregister.domain.db.Client;
+import org.smartregister.domain.db.EventClient;
 import org.smartregister.family.interactor.FamilyOtherMemberProfileInteractor;
-import org.smartregister.family.util.DBConstants;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.EventClientRepository.client_column;
@@ -20,18 +20,18 @@ import org.smartregister.repository.EventClientRepository.event_column;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract.Interactor;
+import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
-import org.smartregister.util.JsonFormUtils;
 
-import java.util.Date;
+import java.util.Collections;
 
 import timber.log.Timber;
 
-import static org.smartregister.repository.EventClientRepository.client_column.syncStatus;
 import static org.smartregister.reveal.application.RevealApplication.getInstance;
+import static org.smartregister.util.JsonFormUtils.gson;
 
 public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileInteractor implements Interactor {
 
@@ -43,10 +43,14 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
 
     private EventClientRepository eventClientRepository;
 
+    private RevealClientProcessor clientProcessor;
+
     public RevealFamilyOtherMemberInteractor() {
         commonRepository = getInstance().getContext().commonrepository(getInstance().getMetadata().familyMemberRegister.tableName);
         appExecutors = getInstance().getAppExecutors();
         taskRepository = getInstance().getTaskRepository();
+        eventClientRepository = getInstance().getContext().getEventClientRepository();
+        clientProcessor = (RevealClientProcessor) getInstance().getClientProcessor();
     }
 
     @Override
@@ -61,17 +65,17 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
 
     @Override
     public void archiveFamilyMember(CommonPersonObjectClient client) {
-
         appExecutors.diskIO().execute(() -> {
             taskRepository.cancelTasksByEntityAndStatus(client.getCaseId(), Task.TaskStatus.READY);
             JSONObject eventsByBaseEntityId = eventClientRepository.getEventsByBaseEntityId(client.getCaseId());
             JSONArray events = eventsByBaseEntityId.optJSONArray("events");
             JSONObject clientJsonObject = eventsByBaseEntityId.optJSONObject("client");
+            DateTime now = new DateTime();
             if (events != null) {
                 for (int i = 0; i < events.length(); i++) {
                     try {
                         JSONObject event = events.getJSONObject(i);
-                        event.put("dateVoided", new DateTime());
+                        event.put("dateVoided", now);
                         event.remove(event_column.syncStatus.name());
 
                     } catch (JSONException e) {
@@ -79,22 +83,24 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
                     }
                 }
             }
-            eventClientRepository.batchInsertClients(events);
+            eventClientRepository.batchInsertEvents(events, 0);
             try {
-                clientJsonObject.put("dateVoided", new DateTime());
+                clientJsonObject.put("dateVoided", now);
                 clientJsonObject.remove(client_column.syncStatus.name());
-                clientJsonObject.getJSONObject("attributes").put(DBConstants.KEY.DATE_REMOVED, DateUtil.fromDate(new Date()));
+                clientJsonObject.getJSONObject("attributes").put("dateRemoved", now);
                 eventClientRepository.addorUpdateClient(client.getCaseId(), clientJsonObject);
-            } catch (JSONException e) {
-                Timber.e(e);
-            }
 
 
-            Event archiveEvent = FamilyJsonFormUtils.createFamilyEvent(client.getCaseId(), Utils.getCurrentLocationId(), null, FamilyConstants.EventType.ARCHIVE_FAMILY_MEMBER);
-            try {
-                JSONObject eventJson = new JSONObject(JsonFormUtils.gson.toJson(archiveEvent));
+                Event archiveEvent = FamilyJsonFormUtils.createFamilyEvent(client.getCaseId(), Utils.getCurrentLocationId(), null, FamilyConstants.EventType.ARCHIVE_FAMILY_MEMBER);
+
+                JSONObject eventJson = new JSONObject(gson.toJson(archiveEvent));
                 eventJson.put(event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
                 eventClientRepository.addEvent(client.getCaseId(), eventJson);
+
+                clientProcessor.processClient(Collections.singletonList(new EventClient(
+                        gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class),
+                        gson.fromJson(clientJsonObject.toString(), Client.class))), true);
+
             } catch (JSONException e) {
                 Timber.e(e);
             }
