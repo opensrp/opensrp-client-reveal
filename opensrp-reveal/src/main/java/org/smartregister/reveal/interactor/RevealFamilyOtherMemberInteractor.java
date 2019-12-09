@@ -5,12 +5,14 @@ import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.clientandeventmodel.DateUtil;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Task;
 import org.smartregister.family.interactor.FamilyOtherMemberProfileInteractor;
+import org.smartregister.family.util.DBConstants;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.EventClientRepository.client_column;
@@ -23,6 +25,8 @@ import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.JsonFormUtils;
+
+import java.util.Date;
 
 import timber.log.Timber;
 
@@ -79,6 +83,7 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
             try {
                 clientJsonObject.put("dateVoided", new DateTime());
                 clientJsonObject.remove(client_column.syncStatus.name());
+                clientJsonObject.getJSONObject("attributes").put(DBConstants.KEY.DATE_REMOVED, DateUtil.fromDate(new Date()));
                 eventClientRepository.addorUpdateClient(client.getCaseId(), clientJsonObject);
             } catch (JSONException e) {
                 Timber.e(e);
