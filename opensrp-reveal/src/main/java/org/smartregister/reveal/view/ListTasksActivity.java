@@ -52,6 +52,7 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
@@ -214,6 +215,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         indicatorsCardView.setOnClickListener(this);
 
         findViewById(R.id.btn_collapse_indicators_card_view).setOnClickListener(this);
+
+        findViewById(R.id.register_family).setOnClickListener(this);
     }
 
     @Override
@@ -370,7 +373,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void onClick(View v) {
         if (v.getId() == R.id.btn_add_structure) {
             listTaskPresenter.onAddStructureClicked(revealMapHelper.isMyLocationComponentActive(this, myLocationButton));
-        } else if (v.getId() == R.id.change_spray_status) {
+        } else if (v.getId() == R.id.change_spray_status
+                || v.getId() == R.id.register_family) {
             listTaskPresenter.onChangeInterventionStatus(IRS);
         } else if (v.getId() == R.id.btn_record_mosquito_collection) {
             listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
@@ -526,8 +530,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             sprayCardView.setVisibility(View.VISIBLE);
         } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
             cardDetailsUtil.populateAndOpenMosquitoHarvestCard((MosquitoHarvestCardDetails) cardDetails, this);
-        }else if (cardDetails instanceof IRSVerificationCardDetails) {
+        } else if (cardDetails instanceof IRSVerificationCardDetails) {
             cardDetailsUtil.populateAndOpenIRSVerificationCard((IRSVerificationCardDetails) cardDetails, this);
+        } else if (cardDetails instanceof FamilyCardDetails) {
+            cardDetailsUtil.populateFamilyCard((FamilyCardDetails) cardDetails, this);
+            sprayCardView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -730,17 +737,18 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void displayMarkStructureIneligibleDialog() {
         AlertDialogUtils.displayNotificationWithCallback(this, R.string.mark_location_ineligible,
-                R.string.is_structure_eligible_for_fam_reg, R.string.confirm, R.string.cancel, new DialogInterface.OnClickListener() {
+                R.string.is_structure_eligible_for_fam_reg, R.string.yes_button_label, R.string.no_button_label, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case BUTTON_NEGATIVE:
                             case BUTTON_NEUTRAL:
-                                registerFamily();
+                                listTaskPresenter.onMarkStructureIneligibleConfirmed();
                                 dialog.dismiss();
+
                                 break;
                             case BUTTON_POSITIVE:
-                                listTaskPresenter.onMarkStructureIneligibleConfirmed();
+                                registerFamily();
                                 dialog.dismiss();
                                 break;
                             default:

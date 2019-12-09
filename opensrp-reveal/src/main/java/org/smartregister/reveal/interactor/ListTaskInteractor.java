@@ -20,6 +20,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
@@ -41,13 +42,16 @@ import timber.log.Timber;
 import static org.smartregister.domain.LocationProperty.PropertyStatus.INACTIVE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.AUTHORED_ON;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CARD_SPRAY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CHALK_SPRAY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ELIGIBLE_STRUCTURE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_UPDATED_DATE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.OWNER;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_COMMENTS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
@@ -106,6 +110,9 @@ public class ListTaskInteractor extends BaseInteractor {
         } else if (IRS_VERIFICATION.equals(interventionType)) {
             sql = String.format("SELECT %s, %s, %s, %s, %s, %s FROM %s WHERE id= ?",
                     TRUE_STRUCTURE, ELIGIBLE_STRUCTURE, REPORT_SPRAY, CHALK_SPRAY, STICKER_SPRAY, CARD_SPRAY, IRS_VERIFICATION_TABLE);
+        } else if (REGISTER_FAMILY.equals(interventionType)) {
+            sql = String.format("SELECT %s, %s, %s FROM %s WHERE %s = ?",
+                    BUSINESS_STATUS, AUTHORED_ON, OWNER, TASK_TABLE, FOR);
         }
 
         final String SQL = sql;
@@ -164,6 +171,8 @@ public class ListTaskInteractor extends BaseInteractor {
             cardDetails = createPaotCardDetails(cursor, interventionType);
         } else if (IRS_VERIFICATION.equals(interventionType)) {
             cardDetails = createIRSverificationCardDetails(cursor);
+        } else if (REGISTER_FAMILY.equals(interventionType)) {
+            cardDetails = createFamilyCardDetails(cursor);
         }
 
         return cardDetails;
@@ -215,6 +224,15 @@ public class ListTaskInteractor extends BaseInteractor {
                 cursor.getString(cursor.getColumnIndex(CARD_SPRAY))
         );
         return irsVerificationCardDetails;
+    }
+
+    private FamilyCardDetails createFamilyCardDetails(Cursor cursor) {
+        return new FamilyCardDetails(
+                CardDetailsUtil.getTranslatedBusinessStatus(cursor.getString(cursor.getColumnIndex("business_status"))),
+                cursor.getString(cursor.getColumnIndex("authored_on")),
+                cursor.getString(cursor.getColumnIndex("owner"))
+
+        );
     }
 
     public void fetchLocations(String plan, String operationalArea) {

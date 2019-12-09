@@ -27,6 +27,7 @@ import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
@@ -42,6 +43,7 @@ import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.util.Utils;
 
+import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
@@ -270,7 +272,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                         || COMPLETE.equals(businessStatus) || NOT_ELIGIBLE.equals(businessStatus) || NOT_VISITED.equals(businessStatus))) {
 
             listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
-        } else if ((MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code))
+        } else if ((MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || REGISTER_FAMILY.equals(code))
                 && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
                 || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
@@ -330,6 +332,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.openCardView(cardDetails);
         } else if (cardDetails instanceof IRSVerificationCardDetails) {
             listTaskView.openCardView(cardDetails);
+        } else if (cardDetails instanceof FamilyCardDetails) {
+            formatFamilyCardDetails((FamilyCardDetails) cardDetails);
+            listTaskView.openCardView(cardDetails);
         }
     }
 
@@ -352,6 +357,15 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         CardDetailsUtil.formatCardDetails(sprayCardDetails);
     }
+
+    private void formatFamilyCardDetails(FamilyCardDetails familyCardDetails) {
+
+        Date originalDate = StringUtils.isBlank(familyCardDetails.getDateCreated()) ? null :
+                new Date(Long.parseLong(familyCardDetails.getDateCreated()));
+
+        familyCardDetails.setDateCreated(formatDate(originalDate));
+    }
+
 
     private void startForm(Feature feature, CardDetails cardDetails, String interventionType) {
         String formName = jsonFormUtils.getFormName(null, interventionType);

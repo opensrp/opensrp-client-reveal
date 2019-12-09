@@ -555,6 +555,10 @@ public interface Constants {
 
         String VALIDATION_STATUS = "validationStatus";
 
+        String AUTHORED_ON = "authored_on";
+
+        String OWNER =  "owner";
+
     }
 
     interface PlanDefinitionStatus {
