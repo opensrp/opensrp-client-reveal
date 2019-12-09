@@ -1,6 +1,8 @@
 package org.smartregister.reveal.presenter;
 
 
+import android.content.DialogInterface;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.json.JSONObject;
@@ -16,6 +18,7 @@ import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.interactor.RevealFamilyOtherMemberInteractor;
 import org.smartregister.reveal.model.FamilyProfileModel;
+import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 
 import timber.log.Timber;
@@ -131,6 +134,20 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
             getView().hideProgressDialog();
             Timber.e(e);
         }
+    }
+
+    @Override
+    public void onArchiveFamilyMember() {
+        AlertDialogUtils.displayNotificationWithCallback(getView().getContext(), R.string.archive_member, R.string.confirm_archive_member, R.string.confirm, R.string.cancel, (dialog, buttonClicked) -> {
+            if (buttonClicked == DialogInterface.BUTTON_POSITIVE) {
+                archiveFamilyMember();
+            }
+            dialog.dismiss();
+        });
+    }
+
+    private void archiveFamilyMember() {
+        otherMemberInteractor.archiveFamilyMember(client);
     }
 
     @Override

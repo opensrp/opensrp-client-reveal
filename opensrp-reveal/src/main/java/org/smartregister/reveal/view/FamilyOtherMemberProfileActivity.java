@@ -80,6 +80,9 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
             case R.id.action_registration:
                 presenter().onEditMemberDetails();
                 return true;
+            case R.id.action_archive:
+                presenter().onArchiveFamilyMember();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

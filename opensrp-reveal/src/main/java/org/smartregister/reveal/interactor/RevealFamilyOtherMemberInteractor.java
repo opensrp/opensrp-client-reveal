@@ -2,6 +2,7 @@ package org.smartregister.reveal.interactor;
 
 
 import org.smartregister.commonregistry.CommonPersonObject;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.family.interactor.FamilyOtherMemberProfileInteractor;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
@@ -29,5 +30,10 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
                 presenter.onFetchFamilyHead(commonPersonObject);
             });
         });
+    }
+
+    @Override
+    public void archiveFamilyMember(CommonPersonObjectClient client) {
+
     }
 }

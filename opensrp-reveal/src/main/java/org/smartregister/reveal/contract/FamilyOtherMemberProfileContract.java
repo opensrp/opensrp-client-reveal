@@ -4,6 +4,7 @@ import android.content.Context;
 
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.contract.FamilyOtherMemberContract;
 
 /**
@@ -19,6 +20,8 @@ public interface FamilyOtherMemberProfileContract {
         void onEditMemberDetails();
 
         void updateFamilyMember(String jsonString);
+
+        void onArchiveFamilyMember();
     }
 
     interface View extends FamilyOtherMemberContract.View {
@@ -34,5 +37,7 @@ public interface FamilyOtherMemberProfileContract {
     interface Interactor extends FamilyOtherMemberContract.Interactor {
 
         void getFamilyHead(BasePresenter presenter, String familyHeadId);
+
+        void archiveFamilyMember(CommonPersonObjectClient client);
     }
 }
