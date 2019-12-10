@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.junit.Rule;
@@ -14,6 +15,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 
@@ -22,8 +24,11 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.smartregister.AllConstants.BOOLEAN_FALSE;
+import static org.smartregister.AllConstants.BOOLEAN_TRUE;
 import static org.smartregister.reveal.util.CardDetailsUtil.formatCardDetails;
 import static org.smartregister.reveal.util.CardDetailsUtil.getTranslatedBusinessStatus;
+import static org.smartregister.reveal.util.CardDetailsUtil.getTranslatedIRSVerificationStatus;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
@@ -214,6 +219,146 @@ public class CardDetailsUtilTest extends BaseUnitTest {
         assertEquals(INCOMPLETE, getTranslatedBusinessStatus(INCOMPLETE));
         assertEquals(NOT_ELIGIBLE, getTranslatedBusinessStatus(NOT_ELIGIBLE));
         assertEquals(IN_PROGRESS, getTranslatedBusinessStatus(IN_PROGRESS));
+
+    }
+
+    @Test
+    public void testIRSVerificationStatusITranslatedCorrectly(){
+        assertEquals(getString(R.string.sprayed), getTranslatedIRSVerificationStatus(Constants.IRSVerificationStatus.SPRAYED));
+        assertEquals(getString(R.string.not_sprayed), getTranslatedIRSVerificationStatus(Constants.IRSVerificationStatus.NOT_SPRAYED));
+        assertEquals(getString(R.string.structure_not_found_or_visited_during_campaign), getTranslatedIRSVerificationStatus(Constants.IRSVerificationStatus.NOT_FOUND_OR_VISITED));
+        assertEquals(getString(R.string.other), getTranslatedIRSVerificationStatus(Constants.IRSVerificationStatus.OTHER));
+    }
+
+    @Test
+    public void testPopulateAndOpenIRSVerificationCardForTrueAndEligibleStructures(){
+
+        final String TRUE_STRUCTURE = BOOLEAN_TRUE;
+        final String ELIGIBLE_STRUCTURE = BOOLEAN_TRUE;
+        final String REPORTED_SPRAY_STATUS = Constants.IRSVerificationStatus.SPRAYED;
+        final String CHALK_SPRAY_STATUS = Constants.IRSVerificationStatus.NOT_SPRAYED;
+        final String STICKER_SPRAY_STATUS = Constants.IRSVerificationStatus.NOT_FOUND_OR_VISITED;
+        final String CARD_SPRAY_STATUS = Constants.IRSVerificationStatus.SPRAYED;
+        final String STATUS = "status";
+
+        Activity activity = mock(Activity.class);
+        Resources resources = mock(Resources.class);
+
+        TextView tvReportedSprayLabel = new TextView(RuntimeEnvironment.application);
+        TextView tvReportedSprayStatus = new TextView(RuntimeEnvironment.application);
+        TextView tvChalkSprayLabel = new TextView(RuntimeEnvironment.application);
+        TextView tvChalkSprayStatus = new TextView(RuntimeEnvironment.application);
+        TextView tvStickerSprayLabel = new TextView(RuntimeEnvironment.application);
+        TextView tvStickerSprayStatus = new TextView(RuntimeEnvironment.application);
+        TextView tvCardSprayLabel = new TextView(RuntimeEnvironment.application);
+        TextView tvCardSprayStatus = new TextView(RuntimeEnvironment.application);
+        TextView tvIneligibleStructuresLabel = new TextView(RuntimeEnvironment.application);
+        ScrollView svEligibleStructuresScrollView = new ScrollView(RuntimeEnvironment.application);
+        CardView irsVerificationCardview = new CardView(RuntimeEnvironment.application);
+        irsVerificationCardview.setVisibility(View.GONE);
+
+        doReturn(resources).when(activity).getResources();
+
+        doReturn(tvReportedSprayLabel).when(activity).findViewById(eq(R.id.reported_spray_label));
+        doReturn(tvReportedSprayStatus).when(activity).findViewById(eq(R.id.reported_spray_status));
+        doReturn(tvChalkSprayLabel).when(activity).findViewById(eq(R.id.chalk_spray_label));
+        doReturn(tvChalkSprayStatus).when(activity).findViewById(eq(R.id.chalk_spray_status));
+        doReturn(tvStickerSprayLabel).when(activity).findViewById(eq(R.id.sticker_spray_label));
+        doReturn(tvStickerSprayStatus).when(activity).findViewById(eq(R.id.sticker_spray_status));
+        doReturn(tvCardSprayLabel).when(activity).findViewById(eq(R.id.card_spray_label));
+        doReturn(tvCardSprayStatus).when(activity).findViewById(eq(R.id.card_spray_status));
+        doReturn(tvIneligibleStructuresLabel).when(activity).findViewById(eq(R.id.ineligible_structures_label));
+        doReturn(svEligibleStructuresScrollView).when(activity).findViewById(eq(R.id.eligible_structures_scrollview));
+        doReturn(irsVerificationCardview).when(activity).findViewById(eq(R.id.irs_verification_card_view));
+
+        IRSVerificationCardDetails cardDetails = new IRSVerificationCardDetails(STATUS,
+                TRUE_STRUCTURE, ELIGIBLE_STRUCTURE, REPORTED_SPRAY_STATUS, CHALK_SPRAY_STATUS,
+                STICKER_SPRAY_STATUS, CARD_SPRAY_STATUS);
+
+        new CardDetailsUtil().populateAndOpenIRSVerificationCard(cardDetails, activity);
+
+        assertEquals(getString(R.string.sprayed), tvReportedSprayStatus.getText());
+        assertEquals(getString(R.string.not_sprayed), tvChalkSprayStatus.getText());
+        assertEquals(getString(R.string.structure_not_found_or_visited_during_campaign), tvStickerSprayStatus.getText());
+        assertEquals(getString(R.string.sprayed), tvCardSprayStatus.getText());
+        assertEquals(irsVerificationCardview.getVisibility(), View.VISIBLE);
+
+    }
+
+    @Test
+    public void testPopulateAndOpenIRSVerificationCardForNonStructures(){
+
+        final String TRUE_STRUCTURE = BOOLEAN_FALSE;
+        final String ELIGIBLE_STRUCTURE = BOOLEAN_TRUE;
+        final String REPORTED_SPRAY_STATUS = Constants.IRSVerificationStatus.SPRAYED;
+        final String CHALK_SPRAY_STATUS = Constants.IRSVerificationStatus.NOT_SPRAYED;
+        final String STICKER_SPRAY_STATUS = Constants.IRSVerificationStatus.NOT_FOUND_OR_VISITED;
+        final String CARD_SPRAY_STATUS = Constants.IRSVerificationStatus.SPRAYED;
+        final String STATUS = "status";
+
+        Activity activity = mock(Activity.class);
+        Resources resources = mock(Resources.class);
+
+
+        TextView tvIneligibleStructuresLabel = new TextView(RuntimeEnvironment.application);
+        ScrollView svEligibleStructuresScrollView = new ScrollView(RuntimeEnvironment.application);
+        CardView irsVerificationCardview = new CardView(RuntimeEnvironment.application);
+        irsVerificationCardview.setVisibility(View.GONE);
+
+        doReturn(resources).when(activity).getResources();
+
+        doReturn(tvIneligibleStructuresLabel).when(activity).findViewById(eq(R.id.ineligible_structures_label));
+        doReturn(svEligibleStructuresScrollView).when(activity).findViewById(eq(R.id.eligible_structures_scrollview));
+        doReturn(irsVerificationCardview).when(activity).findViewById(eq(R.id.irs_verification_card_view));
+
+        IRSVerificationCardDetails cardDetails = new IRSVerificationCardDetails(STATUS,
+                TRUE_STRUCTURE, ELIGIBLE_STRUCTURE, REPORTED_SPRAY_STATUS, CHALK_SPRAY_STATUS,
+                STICKER_SPRAY_STATUS, CARD_SPRAY_STATUS);
+
+        new CardDetailsUtil().populateAndOpenIRSVerificationCard(cardDetails, activity);
+
+        assertEquals(tvIneligibleStructuresLabel.getVisibility(), View.VISIBLE);
+        assertEquals(svEligibleStructuresScrollView.getVisibility(), View.GONE);
+        assertEquals(irsVerificationCardview.getVisibility(), View.VISIBLE);
+
+    }
+
+
+    @Test
+    public void testPopulateAndOpenIRSVerificationCardForInEligibleStructures(){
+
+        final String TRUE_STRUCTURE = BOOLEAN_TRUE;
+        final String ELIGIBLE_STRUCTURE = BOOLEAN_FALSE;
+        final String REPORTED_SPRAY_STATUS = Constants.IRSVerificationStatus.SPRAYED;
+        final String CHALK_SPRAY_STATUS = Constants.IRSVerificationStatus.NOT_SPRAYED;
+        final String STICKER_SPRAY_STATUS = Constants.IRSVerificationStatus.NOT_FOUND_OR_VISITED;
+        final String CARD_SPRAY_STATUS = Constants.IRSVerificationStatus.SPRAYED;
+        final String STATUS = "status";
+
+        Activity activity = mock(Activity.class);
+        Resources resources = mock(Resources.class);
+
+
+        TextView tvIneligibleStructuresLabel = new TextView(RuntimeEnvironment.application);
+        ScrollView svEligibleStructuresScrollView = new ScrollView(RuntimeEnvironment.application);
+        CardView irsVerificationCardview = new CardView(RuntimeEnvironment.application);
+        irsVerificationCardview.setVisibility(View.GONE);
+
+        doReturn(resources).when(activity).getResources();
+
+        doReturn(tvIneligibleStructuresLabel).when(activity).findViewById(eq(R.id.ineligible_structures_label));
+        doReturn(svEligibleStructuresScrollView).when(activity).findViewById(eq(R.id.eligible_structures_scrollview));
+        doReturn(irsVerificationCardview).when(activity).findViewById(eq(R.id.irs_verification_card_view));
+
+        IRSVerificationCardDetails cardDetails = new IRSVerificationCardDetails(STATUS,
+                TRUE_STRUCTURE, ELIGIBLE_STRUCTURE, REPORTED_SPRAY_STATUS, CHALK_SPRAY_STATUS,
+                STICKER_SPRAY_STATUS, CARD_SPRAY_STATUS);
+
+        new CardDetailsUtil().populateAndOpenIRSVerificationCard(cardDetails, activity);
+
+        assertEquals(tvIneligibleStructuresLabel.getVisibility(), View.VISIBLE);
+        assertEquals(svEligibleStructuresScrollView.getVisibility(), View.GONE);
+        assertEquals(irsVerificationCardview.getVisibility(), View.VISIBLE);
 
     }
 
