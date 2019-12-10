@@ -27,7 +27,7 @@ apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'io.fabric'
 
 jacoco {
-    toolVersion = "0.7.9"
+    toolVersion = "0.8.0"
 }
 
 
@@ -262,4 +262,5 @@ tasks.withType(Test) {
 
 coveralls {
     jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/merged.xml"
+    sourceDirs=[files("$project.projectDir/src/main/java")]
 }
