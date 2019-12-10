@@ -86,12 +86,8 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
                     R.string.archive_member_failed, client.getColumnmaps().get(DBConstants.KEY.FIRST_NAME),
                     client.getColumnmaps().get(DBConstants.KEY.LAST_NAME));
         } else {
-            finishActivity();
+            ((Activity) getView().getContext()).finish();
         }
-    }
-
-    private void finishActivity() {
-        ((Activity) getView().getContext()).finish();
     }
 
     private void startFamilyMemberForm(String familyName, boolean isFamilyHead) {
