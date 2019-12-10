@@ -32,6 +32,9 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 
 public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfileActivity implements FamilyOtherMemberProfileContract.View {
 
+
+    private boolean isFamilyHead = false;
+
     @Override
     protected void initializePresenter() {
         String baseEntityId = getIntent().getStringExtra(Constants.INTENT_KEY.BASE_ENTITY_ID);
@@ -44,6 +47,7 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
         presenter = new FamilyOtherMemberPresenter(this, new BaseFamilyOtherMemberProfileActivityModel(),
                 null, familyBaseEntityId, baseEntityId, familyHead, primaryCaregiver, operationalArea, familyName);
         ((FamilyOtherMemberPresenter) presenter).setStructureId(structureId);
+        isFamilyHead = baseEntityId.equals(familyHead);
     }
 
     @Override
@@ -68,6 +72,11 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
         }
 
         getMenuInflater().inflate(R.menu.other_member_menu, menu);
+        if (isFamilyHead) {
+            menu.findItem(R.id.action_archive).setVisible(false);
+        }
+
+
         return true;
     }
 
