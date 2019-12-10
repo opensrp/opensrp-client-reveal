@@ -11,6 +11,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.smartregister.clientandeventmodel.DateUtil;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.db.Event;
+import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.EventClientRepository.event_column;
@@ -88,8 +89,8 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                 }
 
                 cursor.close();
-                cursor = database.rawQuery(getMemberTasksSelect(String.format("%s.%s=? AND %s=? AND %s != ?",
-                        STRUCTURES_TABLE, ID, PLAN_ID, STATUS), getMemberColumns()),
+                cursor = database.rawQuery(getMemberTasksSelect(String.format("%s.%s=? AND %s=? AND %s != ? AND %s IS NULL",
+                        STRUCTURES_TABLE, ID, PLAN_ID, STATUS, DBConstants.KEY.DATE_REMOVED), getMemberColumns()),
                         new String[]{structureId, planId, CANCELLED.name()});
                 while (cursor.moveToNext()) {
                     taskDetailsList.add(readMemberTaskDetails(cursor));
