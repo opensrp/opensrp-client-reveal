@@ -74,4 +74,4 @@ description: Task business status
 priority: 1
 condition: "true"
 actions:
-  - "calculation = (helper.ifNull(step1_eligibile,'null') == 'Yes') ?  'Complete' : 'Not Eligible' "
+- "calculation = (step1_eligibile == 'Yes') ?  'Complete' : 'Not Eligible' "
