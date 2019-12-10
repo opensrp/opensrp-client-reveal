@@ -59,7 +59,7 @@ public class RevealFamilyRegisterInteractor extends org.smartregister.family.int
             }
             if (Utils.isFocusInvestigation())
                 taskUtils.generateBedNetDistributionTask(context, structureId);
-            appExecutors.mainThread().execute(() -> presenter.onTasksGenerated());
+            appExecutors.mainThread().execute(() -> presenter.onTasksGenerated(eventClientList));
         });
     }
 
