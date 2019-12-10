@@ -197,7 +197,9 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             if (structure != null) {
                 Obs eventObs = event.findObs(null, false, formField);
                 if (eventObs != null && JsonForm.PAOT_STATUS.equals(formField)) {
-                    structure.getProperties().setStatus(PropertyStatus.valueOf(eventObs.getValue().toString().toUpperCase()));
+                    String propertyStatusString = eventObs.getValue().toString().toUpperCase();
+                    propertyStatusString = propertyStatusString.replace(" ", "_");
+                    structure.getProperties().setStatus(PropertyStatus.valueOf(propertyStatusString));
                     structureRepository.addOrUpdate(structure);
                 } else if (eventObs != null && JsonForm.STRUCTURE_TYPE.equals(formField)) {
                     structure.getProperties().setType(eventObs.getValue().toString());

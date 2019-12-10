@@ -112,6 +112,7 @@ public class GeoJsonUtils {
                 }
                 taskProperties = new HashMap<>();
                 taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
+                taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus()); // Set here for non residential structures
                 taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus()); // used to determine action to take when a feature is selected
                 taskProperties.put(TASK_STATUS, task.getStatus().name());
                 taskProperties.put(TASK_CODE, task.getCode());

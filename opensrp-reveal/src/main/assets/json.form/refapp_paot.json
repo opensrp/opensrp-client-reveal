@@ -65,6 +65,10 @@
           {
             "key": "Inactive",
             "text": "Inactive"
+          },
+          {
+            "key": "Not Eligible",
+            "text": "Not Eligible"
           }
         ],
         "v_required": {
@@ -99,7 +103,14 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "hidden",
-        "value": "Complete"
+        "value": "Complete",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "paot-calculation.yml"
+            }
+          }
+        }
       }
     ]
   }
