@@ -75,7 +75,7 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
                     try {
                         JSONObject event = events.getJSONObject(i);
                         event.put("dateVoided", now);
-                        clientJsonObject.put(client_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
+                        event.put(event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
                     } catch (JSONException e) {
                         Timber.e(e);
                     }
