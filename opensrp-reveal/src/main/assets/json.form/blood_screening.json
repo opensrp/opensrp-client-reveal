@@ -52,6 +52,29 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "eligibile",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this person eligible for blood screening?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "value" : "Yes",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
         "key": "caseTestingProtocol",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -75,6 +98,12 @@
         "v_required": {
           "value": "true",
           "err": "select type of blood screening"
+        } ,
+        "relevance": {
+          "step1:eligibile": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -97,6 +126,12 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
+        },
+        "relevance": {
+          "step1:eligibile": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -119,6 +154,12 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
+        },
+        "relevance": {
+          "step1:eligibile": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -315,7 +356,13 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Please add a comment"
+        "hint": "Please add a comment",
+        "relevance": {
+          "step1:eligibile": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
       },
       {
         "key": "business_status",
@@ -323,7 +370,14 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "hidden",
-        "value": "Complete"
+        "value": "Complete",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "blood-screening-calculation.yml"
+            }
+          }
+        }
       }
     ]
   }
