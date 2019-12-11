@@ -19,6 +19,8 @@ public interface FamilyConstants {
 
         String UPDATE_FAMILY_REGISTRATION = "Update Family Registration";
         String UPDATE_FAMILY_MEMBER_REGISTRATION = "Update Family Member Registration";
+
+        String ARCHIVE_FAMILY_MEMBER = "Archive Family Member";
     }
 
     interface JSON_FORM {

@@ -270,5 +270,9 @@
     <string name="refresh">Refresh</string>
     <string name="export_db_notification">Exporting Database</string>
     <string name="operational_area_not_selected">Operational Area not selected</string>
+    <string name="archive_member">Archive Member</string>
+    <string name="confirm_archive_member">Are you sure you want archive family member? All tasks and events will be archived </string>
+    <string name="confirm">Confirm</string>
+    <string name="archive_member_failed">Archiving member %1s %2s failed</string>
 
 </resources>
