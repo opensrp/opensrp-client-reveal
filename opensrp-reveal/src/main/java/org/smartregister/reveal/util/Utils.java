@@ -303,4 +303,9 @@ public class Utils {
         return isFocusInvestigation() || isMDA();
     }
 
+    public static String getCurrentLocationId() {
+        Location currentOperationalArea = getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+        return currentOperationalArea == null ? null : currentOperationalArea.getId();
+    }
+
 }

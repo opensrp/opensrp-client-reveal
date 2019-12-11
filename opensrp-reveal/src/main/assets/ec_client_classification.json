@@ -89,6 +89,16 @@
             "creates_case": [
               "irs_verification"
             ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "Archive Family Member",
+            "closes_case": [
+              "ec_family_member"
+            ],
+            "creates_case": [
+              "ec_family_member"
+            ]
           }
         ]
       }

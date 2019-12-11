@@ -89,7 +89,9 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
                         client.put("lastName", family.getFirstName());
                         client.put(syncStatus.name(), BaseRepository.TYPE_Unsynced);
                         familyMembers.put(client);
-                        Event updateEvent = FamilyJsonFormUtils.createUpdateMemberNameEvent(commonPersonObject.getCaseId(), event);
+                        FamilyMetadata familyMetadata = RevealApplication.getInstance().getMetadata();
+                        Event updateEvent = FamilyJsonFormUtils.createFamilyEvent(commonPersonObject.getCaseId(),
+                                event.getLocationId(), event.getDetails(), familyMetadata.familyMemberRegister.updateEventType);
                         JSONObject eventJson = new JSONObject(JsonFormUtils.gson.toJson(updateEvent));
                         eventJson.put(syncStatus.name(), BaseRepository.TYPE_Unsynced);
                         updateSurnameEvents.put(eventJson);
