@@ -1,7 +1,5 @@
 package org.smartregister.reveal.interactor;
 
-import com.google.gson.JsonObject;
-
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 import org.json.JSONArray;
@@ -20,34 +18,25 @@ import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
-import org.smartregister.domain.db.Client;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
-import org.smartregister.repository.EventClientRepository.client_column;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
-import org.smartregister.reveal.util.FamilyConstants;
-import org.smartregister.reveal.util.FamilyConstants.EventType;
-import org.smartregister.util.JsonFormUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.smartregister.repository.EventClientRepository.client_column.*;
 import static org.smartregister.repository.EventClientRepository.event_column.syncStatus;
 import static org.smartregister.reveal.util.FamilyConstants.EventType.ARCHIVE_FAMILY_MEMBER;
-import static org.smartregister.util.JsonFormUtils.gson;
 
 public class RevealFamilyOtherMemberInteractorTest extends BaseUnitTest {
 
@@ -124,9 +113,9 @@ public class RevealFamilyOtherMemberInteractorTest extends BaseUnitTest {
 
         interactor.archiveFamilyMember(presenter, client);
         //assert tasks are cancelled
-        verify(taskRepository).cancelTasksByEntityAndStatus(entityId);
+        verify(taskRepository, timeout(ASYNC_TIMEOUT)).cancelTasksByEntityAndStatus(entityId);
 
-        verify(eventClientRepository).getEventsByBaseEntityId(entityId);
+        verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).getEventsByBaseEntityId(entityId);
         //assert both events and client is updated
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addorUpdateClient(eq(entityId), jsonObjectArgumentCaptor.capture());
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).batchInsertEvents(jsonArrayArgumentCaptor.capture(), eq(0L));
