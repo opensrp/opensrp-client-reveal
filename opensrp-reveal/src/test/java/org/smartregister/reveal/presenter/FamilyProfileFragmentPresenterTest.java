@@ -144,8 +144,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         Whitebox.setInternalState(presenter, "structureId", structureId);
         String baseEntityId = UUID.randomUUID().toString();
         FamilyEventClient eventClient = new FamilyEventClient(new Client(), new Event().withBaseEntityId(baseEntityId));
-        when(model.getEventClient()).thenReturn(eventClient);
-        presenter.onRegistrationSaved(false);
+        presenter.onRegistrationSaved(false,true,eventClient);
         verify(presenter, never()).onTasksGenerated();
         verify(view, never()).refreshTasks(structureId);
         verify(interactor).generateTasks(view.getApplicationContext(), baseEntityId, structureId);
@@ -157,8 +156,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         String entityId = UUID.randomUUID().toString();
         FamilyEventClient eventClient = new FamilyEventClient((Client) new Client().withBaseEntityId(entityId), new Event()
                 .withBaseEntityId(entityId).withObs(new ArrayList<>()));
-        when(model.getEventClient()).thenReturn(eventClient);
-        presenter.onRegistrationSaved(true);
+        presenter.onRegistrationSaved(true,true,eventClient);
         verify(interactor, never()).updateFamilyMemberName(eventClient.getClient(), eventClient.getEvent(), null);
         verify(view, never()).refreshTasks(structureId);
     }
@@ -169,8 +167,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         String entityId = UUID.randomUUID().toString();
         FamilyEventClient eventClient = new FamilyEventClient((Client) new Client().withFirstName("Victor").withBaseEntityId(entityId), new Event()
                 .withBaseEntityId(entityId).withObs(new Obs().withValue("Victoria").withFieldCode(DatabaseKeys.OLD_FAMILY_NAME)));
-        when(model.getEventClient()).thenReturn(eventClient);
-        presenter.onRegistrationSaved(true);
+        presenter.onRegistrationSaved(true,true,eventClient);
         verify(interactor).updateFamilyMemberName(eventClient.getClient(), eventClient.getEvent(), "Victoria");
         verify(view).updateFamilyName("Victor");
         verify(view, never()).hideProgressDialog();
@@ -184,8 +181,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         String entityId = UUID.randomUUID().toString();
         FamilyEventClient eventClient = new FamilyEventClient((Client) new Client().withFirstName("Victor").withBaseEntityId(entityId), new Event()
                 .withBaseEntityId(entityId).withObs(new Obs().withValue("Victor").withFieldCode(DatabaseKeys.OLD_FAMILY_NAME)));
-        when(model.getEventClient()).thenReturn(eventClient);
-        presenter.onRegistrationSaved(true);
+        presenter.onRegistrationSaved(true,true,eventClient);
         verify(interactor, never()).updateFamilyMemberName(eventClient.getClient(), eventClient.getEvent(), "Victoria");
         verify(view, never()).updateFamilyName("Victor");
         verify(view).hideProgressDialog();

@@ -87,7 +87,7 @@ public class RevealFamilyRegisterInteractorTest extends BaseUnitTest {
         interactor.generateTasks(eventClientList, structureId, context);
         verify(taskUtils, timeout(ASYNC_TIMEOUT)).generateBloodScreeningTask(context, baseEntityId, structureId);
         verify(taskUtils, timeout(ASYNC_TIMEOUT)).generateBedNetDistributionTask(context, structureId);
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksGenerated();
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksGenerated(eventClientList);
     }
 
     @Test

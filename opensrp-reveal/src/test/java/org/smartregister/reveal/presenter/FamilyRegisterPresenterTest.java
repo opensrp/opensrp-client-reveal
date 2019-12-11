@@ -59,9 +59,10 @@ public class FamilyRegisterPresenterTest extends BaseUnitTest {
 
     private String careGiver = UUID.randomUUID().toString();
 
+    private List<FamilyEventClient> eventClientList = new ArrayList<>();
+
     @Before
     public void setUp() {
-        List<FamilyEventClient> eventClientList = new ArrayList<>();
         Client family = new Client();
         family.withLastName("Family")
                 .withFirstName("Otala")
@@ -70,7 +71,6 @@ public class FamilyRegisterPresenterTest extends BaseUnitTest {
         family.addRelationship(RELATIONSHIP.FAMILY_HEAD, familyHead);
         family.addRelationship(RELATIONSHIP.PRIMARY_CAREGIVER, careGiver);
         eventClientList.add(new FamilyEventClient(family, new Event().withBaseEntityId(baseEntityId)));
-        when(model.getEventClientList()).thenReturn(eventClientList);
         when(model.getStructureId()).thenReturn(structureId);
         when(view.getContext()).thenReturn(context);
         presenter = new FamilyRegisterPresenter(view, model);
@@ -80,23 +80,23 @@ public class FamilyRegisterPresenterTest extends BaseUnitTest {
     @Test
     public void testOnRegistrationSavedForNewForms() {
         presenter = spy(presenter);
-        presenter.onRegistrationSaved(false);
-        verify(presenter, never()).onTasksGenerated();
-        verify(interactor).generateTasks(model.getEventClientList(), structureId, context);
+        presenter.onRegistrationSaved(false,true,eventClientList);
+        verify(presenter, never()).onTasksGenerated(eventClientList);
+        verify(interactor).generateTasks(eventClientList, structureId, context);
     }
 
 
     @Test
     public void testOnRegistrationSavedForEditedForms() {
         presenter = spy(presenter);
-        doNothing().when(presenter).onTasksGenerated();
-        presenter.onRegistrationSaved(true);
-        verify(presenter).onTasksGenerated();
+        doNothing().when(presenter).onTasksGenerated(eventClientList);
+        presenter.onRegistrationSaved(true,true,eventClientList);
+        verify(presenter).onTasksGenerated(eventClientList);
     }
 
     @Test
     public void testOnTasksGenerated() {
-        presenter.onTasksGenerated();
+        presenter.onTasksGenerated(eventClientList);
         verify(view).hideProgressDialog();
         verify(view).startProfileActivity(baseEntityId, familyHead, careGiver, "Otala");
         assertTrue(RevealApplication.getInstance().isRefreshMapOnEventSaved());
