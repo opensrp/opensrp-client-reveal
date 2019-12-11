@@ -274,5 +274,8 @@
     <string name="confirm_archive_member">Are you sure you want archive family member? All tasks and events will be archived </string>
     <string name="confirm">Confirm</string>
     <string name="archive_member_failed">Archiving member %1s %2s failed</string>
+    <string name="archive_family">Archive Household</string>
+    <string name="confirm_archive_family">Confirm Household Archival</string>
+    <string name="confirm_archive_family_message">Please confirm that you want to archive this household. This will delete all information and can not be undone.</string>
 
 </resources>

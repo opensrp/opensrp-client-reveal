@@ -100,9 +100,11 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
         if (R.id.edit_family == item.getItemId()) {
             startFormForEdit();
             return true;
-        }
-        if (R.id.add_member == item.getItemId()) {
+        } else if (R.id.add_member == item.getItemId()) {
             presenter().onAddFamilyMember();
+            return true;
+        } else if (R.id.archive_family == item.getItemId()) {
+            presenter().onArchiveFamilyClicked();
             return true;
         } else {
             return super.onOptionsItemSelected(item);

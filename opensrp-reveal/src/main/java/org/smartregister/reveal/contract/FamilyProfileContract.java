@@ -18,6 +18,8 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
         void refreshTasks(String structureId);
 
         void updateFamilyName(String firstName);
+
+        Context getContext();
     }
 
     interface Interactor extends org.smartregister.family.contract.FamilyProfileContract.Interactor {
@@ -34,6 +36,8 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
         void onMembersUpdated();
 
         void onAddFamilyMember();
+
+        void onArchiveFamilyClicked();
     }
 }
 

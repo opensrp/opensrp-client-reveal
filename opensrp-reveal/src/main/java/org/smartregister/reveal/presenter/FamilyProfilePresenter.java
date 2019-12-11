@@ -1,5 +1,7 @@
 package org.smartregister.reveal.presenter;
 
+import android.content.DialogInterface;
+
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -11,12 +13,14 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.presenter.BaseFamilyProfilePresenter;
 import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.interactor.RevealFamilyOtherMemberInteractor;
 import org.smartregister.reveal.interactor.RevealFamilyProfileInteractor;
 import org.smartregister.reveal.model.FamilyProfileModel;
+import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants.DatabaseKeys;
@@ -145,6 +149,20 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         } else {
             openAddMemberForm();
         }
+    }
+
+    @Override
+    public void onArchiveFamilyClicked() {
+        AlertDialogUtils.displayNotificationWithCallback(getView().getContext(),
+                R.string.confirm_archive_family, R.string.confirm_archive_family_message, R.string.confirm, R.string.cancel, (dialog, buttonClicked) -> {
+                    if (buttonClicked == DialogInterface.BUTTON_POSITIVE) {
+                        archiveFamily();
+                    }
+                    dialog.dismiss();
+                });
+    }
+
+    private void archiveFamily() {
     }
 
     private FamilyProfileContract.Interactor getInteractor() {
