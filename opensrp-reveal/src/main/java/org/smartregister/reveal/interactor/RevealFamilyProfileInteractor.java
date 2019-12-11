@@ -35,6 +35,7 @@ import java.util.List;
 import timber.log.Timber;
 
 import static org.smartregister.family.util.DBConstants.KEY.BASE_ENTITY_ID;
+import static org.smartregister.family.util.DBConstants.KEY.DATE_REMOVED;
 import static org.smartregister.repository.EventClientRepository.client_column.syncStatus;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 
@@ -131,7 +132,9 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
             boolean saved = false;
             try {
                 db.beginTransaction();
-                List<String> familyMembers = commonRepository.findSearchIds(String.format("select %s from %s where %s='%s'", BASE_ENTITY_ID, FAMILY_MEMBER, KEY.RELATIONAL_ID, familyHead));
+                List<String> familyMembers = commonRepository.findSearchIds(String.format(
+                        "SELECT %s FROM %s where %s='%s' AND %s IS NULL",
+                        BASE_ENTITY_ID, FAMILY_MEMBER, KEY.RELATIONAL_ID, familyHead, DATE_REMOVED));
                 familyMembers.add(familyHead);
                 for (String baseEntityId : familyMembers) {
                     interactorUtils.archiveClient(baseEntityId);
