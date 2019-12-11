@@ -29,7 +29,7 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
 
         void updateFamilyMemberName(@NonNull Client family, Event event, @NonNull String oldFamilyName);
 
-        void archiveFamilyMember(String familyHead);
+        void archiveFamilyMember(String familyBaseEntityId);
     }
 
     interface Presenter extends org.smartregister.family.contract.FamilyProfileContract.Presenter {

@@ -20,7 +20,6 @@ import java.util.Collections;
 
 import timber.log.Timber;
 
-import static org.smartregister.reveal.application.RevealApplication.getInstance;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.util.JsonFormUtils.gson;

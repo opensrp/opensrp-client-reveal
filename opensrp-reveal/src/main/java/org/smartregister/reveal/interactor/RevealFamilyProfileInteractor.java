@@ -126,7 +126,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     }
 
     @Override
-    public void archiveFamilyMember(String familyHead) {
+    public void archiveFamilyMember(String familyBaseEntityId) {
         appExecutors.diskIO().execute(() -> {
             SQLiteDatabase db = eventClientRepository.getWritableDatabase();
             boolean saved = false;
@@ -134,8 +134,8 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
                 db.beginTransaction();
                 List<String> familyMembers = commonRepository.findSearchIds(String.format(
                         "SELECT %s FROM %s where %s='%s' AND %s IS NULL",
-                        BASE_ENTITY_ID, FAMILY_MEMBER, KEY.RELATIONAL_ID, familyHead, DATE_REMOVED));
-                familyMembers.add(familyHead);
+                        BASE_ENTITY_ID, FAMILY_MEMBER, KEY.RELATIONAL_ID, familyBaseEntityId, DATE_REMOVED));
+                familyMembers.add(familyBaseEntityId);
                 for (String baseEntityId : familyMembers) {
                     interactorUtils.archiveClient(baseEntityId);
                 }
