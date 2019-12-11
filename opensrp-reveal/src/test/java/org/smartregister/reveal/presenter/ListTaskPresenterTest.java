@@ -56,6 +56,7 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.reveal.interactor.ListTaskInteractorPowerMockTest.mosquitoCollectionForm;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
@@ -653,6 +654,26 @@ public class ListTaskPresenterTest {
         listTaskPresenter = spy(listTaskPresenter);
         listTaskPresenter.onPasswordVerified();
         PowerMockito.verifyPrivate(listTaskPresenter).invoke("onLocationValidated");
+    }
+
+    @Test
+    public void testOnLocationValidatedCallsDisplaysMarkStructureIneligibleDialog() {
+        mockStaticMethods();
+
+        ListTaskPresenter listTaskPresenterSpy = spy(listTaskPresenter);
+
+        Feature feature = mock(Feature.class);
+        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeature", feature);
+
+        doNothing().when(listTaskViewSpy).startJsonForm(any(JSONObject.class));
+
+        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", REGISTER_FAMILY);
+
+        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureTaskStatus", READY.toString());
+
+        listTaskPresenterSpy.onLocationValidated();
+
+        verify(listTaskViewSpy).displayMarkStructureIneligibleDialog();
     }
 
     private void mockStaticMethods() {
