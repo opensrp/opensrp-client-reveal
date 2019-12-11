@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.junit.Rule;
@@ -14,6 +15,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 
@@ -215,6 +217,54 @@ public class CardDetailsUtilTest extends BaseUnitTest {
         assertEquals(NOT_ELIGIBLE, getTranslatedBusinessStatus(NOT_ELIGIBLE));
         assertEquals(IN_PROGRESS, getTranslatedBusinessStatus(IN_PROGRESS));
 
+    }
+
+    @Test
+    public void testPopulateFamilyCardShouldPopulateCorrectValues() {
+        final String DATE_CREATED = "today";
+        final String OWNER = "operator";
+        final String STATUS = "status";
+        final int STATUS_COLOR = 0;
+
+        Activity activity = mock(Activity.class);
+        Resources resources = mock(Resources.class);
+
+        TextView tvSprayStatus = new TextView(RuntimeEnvironment.application);
+        TextView tvPropertyType = new TextView(RuntimeEnvironment.application);
+        TextView tvSprayDate = new TextView(RuntimeEnvironment.application);
+        TextView tvSprayOperator = new TextView(RuntimeEnvironment.application);
+        TextView tvFamilyHead = new TextView(RuntimeEnvironment.application);
+        TextView tvReason = new TextView(RuntimeEnvironment.application);
+        Button btnChangeSprayStatus = new Button(RuntimeEnvironment.application);
+        Button btnRegisterFamily  =  new Button(RuntimeEnvironment.application);
+
+        doReturn(resources).when(activity).getResources();
+        doReturn(STATUS_COLOR).when(resources).getColor(anyInt());
+
+        doReturn(tvSprayStatus).when(activity).findViewById(eq(R.id.spray_status));
+        doReturn(tvPropertyType).when(activity).findViewById(eq(R.id.property_type));
+        doReturn(tvSprayDate).when(activity).findViewById(eq(R.id.spray_date));
+        doReturn(tvSprayOperator).when(activity).findViewById(eq(R.id.user_id));
+        doReturn(tvFamilyHead).when(activity).findViewById(eq(R.id.family_head));
+        doReturn(tvReason).when(activity).findViewById(eq(R.id.reason));
+        doReturn(btnChangeSprayStatus).when(activity).findViewById(eq(R.id.change_spray_status));
+        doReturn(btnRegisterFamily).when(activity).findViewById(eq(R.id.register_family));
+        doReturn(STATUS).when(activity).getString(anyInt());
+
+        FamilyCardDetails familyCardDetails = new FamilyCardDetails(STATUS, DATE_CREATED, OWNER);
+        familyCardDetails.setStatusColor(2);
+        new CardDetailsUtil().populateFamilyCard(familyCardDetails, activity);
+
+        assertEquals(tvSprayStatus.getText(), STATUS);
+        assertEquals(tvSprayDate.getText(), DATE_CREATED);
+        assertEquals(tvSprayOperator.getText(), OWNER);
+        assertEquals(tvSprayStatus.getCurrentTextColor(), STATUS_COLOR);
+
+        assertEquals(btnRegisterFamily.getVisibility(), View.VISIBLE);
+        assertEquals(tvPropertyType.getVisibility(), View.GONE);
+        assertEquals(tvFamilyHead.getVisibility(), View.GONE);
+        assertEquals(tvReason.getVisibility(), View.GONE);
+        assertEquals(btnChangeSprayStatus.getVisibility(), View.GONE);
     }
 
 }

@@ -28,6 +28,7 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.Constants;
@@ -65,6 +66,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
+import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.THAILAND_LARVAL_DIPPING_FORM;
 import static org.smartregister.reveal.util.Constants.JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM;
@@ -614,6 +616,30 @@ public class ListTaskPresenterTest {
         verify(listTaskViewSpy).hideProgressDialog();
         verify(listTaskViewSpy).displayNotification(R.string.form_save_failure_title, R.string.spray_form_save_failure);
 
+    }
+
+    @Test
+    public void testFetchIneligibleFamilyRegDetailsIsCalledForNotEligibleFamilyRegistrationTask() throws Exception {
+        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(REGISTER_FAMILY), anyString(), anyBoolean());
+        when(Utils.getPropertyValue(any(Feature.class), eq(FEATURE_SELECT_TASK_BUSINESS_STATUS))).thenReturn(NOT_ELIGIBLE);
+        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(REGISTER_FAMILY);
+
+        Feature feature = mock(Feature.class);
+        doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
+
+        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature, false);
+
+        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(REGISTER_FAMILY), AdditionalMatchers.or(anyString(), isNull()), eq(false));
+    }
+
+    @Test
+    public void testOpenCardViewIsCalledWithCorrectArgumentOnFamilyCardDetailsFetched() {
+        FamilyCardDetails familyCardDetails = new FamilyCardDetails(null, null, null);
+
+        doNothing().when(listTaskViewSpy).openCardView(any(CardDetails.class));
+        listTaskPresenter.onCardDetailsFetched(familyCardDetails);
+
+        verify(listTaskViewSpy, times(1)).openCardView(eq(familyCardDetails));
     }
 
     public void testRequestUserPassword() {
