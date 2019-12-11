@@ -51,6 +51,29 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "eligibile",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this household eligible for bednet distribution?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "value" : "Yes",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
         "key": "totPopulation",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -73,6 +96,12 @@
         "v_max": {
           "value": "[num_fam_members]",
           "err": "Cannot be more than number of registered members"
+        },
+        "relevance": {
+          "step1:eligibile": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -94,6 +123,12 @@
         "v_min": {
           "value": "0",
           "err": "Must be greater than or equal to 0"
+        },
+        "relevance": {
+          "step1:eligibile": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -115,6 +150,12 @@
         "v_min": {
           "value": "0",
           "err": "Must be greater than or equal to 0"
+        },
+        "relevance": {
+          "step1:eligibile": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -137,6 +178,12 @@
         "v_min": {
           "value": "0",
           "err": "Must be greater than or equal to 0"
+        },
+        "relevance": {
+          "step1:eligibile": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -163,6 +210,12 @@
         "v_relative_max": {
           "value": "existingITNs",
           "err": "Number nets dipped < 6 months cannot be greater that total normal nets"
+        },
+        "relevance": {
+          "step1:eligibile": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -193,6 +246,12 @@
             "ex-rules": {
               "rules-file": "bednet-distribution-calculation-rules.yml"
             }
+          }
+        },
+        "relevance": {
+          "step1:eligibile": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },
@@ -239,6 +298,12 @@
               "rules-file": "bednet-distribution-calculation-rules.yml"
             }
           }
+        },
+        "relevance": {
+          "step1:eligibile": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -265,6 +330,12 @@
         "v_min": {
           "value": "0",
           "err": "Must be greater than or equal to 0"
+        },
+        "relevance": {
+          "step1:eligibile": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -291,6 +362,12 @@
         "v_max": {
           "value": "[num_sleeps_outdoors]",
           "err": "Cannot be more than number of family members  who spend the night outdoors"
+        },
+        "relevance": {
+          "step1:eligibile": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -317,6 +394,12 @@
         "v_relative_max": {
           "value": "calcPopulationMinusExistingNets",
           "err": "Cannot be more than total Population subtract existing nets"
+        },
+        "relevance": {
+          "step1:eligibile": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -384,6 +467,12 @@
         "v_relative_max": {
           "value": "calcNumNetsToRedip",
           "err": "Cannot be more than Total nets eligible for redipping"
+        },
+        "relevance": {
+          "step1:eligibile": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
         }
       },
       {
@@ -394,7 +483,13 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Comment"
+        "hint": "Comment",
+        "relevance": {
+          "step1:eligibile": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
       },
       {
         "key": "business_status",
@@ -402,7 +497,14 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "hidden",
-        "value": "Complete"
+        "value": "Complete",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
       }
     ]
   }
