@@ -74,6 +74,7 @@ public class TaskUtils {
             for (Action action : currentPlan.getActions()) {
                 if (intervention.equals(action.getCode())) {
                     task.setFocus(action.getIdentifier());
+                    continue;
                 }
             }
         }
