@@ -2,16 +2,46 @@ package org.smartregister.reveal.util;
 
 import android.database.Cursor;
 
+import org.joda.time.DateTime;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.db.Client;
+import org.smartregister.domain.db.EventClient;
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
+import org.smartregister.repository.TaskRepository;
+import org.smartregister.reveal.sync.RevealClientProcessor;
+
+import java.util.Collections;
 
 import timber.log.Timber;
 
+import static org.smartregister.reveal.application.RevealApplication.getInstance;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.util.JsonFormUtils.gson;
 
 public class InteractorUtils {
+
+    private TaskRepository taskRepository;
+
+    private EventClientRepository eventClientRepository;
+
+    private RevealClientProcessor clientProcessor;
+
+    public InteractorUtils(TaskRepository taskRepository, EventClientRepository eventClientRepository, RevealClientProcessor clientProcessor) {
+        this.taskRepository = taskRepository;
+        this.eventClientRepository = eventClientRepository;
+        this.clientProcessor = clientProcessor;
+    }
+
+
+    public InteractorUtils() {
+    }
 
     public CommonPersonObject fetchSprayDetails(String interventionType, String structureId, EventClientRepository eventClientRepository, CommonRepository commonRepository) {
         CommonPersonObject commonPersonObject = null;
@@ -32,5 +62,50 @@ public class InteractorUtils {
             }
         }
         return commonPersonObject;
+    }
+
+
+    public boolean archiveClient(String baseEntityId) {
+        taskRepository.cancelTasksByEntityAndStatus(baseEntityId);
+        JSONObject eventsByBaseEntityId = eventClientRepository.getEventsByBaseEntityId(baseEntityId);
+        JSONArray events = eventsByBaseEntityId.optJSONArray("events");
+        JSONObject clientJsonObject = eventsByBaseEntityId.optJSONObject("client");
+        DateTime now = new DateTime();
+        if (events != null) {
+            for (int i = 0; i < events.length(); i++) {
+                try {
+                    JSONObject event = events.getJSONObject(i);
+                    event.put("dateVoided", now);
+                    event.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
+                } catch (JSONException e) {
+                    Timber.e(e);
+                }
+            }
+        }
+
+        boolean saved;
+        try {
+            eventClientRepository.batchInsertEvents(events, 0);
+            clientJsonObject.put("dateVoided", now);
+            clientJsonObject.put(EventClientRepository.client_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
+            clientJsonObject.getJSONObject("attributes").put("dateRemoved", now);
+            eventClientRepository.addorUpdateClient(baseEntityId, clientJsonObject);
+
+            Event archiveEvent = FamilyJsonFormUtils.createFamilyEvent(baseEntityId, Utils.getCurrentLocationId(), null, FamilyConstants.EventType.ARCHIVE_FAMILY_MEMBER);
+
+            JSONObject eventJson = new JSONObject(gson.toJson(archiveEvent));
+            eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
+            eventClientRepository.addEvent(baseEntityId, eventJson);
+
+            clientProcessor.processClient(Collections.singletonList(new EventClient(
+                    gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class),
+                    gson.fromJson(clientJsonObject.toString(), Client.class))), true);
+            saved = true;
+
+        } catch (JSONException e) {
+            Timber.e(e);
+            saved = false;
+        }
+        return saved;
     }
 }

@@ -70,7 +70,7 @@ public class ListTaskInteractor extends BaseInteractor {
     public ListTaskInteractor(ListTaskContract.Presenter presenter) {
         super(presenter);
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(SPRAYED_STRUCTURES);
-        interactorUtils = new InteractorUtils();
+        interactorUtils = new InteractorUtils(taskRepository, eventClientRepository, clientProcessor);
     }
 
     public void fetchInterventionDetails(String interventionType, String featureId, boolean isForForm) {

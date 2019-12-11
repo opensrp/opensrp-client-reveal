@@ -163,6 +163,8 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
     }
 
     private void archiveFamily() {
+        getView().showProgressDialog(org.smartregister.family.R.string.saving_dialog_title);
+        getInteractor().archiveFamilyMember( familyHead);
     }
 
     private FamilyProfileContract.Interactor getInteractor() {

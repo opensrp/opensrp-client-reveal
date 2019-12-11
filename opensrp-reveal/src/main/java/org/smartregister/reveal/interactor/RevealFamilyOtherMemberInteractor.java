@@ -23,6 +23,7 @@ import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
+import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.Collections;
@@ -38,18 +39,12 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
 
     private AppExecutors appExecutors;
 
-    private TaskRepository taskRepository;
-
-    private EventClientRepository eventClientRepository;
-
-    private RevealClientProcessor clientProcessor;
+    private InteractorUtils interactorUtils;
 
     public RevealFamilyOtherMemberInteractor() {
         commonRepository = getInstance().getContext().commonrepository(getInstance().getMetadata().familyMemberRegister.tableName);
         appExecutors = getInstance().getAppExecutors();
-        taskRepository = getInstance().getTaskRepository();
-        eventClientRepository = getInstance().getContext().getEventClientRepository();
-        clientProcessor = (RevealClientProcessor) getInstance().getClientProcessor();
+        interactorUtils = new InteractorUtils(getInstance().getTaskRepository(), getInstance().getContext().getEventClientRepository(), (RevealClientProcessor) getInstance().getClientProcessor());
     }
 
     @Override
@@ -65,52 +60,16 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
     @Override
     public void archiveFamilyMember(FamilyOtherMemberProfileContract.BasePresenter presenter, CommonPersonObjectClient client) {
         appExecutors.diskIO().execute(() -> {
-            taskRepository.cancelTasksByEntityAndStatus(client.getCaseId());
-            JSONObject eventsByBaseEntityId = eventClientRepository.getEventsByBaseEntityId(client.getCaseId());
-            JSONArray events = eventsByBaseEntityId.optJSONArray("events");
-            JSONObject clientJsonObject = eventsByBaseEntityId.optJSONObject("client");
-            DateTime now = new DateTime();
-            if (events != null) {
-                for (int i = 0; i < events.length(); i++) {
-                    try {
-                        JSONObject event = events.getJSONObject(i);
-                        event.put("dateVoided", now);
-                        event.put(event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
-                    } catch (JSONException e) {
-                        Timber.e(e);
-                    }
-                }
-            }
-
+            getInstance().getRepository().getWritableDatabase().beginTransaction();
             boolean saved;
             try {
-                getInstance().getRepository().getWritableDatabase().beginTransaction();
-                eventClientRepository.batchInsertEvents(events, 0);
-                clientJsonObject.put("dateVoided", now);
-                clientJsonObject.put(client_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
-                clientJsonObject.getJSONObject("attributes").put("dateRemoved", now);
-                eventClientRepository.addorUpdateClient(client.getCaseId(), clientJsonObject);
-
-                Event archiveEvent = FamilyJsonFormUtils.createFamilyEvent(client.getCaseId(), Utils.getCurrentLocationId(), null, FamilyConstants.EventType.ARCHIVE_FAMILY_MEMBER);
-
-                JSONObject eventJson = new JSONObject(gson.toJson(archiveEvent));
-                eventJson.put(event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
-                eventClientRepository.addEvent(client.getCaseId(), eventJson);
-
-                clientProcessor.processClient(Collections.singletonList(new EventClient(
-                        gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class),
-                        gson.fromJson(clientJsonObject.toString(), Client.class))), true);
+                saved = interactorUtils.archiveClient(client.getCaseId());
                 getInstance().getRepository().getWritableDatabase().setTransactionSuccessful();
-                saved = true;
-            } catch (JSONException e) {
-                Timber.e(e);
-                saved = false;
             } finally {
                 getInstance().getRepository().getWritableDatabase().endTransaction();
             }
-            boolean finalSaved = saved;
             appExecutors.mainThread().execute(() -> {
-                presenter.onArchiveMemberCompleted(finalSaved);
+                presenter.onArchiveMemberCompleted(saved);
             });
 
         });
