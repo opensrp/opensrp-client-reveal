@@ -143,6 +143,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
                     interactorUtils.archiveClient(baseEntityId);
                 }
                 taskRepository.cancelTasksByEntityAndStatus(structureId);
+                taskUtils.generateRegisterFamilyTask(RevealApplication.getInstance().getApplicationContext(), structureId);
                 db.setTransactionSuccessful();
                 saved = true;
             } catch (Exception e) {
