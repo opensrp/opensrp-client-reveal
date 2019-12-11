@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.3'
         classpath 'io.fabric.tools:gradle:1.25.4'
     }
 }
@@ -27,7 +27,7 @@ apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'io.fabric'
 
 jacoco {
-    toolVersion = "0.7.9"
+    toolVersion = "0.8.0"
 }
 
 
@@ -170,7 +170,7 @@ dependencies {
         exclude group: 'com.android.volley'
     }
 
-    implementation('org.smartregister:opensrp-client-core:1.8.11-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.8.12-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.guava', module: 'guava'
@@ -254,10 +254,6 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
     executionData = fileTree(dir: project.buildDir, includes: [
             'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
     ])
-}
-
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
 }
 
 coveralls {
