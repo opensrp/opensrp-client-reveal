@@ -18,6 +18,7 @@ import org.smartregister.family.interactor.FamilyProfileInteractor;
 import org.smartregister.family.util.DBConstants.KEY;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
@@ -53,6 +54,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     private RevealClientProcessor clientProcessor;
     private CommonRepository commonRepository;
     private InteractorUtils interactorUtils;
+    private TaskRepository taskRepository;
 
     public RevealFamilyProfileInteractor(FamilyProfileContract.Presenter presenter) {
         this.presenter = presenter;
@@ -63,6 +65,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
         clientProcessor = (RevealClientProcessor) RevealApplication.getInstance().getClientProcessor();
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(familyMetadata.familyMemberRegister.tableName);
         interactorUtils = new InteractorUtils(RevealApplication.getInstance().getTaskRepository(), eventClientRepository, clientProcessor);
+        taskRepository = RevealApplication.getInstance().getTaskRepository();
     }
 
     @Override
@@ -126,7 +129,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     }
 
     @Override
-    public void archiveFamilyMember(String familyBaseEntityId) {
+    public void archiveFamily(String familyBaseEntityId, String structureId) {
         appExecutors.diskIO().execute(() -> {
             SQLiteDatabase db = eventClientRepository.getWritableDatabase();
             boolean saved = false;
@@ -139,6 +142,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
                 for (String baseEntityId : familyMembers) {
                     interactorUtils.archiveClient(baseEntityId);
                 }
+                taskRepository.cancelTasksByEntityAndStatus(structureId);
                 db.setTransactionSuccessful();
                 saved = true;
             } catch (Exception e) {
