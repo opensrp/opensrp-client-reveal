@@ -1,5 +1,6 @@
 package org.smartregister.reveal.contract;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
@@ -19,7 +20,7 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
 
         void updateFamilyName(String firstName);
 
-        Context getContext();
+        Activity getContext();
     }
 
     interface Interactor extends org.smartregister.family.contract.FamilyProfileContract.Interactor {

@@ -1,5 +1,6 @@
 package org.smartregister.reveal.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -79,6 +80,12 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
             profileMemberFragment.getArguments().putString(INTENT_KEY.FAMILY_NAME, firstName);
         }
     }
+
+    @Override
+    public Activity getContext() {
+        return this;
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

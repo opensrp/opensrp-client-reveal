@@ -25,6 +25,7 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
+import org.smartregister.reveal.util.InteractorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,9 +88,7 @@ public class RevealFamilyOtherMemberInteractorTest extends BaseUnitTest {
         Context.bindtypes = new ArrayList<>();
         interactor = new RevealFamilyOtherMemberInteractor();
         Whitebox.setInternalState(interactor, "commonRepository", commonRepository);
-        Whitebox.setInternalState(interactor, "taskRepository", taskRepository);
-        Whitebox.setInternalState(interactor, "eventClientRepository", eventClientRepository);
-        Whitebox.setInternalState(interactor, "clientProcessor", clientProcessor);
+        Whitebox.setInternalState(interactor, "interactorUtils", new InteractorUtils(taskRepository, eventClientRepository, clientProcessor));
     }
 
     @Test
