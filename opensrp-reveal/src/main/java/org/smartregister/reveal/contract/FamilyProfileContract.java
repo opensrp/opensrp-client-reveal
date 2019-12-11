@@ -41,6 +41,8 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
         void onAddFamilyMember();
 
         void onArchiveFamilyClicked();
+
+        void onArchiveFamilyCompleted(boolean isSuccessfulSaved);
     }
 }
 

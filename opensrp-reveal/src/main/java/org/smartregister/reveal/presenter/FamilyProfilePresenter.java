@@ -162,9 +162,20 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                 });
     }
 
+    @Override
+    public void onArchiveFamilyCompleted(boolean isSuccessfulSaved) {
+        getView().hideProgressDialog();
+        if (!isSuccessfulSaved) {
+            AlertDialogUtils.displayNotification(getView().getContext(), R.string.archive_family,
+                    R.string.archive_family_failed, familyName);
+        } else {
+            getView().getContext().finish();
+        }
+    }
+
     private void archiveFamily() {
         getView().showProgressDialog(org.smartregister.family.R.string.saving_dialog_title);
-        getInteractor().archiveFamilyMember( familyHead);
+        getInteractor().archiveFamilyMember(familyHead);
     }
 
     private FamilyProfileContract.Interactor getInteractor() {

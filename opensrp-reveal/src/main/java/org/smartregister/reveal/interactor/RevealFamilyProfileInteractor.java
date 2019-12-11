@@ -3,6 +3,8 @@ package org.smartregister.reveal.interactor;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.CoreLibrary;
@@ -21,6 +23,7 @@ import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
+import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.ClientProcessorForJava;
@@ -31,7 +34,9 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static org.smartregister.family.util.DBConstants.KEY.BASE_ENTITY_ID;
 import static org.smartregister.repository.EventClientRepository.client_column.syncStatus;
+import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 
 
 /**
@@ -46,6 +51,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     private EventClientRepository eventClientRepository;
     private RevealClientProcessor clientProcessor;
     private CommonRepository commonRepository;
+    private InteractorUtils interactorUtils;
 
     public RevealFamilyProfileInteractor(FamilyProfileContract.Presenter presenter) {
         this.presenter = presenter;
@@ -55,6 +61,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
         FamilyMetadata familyMetadata = RevealApplication.getInstance().getMetadata();
         clientProcessor = (RevealClientProcessor) RevealApplication.getInstance().getClientProcessor();
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(familyMetadata.familyMemberRegister.tableName);
+        interactorUtils = new InteractorUtils(RevealApplication.getInstance().getTaskRepository(), eventClientRepository, clientProcessor);
     }
 
     @Override
@@ -113,6 +120,32 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
 
             appExecutors.mainThread().execute(() -> {
                 presenter.onMembersUpdated();
+            });
+        });
+    }
+
+    @Override
+    public void archiveFamilyMember(String familyHead) {
+        appExecutors.diskIO().execute(() -> {
+            SQLiteDatabase db = eventClientRepository.getWritableDatabase();
+            boolean saved = false;
+            try {
+                db.beginTransaction();
+                List<String> familyMembers = commonRepository.findSearchIds(String.format("select %s from %s where %s='%s'", BASE_ENTITY_ID, FAMILY_MEMBER, KEY.RELATIONAL_ID, familyHead));
+                familyMembers.add(familyHead);
+                for (String baseEntityId : familyMembers) {
+                    interactorUtils.archiveClient(baseEntityId);
+                }
+                db.setTransactionSuccessful();
+                saved = true;
+            } catch (Exception e) {
+                Timber.e(e);
+            } finally {
+                db.endTransaction();
+            }
+            boolean finalSaved = saved;
+            appExecutors.mainThread().execute(() -> {
+                presenter.onArchiveFamilyCompleted(finalSaved);
             });
         });
     }
