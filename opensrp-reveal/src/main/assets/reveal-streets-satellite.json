@@ -100,10 +100,6 @@
             "Partially Received"
           ],
           "hsl(26, 84%, 56%)",
-          [
-            "Inactive"
-          ],
-          "hsl(0, 0%, 78%)",
           "hsl(0, 0%, 78%)"
         ],
         "fill-opacity": [
@@ -205,10 +201,6 @@
             "Partially Received"
           ],
           "hsl(26, 84%, 56%)",
-          [
-            "Inactive"
-          ],
-          "hsl(0, 0%, 78%)",
           "hsl(0, 0%, 78%)"
         ],
         "circle-stroke-width": 1,

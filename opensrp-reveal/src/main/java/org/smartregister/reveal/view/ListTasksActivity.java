@@ -712,15 +712,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
-                            case BUTTON_NEGATIVE:
-                            case BUTTON_NEUTRAL:
-                                dialog.dismiss();
-                                break;
                             case BUTTON_POSITIVE:
                                 listTaskPresenter.onMarkStructureInactiveConfirmed();
                                 dialog.dismiss();
-                                break;
-                            default:
                                 break;
                         }
                     }

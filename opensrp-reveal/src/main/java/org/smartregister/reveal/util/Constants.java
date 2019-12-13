@@ -144,7 +144,7 @@ public interface Constants {
         String STRUCTURE_NAME = "structure_name";
         String APP_VERSION_NAME = "appVersionName";
         String FORM_VERSION = "form_version";
-        String STATUS = "status";
+        String STRUCTURE_STATUS = "status";
     }
 
 
@@ -234,8 +234,6 @@ public interface Constants {
         String BEDNET_DISTRIBUTED = "Bednet Distributed";
         String BLOOD_SCREENING_COMPLETE = "Blood Screening Complete";
         String PARTIALLY_SPRAYED = "Partially Sprayed";
-
-        String INACTIVE = "Inactive";
 
     }
 
