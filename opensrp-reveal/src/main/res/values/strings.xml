@@ -279,4 +279,8 @@
     <string name="confirm_archive_family_message">Please confirm that you want to archive this household. This will delete all information and can not be undone.</string>
     <string name="archive_family_failed">Archiving family %1s failed</string>
 
+    <string name="mark_location_inactive">Mark Location Inactive</string>
+    <string name="confirm_mark_location_inactive">Please confirm that this location should be marked inactive</string>
+    <string name="cannot_make_structure_inactive">You can not make this structure inactive because tasks are completed against it</string>
+
 </resources>

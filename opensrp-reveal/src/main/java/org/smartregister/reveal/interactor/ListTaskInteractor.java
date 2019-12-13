@@ -11,6 +11,8 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.repository.StructureRepository;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
@@ -33,6 +35,7 @@ import java.util.Set;
 
 import timber.log.Timber;
 
+import static org.smartregister.domain.LocationProperty.PropertyStatus.INACTIVE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CARD_SPRAY;
@@ -66,11 +69,15 @@ public class ListTaskInteractor extends BaseInteractor {
 
     private CommonRepository commonRepository;
     private InteractorUtils interactorUtils;
+    private StructureRepository structureRepository;
+    private TaskRepository taskRepository;
 
     public ListTaskInteractor(ListTaskContract.Presenter presenter) {
         super(presenter);
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(SPRAYED_STRUCTURES);
-        interactorUtils = new InteractorUtils(taskRepository, eventClientRepository, clientProcessor);
+        interactorUtils = new InteractorUtils();
+        structureRepository = RevealApplication.getInstance().getContext().getStructureRepository();
+        taskRepository = RevealApplication.getInstance().getTaskRepository();
     }
 
     public void fetchInterventionDetails(String interventionType, String featureId, boolean isForForm) {
@@ -277,5 +284,26 @@ public class ListTaskInteractor extends BaseInteractor {
 
     private ListTaskContract.Presenter getPresenter() {
         return (ListTaskContract.Presenter) presenterCallBack;
+    }
+
+    public void markStructureAsInactive(Feature feature) {
+
+        try {
+            Location structure = structureRepository.getLocationById(feature.id());
+            structure.getProperties().setStatus(INACTIVE);
+            structureRepository.addOrUpdate(structure);
+
+            taskRepository.cancelTasksForEntity(feature.id());
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+
+        appExecutors.mainThread().execute(new Runnable() {
+            @Override
+            public void run() {
+                ((ListTaskPresenter) presenterCallBack).onStructureMarkedInactive();
+            }
+        });
+
     }
 }

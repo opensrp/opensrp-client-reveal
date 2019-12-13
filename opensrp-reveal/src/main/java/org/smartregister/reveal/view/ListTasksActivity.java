@@ -3,6 +3,7 @@ package org.smartregister.reveal.view;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
@@ -71,6 +72,7 @@ import io.ona.kujaku.layers.BoundaryLayer;
 import io.ona.kujaku.utils.Constants;
 import timber.log.Timber;
 
+import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
@@ -302,7 +304,15 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                     @Override
                     public boolean onMapClick(@NonNull LatLng point) {
-                        listTaskPresenter.onMapClicked(mapboxMap, point);
+                        listTaskPresenter.onMapClicked(mapboxMap, point, false);
+                        return false;
+                    }
+                });
+
+                mapboxMap.addOnMapLongClickListener(new MapboxMap.OnMapLongClickListener() {
+                    @Override
+                    public boolean onMapLongClick(@NonNull LatLng point) {
+                        listTaskPresenter.onMapClicked(mapboxMap, point, true);
                         return false;
                     }
                 });
@@ -699,6 +709,19 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public boolean isMyLocationComponentActive() {
         return revealMapHelper.isMyLocationComponentActive(this, myLocationButton);
+    }
+
+    @Override
+    public void displayMarkStructureInactiveDialog() {
+        AlertDialogUtils.displayNotificationWithCallback(this, R.string.mark_location_inactive,
+                R.string.confirm_mark_location_inactive, R.string.confirm, R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(which == BUTTON_POSITIVE)
+                            listTaskPresenter.onMarkStructureInactiveConfirmed();
+                        dialog.dismiss();
+                    }
+                });
     }
 
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {

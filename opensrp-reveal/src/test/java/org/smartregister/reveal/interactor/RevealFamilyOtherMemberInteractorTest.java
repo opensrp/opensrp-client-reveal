@@ -117,6 +117,7 @@ public class RevealFamilyOtherMemberInteractorTest extends BaseUnitTest {
         //assert tasks are archived
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).archiveTasksForEntity(entityId);
 
+
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).getEventsByBaseEntityId(entityId);
         //assert both events and client is updated
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addorUpdateClient(eq(entityId), jsonObjectArgumentCaptor.capture());

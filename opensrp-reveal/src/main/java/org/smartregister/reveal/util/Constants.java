@@ -146,6 +146,7 @@ public interface Constants {
         String STRUCTURE_NAME = "structure_name";
         String APP_VERSION_NAME = "appVersionName";
         String FORM_VERSION = "form_version";
+        String STRUCTURE_STATUS = "status";
     }
 
 
