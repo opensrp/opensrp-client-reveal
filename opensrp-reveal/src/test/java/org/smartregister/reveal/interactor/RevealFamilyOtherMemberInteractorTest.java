@@ -113,7 +113,7 @@ public class RevealFamilyOtherMemberInteractorTest extends BaseUnitTest {
 
         interactor.archiveFamilyMember(presenter, client);
         //assert tasks are cancelled
-        verify(taskRepository, timeout(ASYNC_TIMEOUT)).cancelTasksByEntityAndStatus(entityId);
+        verify(taskRepository, timeout(ASYNC_TIMEOUT)).cancelTasksForEntity(entityId);
 
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).getEventsByBaseEntityId(entityId);
         //assert both events and client is updated

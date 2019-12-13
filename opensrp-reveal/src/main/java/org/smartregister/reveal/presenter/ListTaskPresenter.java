@@ -281,11 +281,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     private void onFeatureSelectedByLongClick(Feature feature) {
-        String taskStatus = getPropertyValue(feature, TASK_STATUS);
+        String businessStatus = getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
         String code = getPropertyValue(feature, TASK_CODE);
 
         selectedFeatureInterventionType = code;
-        if (READY.toString().equals(taskStatus) && REGISTER_FAMILY.equals(code)) {
+        if (NOT_VISITED.equals(businessStatus)) {
             listTaskView.displayMarkStructureInactiveDialog();
         } else {
             listTaskView.displayToast(R.string.cannot_make_structure_inactive);
