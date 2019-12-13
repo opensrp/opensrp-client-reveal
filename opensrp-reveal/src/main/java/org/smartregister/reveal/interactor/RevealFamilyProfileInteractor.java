@@ -12,6 +12,7 @@ import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.Task;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.family.interactor.FamilyProfileInteractor;
@@ -133,6 +134,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
         appExecutors.diskIO().execute(() -> {
             SQLiteDatabase db = eventClientRepository.getWritableDatabase();
             boolean saved = false;
+            Task task = null;
             try {
                 db.beginTransaction();
                 List<String> familyMembers = commonRepository.findSearchIds(String.format(
@@ -143,7 +145,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
                     interactorUtils.archiveClient(baseEntityId);
                 }
                 taskRepository.cancelTasksByEntityAndStatus(structureId);
-                taskUtils.generateRegisterFamilyTask(RevealApplication.getInstance().getApplicationContext(), structureId);
+                task = taskUtils.generateRegisterFamilyTask(RevealApplication.getInstance().getApplicationContext(), structureId);
                 db.setTransactionSuccessful();
                 saved = true;
             } catch (Exception e) {
@@ -152,8 +154,9 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
                 db.endTransaction();
             }
             boolean finalSaved = saved;
+            Task finalTask=task;
             appExecutors.mainThread().execute(() -> {
-                presenter.onArchiveFamilyCompleted(finalSaved);
+                presenter.onArchiveFamilyCompleted(finalSaved, finalTask);
             });
         });
     }

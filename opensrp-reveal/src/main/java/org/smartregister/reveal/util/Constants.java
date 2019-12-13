@@ -15,6 +15,8 @@ public interface Constants {
 
     int REQUEST_CODE_GET_JSON_FRAGMENT = 3439;
 
+    int REQUEST_CODE_FAMILY_PROFILE = 3576;
+
     String METADATA = "metadata";
 
     String DETAILS = "details";

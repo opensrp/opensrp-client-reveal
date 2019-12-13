@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import org.smartregister.domain.Task;
 import org.smartregister.family.activity.BaseFamilyProfileActivity;
 import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.family.util.Constants.INTENT_KEY;
@@ -17,6 +18,9 @@ import org.smartregister.reveal.fragment.StructureTasksFragment;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.presenter.FamilyProfilePresenter;
 
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
+import static org.smartregister.reveal.util.Constants.REQUEST_CODE_FAMILY_PROFILE;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON_FRAGMENT;
 
 /**
@@ -84,6 +88,15 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
     @Override
     public Activity getContext() {
         return this;
+    }
+
+    @Override
+    public void returnToMapView(String structureId, Task task) {
+        Intent result = new Intent();
+        result.putExtra(STRUCTURE_ID, structureId);
+        result.putExtra(TASK_ID, task);
+        setResult(RESULT_OK, result);
+        finish();
     }
 
 

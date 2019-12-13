@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Event;
+import org.smartregister.domain.Task;
 
 /**
  * Created by samuelgithengi on 4/12/19.
@@ -21,6 +22,8 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
         void updateFamilyName(String firstName);
 
         Activity getContext();
+
+        void returnToMapView(String structureId, Task task);
     }
 
     interface Interactor extends org.smartregister.family.contract.FamilyProfileContract.Interactor {
@@ -42,7 +45,7 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
 
         void onArchiveFamilyClicked();
 
-        void onArchiveFamilyCompleted(boolean isSuccessfulSaved);
+        void onArchiveFamilyCompleted(boolean isSuccessfulSaved, Task task);
     }
 }
 
