@@ -285,7 +285,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         String code = getPropertyValue(feature, TASK_CODE);
 
         selectedFeatureInterventionType = code;
-        if (READY.toString().equals(taskStatus)) {
+        if (READY.toString().equals(taskStatus) && REGISTER_FAMILY.equals(code)) {
             listTaskView.displayMarkStructureInactiveDialog();
         } else {
             listTaskView.displayToast(R.string.cannot_make_structure_inactive);
