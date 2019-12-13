@@ -275,4 +275,8 @@
     <string name="confirm">Confirm</string>
     <string name="archive_member_failed">Archiving member %1s %2s failed</string>
 
+    <string name="mark_location_inactive">Mark Location Inactive</string>
+    <string name="confirm_mark_location_inactive">Please confirm that this location should be marked inactive</string>
+    <string name="cannot_make_structure_inactive">You can not make this structure inactive because tasks are completed against it</string>
+
 </resources>

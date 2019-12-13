@@ -170,7 +170,7 @@ dependencies {
         exclude group: 'com.android.volley'
     }
 
-    implementation('org.smartregister:opensrp-client-core:1.8.12-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.8.13-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.guava', module: 'guava'
