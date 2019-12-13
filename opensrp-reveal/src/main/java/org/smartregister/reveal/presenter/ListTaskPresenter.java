@@ -50,7 +50,6 @@ import timber.log.Timber;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
-import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
@@ -107,8 +106,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private Feature selectedFeature;
 
     private String selectedFeatureInterventionType;
-
-    private String selectedFeatureTaskStatus;
 
     private LatLng clickedPoint;
 
@@ -259,8 +256,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         String businessStatus = getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
         String code = getPropertyValue(feature, TASK_CODE);
         selectedFeatureInterventionType = code;
-        String taskStatus = getPropertyValue(feature, TASK_STATUS);
-        selectedFeatureTaskStatus = taskStatus;
         if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || PAOT.equals(code) || IRS_VERIFICATION.equals(code))
                 && (NOT_VISITED.equals(businessStatus) || businessStatus == null)) {
             if (validateFarStructures()) {
