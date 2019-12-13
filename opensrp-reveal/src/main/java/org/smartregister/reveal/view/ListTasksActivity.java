@@ -71,8 +71,6 @@ import io.ona.kujaku.layers.BoundaryLayer;
 import io.ona.kujaku.utils.Constants;
 import timber.log.Timber;
 
-import static android.content.DialogInterface.BUTTON_NEGATIVE;
-import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
@@ -711,12 +709,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 R.string.confirm_mark_location_inactive, R.string.confirm, R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case BUTTON_POSITIVE:
-                                listTaskPresenter.onMarkStructureInactiveConfirmed();
-                                dialog.dismiss();
-                                break;
-                        }
+                        if(which == BUTTON_POSITIVE)
+                            listTaskPresenter.onMarkStructureInactiveConfirmed();
+                        dialog.dismiss();
                     }
                 });
     }
