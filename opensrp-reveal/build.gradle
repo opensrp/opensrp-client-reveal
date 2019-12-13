@@ -233,6 +233,8 @@ dependencies {
     testImplementation "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testImplementation "org.powermock:powermock-api-mockito2:$powerMockVersion"
     testImplementation "org.powermock:powermock-classloading-xstream:$powerMockVersion"
+
+    testImplementation "org.jacoco:org.jacoco.agent:0.8.0"
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
