@@ -320,8 +320,8 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     @Override
     public boolean isPlanAndOperationalAreaSelected() {
-        String planId = PreferencesUtil.getInstance().getCurrentPlanId();
-        String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
+        String planId = prefsUtil.getCurrentPlanId();
+        String operationalArea = prefsUtil.getCurrentOperationalArea();
 
         return StringUtils.isNotBlank(planId) && StringUtils.isNotBlank(operationalArea);
 
