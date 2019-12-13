@@ -546,7 +546,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onStructureMarkedIneligible() {
-        refreshStructures(true);
+        for (Feature feature : featureCollection.features()) {
+            if (selectedFeature.id().equals(feature.id())) {
+                feature.addStringProperty(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
+                break;
+            }
+        }
+
+        listTaskView.setGeoJsonSource(featureCollection, operationalArea, false);
     }
 
     @Override
