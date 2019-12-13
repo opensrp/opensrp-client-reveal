@@ -506,9 +506,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onStructureMarkedInactive() {
-        selectedFeature.removeProperty(TASK_BUSINESS_STATUS);
-        selectedFeature.removeProperty(TASK_IDENTIFIER);
-        featureCollection.features().add(selectedFeature);
+        for (Feature feature : featureCollection.features()) {
+            if (selectedFeature.id().equals(feature.id())) {
+                feature.removeProperty(TASK_BUSINESS_STATUS);
+                feature.removeProperty(TASK_IDENTIFIER);
+                break;
+            }
+        }
+
         listTaskView.setGeoJsonSource(featureCollection, operationalArea, false);
     }
 
