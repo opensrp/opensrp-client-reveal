@@ -2,6 +2,8 @@ package org.smartregister.reveal.interactor;
 
 import android.content.Context;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,20 +22,25 @@ import org.smartregister.cloudant.models.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.Task;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.repository.EventClientRepository;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
+import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.sync.ClientProcessorForJava;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -41,6 +48,8 @@ import java.util.concurrent.Executors;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
@@ -70,12 +79,22 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
     @Mock
     private RevealClientProcessor clientProcessor;
 
+    @Mock
+    private SQLiteDatabase sqLiteDatabase;
+
     @Captor
     private ArgumentCaptor<JSONArray> jsonArrayArgumentCaptor;
+
+    @Mock
+    private InteractorUtils interactorUtils;
+
+    @Mock
+    private TaskRepository taskRepository;
 
     private RevealFamilyProfileInteractor interactor;
 
     private Context context = RuntimeEnvironment.application;
+
 
     @Before
     public void setUp() {
@@ -88,6 +107,9 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
         Whitebox.setInternalState(interactor, "commonRepository", commonRepository);
         Whitebox.setInternalState(interactor, "eventClientRepository", eventClientRepository);
         Whitebox.setInternalState(interactor, "clientProcessor", clientProcessor);
+        Whitebox.setInternalState(interactor, "interactorUtils", interactorUtils);
+        Whitebox.setInternalState(interactor, "taskRepository", taskRepository);
+
     }
 
     @Test
@@ -175,6 +197,31 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
         List<EventClient> eventClientList = Collections.singletonList(new EventClient(new org.smartregister.domain.db.Event()));
         interactor.processClient(eventClientList);
         verify(clientProcessor).processClient(eventClientList, true);
+    }
+
+
+    @Test
+    public void testAchiveFamily() {
+        when(eventClientRepository.getWritableDatabase()).thenReturn(sqLiteDatabase);
+        String familyId = UUID.randomUUID().toString();
+        String structureId = UUID.randomUUID().toString();
+        List<String> familyMembers = new ArrayList<>(Arrays.asList("m1", "m2", "m3"));
+
+        when(commonRepository.findSearchIds(anyString())).thenReturn(familyMembers);
+
+        Task task = TestingUtils.getTask(structureId);
+        when(taskUtils.generateRegisterFamilyTask(any(), any())).thenReturn(task);
+        interactor.archiveFamily(familyId, structureId);
+
+        for (String familyMember : new ArrayList<>(familyMembers))
+            verify(interactorUtils, timeout(ASYNC_TIMEOUT)).archiveClient(familyMember);
+        verify(interactorUtils, timeout(ASYNC_TIMEOUT)).archiveClient(familyId);
+
+        verify(taskRepository, timeout(ASYNC_TIMEOUT)).archiveTasksForEntity(structureId);
+        verify(taskRepository, timeout(ASYNC_TIMEOUT)).cancelTasksForEntity(structureId);
+        verify(taskUtils, timeout(ASYNC_TIMEOUT)).generateRegisterFamilyTask(any(), eq(structureId));
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onArchiveFamilyCompleted(true, task);
+
     }
 
 }
