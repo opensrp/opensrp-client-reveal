@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
@@ -27,12 +28,14 @@ import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
+import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -42,10 +45,12 @@ import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.util.Utils;
 
+import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
 
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
@@ -124,6 +129,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private RevealApplication revealApplication;
 
     private RevealMappingHelper mappingHelper;
+
+    private boolean markStructureIneligibleConfirmed;
 
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
@@ -254,7 +261,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         String businessStatus = getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
         String code = getPropertyValue(feature, TASK_CODE);
         selectedFeatureInterventionType = code;
-        if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || PAOT.equals(code) || REGISTER_FAMILY.equals(code) || IRS_VERIFICATION.equals(code))
+        if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || PAOT.equals(code) || IRS_VERIFICATION.equals(code))
                 && (NOT_VISITED.equals(businessStatus) || businessStatus == null)) {
             if (validateFarStructures()) {
                 validateUserLocation();
@@ -269,6 +276,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if ((MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code))
                 && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
                 || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
+            listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
+        }  else if (REGISTER_FAMILY.equals(code) && NOT_VISITED.equals(businessStatus)) {
+            displayMarkStructureIneligibleDialog();
+        }  else if (REGISTER_FAMILY.equals(code) && NOT_ELIGIBLE.equals(businessStatus)) {
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
         } else if (PAOT.equals(code)) {
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
@@ -291,7 +302,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
     }
 
-    private void validateUserLocation() {
+    @Override
+    public void validateUserLocation() {
         Location location = listTaskView.getUserCurrentLocation();
         if (location == null) {
             locationPresenter.requestUserLocation();
@@ -326,6 +338,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.openCardView(cardDetails);
         } else if (cardDetails instanceof IRSVerificationCardDetails) {
             listTaskView.openCardView(cardDetails);
+        } else if (cardDetails instanceof FamilyCardDetails) {
+            formatFamilyCardDetails((FamilyCardDetails) cardDetails);
+            listTaskView.openCardView(cardDetails);
         }
     }
 
@@ -348,6 +363,15 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         CardDetailsUtil.formatCardDetails(sprayCardDetails);
     }
+
+    private void formatFamilyCardDetails(FamilyCardDetails familyCardDetails) {
+
+        Date originalDate = StringUtils.isBlank(familyCardDetails.getDateCreated()) ? null :
+                new Date(Long.parseLong(familyCardDetails.getDateCreated()));
+
+        familyCardDetails.setDateCreated(formatDate(originalDate));
+    }
+
 
     private void startForm(Feature feature, CardDetails cardDetails, String interventionType) {
         String formName = jsonFormUtils.getFormName(null, interventionType);
@@ -456,7 +480,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onLocationValidated() {
-        if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)) {
+        if (markStructureIneligibleConfirmed) {
+            onMarkStructureIneligibleConfirmed();
+            markStructureIneligibleConfirmed = false;
+        } else if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)) {
             listTaskView.registerFamily();
         } else if (cardDetails == null || !changeInterventionStatus) {
             startForm(selectedFeature, null, selectedFeatureInterventionType);
@@ -518,6 +545,24 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
+    public void onMarkStructureIneligibleConfirmed() {
+        listTaskInteractor.markStructureAsIneligible(selectedFeature);
+    }
+
+    @Override
+    public void onStructureMarkedIneligible() {
+        for (Feature feature : featureCollection.features()) {
+            if (selectedFeature.id().equals(feature.id())) {
+                feature.addStringProperty(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
+                feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
+                break;
+            }
+        }
+
+        listTaskView.setGeoJsonSource(featureCollection, operationalArea, false);
+    }
+
+    @Override
     public void onFamilyFound(CommonPersonObjectClient finalFamily) {
         if (finalFamily == null)
             listTaskView.displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
@@ -543,6 +588,25 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.focusOnUserLocation(false);
             listTaskView.setGeoJsonSource(featureCollection, operationalArea, false);
         }
+    }
+
+    private void displayMarkStructureIneligibleDialog() {
+        AlertDialogUtils.displayNotificationWithCallback(listTaskView.getContext(), R.string.mark_location_ineligible,
+                R.string.is_structure_eligible_for_fam_reg, R.string.yes_button_label, R.string.no_button_label, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == BUTTON_NEGATIVE) {
+                            markStructureIneligibleConfirmed = true;
+                        }
+
+                        if (validateFarStructures()) {
+                            validateUserLocation();
+                        } else {
+                            onLocationValidated();
+                        }
+                        dialog.dismiss();
+                    }
+                });
     }
 
     public boolean isChangeMapPosition() {

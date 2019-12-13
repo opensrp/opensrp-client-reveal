@@ -4,6 +4,7 @@ import com.mapbox.geojson.Feature;
 
 import net.sqlcipher.Cursor;
 
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +18,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
@@ -37,18 +39,24 @@ import timber.log.Timber;
 
 import static org.smartregister.domain.LocationProperty.PropertyStatus.INACTIVE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.AUTHORED_ON;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CARD_SPRAY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CHALK_SPRAY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ELIGIBLE_STRUCTURE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_UPDATED_DATE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.OWNER;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_COMMENTS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.REPORT_SPRAY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STICKER_SPRAY;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TRUE_STRUCTURE;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
@@ -56,11 +64,15 @@ import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICAT
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
+import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Tables.IRS_VERIFICATION_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.LARVAL_DIPPINGS_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.MOSQUITO_COLLECTIONS_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.PAOT_TABLE;
 import static org.smartregister.reveal.util.Utils.getInterventionLabel;
+import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
 /**
  * Created by samuelgithengi on 11/27/18.
@@ -95,6 +107,9 @@ public class ListTaskInteractor extends BaseInteractor {
         } else if (IRS_VERIFICATION.equals(interventionType)) {
             sql = String.format("SELECT %s, %s, %s, %s, %s, %s FROM %s WHERE id= ?",
                     TRUE_STRUCTURE, ELIGIBLE_STRUCTURE, REPORT_SPRAY, CHALK_SPRAY, STICKER_SPRAY, CARD_SPRAY, IRS_VERIFICATION_TABLE);
+        } else if (REGISTER_FAMILY.equals(interventionType)) {
+            sql = String.format("SELECT %s, %s, %s FROM %s WHERE %s = ?",
+                    BUSINESS_STATUS, AUTHORED_ON, OWNER, TASK_TABLE, FOR);
         }
 
         final String SQL = sql;
@@ -153,6 +168,8 @@ public class ListTaskInteractor extends BaseInteractor {
             cardDetails = createPaotCardDetails(cursor, interventionType);
         } else if (IRS_VERIFICATION.equals(interventionType)) {
             cardDetails = createIRSverificationCardDetails(cursor);
+        } else if (REGISTER_FAMILY.equals(interventionType)) {
+            cardDetails = createFamilyCardDetails(cursor);
         }
 
         return cardDetails;
@@ -204,6 +221,15 @@ public class ListTaskInteractor extends BaseInteractor {
                 cursor.getString(cursor.getColumnIndex(CARD_SPRAY))
         );
         return irsVerificationCardDetails;
+    }
+
+    private FamilyCardDetails createFamilyCardDetails(Cursor cursor) {
+        return new FamilyCardDetails(
+                CardDetailsUtil.getTranslatedBusinessStatus(cursor.getString(cursor.getColumnIndex("business_status"))),
+                cursor.getString(cursor.getColumnIndex("authored_on")),
+                cursor.getString(cursor.getColumnIndex("owner"))
+
+        );
     }
 
     public void fetchLocations(String plan, String operationalArea) {
@@ -305,5 +331,28 @@ public class ListTaskInteractor extends BaseInteractor {
             }
         });
 
+    }
+
+    public void markStructureAsIneligible(Feature feature) {
+
+        String taskIdentifier = getPropertyValue(feature, TASK_IDENTIFIER);
+        String code = getPropertyValue(feature, TASK_CODE);
+
+        if (code.equals(REGISTER_FAMILY)) {
+            Task task = taskRepository.getTaskByIdentifier(taskIdentifier);
+            task.setBusinessStatus(NOT_ELIGIBLE);
+            task.setStatus(Task.TaskStatus.COMPLETED);
+            task.setLastModified(new DateTime());
+
+            taskRepository.addOrUpdate(task);
+
+        }
+
+        appExecutors.mainThread().execute(new Runnable() {
+            @Override
+            public void run() {
+                ((ListTaskPresenter) presenterCallBack).onStructureMarkedIneligible();
+            }
+        });
     }
 }

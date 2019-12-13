@@ -52,6 +52,7 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
@@ -212,6 +213,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         indicatorsCardView.setOnClickListener(this);
 
         findViewById(R.id.btn_collapse_indicators_card_view).setOnClickListener(this);
+
+        findViewById(R.id.register_family).setOnClickListener(this);
     }
 
     @Override
@@ -381,6 +384,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             closeCardView(v.getId());
         } else if (v.getId() == R.id.register_family) {
             registerFamily();
+            closeCardView(R.id.btn_collapse_spray_card_view);
         } else if (v.getId() == R.id.btn_collapse_mosquito_collection_card_view
                 || v.getId() == R.id.btn_collapse_larval_breeding_card_view
                 || v.getId() == R.id.btn_collapse_paot_card_view
@@ -524,8 +528,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             sprayCardView.setVisibility(View.VISIBLE);
         } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
             cardDetailsUtil.populateAndOpenMosquitoHarvestCard((MosquitoHarvestCardDetails) cardDetails, this);
-        }else if (cardDetails instanceof IRSVerificationCardDetails) {
+        } else if (cardDetails instanceof IRSVerificationCardDetails) {
             cardDetailsUtil.populateAndOpenIRSVerificationCard((IRSVerificationCardDetails) cardDetails, this);
+        } else if (cardDetails instanceof FamilyCardDetails) {
+            cardDetailsUtil.populateFamilyCard((FamilyCardDetails) cardDetails, this);
+            sprayCardView.setVisibility(View.VISIBLE);
         }
     }
 

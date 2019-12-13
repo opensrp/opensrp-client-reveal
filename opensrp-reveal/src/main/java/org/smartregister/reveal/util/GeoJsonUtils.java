@@ -57,6 +57,7 @@ public class GeoJsonUtils {
             boolean nonEligible;
             boolean partiallyReceived;
             boolean bloodScreeningExists=false;
+            boolean ineligibleForFamReg=false;
             String MDA_DISPENSE_TASK_COUNT = "mda_dispense_task_count";
 
             Map<String, Integer> mdaStatusMap = new HashMap<>();
@@ -73,6 +74,7 @@ public class GeoJsonUtils {
                         case REGISTER_FAMILY:
                             familyRegTaskExists = true;
                             familyRegistered = COMPLETE.equals(task.getBusinessStatus());
+                            ineligibleForFamReg  = NOT_ELIGIBLE.equals((task.getBusinessStatus()));
                             break;
                         case BEDNET_DISTRIBUTION:
                             bednetDistributed = COMPLETE.equals(task.getBusinessStatus());
@@ -110,6 +112,7 @@ public class GeoJsonUtils {
                 }
                 taskProperties = new HashMap<>();
                 taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
+                taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus()); // Set here for non residential structures
                 taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus()); // used to determine action to take when a feature is selected
                 taskProperties.put(TASK_STATUS, task.getStatus().name());
                 taskProperties.put(TASK_CODE, task.getCode());
@@ -145,6 +148,8 @@ public class GeoJsonUtils {
                         taskProperties.put(TASK_BUSINESS_STATUS, BEDNET_DISTRIBUTED);
                     } else if (bloodScreeningDone) {
                         taskProperties.put(TASK_BUSINESS_STATUS, BLOOD_SCREENING_COMPLETE);
+                    } else if (ineligibleForFamReg) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
                     } else {
                         taskProperties.put(TASK_BUSINESS_STATUS, NOT_VISITED);
                     }
