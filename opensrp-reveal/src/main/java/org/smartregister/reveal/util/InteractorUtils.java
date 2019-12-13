@@ -65,7 +65,8 @@ public class InteractorUtils {
 
 
     public boolean archiveClient(String baseEntityId) {
-        taskRepository.cancelTasksByEntityAndStatus(baseEntityId);
+        taskRepository.cancelTasksForEntity(baseEntityId);
+        taskRepository.archiveTasksForEntity(baseEntityId);
         JSONObject eventsByBaseEntityId = eventClientRepository.getEventsByBaseEntityId(baseEntityId);
         JSONArray events = eventsByBaseEntityId.optJSONArray("events");
         JSONObject clientJsonObject = eventsByBaseEntityId.optJSONObject("client");
