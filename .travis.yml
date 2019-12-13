@@ -20,7 +20,7 @@ env:
   global:
     # wait up to 10 minutes for adb to connect to emulator
     - MALLOC_ARENA_MAX=2
-    - ADB_INSTALL_TIMEOUT=15
+    - ADB_INSTALL_TIMEOUT=10
 
 android:
   components:
@@ -49,7 +49,7 @@ script:
   - chmod 755 gradlew
   - ls -la
   #Run jacocoTestReport -> Runs all unit tests & instrumentation tests
-  - travis_wait ./gradlew :opensrp-reveal:jacocoTestReport  --stacktrace
+  - ./gradlew :opensrp-reveal:jacocoTestReport  --stacktrace
 after_success:
   - ./gradlew coveralls
 notifications:
