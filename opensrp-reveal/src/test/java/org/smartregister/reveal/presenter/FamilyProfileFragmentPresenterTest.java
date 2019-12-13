@@ -288,6 +288,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnArchiveMemberCompleted() {
+        verify(view).getApplicationContext();
         presenter.onArchiveMemberCompleted(true);
         verifyZeroInteractions(interactor);
         verifyZeroInteractions(view);
