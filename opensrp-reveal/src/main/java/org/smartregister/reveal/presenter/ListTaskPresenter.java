@@ -261,7 +261,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         selectedFeatureInterventionType = code;
         String taskStatus = getPropertyValue(feature, TASK_STATUS);
         selectedFeatureTaskStatus = taskStatus;
-        if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || PAOT.equals(code) || REGISTER_FAMILY.equals(code) || IRS_VERIFICATION.equals(code))
+        if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || PAOT.equals(code) || IRS_VERIFICATION.equals(code))
                 && (NOT_VISITED.equals(businessStatus) || businessStatus == null)) {
             if (validateFarStructures()) {
                 validateUserLocation();
@@ -277,7 +277,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
                 || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
-        } else if (REGISTER_FAMILY.equals(code) && NOT_ELIGIBLE.equals(businessStatus)) {
+        }  else if (REGISTER_FAMILY.equals(code) && NOT_VISITED.equals(businessStatus)) {
+            listTaskView.displayMarkStructureIneligibleDialog();
+        }  else if (REGISTER_FAMILY.equals(code) && NOT_ELIGIBLE.equals(businessStatus)) {
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
         } else if (PAOT.equals(code)) {
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
@@ -300,7 +302,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
     }
 
-    private void validateUserLocation() {
+    @Override
+    public void validateUserLocation() {
         Location location = listTaskView.getUserCurrentLocation();
         if (location == null) {
             locationPresenter.requestUserLocation();
@@ -477,9 +480,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onLocationValidated() {
-        if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)
-                && READY.toString().equals(selectedFeatureTaskStatus)) {
-            listTaskView.displayMarkStructureIneligibleDialog();
+        if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)) {
+            listTaskView.registerFamily();
         } else if (cardDetails == null || !changeInterventionStatus) {
             startForm(selectedFeature, null, selectedFeatureInterventionType);
         } else {
@@ -549,6 +551,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         for (Feature feature : featureCollection.features()) {
             if (selectedFeature.id().equals(feature.id())) {
                 feature.addStringProperty(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
+                feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
                 break;
             }
         }

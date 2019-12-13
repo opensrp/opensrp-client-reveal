@@ -89,6 +89,7 @@ import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTR
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
 import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
+import static org.smartregister.reveal.util.Utils.validateFarStructures;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -739,7 +740,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
                                 break;
                             case BUTTON_POSITIVE:
-                                registerFamily();
+                                if (validateFarStructures()) {
+                                    listTaskPresenter.validateUserLocation();
+                                } else {
+                                    listTaskPresenter.onLocationValidated();
+                                }
                                 dialog.dismiss();
                                 break;
                             default:

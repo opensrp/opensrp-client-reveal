@@ -95,5 +95,7 @@ public interface ListTaskContract {
         void onMarkStructureIneligibleConfirmed();
 
         void onStructureMarkedIneligible();
+
+        void validateUserLocation();
     }
 }
