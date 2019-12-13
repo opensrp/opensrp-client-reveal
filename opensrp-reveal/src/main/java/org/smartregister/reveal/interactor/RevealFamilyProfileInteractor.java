@@ -144,7 +144,8 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
                 for (String baseEntityId : familyMembers) {
                     interactorUtils.archiveClient(baseEntityId);
                 }
-                taskRepository.cancelTasksByEntityAndStatus(structureId);
+                taskRepository.cancelTasksForEntity(structureId);
+                taskRepository.archiveTasksForEntity(structureId);
                 task = taskUtils.generateRegisterFamilyTask(RevealApplication.getInstance().getApplicationContext(), structureId);
                 db.setTransactionSuccessful();
                 saved = true;
@@ -154,7 +155,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
                 db.endTransaction();
             }
             boolean finalSaved = saved;
-            Task finalTask=task;
+            Task finalTask = task;
             appExecutors.mainThread().execute(() -> {
                 presenter.onArchiveFamilyCompleted(finalSaved, finalTask);
             });
