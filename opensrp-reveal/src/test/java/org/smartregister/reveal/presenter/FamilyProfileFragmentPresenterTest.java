@@ -1,6 +1,9 @@
 package org.smartregister.reveal.presenter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.v7.app.AlertDialog;
+import android.widget.TextView;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.MatrixCursor;
@@ -13,13 +16,16 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.shadows.ShadowAlertDialog;
 import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.cloudant.models.Client;
 import org.smartregister.cloudant.models.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.FetchStatus;
+import org.smartregister.domain.Task;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.reveal.BaseUnitTest;
@@ -42,6 +48,8 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
@@ -49,6 +57,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.FI;
@@ -104,6 +113,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         Whitebox.setInternalState(presenter, "familyJsonFormUtils", familyJsonFormUtils);
         Whitebox.setInternalState(presenter, "otherMemberInteractor", otherMemberInteractor);
         when(view.getApplicationContext()).thenReturn(context);
+        when(view.getContext()).thenReturn(Robolectric.buildActivity(Activity.class).resume().get());
     }
 
     @Test
@@ -144,7 +154,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         Whitebox.setInternalState(presenter, "structureId", structureId);
         String baseEntityId = UUID.randomUUID().toString();
         FamilyEventClient eventClient = new FamilyEventClient(new Client(), new Event().withBaseEntityId(baseEntityId));
-        presenter.onRegistrationSaved(false,true,eventClient);
+        presenter.onRegistrationSaved(false, true, eventClient);
         verify(presenter, never()).onTasksGenerated();
         verify(view, never()).refreshTasks(structureId);
         verify(interactor).generateTasks(view.getApplicationContext(), baseEntityId, structureId);
@@ -156,7 +166,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         String entityId = UUID.randomUUID().toString();
         FamilyEventClient eventClient = new FamilyEventClient((Client) new Client().withBaseEntityId(entityId), new Event()
                 .withBaseEntityId(entityId).withObs(new ArrayList<>()));
-        presenter.onRegistrationSaved(true,true,eventClient);
+        presenter.onRegistrationSaved(true, true, eventClient);
         verify(interactor, never()).updateFamilyMemberName(eventClient.getClient(), eventClient.getEvent(), null);
         verify(view, never()).refreshTasks(structureId);
     }
@@ -167,7 +177,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         String entityId = UUID.randomUUID().toString();
         FamilyEventClient eventClient = new FamilyEventClient((Client) new Client().withFirstName("Victor").withBaseEntityId(entityId), new Event()
                 .withBaseEntityId(entityId).withObs(new Obs().withValue("Victoria").withFieldCode(DatabaseKeys.OLD_FAMILY_NAME)));
-        presenter.onRegistrationSaved(true,true,eventClient);
+        presenter.onRegistrationSaved(true, true, eventClient);
         verify(interactor).updateFamilyMemberName(eventClient.getClient(), eventClient.getEvent(), "Victoria");
         verify(view).updateFamilyName("Victor");
         verify(view, never()).hideProgressDialog();
@@ -181,7 +191,7 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         String entityId = UUID.randomUUID().toString();
         FamilyEventClient eventClient = new FamilyEventClient((Client) new Client().withFirstName("Victor").withBaseEntityId(entityId), new Event()
                 .withBaseEntityId(entityId).withObs(new Obs().withValue("Victor").withFieldCode(DatabaseKeys.OLD_FAMILY_NAME)));
-        presenter.onRegistrationSaved(true,true,eventClient);
+        presenter.onRegistrationSaved(true, true, eventClient);
         verify(interactor, never()).updateFamilyMemberName(eventClient.getClient(), eventClient.getEvent(), "Victoria");
         verify(view, never()).updateFamilyName("Victor");
         verify(view).hideProgressDialog();
@@ -275,6 +285,60 @@ public class FamilyProfileFragmentPresenterTest extends BaseUnitTest {
         verify(presenter).startForm(JSON_FORM.FAMILY_MEMBER_REGISTER, null, null, "");
     }
 
+
+    @Test
+    public void testOnArchiveMemberCompleted() {
+        verify(view).getApplicationContext();
+        presenter.onArchiveMemberCompleted(true);
+        verifyZeroInteractions(interactor);
+        verifyZeroInteractions(view);
+    }
+
+    @Test
+    public void testOnArchiveFamily() {
+        presenter.onArchiveFamilyClicked();
+        AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(alertDialog.isShowing());
+        TextView tv = alertDialog.findViewById(android.R.id.message);
+        assertEquals(view.getContext().getString(R.string.confirm_archive_family_message), tv.getText());
+        assertEquals(view.getContext().getString(R.string.confirm_archive_family), ((TextView) alertDialog.findViewById(R.id.alertTitle)).getText());
+    }
+
+    @Test
+    public void testOnArchiveFamilyClicked() {
+        String familyId = UUID.randomUUID().toString();
+        String structureId = UUID.randomUUID().toString();
+        Whitebox.setInternalState(presenter, "familyBaseEntityId", familyId);
+        Whitebox.setInternalState(presenter, "structureId", structureId);
+        presenter.onArchiveFamilyClicked();
+        AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(alertDialog.isShowing());
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+        verify(interactor).archiveFamily(familyId, structureId);
+        verify(view).showProgressDialog(org.smartregister.family.R.string.saving_dialog_title);
+        assertFalse(alertDialog.isShowing());
+    }
+
+    @Test
+    public void testOnArchiveFamilyCompleted() {
+        Task task = TestingUtils.getTask("12");
+        Whitebox.setInternalState(presenter, "structureId", "12");
+        presenter.onArchiveFamilyCompleted(true, task);
+        verify(view).hideProgressDialog();
+        verify(view).returnToMapView(task.getForEntity(), task);
+
+    }
+
+    @Test
+    public void testOnArchiveFamilyFailed() {
+        Whitebox.setInternalState(presenter, "familyName", "Otala");
+        presenter.onArchiveFamilyCompleted(false, null);
+        verify(view).hideProgressDialog();
+        AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(alertDialog.isShowing());
+        TextView tv = alertDialog.findViewById(android.R.id.message);
+        assertEquals("Archiving family Otala failed", tv.getText());
+    }
 
     private Cursor createCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{

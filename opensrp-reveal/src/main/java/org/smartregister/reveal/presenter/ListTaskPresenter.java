@@ -18,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -437,6 +438,22 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
         listTaskView.setGeoJsonSource(featureCollection, null, isChangeMapPosition());
         listTaskInteractor.fetchInterventionDetails(interventionType, structureId, false);
+    }
+
+    @Override
+    public void resetFeatureTasks(String structureId, Task task) {
+        setChangeMapPosition(false);
+        for (Feature feature : featureCollection.features()) {
+            if (structureId.equals(feature.id())) {
+                feature.addStringProperty(TASK_IDENTIFIER, task.getIdentifier());
+                feature.addStringProperty(TASK_CODE, task.getCode());
+                feature.addStringProperty(TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                feature.addStringProperty(TASK_STATUS, task.getStatus().name());
+                feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                break;
+            }
+        }
+        listTaskView.setGeoJsonSource(featureCollection, null, isChangeMapPosition());
     }
 
     @Override

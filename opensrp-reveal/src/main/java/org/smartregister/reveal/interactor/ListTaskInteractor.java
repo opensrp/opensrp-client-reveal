@@ -327,7 +327,7 @@ public class ListTaskInteractor extends BaseInteractor {
         appExecutors.mainThread().execute(new Runnable() {
             @Override
             public void run() {
-                    ((ListTaskPresenter) presenterCallBack).onStructureMarkedInactive();
+                ((ListTaskPresenter) presenterCallBack).onStructureMarkedInactive();
             }
         });
 

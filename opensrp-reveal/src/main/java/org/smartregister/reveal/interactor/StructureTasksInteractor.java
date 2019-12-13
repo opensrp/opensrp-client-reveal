@@ -1,6 +1,7 @@
 package org.smartregister.reveal.interactor;
 
 import android.support.annotation.VisibleForTesting;
+import android.text.TextUtils;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.SQLException;
@@ -25,11 +26,12 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import timber.log.Timber;
 
-import static org.smartregister.domain.Task.TaskStatus.CANCELLED;
+import static org.smartregister.domain.Task.INACTIVE_TASK_STATUS;
 import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.family.util.DBConstants.KEY.DOB;
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
@@ -82,16 +84,18 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
             Cursor cursor = null;
             try {
                 cursor = database.rawQuery(getTaskSelect(String.format(
-                        "%s=? AND %s=? AND %s != ?", FOR, PLAN_ID, STATUS)),
-                        new String[]{structureId, planId, CANCELLED.name()});
+                        "%s=? AND %s=? AND %s NOT IN (%s)", FOR, PLAN_ID, STATUS,
+                        TextUtils.join(",", Collections.nCopies(INACTIVE_TASK_STATUS.length, "?")))),
+                        ArrayUtils.addAll(new String[]{structureId, planId,}, INACTIVE_TASK_STATUS));
                 while (cursor.moveToNext()) {
                     taskDetailsList.add(readTaskDetails(cursor));
                 }
 
                 cursor.close();
-                cursor = database.rawQuery(getMemberTasksSelect(String.format("%s.%s=? AND %s=? AND %s != ? AND %s IS NULL",
-                        STRUCTURES_TABLE, ID, PLAN_ID, STATUS, DBConstants.KEY.DATE_REMOVED), getMemberColumns()),
-                        new String[]{structureId, planId, CANCELLED.name()});
+                cursor = database.rawQuery(getMemberTasksSelect(String.format("%s.%s=? AND %s=? AND %s IS NULL AND %s NOT IN (%s)",
+                        STRUCTURES_TABLE, ID, PLAN_ID, DBConstants.KEY.DATE_REMOVED, STATUS,
+                        TextUtils.join(",", Collections.nCopies(INACTIVE_TASK_STATUS.length, "?"))), getMemberColumns()),
+                        ArrayUtils.addAll(new String[]{structureId, planId}, INACTIVE_TASK_STATUS));
                 while (cursor.moveToNext()) {
                     taskDetailsList.add(readMemberTaskDetails(cursor));
                 }

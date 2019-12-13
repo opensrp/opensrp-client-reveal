@@ -2,11 +2,13 @@ package org.smartregister.reveal.interactor;
 
 import android.location.Location;
 import android.support.v4.util.Pair;
+import android.text.TextUtils;
 
 import com.google.common.annotations.VisibleForTesting;
 
 import net.sqlcipher.Cursor;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
@@ -14,7 +16,6 @@ import org.smartregister.domain.Task;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.repository.EventClientRepository.event_column;
 import org.smartregister.repository.LocationRepository;
-import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
@@ -24,12 +25,12 @@ import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import timber.log.Timber;
 
+import static org.smartregister.domain.Task.INACTIVE_TASK_STATUS;
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
 import static org.smartregister.repository.EventClientRepository.Table.event;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
@@ -136,13 +137,16 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
     }
 
     private String bccSelect() {
-        return String.format("SELECT * FROM %s WHERE %s = ? AND %s = ? AND %s != ? AND %s ='%s'",
-                TASK_TABLE, FOR, PLAN_ID, STATUS, CODE, BCC);
+        return String.format("SELECT * FROM %s WHERE %s = ? AND %s = ? AND %s ='%s' AND %s NOT IN (%s)",
+                TASK_TABLE, FOR, PLAN_ID, CODE, BCC, STATUS,
+                TextUtils.join(",", Collections.nCopies(INACTIVE_TASK_STATUS.length, "?")));
     }
 
     private String indexCaseSelect() {
-        return String.format("SELECT * FROM %s WHERE %s = ? AND %s = ? AND %s != ? AND %s = ?",
-                TASK_TABLE, GROUPID, PLAN_ID, STATUS, CODE);
+        return String.format("SELECT * FROM %s WHERE %s = ? AND %s = ? AND %s NOT IN (%s) AND %s = ? ",
+                TASK_TABLE, GROUPID, PLAN_ID, STATUS,
+                TextUtils.join(",", Collections.nCopies(INACTIVE_TASK_STATUS.length, "?")),
+                CODE);
     }
 
 
@@ -171,7 +175,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
 
     public void findTasks(Pair<String, String[]> mainCondition, Location lastLocation, Location operationalAreaCenter, String houseLabel) {
-        if (mainCondition == null || mainCondition.second == null || mainCondition.second.length != 3 || mainCondition.second[0] == null) {
+        if (mainCondition == null || mainCondition.second == null || mainCondition.second.length < 3 || mainCondition.second[0] == null) {
             getPresenter().onTasksFound(null, 0);
             return;
         }
@@ -201,8 +205,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
 
 
             // Query Case Confirmation task
-            String[] params = Arrays.copyOf(mainCondition.second, 4);
-            params[3] = CASE_CONFIRMATION;
+            String[] params = ArrayUtils.add(mainCondition.second, CASE_CONFIRMATION);
             tasks.addAll(queryTaskDetails(indexCaseSelect(), params, lastLocation,
                     operationalAreaCenter, houseLabel, false));
 

@@ -1,11 +1,13 @@
 package org.smartregister.reveal.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import org.smartregister.domain.Task;
 import org.smartregister.family.activity.BaseFamilyProfileActivity;
 import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.family.util.Constants.INTENT_KEY;
@@ -16,6 +18,8 @@ import org.smartregister.reveal.fragment.StructureTasksFragment;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.presenter.FamilyProfilePresenter;
 
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON_FRAGMENT;
 
 /**
@@ -81,6 +85,21 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
     }
 
     @Override
+    public Activity getContext() {
+        return this;
+    }
+
+    @Override
+    public void returnToMapView(String structureId, Task task) {
+        Intent result = new Intent();
+        result.putExtra(STRUCTURE_ID, structureId);
+        result.putExtra(TASK_ID, task);
+        setResult(RESULT_OK, result);
+        finish();
+    }
+
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == io.ona.kujaku.utils.Constants.RequestCode.LOCATION_SETTINGS ||
                 requestCode == REQUEST_CODE_GET_JSON_FRAGMENT) {
@@ -100,9 +119,11 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
         if (R.id.edit_family == item.getItemId()) {
             startFormForEdit();
             return true;
-        }
-        if (R.id.add_member == item.getItemId()) {
+        } else if (R.id.add_member == item.getItemId()) {
             presenter().onAddFamilyMember();
+            return true;
+        } else if (R.id.archive_family == item.getItemId()) {
+            presenter().onArchiveFamilyClicked();
             return true;
         } else {
             return super.onOptionsItemSelected(item);

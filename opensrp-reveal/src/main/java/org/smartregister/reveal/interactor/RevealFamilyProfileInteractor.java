@@ -3,6 +3,8 @@ package org.smartregister.reveal.interactor;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.CoreLibrary;
@@ -10,17 +12,20 @@ import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.Task;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.family.interactor.FamilyProfileInteractor;
 import org.smartregister.family.util.DBConstants.KEY;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
+import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.ClientProcessorForJava;
@@ -31,7 +36,10 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static org.smartregister.family.util.DBConstants.KEY.BASE_ENTITY_ID;
+import static org.smartregister.family.util.DBConstants.KEY.DATE_REMOVED;
 import static org.smartregister.repository.EventClientRepository.client_column.syncStatus;
+import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 
 
 /**
@@ -46,6 +54,8 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     private EventClientRepository eventClientRepository;
     private RevealClientProcessor clientProcessor;
     private CommonRepository commonRepository;
+    private InteractorUtils interactorUtils;
+    private TaskRepository taskRepository;
 
     public RevealFamilyProfileInteractor(FamilyProfileContract.Presenter presenter) {
         this.presenter = presenter;
@@ -55,6 +65,8 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
         FamilyMetadata familyMetadata = RevealApplication.getInstance().getMetadata();
         clientProcessor = (RevealClientProcessor) RevealApplication.getInstance().getClientProcessor();
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(familyMetadata.familyMemberRegister.tableName);
+        interactorUtils = new InteractorUtils(RevealApplication.getInstance().getTaskRepository(), eventClientRepository, clientProcessor);
+        taskRepository = RevealApplication.getInstance().getTaskRepository();
     }
 
     @Override
@@ -113,6 +125,39 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
 
             appExecutors.mainThread().execute(() -> {
                 presenter.onMembersUpdated();
+            });
+        });
+    }
+
+    @Override
+    public void archiveFamily(String familyBaseEntityId, String structureId) {
+        appExecutors.diskIO().execute(() -> {
+            SQLiteDatabase db = eventClientRepository.getWritableDatabase();
+            boolean saved = false;
+            Task task = null;
+            try {
+                db.beginTransaction();
+                List<String> familyMembers = commonRepository.findSearchIds(String.format(
+                        "SELECT %s FROM %s where %s='%s' AND %s IS NULL",
+                        BASE_ENTITY_ID, FAMILY_MEMBER, KEY.RELATIONAL_ID, familyBaseEntityId, DATE_REMOVED));
+                familyMembers.add(familyBaseEntityId);
+                for (String baseEntityId : familyMembers) {
+                    interactorUtils.archiveClient(baseEntityId);
+                }
+                taskRepository.cancelTasksForEntity(structureId);
+                taskRepository.archiveTasksForEntity(structureId);
+                task = taskUtils.generateRegisterFamilyTask(RevealApplication.getInstance().getApplicationContext(), structureId);
+                db.setTransactionSuccessful();
+                saved = true;
+            } catch (Exception e) {
+                Timber.e(e);
+            } finally {
+                db.endTransaction();
+            }
+            boolean finalSaved = saved;
+            Task finalTask = task;
+            appExecutors.mainThread().execute(() -> {
+                presenter.onArchiveFamilyCompleted(finalSaved, finalTask);
             });
         });
     }
