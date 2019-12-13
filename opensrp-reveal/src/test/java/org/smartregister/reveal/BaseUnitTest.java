@@ -1,10 +1,14 @@
 package org.smartregister.reveal;
 
+import android.os.Build;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.joda.time.DateTime;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
@@ -13,7 +17,9 @@ import org.smartregister.util.DateTimeTypeConverter;
 
 
 @RunWith(RobolectricTestRunner.class)
-@Config(application = TestRevealApplication.class, shadows = {CustomFontTextViewShadow.class})
+@PowerMockRunnerDelegate(RobolectricTestRunner.class)
+@Config(application = TestRevealApplication.class, shadows = {CustomFontTextViewShadow.class}, sdk = Build.VERSION_CODES.P)
+@PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
 public abstract class BaseUnitTest {
 
     protected static final String DUMMY_USERNAME = "myusername";
