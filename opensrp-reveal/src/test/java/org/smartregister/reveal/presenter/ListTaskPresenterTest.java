@@ -669,11 +669,11 @@ public class ListTaskPresenterTest {
 
         Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", REGISTER_FAMILY);
 
-        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureTaskStatus", READY.toString());
+        Whitebox.setInternalState(listTaskPresenterSpy, "markStructureIneligibleConfirmed", true);
 
         listTaskPresenterSpy.onLocationValidated();
 
-        verify(listTaskViewSpy).displayMarkStructureIneligibleDialog();
+        verify(listTaskPresenterSpy).onMarkStructureIneligibleConfirmed();
     }
 
     private void mockStaticMethods() {
