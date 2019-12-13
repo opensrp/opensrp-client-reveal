@@ -65,7 +65,7 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
     @Override
     public void archiveFamilyMember(FamilyOtherMemberProfileContract.BasePresenter presenter, CommonPersonObjectClient client) {
         appExecutors.diskIO().execute(() -> {
-            taskRepository.cancelTasksByEntityAndStatus(client.getCaseId());
+            taskRepository.cancelTasksForEntity(client.getCaseId());
             JSONObject eventsByBaseEntityId = eventClientRepository.getEventsByBaseEntityId(client.getCaseId());
             JSONArray events = eventsByBaseEntityId.optJSONArray("events");
             JSONObject clientJsonObject = eventsByBaseEntityId.optJSONObject("client");

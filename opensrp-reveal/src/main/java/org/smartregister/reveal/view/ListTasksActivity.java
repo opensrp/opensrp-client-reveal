@@ -718,18 +718,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 R.string.confirm_mark_location_inactive, R.string.confirm, R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case BUTTON_NEGATIVE:
-                            case BUTTON_NEUTRAL:
-                                dialog.dismiss();
-                                break;
-                            case BUTTON_POSITIVE:
-                                listTaskPresenter.onMarkStructureInactiveConfirmed();
-                                dialog.dismiss();
-                                break;
-                            default:
-                                break;
-                        }
+                        if(which == BUTTON_POSITIVE)
+                            listTaskPresenter.onMarkStructureInactiveConfirmed();
+                        dialog.dismiss();
                     }
                 });
     }

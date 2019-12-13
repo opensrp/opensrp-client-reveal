@@ -1,11 +1,8 @@
 package org.smartregister.reveal.interactor;
 
-import android.content.ContentValues;
-
 import com.mapbox.geojson.Feature;
 
 import net.sqlcipher.Cursor;
-import net.sqlcipher.database.SQLiteDatabase;
 
 import org.joda.time.DateTime;
 import org.json.JSONArray;
@@ -16,6 +13,7 @@ import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.StructureRepository;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
@@ -57,7 +55,6 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.REPORT_SPRAY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STICKER_SPRAY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TRUE_STRUCTURE;
@@ -85,14 +82,14 @@ public class ListTaskInteractor extends BaseInteractor {
     private CommonRepository commonRepository;
     private InteractorUtils interactorUtils;
     private StructureRepository structureRepository;
-    private SQLiteDatabase writableDatabase;
+    private TaskRepository taskRepository;
 
     public ListTaskInteractor(ListTaskContract.Presenter presenter) {
         super(presenter);
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(SPRAYED_STRUCTURES);
         interactorUtils = new InteractorUtils();
         structureRepository = RevealApplication.getInstance().getContext().getStructureRepository();
-        writableDatabase = RevealApplication.getInstance().getRepository().getWritableDatabase();
+        taskRepository = RevealApplication.getInstance().getTaskRepository();
     }
 
     public void fetchInterventionDetails(String interventionType, String featureId, boolean isForForm) {
@@ -322,10 +319,7 @@ public class ListTaskInteractor extends BaseInteractor {
             structure.getProperties().setStatus(INACTIVE);
             structureRepository.addOrUpdate(structure);
 
-            ContentValues values = new ContentValues();
-            values.put(STATUS, Task.TaskStatus.CANCELLED.name());
-            writableDatabase.update(TASK_TABLE, values, FOR + " = ?",
-                    new String[]{feature.id()} );
+            taskRepository.cancelTasksForEntity(feature.id());
         } catch (Exception e) {
             Timber.e(e);
         }

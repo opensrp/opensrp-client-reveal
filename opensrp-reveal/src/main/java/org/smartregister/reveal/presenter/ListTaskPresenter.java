@@ -53,7 +53,6 @@ import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.INACTIVE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
@@ -71,7 +70,6 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
-import static org.smartregister.reveal.util.Constants.JsonForm.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.JsonForm.DISTRICT_NAME;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
@@ -79,7 +77,6 @@ import static org.smartregister.reveal.util.Constants.JsonForm.PROVINCE_NAME;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
-import static org.smartregister.reveal.util.Constants.Properties.STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
@@ -292,11 +289,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     private void onFeatureSelectedByLongClick(Feature feature) {
-        String taskStatus = getPropertyValue(feature, TASK_STATUS);
-        selectedFeatureTaskStatus = taskStatus;
+        String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
         String code = getPropertyValue(feature, TASK_CODE);
+
         selectedFeatureInterventionType = code;
-        if (READY.toString().equals(taskStatus)) {
+        if (NOT_VISITED.equals(businessStatus)) {
             listTaskView.displayMarkStructureInactiveDialog();
         } else {
             listTaskView.displayToast(R.string.cannot_make_structure_inactive);
@@ -531,9 +528,15 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onStructureMarkedInactive() {
-        selectedFeature.addStringProperty(STATUS, INACTIVE);
-        selectedFeature.addStringProperty(BUSINESS_STATUS, INACTIVE);
-        refreshStructures(true);
+        for (Feature feature : featureCollection.features()) {
+            if (selectedFeature.id().equals(feature.id())) {
+                feature.removeProperty(TASK_BUSINESS_STATUS);
+                feature.removeProperty(TASK_IDENTIFIER);
+                break;
+            }
+        }
+
+        listTaskView.setGeoJsonSource(featureCollection, operationalArea, false);
     }
 
     @Override
