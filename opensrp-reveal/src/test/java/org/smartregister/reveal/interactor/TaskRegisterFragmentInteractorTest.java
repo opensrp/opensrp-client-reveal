@@ -41,6 +41,7 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.smartregister.domain.Task.TaskStatus.ARCHIVED;
 import static org.smartregister.domain.Task.TaskStatus.CANCELLED;
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
@@ -106,11 +107,11 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         Whitebox.setInternalState(interactor, "database", database);
         groupId = UUID.randomUUID().toString();
         planId = UUID.randomUUID().toString();
-        mainSelectQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name , ec_family.house_number FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? AND status != ? ";
-        nonRegisteredStructureTasksQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name , ec_family.house_number FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? AND status != ?   AND ec_family.structure_id IS NULL  AND task.code != 'Bednet Distribution'";
-        groupedRegisteredStructureTasksSelectQuery = " SELECT grouped_tasks.* , SUM(CASE WHEN status='COMPLETED' THEN 1 ELSE 0 END ) AS completed_task_count , COUNT(_id ) AS task_count, GROUP_CONCAT(code || \"-\" || business_status ) AS grouped_structure_task_code_and_status FROM ( Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name , ec_family.house_number FROM task  JOIN structure ON task.structure_id = structure._id   JOIN ec_family ON structure._id = ec_family.structure_id  COLLATE NOCASE  LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id  WHERE task.group_id = ? AND task.plan_id = ? AND status != ?  ) AS grouped_tasks GROUP BY structure_id ";
-        bccSelectQuery = "SELECT * FROM task WHERE for = ? AND plan_id = ? AND status != ? AND code ='BCC'";
-        indexSelectQuery = "SELECT * FROM task WHERE group_id = ? AND plan_id = ? AND status != ? AND code = ?";
+        mainSelectQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name , ec_family.house_number FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? AND status NOT IN (?,?) ";
+        nonRegisteredStructureTasksQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name , ec_family.house_number FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? AND status NOT IN (?,?)   AND ec_family.structure_id IS NULL  AND task.code != 'Bednet Distribution'";
+        groupedRegisteredStructureTasksSelectQuery = " SELECT grouped_tasks.* , SUM(CASE WHEN status='COMPLETED' THEN 1 ELSE 0 END ) AS completed_task_count , COUNT(_id ) AS task_count, GROUP_CONCAT(code || \"-\" || business_status ) AS grouped_structure_task_code_and_status FROM ( Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name , ec_family.house_number FROM task  JOIN structure ON task.structure_id = structure._id   JOIN ec_family ON structure._id = ec_family.structure_id  COLLATE NOCASE  LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id  WHERE task.group_id = ? AND task.plan_id = ? AND status NOT IN (?,?)  ) AS grouped_tasks GROUP BY structure_id ";
+        bccSelectQuery = "SELECT * FROM task WHERE for = ? AND plan_id = ? AND code ='BCC' AND status NOT IN (?,?)";
+        indexSelectQuery = "SELECT * FROM task WHERE group_id = ? AND plan_id = ? AND status NOT IN (?,?) AND code = ? ";
     }
 
     @Test
@@ -125,18 +126,18 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
     @Test
     public void testFindTasksWithOperationalAreaLocation() {
         PreferencesUtil.getInstance().setCurrentPlan("FI_2019_TV01_IRS");
-        Pair<String, String[]> pair = new Pair<>("task.group_id = ? AND task.plan_id = ? AND status != ?", new String[]{groupId, planId, CANCELLED.name()});
+        Pair<String, String[]> pair = new Pair<>("task.group_id = ? AND task.plan_id = ? AND status NOT IN (?,?)", new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()});
         Location center = new Location("Test");
         center.setLatitude(-14.152197);
         center.setLongitude(32.643570);
         String taskId = UUID.randomUUID().toString();
         String bccTask = UUID.randomUUID().toString();
-        when(database.rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor(taskId, Intervention.IRS));
-        when(database.rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor(bccTask, Intervention.BCC));
+        when(database.rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()})).thenReturn(createCursor(taskId, Intervention.IRS));
+        when(database.rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()})).thenReturn(createCursor(bccTask, Intervention.BCC));
         when(database.rawQuery(indexSelectQuery, new String[]{groupId, planId, CANCELLED.name(), Intervention.CASE_CONFIRMATION})).thenReturn(createEmptyCursor());
         interactor.findTasks(pair, null, center, "House");
-        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name()});
-        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()});
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()});
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()});
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskListCaptor.capture(), structuresCaptor.capture());
         verifyNoMoreInteractions(presenter);
         assertEquals(2, taskListCaptor.getValue().size());
@@ -164,18 +165,18 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
     @Test
     public void testFindTasksWithUserLocation() {
         PreferencesUtil.getInstance().setCurrentPlan("FI_2019_TV01_IRS");
-        Pair<String, String[]> pair = new Pair<>("task.group_id = ? AND task.plan_id = ? AND status != ?", new String[]{groupId, planId, CANCELLED.name()});
+        Pair<String, String[]> pair = new Pair<>("task.group_id = ? AND task.plan_id = ? AND status NOT IN (?,?)", new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()});
         Location userLocation = new Location("Test");
         userLocation.setLatitude(-14.987197);
         userLocation.setLongitude(32.076570);
         String memberTask = UUID.randomUUID().toString();
         String bccTask = UUID.randomUUID().toString();
-        when(database.rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor(memberTask, Intervention.BLOOD_SCREENING));
-        when(database.rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor(bccTask, Intervention.BCC));
-        when(database.rawQuery(indexSelectQuery, new String[]{groupId, planId, CANCELLED.name(), Intervention.CASE_CONFIRMATION})).thenReturn(createEmptyCursor());
+        when(database.rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()})).thenReturn(createCursor(memberTask, Intervention.BLOOD_SCREENING));
+        when(database.rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()})).thenReturn(createCursor(bccTask, Intervention.BCC));
+        when(database.rawQuery(indexSelectQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name(), Intervention.CASE_CONFIRMATION})).thenReturn(createEmptyCursor());
         interactor.findTasks(pair, userLocation, null, "House");
-        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name()});
-        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()});
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(mainSelectQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()});
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()});
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskListCaptor.capture(), structuresCaptor.capture());
         verifyNoMoreInteractions(presenter);
         assertEquals(2, taskListCaptor.getValue().size());
@@ -242,22 +243,22 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
     public void testFindTasksWithTaskGrouping() {
         PreferencesUtil.getInstance().setCurrentPlan("FI_2019_TV01_Focus");
         PreferencesUtil.getInstance().setInterventionTypeForPlan("FI_2019_TV01_Focus", FI);
-        Pair<String, String[]> pair = new Pair<>("task.group_id = ? AND task.plan_id = ? AND status != ?", new String[]{groupId, planId, CANCELLED.name()});
+        Pair<String, String[]> pair = new Pair<>("task.group_id = ? AND task.plan_id = ? AND status NOT IN (?,?)", new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()});
         Location userLocation = new Location("Test");
         userLocation.setLatitude(-14.987197);
         userLocation.setLongitude(32.076570);
         String memberTask = UUID.randomUUID().toString();
         String bccTask = UUID.randomUUID().toString();
         String indexTask = UUID.randomUUID().toString();
-        when(database.rawQuery(groupedRegisteredStructureTasksSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor(memberTask, Intervention.BEDNET_DISTRIBUTION));
-        when(database.rawQuery(nonRegisteredStructureTasksQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor(UUID.randomUUID().toString(), Intervention.LARVAL_DIPPING));
-        when(database.rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()})).thenReturn(createCursor(bccTask, Intervention.BCC));
-        when(database.rawQuery(indexSelectQuery, new String[]{groupId, planId, CANCELLED.name(), Intervention.CASE_CONFIRMATION})).thenReturn(createCursor(indexTask, Intervention.CASE_CONFIRMATION));
+        when(database.rawQuery(groupedRegisteredStructureTasksSelectQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()})).thenReturn(createCursor(memberTask, Intervention.BEDNET_DISTRIBUTION));
+        when(database.rawQuery(nonRegisteredStructureTasksQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()})).thenReturn(createCursor(UUID.randomUUID().toString(), Intervention.LARVAL_DIPPING));
+        when(database.rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()})).thenReturn(createCursor(bccTask, Intervention.BCC));
+        when(database.rawQuery(indexSelectQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name(), Intervention.CASE_CONFIRMATION})).thenReturn(createCursor(indexTask, Intervention.CASE_CONFIRMATION));
         interactor.findTasks(pair, userLocation, null, "House");
-        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(groupedRegisteredStructureTasksSelectQuery, new String[]{groupId, planId, CANCELLED.name()});
-        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(nonRegisteredStructureTasksQuery, new String[]{groupId, planId, CANCELLED.name()});
-        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name()});
-        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(indexSelectQuery, new String[]{groupId, planId, CANCELLED.name(), Intervention.CASE_CONFIRMATION});
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(groupedRegisteredStructureTasksSelectQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()});
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(nonRegisteredStructureTasksQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()});
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(bccSelectQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name()});
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(indexSelectQuery, new String[]{groupId, planId, CANCELLED.name(), ARCHIVED.name(), Intervention.CASE_CONFIRMATION});
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksFound(taskListCaptor.capture(), structuresCaptor.capture());
         verifyNoMoreInteractions(presenter);
         assertEquals(4, taskListCaptor.getValue().size());
