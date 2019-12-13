@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
@@ -34,6 +35,7 @@ import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
+import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -48,6 +50,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
@@ -126,6 +129,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private RevealApplication revealApplication;
 
     private RevealMappingHelper mappingHelper;
+
+    private boolean markStructureIneligibleConfirmed;
 
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
@@ -273,7 +278,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
         }  else if (REGISTER_FAMILY.equals(code) && NOT_VISITED.equals(businessStatus)) {
-            listTaskView.displayMarkStructureIneligibleDialog();
+            displayMarkStructureIneligibleDialog();
         }  else if (REGISTER_FAMILY.equals(code) && NOT_ELIGIBLE.equals(businessStatus)) {
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
         } else if (PAOT.equals(code)) {
@@ -475,7 +480,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onLocationValidated() {
-        if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)) {
+        if (markStructureIneligibleConfirmed) {
+            onMarkStructureIneligibleConfirmed();
+            markStructureIneligibleConfirmed = false;
+        } else if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)) {
             listTaskView.registerFamily();
         } else if (cardDetails == null || !changeInterventionStatus) {
             startForm(selectedFeature, null, selectedFeatureInterventionType);
@@ -580,6 +588,25 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.focusOnUserLocation(false);
             listTaskView.setGeoJsonSource(featureCollection, operationalArea, false);
         }
+    }
+
+    private void displayMarkStructureIneligibleDialog() {
+        AlertDialogUtils.displayNotificationWithCallback(listTaskView.getContext(), R.string.mark_location_ineligible,
+                R.string.is_structure_eligible_for_fam_reg, R.string.yes_button_label, R.string.no_button_label, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == BUTTON_NEGATIVE) {
+                            markStructureIneligibleConfirmed = true;
+                        }
+
+                        if (validateFarStructures()) {
+                            validateUserLocation();
+                        } else {
+                            onLocationValidated();
+                        }
+                        dialog.dismiss();
+                    }
+                });
     }
 
     public boolean isChangeMapPosition() {

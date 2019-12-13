@@ -72,8 +72,6 @@ import io.ona.kujaku.layers.BoundaryLayer;
 import io.ona.kujaku.utils.Constants;
 import timber.log.Timber;
 
-import static android.content.DialogInterface.BUTTON_NEGATIVE;
-import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
@@ -89,7 +87,6 @@ import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTR
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
 import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
-import static org.smartregister.reveal.util.Utils.validateFarStructures;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -722,34 +719,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         if(which == BUTTON_POSITIVE)
                             listTaskPresenter.onMarkStructureInactiveConfirmed();
                         dialog.dismiss();
-                    }
-                });
-    }
-
-    @Override
-    public void displayMarkStructureIneligibleDialog() {
-        AlertDialogUtils.displayNotificationWithCallback(this, R.string.mark_location_ineligible,
-                R.string.is_structure_eligible_for_fam_reg, R.string.yes_button_label, R.string.no_button_label, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case BUTTON_NEGATIVE:
-                            case BUTTON_NEUTRAL:
-                                listTaskPresenter.onMarkStructureIneligibleConfirmed();
-                                dialog.dismiss();
-
-                                break;
-                            case BUTTON_POSITIVE:
-                                if (validateFarStructures()) {
-                                    listTaskPresenter.validateUserLocation();
-                                } else {
-                                    listTaskPresenter.onLocationValidated();
-                                }
-                                dialog.dismiss();
-                                break;
-                            default:
-                                break;
-                        }
                     }
                 });
     }

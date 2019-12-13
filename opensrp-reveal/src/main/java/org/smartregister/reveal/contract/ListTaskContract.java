@@ -65,8 +65,6 @@ public interface ListTaskContract {
 
         void displayMarkStructureInactiveDialog();
 
-        void displayMarkStructureIneligibleDialog();
-
     }
 
     interface Presenter extends BaseContract.BasePresenter {
