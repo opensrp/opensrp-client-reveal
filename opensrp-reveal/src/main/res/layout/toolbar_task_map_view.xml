@@ -24,7 +24,7 @@
             app:contentInsetStart="0dp"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
-            <include layout="@layout/task_list_bar" />
+            <include layout="@layout/task_map_view_bar" />
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
