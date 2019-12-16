@@ -32,6 +32,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import timber.log.Timber;
+
 import static org.smartregister.domain.Task.INACTIVE_TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
@@ -242,6 +244,11 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                 getView().displayIndexCaseDetails(indexCase);
             }
         }
+    }
+
+    @Override
+    public void searchTasks(String searchText) {
+        Timber.d("searching task matching %s", searchText);
     }
 
     @Override

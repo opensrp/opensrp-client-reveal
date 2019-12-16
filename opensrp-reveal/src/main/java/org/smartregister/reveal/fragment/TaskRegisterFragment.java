@@ -50,6 +50,7 @@ import io.ona.kujaku.utils.Constants;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.smartregister.reveal.util.Constants.Action;
 
 /**
@@ -105,6 +106,17 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         drawerView.onResume();
 
         initializeProgressIndicatorViews(view);
+    }
+
+
+    @Override
+    public void filter(String filterString, String joinTableString, String mainConditionString, boolean qrCode) {
+        getSearchCancelView().setVisibility(isEmpty(filterString) ? View.INVISIBLE : View.VISIBLE);
+        if (isEmpty(filterString)) {
+            org.smartregister.util.Utils.hideKeyboard(getActivity());
+        } else {
+            getPresenter().searchTasks(filterString);
+        }
     }
 
     private void startMapActivity() {

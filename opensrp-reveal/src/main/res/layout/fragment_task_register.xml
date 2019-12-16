@@ -7,6 +7,12 @@
 
     <include layout="@layout/toolbar_task_register" />
 
+
+    <include
+        layout="@layout/base_register_search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"/>
+
     <LinearLayout
         android:id="@+id/clients_header_layout"
         android:layout_width="match_parent"

@@ -33,6 +33,7 @@ public interface TaskRegisterFragmentContract {
 
         void onIndexCaseFound(JSONObject indexCase, boolean isLinkedToJurisdiction);
 
+        void searchTasks(String searchText);
     }
 
     interface View extends BaseRegisterFragmentContract.View, BaseFormFragmentContract.View {
