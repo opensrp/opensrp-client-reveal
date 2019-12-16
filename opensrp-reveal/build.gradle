@@ -27,7 +27,7 @@ apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'io.fabric'
 
 jacoco {
-    toolVersion = "0.7.9"
+    toolVersion = "0.8.0"
 }
 
 
@@ -233,8 +233,6 @@ dependencies {
     testImplementation "org.powermock:powermock-module-junit4-rule:$powerMockVersion"
     testImplementation "org.powermock:powermock-api-mockito2:$powerMockVersion"
     testImplementation "org.powermock:powermock-classloading-xstream:$powerMockVersion"
-
-    testImplementation "org.jacoco:org.jacoco.agent:0.7.9"
 }
 
 task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
@@ -258,7 +256,10 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
     ])
 }
 
+tasks.coveralls {
+    dependsOn 'jacocoTestReport'
+}
+
 coveralls {
     jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/merged.xml"
-    sourceDirs = ["$project.projectDir/src/main/java"]
 }
