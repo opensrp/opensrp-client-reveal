@@ -40,4 +40,7 @@
     <color name="mda_none_received_bg">#EE0427</color>
     <color name="mda_not_eligible_bg">#000000</color>
 
+    <!--used to override the theme from core dark theme -->
+    <color name="search_textfield_background_grey">@color/white</color>
+
 </resources>

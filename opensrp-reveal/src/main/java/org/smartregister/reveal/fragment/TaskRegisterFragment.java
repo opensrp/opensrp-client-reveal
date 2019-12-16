@@ -108,6 +108,15 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         initializeProgressIndicatorViews(view);
     }
 
+    @Override
+    public void setupSearchView(View view) {
+        super.setupSearchView(view);
+        view.findViewById(R.id.search_bar_layout).setBackgroundColor(getResources().getColor(R.color.toolbar_background));
+        if (searchView != null) {
+            searchView.setTextColor(getResources().getColor(R.color.light_grey));
+            searchView.setHintTextColor(getResources().getColor(R.color.light_grey));
+        }
+    }
 
     @Override
     public void filter(String filterString, String joinTableString, String mainConditionString, boolean qrCode) {
