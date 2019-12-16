@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/register_nav_bar_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,24 +13,47 @@
     <ImageView
         android:id="@+id/drawerMenu"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/task_toolbar_margin"
         android:contentDescription="@string/hamburger_menu"
         android:gravity="center"
-        android:src="@drawable/ic_action_menu" />
+        android:padding="0dp"
+        android:src="@drawable/ic_action_menu"
+        app:layout_constraintBottom_toTopOf="@id/menu_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <org.smartregister.view.customcontrols.CustomFontTextView
+        android:id="@+id/menu_label"
+        style="@style/CustomFontTextViewStyle.NavBar.Black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/task_toolbar_margin"
+        android:background="@android:color/transparent"
+        android:paddingStart="0dp"
+        android:paddingTop="0dp"
+        android:paddingEnd="0dp"
+        android:text="@string/menu"
+        android:textAllCaps="true"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/drawerMenu" />
 
     <org.smartregister.view.customcontrols.CustomFontTextView
         android:id="@+id/txt_title_label"
         style="@style/CustomFontTextViewStyle.NavBar.Black"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:background="@android:color/transparent"
         android:gravity="center"
-        android:text="@string/reveal_app_name"
+        android:text="Plan"
         android:textSize="32sp"
         android:textStyle="bold"
-        tools:ignore="PrivateResource" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/txt_map_label"
+        app:layout_constraintStart_toEndOf="@id/menu_label"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <org.smartregister.view.customcontrols.CustomFontTextView
@@ -44,7 +67,9 @@
         android:text="@string/map"
         android:textAllCaps="true"
         android:textSize="14sp"
-        android:textStyle="normal" />
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
