@@ -9,7 +9,7 @@
 
 
     <include
-        layout="@layout/base_register_search_bar"
+        layout="@layout/task_register_search_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"/>
 

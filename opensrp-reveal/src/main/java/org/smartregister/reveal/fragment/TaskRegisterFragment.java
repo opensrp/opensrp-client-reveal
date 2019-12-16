@@ -74,6 +74,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     private CardView indicatorsCardView;
 
+    private TextView filterTextView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,11 +113,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     public void setupSearchView(View view) {
         super.setupSearchView(view);
-        view.findViewById(R.id.search_bar_layout).setBackgroundColor(getResources().getColor(R.color.toolbar_background));
-        if (searchView != null) {
-            searchView.setTextColor(getResources().getColor(R.color.light_grey));
-            searchView.setHintTextColor(getResources().getColor(R.color.light_grey));
-        }
+        filterTextView = view.findViewById(R.id.filter_text_view);
     }
 
     @Override
