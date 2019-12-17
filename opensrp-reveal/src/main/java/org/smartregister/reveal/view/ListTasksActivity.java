@@ -406,11 +406,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (v.getId() == R.id.progressIndicatorsGroupView) {
             openIndicatorsCardView();
         } else if (v.getId() == R.id.filter_tasks_fab) {
-            openFilterTaskFragment();
+            openFilterTaskActivity();
         }
     }
 
-    private void openFilterTaskFragment() {
+    private void openFilterTaskActivity() {
         startActivityForResult(new Intent(this, FilterTasksActivity.class), RequestCode.REQUEST_CODE_FILTER_TASKS);
     }
 

@@ -37,6 +37,7 @@ import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.DrawerMenuView;
+import org.smartregister.reveal.view.FilterTasksActivity;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.reveal.view.TaskRegisterActivity;
 import org.smartregister.view.activity.BaseRegisterActivity;
@@ -74,8 +75,6 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     private CardView indicatorsCardView;
 
-    private TextView filterTextView;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,13 +107,12 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         drawerView.onResume();
 
         initializeProgressIndicatorViews(view);
+
+        view.findViewById(R.id.filter_text_view).setOnClickListener(v -> {
+            startActivityForResult(new Intent(getContext(), FilterTasksActivity.class), org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS);
+        });
     }
 
-    @Override
-    public void setupSearchView(View view) {
-        super.setupSearchView(view);
-        filterTextView = view.findViewById(R.id.filter_text_view);
-    }
 
     @Override
     public void filter(String filterString, String joinTableString, String mainConditionString, boolean qrCode) {
