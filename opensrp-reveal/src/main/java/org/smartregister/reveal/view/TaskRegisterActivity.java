@@ -25,7 +25,7 @@ import java.util.List;
 import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
-import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.TaskRegister;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 

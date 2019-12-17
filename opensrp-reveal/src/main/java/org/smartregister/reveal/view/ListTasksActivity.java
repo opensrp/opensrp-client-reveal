@@ -63,6 +63,7 @@ import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.Constants.Properties;
+import org.smartregister.reveal.util.Constants.RequestCode;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -84,8 +85,8 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
-import static org.smartregister.reveal.util.Constants.REQUEST_CODE_FAMILY_PROFILE;
-import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FAMILY_PROFILE;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
@@ -138,7 +139,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private FloatingActionButton layerSwitcherFab;
 
-    private LinearLayout progressIndicatorsGroupView;
+    private FloatingActionButton filterTasksFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,6 +220,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         findViewById(R.id.btn_collapse_indicators_card_view).setOnClickListener(this);
 
         findViewById(R.id.register_family).setOnClickListener(this);
+
+        filterTasksFab = findViewById(R.id.filter_tasks_fab);
+        filterTasksFab.setOnClickListener(this);
     }
 
     @Override
@@ -366,7 +370,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     private void initializeProgressIndicatorViews() {
-        progressIndicatorsGroupView = findViewById(R.id.progressIndicatorsGroupView);
+        LinearLayout progressIndicatorsGroupView = findViewById(R.id.progressIndicatorsGroupView);
         progressIndicatorsGroupView.setBackgroundColor(this.getResources().getColor(R.color.transluscent_white));
         progressIndicatorsGroupView.setOnClickListener(this);
     }
@@ -401,7 +405,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             drawerView.openDrawerLayout();
         } else if (v.getId() == R.id.progressIndicatorsGroupView) {
             openIndicatorsCardView();
+        } else if (v.getId() == R.id.filter_tasks_fab) {
+            openFilterTaskFragment();
         }
+    }
+
+    private void openFilterTaskFragment() {
+        startActivityForResult(new Intent(this, FilterTasksActivity.class), RequestCode.REQUEST_CODE_FILTER_TASKS);
     }
 
     private void openIndicatorsCardView() {
@@ -724,7 +734,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 R.string.confirm_mark_location_inactive, R.string.confirm, R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(which == BUTTON_POSITIVE)
+                        if (which == BUTTON_POSITIVE)
                             listTaskPresenter.onMarkStructureInactiveConfirmed();
                         dialog.dismiss();
                     }

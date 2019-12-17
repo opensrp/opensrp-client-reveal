@@ -11,12 +11,6 @@ public interface Constants {
 
     String JSON_FORM_PARAM_JSON = "json";
 
-    int REQUEST_CODE_GET_JSON = 3432;
-
-    int REQUEST_CODE_GET_JSON_FRAGMENT = 3439;
-
-    int REQUEST_CODE_FAMILY_PROFILE = 3576;
-
     String METADATA = "metadata";
 
     String DETAILS = "details";
@@ -557,7 +551,7 @@ public interface Constants {
 
         String AUTHORED_ON = "authored_on";
 
-        String OWNER =  "owner";
+        String OWNER = "owner";
 
     }
 
@@ -590,5 +584,15 @@ public interface Constants {
         String INVALID_CLIENTS = "INValidClients";
         String TASK_UNPROCESSED_EVENTS = "taskUnprocessedEvents";
         String NULL_EVENT_SYNC_STATUS = "nullEventSyncStatus";
+    }
+
+    interface RequestCode {
+        int REQUEST_CODE_GET_JSON = 3432;
+
+        int REQUEST_CODE_GET_JSON_FRAGMENT = 3439;
+
+        int REQUEST_CODE_FAMILY_PROFILE = 3576;
+
+        int REQUEST_CODE_FILTER_TASKS = 3596;
     }
 }

@@ -16,7 +16,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name="org.smartregister.reveal.application.RevealApplication"
+        android:name=".application.RevealApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/reveal_app_name"
@@ -34,7 +34,7 @@
             android:value="3f94f9c3caeff331b3a2bd8c2182b663ad6a955a" />
 
         <activity
-            android:name="org.smartregister.reveal.activity.LoginActivity"
+            android:name=".activity.LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Login"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
@@ -43,17 +43,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
         <activity
             android:name=".view.ListTasksActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-
-
         <activity
             android:name=".activity.RevealJsonFormActivity"
             android:launchMode="singleTask"
@@ -86,6 +82,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.FamilyProfileActivity" />
         </activity>
+
+        <activity
+            android:name=".view.FilterTasksActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".view.TaskRegisterActivity"
             android:launchMode="singleTask"
@@ -94,12 +96,10 @@
             android:name=".view.SummaryFormsActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".view.StatsActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
 
         <service android:name=".sync.LocationTaskIntentService" />
         <service android:name=".sync.RevealSettingsSyncIntentService" />
@@ -107,7 +107,6 @@
         <service android:name="org.smartregister.sync.intent.PullUniqueIdsIntentService" />
         <service android:name="org.smartregister.sync.intent.ValidateIntentService" />
         <service android:name="org.smartregister.sync.intent.ExtendedSyncIntentService" />
-
     </application>
 
 </manifest>
