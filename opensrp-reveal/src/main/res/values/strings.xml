@@ -286,5 +286,6 @@
     <string name="is_structure_eligible_for_fam_reg">Is this location eligible to register a family?</string>
     <string name="ineligible_location">Ineligible Location</string>
     <string name="menu">Menu</string>
+    <string name="add_structure">Register Structure</string>
 
 </resources>

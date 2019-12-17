@@ -29,41 +29,21 @@
                 app:mapbox_uiLogoMarginRight="30dp"
                 app:mapbox_uiRotateGestures="false" />
 
-            <ImageButton
-                android:id="@+id/drawerMenu"
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/filter_tasks_fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start|top"
+                android:layout_gravity="top|end"
                 android:layout_margin="@dimen/hamburger_margin"
-                android:background="@drawable/rounded_square_bg"
-                android:src="@drawable/ic_hamburger_menu"
-                android:visibility="gone"
-                app:elevation="6dp" />
-
-
-            <TextView
-                android:id="@+id/task_register"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|top"
-                android:layout_margin="@dimen/hamburger_margin"
-                android:background="@drawable/rounded_square_bg"
-                android:paddingStart="@dimen/task_register_launcher_horizontal_padding"
-                android:paddingTop="@dimen/task_register_launcher_vertical_padding"
-                android:paddingEnd="@dimen/task_register_launcher_horizontal_padding"
-                android:paddingBottom="@dimen/task_register_launcher_vertical_padding"
-                android:text="@string/list"
-                android:textAllCaps="true"
-                android:textColor="#AAAAAA"
-                android:textSize="@dimen/task_register_text_size"
-                android:textStyle="bold"
-                android:visibility="gone"
-                app:elevation="6dp" />
+                android:src="@drawable/ic_task_filter"
+                app:backgroundTint="@color/white"
+                app:elevation="6dp"
+                app:fabSize="mini" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|left"
+                android:layout_gravity="bottom|start"
                 android:orientation="vertical">
 
                 <ImageButton
@@ -72,9 +52,11 @@
                     android:layout_height="@dimen/my_location_button_dimen"
                     android:layout_margin="@dimen/my_location_btn_margin"
                     android:background="@drawable/circle_button_black_border"
+                    android:contentDescription="@string/add_structure"
                     android:padding="10dp"
                     android:src="@drawable/ic_add"
                     android:textColor="@color/white" />
+
 
                 <include
                     android:id="@+id/spray_card_view"
