@@ -290,5 +290,12 @@
     <string name="add_structure">Register Structure</string>
     <string name="filters">Filters</string>
     <string name="clear">Clear</string>
+    <string name="sort_by">Sort by</string>
+    <string name="status">Status</string>
+    <string name="structure">Structure</string>
+    <string name="person">Person</string>
+    <string name="family">Family</string>
+    <string name="task_type">Task type</string>
+    <string name="intervention_unit">Intervention Unit</string>
 
 </resources>

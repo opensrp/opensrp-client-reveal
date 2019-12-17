@@ -1,6 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        style="@style/FilterTaskStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sort_by"
+        android:textStyle="bold" />
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/sort_by"
+        style="@style/FilterTaskStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <View
+        style="@style/FilterTaskStyle"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/light_grey" />
+
+
+    <TextView
+        android:id="@+id/status_label"
+        style="@style/FilterTaskStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/status"
+        android:textStyle="bold" />
+
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <ToggleButton
+            android:id="@+id/toggle_sprayed"
+            style="@style/TaskFilterToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/toggle_bg"
+            android:textOff="@string/sprayed"
+            android:textOn="@string/sprayed" />
+
+
+        <ToggleButton
+            android:id="@+id/toggle_not_sprayed"
+            style="@style/TaskFilterToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/toggle_bg"
+            android:textOff="@string/not_sprayed"
+            android:textOn="@string/not_sprayed" />
+
+
+        <ToggleButton
+            android:id="@+id/toggle_not_visited"
+            style="@style/TaskFilterToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/toggle_bg"
+            android:textOff="@string/not_visited"
+            android:textOn="@string/not_visited" />
+    </RadioGroup>
+
+
+    <View
+        style="@style/FilterTaskStyle"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/light_grey" />
+
+    <TextView
+        android:id="@+id/task_type_label"
+        style="@style/FilterTaskStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/task_type"
+        android:textStyle="bold" />
+
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <ToggleButton
+            android:id="@+id/toggle_irs"
+            style="@style/TaskFilterToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/toggle_bg"
+            android:textOff="@string/irs"
+            android:textOn="@string/irs" />
+
+
+        <ToggleButton
+            android:id="@+id/toggle_bcc"
+            style="@style/TaskFilterToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/toggle_bg"
+            android:textOff="@string/bcc"
+            android:textOn="@string/bcc" />
+
+
+    </RadioGroup>
+
+
+    <View
+        style="@style/FilterTaskStyle"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/light_grey" />
+
+
+    <TextView
+        style="@style/FilterTaskStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/intervention_unit"
+        android:textStyle="bold" />
+
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:alignContent="stretch"
+        app:alignItems="stretch"
+        app:flexWrap="wrap">
+
+
+        <ToggleButton
+            android:id="@+id/toggle_operationalArea"
+            style="@style/TaskFilterToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/toggle_bg"
+            android:textOff="@string/operational_area"
+            android:textOn="@string/operational_area" />
+
+
+        <ToggleButton
+            android:id="@+id/toggle_structure"
+            style="@style/TaskFilterToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/toggle_bg"
+            android:textOff="@string/structure"
+            android:textOn="@string/structure" />
+
+
+        <ToggleButton
+            android:id="@+id/toggle_family"
+            style="@style/TaskFilterToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/toggle_bg"
+            android:textOff="@string/family"
+            android:textOn="@string/family" />
+
+        <ToggleButton
+            android:id="@+id/toggle_person"
+            style="@style/TaskFilterToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/toggle_bg"
+            android:textOff="@string/person"
+            android:textOn="@string/person" />
+
+
+    </com.google.android.flexbox.FlexboxLayout>
+
+
+</LinearLayout>
