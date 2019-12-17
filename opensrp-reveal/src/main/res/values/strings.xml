@@ -299,4 +299,10 @@
     <string name="intervention_unit">Intervention Unit</string>
     <string name="apply_filters">Apply Filters</string>
 
+    <string-array name="task_sort_options">
+        <item>Distance(nearest first</item>
+        <item>Status</item>
+        <item>Type</item>
+    </string-array>
+
 </resources>

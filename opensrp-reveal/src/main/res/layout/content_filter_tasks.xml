@@ -3,8 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp"
     android:orientation="vertical">
 
     <TextView
@@ -16,12 +14,13 @@
 
     <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/sort_by"
-        style="@style/FilterTaskStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/spinner_background"
+        android:entries="@array/task_sort_options" />
 
     <View
-        style="@style/FilterTaskStyle"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/light_grey" />
@@ -36,7 +35,8 @@
         android:textStyle="bold" />
 
 
-    <RadioGroup
+    <com.google.android.flexbox.FlexboxLayout
+        style="@style/FilterTaskStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -70,11 +70,11 @@
             android:background="@drawable/toggle_bg"
             android:textOff="@string/not_visited"
             android:textOn="@string/not_visited" />
-    </RadioGroup>
+    </com.google.android.flexbox.FlexboxLayout>
 
 
     <View
-        style="@style/FilterTaskStyle"
+
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/light_grey" />
@@ -88,7 +88,8 @@
         android:textStyle="bold" />
 
 
-    <RadioGroup
+    <com.google.android.flexbox.FlexboxLayout
+        style="@style/FilterTaskStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -114,11 +115,10 @@
             android:textOn="@string/bcc" />
 
 
-    </RadioGroup>
+    </com.google.android.flexbox.FlexboxLayout>
 
 
     <View
-        style="@style/FilterTaskStyle"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/light_grey" />
@@ -133,6 +133,7 @@
 
 
     <com.google.android.flexbox.FlexboxLayout
+        style="@style/FilterTaskStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:alignContent="stretch"
@@ -188,14 +189,14 @@
 
         <Button
             android:id="@+id/apply_filters"
+            style="@style/FilterTaskStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center"
             android:layout_marginBottom="24dp"
             android:background="@drawable/apply_filters_bg"
             android:text="@string/apply_filters"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textColor="@color/white" />
     </FrameLayout>
 
 
