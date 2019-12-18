@@ -7,7 +7,9 @@ import org.smartregister.reveal.contract.FilterTasksContract;
 import org.smartregister.reveal.util.Constants.Intervention;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by samuelgithengi on 12/18/19.
@@ -18,6 +20,8 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
     private FilterTasksContract.View view;
 
     private Map<String, Integer> labelsMap;
+
+    private Map<String, Set<String>> checkedFilters = new HashMap<>();
 
     public FilterTasksPresenter(FilterTasksContract.View view) {
         this.view = view;
@@ -47,5 +51,18 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
     public @StringRes
     Integer getStringResource(String intervention) {
         return labelsMap.get(intervention);
+    }
+
+    @Override
+    public void onToggleChanged(int buttonId, Object filterCategory, Object filterKey) {
+        if (filterCategory != null) {
+            Set<String> selected = checkedFilters.get(filterCategory.toString());
+            if (selected == null) {
+                selected = new HashSet<>();
+                checkedFilters.put(filterCategory.toString(), selected);
+            }
+            selected.add(filterKey != null ? filterKey.toString() : buttonId + "");
+        }
+        view.onFiltedSelected(checkedFilters.size());
     }
 }

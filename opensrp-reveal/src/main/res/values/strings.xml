@@ -298,6 +298,7 @@
     <string name="task_type">Task type</string>
     <string name="intervention_unit">Intervention Unit</string>
     <string name="apply_filters">Apply Filters</string>
+    <string name="apply_filters_formatter">Apply Filters (%1$d)</string>
     <string name="bcc_code">BCC</string>
     <string name="mosquito_collection">Mosquito Collection</string>
     <string name="larval_dipping">Larval dipping</string>

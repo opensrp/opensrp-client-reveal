@@ -599,4 +599,10 @@ public interface Constants {
 
         int REQUEST_CODE_FILTER_TASKS = 3596;
     }
+
+    interface Filter {
+        String CODE = "task_code";
+        String STATUS = "task_status";
+        String INTERVENTION_UNIT = "intervention_unit";
+    }
 }

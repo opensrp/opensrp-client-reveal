@@ -6,6 +6,7 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.google.android.flexbox.FlexboxLayout;
@@ -13,6 +14,7 @@ import com.google.android.flexbox.FlexboxLayout;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FilterTasksContract;
 import org.smartregister.reveal.presenter.FilterTasksPresenter;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.view.activity.MultiLanguageActivity;
 
@@ -27,6 +29,8 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     private FlexboxLayout taskCodeLayout;
 
     private FlexboxLayout interventionTypeLayout;
+
+    private TextView applyFiltersTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         businessStatusLayout = findViewById(R.id.business_status_layout);
         taskCodeLayout = findViewById(R.id.task_code_layout);
         interventionTypeLayout = findViewById(R.id.intervention_type_layout);
+        applyFiltersTextView = findViewById(R.id.apply_filters);
 
         setUpToggleButtonGroups();
 
@@ -61,14 +66,16 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
 
 
     private void registerCheckedChangeListener() {
-        registerCheckedChangeListener(businessStatusLayout);
-        registerCheckedChangeListener(taskCodeLayout);
-        registerCheckedChangeListener(interventionTypeLayout);
+        registerCheckedChangeListener(businessStatusLayout, Constants.Filter.STATUS);
+        registerCheckedChangeListener(taskCodeLayout, Constants.Filter.CODE);
+        registerCheckedChangeListener(interventionTypeLayout, Constants.Filter.INTERVENTION_UNIT);
     }
 
-    private void registerCheckedChangeListener(FlexboxLayout layout) {
+    private void registerCheckedChangeListener(FlexboxLayout layout, String category) {
         for (int i = 0; i < layout.getFlexItemCount(); i++) {
-            ((ToggleButton) layout.getFlexItemAt(i)).setOnCheckedChangeListener(this);
+            ToggleButton toggleButton = ((ToggleButton) layout.getFlexItemAt(i));
+            toggleButton.setOnCheckedChangeListener(this);
+            toggleButton.setTag(R.id.filter_category, category);
         }
     }
 
@@ -97,6 +104,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
                 toggleButton.setText(label);
             }
             toggleButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.toggle_bg));
+            toggleButton.setTag(R.id.filter_key, intervention);
             layout.addView(toggleButton, params);
         }
     }
@@ -112,5 +120,12 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+        presenter.onToggleChanged(buttonView.getId(), buttonView.getTag(R.id.filter_category), buttonView.getTag(R.id.filter_key));
+    }
+
+    @Override
+    public void onFiltedSelected(int size) {
+        applyFiltersTextView.setText(getString(R.string.apply_filters_formatter, size));
     }
 }
