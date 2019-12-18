@@ -3,10 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="?actionBarSize"
     android:orientation="vertical">
 
+
     <TextView
-        style="@style/FilterTaskStyle"
+        style="@style/FilterTaskStyle.Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sort_by"
@@ -16,30 +18,37 @@
         android:id="@+id/sort_by"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/spinner_background"
         android:entries="@array/task_sort_options" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/light_grey" />
+        android:layout_marginTop="16dp"
+        android:background="@color/lighter_grey" />
 
 
     <TextView
         android:id="@+id/status_label"
-        style="@style/FilterTaskStyle"
+        style="@style/FilterTaskStyle.Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
         android:text="@string/status"
         android:textStyle="bold" />
 
 
     <com.google.android.flexbox.FlexboxLayout
-        style="@style/FilterTaskStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        app:alignContent="stretch"
+        app:alignItems="stretch"
+        app:flexWrap="wrap">
 
 
         <ToggleButton
@@ -77,11 +86,11 @@
 
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/light_grey" />
+        android:background="@color/lighter_grey" />
 
     <TextView
         android:id="@+id/task_type_label"
-        style="@style/FilterTaskStyle"
+        style="@style/FilterTaskStyle.Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/task_type"
@@ -89,10 +98,14 @@
 
 
     <com.google.android.flexbox.FlexboxLayout
-        style="@style/FilterTaskStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        app:alignContent="stretch"
+        app:alignItems="stretch"
+        app:flexWrap="wrap">
 
 
         <ToggleButton
@@ -111,8 +124,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/toggle_bg"
-            android:textOff="@string/bcc"
-            android:textOn="@string/bcc" />
+            android:textOff="@string/bcc_code"
+            android:textOn="@string/bcc_code" />
 
 
     </com.google.android.flexbox.FlexboxLayout>
@@ -121,11 +134,11 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/light_grey" />
+        android:background="@color/lighter_grey" />
 
 
     <TextView
-        style="@style/FilterTaskStyle"
+        style="@style/FilterTaskStyle.Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/intervention_unit"
@@ -133,9 +146,10 @@
 
 
     <com.google.android.flexbox.FlexboxLayout
-        style="@style/FilterTaskStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
         app:alignContent="stretch"
         app:alignItems="stretch"
         app:flexWrap="wrap">
@@ -182,6 +196,12 @@
 
     </com.google.android.flexbox.FlexboxLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/lighter_grey" />
+
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -196,6 +216,7 @@
             android:layout_marginBottom="24dp"
             android:background="@drawable/apply_filters_bg"
             android:text="@string/apply_filters"
+            android:textAllCaps="true"
             android:textColor="@color/white" />
     </FrameLayout>
 
