@@ -219,9 +219,9 @@ public interface Constants {
         String IN_PROGRESS = "In Progress";
 
 
+        //MDA status
         String FULLY_RECEIVED = "Fully Received";
         String NONE_RECEIVED = "None Received";
-        String NOT_VISITED_ = "Not Visited YET";
         String ADHERENCE_VISIT_DONE = "Adherence Visit Done";
         String PARTIALLY_RECEIVED = "Partially Received";
 
@@ -235,10 +235,10 @@ public interface Constants {
 
     interface BusinessStatusWrapper {
 
-        List<String> SPRAYED = Arrays.asList(new String[]{BusinessStatus.SPRAYED, BusinessStatus.COMPLETE, BusinessStatus.PARTIALLY_SPRAYED});
-        List<String> NOT_SPRAYED = Arrays.asList(new String[]{BusinessStatus.NOT_SPRAYED, BusinessStatus.IN_PROGRESS, BusinessStatus.INCOMPLETE});
-        List<String> NOT_ELIGIBLE = Arrays.asList(new String[]{BusinessStatus.NOT_SPRAYABLE, BusinessStatus.NOT_ELIGIBLE});
-        List<String> NOT_VISITED = Arrays.asList(new String[]{BusinessStatus.NOT_VISITED});
+        List<String> SPRAYED = Arrays.asList(BusinessStatus.SPRAYED, BusinessStatus.COMPLETE, BusinessStatus.PARTIALLY_SPRAYED);
+        List<String> NOT_SPRAYED = Arrays.asList(BusinessStatus.NOT_SPRAYED, BusinessStatus.IN_PROGRESS, BusinessStatus.INCOMPLETE);
+        List<String> NOT_ELIGIBLE = Arrays.asList(BusinessStatus.NOT_SPRAYABLE, BusinessStatus.NOT_ELIGIBLE);
+        List<String> NOT_VISITED = Arrays.asList(BusinessStatus.NOT_VISITED);
     }
 
     interface Map {

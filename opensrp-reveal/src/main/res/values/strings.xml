@@ -299,6 +299,8 @@
     <string name="intervention_unit">Intervention Unit</string>
     <string name="apply_filters">Apply Filters</string>
     <string name="bcc_code">BCC</string>
+    <string name="mosquito_collection">Mosquito Collection</string>
+    <string name="larval_dipping">Larval dipping</string>
 
     <string-array name="task_sort_options">
         <item>Distance(nearest first</item>

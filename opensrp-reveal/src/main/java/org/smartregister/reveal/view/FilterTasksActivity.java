@@ -1,13 +1,23 @@
 package org.smartregister.reveal.view;
 
 import android.os.Bundle;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ToggleButton;
+
+import com.google.android.flexbox.FlexboxLayout;
 
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.view.activity.MultiLanguageActivity;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
+
 public class FilterTasksActivity extends MultiLanguageActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +30,26 @@ public class FilterTasksActivity extends MultiLanguageActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_close);
 
+        setUpToggleButtonGroups();
+    }
+
+    private void setUpToggleButtonGroups() {
+        FlexboxLayout taskCodeLayout = findViewById(R.id.task_code_layout);
+        populateToggleButtons(taskCodeLayout);
+
+    }
+
+    private void populateToggleButtons(FlexboxLayout layout) {
+        FlexboxLayout.LayoutParams params = (FlexboxLayout.LayoutParams) findViewById(R.id.toggle_sprayed).getLayoutParams();
+        List<String> toSKip = Arrays.asList(Intervention.FI, Intervention.MDA, "PERSON_INTERVENTIONS");
+        for (Field field : Intervention.class.getDeclaredFields()) {
+            if (toSKip.contains(field.getName()))
+                continue;
+            ToggleButton toggleButton = new ToggleButton(new ContextThemeWrapper(this, R.style.TaskFilterToggle), null, 0);
+            toggleButton.setText(field.getName());
+            toggleButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.toggle_bg));
+            layout.addView(toggleButton, params);
+        }
     }
 
     @Override
