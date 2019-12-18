@@ -57,6 +57,7 @@ import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.AlertDialogUtils;
@@ -80,12 +81,14 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_D
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
+import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FAMILY_PROFILE;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
@@ -607,6 +610,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             String structureId = data.getStringExtra(STRUCTURE_ID);
             Task task = (Task) data.getSerializableExtra(TASK_ID);
             listTaskPresenter.resetFeatureTasks(structureId, task);
+        } else if (requestCode == REQUEST_CODE_FILTER_TASKS && resultCode == RESULT_OK && data.hasExtra(FILTER_SORT_PARAMS)) {
+            TaskFilterParams filterParams = (TaskFilterParams) data.getSerializableExtra(FILTER_SORT_PARAMS);
+            listTaskPresenter.filterTasks(filterParams);
         }
     }
 

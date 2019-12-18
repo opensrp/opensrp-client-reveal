@@ -8,11 +8,13 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 
+import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,20 +36,26 @@ import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
+import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.JsonForm;
+import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.util.Utils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import timber.log.Timber;
 
@@ -104,6 +112,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private PreferencesUtil prefsUtil;
 
     private FeatureCollection featureCollection;
+
+    private List<Feature> filteredFeatureCollection;
 
     private Feature operationalArea;
 
@@ -278,9 +288,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
                 || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
-        }  else if (REGISTER_FAMILY.equals(code) && NOT_VISITED.equals(businessStatus)) {
+        } else if (REGISTER_FAMILY.equals(code) && NOT_VISITED.equals(businessStatus)) {
             displayMarkStructureIneligibleDialog();
-        }  else if (REGISTER_FAMILY.equals(code) && NOT_ELIGIBLE.equals(businessStatus)) {
+        } else if (REGISTER_FAMILY.equals(code) && NOT_ELIGIBLE.equals(businessStatus)) {
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
         } else if (PAOT.equals(code)) {
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
@@ -632,5 +642,20 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     public void setChangeMapPosition(boolean changeMapPosition) {
         this.changeMapPosition = changeMapPosition;
+    }
+
+    public void filterTasks(TaskFilterParams filterParams) {
+        filteredFeatureCollection = new ArrayList<>();
+        for (Feature feature : featureCollection.features()) {
+            if (filterParams.getCheckedFilters().containsKey(Filter.STATUS) && feature.hasProperty(Properties.TASK_BUSINESS_STATUS_LIST)) {
+                Set<String> filterStatus = filterParams.getCheckedFilters().get(Filter.STATUS);
+                JsonElement businessStatus = feature.getProperty(Properties.TASK_BUSINESS_STATUS_LIST);
+                String[] array = businessStatus.getAsString().split(",");
+                if (CollectionUtils.containsAny(Arrays.asList(array), filterStatus))
+                    filteredFeatureCollection.add(feature);
+
+            }
+        }
+        listTaskView.setGeoJsonSource(FeatureCollection.fromFeatures(filteredFeatureCollection), operationalArea, false);
     }
 }

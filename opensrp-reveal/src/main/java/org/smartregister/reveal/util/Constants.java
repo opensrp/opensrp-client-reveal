@@ -141,6 +141,8 @@ public interface Constants {
         String APP_VERSION_NAME = "appVersionName";
         String FORM_VERSION = "form_version";
         String STRUCTURE_STATUS = "status";
+        String TASK_BUSINESS_STATUS_LIST = "task_business_status_list";
+        String TASK_CODE_LIST = "task_code_list";
     }
 
 

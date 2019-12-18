@@ -1,5 +1,8 @@
 package org.smartregister.reveal.util;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 
@@ -32,7 +35,9 @@ import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
 import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS_LIST;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE_LIST;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 
@@ -56,8 +61,10 @@ public class GeoJsonUtils {
             boolean nonReceived;
             boolean nonEligible;
             boolean partiallyReceived;
-            boolean bloodScreeningExists=false;
-            boolean ineligibleForFamReg=false;
+            boolean bloodScreeningExists = false;
+            boolean ineligibleForFamReg = false;
+            JsonArray statusList = new JsonArray();
+            JsonArray interventionList = new JsonArray();
             String MDA_DISPENSE_TASK_COUNT = "mda_dispense_task_count";
 
             Map<String, Integer> mdaStatusMap = new HashMap<>();
@@ -74,7 +81,7 @@ public class GeoJsonUtils {
                         case REGISTER_FAMILY:
                             familyRegTaskExists = true;
                             familyRegistered = COMPLETE.equals(task.getBusinessStatus());
-                            ineligibleForFamReg  = NOT_ELIGIBLE.equals((task.getBusinessStatus()));
+                            ineligibleForFamReg = NOT_ELIGIBLE.equals((task.getBusinessStatus()));
                             break;
                         case BEDNET_DISTRIBUTION:
                             bednetDistributed = COMPLETE.equals(task.getBusinessStatus());
@@ -83,10 +90,10 @@ public class GeoJsonUtils {
                             if (!bloodScreeningDone) {
                                 bloodScreeningDone = COMPLETE.equals(task.getBusinessStatus());
                             }
-                            bloodScreeningExists=true;
+                            bloodScreeningExists = true;
                             break;
                         case CASE_CONFIRMATION:
-                            caseConfirmed=COMPLETE.equals(task.getBusinessStatus());
+                            caseConfirmed = COMPLETE.equals(task.getBusinessStatus());
                             break;
                         case MDA_ADHERENCE:
                             mdaAdhered = COMPLETE.equals(task.getBusinessStatus());
@@ -94,7 +101,7 @@ public class GeoJsonUtils {
                         case MDA_DISPENSE:
                             mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) + 1);
                             switch (task.getBusinessStatus()) {
-                                case FULLY_RECEIVED :
+                                case FULLY_RECEIVED:
                                     mdaStatusMap.put(FULLY_RECEIVED, mdaStatusMap.get(FULLY_RECEIVED) + 1);
                                     break;
                                 case NONE_RECEIVED:
@@ -127,12 +134,14 @@ public class GeoJsonUtils {
                 taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
                 taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
                 taskProperties.put(STRUCTURE_NAME, structure.getProperties().getName());
+                statusList.add(task.getBusinessStatus());
+                interventionList.add(task.getCode());
 
             }
 
             // The assumption is that a register structure task always exists if the structure has
             // atleast one bednet distribution or blood screening task
-            if ( Utils.isResidentialStructure(taskProperties.get(TASK_CODE)) ) {
+            if (Utils.isResidentialStructure(taskProperties.get(TASK_CODE))) {
 
                 boolean familyRegTaskMissingOrFamilyRegComplete = familyRegistered || !familyRegTaskExists;
 
@@ -141,8 +150,8 @@ public class GeoJsonUtils {
                     if (familyRegTaskMissingOrFamilyRegComplete &&
                             bednetDistributed && bloodScreeningDone) {
                         taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
-                    }  else if (familyRegTaskMissingOrFamilyRegComplete &&
-                             !bednetDistributed && (!bloodScreeningDone || (!bloodScreeningExists && !caseConfirmed)) ) {
+                    } else if (familyRegTaskMissingOrFamilyRegComplete &&
+                            !bednetDistributed && (!bloodScreeningDone || (!bloodScreeningExists && !caseConfirmed))) {
                         taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
                     } else if (bednetDistributed && familyRegTaskMissingOrFamilyRegComplete) {
                         taskProperties.put(TASK_BUSINESS_STATUS, BEDNET_DISTRIBUTED);
@@ -158,20 +167,20 @@ public class GeoJsonUtils {
 
 
                     fullyReceived = (mdaStatusMap.get(FULLY_RECEIVED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
-                    nonReceived = ( mdaStatusMap.get(NONE_RECEIVED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
-                    nonEligible = ( mdaStatusMap.get(NOT_ELIGIBLE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+                    nonReceived = (mdaStatusMap.get(NONE_RECEIVED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+                    nonEligible = (mdaStatusMap.get(NOT_ELIGIBLE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
                     partiallyReceived = (!fullyReceived && (mdaStatusMap.get(FULLY_RECEIVED) > 0));
 
                     if (familyRegTaskMissingOrFamilyRegComplete) {
                         if (mdaAdhered) {
                             taskProperties.put(TASK_BUSINESS_STATUS, ADHERENCE_VISIT_DONE);
-                        } else if (fullyReceived ) {
+                        } else if (fullyReceived) {
                             taskProperties.put(TASK_BUSINESS_STATUS, FULLY_RECEIVED);
-                        } else if (partiallyReceived ) {
+                        } else if (partiallyReceived) {
                             taskProperties.put(TASK_BUSINESS_STATUS, PARTIALLY_RECEIVED);
-                        } else if (nonReceived ) {
+                        } else if (nonReceived) {
                             taskProperties.put(TASK_BUSINESS_STATUS, NONE_RECEIVED);
-                        } else if (nonEligible ) {
+                        } else if (nonEligible) {
                             taskProperties.put(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
                         } else {
                             taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
@@ -183,6 +192,9 @@ public class GeoJsonUtils {
                 }
 
             }
+
+            taskProperties.put(TASK_BUSINESS_STATUS_LIST, statusList.toString());
+            taskProperties.put(TASK_CODE_LIST, interventionList.toString());
 
             structure.getProperties().setCustomProperties(taskProperties);
 
