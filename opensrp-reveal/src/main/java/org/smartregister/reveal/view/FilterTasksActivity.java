@@ -17,6 +17,7 @@ import org.smartregister.reveal.presenter.FilterTasksPresenter;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.view.activity.MultiLanguageActivity;
 
 import java.util.List;
@@ -67,7 +68,6 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         clearSelectedButtons(businessStatusLayout);
         clearSelectedButtons(taskCodeLayout);
         clearSelectedButtons(interventionTypeLayout);
-        onFiltedSelected(0);
     }
 
 
@@ -92,8 +92,8 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     }
 
     private void setUpToggleButtonGroups() {
-        populateToggleButtons(businessStatusLayout, Constants.BusinessStatus.FILTERABLE_BUSINESS_STATUS);
-        populateToggleButtons(taskCodeLayout, Intervention.FILTERABLE_INTERVENTIONS);
+        populateToggleButtons(businessStatusLayout,presenter.getBusinessStatusOptions());
+        populateToggleButtons(taskCodeLayout, presenter.getIntentionTypes());
         populateToggleButtons(interventionTypeLayout, InterventionType.FILTERABLE_INTEVENTION_TYPES);
         registerCheckedChangeListener();
 

@@ -7,9 +7,12 @@ import org.smartregister.reveal.contract.FilterTasksContract;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
+import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.Utils;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -25,8 +28,11 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
 
     private Map<String, Set<String>> checkedFilters = new HashMap<>();
 
+    private PreferencesUtil preferencesUtil;
+
     public FilterTasksPresenter(FilterTasksContract.View view) {
         this.view = view;
+        preferencesUtil = PreferencesUtil.getInstance();
         populateLabels();
     }
 
@@ -85,8 +91,26 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
                 selected.add(filterKey.toString());
             } else {
                 selected.remove(filterKey.toString());
+                if (selected.isEmpty()) {
+                    checkedFilters.remove(filterCategory.toString());
+                }
             }
         }
         view.onFiltedSelected(checkedFilters.size());
+    }
+
+    @Override
+    public List<String> getIntentionTypes() {
+        if (Utils.isMDA()) {
+            return Intervention.MDA_INTERVENTIONS;
+        } else if (Utils.isFocusInvestigation()) {
+            return Intervention.FI_INTERVENTIONS;
+        } else
+            return Intervention.IRS_INTERVENTIONS;
+    }
+
+    @Override
+    public List<String> getBusinessStatusOptions() {
+        return Utils.isFocusInvestigationOrMDA() ? BusinessStatus.FI_MDA_BUSINESS_STATUS : BusinessStatus.IRS_BUSINESS_STATUS;
     }
 }
