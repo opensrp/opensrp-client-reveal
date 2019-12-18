@@ -16,10 +16,6 @@ import org.smartregister.reveal.presenter.FilterTasksPresenter;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.view.activity.MultiLanguageActivity;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
-
 public class FilterTasksActivity extends MultiLanguageActivity implements FilterTasksContract.View, CompoundButton.OnCheckedChangeListener {
 
     private FilterTasksContract.Presenter presenter;
@@ -91,14 +87,12 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
 
     private void populateToggleButtons(FlexboxLayout layout) {
         FlexboxLayout.LayoutParams params = (FlexboxLayout.LayoutParams) findViewById(R.id.toggle_sprayed).getLayoutParams();
-        List<String> toSKip = Arrays.asList(Intervention.FI, Intervention.MDA, "PERSON_INTERVENTIONS");
-        for (Field field : Intervention.class.getDeclaredFields()) {
-            if (toSKip.contains(field.getName()))
-                continue;
+        for (String intervention : Intervention.NON_AGGREGATE_INTERVENTIONS) {
+
             ToggleButton toggleButton = new ToggleButton(new ContextThemeWrapper(this, R.style.TaskFilterToggle), null, 0);
-            Integer label = presenter.getStringResource(field.getName());
+            Integer label = presenter.getStringResource(intervention);
             if (label == null) {
-                toggleButton.setText(field.getName());
+                toggleButton.setText(intervention);
             } else {
                 toggleButton.setText(label);
             }
