@@ -1,5 +1,6 @@
 package org.smartregister.reveal.contract;
 
+import android.content.Intent;
 import android.support.annotation.StringRes;
 
 import java.util.List;
@@ -12,6 +13,8 @@ public interface FilterTasksContract {
     interface View {
 
         void onFiltedSelected(int size);
+
+        void applyFilters(Intent intent);
     }
 
     interface Presenter {
@@ -24,5 +27,7 @@ public interface FilterTasksContract {
         List<String> getIntentionTypes();
 
         List<String> getBusinessStatusOptions();
+
+        void onApplyFilters(String selectedItem);
     }
 }

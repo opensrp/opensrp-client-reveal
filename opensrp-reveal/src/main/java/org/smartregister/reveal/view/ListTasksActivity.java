@@ -139,8 +139,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private FloatingActionButton layerSwitcherFab;
 
-    private FloatingActionButton filterTasksFab;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -221,7 +219,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.register_family).setOnClickListener(this);
 
-        filterTasksFab = findViewById(R.id.filter_tasks_fab);
+        FloatingActionButton filterTasksFab = findViewById(R.id.filter_tasks_fab);
         filterTasksFab.setOnClickListener(this);
     }
 

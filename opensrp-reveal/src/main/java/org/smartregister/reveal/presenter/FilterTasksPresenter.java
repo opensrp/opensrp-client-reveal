@@ -1,13 +1,15 @@
 package org.smartregister.reveal.presenter;
 
+import android.content.Intent;
 import android.support.annotation.StringRes;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FilterTasksContract;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
+import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
-import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.HashMap;
@@ -28,17 +30,13 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
 
     private Map<String, Set<String>> checkedFilters = new HashMap<>();
 
-    private PreferencesUtil preferencesUtil;
-
     public FilterTasksPresenter(FilterTasksContract.View view) {
         this.view = view;
-        preferencesUtil = PreferencesUtil.getInstance();
         populateLabels();
     }
 
 
     private void populateLabels() {
-
         labelsMap = new HashMap<>();
         //Interventions
         labelsMap.put(Intervention.IRS, R.string.irs);
@@ -112,5 +110,12 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
     @Override
     public List<String> getBusinessStatusOptions() {
         return Utils.isFocusInvestigationOrMDA() ? BusinessStatus.FI_MDA_BUSINESS_STATUS : BusinessStatus.IRS_BUSINESS_STATUS;
+    }
+
+    @Override
+    public void onApplyFilters(String selectedItem) {
+        Intent intent = new Intent();
+        intent.putExtra(Filter.FILTER_SORT_PARAMS, new TaskFilterParams(selectedItem, checkedFilters));
+        view.applyFilters(intent);
     }
 }

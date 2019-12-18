@@ -1,5 +1,6 @@
 package org.smartregister.reveal.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.AppCompatSpinner;
@@ -15,9 +16,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FilterTasksContract;
 import org.smartregister.reveal.presenter.FilterTasksPresenter;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
-import org.smartregister.reveal.util.Utils;
 import org.smartregister.view.activity.MultiLanguageActivity;
 
 import java.util.List;
@@ -57,8 +56,12 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
 
         setUpToggleButtonGroups();
 
-        findViewById(R.id.clear_filters).setOnClickListener((view) -> {
+        findViewById(R.id.clear_filters).setOnClickListener(view -> {
             clearSelections();
+        });
+
+        applyFiltersTextView.setOnClickListener(view -> {
+            presenter.onApplyFilters(sortBy.getSelectedItem().toString());
         });
     }
 
@@ -92,7 +95,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     }
 
     private void setUpToggleButtonGroups() {
-        populateToggleButtons(businessStatusLayout,presenter.getBusinessStatusOptions());
+        populateToggleButtons(businessStatusLayout, presenter.getBusinessStatusOptions());
         populateToggleButtons(taskCodeLayout, presenter.getIntentionTypes());
         populateToggleButtons(interventionTypeLayout, InterventionType.FILTERABLE_INTEVENTION_TYPES);
         registerCheckedChangeListener();
@@ -136,5 +139,11 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     @Override
     public void onFiltedSelected(int size) {
         applyFiltersTextView.setText(getString(R.string.apply_filters_formatter, size));
+    }
+
+    @Override
+    public void applyFilters(Intent intent) {
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }
