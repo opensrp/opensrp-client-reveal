@@ -162,10 +162,7 @@
             android:orientation="horizontal"
             app:alignContent="stretch"
             app:alignItems="stretch"
-            app:flexWrap="wrap">
-
-
-        </com.google.android.flexbox.FlexboxLayout>
+            app:flexWrap="wrap" />
 
 
         <View
@@ -183,6 +180,7 @@
 
 
         <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/intervention_type_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

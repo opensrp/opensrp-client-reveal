@@ -14,6 +14,8 @@ import java.util.Map;
  */
 public class FilterTasksPresenter implements FilterTasksContract.Presenter {
 
+
+
     private FilterTasksContract.View view;
 
     private Map<String, Integer> labelsMap;
@@ -22,6 +24,7 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
         this.view = view;
         populateLabels();
     }
+
 
     private void populateLabels() {
 
