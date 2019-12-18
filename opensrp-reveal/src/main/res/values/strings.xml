@@ -301,6 +301,12 @@
     <string name="bcc_code">BCC</string>
     <string name="mosquito_collection">Mosquito Collection</string>
     <string name="larval_dipping">Larval dipping</string>
+    <string name="bednet_distribution">Bednet Distribution</string>
+    <string name="blood_screening">Blood Screening</string>
+    <string name="case_confirmation">Case Confirmation</string>
+    <string name="paot">PAOT</string>
+    <string name="mda_dispense">MDA Dispense</string>
+    <string name="mda_adherence">MDA Adherence</string>
 
     <string-array name="task_sort_options">
         <item>Distance(nearest first</item>

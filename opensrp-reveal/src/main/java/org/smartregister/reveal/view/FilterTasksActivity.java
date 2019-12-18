@@ -9,6 +9,8 @@ import android.widget.ToggleButton;
 import com.google.android.flexbox.FlexboxLayout;
 
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.contract.FilterTasksContract;
+import org.smartregister.reveal.presenter.FilterTasksPresenter;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.view.activity.MultiLanguageActivity;
 
@@ -16,14 +18,16 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-public class FilterTasksActivity extends MultiLanguageActivity {
+public class FilterTasksActivity extends MultiLanguageActivity implements FilterTasksContract.View {
 
+
+    private FilterTasksContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        presenter = new FilterTasksPresenter(this);
         setContentView(R.layout.activity_filter_tasks);
-
         Toolbar toolbar = this.findViewById(R.id.filter_tasks_toolbar);
         toolbar.setTitle(R.string.filters);
         setSupportActionBar(toolbar);
@@ -46,7 +50,12 @@ public class FilterTasksActivity extends MultiLanguageActivity {
             if (toSKip.contains(field.getName()))
                 continue;
             ToggleButton toggleButton = new ToggleButton(new ContextThemeWrapper(this, R.style.TaskFilterToggle), null, 0);
-            toggleButton.setText(field.getName());
+            Integer label = presenter.getStringResource(field.getName());
+            if (label == null) {
+                toggleButton.setText(field.getName());
+            } else {
+                toggleButton.setText(label);
+            }
             toggleButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.toggle_bg));
             layout.addView(toggleButton, params);
         }

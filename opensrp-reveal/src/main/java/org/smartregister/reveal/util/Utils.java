@@ -37,6 +37,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -306,6 +307,11 @@ public class Utils {
     public static String getCurrentLocationId() {
         Location currentOperationalArea = getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
         return currentOperationalArea == null ? null : currentOperationalArea.getId();
+    }
+
+    public static Map<String, Integer> getStringResourceMap(String intervention) {
+        Map<String, Integer> map = new HashMap<>();
+        return map;
     }
 
 }
