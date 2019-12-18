@@ -67,6 +67,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         clearSelectedButtons(businessStatusLayout);
         clearSelectedButtons(taskCodeLayout);
         clearSelectedButtons(interventionTypeLayout);
+        onFiltedSelected(0);
     }
 
 
