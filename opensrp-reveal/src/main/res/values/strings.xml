@@ -310,7 +310,7 @@
     <string name="mda_adherence">MDA Adherence</string>
 
     <string-array name="task_sort_options">
-        <item>Distance(nearest first</item>
+        <item>Distance (nearest first)</item>
         <item>Status</item>
         <item>Type</item>
     </string-array>

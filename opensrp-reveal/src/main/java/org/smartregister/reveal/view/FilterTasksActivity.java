@@ -97,7 +97,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     private void setUpToggleButtonGroups() {
         populateToggleButtons(businessStatusLayout, presenter.getBusinessStatusOptions());
         populateToggleButtons(taskCodeLayout, presenter.getIntentionTypes());
-        populateToggleButtons(interventionTypeLayout, InterventionType.FILTERABLE_INTEVENTION_TYPES);
+        populateToggleButtons(interventionTypeLayout, InterventionType.FILTERABLE_INTERVENTION_TYPES);
         registerCheckedChangeListener();
 
     }
