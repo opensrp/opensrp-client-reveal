@@ -16,7 +16,12 @@ import org.smartregister.reveal.contract.FilterTasksContract;
 import org.smartregister.reveal.presenter.FilterTasksPresenter;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.view.activity.MultiLanguageActivity;
+
+import java.util.List;
+
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class FilterTasksActivity extends MultiLanguageActivity implements FilterTasksContract.View, CompoundButton.OnCheckedChangeListener {
 
@@ -86,15 +91,18 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     }
 
     private void setUpToggleButtonGroups() {
-        FlexboxLayout taskCodeLayout = findViewById(R.id.task_code_layout);
-        populateToggleButtons(taskCodeLayout);
+        populateToggleButtons(businessStatusLayout, Constants.BusinessStatus.FILTERABLE_BUSINESS_STATUS);
+        populateToggleButtons(taskCodeLayout, Intervention.FILTERABLE_INTERVENTIONS);
+        populateToggleButtons(interventionTypeLayout, InterventionType.FILTERABLE_INTEVENTION_TYPES);
         registerCheckedChangeListener();
 
     }
 
-    private void populateToggleButtons(FlexboxLayout layout) {
-        FlexboxLayout.LayoutParams params = (FlexboxLayout.LayoutParams) findViewById(R.id.toggle_sprayed).getLayoutParams();
-        for (String intervention : Intervention.NON_AGGREGATE_INTERVENTIONS) {
+    private void populateToggleButtons(FlexboxLayout layout, List<String> options) {
+        FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
+        params.setMargins(0, 0, getResources().getDimensionPixelSize(R.dimen.filter_toggle_end_margin),
+                getResources().getDimensionPixelSize(R.dimen.filter_toggle_bottom_margin));
+        for (String intervention : options) {
 
             ToggleButton toggleButton = new ToggleButton(new ContextThemeWrapper(this, R.style.TaskFilterToggle), null, 0);
             Integer label = presenter.getStringResource(intervention);

@@ -182,7 +182,7 @@ public interface Constants {
 
         List<String> PERSON_INTERVENTIONS = Arrays.asList(BLOOD_SCREENING, CASE_CONFIRMATION, MDA_DISPENSE, MDA_ADHERENCE);
 
-        List<String> NON_AGGREGATE_INTERVENTIONS = Arrays.asList(IRS, MOSQUITO_COLLECTION,
+        List<String> FILTERABLE_INTERVENTIONS = Arrays.asList(IRS, MOSQUITO_COLLECTION,
                 LARVAL_DIPPING, BCC, BEDNET_DISTRIBUTION, BLOOD_SCREENING, CASE_CONFIRMATION,
                 REGISTER_FAMILY, PAOT, MDA_ADHERENCE, MDA_ADHERENCE, IRS_VERIFICATION);
 
@@ -235,6 +235,9 @@ public interface Constants {
         String BLOOD_SCREENING_COMPLETE = "Blood Screening Complete";
         String PARTIALLY_SPRAYED = "Partially Sprayed";
 
+
+        List<String> FILTERABLE_BUSINESS_STATUS = Arrays.asList(NOT_VISITED, NOT_SPRAYED,
+                SPRAYED, NOT_SPRAYABLE, COMPLETE, INCOMPLETE, NOT_ELIGIBLE, IN_PROGRESS);
     }
 
     interface BusinessStatusWrapper {
@@ -598,6 +601,17 @@ public interface Constants {
         int REQUEST_CODE_FAMILY_PROFILE = 3576;
 
         int REQUEST_CODE_FILTER_TASKS = 3596;
+    }
+
+
+    interface InterventionType {
+        String OPERATIONAL_AREA = "operational_area";
+        String STRUCTURE = "structure";
+        String FAMILY = "family";
+        String PERSON = "person";
+
+        List<String> FILTERABLE_INTEVENTION_TYPES = Arrays.asList(OPERATIONAL_AREA, STRUCTURE, FAMILY, PERSON);
+
     }
 
     interface Filter {
