@@ -129,7 +129,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-        presenter.onToggleChanged(buttonView.getId(), buttonView.getTag(R.id.filter_category), buttonView.getTag(R.id.filter_key));
+        presenter.onToggleChanged(buttonView.isChecked(), buttonView.getTag(R.id.filter_category), buttonView.getTag(R.id.filter_key));
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.smartregister.reveal.contract;
 
-import android.content.Context;
 import android.support.annotation.StringRes;
 
 /**
@@ -18,6 +17,6 @@ public interface FilterTasksContract {
         @StringRes
         Integer getStringResource(String intervention);
 
-        void onToggleChanged(int buttonId, Object filterCategory, Object filterKey);
+        void onToggleChanged(boolean isChecked, Object filterCategory, Object filterKey);
     }
 }

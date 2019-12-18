@@ -4,7 +4,6 @@ import android.support.annotation.StringRes;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FilterTasksContract;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
@@ -75,14 +74,18 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
     }
 
     @Override
-    public void onToggleChanged(int buttonId, Object filterCategory, Object filterKey) {
+    public void onToggleChanged(boolean isChecked, Object filterCategory, Object filterKey) {
         if (filterCategory != null) {
             Set<String> selected = checkedFilters.get(filterCategory.toString());
             if (selected == null) {
                 selected = new HashSet<>();
                 checkedFilters.put(filterCategory.toString(), selected);
             }
-            selected.add(filterKey != null ? filterKey.toString() : buttonId + "");
+            if (isChecked) {
+                selected.add(filterKey.toString());
+            } else {
+                selected.remove(filterKey.toString());
+            }
         }
         view.onFiltedSelected(checkedFilters.size());
     }
