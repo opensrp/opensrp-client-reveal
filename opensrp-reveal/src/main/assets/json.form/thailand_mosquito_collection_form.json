@@ -51,6 +51,29 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "eligibleMos",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this collection point eligible?",
+        "options": [
+          {
+            "key": "1",
+            "text": "Eligible"
+          },
+          {
+            "key": "0",
+            "text": "InEligible"
+          }
+        ],
+        "value": "Yes",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
         "key": "task_business_status",
         "label": "สถานะ",
         "type": "native_radio",

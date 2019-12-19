@@ -51,7 +51,7 @@
     "display_back_button": "true",
     "fields": [
       {
-        "key": "eligibleMos",
+        "key": "eligibleLarv",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -59,11 +59,11 @@
         "label": "Is this collection point eligible?",
         "options": [
           {
-            "key": "Yes",
+            "key": "1",
             "text": "Eligible"
           },
           {
-            "key": "No",
+            "key": "0",
             "text": "InEligible"
           }
         ],
