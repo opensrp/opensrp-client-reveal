@@ -131,7 +131,7 @@
           "err": "Please specify status"
         },
         "relevance": {
-          "step1:eligibleLarv": {
+          "step1:eligibleMos": {
             "type": "string",
             "ex": "equalTo(., \"1\")"
           }
