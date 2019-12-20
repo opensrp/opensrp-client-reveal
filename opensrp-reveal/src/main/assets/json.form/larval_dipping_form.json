@@ -130,6 +130,12 @@
         "v_required": {
           "value": true,
           "err": "Please specify the task status"
+        },
+        "relevance": {
+          "step1:eligibleLarv": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {

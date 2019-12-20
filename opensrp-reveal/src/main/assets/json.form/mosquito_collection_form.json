@@ -74,6 +74,35 @@
         }
       },
       {
+        "key": "whyNotEligibleMos",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Why is it not ineligible?",
+        "options": [
+          {
+            "key": "No longer collection site",
+            "text": "No longer collection site"
+          },
+          {
+            "key": "99",
+            "text": "Other"
+          }
+        ],
+        "value": "Yes",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "step1:eligibleLarv": {
+            "type": "string",
+            "ex": "equalTo(., \"0\")"
+          }
+        }
+      },
+      {
         "key": "task_business_status",
         "label": "Status",
         "type": "native_radio",
@@ -101,6 +130,12 @@
         "v_required": {
           "value": true,
           "err": "Please specify status"
+        },
+        "relevance": {
+          "step1:eligibleLarv": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
