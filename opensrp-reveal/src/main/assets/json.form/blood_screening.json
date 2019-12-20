@@ -52,7 +52,7 @@
     "display_back_button": "true",
     "fields": [
       {
-        "key": "eligibile",
+        "key": "eligiblePerson",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -60,18 +60,54 @@
         "label": "Is this person eligible for blood screening?",
         "options": [
           {
-            "key": "Yes",
-            "text": "Yes"
+            "key": "1",
+            "text": "Eligible"
           },
           {
-            "key": "No",
-            "text": "No"
+            "key": "0",
+            "text": "InEligible"
           }
         ],
-        "value" : "Yes",
+        "value": "1",
         "v_required": {
           "value": true,
           "err": "This field is required"
+        }
+      },
+      {
+        "key": "whyNotEligiblePerson",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Why is this person ineligible?",
+        "options": [
+          {
+            "key": "1",
+            "text": "Sick"
+          },
+          {
+            "key": "2",
+            "text": "Index case - test not necessary"
+          },
+          {
+            "key": "3",
+            "text": "Tested within past week"
+          },
+          {
+            "key": "99",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"0\")"
+          }
         }
       },
       {
@@ -98,11 +134,11 @@
         "v_required": {
           "value": "true",
           "err": "select type of blood screening"
-        } ,
+        },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligiblePerson": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -128,9 +164,9 @@
           "err": "This field is required"
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligiblePerson": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -156,9 +192,9 @@
           "err": "This field is required"
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligiblePerson": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -177,18 +213,6 @@
           {
             "key": "Refused",
             "text": "Refused"
-          },
-          {
-            "key": "Sick",
-            "text": "Sick"
-          },
-          {
-            "key": "Tested within past week",
-            "text": "Tested within past week"
-          },
-          {
-            "key": "Index case - not test necessary",
-            "text": "Index case - not test necessary"
           },
           {
             "key": "Other",
@@ -309,7 +333,7 @@
         "openmrs_entity_id": "",
         "type": "check_box",
         "label": "Microscopy Result",
-        "combine_checkbox_option_values" : "true",
+        "combine_checkbox_option_values": "true",
         "options": [
           {
             "key": "Negative",
@@ -358,7 +382,7 @@
         "type": "edit_text",
         "hint": "Please add a comment",
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligiblePerson": {
             "type": "string",
             "ex": "equalTo(., \"Yes\")"
           }

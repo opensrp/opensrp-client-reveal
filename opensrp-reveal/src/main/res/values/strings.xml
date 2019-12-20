@@ -285,5 +285,8 @@
     <string name="mark_location_ineligible">Mark Location Ineligible</string>
     <string name="is_structure_eligible_for_fam_reg">Is this location eligible to register a family?</string>
     <string name="ineligible_location">Ineligible Location</string>
+    <string name="eligible">Eligible</string>
+    <string name="not_eligible_unoccupied">Not Eligible: Currently Unoccupied</string>
+    <string name="not_eligible_other">Not Eligible: Other</string>
 
 </resources>

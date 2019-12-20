@@ -51,26 +51,50 @@
     "display_back_button": "true",
     "fields": [
       {
-        "key": "eligibile",
+        "key": "eligibleForNet",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Is this household eligible for bednet distribution?",
+        "label": "Is this structure eligible for net survey/distribution?",
         "options": [
           {
-            "key": "Yes",
-            "text": "Yes"
+            "key": "1",
+            "text": "Eligible"
           },
           {
-            "key": "No",
-            "text": "No"
+            "key": "0",
+            "text": "InEligible"
           }
         ],
-        "value" : "Yes",
+        "value": "1",
         "v_required": {
           "value": true,
           "err": "This field is required"
+        }
+      },
+      {
+        "key": "whyNotEligibleNet",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Why is it not ineligible?",
+        "options": [
+          {
+            "key": "99",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"0\")"
+          }
         }
       },
       {
@@ -98,9 +122,9 @@
           "err": "ต้องไม่เกินจำนวนสมาชิกในครัวเรือนที่ลงทะเบียน"
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligibleForNet": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -125,9 +149,9 @@
           "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligibleForNet": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -273,9 +297,9 @@
           "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligibleForNet": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -422,9 +446,9 @@
           "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligibleForNet": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -454,9 +478,9 @@
           "err": "จำนวนมุ้งชุบภายใน 6 เดือนที่ผ่านมาต้องไม่เกินจำนวนมุ้งธรรมดาที่มี"
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligibleForNet": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -491,9 +515,9 @@
           }
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligibleForNet": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -542,9 +566,9 @@
           }
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligibleForNet": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -574,9 +598,9 @@
           "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligibleForNet": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -606,9 +630,9 @@
           "err": "ต้องไม่เกินจำนวนสมาชิกในครอบครัวที่ใช้เวลากลางคืนข้างนอก"
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligibleForNet": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -638,9 +662,9 @@
           "err": "จำนวนมุ้งไม่ควรเกินจำนวนคนในบ้าน"
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligibleForNet": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -717,9 +741,9 @@
           }
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligibleForNet": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -748,9 +772,9 @@
           "err": "จำนวนมุ้งธรรมดาไม่ควรเกินจำนวนมุ้งที่ชุบ"
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligibleForNet": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -776,9 +800,9 @@
           "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligibleForNet": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -790,9 +814,9 @@
         "type": "edit_text",
         "hint": "หมายเหตุ",
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligibleForNet": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
