@@ -74,4 +74,4 @@ description: Task business status
 priority: 1
 condition: "true"
 actions:
-- "calculation = (step1_eligibile == 'Yes') ?  'Complete' : 'Not Eligible' "
+- "calculation = (step1_eligibleForNet == '1') ?  'Complete' : 'Not Eligible' "
