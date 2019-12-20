@@ -70,9 +70,12 @@ public class TaskUtils {
         task.setCode(intervention);
         task.setDescription(context.getString(description));
         PlanDefinition currentPlan = planRepository.findPlanDefinitionById(prefsUtil.getCurrentPlanId());
-        for (Action action : currentPlan.getActions()) {
-            if (intervention.equals(action.getCode())) {
-                task.setFocus(action.getIdentifier());
+        if (currentPlan != null && currentPlan.getActions() != null) {
+            for (Action action : currentPlan.getActions()) {
+                if (intervention.equals(action.getCode())) {
+                    task.setFocus(action.getIdentifier());
+                    continue;
+                }
             }
         }
         task.setForEntity(entityId);

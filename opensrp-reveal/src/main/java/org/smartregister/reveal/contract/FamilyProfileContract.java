@@ -1,10 +1,12 @@
 package org.smartregister.reveal.contract;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Event;
+import org.smartregister.domain.Task;
 
 /**
  * Created by samuelgithengi on 4/12/19.
@@ -18,6 +20,10 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
         void refreshTasks(String structureId);
 
         void updateFamilyName(String firstName);
+
+        Activity getContext();
+
+        void returnToMapView(String structureId, Task task);
     }
 
     interface Interactor extends org.smartregister.family.contract.FamilyProfileContract.Interactor {
@@ -25,6 +31,8 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
         void generateTasks(Context applicationContext, String baseEntityId, String structureId);
 
         void updateFamilyMemberName(@NonNull Client family, Event event, @NonNull String oldFamilyName);
+
+        void archiveFamily(String familyBaseEntityId, String structureId);
     }
 
     interface Presenter extends org.smartregister.family.contract.FamilyProfileContract.Presenter {
@@ -34,6 +42,10 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
         void onMembersUpdated();
 
         void onAddFamilyMember();
+
+        void onArchiveFamilyClicked();
+
+        void onArchiveFamilyCompleted(boolean isSuccessfulSaved, Task task);
     }
 }
 

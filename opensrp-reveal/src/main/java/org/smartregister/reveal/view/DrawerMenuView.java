@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vijay.jsonwizard.customviews.TreeViewDialog;
 
@@ -38,6 +39,9 @@ import java.util.List;
 import java.util.Locale;
 
 import timber.log.Timber;
+
+import static org.smartregister.reveal.util.Constants.COPYDBNAME;
+import static org.smartregister.reveal.util.Constants.DBNAME;
 
 /**
  * Created by samuelgithengi on 3/21/19.
@@ -145,6 +149,23 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         headerView.findViewById(R.id.logout_button).setOnClickListener(this);
         headerView.findViewById(R.id.sync_button).setOnClickListener(this);
 
+        districtTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                startStatsActivity();
+                return true;
+            }
+        });
+
+        operatorTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(getContext(), R.string.export_db_notification, Toast.LENGTH_LONG).show();
+                String currentTimeStamp = new SimpleDateFormat("yyyy-MM-dd-HHmmss", Locale.ENGLISH).format(new Date());
+                Utils.copyDatabase(DBNAME, COPYDBNAME + "-" + currentTimeStamp + ".db", getContext());
+                return false;
+            }
+        });
     }
 
     @Override
@@ -303,5 +324,9 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     private void startOtherFormsActivity() {
         getContext().startActivity(new Intent(getContext(), SummaryFormsActivity.class));
+    }
+
+    private void startStatsActivity() {
+        getContext().startActivity(new Intent(getContext(), StatsActivity.class));
     }
 }

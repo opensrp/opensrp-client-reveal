@@ -127,6 +127,15 @@ public class Utils {
 
     }
 
+    public static String formatDate(Date originalDate) {
+        if (originalDate == null) {
+            return null;
+        }
+        DateFormat sdf = new SimpleDateFormat(CARD_VIEW_DATE_FORMAT, Locale.getDefault());
+        return sdf.format(originalDate);
+
+    }
+
     public static String getGlobalConfig(String key, String defaultValue) {
         Map<String, Object> globalConfigs = RevealApplication.getInstance().getServerConfigs();
         Object val = globalConfigs != null ? globalConfigs.get(key) : null;
@@ -292,6 +301,11 @@ public class Utils {
 
     public static boolean isFocusInvestigationOrMDA() {
         return isFocusInvestigation() || isMDA();
+    }
+
+    public static String getCurrentLocationId() {
+        Location currentOperationalArea = getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+        return currentOperationalArea == null ? null : currentOperationalArea.getId();
     }
 
 }

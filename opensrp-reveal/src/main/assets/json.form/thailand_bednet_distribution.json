@@ -51,6 +51,53 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "eligibleForNet",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this structure eligible for net survey/distribution?",
+        "options": [
+          {
+            "key": "1",
+            "text": "Eligible"
+          },
+          {
+            "key": "0",
+            "text": "InEligible"
+          }
+        ],
+        "value": "1",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "whyNotEligibleNet",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Why is it not ineligible?",
+        "options": [
+          {
+            "key": "99",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"0\")"
+          }
+        }
+      },
+      {
         "key": "totPopulation",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -73,6 +120,12 @@
         "v_max": {
           "value": "[num_fam_members]",
           "err": "ต้องไม่เกินจำนวนสมาชิกในครัวเรือนที่ลงทะเบียน"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -94,6 +147,12 @@
         "v_min": {
           "value": "0",
           "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -236,6 +295,12 @@
         "v_min": {
           "value": "0",
           "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -379,6 +444,12 @@
         "v_min": {
           "value": "0",
           "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -392,7 +463,7 @@
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "มีตาข่ายปกติกี่ตัวที่ถูกจุ่มใน 6 เดือนที่ผ่านมา?"
+          "err": "โปรดกรอกจำนวนมุ้งที่ได้ชุบสารเคมีภายใน 6 เดือนที่ผ่านมา"
         },
         "v_numeric": {
           "value": "true",
@@ -405,6 +476,12 @@
         "v_relative_max": {
           "value": "existingITNs",
           "err": "จำนวนมุ้งชุบภายใน 6 เดือนที่ผ่านมาต้องไม่เกินจำนวนมุ้งธรรมดาที่มี"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -435,6 +512,12 @@
             "ex-rules": {
               "rules-file": "bednet-distribution-calculation-rules.yml"
             }
+          }
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -481,6 +564,12 @@
               "rules-file": "bednet-distribution-calculation-rules.yml"
             }
           }
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -507,6 +596,12 @@
         "v_min": {
           "value": "0",
           "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -533,6 +628,12 @@
         "v_max": {
           "value": "[num_sleeps_outdoors]",
           "err": "ต้องไม่เกินจำนวนสมาชิกในครอบครัวที่ใช้เวลากลางคืนข้างนอก"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -559,6 +660,12 @@
         "v_relative_max": {
           "value": "calcPopulationMinusExistingNets",
           "err": "จำนวนมุ้งไม่ควรเกินจำนวนคนในบ้าน"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -632,6 +739,12 @@
               "rules-file": "bednet-distribution-calculation-rules.yml"
             }
           }
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -657,6 +770,12 @@
         "v_relative_max": {
           "value": "calcNumNetsToRedip",
           "err": "จำนวนมุ้งธรรมดาไม่ควรเกินจำนวนมุ้งที่ชุบ"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -679,6 +798,12 @@
         "v_min": {
           "value": "0",
           "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -687,7 +812,13 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "หมายเหตุ"
+        "hint": "หมายเหตุ",
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
       },
       {
         "key": "business_status",
@@ -695,7 +826,14 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "hidden",
-        "value": "Complete"
+        "value": "Complete",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
       }
     ]
   }

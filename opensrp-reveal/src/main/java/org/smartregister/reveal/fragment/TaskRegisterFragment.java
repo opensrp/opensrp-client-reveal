@@ -77,7 +77,6 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         drawerView = new DrawerMenuView(this);
-        drawerView.initializeDrawerLayout();
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setCancelable(false);
     }
@@ -101,6 +100,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                     getActivity().getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
         }
         view.findViewById(R.id.txt_map_label).setOnClickListener(v -> startMapActivity());
+        drawerView.initializeDrawerLayout();
         view.findViewById(R.id.drawerMenu).setOnClickListener(v -> drawerView.openDrawerLayout());
         drawerView.onResume();
 
@@ -178,7 +178,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     @Override
     public void setTotalTasks(int structuresWithinBuffer) {
-        if (headerTextDisplay != null) {
+        if (isAdded() && headerTextDisplay != null) {
             headerTextDisplay.setText(getResources().getQuantityString(R.plurals.structures,
                     taskAdapter.getItemCount(), structuresWithinBuffer, Utils.getLocationBuffer(), taskAdapter.getItemCount()));
 

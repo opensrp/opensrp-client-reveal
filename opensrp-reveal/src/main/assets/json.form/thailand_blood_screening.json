@@ -52,6 +52,65 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "eligiblePerson",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this person eligible for blood screening?",
+        "options": [
+          {
+            "key": "1",
+            "text": "Eligible"
+          },
+          {
+            "key": "0",
+            "text": "InEligible"
+          }
+        ],
+        "value": "1",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "whyNotEligiblePerson",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Why is this person ineligible?",
+        "options": [
+          {
+            "key": "1",
+            "text": "Sick"
+          },
+          {
+            "key": "2",
+            "text": "Index case - test not necessary"
+          },
+          {
+            "key": "3",
+            "text": "Tested within past week"
+          },
+          {
+            "key": "99",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "step1:eligiblePerson": {
+            "type": "string",
+            "ex": "equalTo(., \"0\")"
+          }
+        }
+      },
+      {
         "key": "caseTestingProtocol",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -75,6 +134,12 @@
         "v_required": {
           "value": "true",
           "err": "กรุณาเลือกวิธีทดสอบ"
+        },
+        "relevance": {
+          "step1:eligiblePerson": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -97,6 +162,12 @@
         "v_required": {
           "value": true,
           "err": "ต้องใส่ข้อมูลในช่องนี้"
+        },
+        "relevance": {
+          "step1:eligiblePerson": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -119,6 +190,12 @@
         "v_required": {
           "value": true,
           "err": "ต้องใส่ข้อมูลในช่องนี้"
+        },
+        "relevance": {
+          "step1:eligiblePerson": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -315,7 +392,13 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "รายละเอียดเพิ่มเติม"
+        "hint": "รายละเอียดเพิ่มเติม",
+        "relevance": {
+          "step1:eligiblePerson": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
       },
       {
         "key": "business_status",
@@ -323,7 +406,14 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "hidden",
-        "value": "Complete"
+        "value": "Complete",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "blood-screening-calculation.yml"
+            }
+          }
+        }
       }
     ]
   }

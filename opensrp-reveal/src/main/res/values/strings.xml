@@ -250,11 +250,43 @@
     <string name="adhere_mda">Adhere MDA</string>
 
     <string name="irs_verification">IRS Verification</string>
+    <string name="not_true_structure">Not True Structure</string>
+    <string name="structure_ineligible">Structure Ineligible</string>
     <string name="reported_spray_status">Reported Spray Status</string>
     <string name="chalk_spray_status">Chalk Spray Status</string>
     <string name="sticker_spray_status">Sticker Spray Status</string>
     <string name="card_spray_status">Card Spray Status</string>
     <string name="structure_not_found_or_visited_during_campaign">Structure not found or visited during campaign</string>
     <string name="other">Other</string>
+
+    <string name="synced_events">Synced events:</string>
+    <string name="unsynced_events">Unsynced events:</string>
+    <string name="synced_clients">Synced clients:</string>
+    <string name="unsynced_clients">Unsynced clients:</string>
+    <string name="validated_events">Validated events:</string>
+    <string name="validated_clients">Validated clients:</string>
+    <string name="task_unprocessed_events">Task unprocessed events:</string>
+
+    <string name="refresh">Refresh</string>
+    <string name="export_db_notification">Exporting Database</string>
+    <string name="operational_area_not_selected">Operational Area not selected</string>
+    <string name="archive_member">Archive Member</string>
+    <string name="confirm_archive_member">Are you sure you want archive family member? All tasks and events will be archived </string>
+    <string name="confirm">Confirm</string>
+    <string name="archive_member_failed">Archiving member %1s %2s failed</string>
+    <string name="archive_family">Archive Household</string>
+    <string name="confirm_archive_family">Confirm Household Archival</string>
+    <string name="confirm_archive_family_message">Please confirm that you want to archive this household. This will delete all information and can not be undone.</string>
+    <string name="archive_family_failed">Archiving family %1s failed</string>
+
+    <string name="mark_location_inactive">Mark Location Inactive</string>
+    <string name="confirm_mark_location_inactive">Please confirm that this location should be marked inactive</string>
+    <string name="cannot_make_structure_inactive">You can not make this structure inactive because tasks are completed against it</string>
+    <string name="mark_location_ineligible">Mark Location Ineligible</string>
+    <string name="is_structure_eligible_for_fam_reg">Is this location eligible to register a family?</string>
+    <string name="ineligible_location">Ineligible Location</string>
+    <string name="eligible">Eligible</string>
+    <string name="not_eligible_unoccupied">Not Eligible: Currently Unoccupied</string>
+    <string name="not_eligible_other">Not Eligible: Other</string>
 
 </resources>

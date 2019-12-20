@@ -211,7 +211,7 @@
         "type": "edit_text",
         "hint": "Age",
         "text_size": "8sp",
-        "v_numeric": {
+        "v_numeric_integer": {
           "value": "true",
           "err": "Please enter a number"
         },

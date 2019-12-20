@@ -15,6 +15,8 @@ import org.smartregister.reveal.view.ListTasksActivity;
 import java.util.Arrays;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Created by ndegwamartin on 2019-09-23.
  */
@@ -57,6 +59,10 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
     @Override
     protected void onPostExecute(IndicatorDetails indicatorDetails) {
 
+        if (progressIndicator == null) {
+            Timber.w("progress indicator is null");
+            return;
+        }
         progressIndicator.setProgress(indicatorDetails.getProgress());
         progressIndicator.setTitle(this.activity.getString(R.string.n_percent, indicatorDetails.getProgress()));
 
@@ -77,8 +83,8 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
 
         ((View) progressIndicator.getParent()).setVisibility(org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? View.VISIBLE : View.GONE);
 
-        if(activity instanceof ListTasksActivity)
-            ((ListTasksActivity)activity).positionMyLocationAndLayerSwitcher();
+        if (activity instanceof ListTasksActivity)
+            ((ListTasksActivity) activity).positionMyLocationAndLayerSwitcher();
     }
 
 

@@ -23,6 +23,7 @@ import org.smartregister.view.LocationPickerView;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import timber.log.Timber;
@@ -279,14 +280,14 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         }
     }
 
-    public static Event createUpdateMemberNameEvent(String baseEntityId, Event updateFamilyEvent) {
+    public static Event createFamilyEvent(String baseEntityId, String locationId, Map<String, String> details, String  eventType) {
         FamilyMetadata familyMetadata = RevealApplication.getInstance().getMetadata();
         Event updateMemberNameEvent =
-                (Event) new Event().withBaseEntityId(baseEntityId).withEventDate(new Date()).withEventType(familyMetadata.familyMemberRegister.updateEventType)
-                        .withLocationId(updateFamilyEvent.getLocationId()).withEntityType(familyMetadata.familyMemberRegister.tableName)
+                (Event) new Event().withBaseEntityId(baseEntityId).withEventDate(new Date()).withEventType(eventType)
+                        .withLocationId(locationId).withEntityType(familyMetadata.familyMemberRegister.tableName)
                         .withFormSubmissionId(UUID.randomUUID().toString()).withDateCreated(new Date());
         tagSyncMetadata(RevealApplication.getInstance().getContext().allSharedPreferences(), updateMemberNameEvent);
-        updateMemberNameEvent.setDetails(updateFamilyEvent.getDetails());
+        updateMemberNameEvent.setDetails(details);
         return updateMemberNameEvent;
     }
 

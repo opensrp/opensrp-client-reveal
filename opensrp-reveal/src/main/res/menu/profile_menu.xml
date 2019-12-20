@@ -14,4 +14,11 @@
         app:showAsAction="never" />
 
 
+    <item
+        android:id="@+id/archive_family"
+        android:enabled="true"
+        android:title="@string/archive_family"
+        app:showAsAction="never" />
+
+
 </menu>

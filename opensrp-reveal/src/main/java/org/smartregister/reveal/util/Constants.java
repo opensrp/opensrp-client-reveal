@@ -15,6 +15,8 @@ public interface Constants {
 
     int REQUEST_CODE_GET_JSON_FRAGMENT = 3439;
 
+    int REQUEST_CODE_FAMILY_PROFILE = 3576;
+
     String METADATA = "metadata";
 
     String DETAILS = "details";
@@ -58,6 +60,9 @@ public interface Constants {
     String NULL_KEY = "NULL";
 
     int IRS_VERIFICATION_PERIOD = 30;
+
+    String DBNAME = "drishti.db";
+    String COPYDBNAME = "reveal";
 
     interface CONFIGURATION {
         String LOGIN = "login";
@@ -141,6 +146,7 @@ public interface Constants {
         String STRUCTURE_NAME = "structure_name";
         String APP_VERSION_NAME = "appVersionName";
         String FORM_VERSION = "form_version";
+        String STRUCTURE_STATUS = "status";
     }
 
 
@@ -533,6 +539,10 @@ public interface Constants {
 
         String EVENTS_PER_TASK = "events_per_task";
 
+        String TRUE_STRUCTURE = "true_structure";
+
+        String ELIGIBLE_STRUCTURE = "eligible_structure";
+
         String REPORT_SPRAY = "report_spray";
 
         String CHALK_SPRAY = "chalk_spray";
@@ -540,6 +550,14 @@ public interface Constants {
         String STICKER_SPRAY = "sticker_spray";
 
         String CARD_SPRAY = "card_spray";
+
+        String SYNC_STATUS = "syncStatus";
+
+        String VALIDATION_STATUS = "validationStatus";
+
+        String AUTHORED_ON = "authored_on";
+
+        String OWNER =  "owner";
 
     }
 
@@ -559,5 +577,18 @@ public interface Constants {
         String NOT_SPRAYED = "notSprayed";
         String NOT_FOUND_OR_VISITED = "notFoundOrVisited";
         String OTHER = "other";
+    }
+
+    interface SyncInfo {
+        String SYNCED_EVENTS = "syncedEvents";
+        String SYNCED_CLIENTS = "syncedClients";
+        String UNSYNCED_EVENTS = "unsyncedEvents";
+        String UNSYNCED_CLIENTS = "unsyncedClients";
+        String VALID_EVENTS = "validEvents";
+        String INVALID_EVENTS = "invalidEvents";
+        String VALID_CLIENTS = "validClients";
+        String INVALID_CLIENTS = "INValidClients";
+        String TASK_UNPROCESSED_EVENTS = "taskUnprocessedEvents";
+        String NULL_EVENT_SYNC_STATUS = "nullEventSyncStatus";
     }
 }

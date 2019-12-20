@@ -5,11 +5,15 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import org.smartregister.AllConstants;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
@@ -130,31 +134,79 @@ public class CardDetailsUtil {
         }
     }
 
-    public void populateAndOpenIRSVerificationCard(IRSVerificationCardDetails sprayCardDetails, Activity activity) {
+    public void populateAndOpenIRSVerificationCard(IRSVerificationCardDetails cardDetails, Activity activity) {
         try {
 
-            TextView tvReportedSprayLabel = activity.findViewById(R.id.reported_spray_label);
-            TextView tvReportedSprayStatus = activity.findViewById(R.id.reported_spray_status);
-            TextView tvChalkSprayLabel = activity.findViewById(R.id.chalk_spray_label);
-            TextView tvChalkSprayStatus = activity.findViewById(R.id.chalk_spray_status);
-            TextView tvStickerSprayLabel = activity.findViewById(R.id.sticker_spray_label);
-            TextView tvStickerSprayStatus = activity.findViewById(R.id.sticker_spray_status);
-            TextView tvCardSprayLabel = activity.findViewById(R.id.card_spray_label);
-            TextView tvCardSprayStatus = activity.findViewById(R.id.card_spray_status);
+            TextView tvIneligibleStructuresLabel = activity.findViewById(R.id.ineligible_structures_label);
+            ScrollView svEligibleStructuresScrollView = activity.findViewById(R.id.eligible_structures_scrollview);
 
-            tvReportedSprayLabel.setText(activity.getResources().getString(R.string.reported_spray_status) + ":");
-            tvReportedSprayStatus.setText(getTranslatedIRSVerificationStatus(sprayCardDetails.getReportedSprayStatus()));
+            if(cardDetails.getTrueStructure().equalsIgnoreCase(AllConstants.BOOLEAN_FALSE)) {
 
-            tvChalkSprayLabel.setText(activity.getResources().getString(R.string.chalk_spray_status)+ ":");
-            tvChalkSprayStatus.setText(getTranslatedIRSVerificationStatus(sprayCardDetails.getChalkSprayStatus()));
+                tvIneligibleStructuresLabel.setText(activity.getResources().getString(R.string.not_true_structure));
+                tvIneligibleStructuresLabel.setVisibility(View.VISIBLE);
+                svEligibleStructuresScrollView.setVisibility(View.GONE);
+            } else if(cardDetails.getEligStruc().equalsIgnoreCase(AllConstants.BOOLEAN_FALSE)) {
 
-            tvStickerSprayLabel.setText(activity.getResources().getString(R.string.sticker_spray_status)+ ":");
-            tvStickerSprayStatus.setText(getTranslatedIRSVerificationStatus(sprayCardDetails.getStickerSprayStatus()));
+                tvIneligibleStructuresLabel.setText(activity.getResources().getString(R.string.structure_ineligible));
+                tvIneligibleStructuresLabel.setVisibility(View.VISIBLE);
+                svEligibleStructuresScrollView.setVisibility(View.GONE);
+            } else {
 
-            tvCardSprayLabel.setText(activity.getResources().getString(R.string.card_spray_status)+ ":");
-            tvCardSprayStatus.setText(getTranslatedIRSVerificationStatus(sprayCardDetails.getCardSprayStatus()));
+                tvIneligibleStructuresLabel.setVisibility(View.GONE);
+                svEligibleStructuresScrollView.setVisibility(View.VISIBLE);
+                TextView tvReportedSprayLabel = activity.findViewById(R.id.reported_spray_label);
+                TextView tvReportedSprayStatus = activity.findViewById(R.id.reported_spray_status);
+                TextView tvChalkSprayLabel = activity.findViewById(R.id.chalk_spray_label);
+                TextView tvChalkSprayStatus = activity.findViewById(R.id.chalk_spray_status);
+                TextView tvStickerSprayLabel = activity.findViewById(R.id.sticker_spray_label);
+                TextView tvStickerSprayStatus = activity.findViewById(R.id.sticker_spray_status);
+                TextView tvCardSprayLabel = activity.findViewById(R.id.card_spray_label);
+                TextView tvCardSprayStatus = activity.findViewById(R.id.card_spray_status);
+
+                tvReportedSprayLabel.setText(activity.getResources().getString(R.string.reported_spray_status) + ":");
+                tvReportedSprayStatus.setText(getTranslatedIRSVerificationStatus(cardDetails.getReportedSprayStatus()));
+
+                tvChalkSprayLabel.setText(activity.getResources().getString(R.string.chalk_spray_status) + ":");
+                tvChalkSprayStatus.setText(getTranslatedIRSVerificationStatus(cardDetails.getChalkSprayStatus()));
+
+                tvStickerSprayLabel.setText(activity.getResources().getString(R.string.sticker_spray_status) + ":");
+                tvStickerSprayStatus.setText(getTranslatedIRSVerificationStatus(cardDetails.getStickerSprayStatus()));
+
+                tvCardSprayLabel.setText(activity.getResources().getString(R.string.card_spray_status) + ":");
+                tvCardSprayStatus.setText(getTranslatedIRSVerificationStatus(cardDetails.getCardSprayStatus()));
+            }
 
             activity.findViewById(R.id.irs_verification_card_view).setVisibility(View.VISIBLE);
+        } catch (Resources.NotFoundException e) {
+            Timber.e(e);
+        }
+    }
+
+    public void populateFamilyCard(FamilyCardDetails familyCardDetails, Activity activity) {
+        try {
+            TextView tvSprayStatus = activity.findViewById(R.id.spray_status);
+            TextView tvPropertyType = activity.findViewById(R.id.property_type);
+            TextView tvSprayDate = activity.findViewById(R.id.spray_date);
+            TextView tvSprayOperator = activity.findViewById(R.id.user_id);
+            TextView tvFamilyHead = activity.findViewById(R.id.family_head);
+            TextView tvReason = activity.findViewById(R.id.reason);
+            Button changeSprayStatus = activity.findViewById(R.id.change_spray_status);
+            Button registerFamily  =  activity.findViewById(R.id.register_family);
+
+            Integer color = familyCardDetails.getStatusColor();
+            tvSprayStatus.setTextColor(color == null ? activity.getResources().getColor(R.color.black) : activity.getResources().getColor(color));
+
+            tvSprayStatus.setText(familyCardDetails.getStatus());
+
+            tvSprayDate.setText(familyCardDetails.getDateCreated());
+            tvSprayOperator.setText(familyCardDetails.getOwner());
+
+            registerFamily.setVisibility(View.VISIBLE);
+            changeSprayStatus.setVisibility(View.GONE);
+            tvPropertyType.setVisibility(View.GONE);
+            tvFamilyHead.setVisibility(View.GONE);
+            tvReason.setVisibility(View.GONE);
+
         } catch (Resources.NotFoundException e) {
             Timber.e(e);
         }

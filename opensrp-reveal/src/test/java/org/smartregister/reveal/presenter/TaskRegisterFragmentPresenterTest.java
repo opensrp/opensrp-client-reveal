@@ -133,7 +133,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testInitializeQueries() {
-        String mainCondition = "task.group_id = ? AND task.plan_id = ? AND task.status != ?";
+        String mainCondition = "task.group_id = ? AND task.plan_id = ? AND task.status NOT IN (?,?)";
         Whitebox.setInternalState(presenter, "visibleColumns", visibleColumns);
         presenter.initializeQueries(mainCondition);
         verify(view).initializeAdapter(eq(visibleColumns));
@@ -152,7 +152,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         String campaignId = UUID.randomUUID().toString();
         when(preferencesUtil.getCurrentPlanId()).thenReturn(campaignId);
         when(preferencesUtil.getCurrentOperationalArea()).thenReturn("MTI_84");
-        String mainCondition = "task.group_id = ? AND task.plan_id = ? AND task.status != ?";
+        String mainCondition = "task.group_id = ? AND task.plan_id = ? AND task.status NOT IN (?,?)";
         Whitebox.setInternalState(presenter, "visibleColumns", visibleColumns);
         when(locationUtils.getLastLocation()).thenReturn(location);
         presenter.initializeQueries(mainCondition);
@@ -258,7 +258,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         presenter.onDrawerClosed();
         verify(view).showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
         verify(interactor).findTasks(mainConditionCaptor.capture(), myLocationCaptor.capture(), operationalAreaCenterCaptor.capture(), labelCaptor.capture());
-        assertEquals("task.group_id = ? AND task.plan_id = ? AND task.status != ?", mainConditionCaptor.getValue().first);
+        assertEquals("task.group_id = ? AND task.plan_id = ? AND task.status NOT IN (?,?)", mainConditionCaptor.getValue().first);
         assertEquals(operationalArea.getId(), mainConditionCaptor.getValue().second[0]);
         assertEquals(campaignId, mainConditionCaptor.getValue().second[1]);
 

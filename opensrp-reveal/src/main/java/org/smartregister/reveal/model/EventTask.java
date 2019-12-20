@@ -2,17 +2,17 @@ package org.smartregister.reveal.model;
 
 public class EventTask {
 
-    private int eventsPerTask;
+    private long eventsPerTask;
 
     private String lastEventDate;
 
     private String taskId;
 
-    public int getEventsPerTask() {
+    public long getEventsPerTask() {
         return eventsPerTask;
     }
 
-    public void setEventsPerTask(int eventsPerTask) {
+    public void setEventsPerTask(long eventsPerTask) {
         this.eventsPerTask = eventsPerTask;
     }
 

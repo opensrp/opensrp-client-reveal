@@ -6,7 +6,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.view.MenuItem;
 
+import org.json.JSONObject;
 import org.smartregister.family.activity.BaseFamilyRegisterActivity;
+import org.smartregister.family.util.Constants;
+import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FamilyRegisterContract;
@@ -15,6 +18,8 @@ import org.smartregister.reveal.model.FamilyRegisterModel;
 import org.smartregister.reveal.presenter.FamilyRegisterPresenter;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.view.fragment.BaseRegisterFragment;
+
+import timber.log.Timber;
 
 /**
  * Created by samuelgithengi on 2/8/19.
@@ -84,5 +89,26 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity implement
 
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == JsonFormUtils.REQUEST_CODE_GET_JSON && resultCode == RESULT_OK) {
+            try {
+                String jsonString = data.getStringExtra(Constants.JSON_FORM_EXTRA.JSON);
+                Timber.d(jsonString);
+
+                JSONObject form = new JSONObject(jsonString);
+                if (form.getString(JsonFormUtils.ENCOUNTER_TYPE).equals(Utils.metadata().familyRegister.registerEventType)) {
+                    presenter().saveForm(jsonString, false);
+                }
+            } catch (Exception e) {
+                Timber.e(e);
+            }
+
+        } else if (requestCode == JsonFormUtils.REQUEST_CODE_GET_JSON && resultCode == RESULT_CANCELED) {
+            this.finish();
+        }
     }
 }

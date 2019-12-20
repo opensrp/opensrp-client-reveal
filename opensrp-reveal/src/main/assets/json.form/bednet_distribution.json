@@ -51,6 +51,53 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "eligibleForNet",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this structure eligible for net survey/distribution?",
+        "options": [
+          {
+            "key": "1",
+            "text": "Eligible"
+          },
+          {
+            "key": "0",
+            "text": "InEligible"
+          }
+        ],
+        "value": "1",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "whyNotEligibleNet",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Why is it not ineligible?",
+        "options": [
+          {
+            "key": "99",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"0\")"
+          }
+        }
+      },
+      {
         "key": "totPopulation",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -73,6 +120,12 @@
         "v_max": {
           "value": "[num_fam_members]",
           "err": "Cannot be more than number of registered members"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -94,6 +147,12 @@
         "v_min": {
           "value": "0",
           "err": "Must be greater than or equal to 0"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -236,6 +295,12 @@
         "v_min": {
           "value": "0",
           "err": "Must be greater than or equal to 0"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -379,6 +444,12 @@
         "v_min": {
           "value": "0",
           "err": "Must be greater than or equal to 0"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -405,6 +476,12 @@
         "v_relative_max": {
           "value": "existingITNs",
           "err": "Number nets dipped < 6 months cannot be greater that total normal nets"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -435,6 +512,12 @@
             "ex-rules": {
               "rules-file": "bednet-distribution-calculation-rules.yml"
             }
+          }
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -481,6 +564,12 @@
               "rules-file": "bednet-distribution-calculation-rules.yml"
             }
           }
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -507,6 +596,12 @@
         "v_min": {
           "value": "0",
           "err": "Must be greater than or equal to 0"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -533,6 +628,12 @@
         "v_max": {
           "value": "[num_sleeps_outdoors]",
           "err": "Cannot be more than number of family members  who spend the night outdoors"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -559,6 +660,12 @@
         "v_relative_max": {
           "value": "calcPopulationMinusExistingNets",
           "err": "Cannot be more than total Population subtract existing nets"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -632,6 +739,12 @@
               "rules-file": "bednet-distribution-calculation-rules.yml"
             }
           }
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -657,6 +770,12 @@
         "v_relative_max": {
           "value": "calcNumNetsToRedip",
           "err": "Cannot be more than Total nets eligible for redipping"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -679,6 +798,12 @@
         "v_min": {
           "value": "0",
           "err": "Must be greater than or equal to 0"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -689,7 +814,13 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Comment"
+        "hint": "Comment",
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
       },
       {
         "key": "business_status",
@@ -697,7 +828,14 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "hidden",
-        "value": "Complete"
+        "value": "Complete",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
       }
     ]
   }

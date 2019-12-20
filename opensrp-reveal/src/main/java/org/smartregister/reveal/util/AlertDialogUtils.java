@@ -25,12 +25,24 @@ public class AlertDialogUtils {
     }
 
     public static AlertDialog displayNotificationWithCallback(Context context, int title, int message, int positiveBtnTitle, int negativeBtnTitle, DialogInterface.OnClickListener onClickListener, Object... formatArgs) {
-        AlertDialog alert = null;
+        AlertDialog alert;
 
         if (formatArgs.length == 0)
-            alert = new AlertDialog.Builder(context).setMessage(message).setTitle(title).setPositiveButton(positiveBtnTitle, onClickListener).setNegativeButton(negativeBtnTitle,null).show();
+            alert = new AlertDialog.Builder(context).setMessage(message).setTitle(title).setPositiveButton(positiveBtnTitle, onClickListener).setNegativeButton(negativeBtnTitle, onClickListener).show();
         else
-            alert = new AlertDialog.Builder(context).setMessage(context.getString(message, formatArgs)).setTitle(title).setPositiveButton(positiveBtnTitle, onClickListener).setNegativeButton(negativeBtnTitle,null).show();
+            alert = new AlertDialog.Builder(context).setMessage(context.getString(message, formatArgs)).setTitle(title).setPositiveButton(positiveBtnTitle, onClickListener).setNegativeButton(negativeBtnTitle, onClickListener).show();
+
+        return alert;
+    }
+
+
+    public static AlertDialog displayNotificationWithCallback(Context context, int title, int message, int positiveBtnTitle, int negativeBtnTitle, Integer neutralBtnTitle, DialogInterface.OnClickListener onClickListener, Object... formatArgs) {
+        AlertDialog alert;
+
+        if (formatArgs.length == 0)
+            alert = new AlertDialog.Builder(context).setMessage(message).setTitle(title).setPositiveButton(positiveBtnTitle, onClickListener).setNegativeButton(negativeBtnTitle, onClickListener).setNeutralButton(neutralBtnTitle, onClickListener).show();
+        else
+            alert = new AlertDialog.Builder(context).setMessage(context.getString(message, formatArgs)).setTitle(title).setPositiveButton(positiveBtnTitle, onClickListener).setNegativeButton(negativeBtnTitle, onClickListener).setNeutralButton(neutralBtnTitle, onClickListener).show();
 
         return alert;
     }

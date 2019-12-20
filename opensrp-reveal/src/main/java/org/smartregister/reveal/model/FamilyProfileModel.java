@@ -38,7 +38,7 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
 
     @Override
     public FamilyEventClient processFamilyRegistrationForm(String jsonString, String familyBaseEntityId) {
-        eventClient = super.processFamilyRegistrationForm(jsonString, familyBaseEntityId);
+     super.processFamilyRegistrationForm(jsonString, familyBaseEntityId);
         tagEventClientDetails(eventClient);
         return eventClient;
     }
@@ -51,6 +51,8 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
     }
 
     private void tagEventClientDetails(FamilyEventClient eventClient) {
+        if (eventClient == null)
+            return;
         if (structureId != null) {
             eventClient.getClient().addAttribute(RESIDENCE, structureId);
             eventClient.getEvent().addDetails(Constants.Properties.LOCATION_ID, structureId);
@@ -63,10 +65,6 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
         this.structureId = structureId;
     }
 
-
-    public FamilyEventClient getEventClient() {
-        return eventClient;
-    }
 
     @Override
     public JSONObject getFormAsJson(String formName, String entityId, String currentLocationId) throws Exception {

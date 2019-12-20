@@ -56,16 +56,16 @@ public class BaseFormFragmentInteractor implements BaseFormFragmentContract.Inte
     public void findNumberOfMembers(String structureId, JSONObject formJSON) {
         appExecutors.diskIO().execute(() -> {
             Cursor cursor = null;
-             int numberOfMembers=0;
-             int numberOfMembersSleepingOutdoors=0;
+            int numberOfMembers = 0;
+            int numberOfMembersSleepingOutdoors = 0;
             try {
                 cursor = sqLiteDatabase.rawQuery(
                         String.format("SELECT count(*),SUM(CASE WHEN sleeps_outdoors='Yes' THEN 1 ELSE 0 END) FROM %s WHERE %s = ?",
-                                metadata().familyMemberRegister.tableName, STRUCTURE_ID),new String[]{structureId}) ;
+                                metadata().familyMemberRegister.tableName, STRUCTURE_ID), new String[]{structureId});
 
                 while (cursor.moveToNext()) {
-                    numberOfMembers=cursor.getInt(0);
-                    numberOfMembersSleepingOutdoors=cursor.getInt(1);
+                    numberOfMembers = cursor.getInt(0);
+                    numberOfMembersSleepingOutdoors = cursor.getInt(1);
                 }
             } catch (Exception e) {
                 Timber.e(e, "Error find Number of members ");
@@ -115,12 +115,12 @@ public class BaseFormFragmentInteractor implements BaseFormFragmentContract.Inte
         if (IRS.equals(interventionType)) {
 
             appExecutors.diskIO().execute(() -> {
-                    CommonPersonObject commonPersonObject = interactorUtils.fetchSprayDetails(interventionType, structureId,
-                            eventClientRepository, commonRepository);
+                CommonPersonObject commonPersonObject = interactorUtils.fetchSprayDetails(interventionType, structureId,
+                        eventClientRepository, commonRepository);
 
-                    appExecutors.mainThread().execute(() -> {
-                        presenter.onFetchedSprayDetails(commonPersonObject, formJSON);
-                    });
+                appExecutors.mainThread().execute(() -> {
+                    presenter.onFetchedSprayDetails(commonPersonObject, formJSON);
+                });
             });
         }
     }

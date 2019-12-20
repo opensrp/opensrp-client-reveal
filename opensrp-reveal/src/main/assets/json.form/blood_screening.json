@@ -52,6 +52,65 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "eligiblePerson",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this person eligible for blood screening?",
+        "options": [
+          {
+            "key": "1",
+            "text": "Eligible"
+          },
+          {
+            "key": "0",
+            "text": "InEligible"
+          }
+        ],
+        "value": "1",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "whyNotEligiblePerson",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Why is this person ineligible?",
+        "options": [
+          {
+            "key": "1",
+            "text": "Sick"
+          },
+          {
+            "key": "2",
+            "text": "Index case - test not necessary"
+          },
+          {
+            "key": "3",
+            "text": "Tested within past week"
+          },
+          {
+            "key": "99",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"0\")"
+          }
+        }
+      },
+      {
         "key": "caseTestingProtocol",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -75,6 +134,12 @@
         "v_required": {
           "value": "true",
           "err": "select type of blood screening"
+        },
+        "relevance": {
+          "step1:eligiblePerson": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -97,6 +162,12 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
+        },
+        "relevance": {
+          "step1:eligiblePerson": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -119,6 +190,12 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
+        },
+        "relevance": {
+          "step1:eligiblePerson": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {
@@ -136,18 +213,6 @@
           {
             "key": "Refused",
             "text": "Refused"
-          },
-          {
-            "key": "Sick",
-            "text": "Sick"
-          },
-          {
-            "key": "Tested within past week",
-            "text": "Tested within past week"
-          },
-          {
-            "key": "Index case - not test necessary",
-            "text": "Index case - not test necessary"
           },
           {
             "key": "Other",
@@ -268,7 +333,7 @@
         "openmrs_entity_id": "",
         "type": "check_box",
         "label": "Microscopy Result",
-        "combine_checkbox_option_values" : "true",
+        "combine_checkbox_option_values": "true",
         "options": [
           {
             "key": "Negative",
@@ -315,7 +380,13 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Please add a comment"
+        "hint": "Please add a comment",
+        "relevance": {
+          "step1:eligiblePerson": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
       },
       {
         "key": "business_status",
@@ -323,7 +394,14 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "hidden",
-        "value": "Complete"
+        "value": "Complete",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "blood-screening-calculation.yml"
+            }
+          }
+        }
       }
     ]
   }

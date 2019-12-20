@@ -44,7 +44,6 @@ import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Country;
-import org.smartregister.reveal.util.CrashlyticsTree;
 import org.smartregister.reveal.util.RevealSyncConfiguration;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.FamilyProfileActivity;
@@ -109,13 +108,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     @Override
     public void onCreate() {
         super.onCreate();
-
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        } else {
-            Timber.plant(new CrashlyticsTree());
-        }
-
         mInstance = this;
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());

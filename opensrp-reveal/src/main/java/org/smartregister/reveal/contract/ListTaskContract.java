@@ -11,6 +11,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.TaskDetails;
@@ -63,6 +64,8 @@ public interface ListTaskContract {
 
         boolean isMyLocationComponentActive();
 
+        void displayMarkStructureInactiveDialog();
+
     }
 
     interface Presenter extends BaseContract.BasePresenter {
@@ -70,6 +73,8 @@ public interface ListTaskContract {
         void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea, List<TaskDetails> taskDetailsList);
 
         void onDrawerClosed();
+
+        void resetFeatureTasks(String structureId, Task task);
 
         void onStructureAdded(Feature feature, JSONArray featureCoordinates, double zoomlevel);
 
@@ -83,5 +88,15 @@ public interface ListTaskContract {
 
         @StringRes
         int getInterventionLabel();
+
+        void onMarkStructureInactiveConfirmed();
+
+        void onStructureMarkedInactive();
+
+        void onMarkStructureIneligibleConfirmed();
+
+        void onStructureMarkedIneligible();
+
+        void validateUserLocation();
     }
 }

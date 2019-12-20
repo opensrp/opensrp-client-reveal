@@ -1,15 +1,18 @@
 package org.smartregister.reveal.interactor;
 
 import android.support.annotation.VisibleForTesting;
+import android.text.TextUtils;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.SQLException;
 import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteStatement;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.smartregister.clientandeventmodel.DateUtil;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.db.Event;
+import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.EventClientRepository.event_column;
@@ -23,11 +26,12 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import timber.log.Timber;
 
-import static org.smartregister.domain.Task.TaskStatus.CANCELLED;
+import static org.smartregister.domain.Task.INACTIVE_TASK_STATUS;
 import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.family.util.DBConstants.KEY.DOB;
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
@@ -35,8 +39,6 @@ import static org.smartregister.family.util.DBConstants.KEY.LAST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.MIDDLE_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENTS_PER_TASK;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_DATE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
@@ -82,16 +84,18 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
             Cursor cursor = null;
             try {
                 cursor = database.rawQuery(getTaskSelect(String.format(
-                        "%s=? AND %s=? AND %s != ?", FOR, PLAN_ID, STATUS)),
-                        new String[]{structureId, planId, CANCELLED.name()});
+                        "%s=? AND %s=? AND %s NOT IN (%s)", FOR, PLAN_ID, STATUS,
+                        TextUtils.join(",", Collections.nCopies(INACTIVE_TASK_STATUS.length, "?")))),
+                        ArrayUtils.addAll(new String[]{structureId, planId,}, INACTIVE_TASK_STATUS));
                 while (cursor.moveToNext()) {
                     taskDetailsList.add(readTaskDetails(cursor));
                 }
 
                 cursor.close();
-                cursor = database.rawQuery(getMemberTasksSelect(String.format("%s.%s=? AND %s=? AND %s != ?",
-                        STRUCTURES_TABLE, ID, PLAN_ID, STATUS), getMemberColumns()),
-                        new String[]{structureId, planId, CANCELLED.name()});
+                cursor = database.rawQuery(getMemberTasksSelect(String.format("%s.%s=? AND %s=? AND %s IS NULL AND %s NOT IN (%s)",
+                        STRUCTURES_TABLE, ID, PLAN_ID, DBConstants.KEY.DATE_REMOVED, STATUS,
+                        TextUtils.join(",", Collections.nCopies(INACTIVE_TASK_STATUS.length, "?"))), getMemberColumns()),
+                        ArrayUtils.addAll(new String[]{structureId, planId}, INACTIVE_TASK_STATUS));
                 while (cursor.moveToNext()) {
                     taskDetailsList.add(readMemberTaskDetails(cursor));
                 }
@@ -161,38 +165,31 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
 
 
     private void populateEventsPerTask(List<StructureTaskDetails> tasks) {
-
-
-        Cursor cursor = null;
+        SQLiteStatement eventsPerTask = database.compileStatement("SELECT count(*) as events_per_task FROM event_task WHERE task_id = ?");
+        SQLiteStatement lastEventDate = database.compileStatement("SELECT max(event_date) FROM event_task WHERE task_id = ?");
         try {
             for (StructureTaskDetails task : tasks) {
                 EventTask eventTask = new EventTask();
 
-                cursor = database.rawQuery("SELECT count(*) as events_per_task FROM event_task WHERE task_id = ?",
-                        new String[]{task.getTaskId()});
-                while (cursor.moveToNext()) {
-                    eventTask.setEventsPerTask(cursor.getInt(cursor.getColumnIndex(EVENTS_PER_TASK)));
-                }
+                eventsPerTask.bindString(1, task.getTaskId());
+                eventTask.setEventsPerTask(eventsPerTask.simpleQueryForLong());
 
-                cursor.close();
-                cursor = null;
-
-                cursor = database.rawQuery("SELECT event_date FROM event_task WHERE task_id = ? ORDER by event_date desc LIMIT 1",
-                        new String[]{task.getTaskId()});
-                while (cursor.moveToNext()) {
-                    eventTask.setLastEventDate(cursor.getString(cursor.getColumnIndex(EVENT_DATE)));
-                }
-
-                if (eventTask.getEventsPerTask() > 1)
+                if (eventTask.getEventsPerTask() > 1) {
+                    lastEventDate.bindString(1, task.getTaskId());
+                    eventTask.setLastEventDate(lastEventDate.simpleQueryForString());
                     task.setLastEdited(DateUtil.parseDate(eventTask.getLastEventDate()));
+                }
 
             }
 
         } catch (Exception e) {
             Timber.e(e, "Error querying events counts ");
         } finally {
-            if (cursor != null) {
-                cursor.close();
+            if (eventsPerTask != null) {
+                eventsPerTask.close();
+            }
+            if (lastEventDate != null) {
+                lastEventDate.close();
             }
         }
 

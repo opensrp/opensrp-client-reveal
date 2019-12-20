@@ -413,7 +413,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 for (Task bloodScreeningTask : taskRepository.getTasksByEntityAndCode(prefsUtil.getCurrentPlanId(),
                         Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(), baseEntityId, BLOOD_SCREENING)) {
                     bloodScreeningTask.setStatus(Task.TaskStatus.CANCELLED);
-                    bloodScreeningTask.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                    bloodScreeningTask.setSyncStatus(BaseRepository.TYPE_Created);
                     taskRepository.addOrUpdate(bloodScreeningTask);
                     removedTasks.add(bloodScreeningTask);
                 }
@@ -430,9 +430,9 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
     protected String getMemberTasksSelect(String mainCondition, String[] memberColumns) {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
         queryBuilder.selectInitiateMainTable(STRUCTURES_TABLE, memberColumns, ID);
-        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
+        queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
                 FAMILY_MEMBER, FAMILY_MEMBER, STRUCTURE_ID, STRUCTURES_TABLE, ID));
-        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
+        queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
                 TASK_TABLE, TASK_TABLE, FOR, FAMILY_MEMBER, BASE_ENTITY_ID));
         return queryBuilder.mainCondition(mainCondition);
     }

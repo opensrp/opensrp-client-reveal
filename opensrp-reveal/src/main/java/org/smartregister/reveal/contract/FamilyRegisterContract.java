@@ -26,6 +26,6 @@ public interface FamilyRegisterContract extends org.smartregister.family.contrac
 
     interface Presenter extends org.smartregister.family.contract.FamilyRegisterContract.Presenter {
 
-        void onTasksGenerated();
+        void onTasksGenerated(List<FamilyEventClient> familyEventClientList);
     }
 }

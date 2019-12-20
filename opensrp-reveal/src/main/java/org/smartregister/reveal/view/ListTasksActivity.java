@@ -3,6 +3,7 @@ package org.smartregister.reveal.view;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
@@ -41,6 +42,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.FetchStatus;
+import org.smartregister.domain.Task;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
@@ -51,6 +53,7 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
@@ -70,14 +73,18 @@ import io.ona.kujaku.layers.BoundaryLayer;
 import io.ona.kujaku.utils.Constants;
 import timber.log.Timber;
 
+import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
+import static org.smartregister.reveal.util.Constants.REQUEST_CODE_FAMILY_PROFILE;
 import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
@@ -210,6 +217,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         indicatorsCardView.setOnClickListener(this);
 
         findViewById(R.id.btn_collapse_indicators_card_view).setOnClickListener(this);
+
+        findViewById(R.id.register_family).setOnClickListener(this);
     }
 
     @Override
@@ -298,7 +307,15 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 mapboxMap.addOnMapClickListener(new MapboxMap.OnMapClickListener() {
                     @Override
                     public boolean onMapClick(@NonNull LatLng point) {
-                        listTaskPresenter.onMapClicked(mapboxMap, point);
+                        listTaskPresenter.onMapClicked(mapboxMap, point, false);
+                        return false;
+                    }
+                });
+
+                mapboxMap.addOnMapLongClickListener(new MapboxMap.OnMapLongClickListener() {
+                    @Override
+                    public boolean onMapLongClick(@NonNull LatLng point) {
+                        listTaskPresenter.onMapClicked(mapboxMap, point, true);
                         return false;
                     }
                 });
@@ -371,6 +388,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             closeCardView(v.getId());
         } else if (v.getId() == R.id.register_family) {
             registerFamily();
+            closeCardView(R.id.btn_collapse_spray_card_view);
         } else if (v.getId() == R.id.btn_collapse_mosquito_collection_card_view
                 || v.getId() == R.id.btn_collapse_larval_breeding_card_view
                 || v.getId() == R.id.btn_collapse_paot_card_view
@@ -417,7 +435,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         intent.putExtra(Properties.TASK_BUSINESS_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_BUSINESS_STATUS));
         intent.putExtra(Properties.TASK_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_STATUS));
 
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_FAMILY_PROFILE);
     }
 
 
@@ -514,8 +532,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             sprayCardView.setVisibility(View.VISIBLE);
         } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
             cardDetailsUtil.populateAndOpenMosquitoHarvestCard((MosquitoHarvestCardDetails) cardDetails, this);
-        }else if (cardDetails instanceof IRSVerificationCardDetails) {
+        } else if (cardDetails instanceof IRSVerificationCardDetails) {
             cardDetailsUtil.populateAndOpenIRSVerificationCard((IRSVerificationCardDetails) cardDetails, this);
+        } else if (cardDetails instanceof FamilyCardDetails) {
+            cardDetailsUtil.populateFamilyCard((FamilyCardDetails) cardDetails, this);
+            sprayCardView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -574,6 +595,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 listTaskPresenter.getLocationPresenter().onGetUserLocationFailed();
             }
             hasRequestedLocation = false;
+        } else if (requestCode == REQUEST_CODE_FAMILY_PROFILE && resultCode == RESULT_OK && data.hasExtra(STRUCTURE_ID)) {
+            String structureId = data.getStringExtra(STRUCTURE_ID);
+            Task task = (Task) data.getSerializableExtra(TASK_ID);
+            listTaskPresenter.resetFeatureTasks(structureId, task);
         }
     }
 
@@ -691,6 +716,19 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public boolean isMyLocationComponentActive() {
         return revealMapHelper.isMyLocationComponentActive(this, myLocationButton);
+    }
+
+    @Override
+    public void displayMarkStructureInactiveDialog() {
+        AlertDialogUtils.displayNotificationWithCallback(this, R.string.mark_location_inactive,
+                R.string.confirm_mark_location_inactive, R.string.confirm, R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(which == BUTTON_POSITIVE)
+                            listTaskPresenter.onMarkStructureInactiveConfirmed();
+                        dialog.dismiss();
+                    }
+                });
     }
 
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {
