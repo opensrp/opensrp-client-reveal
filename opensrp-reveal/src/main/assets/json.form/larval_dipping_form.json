@@ -67,7 +67,7 @@
             "text": "InEligible"
           }
         ],
-        "value": "Yes",
+        "value": "1",
         "v_required": {
           "value": true,
           "err": "This field is required"
@@ -90,7 +90,6 @@
             "text": "Other"
           }
         ],
-        "value": "Yes",
         "v_required": {
           "value": true,
           "err": "This field is required"
