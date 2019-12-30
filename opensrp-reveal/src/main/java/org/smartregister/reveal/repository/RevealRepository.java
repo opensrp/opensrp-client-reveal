@@ -1,12 +1,15 @@
 package org.smartregister.reveal.repository;
 
 import android.content.Context;
+import android.support.v4.util.Pair;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.AllConstants;
 import org.smartregister.configurableviews.repository.ConfigurableViewsRepository;
+import org.smartregister.domain.db.Client;
+import org.smartregister.domain.db.Event;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.CampaignRepository;
@@ -22,9 +25,11 @@ import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.sync.RevealClientProcessor;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
 import org.smartregister.util.DatabaseMigrationUtils;
+import org.smartregister.util.RecreateECUtil;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -80,6 +85,9 @@ public class RevealRepository extends Repository {
                 case 3:
                     upgradeToVersion3(db);
                     break;
+                case 4:
+                    upgradeToVersion4(db);
+                    break;
                 default:
                     break;
             }
@@ -129,6 +137,12 @@ public class RevealRepository extends Repository {
 
         db.execSQL(createFamilyMemberIndex);
         db.execSQL(createFamilyResidenceIndex);
+    }
+
+    private void upgradeToVersion4(SQLiteDatabase db) {
+        RecreateECUtil util = new RecreateECUtil();
+        Pair<List<Event>, List<Client>> events = util.createEventAndClients(db, DatabaseKeys.SPRAYED_STRUCTURES);
+        util.saveEventAndClients(events, db);
     }
 
     @Override
