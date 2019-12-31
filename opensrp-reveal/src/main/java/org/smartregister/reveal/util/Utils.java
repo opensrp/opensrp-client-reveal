@@ -313,9 +313,9 @@ public class Utils {
         FormTag formTag = new FormTag();
         AllSharedPreferences sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
         formTag.providerId = sharedPreferences.fetchRegisteredANM();
-        Location location = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+        String location = PreferencesUtil.getInstance().getCurrentOperationalAreaId();
         if (location != null)
-            formTag.locationId = location.getId();
+            formTag.locationId = location;
         else
             formTag.locationId = PreferencesUtil.getInstance().getCurrentDistrict();
         formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);

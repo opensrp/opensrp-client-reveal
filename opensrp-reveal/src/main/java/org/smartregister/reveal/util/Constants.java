@@ -117,6 +117,7 @@ public interface Constants {
         String CURRENT_PLAN_ID = "CURRENT_PLAN_ID";
         String FACILITY_LEVEL = "FACILITY_LEVEL";
         String CURRENT_OPERATIONAL_AREA = "CURRENT_OPERATIONAL_AREA";
+        String CURRENT_OPERATIONAL_AREA_ID = "CURRENT_OPERATIONAL_AREA_ID";
     }
 
     interface Tags {
