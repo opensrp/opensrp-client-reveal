@@ -3,7 +3,11 @@ package org.smartregister.reveal.util;
 import android.content.Context;
 import android.support.annotation.StringRes;
 
+import net.sqlcipher.Cursor;
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.joda.time.DateTime;
+import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Action;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.Task;
@@ -11,12 +15,16 @@ import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.PlanDefinitionRepository;
 import org.smartregister.repository.TaskRepository;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
 
+import java.util.List;
 import java.util.UUID;
+
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.*;
 
 /**
  * Created by samuelgithengi on 4/14/19.
@@ -104,5 +112,29 @@ public class TaskUtils {
     public void generateMDAAdherenceTask(Context context, String entityId, String structureId) {
         generateTask(context, entityId, structureId, BusinessStatus.NOT_VISITED, Intervention.MDA_ADHERENCE,
                 R.string.mda_adherence_desciption);
+    }
+
+    public void tagEventTaskDetails(List<Event> events, SQLiteDatabase sqLiteDatabase) {
+        for (Event event : events) {
+            Cursor cursor = null;
+            try {
+                cursor = sqLiteDatabase.rawQuery(String.format("select * from %s where %s =? and %s =? and %s =? limit 1", TASK_TABLE, FOR, STATUS, CODE),
+                        new String[]{event.getBaseEntityId(), Task.TaskStatus.COMPLETED.name(), Intervention.IRS});
+                while (cursor.moveToNext()) {
+                    Task task = taskRepository.readCursor(cursor);
+                    event.addDetails(Constants.Properties.TASK_IDENTIFIER, task.getIdentifier());
+                    event.addDetails(Constants.Properties.TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                    event.addDetails(Constants.Properties.TASK_STATUS, task.getStatus().name());
+                    event.addDetails(Constants.Properties.LOCATION_ID, task.getForEntity());
+                    event.addDetails(Constants.Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
+                }
+
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+
+        }
     }
 }
