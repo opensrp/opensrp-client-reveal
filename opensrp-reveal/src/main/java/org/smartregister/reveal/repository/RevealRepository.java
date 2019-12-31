@@ -156,7 +156,9 @@ public class RevealRepository extends Repository {
         String query = String.format("select * from %s where %s=? and %s is not null and %s not in (select %s from %s where %s=?) ", SPRAYED_STRUCTURES, PROPERTY_TYPE, SPRAY_STATUS, BASE_ENTITY_ID, baseEntityId, event.name(), eventType);
         String[] params = new String[]{RESIDENTIAL, SPRAY_EVENT};
         Pair<List<Event>, List<Client>> events = util.createEventAndClients(db, SPRAYED_STRUCTURES, query, params, SPRAY_EVENT, STRUCTURE, formTag);
-        TaskUtils.getInstance().tagEventTaskDetails(events.first,db);
+        if (events.first != null) {
+            TaskUtils.getInstance().tagEventTaskDetails(events.first, db);
+        }
         util.saveEventAndClients(events, db);
     }
 
