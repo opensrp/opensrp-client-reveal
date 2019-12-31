@@ -26,7 +26,6 @@ import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.sync.RevealClientProcessor;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
 import org.smartregister.reveal.util.Utils;
@@ -41,11 +40,16 @@ import java.util.TimerTask;
 
 import timber.log.Timber;
 
+import static org.smartregister.repository.EventClientRepository.Table.event;
 import static org.smartregister.repository.EventClientRepository.event_column.baseEntityId;
+import static org.smartregister.repository.EventClientRepository.event_column.eventType;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.PROPERTY_TYPE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.Constants.StructureType.RESIDENTIAL;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
@@ -67,7 +71,7 @@ public class RevealRepository extends Repository {
         super.onCreate(database);
         ConfigurableViewsRepository.createTable(database);
         EventClientRepository.createTable(database, EventClientRepository.Table.client, EventClientRepository.client_column.values());
-        EventClientRepository.createTable(database, EventClientRepository.Table.event, EventClientRepository.event_column.values());
+        EventClientRepository.createTable(database, event, EventClientRepository.event_column.values());
 
         CampaignRepository.createTable(database);
         TaskRepository.createTable(database);
@@ -148,9 +152,9 @@ public class RevealRepository extends Repository {
     private void upgradeToVersion4(SQLiteDatabase db) {
         RecreateECUtil util = new RecreateECUtil();
         FormTag formTag = Utils.getFormTag();
-        String query = String.format("select * from %s where %s not in (select %s from %s) WHERE %s=?", SPRAYED_STRUCTURES, BASE_ENTITY_ID, baseEntityId, EventClientRepository.Table.event.name(), DatabaseKeys.PROPERTY_TYPE);
-        String[] params = new String[]{RESIDENTIAL};
-        Pair<List<Event>, List<Client>> events = util.createEventAndClients(db, SPRAYED_STRUCTURES, query, params, SPRAY_EVENT, Constants.STRUCTURE, formTag);
+        String query = String.format("select * from %s where %s=? and %s is not null and %s not in (select %s from %s where %s=?) ", SPRAYED_STRUCTURES, PROPERTY_TYPE, SPRAY_STATUS, BASE_ENTITY_ID, baseEntityId, event.name(), eventType);
+        String[] params = new String[]{RESIDENTIAL, SPRAY_EVENT};
+        Pair<List<Event>, List<Client>> events = util.createEventAndClients(db, SPRAYED_STRUCTURES, query, params, SPRAY_EVENT, STRUCTURE, formTag);
         util.saveEventAndClients(events, db);
     }
 
