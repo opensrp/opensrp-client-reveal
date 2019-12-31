@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.tag.FormTag;
 import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BuildConfig;
@@ -306,6 +307,23 @@ public class Utils {
     public static String getCurrentLocationId() {
         Location currentOperationalArea = getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
         return currentOperationalArea == null ? null : currentOperationalArea.getId();
+    }
+
+    public static FormTag getFormTag() {
+        FormTag formTag = new FormTag();
+        AllSharedPreferences sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
+        formTag.providerId = sharedPreferences.fetchRegisteredANM();
+        Location location = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+        if (location != null)
+            formTag.locationId = location.getId();
+        else
+            formTag.locationId = PreferencesUtil.getInstance().getCurrentDistrict();
+        formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
+        formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
+        formTag.databaseVersion = BuildConfig.DATABASE_VERSION;
+        formTag.appVersion = BuildConfig.VERSION_CODE;
+        formTag.appVersionName = BuildConfig.VERSION_NAME;
+        return formTag;
     }
 
 }

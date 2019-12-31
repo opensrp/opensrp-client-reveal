@@ -7,10 +7,11 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.AllConstants;
+import org.smartregister.clientandeventmodel.Client;
+import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.configurableviews.repository.ConfigurableViewsRepository;
-import org.smartregister.domain.db.Client;
-import org.smartregister.domain.db.Event;
 import org.smartregister.domain.db.EventClient;
+import org.smartregister.domain.tag.FormTag;
 import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.EventClientRepository;
@@ -28,6 +29,7 @@ import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.DatabaseMigrationUtils;
 import org.smartregister.util.RecreateECUtil;
 
@@ -141,7 +143,8 @@ public class RevealRepository extends Repository {
 
     private void upgradeToVersion4(SQLiteDatabase db) {
         RecreateECUtil util = new RecreateECUtil();
-        Pair<List<Event>, List<Client>> events = util.createEventAndClients(db, DatabaseKeys.SPRAYED_STRUCTURES);
+        FormTag formTag = Utils.getFormTag();
+        Pair<List<Event>, List<Client>> events = util.createEventAndClients(db, DatabaseKeys.SPRAYED_STRUCTURES, Constants.SPRAY_EVENT, Constants.STRUCTURE, formTag);
         util.saveEventAndClients(events, db);
     }
 
