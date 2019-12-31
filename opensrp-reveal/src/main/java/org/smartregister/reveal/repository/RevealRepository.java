@@ -41,8 +41,12 @@ import java.util.TimerTask;
 
 import timber.log.Timber;
 
+import static org.smartregister.repository.EventClientRepository.event_column.baseEntityId;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
+import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.Constants.StructureType.RESIDENTIAL;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 import static org.smartregister.util.DatabaseMigrationUtils.isColumnExists;
@@ -102,8 +106,8 @@ public class RevealRepository extends Repository {
 
         UniqueIdRepository.createTable(db);
 
-        if (!isColumnExists(db, DatabaseKeys.SPRAYED_STRUCTURES, DatabaseKeys.STRUCTURE_NAME)) {
-            db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s VARCHAR ", DatabaseKeys.SPRAYED_STRUCTURES, DatabaseKeys.STRUCTURE_NAME));
+        if (!isColumnExists(db, SPRAYED_STRUCTURES, DatabaseKeys.STRUCTURE_NAME)) {
+            db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s VARCHAR ", SPRAYED_STRUCTURES, DatabaseKeys.STRUCTURE_NAME));
         }
 
         DatabaseMigrationUtils.createAddedECTables(db,
@@ -144,7 +148,9 @@ public class RevealRepository extends Repository {
     private void upgradeToVersion4(SQLiteDatabase db) {
         RecreateECUtil util = new RecreateECUtil();
         FormTag formTag = Utils.getFormTag();
-        Pair<List<Event>, List<Client>> events = util.createEventAndClients(db, DatabaseKeys.SPRAYED_STRUCTURES, Constants.SPRAY_EVENT, Constants.STRUCTURE, formTag);
+        String query = String.format("select * from %s where %s not in (select %s from %s) WHERE %s=?", SPRAYED_STRUCTURES, BASE_ENTITY_ID, baseEntityId, EventClientRepository.Table.event.name(), DatabaseKeys.PROPERTY_TYPE);
+        String[] params = new String[]{RESIDENTIAL};
+        Pair<List<Event>, List<Client>> events = util.createEventAndClients(db, SPRAYED_STRUCTURES, query, params, SPRAY_EVENT, Constants.STRUCTURE, formTag);
         util.saveEventAndClients(events, db);
     }
 

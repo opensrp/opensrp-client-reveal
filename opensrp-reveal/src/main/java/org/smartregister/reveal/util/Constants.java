@@ -558,7 +558,9 @@ public interface Constants {
 
         String AUTHORED_ON = "authored_on";
 
-        String OWNER =  "owner";
+        String OWNER = "owner";
+
+        String PROPERTY_TYPE = "property_type";
 
     }
 
