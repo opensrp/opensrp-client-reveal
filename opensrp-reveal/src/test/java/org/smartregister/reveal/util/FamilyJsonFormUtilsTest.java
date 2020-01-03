@@ -2,6 +2,8 @@ package org.smartregister.reveal.util;
 
 import android.content.Context;
 
+import org.joda.time.DateTime;
+import org.joda.time.Years;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Rule;
@@ -209,12 +211,13 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
     @Test
     public void testGetAutoPopulatedJsonEditMemberFormStringForEstimateDob() throws JSONException {
         setupMemberForm();
+        DateTime dob = new DateTime().minus(Years.years(37));
+        client.getColumnmaps().put(KEY.DOB, dob.toString());
         client.getColumnmaps().put(Constants.JSON_FORM_KEY.DOB_UNKNOWN, "true");
         client.getColumnmaps().put(DatabaseKeys.AGE, "37");
         JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(R.string.edit_member_form_title, FAMILY_MEMBER_REGISTER, client, UPDATE_FAMILY_MEMBER_REGISTRATION, "Ker", false);
-        //assertEquals("37", JsonFormUtils.getFieldValue(form.toString(), DatabaseKeys.AGE));
-        String dobString = org.smartregister.util.Utils.getDob(37);
-        assertEquals(dobString, JsonFormUtils.getFieldValue(form.toString(), DOB));
+        assertEquals("37", JsonFormUtils.getFieldValue(form.toString(), DatabaseKeys.AGE));
+        assertEquals(dob.toString("dd-MM-yyyy"), JsonFormUtils.getFieldValue(form.toString(), DOB));
         assertTrue(JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), Constants.JSON_FORM_KEY.DOB_UNKNOWN).getJSONArray(OPTIONS).getJSONObject(0).getBoolean(VALUE));
 
     }
