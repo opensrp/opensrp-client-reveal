@@ -51,6 +51,57 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "eligibleLarv",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this collection point eligible?",
+        "options": [
+          {
+            "key": "1",
+            "text": "Eligible"
+          },
+          {
+            "key": "0",
+            "text": "InEligible"
+          }
+        ],
+        "value": "1",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "whyNotEligibleLarv",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Why is it not ineligible?",
+        "options": [
+          {
+            "key": "No longer breeding site",
+            "text": "No longer breeding site"
+          },
+          {
+            "key": "99",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "step1:eligibleLarv": {
+            "type": "string",
+            "ex": "equalTo(., \"0\")"
+          }
+        }
+      },
+      {
         "key": "task_business_status",
         "label": "Status",
         "type": "native_radio",
@@ -78,6 +129,12 @@
         "v_required": {
           "value": true,
           "err": "Please specify the task status"
+        },
+        "relevance": {
+          "step1:eligibleLarv": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
         }
       },
       {

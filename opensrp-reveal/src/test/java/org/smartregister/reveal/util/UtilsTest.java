@@ -74,7 +74,7 @@ public class UtilsTest {
     public void testgetDrawOperationalAreaBoundaryAndLabelReturnsFalseWhenSettingsValueIsFalse() throws Exception {
         RevealApplication revealApplication = initRevealApplicationMock();
 
-        Map<String, String> settings = new HashMap<>();
+        Map<String, Object> settings = new HashMap<>();
         settings.put("draw_operational_area_boundary_and_label", "false");
 
         when(revealApplication.getServerConfigs()).thenReturn(settings);
@@ -85,7 +85,7 @@ public class UtilsTest {
     public void testgetDrawOperationalAreaBoundaryAndLabelReturnsTrueWhenSettingsValueIsTrue() throws Exception {
         RevealApplication revealApplication = initRevealApplicationMock();
 
-        Map<String, String> settings = new HashMap<>();
+        Map<String, Object> settings = new HashMap<>();
         settings.put("draw_operational_area_boundary_and_label", "true");
 
         when(revealApplication.getServerConfigs()).thenReturn(settings);
@@ -131,7 +131,7 @@ public class UtilsTest {
     public void testValidateFarStructuresReturnsTrueWhenSettingsValueIsTrue() throws Exception {
         RevealApplication revealApplication = initRevealApplicationMock();
 
-        Map<String, String> settings = new HashMap<>();
+        Map<String, Object> settings = new HashMap<>();
         settings.put(VALIDATE_FAR_STRUCTURES, "true");
 
         when(revealApplication.getServerConfigs()).thenReturn(settings);
@@ -142,7 +142,7 @@ public class UtilsTest {
     public void testValidateFarStructuresReturnsFalseWhenSettingsValueIsFalse() throws Exception {
         RevealApplication revealApplication = initRevealApplicationMock();
 
-        Map<String, String> settings = new HashMap<>();
+        Map<String, Object> settings = new HashMap<>();
         settings.put(VALIDATE_FAR_STRUCTURES, "false");
 
         when(revealApplication.getServerConfigs()).thenReturn(settings);
@@ -154,7 +154,7 @@ public class UtilsTest {
         RevealApplication revealApplication = initRevealApplicationMock();
 
         Integer testResolveLocationTimeoutInSeconds = 20;
-        Map<String, String> settings = new HashMap<>();
+        Map<String, Object> settings = new HashMap<>();
         settings.put(RESOLVE_LOCATION_TIMEOUT_IN_SECONDS, testResolveLocationTimeoutInSeconds.toString());
 
         when(revealApplication.getServerConfigs()).thenReturn(settings);
@@ -167,7 +167,7 @@ public class UtilsTest {
         RevealApplication revealApplication = initRevealApplicationMock();
 
         String testAdminPass = "NewAdminPass";
-        Map<String, String> settings = new HashMap<>();
+        Map<String, Object> settings = new HashMap<>();
         settings.put(ADMIN_PASSWORD_NOT_NEAR_STRUCTURES, testAdminPass);
 
         when(revealApplication.getServerConfigs()).thenReturn(settings);
@@ -178,7 +178,7 @@ public class UtilsTest {
     @Test
     public void testDisplayAddStructureOutOfBoundaryWarningDialogReturnsTrueWhenSettingsValueIsTrue() throws Exception {
         RevealApplication revealApplication = initRevealApplicationMock();
-        Map<String, String> settings = new HashMap<>();
+        Map<String, Object> settings = new HashMap<>();
         settings.put(DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG, "true");
 
         when(revealApplication.getServerConfigs()).thenReturn(settings);
@@ -189,7 +189,7 @@ public class UtilsTest {
     @Test
     public void testDisplayAddStructureOutOfBoundaryWarningDialogReturnsFalseWhenSettingsValueIsFalse() throws Exception {
         RevealApplication revealApplication = initRevealApplicationMock();
-        Map<String, String> settings = new HashMap<>();
+        Map<String, Object> settings = new HashMap<>();
         settings.put(DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG, "false");
 
         when(revealApplication.getServerConfigs()).thenReturn(settings);

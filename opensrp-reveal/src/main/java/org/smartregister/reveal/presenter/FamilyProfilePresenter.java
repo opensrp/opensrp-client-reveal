@@ -1,5 +1,7 @@
 package org.smartregister.reveal.presenter;
 
+import android.content.DialogInterface;
+
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -8,6 +10,7 @@ import org.smartregister.AllConstants;
 import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Task;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.presenter.BaseFamilyProfilePresenter;
 import org.smartregister.reveal.BuildConfig;
@@ -18,6 +21,7 @@ import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.interactor.RevealFamilyOtherMemberInteractor;
 import org.smartregister.reveal.interactor.RevealFamilyProfileInteractor;
 import org.smartregister.reveal.model.FamilyProfileModel;
+import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants.DatabaseKeys;
@@ -107,13 +111,12 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
     }
 
     @Override
-    public void onRegistrationSaved(boolean isEdit) {
-        if (!isEdit && Utils.getInterventionLabel() == R.string.focus_investigation) {
+    public void onRegistrationSaved(boolean editMode, boolean isSaved, FamilyEventClient eventClient) {
+        if (!editMode && isSaved && Utils.isFocusInvestigationOrMDA()) {
             getInteractor().generateTasks(getView().getApplicationContext(),
-                    getModel().getEventClient().getEvent().getBaseEntityId(), structureId);
+                    eventClient.getEvent().getBaseEntityId(), structureId);
             return;
-        } else {
-            FamilyEventClient eventClient = getModel().getEventClient();
+        } else if (editMode && isSaved) {
             for (Obs obs : eventClient.getEvent().getObs()) {
                 if (obs.getFieldCode().equals(DatabaseKeys.OLD_FAMILY_NAME)) {
                     String oldSurname = obs.getValue().toString();
@@ -125,12 +128,12 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                 }
             }
         }
-        super.onRegistrationSaved(isEdit);
+        super.onRegistrationSaved(editMode, isSaved, eventClient);
     }
 
     @Override
     public void onTasksGenerated() {
-        super.onRegistrationSaved(false);
+        super.onRegistrationSaved(false, true, null);
         getView().refreshTasks(structureId);
 
     }
@@ -149,13 +152,49 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         }
     }
 
+    @Override
+    public void onArchiveFamilyClicked() {
+        AlertDialogUtils.displayNotificationWithCallback(getView().getContext(),
+                R.string.confirm_archive_family, R.string.confirm_archive_family_message, R.string.confirm, R.string.cancel, (dialog, buttonClicked) -> {
+                    if (buttonClicked == DialogInterface.BUTTON_POSITIVE) {
+                        archiveFamily();
+                    }
+                    dialog.dismiss();
+                });
+    }
+
+    @Override
+    public void onArchiveFamilyCompleted(boolean isSuccessfulSaved, Task task) {
+        getView().hideProgressDialog();
+        if (!isSuccessfulSaved) {
+            AlertDialogUtils.displayNotification(getView().getContext(), R.string.archive_family,
+                    R.string.archive_family_failed, familyName);
+        } else {
+            getView().returnToMapView(structureId, task);
+        }
+    }
+
+    private void archiveFamily() {
+        getView().showProgressDialog(org.smartregister.family.R.string.saving_dialog_title);
+        getInteractor().archiveFamily(familyBaseEntityId, structureId);
+    }
+
     private FamilyProfileContract.Interactor getInteractor() {
         return (FamilyProfileContract.Interactor) interactor;
     }
 
     @Override
     public void startFormForEdit(CommonPersonObjectClient client) {
-        String formName = BuildConfig.BUILD_COUNTRY == Country.THAILAND ? JSON_FORM.THAILAND_FAMILY_UPDATE : JSON_FORM.FAMILY_UPDATE;
+        String formName;
+        if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
+            formName = JSON_FORM.THAILAND_FAMILY_UPDATE;
+        } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+            formName = JSON_FORM.ZAMBIA_FAMILY_UPDATE;
+        } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+            formName = JSON_FORM.REFAPP_FAMILY_UPDATE;
+        } else {
+            formName = JSON_FORM.FAMILY_UPDATE;
+        }
         JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditFormString(formName,
                 client, RevealApplication.getInstance().getMetadata().familyRegister.updateEventType);
         try {
@@ -172,9 +211,14 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         openAddMemberForm();
     }
 
+    @Override
+    public void onArchiveMemberCompleted(boolean isSuccessful) {
+        //not used
+    }
+
     private void openAddMemberForm() {
         try {
-            startForm(org.smartregister.family.util.Utils.metadata().familyMemberRegister.formName, null, null, RevealApplication.getInstance().getContext().allSharedPreferences().getPreference(AllConstants.CURRENT_LOCATION_ID));
+            startForm(RevealApplication.getInstance().getMetadata().familyMemberRegister.formName, null, null, RevealApplication.getInstance().getContext().allSharedPreferences().getPreference(AllConstants.CURRENT_LOCATION_ID));
         } catch (Exception e) {
             Timber.e(e, "Error opening add member form");
         }

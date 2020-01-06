@@ -9,6 +9,7 @@ import org.smartregister.reveal.contract.FamilyRegisterContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.TaskUtils;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.ClientProcessorForJava;
 
 import java.util.HashSet;
@@ -50,11 +51,15 @@ public class RevealFamilyRegisterInteractor extends org.smartregister.family.int
                 String entityId = eventClient.getClient().getBaseEntityId();
                 if (!generatedIds.contains(entityId)) {
                     generatedIds.add(entityId);
-                    taskUtils.generateBloodScreeningTask(context, entityId,structureId);
+                    if (Utils.isFocusInvestigation())
+                        taskUtils.generateBloodScreeningTask(context, entityId, structureId);
+                    else if (Utils.isMDA())
+                        taskUtils.generateMDADispenseTask(context, entityId, structureId);
                 }
             }
-            taskUtils.generateBedNetDistributionTask(context, structureId);
-            appExecutors.mainThread().execute(() -> presenter.onTasksGenerated());
+            if (Utils.isFocusInvestigation())
+                taskUtils.generateBedNetDistributionTask(context, structureId);
+            appExecutors.mainThread().execute(() -> presenter.onTasksGenerated(eventClientList));
         });
     }
 

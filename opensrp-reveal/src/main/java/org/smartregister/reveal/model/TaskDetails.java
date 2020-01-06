@@ -5,17 +5,27 @@ import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.FULLY_RECEIVED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NONE_RECEIVED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.COMMA;
 import static org.smartregister.reveal.util.Constants.HYPHEN;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 
 /**
  * Created by samuelgithengi on 3/20/19.
  */
-public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetails> {
+public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetails> , Serializable {
 
     private Location location;
 
@@ -44,6 +54,18 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
     private String reasonReference;
 
     private String houseNumber;
+
+    private boolean familyRegTaskExists;
+
+    private boolean mdaAdhered;
+
+    private boolean fullyReceived;
+
+    private boolean partiallyReceived;
+
+    private boolean noneReceived;
+
+    private boolean notEligible;
 
     public TaskDetails(@NonNull String taskId) {
         super(taskId);
@@ -145,28 +167,127 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         this.bloodScreeningDone = bloodScreeningDone;
     }
 
+    public boolean isFamilyRegTaskExists() {
+        return familyRegTaskExists;
+    }
+
+    public void setFamilyRegTaskExists(boolean familyRegTaskExists) {
+        this.familyRegTaskExists = familyRegTaskExists;
+    }
+
+    public boolean isMdaAdhered() {
+        return mdaAdhered;
+    }
+
+    public void setMdaAdhered(boolean mdaAdhered) {
+        this.mdaAdhered = mdaAdhered;
+    }
+
+    public boolean isFullyReceived() {
+        return fullyReceived;
+    }
+
+    public void setFullyReceived(boolean fullyReceived) {
+        this.fullyReceived = fullyReceived;
+    }
+
+    public boolean isPartiallyReceived() {
+        return partiallyReceived;
+    }
+
+    public void setPartiallyReceived(boolean partiallyReceived) {
+        this.partiallyReceived = partiallyReceived;
+    }
+
+    public boolean isNoneReceived() {
+        return noneReceived;
+    }
+
+    public void setNoneReceived(boolean noneReceived) {
+        this.noneReceived = noneReceived;
+    }
+
+    public boolean isNotEligible() {
+        return notEligible;
+    }
+
+    public void setNotEligible(boolean notEligible) {
+        this.notEligible = notEligible;
+    }
+
     public void setGroupedTaskCodeStatus(String groupedTaskCodeStatusString) {
         setFamilyRegistered(false);
         setBednetDistributed(false);
         setBloodScreeningDone(false);
+        setFamilyRegTaskExists(false);
         if (StringUtils.isEmpty(groupedTaskCodeStatusString)) {
             return;
         }
         String[] groupedTaskCodeStatusArray = groupedTaskCodeStatusString.split(COMMA);
+        String MDA_DISPENSE_TASK_COUNT = "mda_dispense_task_count";
+
+        Map<String, Integer> mdaStatusMap = new HashMap<>();
+        mdaStatusMap.put(FULLY_RECEIVED, 0);
+        mdaStatusMap.put(NONE_RECEIVED, 0);
+        mdaStatusMap.put(NOT_ELIGIBLE, 0);
+        mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, 0);
+
+        boolean bloodScreeningExists=false;
+        boolean caseConfirmed = false;
         for (int i = 0; i < groupedTaskCodeStatusArray.length; i++) {
             String[] taskCodeStatusArray = groupedTaskCodeStatusArray[i].split(HYPHEN);
 
             if (taskCodeStatusArray == null || taskCodeStatusArray.length != 2) {
                 continue;
             }
-            if (REGISTER_FAMILY.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
-                setFamilyRegistered(true);
-            } else if (BEDNET_DISTRIBUTION.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
-                setBednetDistributed(true);
-            }  else if (BLOOD_SCREENING.equals(taskCodeStatusArray[0]) && COMPLETE.equals(taskCodeStatusArray[1])) {
-                setBloodScreeningDone(true);
+
+            switch (taskCodeStatusArray[0]) {
+                case REGISTER_FAMILY:
+                    setFamilyRegTaskExists(true);
+                    this.familyRegistered = COMPLETE.equals(taskCodeStatusArray[1]);
+                    break;
+                case BEDNET_DISTRIBUTION:
+                    this.bednetDistributed = COMPLETE.equals(taskCodeStatusArray[1]);
+                    break;
+                case BLOOD_SCREENING:
+                    if (!this.bloodScreeningDone) {
+                        this.bloodScreeningDone = COMPLETE.equals(taskCodeStatusArray[1]);
+                    }
+                    bloodScreeningExists=true;
+                    break;
+                case CASE_CONFIRMATION:
+                    caseConfirmed=COMPLETE.equals(taskCodeStatusArray[1]);
+                    break;
+                case MDA_ADHERENCE:
+                    this.mdaAdhered = COMPLETE.equals(taskCodeStatusArray[1]);
+                    break;
+                case MDA_DISPENSE:
+                    mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) + 1);
+                    switch (taskCodeStatusArray[1]) {
+                        case FULLY_RECEIVED :
+                            mdaStatusMap.put(FULLY_RECEIVED, mdaStatusMap.get(FULLY_RECEIVED) + 1);
+                            break;
+                        case NONE_RECEIVED:
+                            mdaStatusMap.put(NONE_RECEIVED, mdaStatusMap.get(NONE_RECEIVED) + 1);
+                            break;
+                        case NOT_ELIGIBLE:
+                            mdaStatusMap.put(NOT_ELIGIBLE, mdaStatusMap.get(NOT_ELIGIBLE) + 1);
+                            break;
+                    }
+                default:
+                    break;
             }
         }
+
+        if(!bloodScreeningExists && caseConfirmed && !isBloodScreeningDone()){
+            setBloodScreeningDone(true);
+        }
+
+        setFullyReceived(mdaStatusMap.get(FULLY_RECEIVED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) );
+        setNoneReceived( mdaStatusMap.get(NONE_RECEIVED)  == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+        setNotEligible(mdaStatusMap.get(NOT_ELIGIBLE)  == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+        setPartiallyReceived(!isFullyReceived() && (mdaStatusMap.get(FULLY_RECEIVED) > 0));
+
     }
 
     @Override

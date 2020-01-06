@@ -19,6 +19,8 @@ import org.smartregister.reveal.viewholder.TaskRegisterViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
+
 /**
  * Created by samuelgithengi on 3/20/19.
  */
@@ -51,7 +53,7 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
         boolean hasIcon = false;
         if (Intervention.IRS.equals(task.getTaskCode())) {
             if (name == null) {
-                name = task.getFamilyName() != null ? task.getFamilyName() : context.getString(R.string.unenumerated_structure);
+                name = task.getFamilyName() != null ? task.getFamilyName() : task.getStructureName() != null ? task.getStructureName() : context.getString(R.string.unenumerated_structure);
             }
             action = context.getString(R.string.record_status);
         } else if (Intervention.MOSQUITO_COLLECTION.equals(task.getTaskCode())) {
@@ -77,7 +79,7 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
                 action = CardDetailsUtil.getTranslatedBusinessStatus(task.getBusinessStatus()).replaceAll(" ", "\n");
             }
         } else {
-            name = task.getFamilyName();
+            name = NOT_ELIGIBLE.equals(task.getBusinessStatus()) ? context.getString(R.string.ineligible_location) : task.getFamilyName();
             if (name == null) {
                 name = task.getStructureName() != null ? task.getStructureName() : context.getString(R.string.unenumerated_structure);
             }

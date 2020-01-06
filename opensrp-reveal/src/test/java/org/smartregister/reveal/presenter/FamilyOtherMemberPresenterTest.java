@@ -1,5 +1,9 @@
 package org.smartregister.reveal.presenter;
 
+import android.app.Activity;
+import android.support.v7.app.AlertDialog;
+import android.widget.TextView;
+
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
@@ -8,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.robolectric.Robolectric;
+import org.robolectric.shadows.ShadowAlertDialog;
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -19,6 +25,7 @@ import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
+import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.TestingUtils;
 
@@ -28,8 +35,11 @@ import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -61,10 +71,13 @@ public class FamilyOtherMemberPresenterTest extends BaseUnitTest {
     private FamilyProfileContract.Interactor profileInteractor;
 
     @Mock
-    private FamilyProfileContract.Model profileModel;
+    private FamilyProfileModel profileModel;
 
     @Mock
     private FamilyOtherMemberProfileContract.Interactor otherMemberInteractor;
+
+    @Mock
+    private Activity activity;
 
     private FamilyOtherMemberPresenter otherMemberPresenter;
 
@@ -89,6 +102,8 @@ public class FamilyOtherMemberPresenterTest extends BaseUnitTest {
         Whitebox.setInternalState(otherMemberPresenter, "familyJsonFormUtils", familyJsonFormUtils);
         Whitebox.setInternalState(otherMemberPresenter, "interactor", interactor);
         Whitebox.setInternalState(otherMemberPresenter, "otherMemberInteractor", otherMemberInteractor);
+        Whitebox.setInternalState(otherMemberPresenter, "profileModel", profileModel);
+        when(view.getContext()).thenReturn(Robolectric.buildActivity(Activity.class).create().start().resume().get());
     }
 
     @Test
@@ -114,7 +129,7 @@ public class FamilyOtherMemberPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnRegistrationSaved() {
-        otherMemberPresenter.onRegistrationSaved(false);
+        otherMemberPresenter.onRegistrationSaved(false, true, null);
         verify(view, never()).hideProgressDialog();
         verify(view, never()).refreshList();
         verify(interactor, never()).refreshProfileView(baseEntityId, otherMemberPresenter);
@@ -122,7 +137,7 @@ public class FamilyOtherMemberPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnRegistrationEdited() {
-        otherMemberPresenter.onRegistrationSaved(true);
+        otherMemberPresenter.onRegistrationSaved(true, true, null);
         verify(view).hideProgressDialog();
         verify(view).refreshList();
         verify(interactor).refreshProfileView(baseEntityId, otherMemberPresenter);
@@ -213,5 +228,45 @@ public class FamilyOtherMemberPresenterTest extends BaseUnitTest {
         otherMemberPresenter.onEditMemberDetails();
         verify(view, never()).startFormActivity(any());
         verify(otherMemberInteractor).getFamilyHead(otherMemberPresenter, familyHead);
+    }
+
+    @Test
+    public void testOnArchiveFamilyMember() {
+        otherMemberPresenter.onArchiveFamilyMember();
+        AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(alertDialog.isShowing());
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).performClick();
+        verify(otherMemberInteractor).archiveFamilyMember(eq(otherMemberPresenter), any());
+        verify(view).showProgressDialog(org.smartregister.family.R.string.saving_dialog_title);
+        assertFalse(alertDialog.isShowing());
+
+
+    }
+
+
+    @Test
+    public void testOnArchiveMemberFailed() {
+        Whitebox.setInternalState(otherMemberPresenter, "client", client);
+        otherMemberPresenter.onArchiveMemberCompleted(false);
+        verify(view).hideProgressDialog();
+        AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(alertDialog.isShowing());
+        TextView tv = alertDialog.findViewById(android.R.id.message);
+        assertEquals("Archiving member Charity Otala failed", tv.getText());
+    }
+
+    @Test
+    public void testOnArchiveMemberSucceeds() {
+        when(view.getContext()).thenReturn(activity);
+        otherMemberPresenter.onArchiveMemberCompleted(true);
+        verify(view).hideProgressDialog();
+        verify(activity).finish();
+    }
+
+
+    @Test
+    public void testSetStructureId() {
+        otherMemberPresenter.setStructureId("1234");
+        verify(profileModel).setStructureId("1234");
     }
 }

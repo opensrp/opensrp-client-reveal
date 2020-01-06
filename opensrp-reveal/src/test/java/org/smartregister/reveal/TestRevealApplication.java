@@ -1,6 +1,8 @@
 package org.smartregister.reveal;
 
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.smartregister.Context;
 import org.smartregister.CoreLibrary;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
@@ -12,9 +14,12 @@ import org.smartregister.reveal.util.AppExecutors;
 import java.util.concurrent.Executors;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 public class TestRevealApplication extends RevealApplication {
+
+
     @Override
     public void onCreate() {
         mInstance = this;
@@ -35,6 +40,12 @@ public class TestRevealApplication extends RevealApplication {
 
     @Override
     public Repository getRepository() {
-        return mock(Repository.class);
+        repository = mock(Repository.class);
+        SQLiteDatabase sqLiteDatabase = mock(SQLiteDatabase.class);
+        when(repository.getWritableDatabase()).thenReturn(sqLiteDatabase);
+        when(repository.getReadableDatabase()).thenReturn(sqLiteDatabase);
+
+        return repository;
     }
+
 }

@@ -66,10 +66,8 @@ import timber.log.Timber;
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
-import static org.smartregister.reveal.util.Constants.DIGITAL_GLOBE_CONNECT_ID;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
-import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
 import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
 
@@ -186,7 +184,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
         try {
             operationalArea = new JSONObject(formFragment.getCurrentJsonState()).optString(OPERATIONAL_AREA_TAG);
-            featureCollection = new JSONObject(formFragment.getCurrentJsonState()).optString(STRUCTURES_TAG);
+            featureCollection = RevealApplication.getInstance().getFeatureCollection().toJson();
             locationComponentActive = new JSONObject(formFragment.getCurrentJsonState()).optBoolean(LOCATION_COMPONENT_ACTIVE);
         } catch (JSONException e) {
             Timber.e(e, "error extracting geojson form jsonform");
@@ -222,8 +220,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
 
-                String mapBoxStyle = AssetHandler.readFileFromAssetsFolder(context.getString(R.string.reveal_satellite_style), context);
-                Style.Builder builder = new Style.Builder().fromJson(mapBoxStyle.replace(DIGITAL_GLOBE_CONNECT_ID, BuildConfig.DG_CONNECT_ID));
+                Style.Builder builder = new Style.Builder().fromUri(context.getString(R.string.reveal_satellite_style));
 
                 mapboxMap.setStyle(builder, new Style.OnStyleLoaded() {
                     @Override
@@ -244,6 +241,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         RevealMapHelper.addCustomLayers(style, context);
 
                         mapView.setMapboxMap(mapboxMap);
+
+                        RevealMapHelper.addBaseLayers(mapView, style, context);
                     }
                 });
 
@@ -341,9 +340,14 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         if (markerPosition == null)
             return;
         try {
-            formFragmentView.writeValue(stepName, key, markerPosition.toJSON().toString(), openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
-            formFragmentView.writeValue(stepName, ZOOM_LEVEL, zoomLevel + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
-            formFragmentView.writeValue(stepName, LOCATION_COMPONENT_ACTIVE, finalLocationComponentActive + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
+            if (((JsonFormFragment) formFragmentView).getJsonApi() != null) {
+                formFragmentView.writeValue(stepName, key, markerPosition.toJSON().toString(), openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
+                formFragmentView.writeValue(stepName, ZOOM_LEVEL, zoomLevel + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
+                formFragmentView.writeValue(stepName, LOCATION_COMPONENT_ACTIVE, finalLocationComponentActive + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
+            }
+            else{
+                Timber.w("cannot write values JsonApi is null");
+            }
         } catch (JSONException e) {
             Timber.e(e, "error writing Geowidget values");
         }

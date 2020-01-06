@@ -83,6 +83,8 @@ public interface BaseDrawerContract {
         void onViewResumed();
 
         void onShowOfflineMaps();
+
+        boolean isPlanAndOperationalAreaSelected();
     }
 
     interface Interactor {

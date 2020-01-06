@@ -10,6 +10,8 @@ import org.smartregister.reveal.interactor.RevealFamilyRegisterInteractor;
 import org.smartregister.reveal.model.FamilyRegisterModel;
 import org.smartregister.reveal.util.FamilyConstants;
 
+import java.util.List;
+
 /**
  * Created by samuelgithengi on 4/14/19.
  */
@@ -25,23 +27,23 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter impleme
 
 
     @Override
-    public void onRegistrationSaved(boolean isEdit) {
-        if (isEdit) {
-            onTasksGenerated();
+    public void onRegistrationSaved(boolean isEditMode, boolean isSaved, List<FamilyEventClient> familyEventClientList) {
+        if (isEditMode || !isSaved) {
+            onTasksGenerated(familyEventClientList);
         } else {
-            getInteractor().generateTasks(getModel().getEventClientList(), getModel().getStructureId(), view.getContext());
+            getInteractor().generateTasks(familyEventClientList, getModel().getStructureId(), view.getContext());
         }
     }
 
     @Override
-    public void onTasksGenerated() {
+    public void onTasksGenerated(List<FamilyEventClient> familyEventClientList) {
         view.hideProgressDialog();
-        openProfileActivity();
+        openProfileActivity(familyEventClientList);
         RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
     }
 
-    private void openProfileActivity() {
-        for (FamilyEventClient eventClient : getModel().getEventClientList()) {
+    private void openProfileActivity(List<FamilyEventClient> familyEventClientList) {
+        for (FamilyEventClient eventClient : familyEventClientList) {
             if (eventClient.getClient().getLastName().equals("Family")) {
                 Client family = eventClient.getClient();
                 view.startProfileActivity(family.getBaseEntityId(),

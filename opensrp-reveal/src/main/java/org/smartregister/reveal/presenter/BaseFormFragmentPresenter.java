@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 
 import com.google.gson.Gson;
@@ -16,13 +17,17 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Location;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.PasswordDialogUtils;
+import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.JsonFormUtils;
@@ -39,6 +44,8 @@ import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENI
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Country.NAMIBIA;
@@ -63,8 +70,12 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
 
     private BaseFormFragmentInteractor interactor;
 
+    private PreferencesUtil prefsUtil;
+
     protected Gson gson = new GsonBuilder().setDateFormat(EVENT_DATE_FORMAT_Z)
             .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
+
+    private RevealJsonFormUtils jsonFormUtils = new RevealJsonFormUtils();
 
     protected BaseFormFragmentPresenter(BaseFormFragmentContract.View view, Context context) {
         this.context = context;
@@ -73,6 +84,7 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
         locationPresenter = new ValidateUserLocationPresenter(view, this);
         mappingHelper = new RevealMappingHelper();
         interactor = new BaseFormFragmentInteractor(this);
+        prefsUtil = PreferencesUtil.getInstance();
     }
 
     protected boolean validateFarStructures() {
@@ -104,18 +116,73 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
                 if (Intervention.BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode())) {
                     interactor.findNumberOfMembers(taskDetails.getTaskEntity(), formJSON);
                     return;
-                }
-                if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
+                } else if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
                     interactor.findMemberDetails(taskDetails.getStructureId(), formJSON);
                     return;
-                } if (IRS.equals(taskDetails.getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)){
+                } else if (IRS.equals(taskDetails.getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
                     interactor.findSprayDetails(IRS, structure.getId(), formJSON);
+                } else if (MDA_DISPENSE.equals(taskDetails.getTaskCode()) || MDA_ADHERENCE.equals(taskDetails.getTaskCode())) {
+                    jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJSON, Constants.CONFIGURATION.MDA_CATCHMENT_AREAS, JsonForm.CATCHMENT_AREA, prefsUtil.getCurrentDistrict());
+                    getView().startForm(formJSON);
                 } else {
                     getView().startForm(formJSON);
                 }
             }
         }
         getView().hideProgressDialog();
+    }
+
+    public void showBasicForm(String formName) {
+        JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(context, formName, null, null);
+        switch (formName) {
+
+            case JsonForm.IRS_SA_DECISION_ZAMBIA:
+            case JsonForm.CB_SPRAY_AREA_ZAMBIA:
+            case JsonForm.MOBILIZATION_FORM_ZAMBIA:
+                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.SUPERVISORS, JsonForm.SUPERVISOR,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+                break;
+
+            case JsonForm.IRS_FIELD_OFFICER_ZAMBIA:
+                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.FIELD_OFFICERS, JsonForm.FIELD_OFFICER,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+                break;
+
+            case JsonForm.DAILY_SUMMARY_ZAMBIA:
+                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.TEAM_LEADERS, JsonForm.TEAM_LEADER,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+
+            case JsonForm.TEAM_LEADER_DOS_ZAMBIA:
+                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.SUPERVISORS, JsonForm.SUPERVISOR,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+
+                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.DISTRICT_MANAGERS, JsonForm.DISTRICT_MANAGER,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+
+                break;
+
+            case JsonForm.VERIFICATION_FORM_ZAMBIA:
+                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.FIELD_OFFICERS, JsonForm.FIELD_OFFICER,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+
+                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+
+                break;
+            default:
+                break;
+        }
+        getView().startForm(formJSON);
     }
 
     @Override
@@ -159,9 +226,11 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
     }
 
     @Override
-    public void onFetchedMembersCount(int numberOfMembers, JSONObject formJSON) {
+    public void onFetchedMembersCount(Pair<Integer, Integer> numberOfMembers, JSONObject formJSON) {
         try {
-            getView().startForm(new JSONObject(formJSON.toString().replace(JsonForm.NUMBER_OF_FAMILY_MEMBERS, numberOfMembers + "")));
+            String jsonStr = formJSON.toString().replace(JsonForm.NUMBER_OF_FAMILY_MEMBERS, numberOfMembers.first + "");
+            jsonStr = jsonStr.replace(JsonForm.NUMBER_OF_FAMILY_MEMBERS_SLEEPING_OUTDOORS, numberOfMembers.second + "");
+            getView().startForm(new JSONObject(jsonStr));
         } catch (JSONException e) {
             Timber.e(e, "Error updating Number of members");
             getView().startForm(formJSON);
@@ -192,5 +261,9 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
 
     public void setTaskDetails(BaseTaskDetails taskDetails) {
         this.taskDetails = taskDetails;
+    }
+
+    public Location getStructure() {
+        return structure;
     }
 }

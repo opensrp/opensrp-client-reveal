@@ -68,8 +68,8 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         StructureTasksFragment fragment = new StructureTasksFragment();
         if (bundle != null) {
             fragment.setArguments(bundle);
-            fragment.setPresenter(new StructureTasksPresenter(fragment, context));
         }
+        fragment.setPresenter(new StructureTasksPresenter(fragment, context));
         return fragment;
     }
 
@@ -78,6 +78,9 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         super.onCreate(savedInstanceState);
         if (getActivity() != null) {
             tabLayout = getActivity().findViewById(R.id.tabs);
+        }
+        if (presenter == null) {
+            presenter = new StructureTasksPresenter(this, getContext());
         }
         initDependencies();
     }
@@ -95,6 +98,12 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         setUpViews(view);
         initializeAdapter();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.refreshTasks();
     }
 
     private void initializeAdapter() {
@@ -124,7 +133,7 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         @Override
         public void onClick(View view) {
             StructureTaskDetails details = (StructureTaskDetails) view.getTag(R.id.task_details);
-            presenter.onTaskSelected(details);
+            presenter.onTaskSelected(details, R.id.view_edit == view.getId());
         }
     };
 

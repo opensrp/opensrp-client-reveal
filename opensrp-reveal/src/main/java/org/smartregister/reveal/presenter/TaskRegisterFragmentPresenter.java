@@ -2,10 +2,12 @@ package org.smartregister.reveal.presenter;
 
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
+import android.text.TextUtils;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.mapbox.geojson.Feature;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,15 +23,16 @@ import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import static org.smartregister.domain.Task.INACTIVE_TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
@@ -127,11 +130,12 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
      */
     private Pair<String, String[]> getMainCondition() {
         Location operationalArea = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
-        String whereClause = String.format("%s.%s = ? AND %s.%s = ? AND %s.%s != ?",
-                DatabaseKeys.TASK_TABLE, DatabaseKeys.GROUPID, DatabaseKeys.TASK_TABLE, DatabaseKeys.PLAN_ID,
-                DatabaseKeys.TASK_TABLE, DatabaseKeys.STATUS);
-        return new Pair<>(whereClause, new String[]{operationalArea == null ?
-                null : operationalArea.getId(), prefsUtil.getCurrentPlanId(), Task.TaskStatus.CANCELLED.name()});
+        String whereClause = String.format("%s.%s = ? AND %s.%s = ? AND %s.%s NOT IN (%s)",
+                Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.GROUPID, Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.PLAN_ID,
+                Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.STATUS,
+                TextUtils.join(",", Collections.nCopies(INACTIVE_TASK_STATUS.length, "?")));
+        return new Pair<>(whereClause, ArrayUtils.addAll(new String[]{operationalArea == null ?
+                null : operationalArea.getId(), prefsUtil.getCurrentPlanId()}, INACTIVE_TASK_STATUS));
     }
 
     @Override

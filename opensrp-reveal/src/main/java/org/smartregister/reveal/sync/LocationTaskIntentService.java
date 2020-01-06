@@ -10,6 +10,7 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.job.SyncServiceJob;
+import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.TaskRepository;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
+import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 
 public class LocationTaskIntentService extends IntentService {
 
@@ -44,7 +46,7 @@ public class LocationTaskIntentService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (!NetworkUtils.isNetworkAvailable()) {
-            sendBroadcast(org.smartregister.util.Utils.completeSync(FetchStatus.noConnection));
+            sendSyncStatusBroadcastMessage(FetchStatus.noConnection);
             return;
         }
         if (!syncUtils.verifyAuthorization()) {
@@ -52,7 +54,7 @@ public class LocationTaskIntentService extends IntentService {
             return;
 
         }
-        sendBroadcast(org.smartregister.util.Utils.completeSync(FetchStatus.fetchStarted));
+        sendSyncStatusBroadcastMessage(FetchStatus.fetchStarted);
 
         doSync();
 
@@ -64,6 +66,13 @@ public class LocationTaskIntentService extends IntentService {
         });
     }
 
+    private void sendSyncStatusBroadcastMessage(FetchStatus fetchStatus) {
+        Intent intent = new Intent();
+        intent.setAction(SyncStatusBroadcastReceiver.ACTION_SYNC_STATUS);
+        intent.putExtra(SyncStatusBroadcastReceiver.EXTRA_FETCH_STATUS, fetchStatus);
+        sendBroadcast(intent);
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         syncUtils = new SyncUtils(getBaseContext());
@@ -72,6 +81,7 @@ public class LocationTaskIntentService extends IntentService {
 
 
     private void doSync() {
+        sendSyncStatusBroadcastMessage(FetchStatus.fetchStarted);
         LocationServiceHelper locationServiceHelper = new LocationServiceHelper(
                 RevealApplication.getInstance().getLocationRepository(),
                 RevealApplication.getInstance().getStructureRepository());
@@ -80,12 +90,17 @@ public class LocationTaskIntentService extends IntentService {
 
 
         List<Location> syncedStructures = locationServiceHelper.fetchLocationsStructures();
+
+        sendSyncStatusBroadcastMessage(FetchStatus.fetchStarted);
         planServiceHelper.syncPlans();
+
+        sendSyncStatusBroadcastMessage(FetchStatus.fetchStarted);
         List<Task> synchedTasks = taskServiceHelper.syncTasks();
 
         TaskRepository taskRepository = RevealApplication.getInstance().getContext().getTaskRepository();
         taskRepository.updateTaskStructureIdFromStructure(syncedStructures);
         taskRepository.updateTaskStructureIdsFromExistingStructures();
+        taskRepository.updateTaskStructureIdsFromExistingClients(FAMILY_MEMBER);
 
         if (hasChangesInCurrentOperationalArea(syncedStructures, synchedTasks)) {
             Intent intent = new Intent(STRUCTURE_TASK_SYNCED);

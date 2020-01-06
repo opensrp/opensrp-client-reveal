@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty.PropertyStatus;
 import org.smartregister.domain.Task;
@@ -37,6 +38,7 @@ import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNC
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
+import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
@@ -103,7 +105,8 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     operationalAreaId = processEvent(event, clientClassification, localEvents, JsonForm.STRUCTURE_TYPE);
                 } else if (eventType.equals(MOSQUITO_COLLECTION_EVENT) || eventType.equals(LARVAL_DIPPING_EVENT)
                         || eventType.equals(BEDNET_DISTRIBUTION_EVENT) ||
-                        eventType.equals(BEHAVIOUR_CHANGE_COMMUNICATION)) {
+                        eventType.equals(BEHAVIOUR_CHANGE_COMMUNICATION) ||
+                        eventType.equals(IRS_VERIFICATION)) {
                     operationalAreaId = processEvent(event, clientClassification, localEvents);
                 } else if (eventType.equals(REGISTER_STRUCTURE_EVENT)) {
                     operationalAreaId = processRegisterStructureEvent(event, clientClassification);
@@ -238,24 +241,25 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         if (task != null) {
             task.setBusinessStatus(calculateBusinessStatus(event));
             task.setStatus(Task.TaskStatus.COMPLETED);
+            task.setLastModified(new DateTime());
             // update task sync status to unsynced if it was already synced,
             // ignore if task status is created so that it will be created on server
             if (localEvents && BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
                 task.setSyncStatus(BaseRepository.TYPE_Unsynced);
-            } else if (!localEvents) {
+            } else if (!localEvents && event.getServerVersion() != 0) {
                 // for events synced from server and task exists mark events as being fully synced
                 eventClientRepository.markEventAsSynced(event.getFormSubmissionId());
             }
             taskRepository.addOrUpdate(task);
             operationalAreaId = task.getGroupIdentifier();
-        } else if(!localEvents) {
+        } else if (!localEvents) {
             eventClientRepository.markEventAsTaskUnprocessed(event.getFormSubmissionId());
         }
         return operationalAreaId;
     }
 
     public String calculateBusinessStatus(Event event) {
-        if (EventType.FAMILY_REGISTRATION.equals(event.getEventType()) || EventType.FAMILY_MEMBER_REGISTRATION.equals(event.getEventType())) {
+        if (EventType.FAMILY_REGISTRATION.equals(event.getEventType()) || EventType.FAMILY_MEMBER_REGISTRATION.equals(event.getEventType()) ) {
             return BusinessStatus.COMPLETE;
         }
         Obs businessStatusObs = event.findObs(null, false, JsonForm.BUSINESS_STATUS);
@@ -271,5 +275,10 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 return sprayStatus == null ? null : sprayStatus.getValue().toString();
             }
         }
+    }
+
+    @Override
+    protected void updateRegisterCount(String entityId) {
+        //do nothing. Save performance on unrequired functionality
     }
 }

@@ -59,12 +59,21 @@ public class StructureTaskAdapter extends RecyclerView.Adapter<StructureTaskView
             } else if (Intervention.REGISTER_FAMILY.equals(taskDetails.getTaskCode())) {
                 action = context.getString(R.string.register_family);
                 name = context.getString(R.string.family_registration);
+            } else if (Intervention.MDA_ADHERENCE.equals(taskDetails.getTaskCode())) {
+                action = context.getString(R.string.adhere_mda);
+            } else if (Intervention.MDA_DISPENSE.equals(taskDetails.getTaskCode())) {
+                action = context.getString(R.string.dispense_mda);
             }
             taskDetails.setTaskName(name);
             taskDetails.setTaskAction(action);
 
         }
-        viewHolder.setTaskName(taskDetails.getTaskName());
+        if (Intervention.MDA_DISPENSE.equals(taskDetails.getTaskCode()) ||
+                Intervention.MDA_ADHERENCE.equals(taskDetails.getTaskCode())) {
+            viewHolder.setTaskName(taskDetails.getTaskName(), taskDetails.getTaskCode());
+        } else {
+            viewHolder.setTaskName(taskDetails.getTaskName());
+        }
         viewHolder.setTaskAction(taskDetails, onClickListener);
 
     }

@@ -35,13 +35,14 @@ import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
+import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
@@ -105,6 +106,7 @@ import static org.smartregister.util.JsonFormUtils.getString;
 
 
 /**
+ *
  * Created by samuelgithengi on 3/25/19.
  */
 public class BaseInteractor implements BaseContract.BaseInteractor {
@@ -162,15 +164,28 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             JSONObject jsonForm = new JSONObject(json);
             String encounterType = jsonForm.getString(ENCOUNTER_TYPE);
             boolean refreshMapOnEventSaved = true;
-            if (REGISTER_STRUCTURE_EVENT.equals(encounterType)) {
-                saveRegisterStructureForm(jsonForm);
-            } else if (BLOOD_SCREENING_EVENT.equals(encounterType)) {
-                saveMemberForm(jsonForm, encounterType, BLOOD_SCREENING);
-            } else if (CASE_CONFIRMATION_EVENT.equals(encounterType)) {
-                saveCaseConfirmation(jsonForm, encounterType);
-            } else {
-                saveLocationInterventionForm(jsonForm);
-                refreshMapOnEventSaved = false;
+            switch (encounterType) {
+                case REGISTER_STRUCTURE_EVENT:
+                    saveRegisterStructureForm(jsonForm);
+                    break;
+                case EventType.MDA_DISPENSE:
+                    taskUtils.generateMDAAdherenceTask(RevealApplication.getInstance().getApplicationContext(),
+                            getString(jsonForm, ENTITY_ID), getJSONObject(jsonForm, DETAILS).getString(Properties.LOCATION_ID));
+
+                case BLOOD_SCREENING_EVENT:
+                case EventType.MDA_ADHERENCE:
+                    saveMemberForm(jsonForm, encounterType, BLOOD_SCREENING);
+                    break;
+
+                case CASE_CONFIRMATION_EVENT:
+                    saveCaseConfirmation(jsonForm, encounterType);
+                    break;
+                default:
+                    saveLocationInterventionForm(jsonForm);
+                    if (!encounterType.equals(BEDNET_DISTRIBUTION_EVENT) && !encounterType.equals(EventType.IRS_VERIFICATION)) {
+                        refreshMapOnEventSaved = false;
+                    }
+                    break;
             }
             getInstance().setRefreshMapOnEventSaved(refreshMapOnEventSaved);
         } catch (Exception e) {
@@ -185,7 +200,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
         FormTag formTag = new FormTag();
         formTag.providerId = sharedPreferences.fetchRegisteredANM();
-        formTag.locationId = sharedPreferences.fetchDefaultLocalityId(formTag.providerId);
+        formTag.locationId = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId();
         formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
         formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
         formTag.databaseVersion = BuildConfig.DATABASE_VERSION;
@@ -212,8 +227,14 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 interventionType = BEDNET_DISTRIBUTION;
             } else if (encounterType.equals(BEHAVIOUR_CHANGE_COMMUNICATION)) {
                 interventionType = BCC;
-            } else if (encounterType.equals(Constants.EventType.PAOT_EVENT)) {
+            } else if (encounterType.equals(EventType.PAOT_EVENT)) {
                 interventionType = PAOT;
+            } else if (encounterType.equals(EventType.MDA_DISPENSE)) {
+                interventionType = Intervention.MDA_DISPENSE;
+            } else if (encounterType.equals(EventType.MDA_ADHERENCE)) {
+                interventionType = Intervention.MDA_ADHERENCE;
+            }	else if (encounterType.equals(EventType.IRS_VERIFICATION)) {
+                interventionType = Intervention.IRS_VERIFICATION;
             }
         } catch (JSONException e) {
             Timber.e(e);
@@ -291,7 +312,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     structureRepository.addOrUpdate(structure);
                     Context applicationContext = getInstance().getApplicationContext();
                     Task task = null;
-                    if (StructureType.RESIDENTIAL.equals(structureType) && Utils.getInterventionLabel() == R.string.focus_investigation) {
+                    if (StructureType.RESIDENTIAL.equals(structureType) && Utils.isFocusInvestigationOrMDA()) {
                         task = taskUtils.generateRegisterFamilyTask(applicationContext, structure.getId());
                     } else {
                         if (StructureType.RESIDENTIAL.equals(structureType)) {
@@ -334,9 +355,9 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
 
                             Obs zoomObs = event.findObs(null, false, GeoWidgetFactory.ZOOM_LEVEL);
-                            double zoomLevel=Double.parseDouble(zoomObs.getValue().toString());
+                            double zoomLevel = Double.parseDouble(zoomObs.getValue().toString());
 
-                            presenterCallBack.onStructureAdded(Feature.fromJson(gson.toJson(structure)), featureCoordinates,zoomLevel);
+                            presenterCallBack.onStructureAdded(Feature.fromJson(gson.toJson(structure)), featureCoordinates, zoomLevel);
                         }
                     });
                 } catch (JSONException e) {
@@ -386,13 +407,13 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 task.setForEntity(baseEntityId);
                 task.setBusinessStatus(businessStatus);
                 task.setStatus(Task.TaskStatus.COMPLETED);
-                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                task.setSyncStatus(BaseRepository.TYPE_Created);
                 taskRepository.addOrUpdate(task);
                 Set<Task> removedTasks = new HashSet<>();
                 for (Task bloodScreeningTask : taskRepository.getTasksByEntityAndCode(prefsUtil.getCurrentPlanId(),
                         Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(), baseEntityId, BLOOD_SCREENING)) {
                     bloodScreeningTask.setStatus(Task.TaskStatus.CANCELLED);
-                    bloodScreeningTask.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                    bloodScreeningTask.setSyncStatus(BaseRepository.TYPE_Created);
                     taskRepository.addOrUpdate(bloodScreeningTask);
                     removedTasks.add(bloodScreeningTask);
                 }
@@ -409,9 +430,9 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
     protected String getMemberTasksSelect(String mainCondition, String[] memberColumns) {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
         queryBuilder.selectInitiateMainTable(STRUCTURES_TABLE, memberColumns, ID);
-        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
+        queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
                 FAMILY_MEMBER, FAMILY_MEMBER, STRUCTURE_ID, STRUCTURES_TABLE, ID));
-        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
+        queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
                 TASK_TABLE, TASK_TABLE, FOR, FAMILY_MEMBER, BASE_ENTITY_ID));
         return queryBuilder.mainCondition(mainCondition);
     }

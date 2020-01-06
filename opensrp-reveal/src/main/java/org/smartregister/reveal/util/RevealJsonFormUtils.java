@@ -3,6 +3,7 @@ package org.smartregister.reveal.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.util.Pair;
 
 import com.mapbox.geojson.Feature;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
@@ -13,11 +14,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.db.Event;
+import org.smartregister.domain.db.Obs;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
@@ -25,19 +29,28 @@ import org.smartregister.util.AssetHandler;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import timber.log.Timber;
 
+import static com.vijay.jsonwizard.constants.JsonFormConstants.CHECK_BOX;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.KEYS;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.TYPE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUES;
+import static org.smartregister.AllConstants.OPTIONS;
+import static org.smartregister.AllConstants.TEXT;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT;
+import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
@@ -86,15 +99,28 @@ public class RevealJsonFormUtils {
 
     public JSONObject getFormJSON(Context context, String formName, BaseTaskDetails task, Location structure) {
 
-        String taskBusinessStatus = task.getBusinessStatus();
-        String taskIdentifier = task.getTaskId();
-        String taskStatus = task.getTaskStatus();
+        String taskBusinessStatus = "";
+        String taskIdentifier = "";
+        String taskStatus = "";
+        String entityId = "";
+        if (task != null) {
+            taskBusinessStatus = task.getBusinessStatus();
+            taskIdentifier = task.getTaskId();
+            taskStatus = task.getTaskStatus();
 
-        String entityId = task.getTaskEntity();
-        String structureId = structure.getId();
-        String structureUUID = structure.getProperties().getUid();
-        int structureVersion = structure.getProperties().getVersion();
-        String structureType = structure.getProperties().getType();
+            entityId = task.getTaskEntity();
+        }
+
+        String structureId = "";
+        String structureUUID = "";
+        int structureVersion = 0;
+        String structureType = "";
+        if (structure != null) {
+            structureId = structure.getId();
+            structureUUID = structure.getProperties().getUid();
+            structureVersion = structure.getProperties().getVersion();
+            structureType = structure.getProperties().getType();
+        }
 
         String sprayStatus = null;
         String familyHead = null;
@@ -144,6 +170,7 @@ public class RevealJsonFormUtils {
         formData.put(Properties.LOCATION_UUID, structureUUID);
         formData.put(Properties.LOCATION_VERSION, structureVersion);
         formData.put(Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
+        formData.put(Properties.FORM_VERSION, formJson.optString("form_version"));
         formJson.put(DETAILS, formData);
         return formJson;
     }
@@ -190,14 +217,20 @@ public class RevealJsonFormUtils {
             } else if (BuildConfig.BUILD_COUNTRY == Country.BOTSWANA) {
                 formName = JsonForm.SPRAY_FORM_BOTSWANA;
             } else if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
-                formName = JsonForm.SPRAY_FORM;
+                formName = JsonForm.SPRAY_FORM_ZAMBIA;
             } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_SPRAY_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+                formName = JsonForm.SPRAY_FORM_REFAPP;
+            } else{
+                formName = JsonForm.SPRAY_FORM;
             }
         } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)
                 || Intervention.MOSQUITO_COLLECTION.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+                formName = JsonForm.REFAPP_MOSQUITO_COLLECTION_FORM;
             } else {
                 formName = JsonForm.MOSQUITO_COLLECTION_FORM;
             }
@@ -205,6 +238,8 @@ public class RevealJsonFormUtils {
                 || Intervention.BEDNET_DISTRIBUTION.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_BEDNET_DISTRIBUTION_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+                formName = JsonForm.REFAPP_BEDNET_DISTRIBUTION_FORM;
             } else {
                 formName = JsonForm.BEDNET_DISTRIBUTION_FORM;
             }
@@ -212,6 +247,8 @@ public class RevealJsonFormUtils {
                 || Intervention.CASE_CONFIRMATION.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_CASE_CONFIRMATION_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+                formName = JsonForm.REFAPP_CASE_CONFIRMATION_FORM;
             } else {
                 formName = JsonForm.CASE_CONFIRMATION_FORM;
             }
@@ -219,12 +256,16 @@ public class RevealJsonFormUtils {
                 || Intervention.BLOOD_SCREENING.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_BLOOD_SCREENING_FORM;
+            } else  if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+                formName = JsonForm.REFAPP_BLOOD_SCREENING_FORM;
             } else {
                 formName = JsonForm.BLOOD_SCREENING_FORM;
             }
         } else if (LARVAL_DIPPING_EVENT.equals(encounterType) || Intervention.LARVAL_DIPPING.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_LARVAL_DIPPING_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+                formName = JsonForm.REFAPP_LARVAL_DIPPING_FORM;
             } else {
                 formName = JsonForm.LARVAL_DIPPING_FORM;
             }
@@ -245,9 +286,25 @@ public class RevealJsonFormUtils {
         } else if (Constants.EventType.PAOT_EVENT.equals(encounterType) || Intervention.PAOT.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_PAOT_FORM;
+            } else  if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+                formName = JsonForm.REFAPP_PAOT_FORM;
             } else {
                 formName = JsonForm.PAOT_FORM;
             }
+        } else if (Intervention.MDA_ADHERENCE.equals(taskCode)) {
+            if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                formName = JsonForm.ZAMBIA_MDA_ADHERENCE_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+                formName = JsonForm.REFAPP_MDA_ADHERENCE_FORM;
+            }
+        } else if (Intervention.MDA_DISPENSE.equals(taskCode)) {
+            if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                formName = JsonForm.ZAMBIA_MDA_DISPENSE_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+                formName = JsonForm.REFAPP_MDA_DISPENSE_FORM;
+            }
+        } else if (IRS_VERIFICATION.equals(encounterType) || Intervention.IRS_VERIFICATION.equals(taskCode)) {
+            formName = JsonForm.ZAMBIA_IRS_VERIFICATION_FORM;
         }
         return formName;
     }
@@ -297,4 +354,76 @@ public class RevealJsonFormUtils {
 
         }
     }
+
+    public void populateForm(Event event, JSONObject formJSON) {
+        if (event == null)
+            return;
+        JSONArray fields = JsonFormUtils.fields(formJSON);
+        for (int i = 0; i < fields.length(); i++) {
+            try {
+                JSONObject field = fields.getJSONObject(i);
+                String key = field.getString(KEY);
+                Obs obs = event.findObs(null, false, key);
+                if (obs != null && obs.getValues() != null) {
+                    if (CHECK_BOX.equals(field.getString(TYPE))) {
+                        JSONArray options = field.getJSONArray(OPTIONS);
+                        Map<String, String> optionsKeyValue = new HashMap<>();
+                        for (int j = 0; j < options.length(); j++) {
+                            JSONObject option = options.getJSONObject(j);
+                            optionsKeyValue.put(option.getString(TEXT), option.getString(KEY));
+                        }
+                        JSONArray keys = new JSONArray();
+                        for (Object value : obs.getValues()) {
+                            keys.put(optionsKeyValue.get(value.toString()));
+                        }
+                        field.put(VALUE, keys);
+                    } else
+                        field.put(VALUE, obs.getValue());
+                }
+            } catch (JSONException e) {
+                Timber.e(e);
+            }
+        }
+    }
+
+    public Pair<JSONArray, JSONArray> populateServerOptions(Map<String, Object> serverConfigs, JSONObject formJson, String settingsConfigKey, String formKey, String filterKey) {
+        if (serverConfigs == null)
+            return null;
+        JSONArray serverConfig = (JSONArray) serverConfigs.get(settingsConfigKey);
+        if (serverConfig != null && !serverConfig.isNull(0)) {
+            JSONArray fields = JsonFormUtils.fields(formJson);
+            JSONObject field = JsonFormUtils.getFieldJSONObject(fields, formKey);
+            if (field == null)
+                return null;
+            JSONArray options = serverConfig.optJSONObject(0).optJSONArray(filterKey);
+            if (options == null)
+                return null;
+            JSONArray codes = new JSONArray();
+            JSONArray values = new JSONArray();
+            for (int i = 0; i < options.length(); i++) {
+                JSONObject operator = options.optJSONObject(i);
+                if (operator == null)
+                    continue;
+                String code = operator.optString(CONFIGURATION.CODE, null);
+                String name = operator.optString(CONFIGURATION.NAME);
+                if (StringUtils.isBlank(code) || code.equalsIgnoreCase(name)) {
+                    codes.put(name);
+                    values.put(name);
+                } else {
+                    codes.put(code + ":" + name);
+                    values.put(code + " - " + name);
+                }
+            }
+            try {
+                field.put(KEYS, codes);
+                field.put(VALUES, values);
+            } catch (JSONException e) {
+                Timber.e(e, "Error populating %s Operators ", formKey);
+            }
+            return new Pair<>(codes, values);
+        }
+        return null;
+    }
+
+
 }

@@ -19,6 +19,8 @@ public interface FamilyConstants {
 
         String UPDATE_FAMILY_REGISTRATION = "Update Family Registration";
         String UPDATE_FAMILY_MEMBER_REGISTRATION = "Update Family Member Registration";
+
+        String ARCHIVE_FAMILY_MEMBER = "Archive Family Member";
     }
 
     interface JSON_FORM {
@@ -29,6 +31,14 @@ public interface FamilyConstants {
         String THAILAND_FAMILY_REGISTER = "thailand_family_register";
         String THAILAND_FAMILY_UPDATE = "thailand_family_update";
         String THAILAND_FAMILY_MEMBER_REGISTER = "thailand_family_member_register";
+
+        String ZAMBIA_FAMILY_REGISTER = "zambia_family_register";
+        String ZAMBIA_FAMILY_UPDATE = "zambia_family_update";
+        String ZAMBIA_FAMILY_MEMBER_REGISTER = "zambia_family_member_register";
+
+        String REFAPP_FAMILY_REGISTER = "refapp_family_register";
+        String REFAPP_FAMILY_UPDATE = "refapp_family_update";
+        String REFAPP_FAMILY_MEMBER_REGISTER = "refapp_family_member_register";
     }
 
     interface RELATIONSHIP {

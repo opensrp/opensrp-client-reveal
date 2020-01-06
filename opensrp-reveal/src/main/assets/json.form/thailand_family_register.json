@@ -140,7 +140,7 @@
         "options": [
           {
             "key": "same_as_fam_name",
-            "text": "คลิกเลือกหากสกุลเดียวกับเจ้าบ้าน",
+            "text": "คลิกถ้าชื่อเดียวกับเจ้าบ้าน",
             "text_size": "18px",
             "value": "false"
           }
@@ -222,7 +222,7 @@
         "openmrs_entity_id": "age_entered",
         "type": "edit_text",
         "hint": "อายุ",
-        "v_numeric": {
+        "v_numeric_integer": {
           "value": "true",
           "err": "กรุณาใส่เป็นตัวเลข"
         },

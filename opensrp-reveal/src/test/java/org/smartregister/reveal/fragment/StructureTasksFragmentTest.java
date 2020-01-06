@@ -95,6 +95,7 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
+        org.smartregister.Context.bindtypes= new ArrayList<>();
         fragment = new StructureTasksFragment();
         activity = Robolectric.buildActivity(AppCompatActivity.class).create().start().get();
         activity.setContentView(R.layout.activity_family_profile);
@@ -277,7 +278,7 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
         view.setTag(R.id.task_details, taskDetails);
         view.setOnClickListener(onClickListener);
         view.performClick();
-        verify(presenter).onTaskSelected(taskDetails);
+        verify(presenter).onTaskSelected(taskDetails, R.id.view_edit == view.getId());
     }
 
 

@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
@@ -17,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -27,22 +29,32 @@ import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.FamilyCardDetails;
+import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
+import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.repository.RevealMappingHelper;
+import org.smartregister.reveal.task.IndicatorsCalculatorTask;
+import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
-import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.CONFIGURATION;
+import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.util.Utils;
 
+import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
 
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
+import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
@@ -57,13 +69,15 @@ import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORM
 import static org.smartregister.reveal.util.Constants.DateFormat.EVENT_DATE_FORMAT_Z;
 import static org.smartregister.reveal.util.Constants.GeoJSON.FEATURES;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.JsonForm.DISTRICT_NAME;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
-import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURES_TAG;
+import static org.smartregister.reveal.util.Constants.JsonForm.PROVINCE_NAME;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
@@ -118,6 +132,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private RevealMappingHelper mappingHelper;
 
+    private boolean markStructureIneligibleConfirmed;
+
+    private String reasonUnligible;
+
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
         this.drawerPresenter = drawerPresenter;
@@ -150,7 +168,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
-    public void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea) {
+    public void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea, List<TaskDetails> taskDetailsList) {
         listTaskView.hideProgressDialog();
         setChangeMapPosition(drawerPresenter.isChangedCurrentSelection() || (drawerPresenter.isChangedCurrentSelection() && changeMapPosition));
         drawerPresenter.setChangedCurrentSelection(false);
@@ -173,6 +191,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 Timber.e("error resetting structures");
             }
         }
+
+        if (taskDetailsList != null) {
+
+            if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                new IndicatorsCalculatorTask(listTaskView.getActivity(), taskDetailsList).execute();
+            }
+        }
     }
 
     public void onMapReady() {
@@ -187,7 +212,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
     }
 
-    public void onMapClicked(MapboxMap mapboxMap, LatLng point) {
+    public void onMapClicked(MapboxMap mapboxMap, LatLng point, boolean isLongclick) {
         double currentZoom = mapboxMap.getCameraPosition().zoom;
         if (currentZoom < MAX_SELECT_ZOOM_LEVEL) {
             Timber.w("onMapClicked Current Zoom level" + currentZoom);
@@ -207,12 +232,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     context.getString(R.string.reveal_layer_polygons), context.getString(R.string.reveal_layer_points));
             Timber.d("Selected structure after increasing click area: " + features.size());
             if (features.size() == 1) {
-                onFeatureSelected(features.get(0));
+                onFeatureSelected(features.get(0), isLongclick);
             } else {
                 Timber.d("Not Selected structure after increasing click area: " + features.size());
             }
         } else {
-            onFeatureSelected(features.get(0));
+            onFeatureSelected(features.get(0), isLongclick);
             if (features.size() > 1) {
                 Timber.w("Selected more than 1 structure: " + features.size());
             }
@@ -220,7 +245,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     }
 
-    private void onFeatureSelected(Feature feature) {
+    private void onFeatureSelected(Feature feature, boolean isLongclick) {
         this.selectedFeature = feature;
         this.changeInterventionStatus = false;
         cardDetails = null;
@@ -229,33 +254,60 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         listTaskView.displaySelectedFeature(feature, clickedPoint);
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
+        } else if (isLongclick) {
+            onFeatureSelectedByLongClick(feature);
         } else {
-            String businessStatus = getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
-            String code = getPropertyValue(feature, TASK_CODE);
-            selectedFeatureInterventionType = code;
-            if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || PAOT.equals(code) || REGISTER_FAMILY.equals(code))
-                    && (NOT_VISITED.equals(businessStatus) || businessStatus == null)) {
-                if (validateFarStructures()) {
-                    validateUserLocation();
-                } else {
-                    onLocationValidated();
-                }
-            } else if (IRS.equals(code) &&
-                    (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus)) || PARTIALLY_SPRAYED.equals(businessStatus)) {
-                listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
-            } else if ((MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code))
-                    && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
-                    || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
-                listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
-            } else if (PAOT.equals(code)) {
-                listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
-            } else if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.focus_investigation) {
-                listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
-            }
+            onFeatureSelectedByNormalClick(feature);
         }
     }
 
-    private void validateUserLocation() {
+    private void onFeatureSelectedByNormalClick(Feature feature) {
+        String businessStatus = getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
+        String code = getPropertyValue(feature, TASK_CODE);
+        selectedFeatureInterventionType = code;
+        if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || PAOT.equals(code) || IRS_VERIFICATION.equals(code))
+                && (NOT_VISITED.equals(businessStatus) || businessStatus == null)) {
+            if (validateFarStructures()) {
+                validateUserLocation();
+            } else {
+                onLocationValidated();
+            }
+        } else if (IRS.equals(code) &&
+                (NOT_SPRAYED.equals(businessStatus) || SPRAYED.equals(businessStatus) || NOT_SPRAYABLE.equals(businessStatus) || PARTIALLY_SPRAYED.equals(businessStatus)
+                        || COMPLETE.equals(businessStatus) || NOT_ELIGIBLE.equals(businessStatus) || NOT_VISITED.equals(businessStatus))) {
+
+            listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
+        } else if ((MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code))
+                && (INCOMPLETE.equals(businessStatus) || IN_PROGRESS.equals(businessStatus)
+                || NOT_ELIGIBLE.equals(businessStatus) || COMPLETE.equals(businessStatus))) {
+            listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
+        } else if (REGISTER_FAMILY.equals(code) && NOT_VISITED.equals(businessStatus)) {
+            displayMarkStructureIneligibleDialog();
+        } else if (REGISTER_FAMILY.equals(code) && NOT_ELIGIBLE.equals(businessStatus)) {
+            listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
+        } else if (PAOT.equals(code)) {
+            listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
+        } else if (org.smartregister.reveal.util.Utils.isFocusInvestigationOrMDA()) {
+            listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
+        } else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
+            listTaskInteractor.fetchInterventionDetails(IRS_VERIFICATION, feature.id(), false);
+        }
+    }
+
+    private void onFeatureSelectedByLongClick(Feature feature) {
+        String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
+        String code = getPropertyValue(feature, TASK_CODE);
+
+        selectedFeatureInterventionType = code;
+        if (NOT_VISITED.equals(businessStatus)) {
+            listTaskView.displayMarkStructureInactiveDialog();
+        } else {
+            listTaskView.displayToast(R.string.cannot_make_structure_inactive);
+        }
+    }
+
+    @Override
+    public void validateUserLocation() {
         Location location = listTaskView.getUserCurrentLocation();
         if (location == null) {
             locationPresenter.requestUserLocation();
@@ -288,6 +340,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.openCardView(cardDetails);
         } else if (cardDetails instanceof MosquitoHarvestCardDetails) {
             listTaskView.openCardView(cardDetails);
+        } else if (cardDetails instanceof IRSVerificationCardDetails) {
+            listTaskView.openCardView(cardDetails);
+        } else if (cardDetails instanceof FamilyCardDetails) {
+            formatFamilyCardDetails((FamilyCardDetails) cardDetails);
+            listTaskView.openCardView(cardDetails);
         }
     }
 
@@ -311,6 +368,15 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         CardDetailsUtil.formatCardDetails(sprayCardDetails);
     }
 
+    private void formatFamilyCardDetails(FamilyCardDetails familyCardDetails) {
+
+        Date originalDate = StringUtils.isBlank(familyCardDetails.getDateCreated()) ? null :
+                new Date(Long.parseLong(familyCardDetails.getDateCreated()));
+
+        familyCardDetails.setDateCreated(formatDate(originalDate));
+    }
+
+
     private void startForm(Feature feature, CardDetails cardDetails, String interventionType) {
         String formName = jsonFormUtils.getFormName(null, interventionType);
         String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();
@@ -328,6 +394,18 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             jsonFormUtils.populatePAOTForm((MosquitoHarvestCardDetails) cardDetails, formJson);
         } else if (cardDetails instanceof SprayCardDetails && Country.NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
             jsonFormUtils.populateSprayForm(((SprayCardDetails) cardDetails).getCommonPersonObject(), formJson);
+        } else if (JsonForm.SPRAY_FORM_ZAMBIA.equals(formName)) {
+            try {
+                jsonFormUtils.populateField(formJson, DISTRICT_NAME, prefsUtil.getCurrentDistrict().trim(), VALUE);
+                jsonFormUtils.populateField(formJson, PROVINCE_NAME, prefsUtil.getCurrentProvince().trim(), VALUE);
+            } catch (JSONException e) {
+                Timber.e(e);
+            }
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR, prefsUtil.getCurrentDistrict());
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.HEALTH_FACILITIES, JsonForm.HFC_SEEK, prefsUtil.getCurrentDistrict());
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.HEALTH_FACILITIES, JsonForm.HFC_BELONG, prefsUtil.getCurrentDistrict());
+        } else if (JsonForm.SPRAY_FORM_REFAPP.equals(formName)) {
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR, prefsUtil.getCurrentDistrict());
         }
         listTaskView.startJsonForm(formJson);
     }
@@ -366,6 +444,22 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
+    public void resetFeatureTasks(String structureId, Task task) {
+        setChangeMapPosition(false);
+        for (Feature feature : featureCollection.features()) {
+            if (structureId.equals(feature.id())) {
+                feature.addStringProperty(TASK_IDENTIFIER, task.getIdentifier());
+                feature.addStringProperty(TASK_CODE, task.getCode());
+                feature.addStringProperty(TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                feature.addStringProperty(TASK_STATUS, task.getStatus().name());
+                feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                break;
+            }
+        }
+        listTaskView.setGeoJsonSource(featureCollection, null, isChangeMapPosition());
+    }
+
+    @Override
     public void onStructureAdded(Feature feature, JSONArray featureCoordinates, double zoomlevel) {
         listTaskView.closeAllCardViews();
         listTaskView.hideProgressDialog();
@@ -394,8 +488,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         try {
             JSONObject formJson = new JSONObject(jsonFormUtils.getFormString(listTaskView.getContext(), formName, null));
             formJson.put(OPERATIONAL_AREA_TAG, operationalArea.toJson());
-            formJson.put(STRUCTURES_TAG, featureCollection.toJson());
-            jsonFormUtils.populateField(formJson, Constants.JsonForm.SELECTED_OPERATIONAL_AREA_NAME, prefsUtil.getCurrentOperationalArea(), TEXT);
+            revealApplication.setFeatureCollection(featureCollection);
+            jsonFormUtils.populateField(formJson, JsonForm.SELECTED_OPERATIONAL_AREA_NAME, prefsUtil.getCurrentOperationalArea(), TEXT);
             formJson.put(LOCATION_COMPONENT_ACTIVE, myLocationComponentActive);
             listTaskView.startJsonForm(formJson);
         } catch (Exception e) {
@@ -406,7 +500,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onLocationValidated() {
-        if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)) {
+        if (markStructureIneligibleConfirmed) {
+            onMarkStructureIneligibleConfirmed();
+            markStructureIneligibleConfirmed = false;
+        } else if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)) {
             listTaskView.registerFamily();
         } else if (cardDetails == null || !changeInterventionStatus) {
             startForm(selectedFeature, null, selectedFeatureInterventionType);
@@ -449,6 +546,43 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
+    public void onMarkStructureInactiveConfirmed() {
+        listTaskInteractor.markStructureAsInactive(selectedFeature);
+
+    }
+
+    @Override
+    public void onStructureMarkedInactive() {
+        for (Feature feature : featureCollection.features()) {
+            if (selectedFeature.id().equals(feature.id())) {
+                feature.removeProperty(TASK_BUSINESS_STATUS);
+                feature.removeProperty(TASK_IDENTIFIER);
+                break;
+            }
+        }
+
+        listTaskView.setGeoJsonSource(featureCollection, operationalArea, false);
+    }
+
+    @Override
+    public void onMarkStructureIneligibleConfirmed() {
+        listTaskInteractor.markStructureAsIneligible(selectedFeature,reasonUnligible);
+    }
+
+    @Override
+    public void onStructureMarkedIneligible() {
+        for (Feature feature : featureCollection.features()) {
+            if (selectedFeature.id().equals(feature.id())) {
+                feature.addStringProperty(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
+                feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
+                break;
+            }
+        }
+
+        listTaskView.setGeoJsonSource(featureCollection, operationalArea, false);
+    }
+
+    @Override
     public void onFamilyFound(CommonPersonObjectClient finalFamily) {
         if (finalFamily == null)
             listTaskView.displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
@@ -475,6 +609,27 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.setGeoJsonSource(featureCollection, operationalArea, false);
         }
     }
+
+    private void displayMarkStructureIneligibleDialog() {
+
+        AlertDialogUtils.displayNotificationWithCallback(listTaskView.getContext(), R.string.mark_location_ineligible,
+                R.string.is_structure_eligible_for_fam_reg, R.string.eligible, R.string.not_eligible_unoccupied, R.string.not_eligible_other, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == BUTTON_NEGATIVE || which == BUTTON_NEUTRAL) {
+                            markStructureIneligibleConfirmed = true;
+                            reasonUnligible = which == BUTTON_NEGATIVE ? listTaskView.getContext().getString(R.string.not_eligible_unoccupied) : listTaskView.getContext().getString(R.string.not_eligible_other);
+                        }
+                        if (validateFarStructures()) {
+                            validateUserLocation();
+                        } else {
+                            onLocationValidated();
+                        }
+                        dialog.dismiss();
+                    }
+                });
+    }
+
 
     public boolean isChangeMapPosition() {
         return changeMapPosition;

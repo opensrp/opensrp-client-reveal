@@ -6,14 +6,20 @@ import android.support.annotation.VisibleForTesting;
 
 import com.mapbox.geojson.Feature;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
+import org.smartregister.domain.db.Event;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.contract.StructureTasksContract;
+import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.interactor.StructureTasksInteractor;
 import org.smartregister.reveal.model.StructureTaskDetails;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
@@ -23,6 +29,7 @@ import java.util.Set;
 
 import static org.smartregister.reveal.contract.StructureTasksContract.Interactor;
 import static org.smartregister.reveal.contract.StructureTasksContract.Presenter;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 
 /**
  * Created by samuelgithengi on 4/12/19.
@@ -39,10 +46,13 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
     private String structureId;
 
+    private BaseFormFragmentContract.Interactor formInteractor;
+
 
     public StructureTasksPresenter(StructureTasksContract.View view, Context context) {
         this(view, context, null, PreferencesUtil.getInstance());
         interactor = new StructureTasksInteractor(this);
+        formInteractor = new BaseFormFragmentInteractor(this);
     }
 
     @VisibleForTesting
@@ -61,6 +71,13 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     }
 
     @Override
+    public void refreshTasks() {
+        if (structureId != null)
+            findTasks(structureId);
+    }
+
+
+    @Override
     public void onTasksFound(List<StructureTaskDetails> taskDetailsList, StructureTaskDetails incompleteIndexCase) {
         indexCase = incompleteIndexCase;
         getView().setTaskDetailsList(taskDetailsList);
@@ -70,14 +87,31 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     }
 
     @Override
-    public void onTaskSelected(StructureTaskDetails details) {
+    public void onTaskSelected(StructureTaskDetails details, boolean isEdit) {
         if (details != null) {
             if (TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
-                getView().displayToast("Task Completed");
+                if (isEdit) {
+                    details.setEdit(true);
+                    getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
+                    interactor.getStructure(details);
+                } else {
+                    getView().displayToast("Task Completed");
+                }
             } else {
                 getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
                 interactor.getStructure(details);
             }
+        }
+    }
+
+
+    @Override
+    public void onLocationValidated() {
+        StructureTaskDetails taskDetails = (StructureTaskDetails) getTaskDetails();
+        if (taskDetails.isEdit() && (Constants.Intervention.BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode()) || BLOOD_SCREENING.equals(taskDetails.getTaskCode()))) {
+            interactor.findLastEvent(taskDetails);
+        } else {
+            super.onLocationValidated();
         }
     }
 
@@ -107,6 +141,25 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
             getView().updateNumberOfTasks();
         }
         getView().hideProgressDialog();
+    }
+
+    @Override
+    public void onEventFound(Event event) {
+
+        String formName = getView().getJsonFormUtils().getFormName(null, getTaskDetails().getTaskCode());
+        if (StringUtils.isBlank(formName)) {
+            getView().displayError(R.string.opening_form_title, R.string.form_not_found);
+        } else {
+            JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), formName, getTaskDetails(), getStructure());
+            getView().getJsonFormUtils().populateForm(event, formJSON);
+            if (Constants.Intervention.BEDNET_DISTRIBUTION.equals(getTaskDetails().getTaskCode())) {
+                formInteractor.findNumberOfMembers(getTaskDetails().getTaskEntity(), formJSON);
+            } else {
+                getView().startForm(formJSON);
+            }
+        }
+        getView().hideProgressDialog();
+
     }
 
     @Override

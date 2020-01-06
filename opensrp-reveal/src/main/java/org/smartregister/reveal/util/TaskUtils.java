@@ -4,9 +4,12 @@ import android.content.Context;
 import android.support.annotation.StringRes;
 
 import org.joda.time.DateTime;
+import org.smartregister.domain.Action;
+import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
+import org.smartregister.repository.PlanDefinitionRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -21,6 +24,8 @@ import java.util.UUID;
 public class TaskUtils {
 
     private TaskRepository taskRepository;
+
+    private PlanDefinitionRepository planRepository;
 
     private AllSharedPreferences sharedPreferences;
 
@@ -39,6 +44,7 @@ public class TaskUtils {
         taskRepository = RevealApplication.getInstance().getTaskRepository();
         sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
         prefsUtil = PreferencesUtil.getInstance();
+        planRepository = RevealApplication.getInstance().getPlanDefinitionRepository();
     }
 
     public void generateBloodScreeningTask(Context context, String entityId, String structureId) {
@@ -63,7 +69,15 @@ public class TaskUtils {
         task.setPriority(3);
         task.setCode(intervention);
         task.setDescription(context.getString(description));
-        task.setFocus(intervention);
+        PlanDefinition currentPlan = planRepository.findPlanDefinitionById(prefsUtil.getCurrentPlanId());
+        if (currentPlan != null && currentPlan.getActions() != null) {
+            for (Action action : currentPlan.getActions()) {
+                if (intervention.equals(action.getCode())) {
+                    task.setFocus(action.getIdentifier());
+                    continue;
+                }
+            }
+        }
         task.setForEntity(entityId);
         task.setStructureId(structureId);
         task.setExecutionStartDate(now);
@@ -82,4 +96,13 @@ public class TaskUtils {
 
     }
 
+    public void generateMDADispenseTask(Context context, String entityId, String structureId) {
+        generateTask(context, entityId, structureId, BusinessStatus.NOT_VISITED, Intervention.MDA_DISPENSE,
+                R.string.mda_dispense_desciption);
+    }
+
+    public void generateMDAAdherenceTask(Context context, String entityId, String structureId) {
+        generateTask(context, entityId, structureId, BusinessStatus.NOT_VISITED, Intervention.MDA_ADHERENCE,
+                R.string.mda_adherence_desciption);
+    }
 }

@@ -14,12 +14,14 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vijay.jsonwizard.customviews.TreeViewDialog;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.smartregister.p2p.activity.P2pModeSelectActivity;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -27,6 +29,7 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.presenter.BaseDrawerPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Tags;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -36,6 +39,9 @@ import java.util.List;
 import java.util.Locale;
 
 import timber.log.Timber;
+
+import static org.smartregister.reveal.util.Constants.COPYDBNAME;
+import static org.smartregister.reveal.util.Constants.DBNAME;
 
 /**
  * Created by samuelgithengi on 3/21/19.
@@ -48,6 +54,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     private TextView districtTextView;
     private TextView facilityTextView;
     private TextView operatorTextView;
+    private TextView p2pSyncTextView;
 
     private DrawerLayout mDrawerLayout;
 
@@ -123,15 +130,43 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         districtTextView = headerView.findViewById(R.id.district_label);
         facilityTextView = headerView.findViewById(R.id.facility_label);
         operatorTextView = headerView.findViewById(R.id.operator_label);
+        p2pSyncTextView = headerView.findViewById(R.id.btn_navMenu_p2pSyncBtn);
+
+        TextView summaryFormsTextView = headerView.findViewById(R.id.btn_navMenu_summaryForms);
 
         operationalAreaTextView.setOnClickListener(this);
 
         planTextView.setOnClickListener(this);
 
+        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) { // Enable P2P sync and other forms
+            p2pSyncTextView.setVisibility(View.VISIBLE);
+            p2pSyncTextView.setOnClickListener(this);
+
+            summaryFormsTextView.setVisibility(View.VISIBLE);
+            summaryFormsTextView.setOnClickListener(this);
+        }
+
         headerView.findViewById(R.id.logout_button).setOnClickListener(this);
         headerView.findViewById(R.id.sync_button).setOnClickListener(this);
         headerView.findViewById(R.id.offline_maps_button).setOnClickListener(this);
 
+        districtTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                startStatsActivity();
+                return true;
+            }
+        });
+
+        operatorTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(getContext(), R.string.export_db_notification, Toast.LENGTH_LONG).show();
+                String currentTimeStamp = new SimpleDateFormat("yyyy-MM-dd-HHmmss", Locale.ENGLISH).format(new Date());
+                Utils.copyDatabase(DBNAME, COPYDBNAME + "-" + currentTimeStamp + ".db", getContext());
+                return false;
+            }
+        });
     }
 
     @Override
@@ -249,8 +284,10 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     }
 
 
-    private void closeDrawerLayout() {
-        mDrawerLayout.closeDrawer(GravityCompat.START);
+    public void closeDrawerLayout() {
+        if (presenter.isPlanAndOperationalAreaSelected()) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        }
     }
 
 
@@ -262,6 +299,10 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             presenter.onShowPlanSelector();
         else if (v.getId() == R.id.logout_button)
             RevealApplication.getInstance().logoutCurrentUser();
+        else if (v.getId() == R.id.btn_navMenu_p2pSyncBtn)
+            startP2PActivity();
+        else if (v.getId() == R.id.btn_navMenu_summaryForms)
+            startOtherFormsActivity();
         else if (v.getId() == R.id.offline_maps_button)
             presenter.onShowOfflineMaps();
         else if (v.getId() == R.id.sync_button) {
@@ -280,6 +321,9 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         presenter.onViewResumed();
     }
 
+    private void startP2PActivity() {
+        getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
+    }
     @Override
     public void openOfflineMapsView() {
         Intent intent = new Intent(getContext(), OfflineMapsActivity.class);
@@ -287,4 +331,11 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     }
 
 
+    private void startOtherFormsActivity() {
+        getContext().startActivity(new Intent(getContext(), SummaryFormsActivity.class));
+    }
+
+    private void startStatsActivity() {
+        getContext().startActivity(new Intent(getContext(), StatsActivity.class));
+    }
 }

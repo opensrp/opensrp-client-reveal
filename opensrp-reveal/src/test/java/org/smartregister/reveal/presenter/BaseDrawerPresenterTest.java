@@ -1,20 +1,18 @@
 package org.smartregister.reveal.presenter;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.powermock.reflect.Whitebox;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.reveal.BaseUnitTest;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.interactor.BaseDrawerInteractor;
-import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.PreferencesUtil;
 
 import java.util.ArrayList;
@@ -23,28 +21,33 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.ACTIVE;
 import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.COMPLETE;
 
 /**
  * @author Richard Kareko
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({PreferencesUtil.class,RevealApplication.class})
 public class BaseDrawerPresenterTest extends BaseUnitTest {
+
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
 
     private BaseDrawerPresenter presenter;
 
     @Mock
     private BaseDrawerContract.View view;
 
+    @Mock
+    private PreferencesUtil preferencesUtil;
+
+    @Mock
     private BaseDrawerInteractor interactor;
 
     @Captor
@@ -54,11 +57,9 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
     private ArgumentCaptor<String> entireTreeString;
 
     @Before
-    public void setUp() throws Exception {
-        mockStaticMethods();
+    public void setUp() {
         presenter = new BaseDrawerPresenter(view, mock(BaseDrawerContract.DrawerActivity.class));
-        interactor = mock(BaseDrawerInteractor.class);
-        PowerMockito.whenNew(BaseDrawerInteractor.class).withAnyArguments().thenReturn(interactor);
+        Whitebox.setInternalState(presenter, "prefsUtil", preferencesUtil);
 
     }
 
@@ -115,17 +116,44 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
 
     }
 
-    private void mockStaticMethods() {
-        mockStatic(PreferencesUtil.class);
-        mockStatic(RevealApplication.class);
+    @Test
+    public void testIsPlanAndOperationalAreaSelectedReturnsTrueWHenBothSelected() {
 
-        PreferencesUtil preferencesUtil = mock(PreferencesUtil.class);
-        PowerMockito.when(PreferencesUtil.getInstance()).thenReturn(preferencesUtil);
+        when(preferencesUtil.getCurrentPlanId()).thenReturn("planid");
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn("OA");
 
-        RevealApplication application = mock(RevealApplication.class);
-        when(RevealApplication.getInstance()).thenReturn(application);
-        AppExecutors appExecutors = mock(AppExecutors.class);
-        when(application.getAppExecutors()).thenReturn(appExecutors);
+        assertTrue(presenter.isPlanAndOperationalAreaSelected());
 
     }
+
+    @Test
+    public void testIsPlanAndOperationalAreaSelectedReturnsFalseWhenPlanNotSelected() {
+        when(preferencesUtil.getCurrentPlanId()).thenReturn(null);
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn("OA");
+
+        assertFalse(presenter.isPlanAndOperationalAreaSelected());
+
+    }
+
+    @Test
+    public void testIsPlanAndOperationalAreaSelectedReturnsFalseWhenJurisdictionNotSelected() {
+
+        when(preferencesUtil.getCurrentPlanId()).thenReturn("planid");
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn(null);
+
+        assertFalse(presenter.isPlanAndOperationalAreaSelected());
+
+    }
+
+    @Test
+    public void testIsPlanAndOperationalAreaSelectedReturnsFalseWhenNonSelected() {
+
+        when(preferencesUtil.getCurrentPlanId()).thenReturn(null);
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn(null);
+
+        assertFalse(presenter.isPlanAndOperationalAreaSelected());
+
+    }
+
+
 }

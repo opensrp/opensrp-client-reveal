@@ -1,5 +1,7 @@
 package org.smartregister.reveal.interactor;
 
+import android.support.v4.util.Pair;
+
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -53,11 +55,28 @@ public class BaseFormFragmentInteractor implements BaseFormFragmentContract.Inte
     @Override
     public void findNumberOfMembers(String structureId, JSONObject formJSON) {
         appExecutors.diskIO().execute(() -> {
-            final int numberOfMembers = commonRepository.countSearchIds(
-                    String.format("SELECT count(*) FROM %s WHERE %s = '%s'",
-                            metadata().familyMemberRegister.tableName, STRUCTURE_ID, structureId));
+            Cursor cursor = null;
+            int numberOfMembers = 0;
+            int numberOfMembersSleepingOutdoors = 0;
+            try {
+                cursor = sqLiteDatabase.rawQuery(
+                        String.format("SELECT count(*),SUM(CASE WHEN sleeps_outdoors='Yes' THEN 1 ELSE 0 END) FROM %s WHERE %s = ?",
+                                metadata().familyMemberRegister.tableName, STRUCTURE_ID), new String[]{structureId});
+
+                while (cursor.moveToNext()) {
+                    numberOfMembers = cursor.getInt(0);
+                    numberOfMembersSleepingOutdoors = cursor.getInt(1);
+                }
+            } catch (Exception e) {
+                Timber.e(e, "Error find Number of members ");
+            } finally {
+                if (cursor != null)
+                    cursor.close();
+            }
+            int finalNumberOfMembers = numberOfMembers;
+            int finalNumberOfMembersSleepingOutdoors = numberOfMembersSleepingOutdoors;
             appExecutors.mainThread().execute(() -> {
-                presenter.onFetchedMembersCount(numberOfMembers, formJSON);
+                presenter.onFetchedMembersCount(new Pair<>(finalNumberOfMembers, finalNumberOfMembersSleepingOutdoors), formJSON);
             });
         });
 
@@ -96,12 +115,12 @@ public class BaseFormFragmentInteractor implements BaseFormFragmentContract.Inte
         if (IRS.equals(interventionType)) {
 
             appExecutors.diskIO().execute(() -> {
-                    CommonPersonObject commonPersonObject = interactorUtils.fetchSprayDetails(interventionType, structureId,
-                            eventClientRepository, commonRepository);
+                CommonPersonObject commonPersonObject = interactorUtils.fetchSprayDetails(interventionType, structureId,
+                        eventClientRepository, commonRepository);
 
-                    appExecutors.mainThread().execute(() -> {
-                        presenter.onFetchedSprayDetails(commonPersonObject, formJSON);
-                    });
+                appExecutors.mainThread().execute(() -> {
+                    presenter.onFetchedSprayDetails(commonPersonObject, formJSON);
+                });
             });
         }
     }

@@ -173,7 +173,7 @@
     <string name="focus_status_format">สถานะ: %1s</string>
     <string name="return_to_register">ย้อน</string>
     <string name="index_case_not_found">ไม่พบ</string>
-    <string name="detect_case_button">ตรวจสอบกรณี</string>
+    <string name="detect_case_button">Index Case</string>
 
     <string name="not_visited">ไม่ได้เข้าชม</string>
     <string name="not_sprayed">ไม่ได้พ่น</string>
@@ -196,4 +196,5 @@
     <string name="cancel">Cancel</string>
     <string name="partially_sprayed">Partially Sprayed</string>
 
-    </resources>
+    <string name="opensrp_url" translatable="false">@string/opensrp_base_url</string>
+</resources>

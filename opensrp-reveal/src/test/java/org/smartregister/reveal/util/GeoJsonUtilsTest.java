@@ -26,17 +26,28 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.smartregister.domain.Task.TaskStatus;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.ADHERENCE_VISIT_DONE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.BEDNET_DISTRIBUTED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.BLOOD_SCREENING_COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_REGISTERED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.FULLY_RECEIVED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NONE_RECEIVED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_RECEIVED;
 import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.FI;
+import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
+import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
@@ -291,6 +302,383 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
         Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
 
         assertEquals(BLOOD_SCREENING_COMPLETE, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForMDAFullyReceivedColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setInterventionTypeForPlan("Focus 1", MDA);
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task familyRegTask = initTestTask(REGISTER_FAMILY, COMPLETE);
+        taskSet.add(familyRegTask);
+
+        Task mdaDispenseTask1 = initTestTask(MDA_DISPENSE, FULLY_RECEIVED);
+        taskSet.add(mdaDispenseTask1);
+
+        Task mdaDispenseTask2 = initTestTask(MDA_DISPENSE, FULLY_RECEIVED);
+        taskSet.add(mdaDispenseTask2);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(FULLY_RECEIVED, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForMDAPartiallyReceivedColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setInterventionTypeForPlan("Focus 1", MDA);
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task familyRegTask = initTestTask(REGISTER_FAMILY, COMPLETE);
+        taskSet.add(familyRegTask);
+
+        Task fullyDispensedTask = initTestTask(MDA_DISPENSE, FULLY_RECEIVED);
+        taskSet.add(fullyDispensedTask);
+
+        Task noneReceivedTask = initTestTask(MDA_DISPENSE, NONE_RECEIVED);
+        taskSet.add(noneReceivedTask);
+
+        Task notElligibleTask = initTestTask(MDA_DISPENSE, NOT_ELIGIBLE);
+        taskSet.add(notElligibleTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(PARTIALLY_RECEIVED, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForMDANoneReceivedColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setInterventionTypeForPlan("Focus 1", MDA);
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task familyRegTask = initTestTask(REGISTER_FAMILY, COMPLETE);
+        taskSet.add(familyRegTask);
+
+        Task noneReceivedTask = initTestTask(MDA_DISPENSE, NONE_RECEIVED);
+        taskSet.add(noneReceivedTask);
+
+        Task noneReceivedTask1 = initTestTask(MDA_DISPENSE, NONE_RECEIVED);
+        taskSet.add(noneReceivedTask1);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(NONE_RECEIVED, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForNotElligibleColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setInterventionTypeForPlan("Focus 1", MDA);
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task familyRegTask = initTestTask(REGISTER_FAMILY, COMPLETE);
+        taskSet.add(familyRegTask);
+
+        Task notElligibleTask = initTestTask(MDA_DISPENSE, NOT_ELIGIBLE);
+        taskSet.add(notElligibleTask);
+
+        Task notElligibleTask1 = initTestTask(MDA_DISPENSE, NOT_ELIGIBLE);
+        taskSet.add(notElligibleTask1);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(NOT_ELIGIBLE, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForMDAAdheredColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setInterventionTypeForPlan("Focus 1", MDA);
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task familyRegTask = initTestTask(REGISTER_FAMILY, COMPLETE);
+        taskSet.add(familyRegTask);
+
+        Task notElligibleTask = initTestTask(MDA_DISPENSE, NOT_ELIGIBLE);
+        taskSet.add(notElligibleTask);
+
+        Task fullyReceivedTask = initTestTask(MDA_DISPENSE, FULLY_RECEIVED);
+        taskSet.add(fullyReceivedTask);
+
+        Task nonReceivedTask = initTestTask(MDA_DISPENSE, NONE_RECEIVED);
+        taskSet.add(nonReceivedTask);
+
+        Task adherenceTask = initTestTask(MDA_ADHERENCE, COMPLETE);
+        taskSet.add(adherenceTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(ADHERENCE_VISIT_DONE, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForNotElligibleFamRegColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setInterventionTypeForPlan("Focus 1", FI);
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task familyRegTask = initTestTask(REGISTER_FAMILY, NOT_ELIGIBLE);
+        taskSet.add(familyRegTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(NOT_ELIGIBLE, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForCompletePAOTColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setInterventionTypeForPlan("Focus 1", FI);
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task paotTask = initTestTask(PAOT, COMPLETE);
+        taskSet.add(paotTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(COMPLETE, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForNotEligiblePAOTColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setInterventionTypeForPlan("Focus 1", FI);
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task paotTask = initTestTask(PAOT, NOT_ELIGIBLE);
+        taskSet.add(paotTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(NOT_ELIGIBLE, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForCompleteMosquitoCollectionColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setInterventionTypeForPlan("Focus 1", FI);
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task mosquitoCollectionTask = initTestTask(MOSQUITO_COLLECTION, COMPLETE);
+        taskSet.add(mosquitoCollectionTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(COMPLETE, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForNotEligibleMosquitoCollectionColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setInterventionTypeForPlan("Focus 1", FI);
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task mosquitoCollectionTask = initTestTask(MOSQUITO_COLLECTION, NOT_ELIGIBLE);
+        taskSet.add(mosquitoCollectionTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(NOT_ELIGIBLE, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForCompleteLarvalDippingColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setInterventionTypeForPlan("Focus 1", FI);
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task larvalDippingTask = initTestTask(LARVAL_DIPPING, COMPLETE);
+        taskSet.add(larvalDippingTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(COMPLETE, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+
+    @Test
+    public void testCorrectTaskBusinessStatusIsSetForNotEligibleLarvalDippingColorCoding() throws Exception {
+
+        PreferencesUtil.getInstance().setInterventionTypeForPlan("Focus 1", FI);
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task larvalDippingTask = initTestTask(LARVAL_DIPPING, NOT_ELIGIBLE);
+        taskSet.add(larvalDippingTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(NOT_ELIGIBLE, feature.getStringProperty(TASK_BUSINESS_STATUS));
 
     }
 

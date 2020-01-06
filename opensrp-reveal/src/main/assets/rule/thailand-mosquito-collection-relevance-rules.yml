@@ -1,7 +1,0 @@
----
-name: step1_trap_start
-description: Show the trap_start field based on the task_business_status
-priority: 1
-condition: "step1_task_business_status =='Complete' || step1_task_business_status =='In Progress'"
-actions:
-  - "isRelevant = true"

@@ -46,6 +46,8 @@
     <dimen name="case_section_margin">16dp</dimen>
     <dimen name="case_details_margin">8dp</dimen>
     <dimen name="detect_case_padding">40dp</dimen>
+
+    <dimen name="progress_height">80dp</dimen>
     <dimen name="offline_map_label_text_size">18sp</dimen>
     <dimen name="downloading_hint_text_size">12sp</dimen>
 </resources>

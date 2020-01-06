@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.Context;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.StructureRepository;
@@ -25,6 +26,7 @@ import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
+import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
@@ -36,8 +38,10 @@ import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.Cache;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -82,6 +86,9 @@ public class ListTaskInteractorTest extends BaseUnitTest {
     @Captor
     private ArgumentCaptor<Feature> featureArgumentCaptor;
 
+    @Captor
+    private ArgumentCaptor<List<TaskDetails>> taskDetailsCaptor;
+
     private ListTaskInteractor listTaskInteractor;
 
     private Location operationArea = TestDataUtils.gson.fromJson(TestingUtils.operationalAreaGeoJSON, Location.class);
@@ -92,6 +99,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
+        Context.bindtypes = new ArrayList<>();
         listTaskInteractor = new ListTaskInteractor(presenter);
         Whitebox.setInternalState(listTaskInteractor, "database", database);
         Whitebox.setInternalState(listTaskInteractor, "taskRepository", taskRepository);
@@ -191,7 +199,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         listTaskInteractor.fetchLocations(plan, operationAreaId);
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).getTasksByPlanAndGroup(plan, operationAreaId);
         verify(structureRepository, timeout(ASYNC_TIMEOUT)).getLocationsByParentId(operationAreaId);
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(jsonArgumentCaptor.capture(), featureArgumentCaptor.capture());
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(jsonArgumentCaptor.capture(), featureArgumentCaptor.capture(), taskDetailsCaptor.capture());
         assertEquals(operationAreaId, featureArgumentCaptor.getValue().id());
         FeatureCollection featureCollection = FeatureCollection.fromJson(jsonArgumentCaptor.getValue().toString());
         assertEquals("FeatureCollection", featureCollection.type());
@@ -211,11 +219,13 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         String plan = UUID.randomUUID().toString();
         String operationAreaId = operationArea.getId();
         setOperationArea(plan);
+        PreferencesUtil.getInstance().setCurrentPlan(plan);
+        PreferencesUtil.getInstance().setInterventionTypeForPlan(plan,"FI");
         when(database.rawQuery(anyString(), eq(new String[]{plan, CASE_CONFIRMATION}))).thenReturn(createIndexCaseCursor());
         listTaskInteractor.fetchLocations(plan, operationAreaId);
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).getTasksByPlanAndGroup(plan, operationAreaId);
         verify(structureRepository, timeout(ASYNC_TIMEOUT)).getLocationsByParentId(operationAreaId);
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(jsonArgumentCaptor.capture(), featureArgumentCaptor.capture());
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(jsonArgumentCaptor.capture(), featureArgumentCaptor.capture(),taskDetailsCaptor.capture());
         verify(database).rawQuery(anyString(), eq(new String[]{plan, CASE_CONFIRMATION}));
         assertEquals(operationAreaId, featureArgumentCaptor.getValue().id());
         FeatureCollection featureCollection = FeatureCollection.fromJson(jsonArgumentCaptor.getValue().toString());

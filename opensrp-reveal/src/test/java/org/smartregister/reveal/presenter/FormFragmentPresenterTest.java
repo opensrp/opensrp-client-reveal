@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -133,10 +134,11 @@ public class FormFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnFoundMembersCount() throws JSONException {
-        presenter.onFetchedMembersCount(3, new JSONObject("{\"members\": \"[num_fam_members]\"}"));
+        presenter.onFetchedMembersCount(new Pair<>(3, 1), new JSONObject("{\"members\": \"[num_fam_members]\", \"sleep_outdoors\":\"[num_sleeps_outdoors]\"}"));
         verify(view).startForm(jsonArgumentCaptor.capture());
         verify(view).hideProgressDialog();
         assertEquals(3, jsonArgumentCaptor.getValue().getInt("members"));
+        assertEquals(1, jsonArgumentCaptor.getValue().getInt("sleep_outdoors"));
     }
 
     @Test

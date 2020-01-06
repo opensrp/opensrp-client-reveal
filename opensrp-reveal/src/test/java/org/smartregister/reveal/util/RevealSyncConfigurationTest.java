@@ -1,24 +1,34 @@
 package org.smartregister.reveal.util;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.powermock.reflect.Whitebox;
 import org.smartregister.SyncFilter;
 import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.repository.LocationRepository;
+import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.BuildConfig;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
  * Created by samuelgithengi on 5/22/19.
  */
-@RunWith(MockitoJUnitRunner.class)
-public class RevealSyncConfigurationTest {
+public class RevealSyncConfigurationTest extends BaseUnitTest {
+
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
+
+    @Mock
+    private LocationRepository locationRepository;
 
     @Mock
     private AllSharedPreferences allSharedPreferences;
@@ -27,7 +37,7 @@ public class RevealSyncConfigurationTest {
 
     @Before
     public void setUp() {
-        syncConfiguration = new RevealSyncConfiguration(allSharedPreferences);
+        syncConfiguration = new RevealSyncConfiguration(locationRepository, allSharedPreferences);
     }
 
     @Test
@@ -36,15 +46,39 @@ public class RevealSyncConfigurationTest {
     }
 
     @Test
-    public void getSyncFilterParam() {
-        assertEquals(SyncFilter.TEAM_ID, syncConfiguration.getSyncFilterParam());
+    public void getLocationSyncFilterParam() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        assertEquals(SyncFilter.LOCATION, syncConfiguration.getSyncFilterParam());
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
-    public void getSyncFilterValue() {
-        when(allSharedPreferences.fetchRegisteredANM()).thenReturn("user1");
-        when(allSharedPreferences.fetchDefaultTeamId("user1")).thenReturn("team_123");
-        assertEquals("team_123", syncConfiguration.getSyncFilterValue());
+    public void getTeamSyncFilterParam() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        assertEquals(SyncFilter.TEAM_ID, syncConfiguration.getSyncFilterParam());
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void getLocationSyncFilterValue() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        when(allSharedPreferences.fetchRegisteredANM()).thenReturn("123");
+        when(allSharedPreferences.fetchDefaultTeamId(anyString())).thenReturn("122132");
+        assertEquals("122132", syncConfiguration.getSyncFilterValue());
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void getTeamSyncFilterValue() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        when(allSharedPreferences.fetchRegisteredANM()).thenReturn("123");
+        when(allSharedPreferences.fetchDefaultTeamId(anyString())).thenReturn("122132");
+        assertEquals("122132", syncConfiguration.getSyncFilterValue());
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test

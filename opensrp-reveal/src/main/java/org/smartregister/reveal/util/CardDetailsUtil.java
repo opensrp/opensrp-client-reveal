@@ -5,11 +5,16 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
+import org.smartregister.AllConstants;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.FamilyCardDetails;
+import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
@@ -43,11 +48,13 @@ public class CardDetailsUtil {
             case BusinessStatus.NOT_SPRAYED:
             case BusinessStatus.INCOMPLETE:
             case BusinessStatus.IN_PROGRESS:
+            case BusinessStatus.NONE_RECEIVED:
                 cardDetails.setStatusColor(R.color.unsprayed);
                 cardDetails.setStatusMessage(R.string.details_not_sprayed);
                 break;
             case BusinessStatus.SPRAYED:
             case BusinessStatus.COMPLETE:
+            case BusinessStatus.FULLY_RECEIVED:
                 cardDetails.setStatusColor(R.color.sprayed);
                 cardDetails.setStatusMessage(R.string.details_sprayed);
                 cardDetails.setReason(null);
@@ -127,6 +134,84 @@ public class CardDetailsUtil {
         }
     }
 
+    public void populateAndOpenIRSVerificationCard(IRSVerificationCardDetails cardDetails, Activity activity) {
+        try {
+
+            TextView tvIneligibleStructuresLabel = activity.findViewById(R.id.ineligible_structures_label);
+            ScrollView svEligibleStructuresScrollView = activity.findViewById(R.id.eligible_structures_scrollview);
+
+            if(cardDetails.getTrueStructure().equalsIgnoreCase(AllConstants.BOOLEAN_FALSE)) {
+
+                tvIneligibleStructuresLabel.setText(activity.getResources().getString(R.string.not_true_structure));
+                tvIneligibleStructuresLabel.setVisibility(View.VISIBLE);
+                svEligibleStructuresScrollView.setVisibility(View.GONE);
+            } else if(cardDetails.getEligStruc().equalsIgnoreCase(AllConstants.BOOLEAN_FALSE)) {
+
+                tvIneligibleStructuresLabel.setText(activity.getResources().getString(R.string.structure_ineligible));
+                tvIneligibleStructuresLabel.setVisibility(View.VISIBLE);
+                svEligibleStructuresScrollView.setVisibility(View.GONE);
+            } else {
+
+                tvIneligibleStructuresLabel.setVisibility(View.GONE);
+                svEligibleStructuresScrollView.setVisibility(View.VISIBLE);
+                TextView tvReportedSprayLabel = activity.findViewById(R.id.reported_spray_label);
+                TextView tvReportedSprayStatus = activity.findViewById(R.id.reported_spray_status);
+                TextView tvChalkSprayLabel = activity.findViewById(R.id.chalk_spray_label);
+                TextView tvChalkSprayStatus = activity.findViewById(R.id.chalk_spray_status);
+                TextView tvStickerSprayLabel = activity.findViewById(R.id.sticker_spray_label);
+                TextView tvStickerSprayStatus = activity.findViewById(R.id.sticker_spray_status);
+                TextView tvCardSprayLabel = activity.findViewById(R.id.card_spray_label);
+                TextView tvCardSprayStatus = activity.findViewById(R.id.card_spray_status);
+
+                tvReportedSprayLabel.setText(activity.getResources().getString(R.string.reported_spray_status) + ":");
+                tvReportedSprayStatus.setText(getTranslatedIRSVerificationStatus(cardDetails.getReportedSprayStatus()));
+
+                tvChalkSprayLabel.setText(activity.getResources().getString(R.string.chalk_spray_status) + ":");
+                tvChalkSprayStatus.setText(getTranslatedIRSVerificationStatus(cardDetails.getChalkSprayStatus()));
+
+                tvStickerSprayLabel.setText(activity.getResources().getString(R.string.sticker_spray_status) + ":");
+                tvStickerSprayStatus.setText(getTranslatedIRSVerificationStatus(cardDetails.getStickerSprayStatus()));
+
+                tvCardSprayLabel.setText(activity.getResources().getString(R.string.card_spray_status) + ":");
+                tvCardSprayStatus.setText(getTranslatedIRSVerificationStatus(cardDetails.getCardSprayStatus()));
+            }
+
+            activity.findViewById(R.id.irs_verification_card_view).setVisibility(View.VISIBLE);
+        } catch (Resources.NotFoundException e) {
+            Timber.e(e);
+        }
+    }
+
+    public void populateFamilyCard(FamilyCardDetails familyCardDetails, Activity activity) {
+        try {
+            TextView tvSprayStatus = activity.findViewById(R.id.spray_status);
+            TextView tvPropertyType = activity.findViewById(R.id.property_type);
+            TextView tvSprayDate = activity.findViewById(R.id.spray_date);
+            TextView tvSprayOperator = activity.findViewById(R.id.user_id);
+            TextView tvFamilyHead = activity.findViewById(R.id.family_head);
+            TextView tvReason = activity.findViewById(R.id.reason);
+            Button changeSprayStatus = activity.findViewById(R.id.change_spray_status);
+            Button registerFamily  =  activity.findViewById(R.id.register_family);
+
+            Integer color = familyCardDetails.getStatusColor();
+            tvSprayStatus.setTextColor(color == null ? activity.getResources().getColor(R.color.black) : activity.getResources().getColor(color));
+
+            tvSprayStatus.setText(familyCardDetails.getStatus());
+
+            tvSprayDate.setText(familyCardDetails.getDateCreated());
+            tvSprayOperator.setText(familyCardDetails.getOwner());
+
+            registerFamily.setVisibility(View.VISIBLE);
+            changeSprayStatus.setVisibility(View.GONE);
+            tvPropertyType.setVisibility(View.GONE);
+            tvFamilyHead.setVisibility(View.GONE);
+            tvReason.setVisibility(View.GONE);
+
+        } catch (Resources.NotFoundException e) {
+            Timber.e(e);
+        }
+    }
+
     /**
      * Takes in a business status and returns the translated value according to locale set.
      *
@@ -161,7 +246,34 @@ public class CardDetailsUtil {
                 return businessStatus;
         }
 
+    }
+
+    /**
+     * Takes in a IRS intervention status and returns the translated value .
+     *
+     * @param status Status of the IRS Verification type
+     * @return status Translated status
+     */
+    public static String getTranslatedIRSVerificationStatus(String status) {
+        Context context = RevealApplication.getInstance().getApplicationContext();
+
+        if (status == null)
+            return context.getString(R.string.not_sprayed);
+        switch (status) {
+            case Constants.IRSVerificationStatus.SPRAYED:
+                return context.getString(R.string.sprayed);
+            case Constants.IRSVerificationStatus.NOT_SPRAYED:
+                return context.getString(R.string.not_sprayed);
+            case Constants.IRSVerificationStatus.NOT_FOUND_OR_VISITED:
+                return context.getString(R.string.structure_not_found_or_visited_during_campaign);
+            case Constants.IRSVerificationStatus.OTHER:
+                return context.getString(R.string.other);
+            default:
+                return status;
+        }
+
 
     }
+
 
 }

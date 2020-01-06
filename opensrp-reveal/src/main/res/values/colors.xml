@@ -33,6 +33,13 @@
 
     <color name="outside_area_mask">#313131</color>
 
+    <color name="transluscent_white">#80FFFFFF</color>
+    <color name="mda_adhered">#3DA9DA</color>
+    <color name="mda_dispensed">#6CBF0F</color>
+    <color name="mda_partially_received">#ED8231</color>
+    <color name="mda_none_received_bg">#EE0427</color>
+    <color name="mda_not_eligible_bg">#000000</color>
+
     <color name="download_map">#68BB0C</color>
 
 </resources>

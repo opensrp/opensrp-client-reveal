@@ -200,6 +200,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
         int districtOffset = name.get(0).equalsIgnoreCase(Country.BOTSWANA.name()) || name.get(0).equalsIgnoreCase(Country.NAMIBIA.name()) ? 3 : 2;
         try {
+            prefsUtil.setCurrentProvince(name.get(1));
             prefsUtil.setCurrentDistrict(name.get(name.size() - districtOffset));
             prefsUtil.setCurrentOperationalArea(name.get(name.size() - 1));
             Pair<String, String> facility = getFacilityFromOperationalArea(name.get(name.size() - districtOffset), name.get(name.size() - 1), entireTree);
@@ -254,7 +255,11 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     @Override
     public void onShowPlanSelector() {
-        interactor.fetchPlans(prefsUtil.getInstance().getCurrentOperationalArea());
+        if (StringUtils.isBlank(prefsUtil.getCurrentOperationalArea())) {
+            view.displayNotification(R.string.operational_area, R.string.operational_area_not_selected);
+        } else {
+            interactor.fetchPlans(prefsUtil.getCurrentOperationalArea());
+        }
     }
 
 
@@ -277,12 +282,10 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     }
 
     private void unlockDrawerLayout() {
-        String planId = PreferencesUtil.getInstance().getCurrentPlanId();
-        String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
-        if (StringUtils.isNotBlank(planId) &&
-                StringUtils.isNotBlank(operationalArea)) {
+        if (isPlanAndOperationalAreaSelected()) {
             view.unlockNavigationDrawer();
         }
+
     }
 
     @Override
@@ -312,6 +315,16 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             initializeDrawerLayout();
             viewInitialized = true;
         }
+    }
+
+
+    @Override
+    public boolean isPlanAndOperationalAreaSelected() {
+        String planId = prefsUtil.getCurrentPlanId();
+        String operationalArea = prefsUtil.getCurrentOperationalArea();
+
+        return StringUtils.isNotBlank(planId) && StringUtils.isNotBlank(operationalArea);
+
     }
 
     @Override
