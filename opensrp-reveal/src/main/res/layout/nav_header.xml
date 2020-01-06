@@ -87,7 +87,7 @@
         android:textColor="@color/button_blue"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sync_button" />
+        app:layout_constraintTop_toBottomOf="@id/btn_navMenu_summaryForms" />
 
 
     <View
@@ -99,7 +99,7 @@
         android:background="#DEDEDE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sync_button" />
+        app:layout_constraintTop_toBottomOf="@id/offline_maps_button" />
 
 
 
