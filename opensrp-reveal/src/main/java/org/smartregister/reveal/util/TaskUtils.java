@@ -24,7 +24,10 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import java.util.List;
 import java.util.UUID;
 
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.*;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 
 /**
  * Created by samuelgithengi on 4/14/19.
