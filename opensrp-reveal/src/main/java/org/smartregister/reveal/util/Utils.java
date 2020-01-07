@@ -6,6 +6,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.util.Pair;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -17,10 +18,14 @@ import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.clientandeventmodel.Client;
+import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.tag.FormTag;
 import org.smartregister.job.PullUniqueIdsServiceJob;
@@ -33,17 +38,28 @@ import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
+import org.smartregister.util.RecreateECUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import timber.log.Timber;
+
+import static org.smartregister.repository.EventClientRepository.Table.event;
+import static org.smartregister.repository.EventClientRepository.event_column.baseEntityId;
+import static org.smartregister.repository.EventClientRepository.event_column.eventType;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LATITUDE_AT_EQUITOR;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LONGITUDE_AT_EQUITOR;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.METERS_PER_KILOMETER;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.PROPERTY_TYPE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
 import static org.smartregister.reveal.util.Constants.Intervention.FI;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
@@ -51,6 +67,9 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MDA;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
+import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.Constants.STRUCTURE;
+import static org.smartregister.reveal.util.Constants.StructureType.RESIDENTIAL;
 
 public class Utils {
 
@@ -59,6 +78,8 @@ public class Utils {
     public static final String REVEAL_PROJECT = "reveal";
 
     private static Cache<Location> cache = new Cache<>();
+
+    private static RecreateECUtil util = new RecreateECUtil();
 
     static {
         ALLOWED_LEVELS = new ArrayList<>();
@@ -320,6 +341,18 @@ public class Utils {
         formTag.appVersion = BuildConfig.VERSION_CODE;
         formTag.appVersionName = BuildConfig.VERSION_NAME;
         return formTag;
+    }
+
+    public static void recreateEventAndClients(String query, String[] params, SQLiteDatabase db, FormTag formTag,String tableName,String eventType, String entityType) {
+        try {
+            Pair<List<Event>, List<Client>> events = util.createEventAndClients(db, SPRAYED_STRUCTURES, query, params, SPRAY_EVENT, STRUCTURE, formTag);
+            if (events.first != null) {
+                TaskUtils.getInstance().tagEventTaskDetails(events.first, db);
+            }
+            util.saveEventAndClients(events, db);
+        }catch (Exception e){
+            Timber.e(e,"");
+        }
     }
 
 }

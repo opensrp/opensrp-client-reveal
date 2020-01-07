@@ -1,17 +1,13 @@
 package org.smartregister.reveal.repository;
 
 import android.content.Context;
-import android.support.v4.util.Pair;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.AllConstants;
-import org.smartregister.clientandeventmodel.Client;
-import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.configurableviews.repository.ConfigurableViewsRepository;
 import org.smartregister.domain.db.EventClient;
-import org.smartregister.domain.tag.FormTag;
 import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.EventClientRepository;
@@ -28,10 +24,8 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
-import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.DatabaseMigrationUtils;
-import org.smartregister.util.RecreateECUtil;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -151,16 +145,24 @@ public class RevealRepository extends Repository {
     }
 
     private void upgradeToVersion4(SQLiteDatabase db) {
-        RecreateECUtil util = new RecreateECUtil();
-        FormTag formTag = Utils.getFormTag();
+        //recreate spray events
         String query = String.format("select * from %s where %s=? and %s is not null and %s not in (select %s from %s where %s=?) ", SPRAYED_STRUCTURES, PROPERTY_TYPE, SPRAY_STATUS, BASE_ENTITY_ID, baseEntityId, event.name(), eventType);
         String[] params = new String[]{RESIDENTIAL, SPRAY_EVENT};
-        Pair<List<Event>, List<Client>> events = util.createEventAndClients(db, SPRAYED_STRUCTURES, query, params, SPRAY_EVENT, STRUCTURE, formTag);
-        if (events.first != null) {
-            TaskUtils.getInstance().tagEventTaskDetails(events.first, db);
-        }
-        util.saveEventAndClients(events, db);
+        Utils.recreateEventAndClients(query, params, db, Utils.getFormTag(), SPRAYED_STRUCTURES, SPRAY_EVENT, STRUCTURE);
+
+
+        //recreate family events and clients
+        query = String.format("select * from %s where %s not in (select %s from %s ) ", FAMILY, BASE_ENTITY_ID, baseEntityId, event.name());
+        params = new String[]{};
+        Utils.recreateEventAndClients(query, params, db, Utils.getFormTag(), FAMILY, EventType.FAMILY_REGISTRATION, FAMILY);
+
+
+        //recreate family member events and clients
+        query = String.format("select * from %s where %s not in (select %s from %s ) ", FAMILY_MEMBER, BASE_ENTITY_ID, baseEntityId, event.name());
+        params = new String[]{};
+        Utils.recreateEventAndClients(query, params, db, Utils.getFormTag(), FAMILY_MEMBER, EventType.FAMILY_MEMBER_REGISTRATION, FAMILY_MEMBER);
     }
+
 
     @Override
     public SQLiteDatabase getReadableDatabase() {
