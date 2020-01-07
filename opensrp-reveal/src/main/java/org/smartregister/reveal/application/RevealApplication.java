@@ -76,11 +76,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     private JsonSpecHelper jsonSpecHelper;
     private String password;
 
-    private CampaignRepository campaignRepository;
-    private TaskRepository taskRepository;
-    private StructureRepository structureRepository;
-    private LocationRepository locationRepository;
-    private PlanDefinitionRepository planDefinitionRepository;
     private PlanDefinitionSearchRepository planDefinitionSearchRepository;
 
     private Map<String, Object> serverConfigs;
@@ -125,8 +120,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
             CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.REFAPP_EC_CLIENT_FIELDS);
         }
-        ConfigurableViewsLibrary.init(context, getRepository());
-        FamilyLibrary.init(context, getRepository(), getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
+        ConfigurableViewsLibrary.init(context);
+        FamilyLibrary.init(context, getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
 
         LocationHelper.init(Utils.ALLOWED_LEVELS, Utils.DEFAULT_LOCATION_LEVEL);
 
@@ -214,33 +209,16 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         logoutCurrentUser();
     }
 
-    public CampaignRepository getCampaignRepository() {
-        if (campaignRepository == null) {
-            campaignRepository = new CampaignRepository(getRepository());
-        }
-        return campaignRepository;
-    }
-
     public TaskRepository getTaskRepository() {
-        if (taskRepository == null) {
-            taskRepository = new TaskRepository(getRepository(), new TaskNotesRepository(getRepository()));
-        }
-        return taskRepository;
+        return CoreLibrary.getInstance().context().getTaskRepository();
     }
 
     public StructureRepository getStructureRepository() {
-        if (structureRepository == null) {
-            structureRepository = new StructureRepository(getRepository());
-            structureRepository.setHelper(new RevealMappingHelper());
-        }
-        return structureRepository;
+        return CoreLibrary.getInstance().context().getStructureRepository();
     }
 
     public LocationRepository getLocationRepository() {
-        if (locationRepository == null) {
-            locationRepository = new LocationRepository(getRepository());
-        }
-        return locationRepository;
+        return CoreLibrary.getInstance().context().getLocationRepository();
     }
 
     public AllSettings getSettingsRepository() {
@@ -349,15 +327,12 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     }
 
     public PlanDefinitionRepository getPlanDefinitionRepository() {
-        if (planDefinitionRepository == null) {
-            planDefinitionRepository = new PlanDefinitionRepository(getRepository());
-        }
-        return planDefinitionRepository;
+        return CoreLibrary.getInstance().context().getPlanDefinitionRepository();
     }
 
     public PlanDefinitionSearchRepository getPlanDefinitionSearchRepository() {
         if (planDefinitionSearchRepository == null) {
-            planDefinitionSearchRepository = new PlanDefinitionSearchRepository(getRepository());
+            planDefinitionSearchRepository = new PlanDefinitionSearchRepository();
         }
         return planDefinitionSearchRepository;
     }

@@ -26,9 +26,9 @@ public class TestRevealApplication extends RevealApplication {
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
         CoreLibrary.init(context);
-        ConfigurableViewsLibrary.init(context, getRepository());
+        ConfigurableViewsLibrary.init(context);
 
-        FamilyLibrary.init(context, getRepository(), getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
+        FamilyLibrary.init(context, getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
 
         setTheme(R.style.Theme_AppCompat); //or just R.style.Theme_AppCompat
     }
