@@ -56,6 +56,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import timber.log.Timber;
 
@@ -145,6 +146,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private boolean markStructureIneligibleConfirmed;
 
     private String reasonUnligible;
+
+    private boolean isResumingFromFilterPage;
 
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
@@ -576,7 +579,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onMarkStructureIneligibleConfirmed() {
-        listTaskInteractor.markStructureAsIneligible(selectedFeature,reasonUnligible);
+        listTaskInteractor.markStructureAsIneligible(selectedFeature, reasonUnligible);
     }
 
     @Override
@@ -616,7 +619,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if (!revealApplication.isMyLocationComponentEnabled() && listTaskView.isMyLocationComponentActive()
                 || !listTaskView.isMyLocationComponentActive()) {
             listTaskView.focusOnUserLocation(false);
-            listTaskView.setGeoJsonSource(featureCollection, operationalArea, false);
+            if (!isResumingFromFilterPage) {
+                listTaskView.setGeoJsonSource(featureCollection, operationalArea, false);
+            }
+            isResumingFromFilterPage = false;
         }
     }
 
@@ -651,16 +657,18 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     public void filterTasks(TaskFilterParams filterParams) {
         filteredFeatureCollection = new ArrayList<>();
+        Set<String> filterStatus = filterParams.getCheckedFilters().get(Filter.STATUS);
+        Pattern pattern = Pattern.compile("~");
         for (Feature feature : featureCollection.features()) {
             if (filterParams.getCheckedFilters().containsKey(Filter.STATUS) && feature.hasProperty(Properties.TASK_BUSINESS_STATUS_LIST)) {
-                Set<String> filterStatus = filterParams.getCheckedFilters().get(Filter.STATUS);
                 JsonElement businessStatus = feature.getProperty(Properties.TASK_BUSINESS_STATUS_LIST);
-                String[] array = businessStatus.getAsString().split(",");
+                String[] array = pattern.split(businessStatus.getAsString());
                 if (CollectionUtils.containsAny(Arrays.asList(array), filterStatus))
                     filteredFeatureCollection.add(feature);
 
             }
         }
         listTaskView.setGeoJsonSource(FeatureCollection.fromFeatures(filteredFeatureCollection), operationalArea, false);
+        isResumingFromFilterPage = true;
     }
 }

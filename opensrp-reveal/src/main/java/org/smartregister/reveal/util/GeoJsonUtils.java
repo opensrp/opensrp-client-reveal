@@ -62,8 +62,8 @@ public class GeoJsonUtils {
             boolean partiallyReceived;
             boolean bloodScreeningExists = false;
             boolean ineligibleForFamReg = false;
-            JsonArray statusList = new JsonArray();
-            JsonArray interventionList = new JsonArray();
+            StringBuilder statusList = new StringBuilder();
+            StringBuilder interventionList = new StringBuilder();
             String MDA_DISPENSE_TASK_COUNT = "mda_dispense_task_count";
 
             Map<String, Integer> mdaStatusMap = new HashMap<>();
@@ -133,8 +133,10 @@ public class GeoJsonUtils {
                 taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
                 taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
                 taskProperties.put(STRUCTURE_NAME, structure.getProperties().getName());
-                statusList.add(task.getBusinessStatus());
-                interventionList.add(task.getCode());
+                statusList.append(task.getBusinessStatus());
+                statusList.append("~");
+                interventionList.append(task.getCode());
+                interventionList.append("~");
 
             }
 

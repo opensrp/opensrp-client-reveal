@@ -60,7 +60,7 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
 
         //Business status
         labelsMap.put(BusinessStatus.NOT_VISITED, R.string.not_visited);
-        labelsMap.put(BusinessStatus.NOT_SPRAYED, R.string.not_visited);
+        labelsMap.put(BusinessStatus.NOT_SPRAYED, R.string.not_sprayed);
         labelsMap.put(BusinessStatus.NOT_SPRAYABLE, R.string.not_sprayable);
         labelsMap.put(BusinessStatus.SPRAYED, R.string.sprayed);
 
