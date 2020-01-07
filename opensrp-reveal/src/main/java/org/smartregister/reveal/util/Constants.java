@@ -115,6 +115,7 @@ public interface Constants {
         String CURRENT_PLAN_ID = "CURRENT_PLAN_ID";
         String FACILITY_LEVEL = "FACILITY_LEVEL";
         String CURRENT_OPERATIONAL_AREA = "CURRENT_OPERATIONAL_AREA";
+        String CURRENT_OPERATIONAL_AREA_ID = "CURRENT_OPERATIONAL_AREA_ID";
     }
 
     interface Tags {
@@ -551,6 +552,12 @@ public interface Constants {
         String SYNC_STATUS = "syncStatus";
 
         String VALIDATION_STATUS = "validationStatus";
+
+        String AUTHORED_ON = "authored_on";
+
+        String OWNER = "owner";
+
+        String PROPERTY_TYPE = "property_type";
 
     }
 
