@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.OfflineMapModel;
-import org.smartregister.reveal.viewholder.OfflineMapViewHolder;
+import org.smartregister.reveal.viewholder.AvailableOfflineMapViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class OfflineMapAdapter extends RecyclerView.Adapter<OfflineMapViewHolder> {
+public class OfflineMapAdapter extends RecyclerView.Adapter<AvailableOfflineMapViewHolder> {
 
     private Context context;
 
@@ -31,13 +31,13 @@ public class OfflineMapAdapter extends RecyclerView.Adapter<OfflineMapViewHolder
 
     @NonNull
     @Override
-    public OfflineMapViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
+    public AvailableOfflineMapViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
         View view = LayoutInflater.from(context).inflate(R.layout.offline_map_row, parent, false);
-        return new OfflineMapViewHolder(view);
+        return new AvailableOfflineMapViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull OfflineMapViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull AvailableOfflineMapViewHolder viewHolder, int position) {
         OfflineMapModel offlineMapModel = offlineMapModels.get(position);
         viewHolder.setOfflineMapLabel(offlineMapModel.getDownloadAreaLabel());
     }

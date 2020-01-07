@@ -18,15 +18,25 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.mapbox.geojson.Feature;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.turf.TurfMeasurement;
 
+import org.joda.time.DateTime;
+import org.smartregister.domain.Location;
+import org.smartregister.domain.LocationProperty;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.OfflineMapAdapter;
 import org.smartregister.reveal.contract.AvailableOfflineMapsContract;
 import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.presenter.AvailableOfflineMapsPresenter;
+import org.smartregister.util.DateTimeTypeConverter;
+import org.smartregister.util.PropertiesConverter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.ona.kujaku.helpers.OfflineServiceHelper;
@@ -46,6 +56,8 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
     private String currentMapDownload;
 
     private MapDownloadReceiver mapDownloadReceiver = new MapDownloadReceiver();
+
+    private List<Location> operationalAreasToDownload = new ArrayList<>();
 
     public static AvailableOfflineMapsFragment newInstance(Bundle bundle) {
 
@@ -89,7 +101,7 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
 
         downloadMapButton = view.findViewById(R.id.download_map);
 
-        downloadMapButton.setOnClickListener(v -> downloadMap());
+        downloadMapButton.setOnClickListener(v -> initiateMapDownload());
 
     }
 
@@ -132,21 +144,45 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    private void downloadMap() {
-        double topLeftLat = 37.7897;
-        double topLeftLng = -119.5073;
-        double bottomRightLat = 37.6744;
-        double bottomRightLng = -119.6815;
-        double topRightLat = 37.7897;
-        double topRightLng = -119.6815;
-        double bottomLeftLat = 37.6744;
-        double bottomLeftLng = -119.5073;
+    @Override
+    public void setOperationalAreasToDownload(List<Location> operationalAreasToDownload) {
+        this.operationalAreasToDownload = operationalAreasToDownload;
+    }
 
-        String mapName = "Op Area 1";
+    private void initiateMapDownload() {
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
+                .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
+
+        for (Location location: this.operationalAreasToDownload ) {
+            Feature operationalAreaFeature = Feature.fromJson(gson.toJson(operationalAreasToDownload.get(0)));
+            downloadMap(operationalAreaFeature);
+        }
+    }
+
+    private void downloadMap(Feature operationalAreaFeature) {
+        double[] bbox = TurfMeasurement.bbox(operationalAreaFeature.geometry());
+
+        double minX = bbox[0];
+        double minY = bbox[1];
+        double maxX = bbox[2];
+        double maxY = bbox[3];
+
+        double topLeftLat = maxY;
+        double topLeftLng = minX;
+        double bottomRightLat = minY;
+        double bottomRightLng = maxX;
+        double topRightLat = maxY;
+        double topRightLng = maxX;
+        double bottomLeftLat = minY;
+        double bottomLeftLng = minX;
+
+        String mapName = operationalAreasToDownload.get(0).getProperties().getName();
 
         currentMapDownload = mapName;
 
         String mapboxStyle = "mapbox://styles/ona/cj9jueph7034i2rphe0gp3o6m";
+
         LatLng topLeftBound = new LatLng(topLeftLat, topLeftLng);
         LatLng topRightBound = new LatLng(topRightLat, topRightLng);
         LatLng bottomRightBound = new LatLng(bottomRightLat, bottomRightLng);
@@ -167,7 +203,6 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
                 , bottomLeftBound
                 , zoomRange
         );
-
     }
 
     private void stopMapDownLoad(@NonNull String mapName) {
@@ -226,6 +261,7 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
                                 if (isValidDouble(message)) {
                                     if (Double.valueOf(message) == 100d) {
                                         currentMapDownload = null;
+                                        displayToast("Download finished successfuly");
                                        // setCanStopMapDownload(false);
                                     } else {
                                        // setCanStopMapDownload(true);
@@ -238,7 +274,7 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
                     }
                 }
             } else {
-                Log.i("KUJAKU SAMPLE APP TAG", "Broadcast message has null Extras");
+                Log.i("Reveal APP TAG", "Broadcast message has null Extras");
             }
 
         }

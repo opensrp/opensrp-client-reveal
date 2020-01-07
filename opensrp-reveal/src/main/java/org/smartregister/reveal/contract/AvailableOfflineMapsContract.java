@@ -26,6 +26,8 @@ public interface AvailableOfflineMapsContract {
         void displayToast(String message);
 
         void displayError(int title, String message);
+
+        void setOperationalAreasToDownload(List<Location> operationalAreasToDownload);
     }
 
     interface Interactor {

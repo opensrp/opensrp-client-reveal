@@ -8,13 +8,13 @@ import android.widget.TextView;
 
 import org.smartregister.reveal.R;
 
-public class OfflineMapViewHolder extends RecyclerView.ViewHolder {
+public class AvailableOfflineMapViewHolder extends RecyclerView.ViewHolder {
 
     private Context context;
 
     private TextView offlineMapTextView;
 
-    public OfflineMapViewHolder(@NonNull View itemView) {
+    public AvailableOfflineMapViewHolder(@NonNull View itemView) {
         super(itemView);
         context = itemView.getContext();
         offlineMapTextView = itemView.findViewById(R.id.offline_map_label);
