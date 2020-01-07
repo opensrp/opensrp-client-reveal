@@ -26,14 +26,6 @@ public class OfflineMapAdapter extends RecyclerView.Adapter<OfflineMapViewHolder
         this.context = context;
         this.offlineMapClickHandler = offlineMapClickHandler;
 
-        OfflineMapModel offlineMapModel = new OfflineMapModel();
-        offlineMapModel.setDownloadAreaLabel("Op Area 1");
-        offlineMapModels.add(offlineMapModel);
-
-        offlineMapModel = new OfflineMapModel();
-        offlineMapModel.setDownloadAreaLabel("Op Area 2");
-        offlineMapModels.add(offlineMapModel);
-
     }
 
 
@@ -47,7 +39,6 @@ public class OfflineMapAdapter extends RecyclerView.Adapter<OfflineMapViewHolder
     @Override
     public void onBindViewHolder(@NonNull OfflineMapViewHolder viewHolder, int position) {
         OfflineMapModel offlineMapModel = offlineMapModels.get(position);
-
         viewHolder.setOfflineMapLabel(offlineMapModel.getDownloadAreaLabel());
     }
 
@@ -58,5 +49,6 @@ public class OfflineMapAdapter extends RecyclerView.Adapter<OfflineMapViewHolder
 
     public void setOfflineMapModels(List<OfflineMapModel> offlineMapModels) {
         this.offlineMapModels = offlineMapModels;
+        notifyDataSetChanged();
     }
 }

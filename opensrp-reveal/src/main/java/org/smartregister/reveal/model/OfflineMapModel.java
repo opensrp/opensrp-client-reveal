@@ -1,18 +1,12 @@
 package org.smartregister.reveal.model;
 
-public class OfflineMapModel {
+import org.smartregister.domain.Location;
 
-    private String downloadAreaLabel;
+public class OfflineMapModel {
 
     private boolean downloaded;
 
-    public String getDownloadAreaLabel() {
-        return downloadAreaLabel;
-    }
-
-    public void setDownloadAreaLabel(String downloadAreaLabel) {
-        this.downloadAreaLabel = downloadAreaLabel;
-    }
+    private Location location;
 
     public boolean isDownloaded() {
         return downloaded;
@@ -20,5 +14,17 @@ public class OfflineMapModel {
 
     public void setDownloaded(boolean downloaded) {
         this.downloaded = downloaded;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public String getDownloadAreaLabel() {
+        return  (location != null && location.getProperties() != null) ? location.getProperties().getName() : null;
     }
 }

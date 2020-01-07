@@ -25,6 +25,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.OfflineMapAdapter;
 import org.smartregister.reveal.contract.AvailableOfflineMapsContract;
 import org.smartregister.reveal.model.OfflineMapModel;
+import org.smartregister.reveal.presenter.AvailableOfflineMapsPresenter;
 
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
     private OfflineMapAdapter adapter;
     private Button downloadMapButton;
 
-    private AvailableOfflineMapsContract.Presenter presenter;
+    private AvailableOfflineMapsPresenter presenter;
 
     private List<OfflineMapModel> offlineMapModelList;
 
@@ -58,6 +59,7 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        presenter = new AvailableOfflineMapsPresenter(this);
     }
 
     @Override
@@ -97,6 +99,8 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
         if (offlineMapModelList != null) {
             setOfflineMapModelList(offlineMapModelList);
         }
+
+        presenter.fetchOperationalAreas();
 
     }
 
