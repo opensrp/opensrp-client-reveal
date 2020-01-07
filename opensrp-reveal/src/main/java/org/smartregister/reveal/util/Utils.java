@@ -70,8 +70,6 @@ public class Utils {
 
     private static Cache<Location> cache = new Cache<>();
 
-    private static RecreateECUtil util = new RecreateECUtil();
-
     static {
         ALLOWED_LEVELS = new ArrayList<>();
         ALLOWED_LEVELS.add(DEFAULT_LOCATION_LEVEL);
@@ -334,7 +332,7 @@ public class Utils {
         return formTag;
     }
 
-    public static void recreateEventAndClients(String query, String[] params, SQLiteDatabase db, FormTag formTag, String tableName, String eventType, String entityType) {
+    public static void recreateEventAndClients(String query, String[] params, SQLiteDatabase db, FormTag formTag, String tableName, String eventType, String entityType, RecreateECUtil util) {
         try {
             if (!DatabaseMigrationUtils.isColumnExists(db, tableName, "id")) {
                 return;
