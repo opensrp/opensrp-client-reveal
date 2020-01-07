@@ -60,6 +60,7 @@ import java.util.Set;
 import timber.log.Timber;
 
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
+import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
@@ -142,6 +143,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private RevealMappingHelper mappingHelper;
 
     private boolean markStructureIneligibleConfirmed;
+
+    private String reasonUnligible;
 
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
@@ -573,7 +576,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onMarkStructureIneligibleConfirmed() {
-        listTaskInteractor.markStructureAsIneligible(selectedFeature);
+        listTaskInteractor.markStructureAsIneligible(selectedFeature,reasonUnligible);
     }
 
     @Override
@@ -618,14 +621,15 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     private void displayMarkStructureIneligibleDialog() {
+
         AlertDialogUtils.displayNotificationWithCallback(listTaskView.getContext(), R.string.mark_location_ineligible,
-                R.string.is_structure_eligible_for_fam_reg, R.string.yes_button_label, R.string.no_button_label, new DialogInterface.OnClickListener() {
+                R.string.is_structure_eligible_for_fam_reg, R.string.eligible, R.string.not_eligible_unoccupied, R.string.not_eligible_other, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (which == BUTTON_NEGATIVE) {
+                        if (which == BUTTON_NEGATIVE || which == BUTTON_NEUTRAL) {
                             markStructureIneligibleConfirmed = true;
+                            reasonUnligible = which == BUTTON_NEGATIVE ? listTaskView.getContext().getString(R.string.not_eligible_unoccupied) : listTaskView.getContext().getString(R.string.not_eligible_other);
                         }
-
                         if (validateFarStructures()) {
                             validateUserLocation();
                         } else {
@@ -635,6 +639,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     }
                 });
     }
+
 
     public boolean isChangeMapPosition() {
         return changeMapPosition;

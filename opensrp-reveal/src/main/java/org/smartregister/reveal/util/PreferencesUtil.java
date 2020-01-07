@@ -1,11 +1,13 @@
 package org.smartregister.reveal.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.application.RevealApplication;
 
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_DISTRICT;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_FACILITY;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_OPERATIONAL_AREA;
+import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_OPERATIONAL_AREA_ID;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PLAN;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PLAN_ID;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PROVINCE;
@@ -42,10 +44,17 @@ public class PreferencesUtil {
 
     public void setCurrentOperationalArea(String operationalArea) {
         allSharedPreferences.savePreference(CURRENT_OPERATIONAL_AREA, operationalArea);
+        if (StringUtils.isNotBlank(operationalArea)) {
+            allSharedPreferences.savePreference(CURRENT_OPERATIONAL_AREA_ID, Utils.getCurrentLocationId());
+        }
     }
 
     public String getCurrentOperationalArea() {
         return allSharedPreferences.getPreference(CURRENT_OPERATIONAL_AREA);
+    }
+
+    public String getCurrentOperationalAreaId() {
+        return allSharedPreferences.getPreference(CURRENT_OPERATIONAL_AREA_ID);
     }
 
     public void setCurrentDistrict(String district) {
@@ -97,7 +106,7 @@ public class PreferencesUtil {
         allSharedPreferences.savePreference(planId, interventionType);
     }
 
-    public String getInterventionTypeForPlan(String planId){
+    public String getInterventionTypeForPlan(String planId) {
         return allSharedPreferences.getPreference(planId);
     }
 

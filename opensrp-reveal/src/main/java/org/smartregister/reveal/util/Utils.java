@@ -6,6 +6,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.util.Pair;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -17,11 +18,16 @@ import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.clientandeventmodel.Client;
+import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.tag.FormTag;
 import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BuildConfig;
@@ -32,14 +38,19 @@ import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
+import org.smartregister.util.DatabaseMigrationUtils;
+import org.smartregister.util.RecreateECUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LATITUDE_AT_EQUITOR;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LONGITUDE_AT_EQUITOR;
@@ -309,9 +320,38 @@ public class Utils {
         return currentOperationalArea == null ? null : currentOperationalArea.getId();
     }
 
+
     public static Map<String, Integer> getStringResourceMap(String intervention) {
         Map<String, Integer> map = new HashMap<>();
         return map;
+    }
+
+    public static FormTag getFormTag() {
+        FormTag formTag = new FormTag();
+        AllSharedPreferences sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
+        formTag.providerId = sharedPreferences.fetchRegisteredANM();
+        formTag.locationId = PreferencesUtil.getInstance().getCurrentOperationalAreaId();
+        formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
+        formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
+        formTag.databaseVersion = BuildConfig.DATABASE_VERSION;
+        formTag.appVersion = BuildConfig.VERSION_CODE;
+        formTag.appVersionName = BuildConfig.VERSION_NAME;
+        return formTag;
+    }
+
+    public static void recreateEventAndClients(String query, String[] params, SQLiteDatabase db, FormTag formTag, String tableName, String eventType, String entityType, RecreateECUtil util) {
+        try {
+            if (!DatabaseMigrationUtils.isColumnExists(db, tableName, "id")) {
+                return;
+            }
+            Pair<List<Event>, List<Client>> events = util.createEventAndClients(db, tableName, query, params, eventType, entityType, formTag);
+            if (events.first != null) {
+                TaskUtils.getInstance().tagEventTaskDetails(events.first, db);
+            }
+            util.saveEventAndClients(events, db);
+        } catch (Exception e) {
+            Timber.e(e, "Error creating events and clients for %s", tableName);
+        }
     }
 
 }

@@ -8,12 +8,15 @@ import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.clientandeventmodel.Event;
+import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ListTaskContract;
@@ -25,12 +28,16 @@ import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.CardDetailsUtil;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.GeoJSON;
+import org.smartregister.reveal.util.FamilyConstants;
+import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.GeoJsonUtils;
 import org.smartregister.reveal.util.IndicatorUtils;
 import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.Utils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -333,18 +340,33 @@ public class ListTaskInteractor extends BaseInteractor {
 
     }
 
-    public void markStructureAsIneligible(Feature feature) {
+    public void markStructureAsIneligible(Feature feature, String reasonUnligible) {
 
         String taskIdentifier = getPropertyValue(feature, TASK_IDENTIFIER);
         String code = getPropertyValue(feature, TASK_CODE);
 
-        if (code.equals(REGISTER_FAMILY)) {
+        if (REGISTER_FAMILY.equals(code)) {
+
             Task task = taskRepository.getTaskByIdentifier(taskIdentifier);
+            Map<String, String> details = new HashMap<>();
+            details.put(TASK_IDENTIFIER, taskIdentifier);
+            details.put(Constants.Properties.TASK_BUSINESS_STATUS, task.getBusinessStatus());
+            details.put(Constants.Properties.TASK_STATUS, task.getStatus().name());
+            details.put(Constants.Properties.LOCATION_ID, feature.id());
+            details.put(Constants.Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
             task.setBusinessStatus(NOT_ELIGIBLE);
             task.setStatus(Task.TaskStatus.COMPLETED);
             task.setLastModified(new DateTime());
-
             taskRepository.addOrUpdate(task);
+
+            Event event = FamilyJsonFormUtils.createFamilyEvent(task.getForEntity(), feature.id(), details, FamilyConstants.EventType.FAMILY_REGISTRATION);
+            event.addObs(new Obs().withValue(reasonUnligible).withFieldCode("eligible").withFieldType("formsubmissionField"));
+            event.addObs(new Obs().withValue(task.getBusinessStatus()).withFieldCode("whyNotEligible").withFieldType("formsubmissionField"));
+            try {
+                eventClientRepository.addEvent(feature.id(), new JSONObject(gson.toJson(event)));
+            } catch (JSONException e) {
+                Timber.e(e);
+            }
 
         }
 

@@ -52,7 +52,7 @@
     "display_back_button": "true",
     "fields": [
       {
-        "key": "eligibile",
+        "key": "eligiblePerson",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -60,18 +60,54 @@
         "label": "Is this person eligible for blood screening?",
         "options": [
           {
-            "key": "Yes",
-            "text": "Yes"
+            "key": "1",
+            "text": "Eligible"
           },
           {
-            "key": "No",
-            "text": "No"
+            "key": "0",
+            "text": "InEligible"
           }
         ],
-        "value" : "Yes",
+        "value": "1",
         "v_required": {
           "value": true,
           "err": "This field is required"
+        }
+      },
+      {
+        "key": "whyNotEligiblePerson",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Why is this person ineligible?",
+        "options": [
+          {
+            "key": "1",
+            "text": "Sick"
+          },
+          {
+            "key": "2",
+            "text": "Index case - test not necessary"
+          },
+          {
+            "key": "3",
+            "text": "Tested within past week"
+          },
+          {
+            "key": "99",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "step1:eligiblePerson": {
+            "type": "string",
+            "ex": "equalTo(., \"0\")"
+          }
         }
       },
       {
@@ -100,9 +136,9 @@
           "err": "กรุณาเลือกวิธีทดสอบ"
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligiblePerson": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -128,9 +164,9 @@
           "err": "ต้องใส่ข้อมูลในช่องนี้"
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligiblePerson": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -156,9 +192,9 @@
           "err": "ต้องใส่ข้อมูลในช่องนี้"
         },
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligiblePerson": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },
@@ -358,9 +394,9 @@
         "type": "edit_text",
         "hint": "รายละเอียดเพิ่มเติม",
         "relevance": {
-          "step1:eligibile": {
+          "step1:eligiblePerson": {
             "type": "string",
-            "ex": "equalTo(., \"Yes\")"
+            "ex": "equalTo(., \"1\")"
           }
         }
       },

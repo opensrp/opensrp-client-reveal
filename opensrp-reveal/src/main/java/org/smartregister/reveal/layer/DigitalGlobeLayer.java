@@ -31,7 +31,7 @@ public class DigitalGlobeLayer extends BaseLayer {
     }
 
     private void createLayersAndSources() {
-        String dgTileUrl = "https://earthwatch.digitalglobe.com/earthservice/tmsaccess/tms/1.0.0/DigitalGlobe:ImageryTileService@EPSG:3857@png/{z}/{x}/{y}.png?connectId=" + BuildConfig.DG_CONNECT_ID;
+        String dgTileUrl = "https://access.maxar.com/earthservice/tmsaccess/tms/1.0.0/DigitalGlobe:ImageryTileService@EPSG:3857@png/{z}/{x}/{y}.png?connectId=" + BuildConfig.DG_CONNECT_ID;
         TileSet tileSet = new TileSet("1.0.0", dgTileUrl);
         tileSet.setScheme("tms");
         RasterSource rasterSource = new RasterSource(satelliteSourceId, tileSet, 256);
