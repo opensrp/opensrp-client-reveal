@@ -1,7 +1,6 @@
 package org.smartregister.reveal.util;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;

@@ -64,7 +64,6 @@ import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.Constants.Properties;
-import org.smartregister.reveal.util.Constants.RequestCode;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -412,7 +411,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     private void openFilterTaskActivity() {
-        startActivityForResult(new Intent(this, FilterTasksActivity.class), RequestCode.REQUEST_CODE_FILTER_TASKS);
+        startActivityForResult(new Intent(this, FilterTasksActivity.class), REQUEST_CODE_FILTER_TASKS);
     }
 
     private void openIndicatorsCardView() {
