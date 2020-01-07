@@ -38,6 +38,7 @@ import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
+import org.smartregister.util.DatabaseMigrationUtils;
 import org.smartregister.util.RecreateECUtil;
 
 import java.text.DateFormat;
@@ -50,16 +51,9 @@ import java.util.Map;
 
 import timber.log.Timber;
 
-import static org.smartregister.repository.EventClientRepository.Table.event;
-import static org.smartregister.repository.EventClientRepository.event_column.baseEntityId;
-import static org.smartregister.repository.EventClientRepository.event_column.eventType;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LATITUDE_AT_EQUITOR;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LONGITUDE_AT_EQUITOR;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.METERS_PER_KILOMETER;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.PROPERTY_TYPE;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
 import static org.smartregister.reveal.util.Constants.Intervention.FI;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
@@ -67,9 +61,6 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MDA;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
-import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
-import static org.smartregister.reveal.util.Constants.STRUCTURE;
-import static org.smartregister.reveal.util.Constants.StructureType.RESIDENTIAL;
 
 public class Utils {
 
@@ -343,15 +334,18 @@ public class Utils {
         return formTag;
     }
 
-    public static void recreateEventAndClients(String query, String[] params, SQLiteDatabase db, FormTag formTag,String tableName,String eventType, String entityType) {
+    public static void recreateEventAndClients(String query, String[] params, SQLiteDatabase db, FormTag formTag, String tableName, String eventType, String entityType) {
         try {
-            Pair<List<Event>, List<Client>> events = util.createEventAndClients(db, SPRAYED_STRUCTURES, query, params, SPRAY_EVENT, STRUCTURE, formTag);
+            if (!DatabaseMigrationUtils.isColumnExists(db, tableName, "id")) {
+                return;
+            }
+            Pair<List<Event>, List<Client>> events = util.createEventAndClients(db, tableName, query, params, eventType, entityType, formTag);
             if (events.first != null) {
                 TaskUtils.getInstance().tagEventTaskDetails(events.first, db);
             }
             util.saveEventAndClients(events, db);
-        }catch (Exception e){
-            Timber.e(e,"");
+        } catch (Exception e) {
+            Timber.e(e, "Error creating events and clients for %s", tableName);
         }
     }
 

@@ -43,9 +43,15 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.PROPERTY_TYPE
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAY_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
+import static org.smartregister.reveal.util.Constants.EventType.PAOT_EVENT;
+import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
+import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.Constants.StructureType.RESIDENTIAL;
+import static org.smartregister.reveal.util.Constants.Tables.LARVAL_DIPPINGS_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.MOSQUITO_COLLECTIONS_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.PAOT_TABLE;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 import static org.smartregister.util.DatabaseMigrationUtils.isColumnExists;
@@ -153,14 +159,26 @@ public class RevealRepository extends Repository {
 
         //recreate family events and clients
         query = String.format("select * from %s where %s not in (select %s from %s ) ", FAMILY, BASE_ENTITY_ID, baseEntityId, event.name());
-        params = new String[]{};
-        Utils.recreateEventAndClients(query, params, db, Utils.getFormTag(), FAMILY, EventType.FAMILY_REGISTRATION, FAMILY);
+        Utils.recreateEventAndClients(query, new String[]{}, db, Utils.getFormTag(), FAMILY, EventType.FAMILY_REGISTRATION, FAMILY);
 
 
         //recreate family member events and clients
         query = String.format("select * from %s where %s not in (select %s from %s ) ", FAMILY_MEMBER, BASE_ENTITY_ID, baseEntityId, event.name());
-        params = new String[]{};
-        Utils.recreateEventAndClients(query, params, db, Utils.getFormTag(), FAMILY_MEMBER, EventType.FAMILY_MEMBER_REGISTRATION, FAMILY_MEMBER);
+        Utils.recreateEventAndClients(query, new String[]{}, db, Utils.getFormTag(), FAMILY_MEMBER, EventType.FAMILY_MEMBER_REGISTRATION, FAMILY_MEMBER);
+
+
+        //recreate larval dipping events and clients
+        query = String.format("select * from %s where %s not in (select %s from %s ) ", LARVAL_DIPPINGS_TABLE, BASE_ENTITY_ID, baseEntityId, event.name());
+        Utils.recreateEventAndClients(query, new String[]{}, db, Utils.getFormTag(), LARVAL_DIPPINGS_TABLE, LARVAL_DIPPING_EVENT, STRUCTURE);
+
+        //recreate mosquito collection events and clients
+        query = String.format("select * from %s where %s not in (select %s from %s ) ", MOSQUITO_COLLECTIONS_TABLE, BASE_ENTITY_ID, baseEntityId, event.name());
+        Utils.recreateEventAndClients(query, new String[]{}, db, Utils.getFormTag(), MOSQUITO_COLLECTIONS_TABLE, MOSQUITO_COLLECTION_EVENT, STRUCTURE);
+
+
+        //recreate poat events and clients
+        query = String.format("select * from %s where %s not in (select %s from %s ) ", PAOT_TABLE, BASE_ENTITY_ID, baseEntityId, event.name());
+        Utils.recreateEventAndClients(query, new String[]{}, db, Utils.getFormTag(), PAOT_TABLE, PAOT_EVENT, STRUCTURE);
     }
 
 
