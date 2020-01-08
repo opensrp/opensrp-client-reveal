@@ -14,7 +14,6 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.Task;
-import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.PlanDefinitionRepository;
 import org.smartregister.repository.StructureRepository;
@@ -30,8 +29,6 @@ import java.util.List;
  * Created by samuelgithengi on 12/3/18.
  */
 public class TestDataUtils {
-
-    private CampaignRepository campaignRepository;
 
     private TaskRepository taskRepository;
 
@@ -50,7 +47,6 @@ public class TestDataUtils {
 
 
     public TestDataUtils() {
-        campaignRepository = RevealApplication.getInstance().getCampaignRepository();
         taskRepository = RevealApplication.getInstance().getTaskRepository();
         locationRepository = RevealApplication.getInstance().getLocationRepository();
         structureRepository = RevealApplication.getInstance().getStructureRepository();
@@ -63,25 +59,6 @@ public class TestDataUtils {
             sharedPreferences.edit().putBoolean(TEST_DATA_POPULATED, true).apply();
         }
     }
-
-    private void createCampaigns() {
-        try {
-            Gson gson = new GsonBuilder().registerTypeAdapter(DateTime.class, new DateTimeTypeConverter("yyyy-MM-dd'T'HHmm"))
-                    .registerTypeAdapter(LocalDate.class, new DateTypeConverter())
-                    .create();
-            String campaignJson = "{\"title\": \"2019 IRS Season 1\", \"status\": \"In Progress\", \"identifier\": \"IRS_2019_S1\", \"description\": \"This is the 2019 IRS Spray Campaign for Zambia for the first spray season dated 1 Jan 2019 - 31 Mar 2019.\", \"serverVersion\": 1543451954837, \"executionPeriod\": {\"end\": \"2019-03-31\", \"start\": \"2019-01-01\"}}";
-            String campaign2Json = "{\"identifier\":\"IRS_2018_S2\",\"title\":\"2019 IRS Season 2\",\"description\":\"This is the 2010 IRS Spray Campaign for Zambia for the second spray season dated 1 Jan 2019 - 31 Mar 2019.\",\"status\":\"In Progress\",\"executionPeriod\":{\"start\":\"2019-01-01\",\"end\":\"2019-03-31\"},\"authoredOn\":\"2018-10-01T0900\",\"lastModified\":\"2018-10-01T0900\",\"owner\":\"jdoe\",\"serverVersion\":0}";
-
-            Campaign campaign = gson.fromJson(campaignJson, Campaign.class);
-            campaignRepository.addOrUpdate(campaign);
-
-            Campaign campaign2 = gson.fromJson(campaign2Json, Campaign.class);
-            campaignRepository.addOrUpdate(campaign2);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     private void createTasks() {
         try {

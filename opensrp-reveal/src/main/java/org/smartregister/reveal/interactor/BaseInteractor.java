@@ -106,7 +106,6 @@ import static org.smartregister.util.JsonFormUtils.getString;
 
 
 /**
- *
  * Created by samuelgithengi on 3/25/19.
  */
 public class BaseInteractor implements BaseContract.BaseInteractor {
@@ -197,15 +196,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         String entityId = getString(jsonForm, ENTITY_ID);
         JSONArray fields = JsonFormUtils.fields(jsonForm);
         JSONObject metadata = getJSONObject(jsonForm, METADATA);
-
-        FormTag formTag = new FormTag();
-        formTag.providerId = sharedPreferences.fetchRegisteredANM();
-        formTag.locationId = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId();
-        formTag.teamId = sharedPreferences.fetchDefaultTeamId(formTag.providerId);
-        formTag.team = sharedPreferences.fetchDefaultTeam(formTag.providerId);
-        formTag.databaseVersion = BuildConfig.DATABASE_VERSION;
-        formTag.appVersion = BuildConfig.VERSION_CODE;
-        Event event = JsonFormUtils.createEvent(fields, metadata, formTag, entityId, encounterType, bindType);
+        Event event = JsonFormUtils.createEvent(fields, metadata, Utils.getFormTag(), entityId, encounterType, bindType);
         JSONObject eventJson = new JSONObject(gson.toJson(event));
         eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
         eventClientRepository.addEvent(entityId, eventJson);
@@ -233,7 +224,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 interventionType = Intervention.MDA_DISPENSE;
             } else if (encounterType.equals(EventType.MDA_ADHERENCE)) {
                 interventionType = Intervention.MDA_ADHERENCE;
-            }	else if (encounterType.equals(EventType.IRS_VERIFICATION)) {
+            } else if (encounterType.equals(EventType.IRS_VERIFICATION)) {
                 interventionType = Intervention.IRS_VERIFICATION;
             }
         } catch (JSONException e) {
