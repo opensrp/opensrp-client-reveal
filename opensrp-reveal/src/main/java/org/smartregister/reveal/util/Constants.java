@@ -141,7 +141,6 @@ public interface Constants {
         String STRUCTURE_NAME = "structure_name";
         String APP_VERSION_NAME = "appVersionName";
         String FORM_VERSION = "form_version";
-        String STRUCTURE_STATUS = "status";
         String TASK_CODE_LIST = "task_code_list";
     }
 
@@ -191,6 +190,9 @@ public interface Constants {
                 REGISTER_FAMILY, PAOT);
 
         List<String> MDA_INTERVENTIONS = Arrays.asList(REGISTER_FAMILY, MDA_ADHERENCE, MDA_DISPENSE);
+
+        List<String> STRUCTURE_INTERVENTIONS = Arrays.asList(MOSQUITO_COLLECTION,
+                LARVAL_DIPPING, BCC, BEDNET_DISTRIBUTION, REGISTER_FAMILY, PAOT).;
 
     }
 
