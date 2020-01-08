@@ -8,11 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.contract.OfflineMapDownloadCallback;
 import org.smartregister.reveal.contract.OfflineMapsContract;
 import org.smartregister.reveal.fragment.AvailableOfflineMapsFragment;
 import org.smartregister.reveal.fragment.DownloadedOfflineMapsFragment;
+import org.smartregister.reveal.model.OfflineMapModel;
 
-public class OfflineMapsActivity extends AppCompatActivity implements OfflineMapsContract.View {
+public class OfflineMapsActivity extends AppCompatActivity implements OfflineMapsContract.View, OfflineMapDownloadCallback {
 
     private AvailableOfflineMapsFragment availableOfflineMapsFragment;
 
@@ -39,6 +41,7 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         availableOfflineMapsFragment = AvailableOfflineMapsFragment.newInstance(this.getIntent().getExtras());
+        availableOfflineMapsFragment.setOfflineMapDownloadCallback(this);
         adapter.addFragment(availableOfflineMapsFragment, this.getString(R.string.available).toUpperCase());
 
         downloadedOfflineMapsFragment = DownloadedOfflineMapsFragment.newInstance(this.getIntent().getExtras());
@@ -49,4 +52,10 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
         return viewPager;
     }
 
+    @Override
+    public void onMapDownloaded(OfflineMapModel offlineMapModel) {
+        DownloadedOfflineMapsFragment downloadedOfflineMapsFragment = (DownloadedOfflineMapsFragment)  adapter.getItem(1);
+
+        downloadedOfflineMapsFragment.updateDownloadedMapsList(offlineMapModel);
+    }
 }

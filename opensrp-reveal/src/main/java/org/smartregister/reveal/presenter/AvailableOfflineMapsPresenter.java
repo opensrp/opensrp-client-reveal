@@ -41,6 +41,11 @@ public class AvailableOfflineMapsPresenter implements AvailableOfflineMapsContra
 
     }
 
+    @Override
+    public void onDownloadComplete(String operationalAreaName) {
+        view.moveDownloadedOAToDownloadedList(operationalAreaName);
+    }
+
     private List<OfflineMapModel>  populateOfflineMapModelList(List<Location> locations) {
         List<OfflineMapModel> offlineMapModels = new ArrayList<>();
         for (Location location: locations) {

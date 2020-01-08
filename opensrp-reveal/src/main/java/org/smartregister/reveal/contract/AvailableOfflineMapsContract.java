@@ -17,6 +17,8 @@ public interface AvailableOfflineMapsContract {
 
         void onDownloadStarted(String operationalAreaname);
 
+        void onDownloadComplete(String operationalAreaName);
+
     }
 
     interface View {
@@ -30,6 +32,8 @@ public interface AvailableOfflineMapsContract {
         void updateOperationalAreasToDownload(Location operationalAreasToDownload);
 
         void disableCheckBox(String operationalAreaName);
+
+        void moveDownloadedOAToDownloadedList(String operationalAreaName);
     }
 
     interface Interactor {

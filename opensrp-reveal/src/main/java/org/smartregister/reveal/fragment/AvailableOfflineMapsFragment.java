@@ -31,6 +31,7 @@ import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.AvailableOfflineMapAdapter;
 import org.smartregister.reveal.contract.AvailableOfflineMapsContract;
+import org.smartregister.reveal.contract.OfflineMapDownloadCallback;
 import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.presenter.AvailableOfflineMapsPresenter;
 import org.smartregister.util.DateTimeTypeConverter;
@@ -58,6 +59,8 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
     private MapDownloadReceiver mapDownloadReceiver = new MapDownloadReceiver();
 
     private List<Location> operationalAreasToDownload = new ArrayList<>();
+
+    private OfflineMapDownloadCallback callback;
 
     public static AvailableOfflineMapsFragment newInstance(Bundle bundle) {
 
@@ -164,6 +167,16 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
         }
 
         setOfflineMapModelList(offlineMapModelList);
+    }
+
+    @Override
+    public void moveDownloadedOAToDownloadedList(String operationalAreaName) {
+        for (OfflineMapModel offlineMapModel : offlineMapModelList) {
+            if (offlineMapModel.getDownloadAreaLabel().equals(operationalAreaName)) {
+                callback.onMapDownloaded(offlineMapModel);
+                return;
+            }
+        }
     }
 
     private void initiateMapDownload() {
@@ -283,6 +296,7 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
                                     if (Double.valueOf(message) == 100d) {
                                         currentMapDownload = null;
                                         displayToast("Download finished successfuly");
+                                        presenter.onDownloadComplete(mapUniqueName);
                                        // setCanStopMapDownload(false);
                                     } else {
                                        // setCanStopMapDownload(true);
@@ -307,4 +321,9 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
         String doubleRegex = "[+-]{0,1}[0-9]*.{0,1}[0-9]*";
         return (!doubleString.isEmpty() && doubleString.matches(doubleRegex));
     }
+
+    public void setOfflineMapDownloadCallback(OfflineMapDownloadCallback callBack) {
+        this.callback = callBack;
+    }
+
 }

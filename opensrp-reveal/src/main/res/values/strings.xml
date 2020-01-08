@@ -293,6 +293,7 @@
     <string name="downloaded">Downloaded</string>
     <string name="download">Download</string>
     <string name="downloading">Downloading</string>
+    <string name="delete">Delete</string>
 
 
 </resources>
