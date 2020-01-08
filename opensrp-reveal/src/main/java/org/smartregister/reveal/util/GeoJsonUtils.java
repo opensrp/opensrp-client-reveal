@@ -2,6 +2,7 @@ package org.smartregister.reveal.util;
 
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.model.StructureDetails;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMA
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE;
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
@@ -43,7 +45,7 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 public class GeoJsonUtils {
 
 
-    public static String getGeoJsonFromStructuresAndTasks(List<Location> structures, Map<String, Set<Task>> tasks, String indexCase, Map<String, String> structureNames) {
+    public static String getGeoJsonFromStructuresAndTasks(List<Location> structures, Map<String, Set<Task>> tasks, String indexCase, Map<String, StructureDetails> structureNames) {
         for (Location structure : structures) {
             Set<Task> taskSet = tasks.get(structure.getId());
             HashMap<String, String> taskProperties = null;
@@ -188,7 +190,10 @@ public class GeoJsonUtils {
             }
 
             taskProperties.put(TASK_CODE_LIST, interventionList.toString());
-            taskProperties.put(STRUCTURE_NAME, structureNames.get(structure.getId()));
+            if (structureNames.get(structure.getId()) != null) {
+                taskProperties.put(STRUCTURE_NAME, structureNames.get(structure.getId()).getStructureName());
+                taskProperties.put(FAMILY_MEMBER_NAMES, structureNames.get(structure.getId()).getFamilyMembersNames());
+            }
             structure.getProperties().setCustomProperties(taskProperties);
 
         }

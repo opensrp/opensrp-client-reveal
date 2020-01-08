@@ -707,7 +707,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             codes.add(Constants.Intervention.BCC);
         }
         if (filterList.contains(Constants.InterventionType.STRUCTURE)) {
-            List<String> interventions = Constants.Intervention.FI_INTERVENTIONS;
+            List<String> interventions = new ArrayList<>(Constants.Intervention.FI_INTERVENTIONS);
             interventions.removeAll(Constants.Intervention.PERSON_INTERVENTIONS);
             interventions.addAll(Constants.Intervention.IRS_INTERVENTIONS);
             codes.addAll(interventions);
@@ -723,7 +723,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else {
             List<Feature> features = new ArrayList<>();
             for (Feature feature : searchFeatureCollection != null ? searchFeatureCollection : Utils.isEmptyCollection(filterFeatureCollection) ? featureCollection.features() : filterFeatureCollection) {
-                if (feature.hasProperty(Constants.Properties.STRUCTURE_NAME) && feature.getStringProperty(Constants.Properties.STRUCTURE_NAME).toLowerCase().matches("\\w*" + searchText.toLowerCase() + "\\w*"))
+                if (feature.hasProperty(Constants.Properties.STRUCTURE_NAME) &&
+                        (feature.getStringProperty(Constants.Properties.STRUCTURE_NAME).toLowerCase().matches("\\w*" + searchText.toLowerCase() + "\\w*") ||
+                                feature.getStringProperty(Constants.Properties.).toLowerCase().matches("\\w*" + searchText.toLowerCase() + "\\w*")))
                     features.add(feature);
             }
             searchFeatureCollection = features;

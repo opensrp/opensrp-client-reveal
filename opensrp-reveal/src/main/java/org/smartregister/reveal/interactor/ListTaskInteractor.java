@@ -27,6 +27,7 @@ import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
+import org.smartregister.reveal.model.StructureDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.CardDetailsUtil;
@@ -47,6 +48,7 @@ import java.util.Set;
 import timber.log.Timber;
 
 import static org.smartregister.domain.LocationProperty.PropertyStatus.INACTIVE;
+import static org.smartregister.family.util.DBConstants.KEY.RELATIONAL_ID;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.AUTHORED_ON;
@@ -59,6 +61,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.ELIGIBLE_STRU
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FIRST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_UPDATED_DATE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.OWNER;
@@ -264,7 +267,7 @@ public class ListTaskInteractor extends BaseInteractor {
                     if (operationalAreaLocation != null) {
                         Map<String, Set<Task>> tasks = taskRepository.getTasksByPlanAndGroup(plan, operationalAreaLocation.getId());
                         List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
-                        Map<String, String> structureNames = getStructureName(operationalAreaLocation.getId());
+                        Map<String, StructureDetails> structureNames = getStructureName(operationalAreaLocation.getId());
                         taskDetailsList = IndicatorUtils.processTaskDetails(tasks);
                         String indexCase = null;
                         if (getInterventionLabel() == R.string.focus_investigation)
@@ -302,24 +305,28 @@ public class ListTaskInteractor extends BaseInteractor {
 
     protected String getStructureNamesSelect(String mainCondition) {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
-        queryBuilder.selectInitiateMainTable(STRUCTURES_TABLE, new String[]{String.format("COALESCE(%s,%s,%s)", FIRST_NAME, STRUCTURE_NAME, NAME)}, ID);
+        queryBuilder.selectInitiateMainTable(STRUCTURES_TABLE, new String[]{
+                String.format("COALESCE(%s.%s,%s,%s)", FAMILY, FIRST_NAME, STRUCTURE_NAME, NAME),
+                String.format("group_concat(%s.%s||' '||%s.%s)", FAMILY_MEMBER, FIRST_NAME, FAMILY_MEMBER, LAST_NAME)}, ID);
         queryBuilder.customJoin(String.format("LEFT JOIN %s ON %s.%s = %s.%s collate nocase ",
                 FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
+        queryBuilder.customJoin(String.format("LEFT JOIN %s ON %s.%s = %s.%s collate nocase ",
+                FAMILY_MEMBER, FAMILY, BASE_ENTITY_ID, FAMILY_MEMBER, RELATIONAL_ID));
         queryBuilder.customJoin(String.format("LEFT JOIN %s ON %s.%s = %s.%s collate nocase ",
                 SPRAYED_STRUCTURES, STRUCTURES_TABLE, ID, SPRAYED_STRUCTURES, BASE_ENTITY_ID));
         return queryBuilder.mainCondition(mainCondition);
     }
 
-    private Map<String, String> getStructureName(String parentId) {
+    private Map<String, StructureDetails> getStructureName(String parentId) {
         Cursor cursor = null;
-        Map<String, String> structureNames = new HashMap<>();
+        Map<String, StructureDetails> structureNames = new HashMap<>();
         try {
             String query = getStructureNamesSelect(String.format("%s=?",
-                    Constants.DatabaseKeys.PARENT_ID));
+                    Constants.DatabaseKeys.PARENT_ID)).concat(String.format(" GROUP BY BY %s.%s", STRUCTURES_TABLE, ID));
             Timber.d(query);
             cursor = getDatabase().rawQuery(query, new String[]{parentId});
             while (cursor.moveToNext()) {
-                structureNames.put(cursor.getString(0), cursor.getString(1));
+                structureNames.put(cursor.getString(0), new StructureDetails(cursor.getString(1), cursor.getString(2)));
             }
         } catch (Exception e) {
             Timber.e(e);
