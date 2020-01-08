@@ -174,6 +174,8 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
         for (OfflineMapModel offlineMapModel : offlineMapModelList) {
             if (offlineMapModel.getDownloadAreaLabel().equals(operationalAreaName)) {
                 callback.onMapDownloaded(offlineMapModel);
+                offlineMapModelList.remove(offlineMapModel);
+                setOfflineMapModelList(offlineMapModelList);
                 return;
             }
         }
@@ -237,10 +239,6 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
                 , bottomLeftBound
                 , zoomRange
         );
-    }
-
-    private void stopMapDownLoad(@NonNull String mapName) {
-        OfflineServiceHelper.stopMapDownload(getActivity(), mapName , BuildConfig.MAPBOX_SDK_ACCESS_TOKEN);
     }
 
     private class MapDownloadReceiver extends BroadcastReceiver {
