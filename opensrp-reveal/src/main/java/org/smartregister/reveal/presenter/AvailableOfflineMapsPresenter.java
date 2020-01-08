@@ -24,8 +24,8 @@ public class AvailableOfflineMapsPresenter implements AvailableOfflineMapsContra
     }
 
     @Override
-    public void onDownloadAreaSelected() {
-
+    public void onDownloadAreaSelected(OfflineMapModel offlineMapModel) {
+        view.updateOperationalAreasToDownload(offlineMapModel.getLocation());
     }
 
     @Override

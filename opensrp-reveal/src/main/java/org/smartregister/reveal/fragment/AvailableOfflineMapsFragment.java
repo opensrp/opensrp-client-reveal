@@ -118,9 +118,9 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
 
     private View.OnClickListener onClickListener = new View.OnClickListener(){
         @Override
-        public void onClick(View v) {
-            OfflineMapModel model = (OfflineMapModel) offlineMapRecyclerView.getTag(R.id.offline_map_label);
-            presenter.onDownloadAreaSelected();
+        public void onClick(View view) {
+            OfflineMapModel offlineMapModel = (OfflineMapModel) view.getTag(R.id.offline_map_checkbox);
+            presenter.onDownloadAreaSelected(offlineMapModel);
         }
     };
 
@@ -145,8 +145,8 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
     }
 
     @Override
-    public void setOperationalAreasToDownload(List<Location> operationalAreasToDownload) {
-        this.operationalAreasToDownload = operationalAreasToDownload;
+    public void updateOperationalAreasToDownload(Location operationalAreasToDownload) {
+        this.operationalAreasToDownload.add(operationalAreasToDownload);
     }
 
     private void initiateMapDownload() {
@@ -155,7 +155,7 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
                 .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
 
         for (Location location: this.operationalAreasToDownload ) {
-            Feature operationalAreaFeature = Feature.fromJson(gson.toJson(operationalAreasToDownload.get(0)));
+            Feature operationalAreaFeature = Feature.fromJson(gson.toJson(location));
             downloadMap(operationalAreaFeature);
         }
     }

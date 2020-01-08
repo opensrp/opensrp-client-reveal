@@ -11,7 +11,7 @@ public interface AvailableOfflineMapsContract {
 
         void onDownloadMap();
 
-        void onDownloadAreaSelected();
+        void onDownloadAreaSelected(OfflineMapModel offlineMapModel);
 
         void fetchOperationalAreas();
 
@@ -27,7 +27,7 @@ public interface AvailableOfflineMapsContract {
 
         void displayError(int title, String message);
 
-        void setOperationalAreasToDownload(List<Location> operationalAreasToDownload);
+        void updateOperationalAreasToDownload(Location operationalAreasToDownload);
     }
 
     interface Interactor {

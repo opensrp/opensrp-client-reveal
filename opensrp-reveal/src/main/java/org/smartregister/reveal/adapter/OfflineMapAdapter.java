@@ -40,6 +40,7 @@ public class OfflineMapAdapter extends RecyclerView.Adapter<AvailableOfflineMapV
     public void onBindViewHolder(@NonNull AvailableOfflineMapViewHolder viewHolder, int position) {
         OfflineMapModel offlineMapModel = offlineMapModels.get(position);
         viewHolder.setOfflineMapLabel(offlineMapModel.getDownloadAreaLabel());
+        viewHolder.setItemViewListener(offlineMapModel, offlineMapClickHandler);
     }
 
     @Override
