@@ -45,7 +45,6 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.JsonForm;
-import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -94,6 +93,7 @@ import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE_LIST;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
@@ -666,7 +666,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         for (Feature feature : featureCollection.features()) {
             boolean matches = true;
             if (filterStatus != null) {
-                matches = feature.hasProperty(Properties.TASK_BUSINESS_STATUS) && filterStatus.contains(feature.getStringProperty(Properties.TASK_BUSINESS_STATUS));
+                matches = feature.hasProperty(TASK_BUSINESS_STATUS) && filterStatus.contains(feature.getStringProperty(TASK_BUSINESS_STATUS));
             }
             if (matches && filterTaskCode != null) {
                 matches = matchesTaskCodeFilterList(feature, filterTaskCode, pattern);
@@ -684,7 +684,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private boolean matchesTaskCodeFilterList(Feature feature, Set<String> filterList, Pattern pattern) {
         boolean matches = false;
-        JsonElement taskCodes = feature.getProperty(Properties.TASK_CODE_LIST);
+        JsonElement taskCodes = feature.getProperty(TASK_CODE_LIST);
         if (taskCodes != null) {
             String[] array = pattern.split(taskCodes.getAsString());
             matches = CollectionUtils.containsAny(Arrays.asList(array), filterList);
@@ -694,11 +694,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     private Set<String> getInterventionUnitCodes(Set<String> filterList) {
-        if (filterList != null) {
+        if (filterList == null) {
             return null;
         }
         Set<String> codes = new HashSet<>();
-        if (filterList.contains(Constants.InterventionType.PERSON)) {
+        if (filterList.contains(Constants.InterventionType.PERSON) || filterList.contains(Constants.InterventionType.FAMILY)) {
             codes.addAll(Constants.Intervention.PERSON_INTERVENTIONS);
         }
         if (filterList.contains(Constants.InterventionType.OPERATIONAL_AREA)) {

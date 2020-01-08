@@ -191,9 +191,6 @@ public interface Constants {
 
         List<String> MDA_INTERVENTIONS = Arrays.asList(REGISTER_FAMILY, MDA_ADHERENCE, MDA_DISPENSE);
 
-        List<String> STRUCTURE_INTERVENTIONS = Arrays.asList(MOSQUITO_COLLECTION,
-                LARVAL_DIPPING, BCC, BEDNET_DISTRIBUTION, REGISTER_FAMILY, PAOT).;
-
     }
 
 
