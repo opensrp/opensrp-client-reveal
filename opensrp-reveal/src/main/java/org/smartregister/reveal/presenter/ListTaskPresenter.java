@@ -117,7 +117,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private FeatureCollection featureCollection;
 
-    private List<Feature> filteredFeatureCollection;
+    private List<Feature> filterFeatureCollection;
+
+    private List<Feature> searchFeatureCollection;
 
     private Feature operationalArea;
 
@@ -658,7 +660,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     public void filterTasks(TaskFilterParams filterParams) {
-        filteredFeatureCollection = new ArrayList<>();
+        filterFeatureCollection = new ArrayList<>();
         Set<String> filterStatus = filterParams.getCheckedFilters().get(Filter.STATUS);
         Set<String> filterTaskCode = filterParams.getCheckedFilters().get(Filter.CODE);
         Set<String> filterInterventionUnitTasks = getInterventionUnitCodes(filterParams.getCheckedFilters().get(Filter.INTERVENTION_UNIT));
@@ -675,10 +677,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 matches = matchesTaskCodeFilterList(feature, filterInterventionUnitTasks, pattern);
             }
             if (matches) {
-                filteredFeatureCollection.add(feature);
+                filterFeatureCollection.add(feature);
             }
         }
-        listTaskView.setGeoJsonSource(FeatureCollection.fromFeatures(filteredFeatureCollection), operationalArea, false);
+        listTaskView.setGeoJsonSource(FeatureCollection.fromFeatures(filterFeatureCollection), operationalArea, false);
         isResumingFromFilterPage = true;
     }
 
@@ -712,5 +714,20 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
         return codes;
 
+    }
+
+    public void searchTasks(String searchText) {
+        if (searchText.isEmpty()) {
+            searchFeatureCollection = null;
+            listTaskView.setGeoJsonSource(filterFeatureCollection == null ? featureCollection : FeatureCollection.fromFeatures(filterFeatureCollection), operationalArea, false);
+        } else {
+            List<Feature> features = new ArrayList<>();
+            for (Feature feature : searchFeatureCollection != null ? searchFeatureCollection : Utils.isEmptyCollection(filterFeatureCollection) ? featureCollection.features() : filterFeatureCollection) {
+                if (feature.hasProperty(Constants.Properties.STRUCTURE_NAME) && feature.getStringProperty(Constants.Properties.STRUCTURE_NAME).toLowerCase().matches("\\w*" + searchText.toLowerCase() + "\\w*"))
+                    features.add(feature);
+            }
+            searchFeatureCollection = features;
+            listTaskView.setGeoJsonSource(FeatureCollection.fromFeatures(searchFeatureCollection), operationalArea, false);
+        }
     }
 }

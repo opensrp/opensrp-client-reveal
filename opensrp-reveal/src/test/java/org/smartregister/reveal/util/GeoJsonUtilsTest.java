@@ -78,7 +78,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), Collections.singleton(task));
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, structure.getId());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, structure.getId(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -106,7 +106,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), Collections.singleton(task));
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -135,7 +135,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -164,7 +164,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -199,7 +199,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -231,7 +231,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -263,7 +263,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -295,7 +295,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -329,7 +329,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -366,7 +366,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -400,7 +400,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -434,7 +434,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -474,7 +474,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -503,7 +503,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -531,7 +531,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -559,7 +559,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -587,7 +587,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -615,7 +615,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -643,7 +643,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
@@ -672,7 +672,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(), structureNames);
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 

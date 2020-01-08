@@ -43,7 +43,7 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 public class GeoJsonUtils {
 
 
-    public static String getGeoJsonFromStructuresAndTasks(List<Location> structures, Map<String, Set<Task>> tasks, String indexCase) {
+    public static String getGeoJsonFromStructuresAndTasks(List<Location> structures, Map<String, Set<Task>> tasks, String indexCase, Map<String, String> structureNames) {
         for (Location structure : structures) {
             Set<Task> taskSet = tasks.get(structure.getId());
             HashMap<String, String> taskProperties = null;
@@ -128,7 +128,6 @@ public class GeoJsonUtils {
                 taskProperties.put(LOCATION_UUID, structure.getProperties().getUid());
                 taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
                 taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
-                taskProperties.put(STRUCTURE_NAME, structure.getProperties().getName());
                 interventionList.append(task.getCode());
                 interventionList.append("~");
 
@@ -189,7 +188,7 @@ public class GeoJsonUtils {
             }
 
             taskProperties.put(TASK_CODE_LIST, interventionList.toString());
-
+            taskProperties.put(STRUCTURE_NAME, structureNames.get(structure.getId()));
             structure.getProperties().setCustomProperties(taskProperties);
 
         }

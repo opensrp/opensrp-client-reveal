@@ -572,6 +572,8 @@ public interface Constants {
 
         String PROPERTY_TYPE = "property_type";
 
+        String PARENT_ID = "parent_id";
+
     }
 
     interface PlanDefinitionStatus {

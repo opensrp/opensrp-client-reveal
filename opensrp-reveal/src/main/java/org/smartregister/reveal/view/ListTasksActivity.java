@@ -17,9 +17,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -166,6 +169,22 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         findViewById(R.id.drawerMenu).setOnClickListener(this);
 
         initializeCardViews();
+
+        EditText searchView = findViewById(R.id.edt_search);
+        searchView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { //do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {//do nothing
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                listTaskPresenter.searchTasks(s.toString());
+            }
+        });
 
         syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
     }
