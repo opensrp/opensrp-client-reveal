@@ -33,4 +33,8 @@ public class AvailableOfflineMapViewHolder extends RecyclerView.ViewHolder {
         offlineMapCheckBox.setOnClickListener(onClickListener);
         offlineMapCheckBox.setTag(R.id.offline_map_checkbox, offlineMapModel);
     }
+
+    public void disableCheckBox() {
+        offlineMapCheckBox.setEnabled(false);
+    }
 }

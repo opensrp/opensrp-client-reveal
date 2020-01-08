@@ -51,7 +51,7 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
 
     private AvailableOfflineMapsPresenter presenter;
 
-    private List<OfflineMapModel> offlineMapModelList;
+    private List<OfflineMapModel> offlineMapModelList = new ArrayList<>();
 
     private String currentMapDownload;
 
@@ -130,7 +130,7 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
             this.offlineMapModelList = offlineMapModelList;
         } else {
             adapter.setOfflineMapModels(offlineMapModelList);
-            this.offlineMapModelList = null;
+            this.offlineMapModelList = offlineMapModelList;
         }
     }
 
@@ -149,10 +149,31 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
         this.operationalAreasToDownload.add(operationalAreasToDownload);
     }
 
+    @Override
+    public void disableCheckBox(String operationalAreaName) {
+        if (adapter ==null) {
+            return;
+        }
+        for (OfflineMapModel offlineMapModel: offlineMapModelList ) {
+            if (offlineMapModel.getDownloadAreaLabel().equals(operationalAreaName)){
+                if (offlineMapModel.isDownloadStarted()) {
+                    return;
+                }
+                offlineMapModel.setDownloadStarted(true);
+            }
+        }
+
+        setOfflineMapModelList(offlineMapModelList);
+    }
+
     private void initiateMapDownload() {
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
                 .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
                 .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
+
+        if (this.operationalAreasToDownload == null || this.operationalAreasToDownload.isEmpty()) {
+            displayToast("Please select an Operational Area to download");
+        }
 
         for (Location location: this.operationalAreasToDownload ) {
             Feature operationalAreaFeature = Feature.fromJson(gson.toJson(location));
@@ -265,6 +286,8 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
                                        // setCanStopMapDownload(false);
                                     } else {
                                        // setCanStopMapDownload(true);
+                                        displayToast("Download map for " + mapUniqueName + " in progress at " + Double.valueOf(message));
+                                        presenter.onDownloadStarted(mapUniqueName);
                                     }
                                 } else {
                                     displayToast(message);

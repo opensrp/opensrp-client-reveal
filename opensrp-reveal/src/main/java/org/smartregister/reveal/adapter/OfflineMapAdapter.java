@@ -41,6 +41,9 @@ public class OfflineMapAdapter extends RecyclerView.Adapter<AvailableOfflineMapV
         OfflineMapModel offlineMapModel = offlineMapModels.get(position);
         viewHolder.setOfflineMapLabel(offlineMapModel.getDownloadAreaLabel());
         viewHolder.setItemViewListener(offlineMapModel, offlineMapClickHandler);
+        if (offlineMapModel.isDownloadStarted()) {
+            viewHolder.disableCheckBox();
+        }
     }
 
     @Override

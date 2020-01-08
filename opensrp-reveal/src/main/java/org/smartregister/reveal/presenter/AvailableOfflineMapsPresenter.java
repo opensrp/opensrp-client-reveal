@@ -19,11 +19,6 @@ public class AvailableOfflineMapsPresenter implements AvailableOfflineMapsContra
     }
 
     @Override
-    public void onDownloadMap() {
-
-    }
-
-    @Override
     public void onDownloadAreaSelected(OfflineMapModel offlineMapModel) {
         view.updateOperationalAreasToDownload(offlineMapModel.getLocation());
     }
@@ -38,6 +33,12 @@ public class AvailableOfflineMapsPresenter implements AvailableOfflineMapsContra
 
         List<OfflineMapModel> offlineMapModels = populateOfflineMapModelList(locations);
         view.setOfflineMapModelList(offlineMapModels);
+    }
+
+    @Override
+    public void onDownloadStarted(String operationalAreaname) {
+        view.disableCheckBox(operationalAreaname);
+
     }
 
     private List<OfflineMapModel>  populateOfflineMapModelList(List<Location> locations) {

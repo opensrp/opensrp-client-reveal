@@ -8,6 +8,8 @@ public class OfflineMapModel {
 
     private Location location;
 
+    private boolean downloadStarted;
+
     public boolean isDownloaded() {
         return downloaded;
     }
@@ -22,6 +24,14 @@ public class OfflineMapModel {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public boolean isDownloadStarted() {
+        return downloadStarted;
+    }
+
+    public void setDownloadStarted(boolean downloadStarted) {
+        this.downloadStarted = downloadStarted;
     }
 
     public String getDownloadAreaLabel() {

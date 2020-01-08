@@ -9,13 +9,13 @@ public interface AvailableOfflineMapsContract {
 
     interface Presenter {
 
-        void onDownloadMap();
-
         void onDownloadAreaSelected(OfflineMapModel offlineMapModel);
 
         void fetchOperationalAreas();
 
         void onFetchOperationalAreas(List<Location> locations);
+
+        void onDownloadStarted(String operationalAreaname);
 
     }
 
@@ -28,6 +28,8 @@ public interface AvailableOfflineMapsContract {
         void displayError(int title, String message);
 
         void updateOperationalAreasToDownload(Location operationalAreasToDownload);
+
+        void disableCheckBox(String operationalAreaName);
     }
 
     interface Interactor {
