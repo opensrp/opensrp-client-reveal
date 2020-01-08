@@ -29,7 +29,7 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.adapter.OfflineMapAdapter;
+import org.smartregister.reveal.adapter.AvailableOfflineMapAdapter;
 import org.smartregister.reveal.contract.AvailableOfflineMapsContract;
 import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.presenter.AvailableOfflineMapsPresenter;
@@ -46,7 +46,7 @@ import io.ona.kujaku.utils.Constants;
 public class AvailableOfflineMapsFragment extends Fragment implements AvailableOfflineMapsContract.View {
 
     private RecyclerView offlineMapRecyclerView;
-    private OfflineMapAdapter adapter;
+    private AvailableOfflineMapAdapter adapter;
     private Button downloadMapButton;
 
     private AvailableOfflineMapsPresenter presenter;
@@ -106,7 +106,7 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
     }
 
     private void initializeAdapter() {
-        adapter = new OfflineMapAdapter(this.getContext(), onClickListener);
+        adapter = new AvailableOfflineMapAdapter(this.getContext(), onClickListener);
         offlineMapRecyclerView.setAdapter(adapter);
         if (offlineMapModelList != null) {
             setOfflineMapModelList(offlineMapModelList);

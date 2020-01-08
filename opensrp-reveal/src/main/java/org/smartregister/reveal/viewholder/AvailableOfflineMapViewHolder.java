@@ -1,6 +1,5 @@
 package org.smartregister.reveal.viewholder;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,21 +11,21 @@ import org.smartregister.reveal.model.OfflineMapModel;
 
 public class AvailableOfflineMapViewHolder extends RecyclerView.ViewHolder {
 
-    private Context context;
+    private TextView tvOfflineMapNameLabel;
 
-    private TextView offlineMapTextView;
+    private TextView tvDownloadingLabel;
 
     private CheckBox offlineMapCheckBox;
 
     public AvailableOfflineMapViewHolder(@NonNull View itemView) {
         super(itemView);
-        context = itemView.getContext();
-        offlineMapTextView = itemView.findViewById(R.id.offline_map_label);
+        tvOfflineMapNameLabel = itemView.findViewById(R.id.offline_map_label);
+        tvDownloadingLabel = itemView.findViewById(R.id.downloading_label);
         offlineMapCheckBox = itemView.findViewById(R.id.offline_map_checkbox);
     }
 
     public void setOfflineMapLabel(String offlineMapLabel) {
-        this.offlineMapTextView.setText(offlineMapLabel);
+        this.tvOfflineMapNameLabel.setText(offlineMapLabel);
     }
 
     public void setItemViewListener(OfflineMapModel offlineMapModel, View.OnClickListener onClickListener) {
@@ -36,5 +35,13 @@ public class AvailableOfflineMapViewHolder extends RecyclerView.ViewHolder {
 
     public void disableCheckBox() {
         offlineMapCheckBox.setEnabled(false);
+    }
+
+    public void displayDownloadingLabel(boolean displayDownloadingLabel) {
+        if (displayDownloadingLabel) {
+            tvDownloadingLabel.setVisibility(View.VISIBLE);
+        } else {
+            tvDownloadingLabel.setVisibility(View.GONE);
+        }
     }
 }

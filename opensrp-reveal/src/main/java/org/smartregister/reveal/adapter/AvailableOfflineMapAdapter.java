@@ -14,7 +14,7 @@ import org.smartregister.reveal.viewholder.AvailableOfflineMapViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OfflineMapAdapter extends RecyclerView.Adapter<AvailableOfflineMapViewHolder> {
+public class AvailableOfflineMapAdapter extends RecyclerView.Adapter<AvailableOfflineMapViewHolder> {
 
     private Context context;
 
@@ -22,7 +22,7 @@ public class OfflineMapAdapter extends RecyclerView.Adapter<AvailableOfflineMapV
 
     private List<OfflineMapModel> offlineMapModels = new ArrayList<>();
 
-    public OfflineMapAdapter(Context context, View.OnClickListener offlineMapClickHandler) {
+    public AvailableOfflineMapAdapter(Context context, View.OnClickListener offlineMapClickHandler) {
         this.context = context;
         this.offlineMapClickHandler = offlineMapClickHandler;
 
@@ -43,6 +43,7 @@ public class OfflineMapAdapter extends RecyclerView.Adapter<AvailableOfflineMapV
         viewHolder.setItemViewListener(offlineMapModel, offlineMapClickHandler);
         if (offlineMapModel.isDownloadStarted()) {
             viewHolder.disableCheckBox();
+            viewHolder.displayDownloadingLabel(true);
         }
     }
 
