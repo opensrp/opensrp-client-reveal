@@ -142,7 +142,6 @@ public interface Constants {
         String APP_VERSION_NAME = "appVersionName";
         String FORM_VERSION = "form_version";
         String STRUCTURE_STATUS = "status";
-        String TASK_BUSINESS_STATUS_LIST = "task_business_status_list";
         String TASK_CODE_LIST = "task_code_list";
     }
 
@@ -245,8 +244,11 @@ public interface Constants {
         List<String> IRS_BUSINESS_STATUS = Arrays.asList(NOT_VISITED, NOT_SPRAYED,
                 SPRAYED, NOT_SPRAYABLE, COMPLETE, INCOMPLETE, NOT_ELIGIBLE, IN_PROGRESS);
 
-        List<String> FI_MDA_BUSINESS_STATUS = Arrays.asList(NOT_VISITED, COMPLETE, INCOMPLETE,
-                NOT_ELIGIBLE, IN_PROGRESS);
+        List<String> FI_BUSINESS_STATUS = Arrays.asList(NOT_VISITED, FAMILY_REGISTERED, BEDNET_DISTRIBUTED,
+                BLOOD_SCREENING_COMPLETE, COMPLETE, NOT_ELIGIBLE);
+
+        List<String> MDA_BUSINESS_STATUS = Arrays.asList(NOT_VISITED, FULLY_RECEIVED, NONE_RECEIVED,
+                ADHERENCE_VISIT_DONE, PARTIALLY_RECEIVED, COMPLETE, NOT_ELIGIBLE);
     }
 
     interface BusinessStatusWrapper {

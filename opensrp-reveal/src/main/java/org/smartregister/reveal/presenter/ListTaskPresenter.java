@@ -660,11 +660,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         Set<String> filterStatus = filterParams.getCheckedFilters().get(Filter.STATUS);
         Pattern pattern = Pattern.compile("~");
         for (Feature feature : featureCollection.features()) {
-            if (filterParams.getCheckedFilters().containsKey(Filter.STATUS) && feature.hasProperty(Properties.TASK_BUSINESS_STATUS_LIST)) {
-                JsonElement businessStatus = feature.getProperty(Properties.TASK_BUSINESS_STATUS_LIST);
-                String[] array = pattern.split(businessStatus.getAsString());
-                if (CollectionUtils.containsAny(Arrays.asList(array), filterStatus))
+            if (filterParams.getCheckedFilters().containsKey(Filter.STATUS) && feature.hasProperty(Properties.TASK_BUSINESS_STATUS)) {
+                String businessStatus = feature.getStringProperty(Properties.TASK_BUSINESS_STATUS);
+                if (filterStatus.contains(businessStatus)) {
                     filteredFeatureCollection.add(feature);
+                }
+              /*  String[] array = pattern.split(businessStatus.getAsString());
+                if (CollectionUtils.containsAny(Arrays.asList(array), filterStatus))
+                    filteredFeatureCollection.add(feature);*/
 
             }
         }

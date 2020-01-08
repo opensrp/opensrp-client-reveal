@@ -1,7 +1,5 @@
 package org.smartregister.reveal.util;
 
-import com.google.gson.JsonArray;
-
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 
@@ -34,7 +32,6 @@ import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
 import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
-import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS_LIST;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE_LIST;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
@@ -62,7 +59,6 @@ public class GeoJsonUtils {
             boolean partiallyReceived;
             boolean bloodScreeningExists = false;
             boolean ineligibleForFamReg = false;
-            StringBuilder statusList = new StringBuilder();
             StringBuilder interventionList = new StringBuilder();
             String MDA_DISPENSE_TASK_COUNT = "mda_dispense_task_count";
 
@@ -133,8 +129,6 @@ public class GeoJsonUtils {
                 taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
                 taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
                 taskProperties.put(STRUCTURE_NAME, structure.getProperties().getName());
-                statusList.append(task.getBusinessStatus());
-                statusList.append("~");
                 interventionList.append(task.getCode());
                 interventionList.append("~");
 
@@ -194,7 +188,6 @@ public class GeoJsonUtils {
 
             }
 
-            taskProperties.put(TASK_BUSINESS_STATUS_LIST, statusList.toString());
             taskProperties.put(TASK_CODE_LIST, interventionList.toString());
 
             structure.getProperties().setCustomProperties(taskProperties);
