@@ -19,11 +19,6 @@ public class AvailableOfflineMapsPresenter implements AvailableOfflineMapsContra
     }
 
     @Override
-    public void onDownloadAreaSelected(OfflineMapModel offlineMapModel) {
-        view.updateOperationalAreasToDownload(offlineMapModel.getLocation());
-    }
-
-    @Override
     public void fetchOperationalAreas() {
         interactor.fetchOperationalAreas();
     }
@@ -32,7 +27,7 @@ public class AvailableOfflineMapsPresenter implements AvailableOfflineMapsContra
     public void onFetchOperationalAreas(List<Location> locations) {
 
         List<OfflineMapModel> offlineMapModels = populateOfflineMapModelList(locations);
-        view.setOfflineMapModelList(offlineMapModels);
+        view.setOfflineMapModelList(offlineMapModels, true);
     }
 
     @Override

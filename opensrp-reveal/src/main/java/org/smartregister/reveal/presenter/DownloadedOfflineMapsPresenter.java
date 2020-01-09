@@ -15,10 +15,6 @@ public class DownloadedOfflineMapsPresenter implements DownloadedOfflineMapsCont
 
     @Override
     public void onDeleteDownloadMap(List<OfflineMapModel> offlineMapModels) {
-        if (offlineMapModels == null || offlineMapModels.isEmpty()) {
-            return;
-        }
-
         view.deleteDownloadedOfflineMaps();
     }
 }

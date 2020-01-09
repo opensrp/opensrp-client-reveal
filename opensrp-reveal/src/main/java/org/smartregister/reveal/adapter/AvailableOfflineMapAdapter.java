@@ -20,12 +20,14 @@ public class AvailableOfflineMapAdapter extends RecyclerView.Adapter<AvailableOf
 
     private View.OnClickListener offlineMapClickHandler;
 
-    private List<OfflineMapModel> offlineMapModels = new ArrayList<>();
+    private List<OfflineMapModel> offlineMapModels;
+
+    private boolean initialLoad;
 
     public AvailableOfflineMapAdapter(Context context, View.OnClickListener offlineMapClickHandler) {
         this.context = context;
         this.offlineMapClickHandler = offlineMapClickHandler;
-
+        this.offlineMapModels = new ArrayList<>();
     }
 
 
@@ -41,10 +43,19 @@ public class AvailableOfflineMapAdapter extends RecyclerView.Adapter<AvailableOf
         OfflineMapModel offlineMapModel = offlineMapModels.get(position);
         viewHolder.setOfflineMapLabel(offlineMapModel.getDownloadAreaLabel());
         viewHolder.setItemViewListener(offlineMapModel, offlineMapClickHandler);
-        if (offlineMapModel.isDownloadStarted()) {
-            viewHolder.disableCheckBox();
-            viewHolder.displayDownloadingLabel(true);
+
+        if (initialLoad) {
+            viewHolder.toggleCheckBoxState(true);
+        } else if (offlineMapModel.isDownloadStarted()) {
+            viewHolder.toggleCheckBoxState(false);
+        } else {
+            viewHolder.toggleCheckBoxState(true);
         }
+
+        boolean mapDownloadInProgress = offlineMapModel.isDownloadStarted() &&
+                !offlineMapModel.isDownloaded();
+
+        viewHolder.displayDownloadingLabel(mapDownloadInProgress);
     }
 
     @Override
@@ -52,8 +63,9 @@ public class AvailableOfflineMapAdapter extends RecyclerView.Adapter<AvailableOf
         return offlineMapModels.size();
     }
 
-    public void setOfflineMapModels(List<OfflineMapModel> offlineMapModels) {
+    public void setOfflineMapModels(List<OfflineMapModel> offlineMapModels, boolean initialLoad) {
         this.offlineMapModels = offlineMapModels;
+        this.initialLoad = initialLoad;
         notifyDataSetChanged();
     }
 }

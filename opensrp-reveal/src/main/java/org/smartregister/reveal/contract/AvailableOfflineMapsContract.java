@@ -9,8 +9,6 @@ public interface AvailableOfflineMapsContract extends OfflineMapsFragmentContrac
 
     interface Presenter {
 
-        void onDownloadAreaSelected(OfflineMapModel offlineMapModel);
-
         void fetchOperationalAreas();
 
         void onFetchOperationalAreas(List<Location> locations);
@@ -23,9 +21,7 @@ public interface AvailableOfflineMapsContract extends OfflineMapsFragmentContrac
 
     interface View {
 
-        void setOfflineMapModelList(List<OfflineMapModel> offlineMapModelList);
-
-        void updateOperationalAreasToDownload(Location operationalAreasToDownload);
+        void setOfflineMapModelList(List<OfflineMapModel> offlineMapModelList, boolean initialLoad);
 
         void disableCheckBox(String operationalAreaName);
 

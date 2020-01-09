@@ -3,18 +3,18 @@ package org.smartregister.reveal.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.CheckBox;
 
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.DownloadedOfflineMapAdapter;
 import org.smartregister.reveal.contract.DownloadedOfflineMapsContract;
+import org.smartregister.reveal.contract.OfflineMapDownloadCallback;
 import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.presenter.DownloadedOfflineMapsPresenter;
 
@@ -34,6 +34,8 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
     private List<OfflineMapModel> downloadedOfflineMapModelList = new ArrayList<>();
 
     private List<OfflineMapModel> offlineMapsTodelete = new ArrayList<>();
+
+    private OfflineMapDownloadCallback callback;
 
     public static DownloadedOfflineMapsFragment newInstance(Bundle bundle) {
 
@@ -91,11 +93,27 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
     private View.OnClickListener onClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View view) {
-            OfflineMapModel offlineMapModel = (OfflineMapModel) view.getTag(R.id.offline_map_checkbox);
-            displayToast("Delete offline map for " + offlineMapModel.getDownloadAreaLabel());
-            offlineMapsTodelete.add(offlineMapModel);
+
+            switch (view.getId()) {
+                case R.id.offline_map_checkbox:
+                    updateOfflineMapsTodelete(view);
+                    break;
+                default:
+                    break;
+            }
         }
     };
+
+    private void updateOfflineMapsTodelete(View view) {
+        CheckBox checkBox = (CheckBox) view;
+        OfflineMapModel offlineMapModel = (OfflineMapModel) view.getTag(R.id.offline_map_checkbox);
+
+        if (checkBox.isChecked()) {
+            offlineMapsTodelete.add(offlineMapModel);
+        } else {
+            offlineMapsTodelete.remove(offlineMapModel);
+        }
+    }
 
     @Override
     public void setDownloadedOfflineMapModelList(List<OfflineMapModel> downloadedOfflineMapModelList) {
@@ -110,6 +128,7 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
     @Override
     public void deleteDownloadedOfflineMaps() {
         if (offlineMapsTodelete == null || offlineMapsTodelete.isEmpty()){
+            displayToast(getString(R.string.select_offline_map_to_delete));
             return;
         }
 
@@ -133,9 +152,16 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
         for (OfflineMapModel offlineMapModel: downloadedOfflineMapModelList ) {
             if (offlineMapModel.getDownloadAreaLabel().equals(mapUniqueName)){
                 downloadedOfflineMapModelList.remove(offlineMapModel);
+                offlineMapModel.setDownloaded(true);
+                offlineMapModel.setDownloadStarted(false);
+                callback.onOfflineMapDeleted(offlineMapModel);
             }
         }
 
         setDownloadedOfflineMapModelList(downloadedOfflineMapModelList);
+    }
+
+    public void setOfflineMapDownloadCallback(OfflineMapDownloadCallback callBack) {
+        this.callback = callBack;
     }
 }

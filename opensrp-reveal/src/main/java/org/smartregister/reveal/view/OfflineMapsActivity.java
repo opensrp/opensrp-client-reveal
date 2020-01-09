@@ -17,6 +17,9 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
 
     private ViewPagerAdapter adapter;
 
+    private static  final int AVAILABLE_OFFLINE_MAPS_FRAGMENT_INDEX = 0;
+    private static  final int DOWNLOADED_OFFLINE_MAPS_FRAGMENT_INDEX = 1;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +43,7 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
         adapter.addFragment(availableOfflineMapsFragment, this.getString(R.string.available).toUpperCase());
 
         DownloadedOfflineMapsFragment downloadedOfflineMapsFragment = DownloadedOfflineMapsFragment.newInstance(this.getIntent().getExtras());
+        downloadedOfflineMapsFragment.setOfflineMapDownloadCallback(this);
         adapter.addFragment(downloadedOfflineMapsFragment, this.getString(R.string.downloaded).toUpperCase());
 
         viewPager.setAdapter(adapter);
@@ -49,8 +53,13 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
 
     @Override
     public void onMapDownloaded(OfflineMapModel offlineMapModel) {
-        DownloadedOfflineMapsFragment downloadedOfflineMapsFragment = (DownloadedOfflineMapsFragment)  adapter.getItem(1);
-
+        DownloadedOfflineMapsFragment downloadedOfflineMapsFragment = (DownloadedOfflineMapsFragment)  adapter.getItem(DOWNLOADED_OFFLINE_MAPS_FRAGMENT_INDEX);
         downloadedOfflineMapsFragment.updateDownloadedMapsList(offlineMapModel);
+    }
+
+    @Override
+    public void onOfflineMapDeleted(OfflineMapModel offlineMapModel) {
+        AvailableOfflineMapsFragment availableOfflineMapsFragment = (AvailableOfflineMapsFragment)  adapter.getItem(AVAILABLE_OFFLINE_MAPS_FRAGMENT_INDEX);
+        availableOfflineMapsFragment.updateOperationalAreasToDownload(offlineMapModel);
     }
 }
