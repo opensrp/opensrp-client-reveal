@@ -155,6 +155,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private boolean isResumingFromFilterPage;
 
+    private String searchPhrase;
+
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
         this.drawerPresenter = drawerPresenter;
@@ -718,22 +720,23 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     }
 
-    public void searchTasks(String searchText) {
-        if (searchText.isEmpty()) {
+    public void searchTasks(String searchPhrase) {
+        if (searchPhrase.isEmpty()) {
             searchFeatureCollection = null;
             listTaskView.setGeoJsonSource(filterFeatureCollection == null ? featureCollection : FeatureCollection.fromFeatures(filterFeatureCollection), operationalArea, false);
         } else {
             List<Feature> features = new ArrayList<>();
-            for (Feature feature : searchFeatureCollection != null ? searchFeatureCollection : Utils.isEmptyCollection(filterFeatureCollection) ? featureCollection.features() : filterFeatureCollection) {
+            for (Feature feature : searchFeatureCollection != null && searchPhrase.length() > this.searchPhrase.length() ? searchFeatureCollection : Utils.isEmptyCollection(filterFeatureCollection) ? featureCollection.features() : filterFeatureCollection) {
                 String structureName = feature.getStringProperty(STRUCTURE_NAME);
                 String familyMemberNames = feature.getStringProperty(FAMILY_MEMBER_NAMES);
                 String regex = "[\\w\\h,]*";
-                if ((structureName != null && structureName.toLowerCase().matches(regex + searchText.toLowerCase() + regex)) ||
-                        (familyMemberNames != null && familyMemberNames.toLowerCase().matches(regex + searchText.toLowerCase() + regex)))
+                if ((structureName != null && structureName.toLowerCase().matches(regex + searchPhrase.toLowerCase() + regex)) ||
+                        (familyMemberNames != null && familyMemberNames.toLowerCase().matches(regex + searchPhrase.toLowerCase() + regex)))
                     features.add(feature);
             }
             searchFeatureCollection = features;
             listTaskView.setGeoJsonSource(FeatureCollection.fromFeatures(searchFeatureCollection), operationalArea, false);
         }
+        this.searchPhrase = searchPhrase;
     }
 }
