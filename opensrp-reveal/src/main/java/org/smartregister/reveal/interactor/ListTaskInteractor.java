@@ -322,7 +322,7 @@ public class ListTaskInteractor extends BaseInteractor {
         Map<String, StructureDetails> structureNames = new HashMap<>();
         try {
             String query = getStructureNamesSelect(String.format("%s=?",
-                    Constants.DatabaseKeys.PARENT_ID)).concat(String.format(" GROUP BY BY %s.%s", STRUCTURES_TABLE, ID));
+                    Constants.DatabaseKeys.PARENT_ID)).concat(String.format(" GROUP BY %s.%s", STRUCTURES_TABLE, ID));
             Timber.d(query);
             cursor = getDatabase().rawQuery(query, new String[]{parentId});
             while (cursor.moveToNext()) {

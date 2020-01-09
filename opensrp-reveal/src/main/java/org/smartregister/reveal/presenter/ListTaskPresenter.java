@@ -90,7 +90,9 @@ import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_
 import static org.smartregister.reveal.util.Constants.JsonForm.PROVINCE_NAME;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
+import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE_LIST;
@@ -723,9 +725,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else {
             List<Feature> features = new ArrayList<>();
             for (Feature feature : searchFeatureCollection != null ? searchFeatureCollection : Utils.isEmptyCollection(filterFeatureCollection) ? featureCollection.features() : filterFeatureCollection) {
-                if (feature.hasProperty(Constants.Properties.STRUCTURE_NAME) &&
-                        (feature.getStringProperty(Constants.Properties.STRUCTURE_NAME).toLowerCase().matches("\\w*" + searchText.toLowerCase() + "\\w*") ||
-                                feature.getStringProperty(Constants.Properties.).toLowerCase().matches("\\w*" + searchText.toLowerCase() + "\\w*")))
+                String structureName = feature.getStringProperty(STRUCTURE_NAME);
+                String familyMemberNames = feature.getStringProperty(FAMILY_MEMBER_NAMES);
+                String regex = "[\\w\\h,]*";
+                if ((structureName != null && structureName.toLowerCase().matches(regex + searchText.toLowerCase() + regex)) ||
+                        (familyMemberNames != null && familyMemberNames.toLowerCase().matches(regex + searchText.toLowerCase() + regex)))
                     features.add(feature);
             }
             searchFeatureCollection = features;
