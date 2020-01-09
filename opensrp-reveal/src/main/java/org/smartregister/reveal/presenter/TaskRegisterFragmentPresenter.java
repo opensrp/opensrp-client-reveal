@@ -249,6 +249,16 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public void searchTasks(String searchText) {
         Timber.d("searching task matching %s", searchText);
+        List<TaskDetails> filteredTasks = new ArrayList<>();
+        for (TaskDetails task : tasks) {
+            if (Utils.matchesSearchPhrase(task.getStructureName(), searchText) ||
+                    Utils.matchesSearchPhrase(task.getFamilyName(), searchText) ||
+                    Utils.matchesSearchPhrase(task.getHouseNumber(), searchText)) {
+                filteredTasks.add(task);
+            }
+        }
+        getView().setTaskDetails(filteredTasks);
+        getView().setTotalTasks(filteredTasks.size());
     }
 
     @Override

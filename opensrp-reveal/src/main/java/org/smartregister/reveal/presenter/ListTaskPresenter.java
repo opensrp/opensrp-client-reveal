@@ -747,9 +747,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             for (Feature feature : searchFeatureCollection != null && searchPhrase.length() > this.searchPhrase.length() ? searchFeatureCollection : Utils.isEmptyCollection(filterFeatureCollection) ? getFeatureCollection().features() : filterFeatureCollection) {
                 String structureName = feature.getStringProperty(STRUCTURE_NAME);
                 String familyMemberNames = feature.getStringProperty(FAMILY_MEMBER_NAMES);
-                String regex = "[\\w\\h,]*";
-                if ((structureName != null && structureName.toLowerCase().matches(regex + searchPhrase.toLowerCase() + regex)) ||
-                        (familyMemberNames != null && familyMemberNames.toLowerCase().matches(regex + searchPhrase.toLowerCase() + regex)))
+                if (org.smartregister.reveal.util.Utils.matchesSearchPhrase(structureName, searchPhrase) ||
+                        org.smartregister.reveal.util.Utils.matchesSearchPhrase(familyMemberNames, searchPhrase))
                     features.add(feature);
             }
             searchFeatureCollection = features;
