@@ -150,6 +150,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private TextView filterCountTextView;
 
+    private EditText searchView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -385,7 +387,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     private void initializeToolbar() {
-        EditText searchView = findViewById(R.id.edt_search);
+        searchView = findViewById(R.id.edt_search);
         searchView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { //do nothing
@@ -787,6 +789,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             filterCountLayout.setVisibility(View.GONE);
         }
 
+    }
+
+    @Override
+    public void resetSearch() {
+        searchView.setText("");
     }
 
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {

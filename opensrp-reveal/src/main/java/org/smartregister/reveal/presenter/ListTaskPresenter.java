@@ -199,8 +199,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             featureCollection = FeatureCollection.fromJson(structuresGeoJson.toString());
             isTasksFiltered = false;
             if (filterParams != null && !filterParams.getCheckedFilters().isEmpty() && StringUtils.isBlank(searchPhrase)) {
+                filterFeatureCollection = null;
                 filterTasks(filterParams);
             } else if (filterParams != null && !filterParams.getCheckedFilters().isEmpty()) {
+                searchFeatureCollection = null;
                 searchTasks(searchPhrase);
             } else {
                 listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, isChangeMapPosition());
@@ -636,7 +638,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if (!revealApplication.isMyLocationComponentEnabled() && listTaskView.isMyLocationComponentActive()
                 || !listTaskView.isMyLocationComponentActive()) {
             listTaskView.focusOnUserLocation(false);
-            if (!isTasksFiltered) {
+            if (!isTasksFiltered && StringUtils.isBlank(searchPhrase)) {
                 listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, false);
             }
         }
@@ -700,6 +702,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
         listTaskView.setGeoJsonSource(FeatureCollection.fromFeatures(filterFeatureCollection), operationalArea, false);
         listTaskView.setNumberOfFilters(filterParams.getCheckedFilters().size());
+        listTaskView.resetSearch();
         isTasksFiltered = true;
     }
 
@@ -756,6 +759,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     private FeatureCollection getFeatureCollection() {
-        return isTasksFiltered ? FeatureCollection.fromFeatures(filterFeatureCollection) : featureCollection;
+        return isTasksFiltered && filterFeatureCollection != null ? FeatureCollection.fromFeatures(filterFeatureCollection) : featureCollection;
     }
 }
