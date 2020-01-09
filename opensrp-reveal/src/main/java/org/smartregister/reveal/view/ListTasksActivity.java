@@ -144,6 +144,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private FloatingActionButton layerSwitcherFab;
 
+    private FloatingActionButton filterTasksFab;
+
+    private FrameLayout filterCountLayout;
+
+    private TextView filterCountTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,21 +176,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         initializeCardViews();
 
-        EditText searchView = findViewById(R.id.edt_search);
-        searchView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { //do nothing
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {//do nothing
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                listTaskPresenter.searchTasks(s.toString());
-            }
-        });
+        initializeToolbar();
 
         syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
     }
@@ -392,6 +384,27 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         LinearLayout progressIndicatorsGroupView = findViewById(R.id.progressIndicatorsGroupView);
         progressIndicatorsGroupView.setBackgroundColor(this.getResources().getColor(R.color.transluscent_white));
         progressIndicatorsGroupView.setOnClickListener(this);
+    }
+
+    private void initializeToolbar() {
+        EditText searchView = findViewById(R.id.edt_search);
+        searchView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { //do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {//do nothing
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                listTaskPresenter.searchTasks(s.toString());
+            }
+        });
+        filterTasksFab = findViewById(R.id.filter_tasks_fab);
+        filterCountLayout = findViewById(R.id.filter_tasks_count_layout);
+        filterCountTextView = findViewById(R.id.filter_tasks_count);
     }
 
     @Override
@@ -760,6 +773,20 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         dialog.dismiss();
                     }
                 });
+    }
+
+    @Override
+    public void setNumberOfFilters(int numberOfFilters) {
+        if (numberOfFilters > 0) {
+            filterTasksFab.setVisibility(View.GONE);
+            filterCountLayout.setVisibility(View.VISIBLE);
+            filterCountTextView.setText(String.valueOf(numberOfFilters));
+        } else {
+            filterTasksFab.setVisibility(View.VISIBLE);
+            filterCountLayout.setVisibility(View.GONE);
+            filterCountTextView.setText(numberOfFilters);
+        }
+
     }
 
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {

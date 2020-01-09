@@ -664,6 +664,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     public void filterTasks(TaskFilterParams filterParams) {
+        if (filterParams.getCheckedFilters() == null)
+            return;
         filterFeatureCollection = new ArrayList<>();
         Set<String> filterStatus = filterParams.getCheckedFilters().get(Filter.STATUS);
         Set<String> filterTaskCode = filterParams.getCheckedFilters().get(Filter.CODE);
@@ -686,6 +688,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
         listTaskView.setGeoJsonSource(FeatureCollection.fromFeatures(filterFeatureCollection), operationalArea, false);
         isResumingFromFilterPage = true;
+        listTaskView.setNumberOfFilters(filterParams.getCheckedFilters().size());
     }
 
     private boolean matchesTaskCodeFilterList(Feature feature, Set<String> filterList, Pattern pattern) {

@@ -66,6 +66,7 @@ public interface ListTaskContract {
 
         void displayMarkStructureInactiveDialog();
 
+        void setNumberOfFilters(int numberOfFilters);
     }
 
     interface Presenter extends BaseContract.BasePresenter {
