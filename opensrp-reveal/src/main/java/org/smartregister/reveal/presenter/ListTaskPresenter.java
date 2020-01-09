@@ -157,6 +157,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private String searchPhrase;
 
+    private TaskFilterParams filterParams;
+
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
         this.drawerPresenter = drawerPresenter;
@@ -196,7 +198,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         if (structuresGeoJson.has(FEATURES)) {
             featureCollection = FeatureCollection.fromJson(structuresGeoJson.toString());
             isTasksFiltered = false;
-            listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, isChangeMapPosition());
+            if (filterParams != null && !filterParams.getCheckedFilters().isEmpty() && StringUtils.isBlank(searchPhrase)) {
+                filterTasks(filterParams);
+            } else if (filterParams != null && !filterParams.getCheckedFilters().isEmpty()) {
+                searchTasks(searchPhrase);
+            } else {
+                listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, isChangeMapPosition());
+            }
             this.operationalArea = operationalArea;
             if (Utils.isEmptyCollection(getFeatureCollection().features())) {
                 listTaskView.displayNotification(R.string.fetching_structures_title, R.string.no_structures_found);
@@ -664,6 +672,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     public void filterTasks(TaskFilterParams filterParams) {
+        this.filterParams = filterParams;
         if (filterParams.getCheckedFilters() == null || filterParams.getCheckedFilters().isEmpty()) {
             isTasksFiltered = false;
             listTaskView.setNumberOfFilters(0);
