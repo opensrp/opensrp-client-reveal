@@ -518,7 +518,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         try {
             JSONObject formJson = new JSONObject(jsonFormUtils.getFormString(listTaskView.getContext(), formName, null));
             formJson.put(OPERATIONAL_AREA_TAG, operationalArea.toJson());
-            revealApplication.setFeatureCollection(getFeatureCollection());
+            revealApplication.setFeatureCollection(featureCollection);
             jsonFormUtils.populateField(formJson, JsonForm.SELECTED_OPERATIONAL_AREA_NAME, prefsUtil.getCurrentOperationalArea(), TEXT);
             formJson.put(LOCATION_COMPONENT_ACTIVE, myLocationComponentActive);
             listTaskView.startJsonForm(formJson);
