@@ -23,7 +23,7 @@ import java.util.List;
 
 import io.ona.kujaku.helpers.OfflineServiceHelper;
 
-public class DownloadedOfflineMapsFragment extends Fragment implements DownloadedOfflineMapsContract.View {
+public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment implements DownloadedOfflineMapsContract.View {
 
     private RecyclerView downloadedMapsrecyclerView;
 
@@ -108,16 +108,6 @@ public class DownloadedOfflineMapsFragment extends Fragment implements Downloade
     }
 
     @Override
-    public void displayToast(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void displayError(int title, String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public void deleteDownloadedOfflineMaps() {
         if (offlineMapsTodelete == null || offlineMapsTodelete.isEmpty()){
             return;
@@ -135,4 +125,17 @@ public class DownloadedOfflineMapsFragment extends Fragment implements Downloade
         setDownloadedOfflineMapModelList(downloadedOfflineMapModelList);
     }
 
+    @Override
+    protected void mapDeletedSuccessfully(String mapUniqueName) {
+        if (adapter ==null) {
+            return;
+        }
+        for (OfflineMapModel offlineMapModel: downloadedOfflineMapModelList ) {
+            if (offlineMapModel.getDownloadAreaLabel().equals(mapUniqueName)){
+                downloadedOfflineMapModelList.remove(offlineMapModel);
+            }
+        }
+
+        setDownloadedOfflineMapModelList(downloadedOfflineMapModelList);
+    }
 }

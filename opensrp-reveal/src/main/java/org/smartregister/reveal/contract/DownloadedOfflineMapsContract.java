@@ -4,19 +4,15 @@ import org.smartregister.reveal.model.OfflineMapModel;
 
 import java.util.List;
 
-public interface DownloadedOfflineMapsContract {
+public interface DownloadedOfflineMapsContract extends OfflineMapsFragmentContract {
 
     interface Presenter {
 
         void onDeleteDownloadMap(List<OfflineMapModel> offlineMapModels);
     }
 
-    interface View {
+    interface View  {
         void setDownloadedOfflineMapModelList(List<OfflineMapModel> downloadedOfflineMapModelList);
-
-        void displayToast(String message);
-
-        void displayError(int title, String message);
 
         void deleteDownloadedOfflineMaps();
     }

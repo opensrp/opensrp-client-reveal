@@ -18,8 +18,7 @@ public class DownloadedOfflineMapsPresenter implements DownloadedOfflineMapsCont
         if (offlineMapModels == null || offlineMapModels.isEmpty()) {
             return;
         }
-        view.displayToast("");
 
-        //TODO Implement deletion of downloaded maps
+        view.deleteDownloadedOfflineMaps();
     }
 }

@@ -5,7 +5,7 @@ import org.smartregister.reveal.model.OfflineMapModel;
 
 import java.util.List;
 
-public interface AvailableOfflineMapsContract {
+public interface AvailableOfflineMapsContract extends OfflineMapsFragmentContract {
 
     interface Presenter {
 
@@ -24,10 +24,6 @@ public interface AvailableOfflineMapsContract {
     interface View {
 
         void setOfflineMapModelList(List<OfflineMapModel> offlineMapModelList);
-
-        void displayToast(String message);
-
-        void displayError(int title, String message);
 
         void updateOperationalAreasToDownload(Location operationalAreasToDownload);
 
