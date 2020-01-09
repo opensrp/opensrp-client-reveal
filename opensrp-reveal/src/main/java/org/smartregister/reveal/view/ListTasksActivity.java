@@ -142,9 +142,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private ImageButton myLocationButton;
 
-    private FloatingActionButton layerSwitcherFab;
+    private ImageButton layerSwitcherFab;
 
-    private FloatingActionButton filterTasksFab;
+    private ImageButton filterTasksFab;
 
     private FrameLayout filterCountLayout;
 
@@ -232,8 +232,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.register_family).setOnClickListener(this);
 
-        FloatingActionButton filterTasksFab = findViewById(R.id.filter_tasks_fab);
-        filterTasksFab.setOnClickListener(this);
     }
 
     @Override
@@ -405,6 +403,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         filterTasksFab = findViewById(R.id.filter_tasks_fab);
         filterCountLayout = findViewById(R.id.filter_tasks_count_layout);
         filterCountTextView = findViewById(R.id.filter_tasks_count);
+
+        filterTasksFab.setOnClickListener(this);
+        filterCountLayout.setOnClickListener(this);
     }
 
     @Override
@@ -437,7 +438,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             drawerView.openDrawerLayout();
         } else if (v.getId() == R.id.progressIndicatorsGroupView) {
             openIndicatorsCardView();
-        } else if (v.getId() == R.id.filter_tasks_fab) {
+        } else if (v.getId() == R.id.filter_tasks_fab || v.getId() == R.id.filter_tasks_count_layout) {
             openFilterTaskActivity();
         }
     }
@@ -784,7 +785,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else {
             filterTasksFab.setVisibility(View.VISIBLE);
             filterCountLayout.setVisibility(View.GONE);
-            filterCountTextView.setText(numberOfFilters);
         }
 
     }
