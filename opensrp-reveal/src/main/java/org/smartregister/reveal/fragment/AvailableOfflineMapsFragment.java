@@ -47,8 +47,8 @@ import io.ona.kujaku.utils.Constants;
 public class AvailableOfflineMapsFragment extends Fragment implements AvailableOfflineMapsContract.View {
 
     private RecyclerView offlineMapRecyclerView;
+
     private AvailableOfflineMapAdapter adapter;
-    private Button downloadMapButton;
 
     private AvailableOfflineMapsPresenter presenter;
 
@@ -102,9 +102,9 @@ public class AvailableOfflineMapsFragment extends Fragment implements AvailableO
     private void setUpViews(View view) {
         offlineMapRecyclerView = view.findViewById(R.id.offline_map_recyclerView);
 
-        downloadMapButton = view.findViewById(R.id.download_map);
+        Button btnDownloadMap = view.findViewById(R.id.download_map);
 
-        downloadMapButton.setOnClickListener(v -> initiateMapDownload());
+        btnDownloadMap.setOnClickListener(v -> initiateMapDownload());
 
     }
 

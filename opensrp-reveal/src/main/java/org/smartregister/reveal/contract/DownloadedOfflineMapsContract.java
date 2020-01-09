@@ -17,5 +17,7 @@ public interface DownloadedOfflineMapsContract {
         void displayToast(String message);
 
         void displayError(int title, String message);
+
+        void deleteDownloadedOfflineMaps();
     }
 }

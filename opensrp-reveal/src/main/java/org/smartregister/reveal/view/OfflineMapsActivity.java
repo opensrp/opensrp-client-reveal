@@ -16,10 +16,6 @@ import org.smartregister.reveal.model.OfflineMapModel;
 
 public class OfflineMapsActivity extends AppCompatActivity implements OfflineMapsContract.View, OfflineMapDownloadCallback {
 
-    private AvailableOfflineMapsFragment availableOfflineMapsFragment;
-
-    private DownloadedOfflineMapsFragment downloadedOfflineMapsFragment;
-
     private ViewPagerAdapter adapter;
 
     @Override
@@ -40,11 +36,11 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
     protected ViewPager setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        availableOfflineMapsFragment = AvailableOfflineMapsFragment.newInstance(this.getIntent().getExtras());
+        AvailableOfflineMapsFragment availableOfflineMapsFragment = AvailableOfflineMapsFragment.newInstance(this.getIntent().getExtras());
         availableOfflineMapsFragment.setOfflineMapDownloadCallback(this);
         adapter.addFragment(availableOfflineMapsFragment, this.getString(R.string.available).toUpperCase());
 
-        downloadedOfflineMapsFragment = DownloadedOfflineMapsFragment.newInstance(this.getIntent().getExtras());
+        DownloadedOfflineMapsFragment downloadedOfflineMapsFragment = DownloadedOfflineMapsFragment.newInstance(this.getIntent().getExtras());
         adapter.addFragment(downloadedOfflineMapsFragment, this.getString(R.string.downloaded).toUpperCase());
 
         viewPager.setAdapter(adapter);

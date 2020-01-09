@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.DownloadedOfflineMapAdapter;
 import org.smartregister.reveal.contract.DownloadedOfflineMapsContract;
@@ -20,11 +21,13 @@ import org.smartregister.reveal.presenter.DownloadedOfflineMapsPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.ona.kujaku.helpers.OfflineServiceHelper;
+
 public class DownloadedOfflineMapsFragment extends Fragment implements DownloadedOfflineMapsContract.View {
 
     private RecyclerView downloadedMapsrecyclerView;
+
     private DownloadedOfflineMapAdapter adapter;
-    private Button btnDeleteMap;
 
     private DownloadedOfflineMapsPresenter presenter;
 
@@ -64,7 +67,7 @@ public class DownloadedOfflineMapsFragment extends Fragment implements Downloade
     private void setUpViews(View view) {
         downloadedMapsrecyclerView = view.findViewById(R.id.offline_map_recyclerView);
 
-        btnDeleteMap = view.findViewById(R.id.download_map);
+        Button btnDeleteMap = view.findViewById(R.id.download_map);
         btnDeleteMap.setText(getString(R.string.delete).toUpperCase());
 
         btnDeleteMap.setOnClickListener(new View.OnClickListener() {
@@ -112,6 +115,19 @@ public class DownloadedOfflineMapsFragment extends Fragment implements Downloade
     @Override
     public void displayError(int title, String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void deleteDownloadedOfflineMaps() {
+        if (offlineMapsTodelete == null || offlineMapsTodelete.isEmpty()){
+            return;
+        }
+
+        for (OfflineMapModel offlineMapModel: offlineMapsTodelete) {
+            OfflineServiceHelper.deleteOfflineMap(getActivity(),
+                    offlineMapModel.getDownloadAreaLabel(),
+                    BuildConfig.MAPBOX_SDK_ACCESS_TOKEN);
+        }
     }
 
     public void updateDownloadedMapsList(OfflineMapModel offlineMapModel){
