@@ -40,6 +40,31 @@
                 app:elevation="6dp"
                 app:fabSize="mini" />
 
+
+            <FrameLayout
+                android:id="@+id/filter_tasks_count_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|start"
+                android:layout_margin="@dimen/hamburger_margin"
+                android:layout_marginTop="140dp"
+                android:background="@drawable/circle_background"
+                android:visibility="gone"
+                app:elevation="6dp">
+
+                <TextView
+                    android:id="@+id/filter_tasks_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/filter_count_bg"
+                    android:gravity="center"
+                    android:text="2"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+
+            </FrameLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
