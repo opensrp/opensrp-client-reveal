@@ -1,6 +1,5 @@
 package org.smartregister.reveal.contract;
 
-import org.smartregister.domain.Location;
 import org.smartregister.reveal.model.OfflineMapModel;
 
 import java.util.List;
@@ -9,13 +8,13 @@ public interface AvailableOfflineMapsContract extends OfflineMapsFragmentContrac
 
     interface Presenter {
 
-        void fetchOperationalAreas();
+        void fetchAvailableOAsForMapDownLoad(List<String> locationIds);
 
-        void onFetchOperationalAreas(List<Location> locations);
+        void onFetchAvailableOAsForMapDownLoad(List<OfflineMapModel> offlineMapModels);
 
-        void onDownloadStarted(String operationalAreaname);
+        void onDownloadStarted(String operationalAreaId);
 
-        void onDownloadComplete(String operationalAreaName);
+        void onDownloadComplete(String operationalAreaId);
 
     }
 
@@ -23,13 +22,13 @@ public interface AvailableOfflineMapsContract extends OfflineMapsFragmentContrac
 
         void setOfflineMapModelList(List<OfflineMapModel> offlineMapModelList, boolean initialLoad);
 
-        void disableCheckBox(String operationalAreaName);
+        void disableCheckBox(String operationalAreaId);
 
-        void moveDownloadedOAToDownloadedList(String operationalAreaName);
+        void moveDownloadedOAToDownloadedList(String operationalAreaId);
     }
 
     interface Interactor {
 
-        void fetchOperationalAreas();
+        void fetchAvailableOAsForMapDownLoad(List<String> locationIds);
     }
 }

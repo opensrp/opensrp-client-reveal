@@ -88,8 +88,6 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
             setOfflineMapModelList(offlineMapModelList, true);
         }
 
-        presenter.fetchOperationalAreas();
-
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener(){
@@ -128,12 +126,12 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
     }
 
     @Override
-    public void disableCheckBox(String operationalAreaName) {
+    public void disableCheckBox(String operationalAreaId) {
         if (adapter ==null) {
             return;
         }
         for (OfflineMapModel offlineMapModel: offlineMapModelList ) {
-            if (offlineMapModel.getDownloadAreaLabel().equals(operationalAreaName)){
+            if (offlineMapModel.getDownloadAreaId().equals(operationalAreaId)){
                 if (offlineMapModel.isDownloadStarted()) {
                     return;
                 }
@@ -145,9 +143,9 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
     }
 
     @Override
-    public void moveDownloadedOAToDownloadedList(String operationalAreaName) {
+    public void moveDownloadedOAToDownloadedList(String operationalAreaId) {
         for (OfflineMapModel offlineMapModel : offlineMapModelList) {
-            if (offlineMapModel.getDownloadAreaLabel().equals(operationalAreaName)) {
+            if (offlineMapModel.getDownloadAreaId().equals(operationalAreaId)) {
                 callback.onMapDownloaded(offlineMapModel);
                 offlineMapModelList.remove(offlineMapModel);
                 setOfflineMapModelList(offlineMapModelList, false);
@@ -167,11 +165,12 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
 
         for (Location location: this.operationalAreasToDownload ) {
             Feature operationalAreaFeature = Feature.fromJson(gson.toJson(location));
-            downloadMap(operationalAreaFeature);
+            String mapName = location.getId();
+            downloadMap(operationalAreaFeature, mapName);
         }
     }
 
-    private void downloadMap(Feature operationalAreaFeature) {
+    private void downloadMap(Feature operationalAreaFeature, String mapName) {
         double[] bbox = TurfMeasurement.bbox(operationalAreaFeature.geometry());
 
         double minX = bbox[0];
@@ -187,8 +186,6 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
         double topRightLng = maxX;
         double bottomLeftLat = minY;
         double bottomLeftLng = minX;
-
-        String mapName = operationalAreasToDownload.get(0).getProperties().getName();
 
         currentMapDownload = mapName;
 
@@ -234,5 +231,10 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
         offlineMapModelList.add(offlineMapModel);
         setOfflineMapModelList(offlineMapModelList, false);
     }
+
+    public void setOfflineDownloadedMapNames (List<String> offlineRegionNames) {
+        presenter.fetchAvailableOAsForMapDownLoad(offlineRegionNames);
+    }
+
 
 }

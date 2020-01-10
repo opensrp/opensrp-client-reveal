@@ -1,11 +1,9 @@
 package org.smartregister.reveal.presenter;
 
-import org.smartregister.domain.Location;
 import org.smartregister.reveal.contract.AvailableOfflineMapsContract;
 import org.smartregister.reveal.interactor.AvailableOfflineMapsInteractor;
 import org.smartregister.reveal.model.OfflineMapModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AvailableOfflineMapsPresenter implements AvailableOfflineMapsContract.Presenter {
@@ -19,37 +17,24 @@ public class AvailableOfflineMapsPresenter implements AvailableOfflineMapsContra
     }
 
     @Override
-    public void fetchOperationalAreas() {
-        interactor.fetchOperationalAreas();
+    public void fetchAvailableOAsForMapDownLoad(List<String> locationIds) {
+        interactor.fetchAvailableOAsForMapDownLoad(locationIds);
     }
 
     @Override
-    public void onFetchOperationalAreas(List<Location> locations) {
-
-        List<OfflineMapModel> offlineMapModels = populateOfflineMapModelList(locations);
+    public void onFetchAvailableOAsForMapDownLoad(List<OfflineMapModel> offlineMapModels) {
         view.setOfflineMapModelList(offlineMapModels, true);
     }
 
     @Override
-    public void onDownloadStarted(String operationalAreaname) {
-        view.disableCheckBox(operationalAreaname);
+    public void onDownloadStarted(String operationalAreaId) {
+        view.disableCheckBox(operationalAreaId);
 
     }
 
     @Override
-    public void onDownloadComplete(String operationalAreaName) {
-        view.moveDownloadedOAToDownloadedList(operationalAreaName);
+    public void onDownloadComplete(String operationalAreaId) {
+        view.moveDownloadedOAToDownloadedList(operationalAreaId);
     }
-
-    private List<OfflineMapModel>  populateOfflineMapModelList(List<Location> locations) {
-        List<OfflineMapModel> offlineMapModels = new ArrayList<>();
-        for (Location location: locations) {
-            OfflineMapModel offlineMapModel = new OfflineMapModel();
-            offlineMapModel.setLocation(location);
-            offlineMapModels.add(offlineMapModel);
-        }
-
-        return offlineMapModels;
-    };
 
 }

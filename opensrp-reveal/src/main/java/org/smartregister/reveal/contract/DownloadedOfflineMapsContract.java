@@ -9,11 +9,22 @@ public interface DownloadedOfflineMapsContract extends OfflineMapsFragmentContra
     interface Presenter {
 
         void onDeleteDownloadMap(List<OfflineMapModel> offlineMapModels);
+
+        void fetchOAsWithOfflineDownloads(List<String> locationIds);
+
+        void onOAsWithOfflineDownloadsFetched(List<OfflineMapModel> downloadedOfflineMapModelList);
     }
 
     interface View  {
+
         void setDownloadedOfflineMapModelList(List<OfflineMapModel> downloadedOfflineMapModelList);
 
         void deleteDownloadedOfflineMaps();
+
+    }
+
+    interface Interactor {
+
+        void fetchLocationsWithOfflineMapDownloads(List<String> locationIds);
     }
 }

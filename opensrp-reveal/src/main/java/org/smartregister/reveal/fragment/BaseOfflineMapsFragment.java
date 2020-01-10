@@ -20,6 +20,7 @@ import io.ona.kujaku.utils.Constants;
 public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFragmentContract.View {
 
 
+    private static final String TAG = BaseOfflineMapsFragment.class.getName();
     private MapDownloadReceiver mapDownloadReceiver = new MapDownloadReceiver();
 
     protected String currentMapDownload;
@@ -52,7 +53,7 @@ public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFrag
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
-                Log.i("KUJAKU SAMPLE APP TAG", intent.getExtras().toString());
+                Log.i(TAG, intent.getExtras().toString());
                 if (bundle.containsKey(MapboxOfflineDownloaderService.KEY_RESULT_STATUS)
                         && bundle.containsKey(MapboxOfflineDownloaderService.KEY_RESULT_MESSAGE)
                         && bundle.containsKey(MapboxOfflineDownloaderService.KEY_RESULTS_PARENT_ACTION)
@@ -117,7 +118,7 @@ public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFrag
                     }
                 }
             } else {
-                Log.i("Reveal APP TAG", "Broadcast message has null Extras");
+                Log.i(TAG, "Broadcast message has null Extras");
             }
 
         }

@@ -87,7 +87,6 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
         if (downloadedOfflineMapModelList != null) {
             setDownloadedOfflineMapModelList(downloadedOfflineMapModelList);
         }
-
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener(){
@@ -134,7 +133,7 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
 
         for (OfflineMapModel offlineMapModel: offlineMapsTodelete) {
             OfflineServiceHelper.deleteOfflineMap(getActivity(),
-                    offlineMapModel.getDownloadAreaLabel(),
+                    offlineMapModel.getDownloadAreaId(),
                     BuildConfig.MAPBOX_SDK_ACCESS_TOKEN);
         }
     }
@@ -150,9 +149,9 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
             return;
         }
         for (OfflineMapModel offlineMapModel: downloadedOfflineMapModelList ) {
-            if (offlineMapModel.getDownloadAreaLabel().equals(mapUniqueName)){
+            if (offlineMapModel.getDownloadAreaId().equals(mapUniqueName)){
                 downloadedOfflineMapModelList.remove(offlineMapModel);
-                offlineMapModel.setDownloaded(true);
+                offlineMapModel.setDownloaded(false);
                 offlineMapModel.setDownloadStarted(false);
                 callback.onOfflineMapDeleted(offlineMapModel);
             }
@@ -164,4 +163,12 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
     public void setOfflineMapDownloadCallback(OfflineMapDownloadCallback callBack) {
         this.callback = callBack;
     }
+
+    public void setOfflineDownloadedMapNames (List<String> offlineRegionNames) {
+        if (offlineRegionNames == null || offlineRegionNames.isEmpty()) {
+            return;
+        }
+        presenter.fetchOAsWithOfflineDownloads(offlineRegionNames);
+    }
+
 }

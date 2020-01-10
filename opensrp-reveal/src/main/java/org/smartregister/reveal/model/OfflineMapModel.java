@@ -37,4 +37,8 @@ public class OfflineMapModel {
     public String getDownloadAreaLabel() {
         return  (location != null && location.getProperties() != null) ? location.getProperties().getName() : null;
     }
+
+    public String getDownloadAreaId() {
+        return location != null ? location.getId() : null;
+    }
 }
