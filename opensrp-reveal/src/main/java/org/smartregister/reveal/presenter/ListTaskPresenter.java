@@ -685,7 +685,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         Set<String> filterTaskCode = filterParams.getCheckedFilters().get(Filter.CODE);
         Set<String> filterInterventionUnitTasks = getInterventionUnitCodes(filterParams.getCheckedFilters().get(Filter.INTERVENTION_UNIT));
         Pattern pattern = Pattern.compile("~");
-        for (Feature feature : getFeatureCollection().features()) {
+        for (Feature feature : featureCollection.features()) {
             boolean matches = true;
             if (filterStatus != null) {
                 matches = feature.hasProperty(TASK_BUSINESS_STATUS) && filterStatus.contains(feature.getStringProperty(TASK_BUSINESS_STATUS));
