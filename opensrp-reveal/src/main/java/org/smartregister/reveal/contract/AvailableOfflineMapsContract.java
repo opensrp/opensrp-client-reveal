@@ -20,7 +20,7 @@ public interface AvailableOfflineMapsContract extends OfflineMapsFragmentContrac
 
     interface View {
 
-        void setOfflineMapModelList(List<OfflineMapModel> offlineMapModelList, boolean initialLoad);
+        void setOfflineMapModelList(List<OfflineMapModel> offlineMapModelList);
 
         void disableCheckBox(String operationalAreaId);
 

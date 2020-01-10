@@ -23,7 +23,7 @@ public class AvailableOfflineMapsPresenter implements AvailableOfflineMapsContra
 
     @Override
     public void onFetchAvailableOAsForMapDownLoad(List<OfflineMapModel> offlineMapModels) {
-        view.setOfflineMapModelList(offlineMapModels, true);
+        view.setOfflineMapModelList(offlineMapModels);
     }
 
     @Override

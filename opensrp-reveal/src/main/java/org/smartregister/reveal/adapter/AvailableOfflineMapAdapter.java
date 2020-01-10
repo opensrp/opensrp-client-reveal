@@ -22,8 +22,6 @@ public class AvailableOfflineMapAdapter extends RecyclerView.Adapter<AvailableOf
 
     private List<OfflineMapModel> offlineMapModels;
 
-    private boolean initialLoad;
-
     public AvailableOfflineMapAdapter(Context context, View.OnClickListener offlineMapClickHandler) {
         this.context = context;
         this.offlineMapClickHandler = offlineMapClickHandler;
@@ -44,18 +42,21 @@ public class AvailableOfflineMapAdapter extends RecyclerView.Adapter<AvailableOf
         viewHolder.setOfflineMapLabel(offlineMapModel.getDownloadAreaLabel());
         viewHolder.setItemViewListener(offlineMapModel, offlineMapClickHandler);
 
-        if (initialLoad) {
-            viewHolder.toggleCheckBoxState(true);
-        } else if (offlineMapModel.isDownloadStarted()) {
-            viewHolder.toggleCheckBoxState(false);
-        } else {
-            viewHolder.toggleCheckBoxState(true);
+        switch (offlineMapModel.getOfflineMapStatus()) {
+            case READY:
+                viewHolder.enableCheckBox(true);
+                viewHolder.displayDownloadingLabel(false);
+                viewHolder.checkCheckBox(false);
+                break;
+            case DOWNLOAD_STARTED:
+                viewHolder.enableCheckBox(false);
+                viewHolder.displayDownloadingLabel(true);
+                break;
+            default:
+                break;
+
         }
 
-        boolean mapDownloadInProgress = offlineMapModel.isDownloadStarted() &&
-                !offlineMapModel.isDownloaded();
-
-        viewHolder.displayDownloadingLabel(mapDownloadInProgress);
     }
 
     @Override
@@ -63,9 +64,8 @@ public class AvailableOfflineMapAdapter extends RecyclerView.Adapter<AvailableOf
         return offlineMapModels.size();
     }
 
-    public void setOfflineMapModels(List<OfflineMapModel> offlineMapModels, boolean initialLoad) {
+    public void setOfflineMapModels(List<OfflineMapModel> offlineMapModels) {
         this.offlineMapModels = offlineMapModels;
-        this.initialLoad = initialLoad;
         notifyDataSetChanged();
     }
 }

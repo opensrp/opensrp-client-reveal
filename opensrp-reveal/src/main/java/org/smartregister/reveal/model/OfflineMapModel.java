@@ -4,19 +4,19 @@ import org.smartregister.domain.Location;
 
 public class OfflineMapModel {
 
-    private boolean downloaded;
-
     private Location location;
 
-    private boolean downloadStarted;
-
-    public boolean isDownloaded() {
-        return downloaded;
+    public enum OFFLINE_MAP_STATUS {
+        READY,
+        DOWNLOAD_STARTED,
+        DOWNLOADED
     }
 
-    public void setDownloaded(boolean downloaded) {
-        this.downloaded = downloaded;
+    public OfflineMapModel() {
+        setOfflineMapStatus(OFFLINE_MAP_STATUS.READY);
     }
+
+    private OFFLINE_MAP_STATUS offlineMapStatus;
 
     public Location getLocation() {
         return location;
@@ -26,12 +26,12 @@ public class OfflineMapModel {
         this.location = location;
     }
 
-    public boolean isDownloadStarted() {
-        return downloadStarted;
+    public OFFLINE_MAP_STATUS getOfflineMapStatus() {
+        return offlineMapStatus;
     }
 
-    public void setDownloadStarted(boolean downloadStarted) {
-        this.downloadStarted = downloadStarted;
+    public void setOfflineMapStatus(OFFLINE_MAP_STATUS offlineMapStatus) {
+        this.offlineMapStatus = offlineMapStatus;
     }
 
     public String getDownloadAreaLabel() {

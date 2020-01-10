@@ -43,13 +43,16 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
         if (bundle != null) {
             fragment.setArguments(bundle);
         }
+        fragment.setPresenter(new DownloadedOfflineMapsPresenter(fragment));
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new DownloadedOfflineMapsPresenter(this);
+        if (presenter == null) {
+            presenter = new DownloadedOfflineMapsPresenter(this);
+        }
     }
 
     @Override
@@ -151,8 +154,7 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
         for (OfflineMapModel offlineMapModel: downloadedOfflineMapModelList ) {
             if (offlineMapModel.getDownloadAreaId().equals(mapUniqueName)){
                 downloadedOfflineMapModelList.remove(offlineMapModel);
-                offlineMapModel.setDownloaded(false);
-                offlineMapModel.setDownloadStarted(false);
+                offlineMapModel.setOfflineMapStatus(OfflineMapModel.OFFLINE_MAP_STATUS.READY);
                 callback.onOfflineMapDeleted(offlineMapModel);
             }
         }
@@ -169,6 +171,10 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
             return;
         }
         presenter.fetchOAsWithOfflineDownloads(offlineRegionNames);
+    }
+
+    public void setPresenter(DownloadedOfflineMapsPresenter presenter) {
+        this.presenter = presenter;
     }
 
 }

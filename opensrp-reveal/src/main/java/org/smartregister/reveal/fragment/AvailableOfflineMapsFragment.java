@@ -54,13 +54,17 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
         if (bundle != null) {
             fragment.setArguments(bundle);
         }
+
+        fragment.setPresenter(new AvailableOfflineMapsPresenter(fragment));
         return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new AvailableOfflineMapsPresenter(this);
+        if (presenter == null) {
+            presenter = new AvailableOfflineMapsPresenter(this);
+        }
     }
 
     @Nullable
@@ -85,7 +89,7 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
         adapter = new AvailableOfflineMapAdapter(this.getContext(), onClickListener);
         offlineMapRecyclerView.setAdapter(adapter);
         if (offlineMapModelList != null) {
-            setOfflineMapModelList(offlineMapModelList, true);
+            setOfflineMapModelList(offlineMapModelList);
         }
 
     }
@@ -105,11 +109,11 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
     };
 
     @Override
-    public void setOfflineMapModelList(List<OfflineMapModel> offlineMapModelList, boolean initialLoad) {
+    public void setOfflineMapModelList(List<OfflineMapModel> offlineMapModelList) {
         if (adapter == null) {
             this.offlineMapModelList = offlineMapModelList;
         } else {
-            adapter.setOfflineMapModels(offlineMapModelList, initialLoad);
+            adapter.setOfflineMapModels(offlineMapModelList);
             this.offlineMapModelList = offlineMapModelList;
         }
     }
@@ -132,23 +136,24 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
         }
         for (OfflineMapModel offlineMapModel: offlineMapModelList ) {
             if (offlineMapModel.getDownloadAreaId().equals(operationalAreaId)){
-                if (offlineMapModel.isDownloadStarted()) {
+                if (offlineMapModel.getOfflineMapStatus() == OfflineMapModel.OFFLINE_MAP_STATUS.DOWNLOAD_STARTED) {
                     return;
                 }
-                offlineMapModel.setDownloadStarted(true);
+                offlineMapModel.setOfflineMapStatus(OfflineMapModel.OFFLINE_MAP_STATUS.DOWNLOAD_STARTED);
             }
         }
 
-        setOfflineMapModelList(offlineMapModelList, false);
+        setOfflineMapModelList(offlineMapModelList);
     }
 
     @Override
     public void moveDownloadedOAToDownloadedList(String operationalAreaId) {
         for (OfflineMapModel offlineMapModel : offlineMapModelList) {
             if (offlineMapModel.getDownloadAreaId().equals(operationalAreaId)) {
+                offlineMapModel.setOfflineMapStatus(OfflineMapModel.OFFLINE_MAP_STATUS.DOWNLOADED);
                 callback.onMapDownloaded(offlineMapModel);
                 offlineMapModelList.remove(offlineMapModel);
-                setOfflineMapModelList(offlineMapModelList, false);
+                setOfflineMapModelList(offlineMapModelList);
                 return;
             }
         }
@@ -229,12 +234,15 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
 
     public void updateOperationalAreasToDownload(OfflineMapModel offlineMapModel){
         offlineMapModelList.add(offlineMapModel);
-        setOfflineMapModelList(offlineMapModelList, false);
+        setOfflineMapModelList(offlineMapModelList);
     }
 
     public void setOfflineDownloadedMapNames (List<String> offlineRegionNames) {
         presenter.fetchAvailableOAsForMapDownLoad(offlineRegionNames);
     }
 
+    public void setPresenter(AvailableOfflineMapsPresenter presenter) {
+        this.presenter = presenter;
+    }
 
 }
