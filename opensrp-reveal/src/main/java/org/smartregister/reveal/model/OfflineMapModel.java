@@ -1,10 +1,14 @@
 package org.smartregister.reveal.model;
 
+import com.mapbox.mapboxsdk.offline.OfflineRegion;
+
 import org.smartregister.domain.Location;
 
 public class OfflineMapModel {
 
     private Location location;
+
+    private OfflineRegion offlineRegion;
 
     public enum OFFLINE_MAP_STATUS {
         READY,
@@ -40,5 +44,13 @@ public class OfflineMapModel {
 
     public String getDownloadAreaId() {
         return location != null ? location.getId() : null;
+    }
+
+    public OfflineRegion getOfflineRegion() {
+        return offlineRegion;
+    }
+
+    public void setOfflineRegion(OfflineRegion offlineRegion) {
+        this.offlineRegion = offlineRegion;
     }
 }

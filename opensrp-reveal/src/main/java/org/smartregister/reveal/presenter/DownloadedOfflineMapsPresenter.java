@@ -1,10 +1,15 @@
 package org.smartregister.reveal.presenter;
 
+import android.support.v4.util.Pair;
+
+import com.mapbox.mapboxsdk.offline.OfflineRegion;
+
 import org.smartregister.reveal.contract.DownloadedOfflineMapsContract;
 import org.smartregister.reveal.interactor.DownloadedOfflineMapsInteractor;
 import org.smartregister.reveal.model.OfflineMapModel;
 
 import java.util.List;
+import java.util.Map;
 
 public class DownloadedOfflineMapsPresenter implements DownloadedOfflineMapsContract.Presenter {
 
@@ -22,8 +27,8 @@ public class DownloadedOfflineMapsPresenter implements DownloadedOfflineMapsCont
     }
 
     @Override
-    public void fetchOAsWithOfflineDownloads(List<String> locationIds) {
-        interactor.fetchLocationsWithOfflineMapDownloads(locationIds);
+    public void fetchOAsWithOfflineDownloads(Pair<List<String>, Map<String, OfflineRegion>> offlineRegionInfo) {
+        interactor.fetchLocationsWithOfflineMapDownloads(offlineRegionInfo);
     }
 
     @Override

@@ -3,9 +3,13 @@ package org.smartregister.reveal.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.mapbox.mapboxsdk.offline.OfflineRegion;
+import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.OfflineMapModel;
@@ -50,6 +54,19 @@ public class DownloadedOfflineMapAdapter extends RecyclerView.Adapter<Downloaded
                 break;
 
         }
+
+        offlineMapModel.getOfflineRegion().getStatus(new OfflineRegion.OfflineRegionStatusCallback() {
+            @Override
+            public void onStatus(OfflineRegionStatus status) {
+                viewHolder.displayDownloadSizeLabel(true);
+                viewHolder.setDownloadedMapSize(Formatter.formatFileSize(context, status.getCompletedResourceSize()));
+            }
+
+            @Override
+            public void onError(String error) {
+                // Do nothing
+            }
+        });
 
     }
 

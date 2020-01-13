@@ -1,8 +1,13 @@
 package org.smartregister.reveal.contract;
 
+import android.support.v4.util.Pair;
+
+import com.mapbox.mapboxsdk.offline.OfflineRegion;
+
 import org.smartregister.reveal.model.OfflineMapModel;
 
 import java.util.List;
+import java.util.Map;
 
 public interface DownloadedOfflineMapsContract extends OfflineMapsFragmentContract {
 
@@ -10,7 +15,7 @@ public interface DownloadedOfflineMapsContract extends OfflineMapsFragmentContra
 
         void onDeleteDownloadMap(List<OfflineMapModel> offlineMapModels);
 
-        void fetchOAsWithOfflineDownloads(List<String> locationIds);
+        void fetchOAsWithOfflineDownloads(Pair<List<String>, Map<String, OfflineRegion>> offlineRegionInfo);
 
         void onOAsWithOfflineDownloadsFetched(List<OfflineMapModel> downloadedOfflineMapModelList);
     }
@@ -25,6 +30,6 @@ public interface DownloadedOfflineMapsContract extends OfflineMapsFragmentContra
 
     interface Interactor {
 
-        void fetchLocationsWithOfflineMapDownloads(List<String> locationIds);
+        void fetchLocationsWithOfflineMapDownloads(Pair<List<String>, Map<String, OfflineRegion>> offlineRegionInfo);
     }
 }

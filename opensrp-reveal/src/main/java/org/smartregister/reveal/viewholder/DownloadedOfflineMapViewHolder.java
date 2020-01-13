@@ -12,6 +12,9 @@ import org.smartregister.reveal.model.OfflineMapModel;
 public class DownloadedOfflineMapViewHolder extends RecyclerView.ViewHolder {
 
     private TextView tvOfflineMapNameLabel;
+
+    private TextView tvDownloadingLabel;
+
     private CheckBox offlineMapCheckBox;
 
 
@@ -19,11 +22,16 @@ public class DownloadedOfflineMapViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
 
         tvOfflineMapNameLabel = itemView.findViewById(R.id.offline_map_label);
+        tvDownloadingLabel = itemView.findViewById(R.id.downloading_label);
         offlineMapCheckBox = itemView.findViewById(R.id.offline_map_checkbox);
     }
 
     public void setOfflineMapLabel(String offlineMapLabel) {
         this.tvOfflineMapNameLabel.setText(offlineMapLabel);
+    }
+
+    public void setDownloadedMapSize(String offlineMapSize) {
+        this.tvDownloadingLabel.setText(offlineMapSize);
     }
 
     public void setItemViewListener(OfflineMapModel offlineMapModel, View.OnClickListener onClickListener) {
@@ -33,6 +41,14 @@ public class DownloadedOfflineMapViewHolder extends RecyclerView.ViewHolder {
 
     public void checkCheckBox(boolean check) {
         offlineMapCheckBox.setChecked(check);
+    }
+
+    public void displayDownloadSizeLabel(boolean displayDownloadSizeLabel) {
+        if (displayDownloadSizeLabel) {
+            tvDownloadingLabel.setVisibility(View.VISIBLE);
+        } else {
+            tvDownloadingLabel.setVisibility(View.GONE);
+        }
     }
 
 }

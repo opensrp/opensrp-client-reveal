@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,7 +24,9 @@ import org.smartregister.reveal.fragment.DownloadedOfflineMapsFragment;
 import org.smartregister.reveal.model.OfflineMapModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.ona.kujaku.downloaders.MapBoxOfflineResourcesDownloader;
 import io.ona.kujaku.utils.LogUtil;
@@ -89,11 +92,11 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
         offlineManager.listOfflineRegions(new OfflineManager.ListOfflineRegionsCallback() {
             @Override
             public void onList(final OfflineRegion[] offlineRegions) {
-                List<String> offlineRegionNames = new ArrayList<>();;
+                Pair<List<String>, Map<String, OfflineRegion>>  offlineRegionInfo = null;
                 if (offlineRegions != null && offlineRegions.length > 0) {
-                    offlineRegionNames = getOfflineRegionNames(offlineRegions);
+                    offlineRegionInfo = getOfflineRegionInfo(offlineRegions);
                 }
-                setOfflineDownloadedMapNames(offlineRegionNames);
+                setOfflineDownloadedMapNames(offlineRegionInfo);
             }
 
             @Override
@@ -104,16 +107,20 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
     }
 
     @NonNull
-    private List<String> getOfflineRegionNames(final OfflineRegion[] offlineRegions) {
+    private Pair<List<String>, Map<String, OfflineRegion>> getOfflineRegionInfo (final OfflineRegion[] offlineRegions) {
         List<String> offlineRegionNames = new ArrayList<>();
+        Map<String, OfflineRegion> modelMap = new HashMap<>();
 
         for(int position = 0; position < offlineRegions.length; position++) {
+            OfflineMapModel offlineMapModel = new OfflineMapModel();
 
             byte[] metadataBytes = offlineRegions[position].getMetadata();
             try {
                 JSONObject jsonObject = new JSONObject(new String(metadataBytes));
                 if (jsonObject.has(MapBoxOfflineResourcesDownloader.METADATA_JSON_FIELD_REGION_NAME)) {
-                    offlineRegionNames.add(jsonObject.getString(MapBoxOfflineResourcesDownloader.METADATA_JSON_FIELD_REGION_NAME)) ;
+                    String regionName = jsonObject.getString(MapBoxOfflineResourcesDownloader.METADATA_JSON_FIELD_REGION_NAME);
+                    offlineRegionNames.add(regionName);
+                    modelMap.put(regionName, offlineRegions[position]);
                 }
 
             } catch (JSONException e) {
@@ -122,15 +129,16 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
 
         }
 
-        return offlineRegionNames;
+        return new Pair(offlineRegionNames, modelMap);
     }
 
-    private void setOfflineDownloadedMapNames(List<String> offlineRegionNames) {
+    private void setOfflineDownloadedMapNames(Pair<List<String>, Map<String, OfflineRegion>>  offlineRegionInfo) {
         DownloadedOfflineMapsFragment downloadedOfflineMapsFragment = (DownloadedOfflineMapsFragment)  adapter.getItem(DOWNLOADED_OFFLINE_MAPS_FRAGMENT_INDEX);
-        downloadedOfflineMapsFragment.setOfflineDownloadedMapNames(offlineRegionNames);
+        downloadedOfflineMapsFragment.setOfflineDownloadedMapNames(offlineRegionInfo);
 
         AvailableOfflineMapsFragment availableOfflineMapsFragment = (AvailableOfflineMapsFragment)  adapter.getItem(AVAILABLE_OFFLINE_MAPS_FRAGMENT_INDEX);
-        availableOfflineMapsFragment.setOfflineDownloadedMapNames(offlineRegionNames);
+        List<String> regionNames = offlineRegionInfo != null ? offlineRegionInfo.first : null;
+        availableOfflineMapsFragment.setOfflineDownloadedMapNames(regionNames);
 
     }
 }

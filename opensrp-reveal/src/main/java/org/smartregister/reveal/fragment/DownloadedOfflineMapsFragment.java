@@ -3,12 +3,15 @@ package org.smartregister.reveal.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+
+import com.mapbox.mapboxsdk.offline.OfflineRegion;
 
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -20,6 +23,7 @@ import org.smartregister.reveal.presenter.DownloadedOfflineMapsPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import io.ona.kujaku.helpers.OfflineServiceHelper;
 
@@ -166,11 +170,11 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
         this.callback = callBack;
     }
 
-    public void setOfflineDownloadedMapNames (List<String> offlineRegionNames) {
-        if (offlineRegionNames == null || offlineRegionNames.isEmpty()) {
+    public void setOfflineDownloadedMapNames (Pair<List<String>, Map<String, OfflineRegion>> offlineRegionInfo) {
+        if (offlineRegionInfo == null || offlineRegionInfo.first == null) {
             return;
         }
-        presenter.fetchOAsWithOfflineDownloads(offlineRegionNames);
+        presenter.fetchOAsWithOfflineDownloads(offlineRegionInfo);
     }
 
     public void setPresenter(DownloadedOfflineMapsPresenter presenter) {
