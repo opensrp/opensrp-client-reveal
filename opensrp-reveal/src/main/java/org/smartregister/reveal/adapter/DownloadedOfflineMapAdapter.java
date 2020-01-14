@@ -55,11 +55,22 @@ public class DownloadedOfflineMapAdapter extends RecyclerView.Adapter<Downloaded
 
         }
 
+        displayOfflineMapSize(offlineMapModel, viewHolder);
+
+    }
+
+    private void displayOfflineMapSize(OfflineMapModel offlineMapModel, DownloadedOfflineMapViewHolder viewHolder ) {
+        if (offlineMapModel == null || offlineMapModel.getOfflineRegion() == null) {
+            return;
+        }
+
         offlineMapModel.getOfflineRegion().getStatus(new OfflineRegion.OfflineRegionStatusCallback() {
             @Override
             public void onStatus(OfflineRegionStatus status) {
+
                 viewHolder.displayDownloadSizeLabel(true);
-                viewHolder.setDownloadedMapSize(Formatter.formatFileSize(context, status.getCompletedResourceSize()));
+                viewHolder.setDownloadedMapSize(context.getString(R.string.offline_map_size, Formatter.formatFileSize(context, status.getCompletedResourceSize())));
+
             }
 
             @Override

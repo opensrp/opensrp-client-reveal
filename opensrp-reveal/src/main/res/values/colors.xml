@@ -41,5 +41,6 @@
     <color name="mda_not_eligible_bg">#000000</color>
 
     <color name="download_map">#68BB0C</color>
+    <color name="delete_map">#EE0427</color>
 
 </resources>

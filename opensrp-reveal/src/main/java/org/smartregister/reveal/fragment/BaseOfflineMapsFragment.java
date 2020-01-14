@@ -93,7 +93,6 @@ public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFrag
                         if (serviceAction == MapboxOfflineDownloaderService.SERVICE_ACTION.STOP_CURRENT_DOWNLOAD) {
                             currentMapDownload = null;
                             // setCanStopMapDownload(false);
-                            displayToast("Download stopped");
                         } else if (serviceAction == MapboxOfflineDownloaderService.SERVICE_ACTION.DELETE_MAP) {
                             mapDeletedSuccessfully(mapUniqueName);
                         } else {
@@ -102,12 +101,12 @@ public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFrag
                                 if (isValidDouble(message)) {
                                     if (Double.valueOf(message) == 100d) {
                                         currentMapDownload = null;
-                                        displayToast("Download finished successfuly");
+                                        displayToast(getString(R.string.download_finished_successfuly));
                                         downloadCompleted(mapUniqueName);
                                         // setCanStopMapDownload(false);
                                     } else {
                                         // setCanStopMapDownload(true);
-                                        displayToast("Download map for " + mapUniqueName + " in progress at " + Double.valueOf(message));
+                                        displayToast(context.getApplicationContext().getString(R.string.map_download_progress, Double.valueOf(message)));
                                         downloadStarted(mapUniqueName);
                                     }
                                 } else {

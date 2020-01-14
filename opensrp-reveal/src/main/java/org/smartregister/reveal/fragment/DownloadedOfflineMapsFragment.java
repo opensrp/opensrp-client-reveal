@@ -3,6 +3,7 @@ package org.smartregister.reveal.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -78,6 +79,7 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
 
         Button btnDeleteMap = view.findViewById(R.id.download_map);
         btnDeleteMap.setText(getString(R.string.delete).toUpperCase());
+        btnDeleteMap.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.delete_map_bg));
 
         btnDeleteMap.setOnClickListener(new View.OnClickListener() {
             @Override
