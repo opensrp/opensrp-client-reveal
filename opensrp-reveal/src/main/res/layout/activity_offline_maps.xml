@@ -13,7 +13,7 @@
         android:background="@color/customAppThemeBlue">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/family_toolbar"
+            android:id="@+id/offline_maps_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/customAppThemeBlue"
@@ -35,7 +35,6 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp"
-                android:text="@string/return_to_all_families"
                 android:textColor="@color/white"
                 android:textSize="@dimen/register_member_title_size" />
 

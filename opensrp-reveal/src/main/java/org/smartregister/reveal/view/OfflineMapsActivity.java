@@ -7,7 +7,9 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.offline.OfflineManager;
@@ -46,9 +48,25 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
 
         setContentView(R.layout.activity_offline_maps);
 
+        setUpToolbar();
+
         setupViews();
 
         getOfflineDownloadedRegions();
+    }
+
+    protected void setUpToolbar() {
+        Toolbar toolbar= this.findViewById(R.id.offline_maps_toolbar);
+        toolbar.setTitle(R.string.return_to_register);
+        this.setSupportActionBar(toolbar);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     protected void setupViews() {
