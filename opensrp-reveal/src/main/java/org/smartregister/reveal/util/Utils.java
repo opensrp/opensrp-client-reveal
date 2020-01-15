@@ -45,9 +45,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import timber.log.Timber;
 
@@ -352,6 +354,28 @@ public class Utils {
             return false;
         String wordsSpaceAndCommaRegex = "[\\w\\h,]*";
         return toSearch.toLowerCase().matches(wordsSpaceAndCommaRegex + searchPhrase.toLowerCase() + wordsSpaceAndCommaRegex);
+    }
+
+
+    public static Set<String> getInterventionUnitCodes(Set<String> filterList) {
+        if (filterList == null) {
+            return null;
+        }
+        Set<String> codes = new HashSet<>();
+        if (filterList.contains(Constants.InterventionType.PERSON) || filterList.contains(Constants.InterventionType.FAMILY)) {
+            codes.addAll(Constants.Intervention.PERSON_INTERVENTIONS);
+        }
+        if (filterList.contains(Constants.InterventionType.OPERATIONAL_AREA)) {
+            codes.add(Constants.Intervention.BCC);
+        }
+        if (filterList.contains(Constants.InterventionType.STRUCTURE)) {
+            List<String> interventions = new ArrayList<>(Constants.Intervention.FI_INTERVENTIONS);
+            interventions.removeAll(Constants.Intervention.PERSON_INTERVENTIONS);
+            interventions.addAll(Constants.Intervention.IRS_INTERVENTIONS);
+            codes.addAll(interventions);
+        }
+        return codes;
+
     }
 
 }

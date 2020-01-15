@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.google.common.annotations.VisibleForTesting;
 import com.mapbox.geojson.Feature;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -22,15 +23,18 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import timber.log.Timber;
 
@@ -63,6 +67,12 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     private PreferencesUtil prefsUtil;
 
     private boolean isActionClicked = true;
+
+    private TaskFilterParams filterParams;
+
+    private boolean isTasksFiltered;
+
+    private ArrayList<TaskDetails> filteredTasks;
 
 
     public TaskRegisterFragmentPresenter(TaskRegisterFragmentContract.View view, String viewConfigurationIdentifier) {
@@ -263,6 +273,47 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         }
         getView().setTaskDetails(filteredTasks);
         getView().setTotalTasks(withBuffer);
+    }
+
+    @Override
+    public void filterTasks(TaskFilterParams filterParams) {
+        this.filterParams = filterParams;
+        if (filterParams.getCheckedFilters() == null || filterParams.getCheckedFilters().isEmpty()) {
+            isTasksFiltered = false;
+            getView().setNumberOfFilters(0);
+            return;
+        }
+        filteredTasks = new ArrayList<>();
+        Set<String> filterStatus = filterParams.getCheckedFilters().get(Constants.Filter.STATUS);
+        Set<String> filterTaskCode = filterParams.getCheckedFilters().get(Constants.Filter.CODE);
+        Set<String> filterInterventionUnitTasks = Utils.getInterventionUnitCodes(filterParams.getCheckedFilters().get(Constants.Filter.INTERVENTION_UNIT));
+        Pattern pattern = Pattern.compile("~");
+        int withBuffer = 0;
+        for (TaskDetails taskDetails : tasks) {
+            boolean matches = true;
+            if (filterStatus != null) {
+                matches = StringUtils.isNotBlank(taskDetails.getBusinessStatus()) && filterStatus.contains(taskDetails.getBusinessStatus());
+            }
+            if (matches && filterTaskCode != null) {
+                matches = matchesTaskCodeFilterList(taskDetails.getTaskCode(), filterTaskCode, pattern);
+            }
+            if (matches && filterInterventionUnitTasks != null) {
+                matches = matchesTaskCodeFilterList(taskDetails.getTaskCode(), filterInterventionUnitTasks, pattern);
+            }
+            if (matches) {
+                filteredTasks.add(taskDetails);
+                if (taskDetails.getDistanceFromUser() > 0 && taskDetails.getDistanceFromUser() <= Utils.getLocationBuffer())
+                    withBuffer++;
+            }
+        }
+        getView().setTaskDetails(filteredTasks);
+        getView().setTotalTasks(withBuffer);
+        isTasksFiltered = true;
+    }
+
+    private boolean matchesTaskCodeFilterList(String value, Set<String> filterList, Pattern pattern) {
+        String[] array = pattern.split(value);
+        return CollectionUtils.containsAny(Arrays.asList(array), filterList);
     }
 
     @Override

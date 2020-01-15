@@ -27,6 +27,7 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.AlertDialogUtils;
@@ -53,6 +54,8 @@ import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.smartregister.reveal.util.Constants.Action;
+import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
 
 /**
  * Created by samuelgithengi on 3/11/19.
@@ -314,6 +317,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         ((TaskRegisterActivity) getActivity()).displayIndexCaseFragment(indexCase);
     }
 
+    @Override
+    public void setNumberOfFilters(int numberOfFilters) {
+        //TODO implement display number of filters
+    }
+
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {
         this.jsonFormUtils = jsonFormUtils;
     }
@@ -328,6 +336,9 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                 getPresenter().getLocationPresenter().onGetUserLocationFailed();
             }
             hasRequestedLocation = false;
+        } else if (requestCode == REQUEST_CODE_FILTER_TASKS && resultCode == RESULT_OK && data.hasExtra(FILTER_SORT_PARAMS)) {
+            TaskFilterParams filterParams = (TaskFilterParams) data.getSerializableExtra(FILTER_SORT_PARAMS);
+            getPresenter().filterTasks(filterParams);
         }
     }
 

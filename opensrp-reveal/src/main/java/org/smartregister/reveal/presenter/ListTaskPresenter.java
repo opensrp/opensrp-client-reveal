@@ -41,7 +41,6 @@ import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -54,7 +53,6 @@ import org.smartregister.util.Utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -683,7 +681,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         filterFeatureCollection = new ArrayList<>();
         Set<String> filterStatus = filterParams.getCheckedFilters().get(Filter.STATUS);
         Set<String> filterTaskCode = filterParams.getCheckedFilters().get(Filter.CODE);
-        Set<String> filterInterventionUnitTasks = getInterventionUnitCodes(filterParams.getCheckedFilters().get(Filter.INTERVENTION_UNIT));
+        Set<String> filterInterventionUnitTasks = org.smartregister.reveal.util.Utils.getInterventionUnitCodes(filterParams.getCheckedFilters().get(Filter.INTERVENTION_UNIT));
         Pattern pattern = Pattern.compile("~");
         for (Feature feature : featureCollection.features()) {
             boolean matches = true;
@@ -714,27 +712,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             matches = CollectionUtils.containsAny(Arrays.asList(array), filterList);
         }
         return matches;
-
-    }
-
-    private Set<String> getInterventionUnitCodes(Set<String> filterList) {
-        if (filterList == null) {
-            return null;
-        }
-        Set<String> codes = new HashSet<>();
-        if (filterList.contains(Constants.InterventionType.PERSON) || filterList.contains(Constants.InterventionType.FAMILY)) {
-            codes.addAll(Constants.Intervention.PERSON_INTERVENTIONS);
-        }
-        if (filterList.contains(Constants.InterventionType.OPERATIONAL_AREA)) {
-            codes.add(Constants.Intervention.BCC);
-        }
-        if (filterList.contains(Constants.InterventionType.STRUCTURE)) {
-            List<String> interventions = new ArrayList<>(Constants.Intervention.FI_INTERVENTIONS);
-            interventions.removeAll(Constants.Intervention.PERSON_INTERVENTIONS);
-            interventions.addAll(Constants.Intervention.IRS_INTERVENTIONS);
-            codes.addAll(interventions);
-        }
-        return codes;
 
     }
 
