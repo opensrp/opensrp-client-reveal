@@ -260,6 +260,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             task.setCompleteTaskCount(cursor.getInt(cursor.getColumnIndex(COMPLETED_TASK_COUNT)));
             task.setGroupedTaskCodeStatus(cursor.getString(cursor.getColumnIndex(GROUPED_STRUCTURE_TASK_CODE_AND_STATUS)));
             task.setHouseNumber(cursor.getString(cursor.getColumnIndex(HOUSE_NUMBER)));
+            task.setFamilyMemberNames(cursor.getString(cursor.getColumnIndex(FAMILY_MEMBER_NAMES)));
         }
         Location location = new Location((String) null);
 
