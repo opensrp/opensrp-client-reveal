@@ -63,4 +63,4 @@ deploy:
   github_token: $GITHUB_TOKEN
   local_dir: opensrp-reveal/build/docs/javadoc/
   on:
-    branch: travis-deploy-javadoc
+    branch: master
