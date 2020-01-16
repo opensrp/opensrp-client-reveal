@@ -57,7 +57,7 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
 
     protected void setUpToolbar() {
         Toolbar toolbar= this.findViewById(R.id.offline_maps_toolbar);
-        toolbar.setTitle(R.string.return_to_register);
+        toolbar.setTitle(R.string.offline_maps);
         this.setSupportActionBar(toolbar);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener(){
@@ -130,7 +130,6 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
         Map<String, OfflineRegion> modelMap = new HashMap<>();
 
         for(int position = 0; position < offlineRegions.length; position++) {
-            OfflineMapModel offlineMapModel = new OfflineMapModel();
 
             byte[] metadataBytes = offlineRegions[position].getMetadata();
             try {

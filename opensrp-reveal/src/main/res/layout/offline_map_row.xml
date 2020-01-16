@@ -20,9 +20,10 @@
         android:textAllCaps="true"
         android:textColor="#FAAB00"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/downloading_label"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.785" />
 
     <TextView
         android:id="@+id/offline_map_label"
@@ -31,7 +32,7 @@
         android:padding="16dp"
         android:textColor="@color/text_black"
         android:textSize="@dimen/task_action_text"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/downloading_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintHorizontal_weight="2"
@@ -47,14 +48,14 @@
         android:text="@string/downloading"
         android:textColor="@color/light_grey"
         android:textSize="@dimen/downloading_hint_text_size"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintHorizontal_weight="2"
         app:layout_constraintStart_toEndOf="@+id/offline_map_checkbox"
         app:layout_constraintTop_toBottomOf="@id/offline_map_label"
-        app:layout_constraintVertical_bias="0.52"
-        android:visibility="gone" />
+         />
 
     <View
         android:id="@+id/separator"
