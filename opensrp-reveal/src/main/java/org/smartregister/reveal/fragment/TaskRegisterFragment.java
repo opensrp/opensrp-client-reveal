@@ -112,7 +112,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         initializeProgressIndicatorViews(view);
 
         view.findViewById(R.id.filter_text_view).setOnClickListener(v -> {
-            startActivityForResult(new Intent(getContext(), FilterTasksActivity.class), org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS);
+            getActivity().startActivityForResult(new Intent(getContext(), FilterTasksActivity.class), REQUEST_CODE_FILTER_TASKS);
         });
     }
 
