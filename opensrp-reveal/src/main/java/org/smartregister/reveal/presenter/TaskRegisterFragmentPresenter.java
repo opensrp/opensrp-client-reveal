@@ -74,7 +74,6 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
 
     private ArrayList<TaskDetails> filteredTasks;
 
-
     public TaskRegisterFragmentPresenter(TaskRegisterFragmentContract.View view, String viewConfigurationIdentifier) {
         this(view, viewConfigurationIdentifier, null);
         this.interactor = new TaskRegisterFragmentInteractor(this);
@@ -107,15 +106,18 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public void initializeQueries(String mainCondition) {
 
-        getView().initializeAdapter(visibleColumns);
+        if (getView().getAdapter() == null) {
+            getView().initializeAdapter(visibleColumns);
+        }
         lastLocation = getView().getLocationUtils().getLastLocation();
         if (lastLocation == null) {//if location client has not initialized use last location passed from map
             lastLocation = getView().getLastLocation();
         }
 
-        getView().showProgressView();
-
-        interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter(), getView().getContext().getString(R.string.house));
+        if (!isTasksFiltered) {
+            getView().showProgressView();
+            interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter(), getView().getContext().getString(R.string.house));
+        }
 
     }
 
@@ -288,7 +290,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         Set<String> filterTaskCode = filterParams.getCheckedFilters().get(Constants.Filter.CODE);
         Set<String> filterInterventionUnitTasks = Utils.getInterventionUnitCodes(filterParams.getCheckedFilters().get(Constants.Filter.INTERVENTION_UNIT));
         Pattern pattern = Pattern.compile("~");
-        int withBuffer = 0;
+        int withinBuffer = 0;
         for (TaskDetails taskDetails : tasks) {
             boolean matches = true;
             if (filterStatus != null) {
@@ -303,11 +305,13 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             if (matches) {
                 filteredTasks.add(taskDetails);
                 if (taskDetails.getDistanceFromUser() > 0 && taskDetails.getDistanceFromUser() <= Utils.getLocationBuffer())
-                    withBuffer++;
+                    withinBuffer++;
             }
         }
         getView().setTaskDetails(filteredTasks);
-        getView().setTotalTasks(withBuffer);
+        getView().setTotalTasks(withinBuffer);
+        getView().hideProgressDialog();
+        getView().hideProgressView();
         isTasksFiltered = true;
     }
 

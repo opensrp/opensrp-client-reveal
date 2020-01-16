@@ -6,6 +6,7 @@ import android.support.annotation.StringRes;
 
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.reveal.adapter.TaskRegisterAdapter;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
@@ -66,6 +67,8 @@ public interface TaskRegisterFragmentContract {
         void displayIndexCaseDetails(JSONObject indexCase);
 
         void setNumberOfFilters(int numberOfFilters);
+
+        TaskRegisterAdapter getAdapter();
     }
 
 }

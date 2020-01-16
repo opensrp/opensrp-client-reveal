@@ -322,6 +322,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         //TODO implement display number of filters
     }
 
+    @Override
+    public TaskRegisterAdapter getAdapter() {
+        return taskAdapter;
+    }
+
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {
         this.jsonFormUtils = jsonFormUtils;
     }

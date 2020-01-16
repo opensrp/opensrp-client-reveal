@@ -69,12 +69,13 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
     protected void onActivityResultExtended(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
             String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
-            Timber.d( json);
+            Timber.d(json);
             getPresenter().saveJsonForm(json);
         } else {
             mBaseFragment.onActivityResult(requestCode, resultCode, data);
         }
     }
+
 
     @Override
     public List<String> getViewIdentifiers() {
