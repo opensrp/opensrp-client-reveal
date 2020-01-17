@@ -222,7 +222,7 @@ public class RevealJsonFormUtils {
                 formName = JsonForm.THAILAND_SPRAY_FORM;
             } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.SPRAY_FORM_REFAPP;
-            } else{
+            } else {
                 formName = JsonForm.SPRAY_FORM;
             }
         } else if (MOSQUITO_COLLECTION_EVENT.equals(encounterType)
@@ -256,7 +256,7 @@ public class RevealJsonFormUtils {
                 || Intervention.BLOOD_SCREENING.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_BLOOD_SCREENING_FORM;
-            } else  if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.REFAPP_BLOOD_SCREENING_FORM;
             } else {
                 formName = JsonForm.BLOOD_SCREENING_FORM;
@@ -286,7 +286,7 @@ public class RevealJsonFormUtils {
         } else if (Constants.EventType.PAOT_EVENT.equals(encounterType) || Intervention.PAOT.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_PAOT_FORM;
-            } else  if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+            } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.REFAPP_PAOT_FORM;
             } else {
                 formName = JsonForm.PAOT_FORM;
