@@ -13,6 +13,7 @@ import com.mapbox.mapboxsdk.offline.OfflineRegionStatus;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.OfflineMapModel;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.viewholder.DownloadedOfflineMapViewHolder;
 
 import java.util.ArrayList;
@@ -69,7 +70,11 @@ public class DownloadedOfflineMapAdapter extends RecyclerView.Adapter<Downloaded
             public void onStatus(OfflineRegionStatus status) {
 
                 viewHolder.displayDownloadSizeLabel(true);
-                viewHolder.setDownloadedMapSize(context.getString(R.string.offline_map_size, Formatter.formatFileSize(context, status.getCompletedResourceSize())));
+
+                String mapDownloadSize = Formatter.formatFileSize(context, status.getCompletedResourceSize());
+                String downloadDate = Utils.formatDate(offlineMapModel.getDateCreated());
+
+                viewHolder.setDownloadedMapSize(context.getString(R.string.offline_map_size, mapDownloadSize, downloadDate));
 
             }
 

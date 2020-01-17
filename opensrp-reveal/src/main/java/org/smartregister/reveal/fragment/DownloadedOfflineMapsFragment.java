@@ -1,5 +1,6 @@
 package org.smartregister.reveal.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -42,13 +43,13 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
 
     private OfflineMapDownloadCallback callback;
 
-    public static DownloadedOfflineMapsFragment newInstance(Bundle bundle) {
+    public static DownloadedOfflineMapsFragment newInstance(Bundle bundle, Context context) {
 
         DownloadedOfflineMapsFragment fragment = new DownloadedOfflineMapsFragment();
         if (bundle != null) {
             fragment.setArguments(bundle);
         }
-        fragment.setPresenter(new DownloadedOfflineMapsPresenter(fragment));
+        fragment.setPresenter(new DownloadedOfflineMapsPresenter(fragment, context));
         return fragment;
     }
 
@@ -56,7 +57,7 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (presenter == null) {
-            presenter = new DownloadedOfflineMapsPresenter(this);
+            presenter = new DownloadedOfflineMapsPresenter(this, getContext());
         }
     }
 

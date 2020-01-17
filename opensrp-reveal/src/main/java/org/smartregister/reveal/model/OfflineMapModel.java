@@ -4,11 +4,15 @@ import com.mapbox.mapboxsdk.offline.OfflineRegion;
 
 import org.smartregister.domain.Location;
 
+import java.util.Date;
+
 public class OfflineMapModel {
 
     private Location location;
 
     private OfflineRegion offlineRegion;
+
+    private Date dateCreated;
 
     public enum OFFLINE_MAP_STATUS {
         READY,
@@ -52,5 +56,13 @@ public class OfflineMapModel {
 
     public void setOfflineRegion(OfflineRegion offlineRegion) {
         this.offlineRegion = offlineRegion;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
     }
 }

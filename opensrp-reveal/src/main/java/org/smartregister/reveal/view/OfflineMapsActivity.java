@@ -52,7 +52,7 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
 
         setupViews();
 
-        getOfflineDownloadedRegions();
+        getOfflineDownloadedRegions(false);
     }
 
     protected void setUpToolbar() {
@@ -82,7 +82,7 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
         availableOfflineMapsFragment.setOfflineMapDownloadCallback(this);
         adapter.addFragment(availableOfflineMapsFragment, this.getString(R.string.available).toUpperCase());
 
-        DownloadedOfflineMapsFragment downloadedOfflineMapsFragment = DownloadedOfflineMapsFragment.newInstance(this.getIntent().getExtras());
+        DownloadedOfflineMapsFragment downloadedOfflineMapsFragment = DownloadedOfflineMapsFragment.newInstance(this.getIntent().getExtras(), this );
         downloadedOfflineMapsFragment.setOfflineMapDownloadCallback(this);
         adapter.addFragment(downloadedOfflineMapsFragment, this.getString(R.string.downloaded).toUpperCase());
 
@@ -93,8 +93,7 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
 
     @Override
     public void onMapDownloaded(OfflineMapModel offlineMapModel) {
-        DownloadedOfflineMapsFragment downloadedOfflineMapsFragment = (DownloadedOfflineMapsFragment)  adapter.getItem(DOWNLOADED_OFFLINE_MAPS_FRAGMENT_INDEX);
-        downloadedOfflineMapsFragment.updateDownloadedMapsList(offlineMapModel);
+        getOfflineDownloadedRegions(true);
     }
 
     @Override
@@ -103,7 +102,7 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
         availableOfflineMapsFragment.updateOperationalAreasToDownload(offlineMapModel);
     }
 
-    private void getOfflineDownloadedRegions() {
+    private void getOfflineDownloadedRegions(boolean refreshDownloadedListOnly) {
         Mapbox.getInstance(this, BuildConfig.MAPBOX_SDK_ACCESS_TOKEN);
 
         OfflineManager offlineManager = OfflineManager.getInstance(this);
@@ -114,7 +113,7 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
                 if (offlineRegions != null && offlineRegions.length > 0) {
                     offlineRegionInfo = getOfflineRegionInfo(offlineRegions);
                 }
-                setOfflineDownloadedMapNames(offlineRegionInfo);
+                setOfflineDownloadedMapNames(offlineRegionInfo, refreshDownloadedListOnly);
             }
 
             @Override
@@ -149,9 +148,13 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
         return new Pair(offlineRegionNames, modelMap);
     }
 
-    private void setOfflineDownloadedMapNames(Pair<List<String>, Map<String, OfflineRegion>>  offlineRegionInfo) {
+    private void setOfflineDownloadedMapNames(Pair<List<String>, Map<String, OfflineRegion>>  offlineRegionInfo, boolean refreshDownloadedListOnly) {
         DownloadedOfflineMapsFragment downloadedOfflineMapsFragment = (DownloadedOfflineMapsFragment)  adapter.getItem(DOWNLOADED_OFFLINE_MAPS_FRAGMENT_INDEX);
         downloadedOfflineMapsFragment.setOfflineDownloadedMapNames(offlineRegionInfo);
+
+        if (refreshDownloadedListOnly){
+            return;
+        }
 
         AvailableOfflineMapsFragment availableOfflineMapsFragment = (AvailableOfflineMapsFragment)  adapter.getItem(AVAILABLE_OFFLINE_MAPS_FRAGMENT_INDEX);
         List<String> regionNames = offlineRegionInfo != null ? offlineRegionInfo.first : null;

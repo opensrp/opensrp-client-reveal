@@ -1,5 +1,6 @@
 package org.smartregister.reveal.presenter;
 
+import android.content.Context;
 import android.support.v4.util.Pair;
 
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
@@ -16,9 +17,9 @@ public class DownloadedOfflineMapsPresenter implements DownloadedOfflineMapsCont
     private DownloadedOfflineMapsContract.View view;
     private DownloadedOfflineMapsContract.Interactor interactor;
 
-    public DownloadedOfflineMapsPresenter(DownloadedOfflineMapsContract.View view) {
+    public DownloadedOfflineMapsPresenter(DownloadedOfflineMapsContract.View view, Context context) {
         this.view = view;
-        this.interactor = new DownloadedOfflineMapsInteractor(this);
+        this.interactor = new DownloadedOfflineMapsInteractor(this, context);
     }
 
     @Override

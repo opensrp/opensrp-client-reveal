@@ -296,7 +296,7 @@
     <string name="delete">Delete</string>
     <string name="select_offline_map_to_delete">Please select an offline map to delete</string>
     <string name="select_offline_map_to_download">Please select an offline map to download</string>
-    <string name="offline_map_size">Size %1$s</string>
+    <string name="offline_map_size">Size %1$s Downloaded %2$s </string>
     <string name="download_finished_successfuly">Download finished successfuly</string>
     <string name="map_download_progress">Downloading: %,.2f %%</string>
 
