@@ -136,10 +136,10 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
         }
         for (OfflineMapModel offlineMapModel: offlineMapModelList ) {
             if (offlineMapModel.getDownloadAreaId().equals(operationalAreaId)){
-                if (offlineMapModel.getOfflineMapStatus() == OfflineMapModel.OFFLINE_MAP_STATUS.DOWNLOAD_STARTED) {
+                if (offlineMapModel.getOfflineMapStatus() == OfflineMapModel.OfflineMapStatus.DOWNLOAD_STARTED) {
                     return;
                 }
-                offlineMapModel.setOfflineMapStatus(OfflineMapModel.OFFLINE_MAP_STATUS.DOWNLOAD_STARTED);
+                offlineMapModel.setOfflineMapStatus(OfflineMapModel.OfflineMapStatus.DOWNLOAD_STARTED);
             }
         }
 
@@ -150,7 +150,7 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
     public void moveDownloadedOAToDownloadedList(String operationalAreaId) {
         for (OfflineMapModel offlineMapModel : offlineMapModelList) {
             if (offlineMapModel.getDownloadAreaId().equals(operationalAreaId)) {
-                offlineMapModel.setOfflineMapStatus(OfflineMapModel.OFFLINE_MAP_STATUS.DOWNLOADED);
+                offlineMapModel.setOfflineMapStatus(OfflineMapModel.OfflineMapStatus.DOWNLOADED);
                 callback.onMapDownloaded(offlineMapModel);
                 offlineMapModelList.remove(offlineMapModel);
                 setOfflineMapModelList(offlineMapModelList);

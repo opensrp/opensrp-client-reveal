@@ -161,7 +161,7 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
         for (OfflineMapModel offlineMapModel: downloadedOfflineMapModelList ) {
             if (offlineMapModel.getDownloadAreaId().equals(mapUniqueName)){
                 downloadedOfflineMapModelList.remove(offlineMapModel);
-                offlineMapModel.setOfflineMapStatus(OfflineMapModel.OFFLINE_MAP_STATUS.READY);
+                offlineMapModel.setOfflineMapStatus(OfflineMapModel.OfflineMapStatus.READY);
                 callback.onOfflineMapDeleted(offlineMapModel);
             }
         }

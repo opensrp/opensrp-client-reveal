@@ -65,7 +65,7 @@ public class DownloadedOfflineMapsInteractor implements DownloadedOfflineMapsCon
         for (Location location: locations) {
             OfflineMapModel offlineMapModel = new OfflineMapModel();
             offlineMapModel.setLocation(location);
-            offlineMapModel.setOfflineMapStatus(OfflineMapModel.OFFLINE_MAP_STATUS.DOWNLOADED);
+            offlineMapModel.setOfflineMapStatus(OfflineMapModel.OfflineMapStatus.DOWNLOADED);
             offlineMapModel.setOfflineRegion(offlineRegionMap.get(location.getId()));
 
             if (offlineQueueTaskMap.get(location.getId()) != null) {

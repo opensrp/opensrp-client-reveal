@@ -66,27 +66,14 @@ public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFrag
                     String message = bundle.getString(MapboxOfflineDownloaderService.KEY_RESULT_MESSAGE);
 
                     if (MapboxOfflineDownloaderService.SERVICE_ACTION_RESULT.FAILED.name().equals(resultStatus)) {
-                        if (!TextUtils.isEmpty(message)) {
-                            if (!message.contains("MapBox Tile Count limit exceeded")) {
-                                //showInfoNotification("Error occurred " + mapUniqueName + ":" + serviceAction.name(), message);
-
-                                displayError(R.id.download_map,  message);
-                            }
+                        if (!TextUtils.isEmpty(message) &&
+                                !message.contains("MapBox Tile Count limit exceeded")) {
+                            //showInfoNotification("Error occurred " + mapUniqueName + ":" + serviceAction.name(), message);
+                            displayError(R.id.download_map,  message);
                         }
 
                         if (serviceAction == MapboxOfflineDownloaderService.SERVICE_ACTION.DELETE_MAP && !TextUtils.isEmpty(message)) {
                             displayError(R.id.download_map, message);
-                        }
-                                    /*
-                                    (FACT) This is an error update from the service. If this is not
-                                    a DELETE_MAP action and the update is about the map that we expect
-                                    to be currently downloading, held by currentMapDownload variable, then we
-                                    need to disable the STOP MAP DOWNLOAD since the download has already been
-                                    stopped after the error. If we left this as true, then we would be misleading
-                                    the user that they can stop a non-existent download.
-                                     */
-                        else if (!TextUtils.isEmpty(mapUniqueName) && mapUniqueName.equals(currentMapDownload)) {
-                            // setCanStopMapDownload(false);
                         }
                     } else {
                         // We should disable the stop offline download button if it was stopped successfully

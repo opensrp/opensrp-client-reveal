@@ -14,17 +14,17 @@ public class OfflineMapModel {
 
     private Date dateCreated;
 
-    public enum OFFLINE_MAP_STATUS {
+    public enum OfflineMapStatus {
         READY,
         DOWNLOAD_STARTED,
         DOWNLOADED
     }
 
-    public OfflineMapModel() {
-        setOfflineMapStatus(OFFLINE_MAP_STATUS.READY);
-    }
+    private OfflineMapStatus offlineMapStatus;
 
-    private OFFLINE_MAP_STATUS offlineMapStatus;
+    public OfflineMapModel() {
+        setOfflineMapStatus(OfflineMapStatus.READY);
+    }
 
     public Location getLocation() {
         return location;
@@ -34,11 +34,11 @@ public class OfflineMapModel {
         this.location = location;
     }
 
-    public OFFLINE_MAP_STATUS getOfflineMapStatus() {
+    public OfflineMapStatus getOfflineMapStatus() {
         return offlineMapStatus;
     }
 
-    public void setOfflineMapStatus(OFFLINE_MAP_STATUS offlineMapStatus) {
+    public void setOfflineMapStatus(OfflineMapStatus offlineMapStatus) {
         this.offlineMapStatus = offlineMapStatus;
     }
 
