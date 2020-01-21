@@ -326,6 +326,11 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         isTasksFiltered = true;
     }
 
+    @Override
+    public void onFilterTasksClicked() {
+        getView().openFilterActivity(filterParams);
+    }
+
     private boolean matchesTaskCodeFilterList(String value, Set<String> filterList, Pattern pattern) {
         String[] array = pattern.split(value);
         return CollectionUtils.containsAny(Arrays.asList(array), filterList);

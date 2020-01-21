@@ -115,10 +115,9 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
         filterTextView = view.findViewById(R.id.filter_text_view);
         filterTextView.setOnClickListener(v -> {
-            getActivity().startActivityForResult(new Intent(getContext(), FilterTasksActivity.class), REQUEST_CODE_FILTER_TASKS);
+            getPresenter().onFilterTasksClicked();
         });
     }
-
 
     @Override
     public void filter(String filterString, String joinTableString, String mainConditionString, boolean qrCode) {
@@ -336,6 +335,13 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     public TaskRegisterAdapter getAdapter() {
         return taskAdapter;
+    }
+
+    @Override
+    public void openFilterActivity(TaskFilterParams filterParams) {
+        Intent intent = new Intent(getContext(), FilterTasksActivity.class);
+        intent.putExtra(FILTER_SORT_PARAMS, filterParams);
+        getActivity().startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
     }
 
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {

@@ -118,4 +118,9 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
         intent.putExtra(Filter.FILTER_SORT_PARAMS, new TaskFilterParams(selectedItem, checkedFilters));
         view.applyFilters(intent);
     }
+
+    @Override
+    public void setCheckedFilters(Map<String, Set<String>> checkedFilters) {
+        this.checkedFilters = checkedFilters;
+    }
 }

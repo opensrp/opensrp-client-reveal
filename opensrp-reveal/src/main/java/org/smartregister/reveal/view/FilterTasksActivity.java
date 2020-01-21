@@ -14,11 +14,14 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FilterTasksContract;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.FilterTasksPresenter;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.view.activity.MultiLanguageActivity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -63,6 +66,12 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         applyFiltersTextView.setOnClickListener(view -> {
             presenter.onApplyFilters(sortBy.getSelectedItem().toString());
         });
+
+
+        TaskFilterParams filterParams = (TaskFilterParams) getIntent().getSerializableExtra(Filter.FILTER_SORT_PARAMS);
+        if (filterParams != null) {
+            presenter.setCheckedFilters(filterParams.getCheckedFilters());
+        }
     }
 
 
@@ -75,9 +84,9 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
 
 
     private void registerCheckedChangeListener() {
-        registerCheckedChangeListener(businessStatusLayout, Constants.Filter.STATUS);
-        registerCheckedChangeListener(taskCodeLayout, Constants.Filter.CODE);
-        registerCheckedChangeListener(interventionTypeLayout, Constants.Filter.INTERVENTION_UNIT);
+        registerCheckedChangeListener(businessStatusLayout, Filter.STATUS);
+        registerCheckedChangeListener(taskCodeLayout, Filter.CODE);
+        registerCheckedChangeListener(interventionTypeLayout, Filter.INTERVENTION_UNIT);
     }
 
     private void registerCheckedChangeListener(FlexboxLayout layout, String category) {

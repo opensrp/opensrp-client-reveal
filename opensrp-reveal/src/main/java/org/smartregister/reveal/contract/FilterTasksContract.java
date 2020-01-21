@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.annotation.StringRes;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by samuelgithengi on 12/18/19.
@@ -29,5 +31,7 @@ public interface FilterTasksContract {
         List<String> getBusinessStatusOptions();
 
         void onApplyFilters(String selectedItem);
+
+        void setCheckedFilters(Map<String, Set<String>> checkedFilters);
     }
 }
