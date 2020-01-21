@@ -10,6 +10,7 @@ import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.vijay.jsonwizard.activities.JsonWizardFormActivity;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,18 +28,16 @@ import org.smartregister.family.util.DBConstants;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.AllSettings;
-import org.smartregister.repository.CampaignRepository;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.PlanDefinitionRepository;
 import org.smartregister.repository.PlanDefinitionSearchRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.repository.StructureRepository;
-import org.smartregister.repository.TaskNotesRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.job.RevealJobCreator;
-import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.repository.RevealRepository;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
@@ -107,6 +106,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
         context.updateCommonFtsObject(createCommonFtsObject());
+        forceRemoteLoginForInConsistentUsername();
         // Initialize Modules
         Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
         P2POptions p2POptions = new P2POptions(true);
@@ -141,6 +141,17 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             LangUtils.saveLanguage(getApplicationContext(), "en");
         }
 
+    }
+
+    /**
+     * Removes the username and forces a remote login in case the username did not match the openmrs username
+     */
+    private void forceRemoteLoginForInConsistentUsername() {
+        AllSharedPreferences allSharedPreferences = context.allSharedPreferences();
+        if (StringUtils.isNotBlank(allSharedPreferences.fetchRegisteredANM()) && StringUtils.isBlank(allSharedPreferences.fetchDefaultTeamId(allSharedPreferences.fetchRegisteredANM()))) {
+            allSharedPreferences.updateANMUserName(null);
+            allSharedPreferences.saveForceRemoteLogin(true);
+        }
     }
 
     @Override
