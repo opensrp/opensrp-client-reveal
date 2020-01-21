@@ -263,7 +263,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         Timber.d("searching task matching %s", searchText);
         List<TaskDetails> filteredTasks = new ArrayList<>();
         int withBuffer = 0;
-        for (TaskDetails task : tasks) {
+        for (TaskDetails task : isTasksFiltered ? filteredTasks : tasks) {
             if (Utils.matchesSearchPhrase(task.getFamilyName(), searchText) ||
                     Utils.matchesSearchPhrase(task.getStructureName(), searchText) ||
                     Utils.matchesSearchPhrase(task.getHouseNumber(), searchText) ||
@@ -283,6 +283,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         if (filterParams.getCheckedFilters() == null || filterParams.getCheckedFilters().isEmpty()) {
             isTasksFiltered = false;
             getView().setNumberOfFilters(0);
+            filteredTasks = null;
             return;
         }
         filteredTasks = new ArrayList<>();
