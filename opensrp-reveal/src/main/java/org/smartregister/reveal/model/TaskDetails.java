@@ -4,6 +4,7 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
+import org.smartregister.reveal.util.Utils;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.FULLY_RECEI
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NONE_RECEIVED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_RECEIVED;
 import static org.smartregister.reveal.util.Constants.COMMA;
 import static org.smartregister.reveal.util.Constants.HYPHEN;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
@@ -297,19 +299,39 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         setAggregateBusinessStatus(calculateAggegateBusinessStatus());
     }
 
+    /**
+     * @see  org.smartregister.reveal.viewholder.TaskRegisterViewHolder#getActionDrawable(TaskDetails task)
+     * Calculates the aggregate/overall business status
+     * @return the aggregate business status
+     */
     private String calculateAggegateBusinessStatus() {
-        if (isFamilyRegisteredOrNoTaskExists() && isBednetDistributed() && isBloodScreeningDone()) {
-            return COMPLETE;
-
-        } else if (isFamilyRegisteredOrNoTaskExists() && !isBednetDistributed() && !isBloodScreeningDone()) {
-            return FAMILY_REGISTERED;
-        } else if (isFamilyRegisteredOrNoTaskExists() && isBednetDistributed()) {
-            return BEDNET_DISTRIBUTED;
-        } else if (isBloodScreeningDone()) {
-            return BLOOD_SCREENING_COMPLETE;
-        } else {
-            return NOT_VISITED;
+        if (isNoneReceived())
+            return NOT_ELIGIBLE;
+        else if (Utils.isFocusInvestigation()) {
+            if (isFamilyRegisteredOrNoTaskExists() && isBednetDistributed() && isBloodScreeningDone()) {
+                return COMPLETE;
+            } else if (isFamilyRegisteredOrNoTaskExists() && !isBednetDistributed() && !isBloodScreeningDone()) {
+                return FAMILY_REGISTERED;
+            } else if (isFamilyRegisteredOrNoTaskExists() && isBednetDistributed()) {
+                return BEDNET_DISTRIBUTED;
+            } else if (isBloodScreeningDone()) {
+                return BLOOD_SCREENING_COMPLETE;
+            }
         }
+        if (Utils.isMDA()) {
+            if (isFamilyRegisteredOrNoTaskExists() && isMdaAdhered()) {
+                return COMPLETE;
+            } else if (isFamilyRegisteredOrNoTaskExists() && isFullyReceived()) {
+                return FULLY_RECEIVED;
+            } else if (isFamilyRegisteredOrNoTaskExists() && isPartiallyReceived()) {
+                return PARTIALLY_RECEIVED;
+            } else if (isFamilyRegisteredOrNoTaskExists() && isNoneReceived()) {
+                return NONE_RECEIVED;
+            } else if (isFamilyRegisteredOrNoTaskExists()) {
+                return FAMILY_REGISTERED;
+            }
+        }
+        return NOT_VISITED;
     }
 
     private boolean isFamilyRegisteredOrNoTaskExists() {
