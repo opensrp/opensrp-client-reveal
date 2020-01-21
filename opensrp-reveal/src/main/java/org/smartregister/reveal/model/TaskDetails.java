@@ -305,9 +305,7 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
      * Calculates the aggregate/overall business status
      */
     private String calculateAggregateBusinessStatus() {
-        if (isNoneReceived())
-            return NOT_ELIGIBLE;
-        else if (Utils.isFocusInvestigation()) {
+        if (Utils.isFocusInvestigation()) {
             if (isFamilyRegisteredOrNoTaskExists() && isBednetDistributed() && isBloodScreeningDone()) {
                 return COMPLETE;
             } else if (isFamilyRegisteredOrNoTaskExists() && !isBednetDistributed() && !isBloodScreeningDone()) {
@@ -329,6 +327,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
             } else if (isFamilyRegisteredOrNoTaskExists()) {
                 return FAMILY_REGISTERED;
             }
+        } else if (isNotEligible()) {
+            return NOT_ELIGIBLE;
         }
         return NOT_VISITED;
     }
