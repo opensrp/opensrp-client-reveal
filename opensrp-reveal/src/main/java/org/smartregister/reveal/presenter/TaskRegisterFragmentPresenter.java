@@ -305,7 +305,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         for (TaskDetails taskDetails : tasks) {
             boolean matches = true;
             if (filterStatus != null) {
-                matches = StringUtils.isNotBlank(taskDetails.getBusinessStatus()) && filterStatus.contains(taskDetails.getBusinessStatus());
+                matches = StringUtils.isBlank(taskDetails.getAggregateBusinessStatus()) ? filterStatus.contains(taskDetails.getBusinessStatus()) : filterStatus.contains(taskDetails.getAggregateBusinessStatus());
             }
             if (matches && filterTaskCode != null) {
                 matches = matchesTaskCodeFilterList(taskDetails.getTaskCode(), filterTaskCode, pattern);
