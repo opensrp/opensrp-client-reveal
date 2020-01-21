@@ -78,6 +78,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     private CardView indicatorsCardView;
 
+    private TextView filterTextView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +113,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
         initializeProgressIndicatorViews(view);
 
-        view.findViewById(R.id.filter_text_view).setOnClickListener(v -> {
+        filterTextView = view.findViewById(R.id.filter_text_view);
+        filterTextView.setOnClickListener(v -> {
             getActivity().startActivityForResult(new Intent(getContext(), FilterTasksActivity.class), REQUEST_CODE_FILTER_TASKS);
         });
     }
@@ -318,7 +321,16 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     @Override
     public void setNumberOfFilters(int numberOfFilters) {
-        //TODO implement display number of filters
+        filterTextView.setText(getString(R.string.filters, numberOfFilters));
+        int padding = getResources().getDimensionPixelSize(R.dimen.filter_toggle_end_margin);
+        filterTextView.setPadding(padding, 0, padding, 0);
+    }
+
+    @Override
+    public void clearFilter() {
+        filterTextView.setText(getString(R.string.filter));
+        int padding = getResources().getDimensionPixelSize(R.dimen.filter_toggle_padding);
+        filterTextView.setPadding(padding, 0, padding, 0);
     }
 
     @Override

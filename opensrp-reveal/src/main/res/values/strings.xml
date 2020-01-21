@@ -291,7 +291,8 @@
 
     <string name="menu">Menu</string>
     <string name="add_structure">Register Structure</string>
-    <string name="filters">Filters</string>
+    <string name="filter">Filter</string>
+    <string name="filters">Filters (%1$d)</string>
     <string name="clear">Clear</string>
     <string name="sort_by">Sort by</string>
     <string name="status">Status</string>

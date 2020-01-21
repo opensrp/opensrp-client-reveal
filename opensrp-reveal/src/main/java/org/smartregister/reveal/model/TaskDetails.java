@@ -296,15 +296,15 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         setNotEligible(mdaStatusMap.get(NOT_ELIGIBLE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
         setPartiallyReceived(!isFullyReceived() && (mdaStatusMap.get(FULLY_RECEIVED) > 0));
 
-        setAggregateBusinessStatus(calculateAggegateBusinessStatus());
+        setAggregateBusinessStatus(calculateAggregateBusinessStatus());
     }
 
     /**
-     * @see  org.smartregister.reveal.viewholder.TaskRegisterViewHolder#getActionDrawable(TaskDetails task)
-     * Calculates the aggregate/overall business status
      * @return the aggregate business status
+     * @see org.smartregister.reveal.viewholder.TaskRegisterViewHolder#getActionDrawable(TaskDetails task)
+     * Calculates the aggregate/overall business status
      */
-    private String calculateAggegateBusinessStatus() {
+    private String calculateAggregateBusinessStatus() {
         if (isNoneReceived())
             return NOT_ELIGIBLE;
         else if (Utils.isFocusInvestigation()) {
@@ -317,8 +317,7 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
             } else if (isBloodScreeningDone()) {
                 return BLOOD_SCREENING_COMPLETE;
             }
-        }
-        if (Utils.isMDA()) {
+        } else if (Utils.isMDA()) {
             if (isFamilyRegisteredOrNoTaskExists() && isMdaAdhered()) {
                 return COMPLETE;
             } else if (isFamilyRegisteredOrNoTaskExists() && isFullyReceived()) {

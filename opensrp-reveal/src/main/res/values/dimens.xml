@@ -51,6 +51,7 @@
 
     <dimen name="filter_toggle_end_margin">16dp</dimen>
     <dimen name="filter_toggle_bottom_margin">8dp</dimen>
+    <dimen name="filter_toggle_padding">32dp</dimen>
 
 </resources>
 

@@ -292,7 +292,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         this.filterParams = filterParams;
         if (filterParams.getCheckedFilters() == null || filterParams.getCheckedFilters().isEmpty()) {
             isTasksFiltered = false;
-            getView().setNumberOfFilters(0);
+            getView().clearFilter();
             filteredTasks = null;
             return;
         }
@@ -300,6 +300,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         Set<String> filterStatus = filterParams.getCheckedFilters().get(Constants.Filter.STATUS);
         Set<String> filterTaskCode = filterParams.getCheckedFilters().get(Constants.Filter.CODE);
         Set<String> filterInterventionUnitTasks = Utils.getInterventionUnitCodes(filterParams.getCheckedFilters().get(Constants.Filter.INTERVENTION_UNIT));
+        getView().setNumberOfFilters(filterParams.getCheckedFilters().size());
         Pattern pattern = Pattern.compile("~");
         withinBuffer = 0;
         for (TaskDetails taskDetails : tasks) {
@@ -362,6 +363,6 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     }
 
     private List<TaskDetails> getActiveTasks() {
-        return isTasksFiltered ? filteredTasks : tasks;
+        return isTasksFiltered && filteredTasks != null ? filteredTasks : tasks;
     }
 }

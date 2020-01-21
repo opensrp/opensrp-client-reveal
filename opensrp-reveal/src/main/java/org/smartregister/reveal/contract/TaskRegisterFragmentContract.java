@@ -68,6 +68,8 @@ public interface TaskRegisterFragmentContract {
 
         void setNumberOfFilters(int numberOfFilters);
 
+        void clearFilter();
+
         TaskRegisterAdapter getAdapter();
     }
 

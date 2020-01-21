@@ -43,7 +43,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         presenter = new FilterTasksPresenter(this);
         setContentView(R.layout.activity_filter_tasks);
         Toolbar toolbar = this.findViewById(R.id.filter_tasks_toolbar);
-        toolbar.setTitle(R.string.filters);
+        toolbar.setTitle(R.string.filter);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_close);
