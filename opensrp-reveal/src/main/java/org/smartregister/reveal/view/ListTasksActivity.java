@@ -441,12 +441,15 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (v.getId() == R.id.progressIndicatorsGroupView) {
             openIndicatorsCardView();
         } else if (v.getId() == R.id.filter_tasks_fab || v.getId() == R.id.filter_tasks_count_layout) {
-            openFilterTaskActivity();
+            listTaskPresenter.onFilterTasksClicked();
         }
     }
 
-    private void openFilterTaskActivity() {
-        startActivityForResult(new Intent(this, FilterTasksActivity.class), REQUEST_CODE_FILTER_TASKS);
+    @Override
+    public void openFilterTaskActivity(TaskFilterParams filterParams) {
+        Intent intent = new Intent(getContext(), FilterTasksActivity.class);
+        intent.putExtra(FILTER_SORT_PARAMS, filterParams);
+        startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
     }
 
     private void openIndicatorsCardView() {

@@ -15,6 +15,7 @@ import org.smartregister.domain.Task;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 
 import java.util.List;
@@ -35,6 +36,8 @@ public interface ListTaskContract {
         void closeCardView(int id);
 
         void closeAllCardViews();
+
+        void openFilterTaskActivity(TaskFilterParams filterParams);
 
         void openStructureProfile(CommonPersonObjectClient family);
 
@@ -101,5 +104,7 @@ public interface ListTaskContract {
         void onStructureMarkedIneligible();
 
         void validateUserLocation();
+
+        void onFilterTasksClicked();
     }
 }
