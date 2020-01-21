@@ -16,12 +16,10 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FilterTasksContract;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.FilterTasksPresenter;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.view.activity.MultiLanguageActivity;
 
-import java.io.Serializable;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -70,7 +68,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
 
         TaskFilterParams filterParams = (TaskFilterParams) getIntent().getSerializableExtra(Filter.FILTER_SORT_PARAMS);
         if (filterParams != null) {
-            presenter.setCheckedFilters(filterParams.getCheckedFilters());
+            presenter.restoreCheckedFilters(filterParams.getCheckedFilters());
         }
     }
 
@@ -125,7 +123,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
                 toggleButton.setText(label);
             }
             toggleButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.toggle_bg));
-            toggleButton.setTag(R.id.filter_key, intervention);
+            toggleButton.setTag(intervention);
             layout.addView(toggleButton, params);
         }
     }
@@ -142,7 +140,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-        presenter.onToggleChanged(buttonView.isChecked(), buttonView.getTag(R.id.filter_category), buttonView.getTag(R.id.filter_key));
+        presenter.onToggleChanged(buttonView.isChecked(), buttonView.getTag(R.id.filter_category), buttonView.getTag());
     }
 
     @Override
@@ -154,5 +152,20 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     public void applyFilters(Intent intent) {
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public FlexboxLayout getBusinessStatusLayout() {
+        return businessStatusLayout;
+    }
+
+    @Override
+    public FlexboxLayout getTaskCodeLayout() {
+        return taskCodeLayout;
+    }
+
+    @Override
+    public FlexboxLayout getInterventionTypeLayout() {
+        return interventionTypeLayout;
     }
 }

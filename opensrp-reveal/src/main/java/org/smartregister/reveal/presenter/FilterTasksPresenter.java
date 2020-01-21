@@ -2,10 +2,13 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Intent;
 import android.support.annotation.StringRes;
+import android.view.ViewGroup;
+import android.widget.ToggleButton;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FilterTasksContract;
 import org.smartregister.reveal.model.TaskFilterParams;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.Intervention;
@@ -120,7 +123,21 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
     }
 
     @Override
-    public void setCheckedFilters(Map<String, Set<String>> checkedFilters) {
-        this.checkedFilters = checkedFilters;
+    public void restoreCheckedFilters(Map<String, Set<String>> checkedFilters) {
+        if (checkedFilters != null) {
+            this.checkedFilters = checkedFilters;
+            restoreSelections(checkedFilters.get(Constants.Filter.STATUS), view.getBusinessStatusLayout());
+            restoreSelections(checkedFilters.get(Constants.Filter.CODE), view.getTaskCodeLayout());
+            restoreSelections(checkedFilters.get(Filter.INTERVENTION_UNIT), view.getInterventionTypeLayout());
+        }
+    }
+
+    private void restoreSelections(Set<String> filters, ViewGroup viewGroup) {
+        if (filters == null)
+            return;
+        for (String filter : filters) {
+            ToggleButton toggleButton = viewGroup.findViewWithTag(filter);
+            toggleButton.setChecked(true);
+        }
     }
 }

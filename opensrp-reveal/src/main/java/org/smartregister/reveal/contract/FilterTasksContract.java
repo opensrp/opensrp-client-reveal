@@ -3,6 +3,8 @@ package org.smartregister.reveal.contract;
 import android.content.Intent;
 import android.support.annotation.StringRes;
 
+import com.google.android.flexbox.FlexboxLayout;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +19,12 @@ public interface FilterTasksContract {
         void onFiltedSelected(int size);
 
         void applyFilters(Intent intent);
+
+        FlexboxLayout getBusinessStatusLayout();
+
+        FlexboxLayout getTaskCodeLayout();
+
+        FlexboxLayout getInterventionTypeLayout();
     }
 
     interface Presenter {
@@ -32,6 +40,6 @@ public interface FilterTasksContract {
 
         void onApplyFilters(String selectedItem);
 
-        void setCheckedFilters(Map<String, Set<String>> checkedFilters);
+        void restoreCheckedFilters(Map<String, Set<String>> checkedFilters);
     }
 }
