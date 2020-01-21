@@ -75,6 +75,8 @@ public interface TaskRegisterFragmentContract {
         TaskRegisterAdapter getAdapter();
 
         void openFilterActivity(TaskFilterParams filterParams);
+
+        void clearSearch();
     }
 
 }

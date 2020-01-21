@@ -344,6 +344,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         getActivity().startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
     }
 
+    @Override
+    public void clearSearch() {
+        getSearchView().setText("");
+    }
+
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {
         this.jsonFormUtils = jsonFormUtils;
     }

@@ -321,6 +321,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             }
         }
         setTasks(filteredTasks, withinBuffer);
+        getView().clearSearch();
         getView().hideProgressDialog();
         getView().hideProgressView();
         isTasksFiltered = true;
