@@ -117,6 +117,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         filterTextView.setOnClickListener(v -> {
             getPresenter().onFilterTasksClicked();
         });
+
+        TaskFilterParams filterParams = (TaskFilterParams) getActivity().getIntent().getSerializableExtra(FILTER_SORT_PARAMS);
+        if (filterParams != null) {
+            getPresenter().setTaskFilterParams(filterParams);
+        }
     }
 
     @Override
@@ -345,8 +350,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     }
 
     @Override
-    public void clearSearch() {
-        getSearchView().setText("");
+    public void setSearchPhrase(String searchPhrase) {
+        getSearchView().setText(searchPhrase);
     }
 
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {

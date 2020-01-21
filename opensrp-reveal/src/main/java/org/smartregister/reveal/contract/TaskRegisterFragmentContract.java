@@ -40,6 +40,8 @@ public interface TaskRegisterFragmentContract {
         void filterTasks(TaskFilterParams filterParams);
 
         void onFilterTasksClicked();
+
+        void setTaskFilterParams(TaskFilterParams filterParams);
     }
 
     interface View extends BaseRegisterFragmentContract.View, BaseFormFragmentContract.View {
@@ -76,7 +78,7 @@ public interface TaskRegisterFragmentContract {
 
         void openFilterActivity(TaskFilterParams filterParams);
 
-        void clearSearch();
+        void setSearchPhrase(String searchPhrase);
     }
 
 }

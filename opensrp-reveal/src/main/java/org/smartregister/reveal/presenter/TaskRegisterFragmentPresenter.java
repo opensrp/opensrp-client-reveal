@@ -76,6 +76,8 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
 
     private int withinBuffer;
 
+    private boolean applyFilterOnTasksFound;
+
     public TaskRegisterFragmentPresenter(TaskRegisterFragmentContract.View view, String viewConfigurationIdentifier) {
         this(view, viewConfigurationIdentifier, null);
         this.interactor = new TaskRegisterFragmentInteractor(this);
@@ -173,6 +175,10 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             } else if (tasks.isEmpty()) {
                 getView().displayNotification(R.string.fetching_structure_title, R.string.no_structures_found);
                 getView().setTaskDetails(tasks);
+            } else if (applyFilterOnTasksFound) {
+                filterTasks(filterParams);
+                getView().setSearchPhrase(filterParams.getSearchPhrase());
+                applyFilterOnTasksFound = false;
             } else {
                 getView().setTaskDetails(tasks);
             }
@@ -321,7 +327,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             }
         }
         setTasks(filteredTasks, withinBuffer);
-        getView().clearSearch();
+        getView().setSearchPhrase("");
         getView().hideProgressDialog();
         getView().hideProgressView();
         isTasksFiltered = true;
@@ -330,6 +336,12 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public void onFilterTasksClicked() {
         getView().openFilterActivity(filterParams);
+    }
+
+    @Override
+    public void setTaskFilterParams(TaskFilterParams filterParams) {
+        this.filterParams = filterParams;
+        applyFilterOnTasksFound = true;
     }
 
     private boolean matchesTaskCodeFilterList(String value, Set<String> filterList, Pattern pattern) {
