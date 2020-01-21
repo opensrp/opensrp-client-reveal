@@ -11,6 +11,8 @@ public class TaskFilterParams implements Serializable {
 
     private String sortBy;
 
+    private String searchPhrase;
+
     private Map<String, Set<String>> checkedFilters;
 
     public TaskFilterParams(String sortBy, Map<String, Set<String>> checkedFilters) {
@@ -24,5 +26,13 @@ public class TaskFilterParams implements Serializable {
 
     public Map<String, Set<String>> getCheckedFilters() {
         return checkedFilters;
+    }
+
+    public String getSearchPhrase() {
+        return searchPhrase;
+    }
+
+    public void setSearchPhrase(String searchPhrase) {
+        this.searchPhrase = searchPhrase;
     }
 }

@@ -39,6 +39,8 @@ public interface ListTaskContract {
 
         void openFilterTaskActivity(TaskFilterParams filterParams);
 
+        void openTaskRegister(TaskFilterParams filterParams);
+
         void openStructureProfile(CommonPersonObjectClient family);
 
         void registerFamily();
@@ -106,5 +108,7 @@ public interface ListTaskContract {
         void validateUserLocation();
 
         void onFilterTasksClicked();
+
+        void onOpenTaskRegisterClicked();
     }
 }

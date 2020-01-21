@@ -435,7 +435,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 || v.getId() == R.id.btn_collapse_irs_verification_card_view) {
             closeCardView(v.getId());
         } else if (v.getId() == R.id.task_register) {
-            openTaskRegister();
+            listTaskPresenter.onOpenTaskRegisterClicked();
         } else if (v.getId() == R.id.drawerMenu) {
             drawerView.openDrawerLayout();
         } else if (v.getId() == R.id.progressIndicatorsGroupView) {
@@ -457,11 +457,17 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         setViewVisibility(indicatorsCardView, true);
     }
 
-    private void openTaskRegister() {
+    @Override
+    public void openTaskRegister(TaskFilterParams filterParams) {
+
         Intent intent = new Intent(this, TaskRegisterActivity.class);
         intent.putExtra(TaskRegister.INTERVENTION_TYPE, getString(listTaskPresenter.getInterventionLabel()));
         if (getUserCurrentLocation() != null) {
             intent.putExtra(TaskRegister.LAST_USER_LOCATION, getUserCurrentLocation());
+        }
+        if (filterParams != null) {
+            filterParams.setSearchPhrase(searchView.getText().toString());
+            intent.putExtra(FILTER_SORT_PARAMS, filterParams);
         }
         startActivity(intent);
     }

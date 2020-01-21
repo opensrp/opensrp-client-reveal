@@ -351,6 +351,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         listTaskView.openFilterTaskActivity(filterParams);
     }
 
+    @Override
+    public void onOpenTaskRegisterClicked() {
+        listTaskView.openTaskRegister(filterParams);
+    }
 
     @Override
     public void onInterventionFormDetailsFetched(CardDetails cardDetails) {
