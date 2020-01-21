@@ -122,9 +122,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         getSearchCancelView().setVisibility(isEmpty(filterString) ? View.INVISIBLE : View.VISIBLE);
         if (isEmpty(filterString)) {
             org.smartregister.util.Utils.hideKeyboard(getActivity());
-        } else {
-            getPresenter().searchTasks(filterString);
         }
+        getPresenter().searchTasks(filterString);
     }
 
     private void startMapActivity() {

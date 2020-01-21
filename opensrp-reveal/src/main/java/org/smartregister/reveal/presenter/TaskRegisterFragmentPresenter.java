@@ -74,6 +74,8 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
 
     private ArrayList<TaskDetails> filteredTasks;
 
+    private int withinBuffer;
+
     public TaskRegisterFragmentPresenter(TaskRegisterFragmentContract.View view, String viewConfigurationIdentifier) {
         this(view, viewConfigurationIdentifier, null);
         this.interactor = new TaskRegisterFragmentInteractor(this);
@@ -261,20 +263,28 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public void searchTasks(String searchText) {
         Timber.d("searching task matching %s", searchText);
-        List<TaskDetails> filteredTasks = new ArrayList<>();
-        int withBuffer = 0;
-        for (TaskDetails task : isTasksFiltered ? filteredTasks : tasks) {
-            if (Utils.matchesSearchPhrase(task.getFamilyName(), searchText) ||
-                    Utils.matchesSearchPhrase(task.getStructureName(), searchText) ||
-                    Utils.matchesSearchPhrase(task.getHouseNumber(), searchText) ||
-                    Utils.matchesSearchPhrase(task.getFamilyMemberNames(), searchText)) {
-                filteredTasks.add(task);
-                if (task.getDistanceFromUser() > 0 && task.getDistanceFromUser() <= Utils.getLocationBuffer())
-                    withBuffer++;
+        if (StringUtils.isBlank(searchText)) {
+            setTasks(filteredTasks, this.withinBuffer);
+        } else {
+            List<TaskDetails> filteredTasks = new ArrayList<>();
+            int withinBuffer = 0;
+            for (TaskDetails task : isTasksFiltered ? filteredTasks : tasks) {
+                if (Utils.matchesSearchPhrase(task.getFamilyName(), searchText) ||
+                        Utils.matchesSearchPhrase(task.getStructureName(), searchText) ||
+                        Utils.matchesSearchPhrase(task.getHouseNumber(), searchText) ||
+                        Utils.matchesSearchPhrase(task.getFamilyMemberNames(), searchText)) {
+                    filteredTasks.add(task);
+                    if (task.getDistanceFromUser() > 0 && task.getDistanceFromUser() <= Utils.getLocationBuffer())
+                        withinBuffer++;
+                }
             }
+            setTasks(filteredTasks, withinBuffer);
         }
+    }
+
+    private void setTasks(List<TaskDetails> filteredTasks, int withinBuffer) {
         getView().setTaskDetails(filteredTasks);
-        getView().setTotalTasks(withBuffer);
+        getView().setTotalTasks(withinBuffer);
     }
 
     @Override
@@ -291,7 +301,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         Set<String> filterTaskCode = filterParams.getCheckedFilters().get(Constants.Filter.CODE);
         Set<String> filterInterventionUnitTasks = Utils.getInterventionUnitCodes(filterParams.getCheckedFilters().get(Constants.Filter.INTERVENTION_UNIT));
         Pattern pattern = Pattern.compile("~");
-        int withinBuffer = 0;
+        withinBuffer = 0;
         for (TaskDetails taskDetails : tasks) {
             boolean matches = true;
             if (filterStatus != null) {
@@ -309,8 +319,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                     withinBuffer++;
             }
         }
-        getView().setTaskDetails(filteredTasks);
-        getView().setTotalTasks(withinBuffer);
+        setTasks(filteredTasks, withinBuffer);
         getView().hideProgressDialog();
         getView().hideProgressView();
         isTasksFiltered = true;
