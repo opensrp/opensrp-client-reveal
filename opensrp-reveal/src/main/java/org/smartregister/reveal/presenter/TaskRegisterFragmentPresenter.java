@@ -264,11 +264,11 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     public void searchTasks(String searchText) {
         Timber.d("searching task matching %s", searchText);
         if (StringUtils.isBlank(searchText)) {
-            setTasks(filteredTasks, this.withinBuffer);
+            setTasks(getActiveTasks(), this.withinBuffer);
         } else {
             List<TaskDetails> filteredTasks = new ArrayList<>();
             int withinBuffer = 0;
-            for (TaskDetails task : isTasksFiltered ? filteredTasks : tasks) {
+            for (TaskDetails task : getActiveTasks()) {
                 if (Utils.matchesSearchPhrase(task.getFamilyName(), searchText) ||
                         Utils.matchesSearchPhrase(task.getStructureName(), searchText) ||
                         Utils.matchesSearchPhrase(task.getHouseNumber(), searchText) ||
@@ -359,5 +359,9 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             getView().displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
         else
             getView().openFamilyProfile(family, getTaskDetails());
+    }
+
+    private List<TaskDetails> getActiveTasks() {
+        return isTasksFiltered ? filteredTasks : tasks;
     }
 }
