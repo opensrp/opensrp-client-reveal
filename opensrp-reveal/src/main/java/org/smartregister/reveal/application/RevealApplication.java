@@ -10,6 +10,7 @@ import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.vijay.jsonwizard.activities.JsonWizardFormActivity;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,18 +28,16 @@ import org.smartregister.family.util.DBConstants;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.AllSettings;
-import org.smartregister.repository.CampaignRepository;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.PlanDefinitionRepository;
 import org.smartregister.repository.PlanDefinitionSearchRepository;
 import org.smartregister.repository.Repository;
 import org.smartregister.repository.StructureRepository;
-import org.smartregister.repository.TaskNotesRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.job.RevealJobCreator;
-import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.repository.RevealRepository;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
@@ -77,11 +76,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     private JsonSpecHelper jsonSpecHelper;
     private String password;
 
-    private CampaignRepository campaignRepository;
-    private TaskRepository taskRepository;
-    private StructureRepository structureRepository;
-    private LocationRepository locationRepository;
-    private PlanDefinitionRepository planDefinitionRepository;
     private PlanDefinitionSearchRepository planDefinitionSearchRepository;
 
     private Map<String, Object> serverConfigs;
@@ -113,6 +107,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
         context.updateCommonFtsObject(createCommonFtsObject());
+        forceRemoteLoginForInConsistentUsername();
         // Initialize Modules
         Fabric.with(this, new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build());
         P2POptions p2POptions = new P2POptions(true);
@@ -126,8 +121,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
             CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.REFAPP_EC_CLIENT_FIELDS);
         }
-        ConfigurableViewsLibrary.init(context, getRepository());
-        FamilyLibrary.init(context, getRepository(), getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
+        ConfigurableViewsLibrary.init(context);
+        FamilyLibrary.init(context, getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
 
         LocationHelper.init(Utils.ALLOWED_LEVELS, Utils.DEFAULT_LOCATION_LEVEL);
 
@@ -148,6 +143,17 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             LangUtils.saveLanguage(getApplicationContext(), "en");
         }
 
+    }
+
+    /**
+     * Removes the username and forces a remote login in case the username did not match the openmrs username
+     */
+    private void forceRemoteLoginForInConsistentUsername() {
+        AllSharedPreferences allSharedPreferences = context.allSharedPreferences();
+        if (StringUtils.isNotBlank(allSharedPreferences.fetchRegisteredANM()) && StringUtils.isBlank(allSharedPreferences.fetchDefaultTeamId(allSharedPreferences.fetchRegisteredANM()))) {
+            allSharedPreferences.updateANMUserName(null);
+            allSharedPreferences.saveForceRemoteLogin(true);
+        }
     }
 
     @Override
@@ -216,33 +222,16 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         logoutCurrentUser();
     }
 
-    public CampaignRepository getCampaignRepository() {
-        if (campaignRepository == null) {
-            campaignRepository = new CampaignRepository(getRepository());
-        }
-        return campaignRepository;
-    }
-
     public TaskRepository getTaskRepository() {
-        if (taskRepository == null) {
-            taskRepository = new TaskRepository(getRepository(), new TaskNotesRepository(getRepository()));
-        }
-        return taskRepository;
+        return CoreLibrary.getInstance().context().getTaskRepository();
     }
 
     public StructureRepository getStructureRepository() {
-        if (structureRepository == null) {
-            structureRepository = new StructureRepository(getRepository());
-            structureRepository.setHelper(new RevealMappingHelper());
-        }
-        return structureRepository;
+        return CoreLibrary.getInstance().context().getStructureRepository();
     }
 
     public LocationRepository getLocationRepository() {
-        if (locationRepository == null) {
-            locationRepository = new LocationRepository(getRepository());
-        }
-        return locationRepository;
+        return CoreLibrary.getInstance().context().getLocationRepository();
     }
 
     public AllSettings getSettingsRepository() {
@@ -351,15 +340,12 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     }
 
     public PlanDefinitionRepository getPlanDefinitionRepository() {
-        if (planDefinitionRepository == null) {
-            planDefinitionRepository = new PlanDefinitionRepository(getRepository());
-        }
-        return planDefinitionRepository;
+        return CoreLibrary.getInstance().context().getPlanDefinitionRepository();
     }
 
     public PlanDefinitionSearchRepository getPlanDefinitionSearchRepository() {
         if (planDefinitionSearchRepository == null) {
-            planDefinitionSearchRepository = new PlanDefinitionSearchRepository(getRepository());
+            planDefinitionSearchRepository = new PlanDefinitionSearchRepository();
         }
         return planDefinitionSearchRepository;
     }
