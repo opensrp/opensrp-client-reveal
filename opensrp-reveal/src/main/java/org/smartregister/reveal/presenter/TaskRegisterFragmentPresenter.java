@@ -32,6 +32,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -300,6 +301,10 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             isTasksFiltered = false;
             getView().clearFilter();
             filteredTasks = null;
+            if (StringUtils.isNotBlank(filterParams.getSortBy())) {
+                sortTasks(tasks, filterParams.getSortBy());
+                getView().setTaskDetails(tasks);
+            }
             return;
         }
         filteredTasks = new ArrayList<>();
@@ -326,11 +331,29 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                     withinBuffer++;
             }
         }
+        if (StringUtils.isNotBlank(filterParams.getSortBy())) {
+            sortTasks(filteredTasks, filterParams.getSortBy());
+        }
         setTasks(filteredTasks, withinBuffer);
         getView().setSearchPhrase("");
         getView().hideProgressDialog();
         getView().hideProgressView();
         isTasksFiltered = true;
+    }
+
+    private void sortTasks(List<TaskDetails> filteredTasks, String sortBy) {
+        int sortType = Arrays.asList(getView().getContext().getResources().getStringArray(R.array.task_sort_options)).indexOf(sortBy);
+        if (sortType == 0) {// sort by distance default sort
+            Collections.sort(filteredTasks);
+        } else if (sortType == 1) {// sort by business status
+            Collections.sort(filteredTasks, (task, task2) -> {
+                String status = StringUtils.isBlank(task.getAggregateBusinessStatus()) ? task.getBusinessStatus() : task.getAggregateBusinessStatus();
+                String status2 = StringUtils.isBlank(task2.getAggregateBusinessStatus()) ? task2.getBusinessStatus() : task2.getAggregateBusinessStatus();
+                return status.compareTo(status2);
+            });
+        } else if (sortType == 2) {// sort by task type
+            Collections.sort(filteredTasks, (task, task2) -> task.getTaskCode().compareTo(task2.getTaskCode()));
+        }
     }
 
     @Override
