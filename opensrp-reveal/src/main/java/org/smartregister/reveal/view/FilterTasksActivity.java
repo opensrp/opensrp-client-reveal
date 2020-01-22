@@ -28,7 +28,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
 
     private FilterTasksContract.Presenter presenter;
 
-    private AppCompatSpinner sortBy;
+    private AppCompatSpinner sortBySpinner;
 
     private FlexboxLayout businessStatusLayout;
 
@@ -49,7 +49,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_close);
 
-        sortBy = findViewById(R.id.sort_by);
+        sortBySpinner = findViewById(R.id.sort_by);
         businessStatusLayout = findViewById(R.id.business_status_layout);
         taskCodeLayout = findViewById(R.id.task_code_layout);
         interventionTypeLayout = findViewById(R.id.intervention_type_layout);
@@ -62,19 +62,19 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         });
 
         applyFiltersTextView.setOnClickListener(view -> {
-            presenter.onApplyFilters(sortBy.getSelectedItem().toString());
+            presenter.onApplyFilters(sortBySpinner.getSelectedItem().toString());
         });
 
 
         TaskFilterParams filterParams = (TaskFilterParams) getIntent().getSerializableExtra(Filter.FILTER_SORT_PARAMS);
         if (filterParams != null) {
-            presenter.restoreCheckedFilters(filterParams.getCheckedFilters());
+            presenter.restoreCheckedFilters(filterParams);
         }
     }
 
 
     private void clearSelections() {
-        sortBy.setSelection(0);
+        sortBySpinner.setSelection(0);
         clearSelectedButtons(businessStatusLayout);
         clearSelectedButtons(taskCodeLayout);
         clearSelectedButtons(interventionTypeLayout);
@@ -167,5 +167,10 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     @Override
     public FlexboxLayout getInterventionTypeLayout() {
         return interventionTypeLayout;
+    }
+
+    @Override
+    public void setSortBySelection(int sortBySpinner) {
+        this.sortBySpinner.setSelection(sortBySpinner);
     }
 }

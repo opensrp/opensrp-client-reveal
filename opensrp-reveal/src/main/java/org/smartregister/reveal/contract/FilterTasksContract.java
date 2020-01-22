@@ -5,9 +5,9 @@ import android.support.annotation.StringRes;
 
 import com.google.android.flexbox.FlexboxLayout;
 
+import org.smartregister.reveal.model.TaskFilterParams;
+
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by samuelgithengi on 12/18/19.
@@ -25,6 +25,8 @@ public interface FilterTasksContract {
         FlexboxLayout getTaskCodeLayout();
 
         FlexboxLayout getInterventionTypeLayout();
+
+        void setSortBySelection(int sortBySpinner);
     }
 
     interface Presenter {
@@ -40,6 +42,6 @@ public interface FilterTasksContract {
 
         void onApplyFilters(String selectedItem);
 
-        void restoreCheckedFilters(Map<String, Set<String>> checkedFilters);
+        void restoreCheckedFilters(TaskFilterParams taskFilterParams);
     }
 }

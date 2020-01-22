@@ -5,6 +5,7 @@ import android.support.annotation.StringRes;
 import android.view.ViewGroup;
 import android.widget.ToggleButton;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FilterTasksContract;
 import org.smartregister.reveal.model.TaskFilterParams;
@@ -15,6 +16,7 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.reveal.util.Utils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -123,12 +125,17 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
     }
 
     @Override
-    public void restoreCheckedFilters(Map<String, Set<String>> checkedFilters) {
-        if (checkedFilters != null) {
-            this.checkedFilters = checkedFilters;
+    public void restoreCheckedFilters(TaskFilterParams taskFilterParams) {
+        if (taskFilterParams != null) {
+            checkedFilters = taskFilterParams.getCheckedFilters();
             restoreSelections(checkedFilters.get(Constants.Filter.STATUS), view.getBusinessStatusLayout());
             restoreSelections(checkedFilters.get(Constants.Filter.CODE), view.getTaskCodeLayout());
             restoreSelections(checkedFilters.get(Filter.INTERVENTION_UNIT), view.getInterventionTypeLayout());
+            if (StringUtils.isNotBlank(taskFilterParams.getSortBy())) {
+                int index = Arrays.asList(view.getBusinessStatusLayout().getResources().getStringArray(R.array.task_sort_options)).indexOf(taskFilterParams.getSortBy());
+                view.setSortBySelection(index == -1 ? 0 : index);
+            }
+
         }
     }
 
