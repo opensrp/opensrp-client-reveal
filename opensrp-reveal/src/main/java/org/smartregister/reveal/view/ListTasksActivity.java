@@ -469,10 +469,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         }
         if (filterParams != null) {
             filterParams.setSearchPhrase(searchView.getText().toString());
+            intent.putExtra(FILTER_SORT_PARAMS, filterParams);
         } else if (StringUtils.isNotBlank(searchView.getText())) {
-            filterParams = new TaskFilterParams(searchView.getText().toString());
+            intent.putExtra(FILTER_SORT_PARAMS, new TaskFilterParams(searchView.getText().toString()));
         }
-        intent.putExtra(FILTER_SORT_PARAMS, filterParams);
         startActivityForResult(intent, REQUEST_CODE_TASK_LISTS);
     }
 
