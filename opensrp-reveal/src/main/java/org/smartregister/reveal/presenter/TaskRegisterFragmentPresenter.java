@@ -297,13 +297,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     public void filterTasks(TaskFilterParams filterParams) {
         this.filterParams = filterParams;
         if (filterParams.getCheckedFilters() == null || filterParams.getCheckedFilters().isEmpty()) {
-            isTasksFiltered = false;
-            getView().clearFilter();
-            filteredTasks = null;
-            if (StringUtils.isNotBlank(filterParams.getSortBy())) {
-                sortTasks(tasks, filterParams.getSortBy());
-                getView().setTaskDetails(tasks);
-            }
+            applyEmptyFilter();
             return;
         }
         filteredTasks = new ArrayList<>();
@@ -314,17 +308,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         Pattern pattern = Pattern.compile("~");
         withinBuffer = 0;
         for (TaskDetails taskDetails : tasks) {
-            boolean matches = true;
-            if (filterStatus != null) {
-                matches = StringUtils.isBlank(taskDetails.getAggregateBusinessStatus()) ? filterStatus.contains(taskDetails.getBusinessStatus()) : filterStatus.contains(taskDetails.getAggregateBusinessStatus());
-            }
-            if (matches && filterTaskCode != null) {
-                matches = matchesTaskCodeFilterList(taskDetails.getTaskCode(), filterTaskCode, pattern);
-            }
-            if (matches && filterInterventionUnitTasks != null) {
-                matches = matchesTaskCodeFilterList(taskDetails.getTaskCode(), filterInterventionUnitTasks, pattern);
-            }
-            if (matches) {
+            if (matchesTask(taskDetails, pattern, filterStatus, filterTaskCode, filterInterventionUnitTasks)) {
                 filteredTasks.add(taskDetails);
                 if (taskDetails.getDistanceFromUser() > 0 && taskDetails.getDistanceFromUser() <= Utils.getLocationBuffer())
                     withinBuffer++;
@@ -338,6 +322,30 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         getView().hideProgressDialog();
         getView().hideProgressView();
         isTasksFiltered = true;
+    }
+
+    private void applyEmptyFilter() {
+        isTasksFiltered = false;
+        getView().clearFilter();
+        filteredTasks = null;
+        if (StringUtils.isNotBlank(filterParams.getSortBy())) {
+            sortTasks(tasks, filterParams.getSortBy());
+            getView().setTaskDetails(tasks);
+        }
+    }
+
+    private boolean matchesTask(TaskDetails taskDetails, Pattern pattern, Set<String> filterStatus, Set<String> filterTaskCode, Set<String> filterInterventionUnitTasks) {
+        boolean matches = true;
+        if (filterStatus != null) {
+            matches = StringUtils.isBlank(taskDetails.getAggregateBusinessStatus()) ? filterStatus.contains(taskDetails.getBusinessStatus()) : filterStatus.contains(taskDetails.getAggregateBusinessStatus());
+        }
+        if (matches && filterTaskCode != null) {
+            matches = matchesTaskCodeFilterList(taskDetails.getTaskCode(), filterTaskCode, pattern);
+        }
+        if (matches && filterInterventionUnitTasks != null) {
+            matches = matchesTaskCodeFilterList(taskDetails.getTaskCode(), filterInterventionUnitTasks, pattern);
+        }
+        return matches;
     }
 
     private void sortTasks(List<TaskDetails> filteredTasks, String sortBy) {
