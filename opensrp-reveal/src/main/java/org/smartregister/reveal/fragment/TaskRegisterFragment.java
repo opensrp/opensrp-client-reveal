@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
@@ -106,7 +107,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
             interventionTypeTv.setText(
                     getActivity().getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
         }
-        view.findViewById(R.id.txt_map_label).setOnClickListener(v -> startMapActivity());
+        view.findViewById(R.id.txt_map_label).setOnClickListener(v -> getPresenter().onOpenMapClicked());
         drawerView.initializeDrawerLayout();
         view.findViewById(R.id.drawerMenu).setOnClickListener(v -> drawerView.openDrawerLayout());
         drawerView.onResume();
@@ -133,9 +134,17 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         getPresenter().searchTasks(filterString);
     }
 
-    private void startMapActivity() {
+    @Override
+    public void startMapActivity(TaskFilterParams taskFilterParams) {
         Intent intent = new Intent(getContext(), ListTasksActivity.class);
-        startActivity(intent);
+        if (taskFilterParams != null) {
+            taskFilterParams.setSearchPhrase(getSearchView().getText().toString());
+        } else if (StringUtils.isNotBlank(getSearchView().getText())) {
+            taskFilterParams = new TaskFilterParams(getSearchView().getText().toString());
+        }
+        intent.putExtra(FILTER_SORT_PARAMS, taskFilterParams);
+        getActivity().setResult(RESULT_OK, intent);
+        getActivity().finish();
     }
 
     @Override

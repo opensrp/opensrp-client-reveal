@@ -357,6 +357,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
+    public void setTaskFilterParams(TaskFilterParams filterParams) {
+        if (filterParams != null) {
+            filterTasks(filterParams);
+            listTaskView.setSearchPhrase(filterParams.getSearchPhrase());
+        }
+    }
+
+    @Override
     public void onInterventionFormDetailsFetched(CardDetails cardDetails) {
         this.cardDetails = cardDetails;
         this.changeInterventionStatus = true;
@@ -709,7 +717,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
         listTaskView.setGeoJsonSource(FeatureCollection.fromFeatures(filterFeatureCollection), operationalArea, false);
         listTaskView.setNumberOfFilters(filterParams.getCheckedFilters().size());
-        listTaskView.resetSearch();
+        listTaskView.setSearchPhrase("");
         isTasksFiltered = true;
     }
 

@@ -41,6 +41,7 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -92,6 +93,7 @@ import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FAMILY_PROFILE;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_TASK_LISTS;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
@@ -467,9 +469,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         }
         if (filterParams != null) {
             filterParams.setSearchPhrase(searchView.getText().toString());
-            intent.putExtra(FILTER_SORT_PARAMS, filterParams);
+        } else if (StringUtils.isNotBlank(searchView.getText())) {
+            filterParams = new TaskFilterParams(searchView.getText().toString());
         }
-        startActivity(intent);
+        intent.putExtra(FILTER_SORT_PARAMS, filterParams);
+        startActivityForResult(intent, REQUEST_CODE_TASK_LISTS);
     }
 
 
@@ -655,6 +659,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (requestCode == REQUEST_CODE_FILTER_TASKS && resultCode == RESULT_OK && data.hasExtra(FILTER_SORT_PARAMS)) {
             TaskFilterParams filterParams = (TaskFilterParams) data.getSerializableExtra(FILTER_SORT_PARAMS);
             listTaskPresenter.filterTasks(filterParams);
+        } else if (requestCode == REQUEST_CODE_TASK_LISTS && resultCode == RESULT_OK && data.hasExtra(FILTER_SORT_PARAMS)) {
+            TaskFilterParams filterParams = (TaskFilterParams) data.getSerializableExtra(FILTER_SORT_PARAMS);
+            listTaskPresenter.setTaskFilterParams(filterParams);
         }
     }
 
@@ -801,8 +808,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void resetSearch() {
-        searchView.setText("");
+    public void setSearchPhrase(String searchPhrase) {
+        searchView.setText(searchPhrase);
     }
 
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {

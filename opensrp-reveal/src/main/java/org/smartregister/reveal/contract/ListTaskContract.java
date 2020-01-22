@@ -73,7 +73,7 @@ public interface ListTaskContract {
 
         void setNumberOfFilters(int numberOfFilters);
 
-        void resetSearch();
+        void setSearchPhrase(String searchPhrase);
     }
 
     interface Presenter extends BaseContract.BasePresenter {
@@ -110,5 +110,7 @@ public interface ListTaskContract {
         void onFilterTasksClicked();
 
         void onOpenTaskRegisterClicked();
+
+        void setTaskFilterParams(TaskFilterParams filterParams);
     }
 }

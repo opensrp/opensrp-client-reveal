@@ -20,6 +20,10 @@ public class TaskFilterParams implements Serializable {
         this.checkedFilters = checkedFilters;
     }
 
+    public TaskFilterParams(String searchPhrase) {
+        setSearchPhrase(searchPhrase);
+    }
+
     public String getSortBy() {
         return sortBy;
     }
