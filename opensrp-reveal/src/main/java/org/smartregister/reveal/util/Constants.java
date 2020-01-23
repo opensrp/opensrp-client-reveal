@@ -252,6 +252,9 @@ public interface Constants {
         int MAX_SELECT_ZOOM_LEVEL = 16;
         int CLICK_SELECT_RADIUS = 24;
         String NAME_PROPERTY = "name";
+        double DOWNLOAD_MAX_ZOOM = 20.0;
+        double DOWNLOAD_MIN_ZOOM = 0.0;
+        String MAPBOX_STYLE = "mapbox://styles/ona/cj9jueph7034i2rphe0gp3o6m";
     }
 
     interface JsonForm {

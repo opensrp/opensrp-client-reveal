@@ -26,6 +26,7 @@ import org.smartregister.reveal.contract.AvailableOfflineMapsContract;
 import org.smartregister.reveal.contract.OfflineMapDownloadCallback;
 import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.presenter.AvailableOfflineMapsPresenter;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.PropertiesConverter;
 
@@ -33,6 +34,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.ona.kujaku.helpers.OfflineServiceHelper;
+
+import static org.smartregister.reveal.util.Constants.Map.DOWNLOAD_MAX_ZOOM;
+import static org.smartregister.reveal.util.Constants.Map.DOWNLOAD_MIN_ZOOM;
+import static org.smartregister.reveal.util.Constants.Map.MAPBOX_STYLE;
 
 public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implements AvailableOfflineMapsContract.View {
 
@@ -160,7 +165,7 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
     }
 
     private void initiateMapDownload() {
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+        Gson gson = new GsonBuilder().setDateFormat(Constants.DateFormat.EVENT_DATE_FORMAT_Z)
                 .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
                 .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
 
@@ -194,15 +199,15 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
 
         currentMapDownload = mapName;
 
-        String mapboxStyle = "mapbox://styles/ona/cj9jueph7034i2rphe0gp3o6m";
+        String mapboxStyle = MAPBOX_STYLE;
 
         LatLng topLeftBound = new LatLng(topLeftLat, topLeftLng);
         LatLng topRightBound = new LatLng(topRightLat, topRightLng);
         LatLng bottomRightBound = new LatLng(bottomRightLat, bottomRightLng);
         LatLng bottomLeftBound = new LatLng(bottomLeftLat, bottomLeftLng);
 
-        double maxZoom = 20.0;
-        double minZoom = 0.0;
+        double maxZoom = DOWNLOAD_MAX_ZOOM;
+        double minZoom = DOWNLOAD_MIN_ZOOM;
 
         OfflineServiceHelper.ZoomRange zoomRange = new OfflineServiceHelper.ZoomRange(minZoom, maxZoom);
 

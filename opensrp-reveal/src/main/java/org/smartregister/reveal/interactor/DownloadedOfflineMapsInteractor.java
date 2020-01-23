@@ -39,7 +39,7 @@ public class DownloadedOfflineMapsInteractor implements DownloadedOfflineMapsCon
         this.presenter = presenter;
         appExecutors = RevealApplication.getInstance().getAppExecutors();
         locationRepository = RevealApplication.getInstance().getLocationRepository();
-        realmDatabase = RealmDatabase.init(context);
+        realmDatabase = RevealApplication.getInstance().getRealmDatabase(context);
         offlineQueueTaskMap = new HashMap<>();
     }
 
@@ -82,6 +82,10 @@ public class DownloadedOfflineMapsInteractor implements DownloadedOfflineMapsCon
         Map<String, MapBoxOfflineQueueTask> offlineQueueTaskMap = new HashMap<>();
 
         List<MapBoxOfflineQueueTask> offlineQueueTasks = realmDatabase.getTasks();
+
+        if (offlineQueueTasks == null){
+            return offlineQueueTaskMap;
+        }
 
         for (MapBoxOfflineQueueTask offlineQueueTask: offlineQueueTasks) {
 
