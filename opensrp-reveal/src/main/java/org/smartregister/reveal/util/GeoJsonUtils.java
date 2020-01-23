@@ -125,6 +125,7 @@ public class GeoJsonUtils {
                     break;
                 case MDA_DISPENSE:
                     populateMDAStatus(task, mdaStatusMap);
+                    break;
                 default:
                     break;
             }
@@ -204,17 +205,17 @@ public class GeoJsonUtils {
     }
 
     private static class StateWrapper {
-        boolean familyRegistered = false;
-        boolean bednetDistributed = false;
-        boolean bloodScreeningDone = false;
-        boolean familyRegTaskExists = false;
-        boolean caseConfirmed = false;
-        boolean mdaAdhered = false;
-        boolean fullyReceived;
-        boolean nonReceived;
-        boolean nonEligible;
-        boolean partiallyReceived;
-        boolean bloodScreeningExists = false;
-        boolean ineligibleForFamReg = false;
+        private boolean familyRegistered = false;
+        private boolean bednetDistributed = false;
+        private boolean bloodScreeningDone = false;
+        private boolean familyRegTaskExists = false;
+        private boolean caseConfirmed = false;
+        private boolean mdaAdhered = false;
+        private boolean fullyReceived;
+        private boolean nonReceived;
+        private boolean nonEligible;
+        private boolean partiallyReceived;
+        private boolean bloodScreeningExists = false;
+        private boolean ineligibleForFamReg = false;
     }
 }
