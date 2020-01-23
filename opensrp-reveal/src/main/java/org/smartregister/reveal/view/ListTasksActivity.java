@@ -154,6 +154,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private EditText searchView;
 
+    private CardDetailsUtil cardDetailsUtil = new CardDetailsUtil();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -581,7 +583,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void openCardView(CardDetails cardDetails) {
-        CardDetailsUtil cardDetailsUtil = new CardDetailsUtil();
         if (cardDetails instanceof SprayCardDetails) {
             cardDetailsUtil.populateSprayCardTextViews((SprayCardDetails) cardDetails, this);
             sprayCardView.setVisibility(View.VISIBLE);

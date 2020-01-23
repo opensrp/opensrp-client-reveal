@@ -32,5 +32,14 @@ public class KujakuMapViewShadow extends MapViewShadow {
         //Do nothing
     }
 
+    @Implementation
+    public void onDestroy() {
+        //Do nothing
+    }
+
+    @Implementation
+    public void onResume(){//Do nothing
+    }
+
 
 }
