@@ -303,7 +303,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
                         RevealMapHelper.addBaseLayers(kujakuMapView, style, ListTasksActivity.this);
 
-                        if (BuildConfig.BUILD_COUNTRY != Country.ZAMBIA) {
+                        if (getBuildCountry() != Country.ZAMBIA) {
                             layerSwitcherFab.setVisibility(View.GONE);
                         }
 
@@ -357,7 +357,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     public void positionMyLocationAndLayerSwitcher() {
         FrameLayout.LayoutParams myLocationButtonParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
-        if (BuildConfig.BUILD_COUNTRY != Country.ZAMBIA) {
+        if (getBuildCountry() != Country.ZAMBIA) {
             positionMyLocationAndLayerSwitcher(myLocationButtonParams, myLocationButtonParams.topMargin);
         } else {
             int progressHeight = getResources().getDimensionPixelSize(R.dimen.progress_height);
@@ -455,13 +455,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     private void openIndicatorsCardView() {
-
         setViewVisibility(indicatorsCardView, true);
     }
 
     @Override
     public void openTaskRegister(TaskFilterParams filterParams) {
-
         Intent intent = new Intent(this, TaskRegisterActivity.class);
         intent.putExtra(TaskRegister.INTERVENTION_TYPE, getString(listTaskPresenter.getInterventionLabel()));
         if (getUserCurrentLocation() != null) {
@@ -825,5 +823,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 listTaskPresenter.refreshStructures(localSyncDone);
             }
         }
+    }
+
+    protected Country getBuildCountry() {
+        return BuildConfig.BUILD_COUNTRY;
     }
 }
