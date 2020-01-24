@@ -21,6 +21,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -77,7 +78,7 @@ public class AvailableOfflineMapsInteractorTest extends BaseUnitTest {
 
         interactor.fetchAvailableOAsForMapDownLoad(locationIds);
         verify(locationRepository).getLocationsByIds(locationIdsCaptor.capture(), booleanArgumentCaptor.capture());
-        verify(presenter).onFetchAvailableOAsForMapDownLoad(offlineMapModelListArgumentCaptor.capture());
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onFetchAvailableOAsForMapDownLoad(offlineMapModelListArgumentCaptor.capture());
         verifyNoMoreInteractions(presenter);
         verifyNoMoreInteractions(locationRepository);
 

@@ -35,11 +35,8 @@ public class AvailableOfflineMapsInteractor implements AvailableOfflineMapsContr
 
         List<Location> operationalAreas = locationRepository.getLocationsByIds(locationIds, false);
 
-        appExecutors.mainThread().execute(new Runnable() {
-            @Override
-            public void run() {
-                presenter.onFetchAvailableOAsForMapDownLoad(populateOfflineMapModelList(operationalAreas));
-            }
+        appExecutors.mainThread().execute(() -> {
+            presenter.onFetchAvailableOAsForMapDownLoad(populateOfflineMapModelList(operationalAreas));
         });
 
     }
