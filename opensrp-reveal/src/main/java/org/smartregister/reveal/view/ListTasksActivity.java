@@ -526,7 +526,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea, boolean isChangeMapPosition) {
         if (geoJsonSource != null) {
-            double currentZoom = mMapboxMap.getCameraPosition().zoom;
             geoJsonSource.setGeoJson(featureCollection);
             if (operationalArea != null) {
                 CameraPosition cameraPosition = mMapboxMap.getCameraForGeometry(operationalArea.geometry());
@@ -534,6 +533,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     Feature indexCase = revealMapHelper.getIndexCase(featureCollection);
                     if (indexCase != null) {
                         Location center = new RevealMappingHelper().getCenter(indexCase.geometry().toJson());
+                        double currentZoom = mMapboxMap.getCameraPosition().zoom;
                         cameraPosition = new CameraPosition.Builder()
                                 .target(new LatLng(center.getLatitude(), center.getLongitude())).zoom(currentZoom).build();
                     }

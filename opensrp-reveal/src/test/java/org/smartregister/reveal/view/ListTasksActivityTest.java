@@ -18,12 +18,16 @@ import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -62,6 +66,7 @@ import java.util.List;
 import java.util.UUID;
 
 import io.ona.kujaku.interfaces.ILocationClient;
+import io.ona.kujaku.layers.BoundaryLayer;
 
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static android.view.View.GONE;
@@ -76,6 +81,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 import static org.smartregister.receiver.SyncStatusBroadcastReceiver.SyncStatusListener;
@@ -126,7 +132,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
     private RevealMapView kujakuMapView;
 
     @Mock
-    private GeoJsonSource selectedGeoJsonSource;
+    private GeoJsonSource geoJsonSource;
 
 
     @Mock
@@ -140,6 +146,12 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     @Mock
     private ILocationClient locationClient;
+
+    @Captor
+    private ArgumentCaptor<BoundaryLayer> boundaryLayerArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<CameraPosition> cameraPositionArgumentCaptor;
 
     @Before
     public void setUp() {
@@ -375,9 +387,80 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
 
     @Test
-    public void testSetGeoJsonSource() {
-        //Todo add test
+    public void testSetGeoJsonSourceWithNullOperationalArea() {
+        Whitebox.setInternalState(listTasksActivity, "geoJsonSource", geoJsonSource);
+        FeatureCollection featureCollection = FeatureCollection.fromFeature(feature);
+        listTasksActivity.setGeoJsonSource(featureCollection, null, true);
+        verify(geoJsonSource).setGeoJson(featureCollection);
+        verifyZeroInteractions(mMapboxMap);
     }
+
+
+    @Test
+    public void testSetGeoJsonSource() {
+        Whitebox.setInternalState(listTasksActivity, "listTaskPresenter", listTaskPresenter);
+        Whitebox.setInternalState(listTasksActivity, "mMapboxMap", mMapboxMap);
+        Whitebox.setInternalState(listTasksActivity, "geoJsonSource", geoJsonSource);
+        Whitebox.setInternalState(listTasksActivity, "kujakuMapView", kujakuMapView);
+        Whitebox.setInternalState(listTasksActivity, "revealMapHelper", revealMapHelper);
+        Feature operationalArea = mock(Feature.class);
+        CameraPosition cameraPosition = new CameraPosition.Builder().build();
+        when(mMapboxMap.getCameraForGeometry(operationalArea.geometry())).thenReturn(cameraPosition);
+        when(listTaskPresenter.getInterventionLabel()).thenReturn(R.string.focus_investigation);
+        FeatureCollection featureCollection = FeatureCollection.fromFeature(feature);
+        listTasksActivity.setGeoJsonSource(featureCollection, operationalArea, true);
+        verify(geoJsonSource).setGeoJson(featureCollection);
+        verify(mMapboxMap).setCameraPosition(cameraPosition);
+        verify(kujakuMapView).addLayer(boundaryLayerArgumentCaptor.capture());
+        verify(revealMapHelper).addIndexCaseLayers(mMapboxMap, listTasksActivity, featureCollection);
+        assertEquals(FeatureCollection.fromFeature(operationalArea), boundaryLayerArgumentCaptor.getValue().getFeatureCollection());
+        assertEquals(2, boundaryLayerArgumentCaptor.getValue().getLayerIds().length);
+    }
+
+
+    @Test
+    public void testSetGeoJsonSourceSetsCameraOnIndexCase() {
+        Whitebox.setInternalState(listTasksActivity, "listTaskPresenter", listTaskPresenter);
+        Whitebox.setInternalState(listTasksActivity, "mMapboxMap", mMapboxMap);
+        Whitebox.setInternalState(listTasksActivity, "geoJsonSource", geoJsonSource);
+        Whitebox.setInternalState(listTasksActivity, "kujakuMapView", kujakuMapView);
+        Whitebox.setInternalState(listTasksActivity, "revealMapHelper", revealMapHelper);
+        Feature indexCase = Feature.fromJson("{\"type\":\"Feature\",\"id\":\"000c99d7\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[28.821878,-10.203831]}}");
+        FeatureCollection featureCollection = FeatureCollection.fromFeature(feature);
+        CameraPosition cameraPosition = new CameraPosition.Builder().zoom(18.5).build();
+        when(mMapboxMap.getCameraPosition()).thenReturn(cameraPosition);
+        when(revealMapHelper.getIndexCase(featureCollection)).thenReturn(indexCase);
+        when(listTaskPresenter.getInterventionLabel()).thenReturn(R.string.focus_investigation);
+        listTasksActivity.setGeoJsonSource(featureCollection, mock(Feature.class), true);
+        verify(geoJsonSource).setGeoJson(featureCollection);
+        verify(mMapboxMap).setCameraPosition(cameraPositionArgumentCaptor.capture());
+        verify(kujakuMapView).addLayer(boundaryLayerArgumentCaptor.capture());
+        verify(revealMapHelper).addIndexCaseLayers(mMapboxMap, listTasksActivity, featureCollection);
+        assertEquals(28.821878, cameraPositionArgumentCaptor.getValue().target.getLongitude(), 0);
+        assertEquals(-10.203831, cameraPositionArgumentCaptor.getValue().target.getLatitude(), 0);
+
+    }
+
+    @Test
+    public void testSetGeoJsonSourceUpdatesBoundaryLayerAndIndexCaseLayers() throws JSONException {
+        Whitebox.setInternalState(listTasksActivity, "listTaskPresenter", listTaskPresenter);
+        Whitebox.setInternalState(listTasksActivity, "mMapboxMap", mMapboxMap);
+        Whitebox.setInternalState(listTasksActivity, "geoJsonSource", geoJsonSource);
+        Whitebox.setInternalState(listTasksActivity, "kujakuMapView", kujakuMapView);
+        Whitebox.setInternalState(listTasksActivity, "revealMapHelper", revealMapHelper);
+        BoundaryLayer boundaryLayer = mock(BoundaryLayer.class);
+        Whitebox.setInternalState(listTasksActivity, "boundaryLayer", boundaryLayer);
+        Feature operationalArea = mock(Feature.class);
+        when(listTaskPresenter.getInterventionLabel()).thenReturn(R.string.focus_investigation);
+        FeatureCollection featureCollection = FeatureCollection.fromFeature(feature);
+        when(revealMapHelper.getIndexCaseLineLayer()).thenReturn(mock(LineLayer.class));
+        listTasksActivity.setGeoJsonSource(featureCollection, operationalArea, true);
+        verify(geoJsonSource).setGeoJson(featureCollection);
+        verify(boundaryLayer).updateFeatures(FeatureCollection.fromFeature(operationalArea));
+        verify(revealMapHelper).updateIndexCaseLayers(mMapboxMap, featureCollection, listTasksActivity);
+
+    }
+
 
     @Test
     public void testDisplayNotificationWithArgs() {
@@ -444,20 +527,20 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testDisplaySelectedFeature() {
         Whitebox.setInternalState(listTasksActivity, "kujakuMapView", kujakuMapView);
-        Whitebox.setInternalState(listTasksActivity, "selectedGeoJsonSource", selectedGeoJsonSource);
+        Whitebox.setInternalState(listTasksActivity, "selectedGeoJsonSource", geoJsonSource);
         Whitebox.setInternalState(listTasksActivity, "mMapboxMap", mMapboxMap);
         LatLng latLng = new LatLng();
         when(mMapboxMap.getCameraPosition()).thenReturn(new CameraPosition.Builder().zoom(18).build());
         listTasksActivity.displaySelectedFeature(feature, latLng);
         verify(kujakuMapView).centerMap(latLng, ANIMATE_TO_LOCATION_DURATION, 18);
-        verify(selectedGeoJsonSource).setGeoJson(FeatureCollection.fromFeature(feature));
+        verify(geoJsonSource).setGeoJson(FeatureCollection.fromFeature(feature));
     }
 
     @Test
     public void testClearSelectedFeature() {
-        Whitebox.setInternalState(listTasksActivity, "selectedGeoJsonSource", selectedGeoJsonSource);
+        Whitebox.setInternalState(listTasksActivity, "selectedGeoJsonSource", geoJsonSource);
         listTasksActivity.clearSelectedFeature();
-        verify(selectedGeoJsonSource).setGeoJson("{\"type\":\"FeatureCollection\",\"features\":[]}");
+        verify(geoJsonSource).setGeoJson("{\"type\":\"FeatureCollection\",\"features\":[]}");
     }
 
 
