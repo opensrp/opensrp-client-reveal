@@ -1,6 +1,7 @@
 package org.smartregister.reveal.view;
 
 import android.content.Intent;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
@@ -92,7 +93,8 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
         findViewById(R.id.bottom_navigation).setVisibility(View.GONE);
     }
 
-    private TaskRegisterContract.Presenter getPresenter() {
+    @VisibleForTesting
+    public TaskRegisterContract.Presenter getPresenter() {
         return (TaskRegisterContract.Presenter) presenter;
     }
 
