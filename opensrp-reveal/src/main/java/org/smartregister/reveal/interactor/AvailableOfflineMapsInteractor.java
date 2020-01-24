@@ -28,6 +28,11 @@ public class AvailableOfflineMapsInteractor implements AvailableOfflineMapsContr
     @Override
     public void fetchAvailableOAsForMapDownLoad(List<String> locationIds) {
 
+        if (locationIds == null || locationIds.isEmpty()) {
+            presenter.onFetchAvailableOAsForMapDownLoad(null);
+            return;
+        }
+
         List<Location> operationalAreas = locationRepository.getLocationsByIds(locationIds, false);
 
         appExecutors.mainThread().execute(new Runnable() {
@@ -38,7 +43,8 @@ public class AvailableOfflineMapsInteractor implements AvailableOfflineMapsContr
         });
 
     }
-    private List<OfflineMapModel>  populateOfflineMapModelList(List<Location> locations) {
+
+    public List<OfflineMapModel>  populateOfflineMapModelList(List<Location> locations) {
         List<OfflineMapModel> offlineMapModels = new ArrayList<>();
         for (Location location: locations) {
             OfflineMapModel offlineMapModel = new OfflineMapModel();

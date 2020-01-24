@@ -115,6 +115,9 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
 
     @Override
     public void setOfflineMapModelList(List<OfflineMapModel> offlineMapModelList) {
+        if (offlineMapModelList == null) {
+            return;
+        }
         if (adapter == null) {
             this.offlineMapModelList = offlineMapModelList;
         } else {

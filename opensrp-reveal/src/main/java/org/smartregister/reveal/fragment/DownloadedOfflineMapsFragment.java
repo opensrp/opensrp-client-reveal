@@ -126,6 +126,9 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
 
     @Override
     public void setDownloadedOfflineMapModelList(List<OfflineMapModel> downloadedOfflineMapModelList) {
+        if (downloadedOfflineMapModelList == null) {
+            return;
+        }
         if (adapter == null) {
             this.downloadedOfflineMapModelList = downloadedOfflineMapModelList;
         } else {

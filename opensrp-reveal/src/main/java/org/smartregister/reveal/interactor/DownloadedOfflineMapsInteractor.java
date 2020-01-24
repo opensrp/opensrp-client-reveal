@@ -46,6 +46,11 @@ public class DownloadedOfflineMapsInteractor implements DownloadedOfflineMapsCon
     @Override
     public void fetchLocationsWithOfflineMapDownloads(Pair<List<String>, Map<String, OfflineRegion>> offlineRegionInfo) {
 
+        if (offlineRegionInfo == null || offlineRegionInfo.first == null) {
+            presenter.onOAsWithOfflineDownloadsFetched(null);
+            return;
+        }
+
         List<Location> operationalAreas = locationRepository.getLocationsByIds(offlineRegionInfo.first);
 
         offlineQueueTaskMap = populateOfflineQueueTaskMap();
@@ -59,7 +64,7 @@ public class DownloadedOfflineMapsInteractor implements DownloadedOfflineMapsCon
 
     }
 
-    private List<OfflineMapModel>  populateOfflineMapModelList(List<Location> locations, Map<String, OfflineRegion> offlineRegionMap) {
+    public List<OfflineMapModel>  populateOfflineMapModelList(List<Location> locations, Map<String, OfflineRegion> offlineRegionMap) {
 
         List<OfflineMapModel> offlineMapModels = new ArrayList<>();
         for (Location location: locations) {
@@ -76,9 +81,9 @@ public class DownloadedOfflineMapsInteractor implements DownloadedOfflineMapsCon
         }
 
         return offlineMapModels;
-    };
+    }
 
-    private Map<String, MapBoxOfflineQueueTask> populateOfflineQueueTaskMap() {
+    public Map<String, MapBoxOfflineQueueTask> populateOfflineQueueTaskMap() {
         Map<String, MapBoxOfflineQueueTask> offlineQueueTaskMap = new HashMap<>();
 
         List<MapBoxOfflineQueueTask> offlineQueueTasks = realmDatabase.getTasks();
