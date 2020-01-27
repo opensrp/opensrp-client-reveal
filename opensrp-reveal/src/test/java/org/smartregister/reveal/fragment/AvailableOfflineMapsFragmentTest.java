@@ -70,13 +70,11 @@ public class AvailableOfflineMapsFragmentTest extends BaseUnitTest {
 
     private Context context = RuntimeEnvironment.application;
 
-    private AppCompatActivity activity;
-
     @Before
     public void setUp() {
         org.smartregister.Context.bindtypes= new ArrayList<>();
         fragment = new AvailableOfflineMapsFragment();
-        activity = Robolectric.buildActivity(AppCompatActivity.class).create().start().get();
+        AppCompatActivity activity = Robolectric.buildActivity(AppCompatActivity.class).create().start().get();
         activity.setContentView(R.layout.activity_offline_maps);
         activity.getSupportFragmentManager().beginTransaction().add(fragment, "Available").commit();
     }

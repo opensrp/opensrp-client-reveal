@@ -31,7 +31,7 @@ import io.ona.kujaku.helpers.OfflineServiceHelper;
 
 public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment implements DownloadedOfflineMapsContract.View {
 
-    private RecyclerView downloadedMapsrecyclerView;
+    private RecyclerView downloadedMapsRecyclerView;
 
     private DownloadedOfflineMapAdapter adapter;
 
@@ -76,7 +76,7 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
     }
 
     private void setUpViews(View view) {
-        downloadedMapsrecyclerView = view.findViewById(R.id.offline_map_recyclerView);
+        downloadedMapsRecyclerView = view.findViewById(R.id.offline_map_recyclerView);
 
         Button btnDeleteMap = view.findViewById(R.id.download_map);
         btnDeleteMap.setText(getString(R.string.delete).toUpperCase());
@@ -93,7 +93,7 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
 
     private void initializeAdapter() {
         adapter = new DownloadedOfflineMapAdapter(this.getContext(), onClickListener);
-        downloadedMapsrecyclerView.setAdapter(adapter);
+        downloadedMapsRecyclerView.setAdapter(adapter);
         if (downloadedOfflineMapModelList != null) {
             setDownloadedOfflineMapModelList(downloadedOfflineMapModelList);
         }
@@ -113,7 +113,7 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
         }
     };
 
-    private void updateOfflineMapsTodelete(View view) {
+    public void updateOfflineMapsTodelete(View view) {
         CheckBox checkBox = (CheckBox) view;
         OfflineMapModel offlineMapModel = (OfflineMapModel) view.getTag(R.id.offline_map_checkbox);
 
