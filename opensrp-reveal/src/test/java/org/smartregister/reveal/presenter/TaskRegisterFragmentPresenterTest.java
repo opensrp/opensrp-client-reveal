@@ -25,6 +25,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.LocationUtils;
@@ -35,6 +36,7 @@ import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.Cache;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,6 +53,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -93,6 +96,9 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Captor
     private ArgumentCaptor<String> labelCaptor;
 
+    @Captor
+    private ArgumentCaptor<List<TaskDetails>> taskDetailsArgumentCaptor;
+
     private TaskRegisterFragmentPresenter presenter;
 
     private Set<View> visibleColumns;
@@ -100,6 +106,9 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     private Location location;
 
     private org.smartregister.domain.Location operationalArea;
+    private TaskDetails task1;
+    private TaskDetails task2;
+    private List<TaskDetails> taskList;
 
     @Before
     public void setUp() {
@@ -227,6 +236,19 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     }
 
     @Test
+    public void testOnTasksWithFilterApplied() {
+        List<TaskDetails> detailsList = new ArrayList<>();
+        detailsList.add(TestingUtils.getTaskDetails());
+        Whitebox.setInternalState(presenter, "applyFilterOnTasksFound", true);
+        Whitebox.setInternalState(presenter, "filterParams", new TaskFilterParams("search"));
+        presenter.onTasksFound(detailsList, 1);
+        verify(view).setTotalTasks(1);
+        verify(view).clearFilter();
+        verify(view).setSearchPhrase("search");
+        assertFalse(Whitebox.getInternalState(presenter, "applyFilterOnTasksFound"));
+    }
+
+    @Test
     public void testOnLocationChangedFirstTime() {
         presenter.onLocationChanged(location);
         assertEquals(location, Whitebox.getInternalState(presenter, "lastLocation"));
@@ -317,7 +339,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         presenter = spy(presenter);
         doReturn(false).when(presenter).validateFarStructures();
         presenter.onStructureFound(new org.smartregister.domain.Location(), taskDetails);
-        verify(view,timeout(ASYNC_TIMEOUT)).startForm(any());
+        verify(view, timeout(ASYNC_TIMEOUT)).startForm(any());
         verify(view).hideProgressDialog();
     }
 
@@ -457,5 +479,63 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         verifyNoMoreInteractions(view);
         verifyNoMoreInteractions(interactor);
     }
+
+    private void initSearchTasks() {
+        task1 = TestingUtils.getTaskDetails();
+        task2 = new TaskDetails("task2");
+        task2.setFamilyMemberNames("Jane Doe,John Doe,Kenny Rodger");
+        task2.setDistanceFromUser(24f);
+        taskList = Arrays.asList(task1, task2);
+        Whitebox.setInternalState(presenter, "tasks", taskList);
+    }
+
+    @Test
+    public void testSearchTasks() {
+        initSearchTasks();
+        presenter.searchTasks("Kenny");
+        verify(view).setTaskDetails(taskList);
+        verify(view).setTotalTasks(1);
+
+
+    }
+
+
+    @Test
+    public void testSearchTaskFamilyMembers() {
+        initSearchTasks();
+        presenter.searchTasks("Jane Doe");
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        verify(view).setTotalTasks(1);
+
+        assertEquals(1, taskDetailsArgumentCaptor.getValue().size());
+        assertEquals(task2.getTaskId(), taskDetailsArgumentCaptor.getValue().get(0).getTaskId());
+
+    }
+
+
+    @Test
+    public void testSearchTasksByStructure() {
+        initSearchTasks();
+        presenter.searchTasks("Kenny House");
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        verify(view).setTotalTasks(0);
+
+        assertEquals(1, taskDetailsArgumentCaptor.getValue().size());
+        assertEquals(task1.getTaskId(), taskDetailsArgumentCaptor.getValue().get(0).getTaskId());
+
+    }
+
+    @Test
+    public void testSearchTasksByMissingPhrase() {
+        initSearchTasks();
+        presenter.searchTasks("Pluto");
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        verify(view).setTotalTasks(0);
+
+        assertEquals(0, taskDetailsArgumentCaptor.getValue().size());
+
+
+    }
+
 
 }
