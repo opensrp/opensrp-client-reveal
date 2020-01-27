@@ -38,7 +38,7 @@ public class DownloadedOfflineMapViewHolderTest extends BaseUnitTest {
     private Context context = RuntimeEnvironment.application;
 
     @Before
-    public void setup() {
+    public void setUp() {
         View view = LayoutInflater.from(context).inflate(R.layout.offline_map_row, null);
         viewHolder = new DownloadedOfflineMapViewHolder(view);
     }

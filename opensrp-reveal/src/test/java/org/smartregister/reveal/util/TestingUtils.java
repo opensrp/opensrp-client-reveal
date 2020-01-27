@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
+import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
@@ -19,6 +20,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import static org.smartregister.family.util.DBConstants.KEY;
+import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.DOWNLOADED;
 
 /**
  * Created by samuelgithengi on 3/27/19.
@@ -83,6 +85,13 @@ public class TestingUtils {
         task.setCode(Intervention.CASE_CONFIRMATION);
         task.setForEntity(entityId);
         return task;
+    }
+
+    public static OfflineMapModel getOfflineMapModel() {
+        OfflineMapModel model = new OfflineMapModel();
+        model.setOfflineMapStatus(DOWNLOADED);
+        model.setLocation(TestingUtils.gson.fromJson(TestingUtils.operationalAreaGeoJSON, org.smartregister.domain.Location.class));
+        return model;
     }
 
 }
