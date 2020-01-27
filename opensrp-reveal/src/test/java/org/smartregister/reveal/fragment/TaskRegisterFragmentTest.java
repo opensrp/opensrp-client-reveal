@@ -30,6 +30,7 @@ import org.smartregister.reveal.adapter.TaskRegisterAdapter;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
+import org.smartregister.reveal.presenter.ValidateUserLocationPresenter;
 import org.smartregister.reveal.shadow.DrawerMenuViewShadow;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.LocationUtils;
@@ -37,23 +38,30 @@ import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.view.FamilyProfileActivity;
 import org.smartregister.reveal.view.FamilyRegisterActivity;
+import org.smartregister.reveal.view.FilterTasksActivity;
 import org.smartregister.reveal.view.TaskRegisterActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import io.ona.kujaku.utils.Constants.RequestCode;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FIRST_NAME;
+import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
 
 /**
  * Created by samuelgithengi on 1/27/20.
@@ -83,6 +91,10 @@ public class TaskRegisterFragmentTest extends BaseUnitTest {
 
     @Mock
     private CaseClassificationFragment caseClassificationFragment;
+
+    @Mock
+    private ValidateUserLocationPresenter locationPresenter;
+
 
     @Before
     public void setUp() {
@@ -317,6 +329,66 @@ public class TaskRegisterFragmentTest extends BaseUnitTest {
         fragment.displayIndexCaseDetails(indexCase);
         verify(caseClassificationFragment).displayIndexCase(indexCase);
 
+    }
+
+    @Test
+    public void testSetNumberOfFilters() {
+        fragment.setNumberOfFilters(2);
+        TextView filterTextView = fragment.getView().findViewById(R.id.filter_text_view);
+        assertEquals(activity.getResources().getString(R.string.filters, 2), filterTextView.getText());
+        assertEquals(activity.getResources().getDimensionPixelSize(R.dimen.filter_toggle_end_margin), filterTextView.getPaddingStart());
+    }
+
+
+    @Test
+    public void testClearFilters() {
+        fragment.clearFilter();
+        TextView filterTextView = fragment.getView().findViewById(R.id.filter_text_view);
+        assertEquals(activity.getResources().getString(R.string.filter), filterTextView.getText());
+        assertEquals(activity.getResources().getDimensionPixelSize(R.dimen.filter_toggle_padding), filterTextView.getPaddingStart());
+    }
+
+    @Test
+    public void testOpenFilterActivity() {
+        fragment.openFilterActivity(null);
+        Intent intent = shadowOf(activity).getNextStartedActivity();
+        assertEquals(FilterTasksActivity.class, shadowOf(intent).getIntentClass());
+    }
+
+    @Test
+    public void testSetSearchPhrase() {
+        fragment.setSearchPhrase("H");
+        assertEquals("H", fragment.getSearchView().getText().toString());
+    }
+
+
+    @Test
+    public void testOnActivityResultGetUserLocation() {
+        Whitebox.setInternalState(fragment, "hasRequestedLocation", true);
+        when(presenter.getLocationPresenter()).thenReturn(locationPresenter);
+        Whitebox.setInternalState(fragment, "locationUtils", locationUtils);
+        fragment.onActivityResult(RequestCode.LOCATION_SETTINGS, RESULT_OK, null);
+        verify(locationPresenter).waitForUserLocation();
+        verify(locationUtils).requestLocationUpdates(presenter);
+    }
+
+
+    @Test
+    public void testOnActivityResultGetUserLocationFailed() {
+        Whitebox.setInternalState(fragment, "hasRequestedLocation", true);
+        when(presenter.getLocationPresenter()).thenReturn(locationPresenter);
+        fragment.onActivityResult(RequestCode.LOCATION_SETTINGS, RESULT_CANCELED, null);
+        verify(locationPresenter).onGetUserLocationFailed();
+        verify(locationUtils, never()).requestLocationUpdates(presenter);
+    }
+
+    @Test
+    public void testOnActivityResultFilterTasks() {
+        Intent intent = new Intent();
+        TaskFilterParams params = new TaskFilterParams("");
+        intent.putExtra(FILTER_SORT_PARAMS, params);
+        fragment.onActivityResult(REQUEST_CODE_FILTER_TASKS, RESULT_OK, intent);
+        verify(presenter).filterTasks(params);
     }
 
 
