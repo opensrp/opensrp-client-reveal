@@ -1,7 +1,6 @@
 package org.smartregister.reveal.view;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -15,7 +14,6 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.TaskRegisterContract;
@@ -49,8 +47,6 @@ public class TaskRegisterActivityTest extends BaseUnitTest {
     public MockitoRule rule = MockitoJUnit.rule();
 
     private TaskRegisterActivity taskRegisterActivity;
-
-    private Context context = RuntimeEnvironment.application;
 
     @Mock
     private RevealJsonFormUtils jsonFormUtils;
