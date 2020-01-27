@@ -99,12 +99,11 @@ public class TestingUtils {
     }
 
     public static TaskFilterParams getFilterParams() {
-
         Map<String, Set<String>> filters = new HashMap<>();
         filters.put(Constants.Filter.STATUS, Collections.singleton(NOT_VISITED));
         filters.put(Constants.Filter.CODE, Collections.singleton(Intervention.IRS));
         filters.put(Constants.Filter.INTERVENTION_UNIT, Collections.singleton(InterventionType.STRUCTURE));
-        return new TaskFilterParams("", filters);
+        return new TaskFilterParams("Status", filters);
     }
 
 

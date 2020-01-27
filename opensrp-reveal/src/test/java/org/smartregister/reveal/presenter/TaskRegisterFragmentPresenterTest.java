@@ -53,7 +53,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeout;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -484,8 +483,10 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         task1 = TestingUtils.getTaskDetails();
         task2 = new TaskDetails("task2");
         task2.setFamilyMemberNames("Jane Doe,John Doe,Kenny Rodger");
+        task2.setBusinessStatus(Constants.BusinessStatus.BEDNET_DISTRIBUTED);
+        task2.setTaskCode(Constants.Intervention.BEDNET_DISTRIBUTION);
         task2.setDistanceFromUser(24f);
-        taskList = Arrays.asList(task1, task2);
+        taskList = new ArrayList<>(Arrays.asList(task1, task2));
         Whitebox.setInternalState(presenter, "tasks", taskList);
     }
 
@@ -495,8 +496,6 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         presenter.searchTasks("Kenny");
         verify(view).setTaskDetails(taskList);
         verify(view).setTotalTasks(1);
-
-
     }
 
 
@@ -506,7 +505,6 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         presenter.searchTasks("Jane Doe");
         verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
         verify(view).setTotalTasks(1);
-
         assertEquals(1, taskDetailsArgumentCaptor.getValue().size());
         assertEquals(task2.getTaskId(), taskDetailsArgumentCaptor.getValue().get(0).getTaskId());
 
@@ -519,7 +517,6 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         presenter.searchTasks("Kenny House");
         verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
         verify(view).setTotalTasks(0);
-
         assertEquals(1, taskDetailsArgumentCaptor.getValue().size());
         assertEquals(task1.getTaskId(), taskDetailsArgumentCaptor.getValue().get(0).getTaskId());
 
@@ -531,10 +528,50 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         presenter.searchTasks("Pluto");
         verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
         verify(view).setTotalTasks(0);
-
         assertEquals(0, taskDetailsArgumentCaptor.getValue().size());
+    }
+
+    @Test
+    public void testSortTasksWithBusinessStatus() {
+        initSearchTasks();
+        TaskFilterParams params = TestingUtils.getFilterParams();
+        params.getCheckedFilters().clear();
+        presenter.filterTasks(params);
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        assertEquals(task1, taskDetailsArgumentCaptor.getValue().get(1));
+        assertEquals(task2, taskDetailsArgumentCaptor.getValue().get(0));
+    }
+
+    @Test
+    public void testSortTasksWithTaskType() {
+        initSearchTasks();
+        TaskFilterParams params = TestingUtils.getFilterParams();
+        params.setSortBy("Type");
+        params.getCheckedFilters().clear();
+        presenter.filterTasks(params);
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        assertEquals(task1, taskDetailsArgumentCaptor.getValue().get(1));
+        assertEquals(task2, taskDetailsArgumentCaptor.getValue().get(0));
+    }
 
 
+    @Test
+    public void testSortTasksWithDistance() {
+        initSearchTasks();
+        TaskDetails task3 = new TaskDetails("task3");
+        task3.setDistanceFromUser(2.1f);
+        taskList.add(task3);
+        TaskFilterParams params = TestingUtils.getFilterParams();
+        params.setSortBy("Distance (nearest first)");
+        params.getCheckedFilters().clear();
+        Whitebox.setInternalState(presenter, "tasks", taskList);
+
+
+        presenter.filterTasks(params);
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        assertEquals(task1, taskDetailsArgumentCaptor.getValue().get(2));
+        assertEquals(task2, taskDetailsArgumentCaptor.getValue().get(1));
+        assertEquals(task3, taskDetailsArgumentCaptor.getValue().get(0));
     }
 
 

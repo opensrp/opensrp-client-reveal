@@ -28,6 +28,10 @@ public class TaskFilterParams implements Serializable {
         return sortBy;
     }
 
+    public void setSortBy(String sortBy) {
+        this.sortBy = sortBy;
+    }
+
     public Map<String, Set<String>> getCheckedFilters() {
         return checkedFilters;
     }
