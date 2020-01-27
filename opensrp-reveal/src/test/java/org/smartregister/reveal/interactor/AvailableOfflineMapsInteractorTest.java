@@ -62,14 +62,6 @@ public class AvailableOfflineMapsInteractorTest extends BaseUnitTest {
     }
 
     @Test
-    public void testFetchAvailableOAsForMapDownloadWithNullParams() {
-        interactor.fetchAvailableOAsForMapDownLoad(null);
-        verify(presenter).onFetchAvailableOAsForMapDownLoad(null);
-        verifyNoMoreInteractions(presenter);
-        verifyNoMoreInteractions(locationRepository);
-    }
-
-    @Test
     public void testFetchAvailableOAsForMapDownload() {
         List<String> locationIds = Collections.singletonList(locationId);
         List<Location> locations = Collections.singletonList(initLocation());

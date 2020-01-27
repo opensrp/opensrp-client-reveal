@@ -28,11 +28,6 @@ public class AvailableOfflineMapsInteractor implements AvailableOfflineMapsContr
     @Override
     public void fetchAvailableOAsForMapDownLoad(List<String> locationIds) {
 
-        if (locationIds == null || locationIds.isEmpty()) {
-            presenter.onFetchAvailableOAsForMapDownLoad(null);
-            return;
-        }
-
         List<Location> operationalAreas = locationRepository.getLocationsByIds(locationIds, false);
 
         appExecutors.mainThread().execute(() -> {
