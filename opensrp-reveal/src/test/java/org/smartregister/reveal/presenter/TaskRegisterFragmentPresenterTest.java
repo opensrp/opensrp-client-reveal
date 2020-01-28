@@ -540,12 +540,10 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     }
 
     @Test
-    public void testSearchTasksByEmptyPhrase() {
+    public void testSearchTasksByEmptyPhraseResetsPreviousTasks() {
         initFilterSearchTasks();
         presenter.searchTasks("");
-        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
-        verify(view).setTotalTasks(0);
-        assertEquals(0, taskDetailsArgumentCaptor.getValue().size());
+        verify(view).setTaskDetails(taskList);
     }
 
     @Test
