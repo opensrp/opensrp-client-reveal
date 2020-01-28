@@ -1,6 +1,7 @@
 package org.smartregister.reveal.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,7 +14,7 @@ public class TaskFilterParams implements Serializable {
 
     private String searchPhrase;
 
-    private Map<String, Set<String>> checkedFilters;
+    private Map<String, Set<String>> checkedFilters = new HashMap<>();
 
     public TaskFilterParams(String sortBy, Map<String, Set<String>> checkedFilters) {
         this.sortBy = sortBy;
