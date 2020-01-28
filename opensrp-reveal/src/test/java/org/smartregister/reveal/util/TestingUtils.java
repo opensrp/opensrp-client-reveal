@@ -18,10 +18,8 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.util.DateTimeTypeConverter;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -94,8 +92,8 @@ public class TestingUtils {
     }
 
 
-    public static com.mapbox.geojson.Feature getStucture() {
-        return com.mapbox.geojson.Feature.fromJson(structureJSON);
+    public static Feature getStucture() {
+        return Feature.fromJson(structureJSON);
     }
 
     public static TaskFilterParams getFilterParams() {
