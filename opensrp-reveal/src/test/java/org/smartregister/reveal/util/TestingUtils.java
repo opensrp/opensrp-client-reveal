@@ -20,6 +20,7 @@ import org.smartregister.util.DateTimeTypeConverter;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -92,15 +93,15 @@ public class TestingUtils {
     }
 
 
-    public static Feature getStucture() {
+    public static Feature getStructure() {
         return Feature.fromJson(structureJSON);
     }
 
     public static TaskFilterParams getFilterParams() {
         Map<String, Set<String>> filters = new HashMap<>();
-        filters.put(Constants.Filter.STATUS, Collections.singleton(NOT_VISITED));
-        filters.put(Constants.Filter.CODE, Collections.singleton(Intervention.IRS));
-        filters.put(Constants.Filter.INTERVENTION_UNIT, Collections.singleton(InterventionType.STRUCTURE));
+        filters.put(Constants.Filter.STATUS, new HashSet<>(Collections.singleton(NOT_VISITED)));
+        filters.put(Constants.Filter.CODE, new HashSet<>(Collections.singleton(Intervention.IRS)));
+        filters.put(Constants.Filter.INTERVENTION_UNIT, new HashSet<>(Collections.singleton(InterventionType.STRUCTURE)));
         return new TaskFilterParams("Status", filters);
     }
 

@@ -144,7 +144,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnStructuresFetched() throws JSONException {
-        FeatureCollection featureCollection = FeatureCollection.fromFeature(TestingUtils.getStucture());
+        FeatureCollection featureCollection = FeatureCollection.fromFeature(TestingUtils.getStructure());
         listTaskPresenter.onStructuresFetched(new JSONObject(featureCollection.toJson()), feature, Collections.singletonList(TestingUtils.getTaskDetails()));
         verify(drawerPresenter).setChangedCurrentSelection(false);
         verify(listTaskView).setGeoJsonSource(featureCollection, feature, false);
@@ -155,7 +155,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnStructuresFetchedWithFilterAndNoSearchFiltersStructures() throws JSONException {
-        FeatureCollection featureCollection = FeatureCollection.fromFeature(TestingUtils.getStucture());
+        FeatureCollection featureCollection = FeatureCollection.fromFeature(TestingUtils.getStructure());
         TaskFilterParams params = TestingUtils.getFilterParams();
         Whitebox.setInternalState(listTaskPresenter, "filterParams", params);
         listTaskPresenter.onStructuresFetched(new JSONObject(featureCollection.toJson()), feature, Collections.singletonList(TestingUtils.getTaskDetails()));
@@ -170,7 +170,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnStructuresFetchedWithFilterAndSearchSearchesStructures() throws JSONException {
-        FeatureCollection featureCollection = FeatureCollection.fromFeature(TestingUtils.getStucture());
+        FeatureCollection featureCollection = FeatureCollection.fromFeature(TestingUtils.getStructure());
         TaskFilterParams params = TestingUtils.getFilterParams();
         Whitebox.setInternalState(listTaskPresenter, "filterParams", params);
         Whitebox.setInternalState(listTaskPresenter, "searchPhrase", "Doe");
@@ -248,7 +248,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         when(mapboxMap.getCameraPosition()).thenReturn(cameraPosition);
         when(mapboxMap.getProjection()).thenReturn(mapProjection);
         when(mapProjection.toScreenLocation(clickedPoint)).thenReturn(new PointF());
-        Feature structure = TestingUtils.getStucture();
+        Feature structure = TestingUtils.getStructure();
         when(mapboxMap.queryRenderedFeatures(any(PointF.class), any())).thenReturn(Arrays.asList(structure, feature));
         when(listTaskView.getContext()).thenReturn(RuntimeEnvironment.application);
         listTaskPresenter.onMapClicked(mapboxMap, clickedPoint, false);
@@ -265,7 +265,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
 
     @Test
     public void testFilterTasksBusinessStatus() {
-        Feature structure = TestingUtils.getStucture();
+        Feature structure = TestingUtils.getStructure();
         TaskFilterParams params = new TaskFilterParams("", new HashMap<>());
         params.getCheckedFilters().put(Filter.STATUS, Collections.singleton(NOT_VISITED));
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", FeatureCollection.fromFeature(structure));
@@ -288,7 +288,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
 
     @Test
     public void testFilterWithAllFilters() {
-        Feature structure = TestingUtils.getStucture();
+        Feature structure = TestingUtils.getStructure();
         TaskFilterParams params = new TaskFilterParams("", new HashMap<>());
         params.getCheckedFilters().put(Filter.STATUS, Collections.singleton(NOT_VISITED));
         params.getCheckedFilters().put(Filter.CODE, Collections.singleton(Intervention.IRS));
