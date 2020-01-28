@@ -51,6 +51,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
@@ -530,9 +531,18 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     }
 
     @Test
-    public void testSearchTasksByMissingPhrase() {
+    public void testSearchTasksByNonExistentPhrase() {
         initFilterSearchTasks();
         presenter.searchTasks("Pluto");
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        verify(view).setTotalTasks(0);
+        assertEquals(0, taskDetailsArgumentCaptor.getValue().size());
+    }
+
+    @Test
+    public void testSearchTasksByEmptyPhrase() {
+        initFilterSearchTasks();
+        presenter.searchTasks("");
         verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
         verify(view).setTotalTasks(0);
         assertEquals(0, taskDetailsArgumentCaptor.getValue().size());
@@ -664,7 +674,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void filterTaskWithAllParams() {
         initFilterSearchTasks();
-        TaskFilterParams params = new TaskFilterParams("", new HashMap<>());
+        TaskFilterParams params = new TaskFilterParams("Status", new HashMap<>());
         params.getCheckedFilters().put(Filter.STATUS, Collections.singleton(BusinessStatus.BLOOD_SCREENING_COMPLETE));
         params.getCheckedFilters().put(Filter.CODE, Collections.singleton(Intervention.BLOOD_SCREENING));
         params.getCheckedFilters().put(Filter.INTERVENTION_UNIT, Collections.singleton(InterventionType.PERSON));
@@ -680,6 +690,34 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         verify(view).setTaskDetails(new ArrayList<>());
         verify(view).setTotalTasks(0);
 
+    }
+
+    @Test
+    public void testOnFilterTasksClicked() {
+        TaskFilterParams params = TestingUtils.getFilterParams();
+        presenter.setTaskFilterParams(params);
+        presenter.onFilterTasksClicked();
+        verify(view).openFilterActivity(params);
+    }
+
+
+    @Test
+    public void setTaskFilterParams() {
+        TaskFilterParams params = TestingUtils.getFilterParams();
+        presenter.setTaskFilterParams(params);
+
+        assertEquals(params, Whitebox.getInternalState(presenter, "filterParams"));
+        assertTrue(Whitebox.getInternalState(presenter, "applyFilterOnTasksFound"));
+    }
+
+
+    @Test
+    public void setonOpenMapClicked() {
+        TaskFilterParams params = TestingUtils.getFilterParams();
+        presenter.setTaskFilterParams(params);
+        presenter.onOpenMapClicked();
+
+        verify(view).startMapActivity(params);
     }
 
 
