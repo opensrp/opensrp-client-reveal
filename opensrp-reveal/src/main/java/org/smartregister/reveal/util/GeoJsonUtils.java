@@ -77,11 +77,11 @@ public class GeoJsonUtils {
                             ineligibleForFamReg  = NOT_ELIGIBLE.equals((task.getBusinessStatus()));
                             break;
                         case BEDNET_DISTRIBUTION:
-                            bednetDistributed = COMPLETE.equals(task.getBusinessStatus());
+                            bednetDistributed = COMPLETE.equals(task.getBusinessStatus())||NOT_ELIGIBLE.equals(task.getBusinessStatus());
                             break;
                         case BLOOD_SCREENING:
                             if (!bloodScreeningDone) {
-                                bloodScreeningDone = COMPLETE.equals(task.getBusinessStatus());
+                                bloodScreeningDone = COMPLETE.equals(task.getBusinessStatus()) ||NOT_ELIGIBLE.equals(task.getBusinessStatus());
                             }
                             bloodScreeningExists=true;
                             break;
@@ -89,7 +89,7 @@ public class GeoJsonUtils {
                             caseConfirmed=COMPLETE.equals(task.getBusinessStatus());
                             break;
                         case MDA_ADHERENCE:
-                            mdaAdhered = COMPLETE.equals(task.getBusinessStatus());
+                            mdaAdhered = COMPLETE.equals(task.getBusinessStatus())||NOT_ELIGIBLE.equals(task.getBusinessStatus());
                             break;
                         case MDA_DISPENSE:
                             mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) + 1);

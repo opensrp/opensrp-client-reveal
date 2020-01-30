@@ -63,6 +63,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
         PreferencesUtil.getInstance().setCurrentPlan("Focus 1");
         PreferencesUtil.getInstance().setInterventionTypeForPlan("Focus 1", FI);
     }
+
     @Test
     public void testIsIndexCaseIsSetToTrueWhenTaskCodeIsCaseConfirmation() throws Exception {
 
@@ -74,7 +75,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         Map<String, Set<Task>> tasks = new HashMap<>();
 
-        Task task = initTestTask(null,null);
+        Task task = initTestTask(null, null);
 
         tasks.put(structure.getId(), Collections.singleton(task));
 
@@ -100,7 +101,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         Map<String, Set<Task>> tasks = new HashMap<>();
 
-        Task task = initTestTask(null,null);
+        Task task = initTestTask(null, null);
         task.setCode(BEDNET_DISTRIBUTION); // Value set to another code that
         // is not "Case Confirmation"
 
@@ -129,7 +130,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
         Map<String, Set<Task>> tasks = new HashMap<>();
 
         Set<Task> taskSet = new HashSet<>();
-        Task task = initTestTask(null,null);
+        Task task = initTestTask(null, null);
         task.setCode(REGISTER_FAMILY);
         taskSet.add(task);
 
@@ -157,7 +158,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
         Map<String, Set<Task>> tasks = new HashMap<>();
 
         Set<Task> taskSet = new HashSet<>();
-        Task task = initTestTask(null,null);
+        Task task = initTestTask(null, null);
         task.setCode(REGISTER_FAMILY);
         task.setBusinessStatus(COMPLETE);
         taskSet.add(task);
@@ -302,6 +303,39 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
         Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
 
         assertEquals(BLOOD_SCREENING_COMPLETE, feature.getStringProperty(TASK_BUSINESS_STATUS));
+
+    }
+
+
+    @Test
+    public void testCorrectTaskBusinessStatusBloodScreeningAndBedNetIneligible() throws Exception {
+
+        Location structure = initTestStructure();
+
+        ArrayList<Location> structures = new ArrayList<Location>();
+        structures.add(structure);
+
+        Map<String, Set<Task>> tasks = new HashMap<>();
+
+        Set<Task> taskSet = new HashSet<>();
+        Task familyRegTask = initTestTask(REGISTER_FAMILY, COMPLETE);
+        taskSet.add(familyRegTask);
+
+        Task bednetDistributionTask = initTestTask(BEDNET_DISTRIBUTION, NOT_ELIGIBLE);
+        taskSet.add(bednetDistributionTask);
+
+        Task bloodScreeningTask = initTestTask(BLOOD_SCREENING, NOT_ELIGIBLE);
+        taskSet.add(bloodScreeningTask);
+
+        tasks.put(structure.getId(), taskSet);
+
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+
+        JSONArray featuresJsonArray = new JSONArray(geoJsonString);
+
+        Feature feature = Feature.fromJson(featuresJsonArray.get(0).toString());
+
+        assertEquals(COMPLETE, feature.getStringProperty(TASK_BUSINESS_STATUS));
 
     }
 
@@ -685,10 +719,10 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
     private Task initTestTask(String taskCode, String businessStatus) {
         Task task = new Task();
         task.setIdentifier("ARCHIVE_2019-04");
-        String taskBusinessSTatus =  StringUtils.isNotEmpty(businessStatus) ? businessStatus : IN_PROGRESS;
+        String taskBusinessSTatus = StringUtils.isNotEmpty(businessStatus) ? businessStatus : IN_PROGRESS;
         task.setBusinessStatus(taskBusinessSTatus);
         task.setStatus(TaskStatus.IN_PROGRESS);
-        String code =  StringUtils.isNotEmpty(taskCode) ? taskCode : CASE_CONFIRMATION;
+        String code = StringUtils.isNotEmpty(taskCode) ? taskCode : CASE_CONFIRMATION;
         task.setCode(code);
         return task;
     }
