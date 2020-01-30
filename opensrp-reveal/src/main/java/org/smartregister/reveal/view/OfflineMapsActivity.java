@@ -38,8 +38,8 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
 
     private OfflineManager offlineManager;
 
-    private static  final int AVAILABLE_OFFLINE_MAPS_FRAGMENT_INDEX = 0;
-    private static  final int DOWNLOADED_OFFLINE_MAPS_FRAGMENT_INDEX = 1;
+    public static  final int AVAILABLE_OFFLINE_MAPS_FRAGMENT_INDEX = 0;
+    public static  final int DOWNLOADED_OFFLINE_MAPS_FRAGMENT_INDEX = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,7 +126,7 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
         });
     }
 
-    private void setOfflineDownloadedMapNames(Pair<List<String>, Map<String, OfflineRegion>>  offlineRegionInfo, boolean refreshDownloadedListOnly) {
+    public void setOfflineDownloadedMapNames(Pair<List<String>, Map<String, OfflineRegion>>  offlineRegionInfo, boolean refreshDownloadedListOnly) {
         downloadedOfflineMapsFragment = (DownloadedOfflineMapsFragment)  adapter.getItem(DOWNLOADED_OFFLINE_MAPS_FRAGMENT_INDEX);
         downloadedOfflineMapsFragment.setOfflineDownloadedMapNames(offlineRegionInfo);
 

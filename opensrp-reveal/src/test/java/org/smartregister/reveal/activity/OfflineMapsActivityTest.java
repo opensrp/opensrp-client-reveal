@@ -1,7 +1,11 @@
 package org.smartregister.reveal.activity;
 
-import com.mapbox.mapboxsdk.offline.OfflineManager;
+import android.support.v4.util.Pair;
 
+import com.mapbox.mapboxsdk.offline.OfflineManager;
+import com.mapbox.mapboxsdk.offline.OfflineRegion;
+
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -21,12 +25,20 @@ import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.view.OfflineMapsActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import io.ona.kujaku.data.realm.objects.MapBoxOfflineQueueTask;
+
+import static io.ona.kujaku.downloaders.MapBoxOfflineResourcesDownloader.METADATA_JSON_FIELD_REGION_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -43,7 +55,7 @@ public class OfflineMapsActivityTest extends BaseUnitTest {
     private ViewPagerAdapter adapter;
 
     @Mock
-    OfflineManager offlineManager;
+    private OfflineManager offlineManager;
 
     @Mock
     private AvailableOfflineMapsFragment availableOfflineMapsFragment;
@@ -94,6 +106,54 @@ public class OfflineMapsActivityTest extends BaseUnitTest {
         OfflineMapModel actualOfflineMapModel = offlineMapModelArgumentCaptor.getValue();
         assertNotNull(actualOfflineMapModel);
         assertEquals(expectedOfflineMapModel.getLocation().getId(), actualOfflineMapModel.getLocation().getId());
+    }
+
+    @Test
+    public void testSetOfflineDownloadedMapNames() throws  Exception {
+        offlineMapsActivity = spy(offlineMapsActivity);
+
+        when(adapter.getItem(OfflineMapsActivity.AVAILABLE_OFFLINE_MAPS_FRAGMENT_INDEX)).thenReturn(availableOfflineMapsFragment);
+        when(adapter.getItem(OfflineMapsActivity.DOWNLOADED_OFFLINE_MAPS_FRAGMENT_INDEX)).thenReturn(downloadedOfflineMapsFragment);
+
+        Pair<List<String>, Map<String, OfflineRegion>> offlineRegionInfo = initOfflineRegionInfo();
+
+        offlineMapsActivity.setOfflineDownloadedMapNames(offlineRegionInfo, false);
+        verify(downloadedOfflineMapsFragment).setOfflineDownloadedMapNames(offlineRegionInfo);
+        verify(availableOfflineMapsFragment).setOfflineDownloadedMapNames(offlineRegionInfo.first);
+    }
+
+    @Test
+    public void testSetOfflineDownloadedMapNamesRefreshDownloadListOnly() throws  Exception {
+        offlineMapsActivity = spy(offlineMapsActivity);
+
+        when(adapter.getItem(OfflineMapsActivity.AVAILABLE_OFFLINE_MAPS_FRAGMENT_INDEX)).thenReturn(availableOfflineMapsFragment);
+        when(adapter.getItem(OfflineMapsActivity.DOWNLOADED_OFFLINE_MAPS_FRAGMENT_INDEX)).thenReturn(downloadedOfflineMapsFragment);
+
+        Pair<List<String>, Map<String, OfflineRegion>> offlineRegionInfo = initOfflineRegionInfo();
+
+        offlineMapsActivity.setOfflineDownloadedMapNames(offlineRegionInfo, true);
+        verify(downloadedOfflineMapsFragment).setOfflineDownloadedMapNames(offlineRegionInfo);
+        verify(availableOfflineMapsFragment, times(0)).setOfflineDownloadedMapNames(offlineRegionInfo.first);
+    }
+
+
+    private Pair<List<String>, Map<String, OfflineRegion>> initOfflineRegionInfo() throws Exception {
+        List<String> offlineRegionNames = Collections.singletonList("Akros_1");
+        OfflineRegion offlineRegion = TestingUtils.createMockOfflineRegion();
+        OfflineRegion[] offlineRegions = {offlineRegion};
+
+        JSONObject task = new JSONObject();
+        task.put(METADATA_JSON_FIELD_REGION_NAME, "Akros_1");
+
+        MapBoxOfflineQueueTask offlineQueueTask = new MapBoxOfflineQueueTask();
+        offlineQueueTask.setTaskStatus(MapBoxOfflineQueueTask.TASK_STATUS_DONE);
+        offlineQueueTask.setTaskType(MapBoxOfflineQueueTask.TASK_TYPE_DOWNLOAD);
+        offlineQueueTask.setTask(task);
+
+        Map<String, MapBoxOfflineQueueTask> offlineQueueTaskMap = new HashMap<>();
+        offlineQueueTaskMap.put("Akros", offlineQueueTask);
+
+        return new Pair(offlineRegionNames, offlineRegions);
     }
 
 }
