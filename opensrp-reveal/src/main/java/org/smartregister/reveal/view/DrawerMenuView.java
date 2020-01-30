@@ -55,7 +55,6 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     private TextView facilityTextView;
     private TextView operatorTextView;
     private TextView p2pSyncTextView;
-    private TextView offlineMapTextView;
 
     private DrawerLayout mDrawerLayout;
 
@@ -132,7 +131,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         facilityTextView = headerView.findViewById(R.id.facility_label);
         operatorTextView = headerView.findViewById(R.id.operator_label);
         p2pSyncTextView = headerView.findViewById(R.id.btn_navMenu_p2pSyncBtn);
-        offlineMapTextView = headerView.findViewById(R.id.btn_navMenu_offline_maps);
+        TextView offlineMapTextView = headerView.findViewById(R.id.btn_navMenu_offline_maps);
 
         TextView summaryFormsTextView = headerView.findViewById(R.id.btn_navMenu_summaryForms);
 
