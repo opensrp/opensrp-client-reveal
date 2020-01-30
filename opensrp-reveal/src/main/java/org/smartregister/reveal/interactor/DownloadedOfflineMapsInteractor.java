@@ -5,13 +5,13 @@ import android.support.v4.util.Pair;
 
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 
-import org.json.JSONException;
 import org.smartregister.domain.Location;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.DownloadedOfflineMapsContract;
 import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.OfflineMapHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,8 +20,6 @@ import java.util.Map;
 
 import io.ona.kujaku.data.realm.RealmDatabase;
 import io.ona.kujaku.data.realm.objects.MapBoxOfflineQueueTask;
-
-import static io.ona.kujaku.data.MapBoxDownloadTask.MAP_NAME;
 
 public class DownloadedOfflineMapsInteractor implements DownloadedOfflineMapsContract.Interactor {
 
@@ -53,7 +51,7 @@ public class DownloadedOfflineMapsInteractor implements DownloadedOfflineMapsCon
 
         List<Location> operationalAreas = locationRepository.getLocationsByIds(offlineRegionInfo.first);
 
-        offlineQueueTaskMap = populateOfflineQueueTaskMap();
+        offlineQueueTaskMap = OfflineMapHelper.populateOfflineQueueTaskMap(realmDatabase);
 
         appExecutors.mainThread().execute(new Runnable() {
             @Override
@@ -83,27 +81,4 @@ public class DownloadedOfflineMapsInteractor implements DownloadedOfflineMapsCon
         return offlineMapModels;
     }
 
-    public Map<String, MapBoxOfflineQueueTask> populateOfflineQueueTaskMap() {
-        Map<String, MapBoxOfflineQueueTask> offlineQueueTaskMap = new HashMap<>();
-
-        List<MapBoxOfflineQueueTask> offlineQueueTasks = realmDatabase.getTasks();
-
-        if (offlineQueueTasks == null){
-            return offlineQueueTaskMap;
-        }
-
-        for (MapBoxOfflineQueueTask offlineQueueTask: offlineQueueTasks) {
-
-            try {
-                if (MapBoxOfflineQueueTask.TASK_TYPE_DOWNLOAD.equals(offlineQueueTask.getTaskType())
-                        && MapBoxOfflineQueueTask.TASK_STATUS_DONE == offlineQueueTask.getTaskStatus()) {
-                    offlineQueueTaskMap.put(offlineQueueTask.getTask().get(MAP_NAME).toString(), offlineQueueTask);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return offlineQueueTaskMap;
-    }
 }

@@ -4,8 +4,11 @@ import android.location.Location;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mapbox.mapboxsdk.offline.OfflineRegion;
 
 import org.joda.time.DateTime;
+import org.json.JSONObject;
+import org.mockito.Mockito;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
@@ -19,6 +22,7 @@ import org.smartregister.util.DateTimeTypeConverter;
 import java.util.HashMap;
 import java.util.UUID;
 
+import static io.ona.kujaku.downloaders.MapBoxOfflineResourcesDownloader.METADATA_JSON_FIELD_REGION_NAME;
 import static org.smartregister.family.util.DBConstants.KEY;
 import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.DOWNLOADED;
 
@@ -95,6 +99,20 @@ public class TestingUtils {
 
     public static org.smartregister.domain.Location getOperationalArea() {
         return gson.fromJson(operationalAreaGeoJSON, org.smartregister.domain.Location.class);
+    }
+
+    public static OfflineRegion createMockOfflineRegion() throws Exception {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(METADATA_JSON_FIELD_REGION_NAME, "Akros_1");
+
+        byte[] metadata = jsonObject.toString().getBytes("utf-8");
+
+        final OfflineRegion offlineRegion = Mockito.mock(OfflineRegion.class);
+
+        Mockito.when(offlineRegion.getMetadata())
+                .thenReturn(metadata);
+
+        return offlineRegion;
     }
 
 }

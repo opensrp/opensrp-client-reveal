@@ -13,8 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.ona.kujaku.data.realm.RealmDatabase;
+import io.ona.kujaku.data.realm.objects.MapBoxOfflineQueueTask;
 import io.ona.kujaku.downloaders.MapBoxOfflineResourcesDownloader;
 import io.ona.kujaku.utils.LogUtil;
+
+import static io.ona.kujaku.data.MapBoxDownloadTask.MAP_NAME;
 
 /**
  * Created by Richard Kareko on 1/30/20.
@@ -47,5 +51,29 @@ public class OfflineMapHelper {
         }
 
         return new Pair(offlineRegionNames, modelMap);
+    }
+
+    public static Map<String, MapBoxOfflineQueueTask> populateOfflineQueueTaskMap(RealmDatabase realmDatabase) {
+        Map<String, MapBoxOfflineQueueTask> offlineQueueTaskMap = new HashMap<>();
+
+        List<MapBoxOfflineQueueTask> offlineQueueTasks = realmDatabase.getTasks();
+
+        if (offlineQueueTasks == null){
+            return offlineQueueTaskMap;
+        }
+
+        for (MapBoxOfflineQueueTask offlineQueueTask: offlineQueueTasks) {
+
+            try {
+                if (MapBoxOfflineQueueTask.TASK_TYPE_DOWNLOAD.equals(offlineQueueTask.getTaskType())
+                        && MapBoxOfflineQueueTask.TASK_STATUS_DONE == offlineQueueTask.getTaskStatus()) {
+                    offlineQueueTaskMap.put(offlineQueueTask.getTask().get(MAP_NAME).toString(), offlineQueueTask);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return offlineQueueTaskMap;
     }
 }

@@ -37,7 +37,7 @@ public class OfflineMapHelperTest {
 
     @Test
     public void testGetOfflineRegionInfo() throws Exception {
-        OfflineRegion offlineRegion = createMockOfflineRegion();
+        OfflineRegion offlineRegion = TestingUtils.createMockOfflineRegion();
 
         OfflineRegion[] offlineRegions = {offlineRegion};
 
@@ -55,18 +55,5 @@ public class OfflineMapHelperTest {
         assertNotNull(modelMap.get("Akros_1"));
     }
 
-    private OfflineRegion createMockOfflineRegion() throws Exception {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put(METADATA_JSON_FIELD_REGION_NAME, "Akros_1");
-
-        byte[] metadata = jsonObject.toString().getBytes("utf-8");
-
-        final OfflineRegion offlineRegion = Mockito.mock(OfflineRegion.class);
-
-        Mockito.when(offlineRegion.getMetadata())
-                .thenReturn(metadata);
-
-        return offlineRegion;
-    }
 
 }
