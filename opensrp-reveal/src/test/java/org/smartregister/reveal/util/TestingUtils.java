@@ -41,7 +41,6 @@ public class TestingUtils {
 
     public static String structureJSON = "{\"id\": \"170230\", \"type\": \"Feature\", \"geometry\": {\"type\": \"Point\", \"coordinates\": [32.5961026, -14.1715113]}, \"properties\": {\"status\": \"Active\", \"version\": 0, \"parentId\": \"3429\", \"geographicLevel\": 4}, \"serverVersion\": 1542970626353}";
 
-
     public static String caseConfirmstionEventJSON = "{\"_id\":\"463e8cd4-acba-4f12-bbff-8435bced0227\",\"obs\":[],\"_rev\":\"v1\",\"type\":\"Event\",\"teamId\":\"09962f7c-8dab-4dee-96e2-354382aec76a\",\"details\":{\"family_name\":\"วีรศักดิ์\",\"focus_id\":\"2301110301\",\"focus_name\":\"ท่ากุ่มบน(ชายเขา)\",\"surname\":\"กัวติด\",\"first_name\":\"วีรศักดิ์\",\"age\":\"20\",\"case_number\":\"131412000001031181107101758977\",\"case_classification\":\"Bz\",\"focus_status\":\"B1\",\"focus_reason\":\"Investigation\",\"species\":\"V\",\"investigtion_date\":\"2018-11-06T00:00:00.000+0000\",\"ep1_create_date\":\"2018-11-07T10:10:27.673+0000\",\"ep3_create_date\":\"2018-11-07T10:17:58.977+0000\",\"house_number\":\"114\",\"plan_id\":\"10f9e9fa-ce34-4b27-a961-72fab5206ab6\"},\"version\":null,\"duration\":0,\"eventDate\":\"2019-01-08T09:14:32.807+02:00\",\"eventType\":\"Case Details\",\"entityType\":\"Case Details\",\"providerId\":\"nifi-user\",\"dateCreated\":\"2019-06-25T15:08:19.182+02:00\",\"identifiers\":{},\"baseEntityId\":\"bd73f7d7-4387-4b6b-b632-acb03c4ea160\",\"serverVersion\":null,\"formSubmissionId\":\"9c53270a-97f7-11e9-bc42-526af7764f64\"}";
 
 
@@ -92,7 +91,6 @@ public class TestingUtils {
         return task;
     }
 
-
     public static Feature getStructure() {
         return Feature.fromJson(structureJSON);
     }
@@ -105,5 +103,8 @@ public class TestingUtils {
         return new TaskFilterParams("Status", filters);
     }
 
+    public static org.smartregister.domain.Location getOperationalArea() {
+        return gson.fromJson(operationalAreaGeoJSON, org.smartregister.domain.Location.class);
+    }
 
 }

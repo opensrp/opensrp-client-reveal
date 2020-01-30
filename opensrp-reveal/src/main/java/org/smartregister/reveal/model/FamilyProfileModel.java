@@ -38,7 +38,7 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
 
     @Override
     public FamilyEventClient processFamilyRegistrationForm(String jsonString, String familyBaseEntityId) {
-     super.processFamilyRegistrationForm(jsonString, familyBaseEntityId);
+        eventClient = super.processFamilyRegistrationForm(jsonString, familyBaseEntityId);
         tagEventClientDetails(eventClient);
         return eventClient;
     }
