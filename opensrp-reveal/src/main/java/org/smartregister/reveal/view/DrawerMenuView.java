@@ -55,6 +55,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     private TextView facilityTextView;
     private TextView operatorTextView;
     private TextView p2pSyncTextView;
+    private TextView offlineMapTextView;
 
     private DrawerLayout mDrawerLayout;
 
@@ -131,6 +132,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         facilityTextView = headerView.findViewById(R.id.facility_label);
         operatorTextView = headerView.findViewById(R.id.operator_label);
         p2pSyncTextView = headerView.findViewById(R.id.btn_navMenu_p2pSyncBtn);
+        offlineMapTextView = headerView.findViewById(R.id.btn_navMenu_offline_maps);
 
         TextView summaryFormsTextView = headerView.findViewById(R.id.btn_navMenu_summaryForms);
 
@@ -144,11 +146,14 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
             summaryFormsTextView.setVisibility(View.VISIBLE);
             summaryFormsTextView.setOnClickListener(this);
+
+            offlineMapTextView.setVisibility(View.VISIBLE);
+            offlineMapTextView.setOnClickListener(this);
         }
 
         headerView.findViewById(R.id.logout_button).setOnClickListener(this);
         headerView.findViewById(R.id.sync_button).setOnClickListener(this);
-        headerView.findViewById(R.id.offline_maps_button).setOnClickListener(this);
+        headerView.findViewById(R.id.btn_navMenu_offline_maps).setOnClickListener(this);
 
         districtTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -303,7 +308,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             startP2PActivity();
         else if (v.getId() == R.id.btn_navMenu_summaryForms)
             startOtherFormsActivity();
-        else if (v.getId() == R.id.offline_maps_button)
+        else if (v.getId() == R.id.btn_navMenu_offline_maps)
             presenter.onShowOfflineMaps();
         else if (v.getId() == R.id.sync_button) {
             org.smartregister.reveal.util.Utils.startImmediateSync();
