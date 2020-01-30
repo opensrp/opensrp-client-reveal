@@ -331,7 +331,7 @@ public class GeoJsonUtilsTest extends BaseUnitTest {
 
         tasks.put(structure.getId(), taskSet);
 
-        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString());
+        String geoJsonString = GeoJsonUtils.getGeoJsonFromStructuresAndTasks(structures, tasks, UUID.randomUUID().toString(),new HashMap<>());
 
         JSONArray featuresJsonArray = new JSONArray(geoJsonString);
 
