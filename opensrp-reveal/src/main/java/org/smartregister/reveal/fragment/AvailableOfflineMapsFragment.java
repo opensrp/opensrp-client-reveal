@@ -13,13 +13,10 @@ import android.widget.CheckBox;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mapbox.geojson.Feature;
-import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.turf.TurfMeasurement;
 
 import org.joda.time.DateTime;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.AvailableOfflineMapAdapter;
 import org.smartregister.reveal.contract.AvailableOfflineMapsContract;
@@ -27,17 +24,12 @@ import org.smartregister.reveal.contract.OfflineMapDownloadCallback;
 import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.presenter.AvailableOfflineMapsPresenter;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.OfflineMapHelper;
 import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.PropertiesConverter;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.ona.kujaku.helpers.OfflineServiceHelper;
-
-import static org.smartregister.reveal.util.Constants.Map.DOWNLOAD_MAX_ZOOM;
-import static org.smartregister.reveal.util.Constants.Map.DOWNLOAD_MIN_ZOOM;
-import static org.smartregister.reveal.util.Constants.Map.MAPBOX_STYLE;
 
 public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implements AvailableOfflineMapsContract.View {
 
@@ -52,6 +44,8 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
     private List<Location> operationalAreasToDownload = new ArrayList<>();
 
     private OfflineMapDownloadCallback callback;
+
+    private Button btnDownloadMap;
 
     public static AvailableOfflineMapsFragment newInstance(Bundle bundle) {
 
@@ -70,6 +64,7 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
         if (presenter == null) {
             presenter = new AvailableOfflineMapsPresenter(this);
         }
+        btnDownloadMap = null;
     }
 
     @Nullable
@@ -84,9 +79,9 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
     private void setUpViews(View view) {
         offlineMapRecyclerView = view.findViewById(R.id.offline_map_recyclerView);
 
-        Button btnDownloadMap = view.findViewById(R.id.download_map);
+        btnDownloadMap = view.findViewById(R.id.download_map);
 
-        btnDownloadMap.setOnClickListener(v -> initiateMapDownload());
+        btnDownloadMap.setOnClickListener(onClickListener);
 
     }
 
@@ -105,6 +100,9 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
             switch (view.getId()) {
                 case R.id.offline_map_checkbox:
                     updateOperationalAreasToDownload(view);
+                    break;
+                case R.id.download_map:
+                    initiateMapDownload();
                     break;
                 default:
                         break;
@@ -167,63 +165,22 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
         }
     }
 
-    private void initiateMapDownload() {
+    public void initiateMapDownload() {
         Gson gson = new GsonBuilder().setDateFormat(Constants.DateFormat.EVENT_DATE_FORMAT_Z)
                 .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
                 .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
 
         if (this.operationalAreasToDownload == null || this.operationalAreasToDownload.isEmpty()) {
             displayToast(getString(R.string.select_offline_map_to_download));
+            return;
         }
 
         for (Location location: this.operationalAreasToDownload ) {
             Feature operationalAreaFeature = Feature.fromJson(gson.toJson(location));
             String mapName = location.getId();
-            downloadMap(operationalAreaFeature, mapName);
+            currentMapDownload = mapName;
+            OfflineMapHelper.downloadMap(operationalAreaFeature, mapName, getActivity());
         }
-    }
-
-    private void downloadMap(Feature operationalAreaFeature, String mapName) {
-        double[] bbox = TurfMeasurement.bbox(operationalAreaFeature.geometry());
-
-        double minX = bbox[0];
-        double minY = bbox[1];
-        double maxX = bbox[2];
-        double maxY = bbox[3];
-
-        double topLeftLat = maxY;
-        double topLeftLng = minX;
-        double bottomRightLat = minY;
-        double bottomRightLng = maxX;
-        double topRightLat = maxY;
-        double topRightLng = maxX;
-        double bottomLeftLat = minY;
-        double bottomLeftLng = minX;
-
-        currentMapDownload = mapName;
-
-        String mapboxStyle = MAPBOX_STYLE;
-
-        LatLng topLeftBound = new LatLng(topLeftLat, topLeftLng);
-        LatLng topRightBound = new LatLng(topRightLat, topRightLng);
-        LatLng bottomRightBound = new LatLng(bottomRightLat, bottomRightLng);
-        LatLng bottomLeftBound = new LatLng(bottomLeftLat, bottomLeftLng);
-
-        double maxZoom = DOWNLOAD_MAX_ZOOM;
-        double minZoom = DOWNLOAD_MIN_ZOOM;
-
-        OfflineServiceHelper.ZoomRange zoomRange = new OfflineServiceHelper.ZoomRange(minZoom, maxZoom);
-
-        OfflineServiceHelper.requestOfflineMapDownload(getActivity()
-                , mapName
-                , mapboxStyle
-                , BuildConfig.MAPBOX_SDK_ACCESS_TOKEN
-                , topLeftBound
-                , topRightBound
-                , bottomRightBound
-                , bottomLeftBound
-                , zoomRange
-        );
     }
 
     public void setOfflineMapDownloadCallback(OfflineMapDownloadCallback callBack) {

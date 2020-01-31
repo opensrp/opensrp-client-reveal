@@ -2,6 +2,8 @@ package org.smartregister.reveal.fragment;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 
 import org.junit.Before;
@@ -15,6 +17,7 @@ import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.shadows.ShadowToast;
 import org.smartregister.domain.Location;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
@@ -217,6 +220,39 @@ public class AvailableOfflineMapsFragmentTest extends BaseUnitTest {
         verify(presenter).fetchAvailableOAsForMapDownLoad(stringListCaptor.capture());
         assertNotNull(stringListCaptor.getValue());
         assertEquals(expectedOfflineRegionNames.get(0), stringListCaptor.getValue().get(0));
+    }
+
+    @Test
+    public void testSetOnclickListener() {
+        View.OnClickListener onClickListener = Whitebox.getInternalState(fragment, "onClickListener");
+        assertNotNull(onClickListener);
+    }
+
+    @Test
+    public void testInitiateMapDownloadWithoutOAToDownload() {
+        Button btnDownload = Whitebox.getInternalState(fragment, "btnDownloadMap");
+        Whitebox.setInternalState(fragment, "operationalAreasToDownload", new ArrayList<Location>());
+
+        btnDownload.performClick();
+        assertEquals(context.getString(R.string.select_offline_map_to_download), ShadowToast.getTextOfLatestToast());
+
+    }
+
+    @Test
+    public void testInitiateMapDownloadWithOAToDownload() {
+        List<Location> opAreasToDownload = Collections.singletonList(TestingUtils.getOperationalArea());
+        Whitebox.setInternalState(fragment, "operationalAreasToDownload", opAreasToDownload);
+
+        String originalCurrentMapDownload = Whitebox.getInternalState(fragment, "currentMapDownload");
+        assertNull(originalCurrentMapDownload);
+
+        Button btnDownload = Whitebox.getInternalState(fragment, "btnDownloadMap");
+        btnDownload.performClick();
+
+        String updatedCurrentMapDownload = Whitebox.getInternalState(fragment, "currentMapDownload");
+        assertNotNull(updatedCurrentMapDownload);
+        assertEquals(opAreasToDownload.get(0).getId(), updatedCurrentMapDownload);
+
     }
 
     private List<OfflineMapModel> initializeOfflineMapModelList() {
