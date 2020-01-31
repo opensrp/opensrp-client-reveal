@@ -20,7 +20,7 @@ import org.smartregister.reveal.presenter.FamilyProfilePresenter;
 
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
-import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON_FRAGMENT;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON_FRAGMENT;
 
 /**
  * Created by samuelgithengi on 2/8/19.
