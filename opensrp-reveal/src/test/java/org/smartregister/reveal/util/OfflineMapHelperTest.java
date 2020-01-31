@@ -6,9 +6,7 @@ import com.mapbox.mapboxsdk.offline.OfflineRegion;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.smartregister.reveal.BaseUnitTest;
 
 import java.util.List;
 import java.util.Map;
@@ -21,9 +19,8 @@ import static org.junit.Assert.assertNotNull;
  * Created by Richard Kareko on 1/30/20.
  */
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({OfflineMapHelper.class})
-public class OfflineMapHelperTest {
+
+public class OfflineMapHelperTest extends BaseUnitTest {
 
     private OfflineMapHelper OfflineMapHelper;
 

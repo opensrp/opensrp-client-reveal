@@ -23,6 +23,11 @@ public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFrag
     private static final String TAG = BaseOfflineMapsFragment.class.getName();
     private MapDownloadReceiver mapDownloadReceiver = new MapDownloadReceiver();
 
+    private String mapUniqueName;
+    private String resultStatus;
+    private String message;
+    private MapboxOfflineDownloaderService.SERVICE_ACTION serviceAction;
+
     protected String currentMapDownload;
 
     @Override
@@ -48,7 +53,7 @@ public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFrag
         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    private class MapDownloadReceiver extends BroadcastReceiver {
+    public class MapDownloadReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
@@ -59,54 +64,61 @@ public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFrag
                         && bundle.containsKey(MapboxOfflineDownloaderService.KEY_RESULTS_PARENT_ACTION)
                         && bundle.containsKey(Constants.PARCELABLE_KEY_MAP_UNIQUE_NAME)) {
 
-                    String mapUniqueName = bundle.getString(Constants.PARCELABLE_KEY_MAP_UNIQUE_NAME);
-                    String resultStatus = bundle.getString(MapboxOfflineDownloaderService.KEY_RESULT_STATUS);
-                    MapboxOfflineDownloaderService.SERVICE_ACTION serviceAction = (MapboxOfflineDownloaderService.SERVICE_ACTION) bundle.get(MapboxOfflineDownloaderService.KEY_RESULTS_PARENT_ACTION);
+                    mapUniqueName = bundle.getString(Constants.PARCELABLE_KEY_MAP_UNIQUE_NAME);
+                    resultStatus = bundle.getString(MapboxOfflineDownloaderService.KEY_RESULT_STATUS);
+                    serviceAction = (MapboxOfflineDownloaderService.SERVICE_ACTION) bundle.get(MapboxOfflineDownloaderService.KEY_RESULTS_PARENT_ACTION);
 
-                    String message = bundle.getString(MapboxOfflineDownloaderService.KEY_RESULT_MESSAGE);
+                    message = bundle.getString(MapboxOfflineDownloaderService.KEY_RESULT_MESSAGE);
 
                     if (MapboxOfflineDownloaderService.SERVICE_ACTION_RESULT.FAILED.name().equals(resultStatus)) {
-                        if (!TextUtils.isEmpty(message) &&
-                                !message.contains("MapBox Tile Count limit exceeded")) {
-                            //showInfoNotification("Error occurred " + mapUniqueName + ":" + serviceAction.name(), message);
-                            displayError(R.id.download_map,  message);
-                        }
-
-                        if (serviceAction == MapboxOfflineDownloaderService.SERVICE_ACTION.DELETE_MAP && !TextUtils.isEmpty(message)) {
-                            displayError(R.id.download_map, message);
-                        }
+                        handleFailureResponse();
                     } else {
-                        // We should disable the stop offline download button if it was stopped successfully
-                        if (serviceAction == MapboxOfflineDownloaderService.SERVICE_ACTION.STOP_CURRENT_DOWNLOAD) {
-                            currentMapDownload = null;
-                            // setCanStopMapDownload(false);
-                        } else if (serviceAction == MapboxOfflineDownloaderService.SERVICE_ACTION.DELETE_MAP) {
-                            mapDeletedSuccessfully(mapUniqueName);
-                        } else {
-                            if (!TextUtils.isEmpty(message)) {
-                                // This is a download progress message
-                                if (isValidDouble(message)) {
-                                    if (Double.valueOf(message) == 100d) {
-                                        currentMapDownload = null;
-                                        displayToast(getString(R.string.download_finished_successfuly));
-                                        downloadCompleted(mapUniqueName);
-                                        // setCanStopMapDownload(false);
-                                    } else {
-                                        // setCanStopMapDownload(true);
-                                        displayToast(context.getApplicationContext().getString(R.string.map_download_progress, Double.valueOf(message)));
-                                        downloadStarted(mapUniqueName);
-                                    }
-                                } else {
-                                    displayToast(message);
-                                }
-                            }
-                        }
+                        handleSuccessResponse();
                     }
                 }
             } else {
                 Timber.i(TAG, "Broadcast message has null Extras");
             }
 
+        }
+    }
+
+    public void handleFailureResponse() {
+        if (!TextUtils.isEmpty(message) &&
+                !message.contains("MapBox Tile Count limit exceeded")) {
+            displayError(R.id.download_map,  message);
+        }
+
+        if (serviceAction == MapboxOfflineDownloaderService.SERVICE_ACTION.DELETE_MAP && !TextUtils.isEmpty(message)) {
+            displayError(R.id.download_map, message);
+        }
+    }
+
+    public void handleSuccessResponse() {
+        // We should disable the stop offline download button if it was stopped successfully
+        if (serviceAction == MapboxOfflineDownloaderService.SERVICE_ACTION.STOP_CURRENT_DOWNLOAD) {
+            currentMapDownload = null;
+            // setCanStopMapDownload(false);
+        } else if (serviceAction == MapboxOfflineDownloaderService.SERVICE_ACTION.DELETE_MAP) {
+            mapDeletedSuccessfully(mapUniqueName);
+        } else {
+            if (!TextUtils.isEmpty(message)) {
+                // This is a download progress message
+                if (isValidDouble(message)) {
+                    if (Double.valueOf(message) == 100d) {
+                        currentMapDownload = null;
+                        displayToast(getString(R.string.download_finished_successfuly));
+                        downloadCompleted(mapUniqueName);
+                        // setCanStopMapDownload(false);
+                    } else {
+                        // setCanStopMapDownload(true);
+                        displayToast(getContext().getApplicationContext().getString(R.string.map_download_progress, Double.valueOf(message)));
+                        downloadStarted(mapUniqueName);
+                    }
+                } else {
+                    displayToast(message);
+                }
+            }
         }
     }
 

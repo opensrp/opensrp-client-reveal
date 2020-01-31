@@ -86,6 +86,12 @@ public class DownloadedOfflineMapsFragmentTest extends BaseUnitTest {
     }
 
     @Test
+    public void testOnResume() {
+        fragment.onResume();
+        assertNotNull(Whitebox.getInternalState(fragment, "presenter"));
+    }
+
+    @Test
     public void testOnCreateView() {
         assertNotNull(Whitebox.getInternalState(fragment, "downloadedMapsRecyclerView"));
         assertNotNull(Whitebox.getInternalState(fragment, "adapter"));
