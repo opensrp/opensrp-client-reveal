@@ -43,4 +43,9 @@
     <color name="download_map">#68BB0C</color>
     <color name="delete_map">#EE0427</color>
 
+    <!--used to override the theme from core dark theme -->
+    <color name="search_textfield_background_grey">@color/white</color>
+    <color name="task_filter_gray">#8B8B8B</color>
+
+
 </resources>

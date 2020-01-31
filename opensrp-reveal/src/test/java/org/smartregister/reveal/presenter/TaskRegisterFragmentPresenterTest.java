@@ -25,7 +25,12 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.BusinessStatus;
+import org.smartregister.reveal.util.Constants.Filter;
+import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -35,6 +40,9 @@ import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.Cache;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,6 +51,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
@@ -51,6 +60,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -93,6 +103,9 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Captor
     private ArgumentCaptor<String> labelCaptor;
 
+    @Captor
+    private ArgumentCaptor<List<TaskDetails>> taskDetailsArgumentCaptor;
+
     private TaskRegisterFragmentPresenter presenter;
 
     private Set<View> visibleColumns;
@@ -100,6 +113,9 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     private Location location;
 
     private org.smartregister.domain.Location operationalArea;
+    private TaskDetails task1;
+    private TaskDetails task2;
+    private List<TaskDetails> taskList;
 
     @Before
     public void setUp() {
@@ -227,6 +243,19 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     }
 
     @Test
+    public void testOnTasksWithFilterApplied() {
+        List<TaskDetails> detailsList = new ArrayList<>();
+        detailsList.add(TestingUtils.getTaskDetails());
+        Whitebox.setInternalState(presenter, "applyFilterOnTasksFound", true);
+        Whitebox.setInternalState(presenter, "filterParams", new TaskFilterParams("search"));
+        presenter.onTasksFound(detailsList, 1);
+        verify(view).setTotalTasks(1);
+        verify(view).clearFilter();
+        verify(view).setSearchPhrase("search");
+        assertFalse(Whitebox.getInternalState(presenter, "applyFilterOnTasksFound"));
+    }
+
+    @Test
     public void testOnLocationChangedFirstTime() {
         presenter.onLocationChanged(location);
         assertEquals(location, Whitebox.getInternalState(presenter, "lastLocation"));
@@ -291,7 +320,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void testOnTaskSelectedForBCCTasks() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
-        taskDetails.setTaskCode(Constants.Intervention.BCC);
+        taskDetails.setTaskCode(Intervention.BCC);
         presenter.onTaskSelected(taskDetails, true);
         verify(view).getContext();
         verify(view).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
@@ -317,7 +346,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         presenter = spy(presenter);
         doReturn(false).when(presenter).validateFarStructures();
         presenter.onStructureFound(new org.smartregister.domain.Location(), taskDetails);
-        verify(view,timeout(ASYNC_TIMEOUT)).startForm(any());
+        verify(view, timeout(ASYNC_TIMEOUT)).startForm(any());
         verify(view).hideProgressDialog();
     }
 
@@ -388,7 +417,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         when(preferencesUtil.getCurrentOperationalArea()).thenReturn("MTI_84");
 
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
-        taskDetails.setTaskCode(Constants.Intervention.CASE_CONFIRMATION);
+        taskDetails.setTaskCode(Intervention.CASE_CONFIRMATION);
         taskDetails.setReasonReference(eventId);
         presenter.onTaskSelected(taskDetails, true);
         verify(view).getContext();
@@ -400,7 +429,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void testOnTaskSelectedOpensFamilyProfile() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
-        taskDetails.setTaskCode(Constants.Intervention.BLOOD_SCREENING);
+        taskDetails.setTaskCode(Intervention.BLOOD_SCREENING);
         taskDetails.setTaskCount(2);
         taskDetails.setStructureId(UUID.randomUUID().toString());
         presenter.onTaskSelected(taskDetails, true);
@@ -413,7 +442,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void testOnLocationValidatedStartsFamilyForm() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
-        taskDetails.setTaskCode(Constants.Intervention.REGISTER_FAMILY);
+        taskDetails.setTaskCode(Intervention.REGISTER_FAMILY);
         presenter.setTaskDetails(taskDetails);
         presenter.onLocationValidated();
         verify(view).registerFamily(taskDetails);
@@ -433,7 +462,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void testOnIndexLinkedToJurisdictionCaseFound() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
-        taskDetails.setTaskCode(Constants.Intervention.CASE_CONFIRMATION);
+        taskDetails.setTaskCode(Intervention.CASE_CONFIRMATION);
         presenter.setTaskDetails(taskDetails);
         JSONObject indexCase = new JSONObject();
         presenter.onIndexCaseFound(indexCase, true);
@@ -446,7 +475,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void testOnIndexLinkedToStructureCaseAndNotCompletedFound() {
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
-        taskDetails.setTaskCode(Constants.Intervention.CASE_CONFIRMATION);
+        taskDetails.setTaskCode(Intervention.CASE_CONFIRMATION);
         taskDetails.setTaskStatus(Task.TaskStatus.READY.name());
         presenter.setTaskDetails(taskDetails);
         JSONObject indexCase = new JSONObject();
@@ -457,5 +486,237 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         verifyNoMoreInteractions(view);
         verifyNoMoreInteractions(interactor);
     }
+
+    private void initFilterSearchTasks() {
+        task1 = TestingUtils.getTaskDetails();
+        task2 = new TaskDetails("task2");
+        task2.setFamilyMemberNames("Jane Doe,John Doe,Kenny Rodger");
+        task2.setBusinessStatus(BusinessStatus.BLOOD_SCREENING_COMPLETE);
+        task2.setTaskCode(Intervention.BLOOD_SCREENING);
+        task2.setDistanceFromUser(24f);
+        taskList = new ArrayList<>(Arrays.asList(task1, task2));
+        Whitebox.setInternalState(presenter, "tasks", taskList);
+    }
+
+    @Test
+    public void testSearchTasks() {
+        initFilterSearchTasks();
+        presenter.searchTasks("Kenny");
+        verify(view).setTaskDetails(taskList);
+        verify(view).setTotalTasks(1);
+    }
+
+
+    @Test
+    public void testSearchTaskFamilyMembers() {
+        initFilterSearchTasks();
+        presenter.searchTasks("Jane Doe");
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        verify(view).setTotalTasks(1);
+        assertEquals(1, taskDetailsArgumentCaptor.getValue().size());
+        assertEquals(task2.getTaskId(), taskDetailsArgumentCaptor.getValue().get(0).getTaskId());
+
+    }
+
+
+    @Test
+    public void testSearchTasksByStructure() {
+        initFilterSearchTasks();
+        presenter.searchTasks("Kenny House");
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        verify(view).setTotalTasks(0);
+        assertEquals(1, taskDetailsArgumentCaptor.getValue().size());
+        assertEquals(task1.getTaskId(), taskDetailsArgumentCaptor.getValue().get(0).getTaskId());
+
+    }
+
+    @Test
+    public void testSearchTasksByNonExistentPhrase() {
+        initFilterSearchTasks();
+        presenter.searchTasks("Pluto");
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        verify(view).setTotalTasks(0);
+        assertEquals(0, taskDetailsArgumentCaptor.getValue().size());
+    }
+
+    @Test
+    public void testSearchTasksByEmptyPhraseResetsPreviousTasks() {
+        initFilterSearchTasks();
+        presenter.searchTasks("");
+        verify(view).setTaskDetails(taskList);
+    }
+
+    @Test
+    public void testSortTasksWithBusinessStatus() {
+        initFilterSearchTasks();
+        TaskFilterParams params = TestingUtils.getFilterParams();
+        params.getCheckedFilters().clear();
+        presenter.filterTasks(params);
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        assertEquals(task1, taskDetailsArgumentCaptor.getValue().get(1));
+        assertEquals(task2, taskDetailsArgumentCaptor.getValue().get(0));
+    }
+
+    @Test
+    public void testSortTasksWithTaskType() {
+        initFilterSearchTasks();
+        TaskFilterParams params = TestingUtils.getFilterParams();
+        params.setSortBy("Type");
+        params.getCheckedFilters().clear();
+        presenter.filterTasks(params);
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        assertEquals(task1, taskDetailsArgumentCaptor.getValue().get(1));
+        assertEquals(task2, taskDetailsArgumentCaptor.getValue().get(0));
+    }
+
+
+    @Test
+    public void testSortTasksWithDistance() {
+        initFilterSearchTasks();
+        TaskDetails task3 = new TaskDetails("task3");
+        task3.setDistanceFromUser(2.1f);
+        taskList.add(task3);
+        TaskFilterParams params = TestingUtils.getFilterParams();
+        params.setSortBy("Distance (nearest first)");
+        params.getCheckedFilters().clear();
+        Whitebox.setInternalState(presenter, "tasks", taskList);
+
+
+        presenter.filterTasks(params);
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        assertEquals(task1, taskDetailsArgumentCaptor.getValue().get(2));
+        assertEquals(task2, taskDetailsArgumentCaptor.getValue().get(1));
+        assertEquals(task3, taskDetailsArgumentCaptor.getValue().get(0));
+    }
+
+    @Test
+    public void filterTasksWithBusinessStatus() {
+        initFilterSearchTasks();
+        TaskFilterParams params = new TaskFilterParams("", new HashMap<>());
+        params.getCheckedFilters().put(Filter.STATUS, Collections.singleton(BusinessStatus.BLOOD_SCREENING_COMPLETE));
+        presenter.filterTasks(params);
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        verify(view).setTotalTasks(1);
+        assertEquals(task2, taskDetailsArgumentCaptor.getValue().get(0));
+
+
+        params.getCheckedFilters().put(Filter.STATUS, Collections.singleton(BusinessStatus.FULLY_RECEIVED));
+        presenter.filterTasks(params);
+        verify(view).setTaskDetails(new ArrayList<>());
+        verify(view).setTotalTasks(0);
+
+    }
+
+
+    @Test
+    public void filterTasksWithTaskCode() {
+        initFilterSearchTasks();
+        TaskFilterParams params = new TaskFilterParams("", new HashMap<>());
+        params.getCheckedFilters().put(Filter.CODE, Collections.singleton(Intervention.IRS));
+        presenter.filterTasks(params);
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        verify(view).setTotalTasks(0);
+        assertEquals(task1, taskDetailsArgumentCaptor.getValue().get(0));
+        verify(view).setNumberOfFilters(1);
+
+
+        params.getCheckedFilters().put(Filter.CODE, Collections.singleton(BusinessStatus.FULLY_RECEIVED));
+        presenter.filterTasks(params);
+        verify(view).setTaskDetails(new ArrayList<>());
+        verify(view, times(2)).setTotalTasks(0);
+
+
+    }
+
+    @Test
+    public void filterTasksWithStructureInterventionType() {
+        initFilterSearchTasks();
+        TaskFilterParams params = new TaskFilterParams("", new HashMap<>());
+        params.getCheckedFilters().put(Filter.INTERVENTION_UNIT, Collections.singleton(InterventionType.STRUCTURE));
+        presenter.filterTasks(params);
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        verify(view).setTotalTasks(0);
+        assertEquals(task1, taskDetailsArgumentCaptor.getValue().get(0));
+        assertEquals(1, taskDetailsArgumentCaptor.getValue().size());
+        verify(view).setNumberOfFilters(1);
+
+    }
+
+    @Test
+    public void filterTasksWithPersonInterventionType() {
+        initFilterSearchTasks();
+        TaskFilterParams params = new TaskFilterParams("", new HashMap<>());
+        params.getCheckedFilters().put(Filter.INTERVENTION_UNIT, Collections.singleton(InterventionType.PERSON));
+        presenter.filterTasks(params);
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        verify(view).setTotalTasks(1);
+        assertEquals(1, taskDetailsArgumentCaptor.getValue().size());
+        assertEquals(task2, taskDetailsArgumentCaptor.getValue().get(0));
+        verify(view).setNumberOfFilters(1);
+
+    }
+
+    @Test
+    public void filterTasksWithMissingInterventionType() {
+        initFilterSearchTasks();
+        TaskFilterParams params = new TaskFilterParams("", new HashMap<>());
+        params.getCheckedFilters().put(Filter.INTERVENTION_UNIT, Collections.singleton(InterventionType.OPERATIONAL_AREA));
+        presenter.filterTasks(params);
+        verify(view).setTaskDetails(new ArrayList<>());
+        verify(view).setTotalTasks(0);
+        verify(view).setNumberOfFilters(1);
+
+    }
+
+
+    @Test
+    public void filterTaskWithAllParams() {
+        initFilterSearchTasks();
+        TaskFilterParams params = new TaskFilterParams("Status", new HashMap<>());
+        params.getCheckedFilters().put(Filter.STATUS, Collections.singleton(BusinessStatus.BLOOD_SCREENING_COMPLETE));
+        params.getCheckedFilters().put(Filter.CODE, Collections.singleton(Intervention.BLOOD_SCREENING));
+        params.getCheckedFilters().put(Filter.INTERVENTION_UNIT, Collections.singleton(InterventionType.PERSON));
+        presenter.filterTasks(params);
+        verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
+        verify(view).setTotalTasks(1);
+        assertEquals(1, taskDetailsArgumentCaptor.getValue().size());
+        assertEquals(task2, taskDetailsArgumentCaptor.getValue().get(0));
+        verify(view).setNumberOfFilters(3);
+
+        params.getCheckedFilters().put(Filter.INTERVENTION_UNIT, Collections.singleton(InterventionType.STRUCTURE));
+        presenter.filterTasks(params);
+        verify(view).setTaskDetails(new ArrayList<>());
+        verify(view).setTotalTasks(0);
+
+    }
+
+    @Test
+    public void testOnFilterTasksClicked() {
+        TaskFilterParams params = TestingUtils.getFilterParams();
+        presenter.setTaskFilterParams(params);
+        presenter.onFilterTasksClicked();
+        verify(view).openFilterActivity(params);
+    }
+
+
+    @Test
+    public void setTaskFilterParams() {
+        TaskFilterParams params = TestingUtils.getFilterParams();
+        presenter.setTaskFilterParams(params);
+
+        assertEquals(params, Whitebox.getInternalState(presenter, "filterParams"));
+        assertTrue(Whitebox.getInternalState(presenter, "applyFilterOnTasksFound"));
+    }
+
+
+    @Test
+    public void setonOpenMapClicked() {
+        TaskFilterParams params = TestingUtils.getFilterParams();
+        presenter.setTaskFilterParams(params);
+        presenter.onOpenMapClicked();
+
+        verify(view).startMapActivity(params);
+    }
+
 
 }

@@ -11,12 +11,6 @@ public interface Constants {
 
     String JSON_FORM_PARAM_JSON = "json";
 
-    int REQUEST_CODE_GET_JSON = 3432;
-
-    int REQUEST_CODE_GET_JSON_FRAGMENT = 3439;
-
-    int REQUEST_CODE_FAMILY_PROFILE = 3576;
-
     String METADATA = "metadata";
 
     String DETAILS = "details";
@@ -147,7 +141,8 @@ public interface Constants {
         String STRUCTURE_NAME = "structure_name";
         String APP_VERSION_NAME = "appVersionName";
         String FORM_VERSION = "form_version";
-        String STRUCTURE_STATUS = "status";
+        String TASK_CODE_LIST = "task_code_list";
+        String FAMILY_MEMBER_NAMES = "family_member_names";
     }
 
 
@@ -189,6 +184,13 @@ public interface Constants {
 
         List<String> PERSON_INTERVENTIONS = Arrays.asList(BLOOD_SCREENING, CASE_CONFIRMATION, MDA_DISPENSE, MDA_ADHERENCE);
 
+        List<String> IRS_INTERVENTIONS = Arrays.asList(IRS, IRS_VERIFICATION);
+
+        List<String> FI_INTERVENTIONS = Arrays.asList(MOSQUITO_COLLECTION,
+                LARVAL_DIPPING, BCC, BEDNET_DISTRIBUTION, BLOOD_SCREENING, CASE_CONFIRMATION,
+                REGISTER_FAMILY, PAOT);
+
+        List<String> MDA_INTERVENTIONS = Arrays.asList(REGISTER_FAMILY, MDA_ADHERENCE, MDA_DISPENSE);
 
     }
 
@@ -226,9 +228,9 @@ public interface Constants {
         String IN_PROGRESS = "In Progress";
 
 
+        //MDA status
         String FULLY_RECEIVED = "Fully Received";
         String NONE_RECEIVED = "None Received";
-        String NOT_VISITED_ = "Not Visited YET";
         String ADHERENCE_VISIT_DONE = "Adherence Visit Done";
         String PARTIALLY_RECEIVED = "Partially Received";
 
@@ -238,14 +240,23 @@ public interface Constants {
         String BLOOD_SCREENING_COMPLETE = "Blood Screening Complete";
         String PARTIALLY_SPRAYED = "Partially Sprayed";
 
+
+        List<String> IRS_BUSINESS_STATUS = Arrays.asList(NOT_VISITED, NOT_SPRAYED,
+                SPRAYED, NOT_SPRAYABLE, COMPLETE, INCOMPLETE, NOT_ELIGIBLE, IN_PROGRESS);
+
+        List<String> FI_BUSINESS_STATUS = Arrays.asList(NOT_VISITED, FAMILY_REGISTERED, BEDNET_DISTRIBUTED,
+                BLOOD_SCREENING_COMPLETE, COMPLETE, NOT_ELIGIBLE);
+
+        List<String> MDA_BUSINESS_STATUS = Arrays.asList(NOT_VISITED, FULLY_RECEIVED, NONE_RECEIVED,
+                ADHERENCE_VISIT_DONE, PARTIALLY_RECEIVED, COMPLETE, NOT_ELIGIBLE);
     }
 
     interface BusinessStatusWrapper {
 
-        List<String> SPRAYED = Arrays.asList(new String[]{BusinessStatus.SPRAYED, BusinessStatus.COMPLETE, BusinessStatus.PARTIALLY_SPRAYED});
-        List<String> NOT_SPRAYED = Arrays.asList(new String[]{BusinessStatus.NOT_SPRAYED, BusinessStatus.IN_PROGRESS, BusinessStatus.INCOMPLETE});
-        List<String> NOT_ELIGIBLE = Arrays.asList(new String[]{BusinessStatus.NOT_SPRAYABLE, BusinessStatus.NOT_ELIGIBLE});
-        List<String> NOT_VISITED = Arrays.asList(new String[]{BusinessStatus.NOT_VISITED});
+        List<String> SPRAYED = Arrays.asList(BusinessStatus.SPRAYED, BusinessStatus.COMPLETE, BusinessStatus.PARTIALLY_SPRAYED);
+        List<String> NOT_SPRAYED = Arrays.asList(BusinessStatus.NOT_SPRAYED, BusinessStatus.IN_PROGRESS, BusinessStatus.INCOMPLETE);
+        List<String> NOT_ELIGIBLE = Arrays.asList(BusinessStatus.NOT_SPRAYABLE, BusinessStatus.NOT_ELIGIBLE);
+        List<String> NOT_VISITED = Arrays.asList(BusinessStatus.NOT_VISITED);
     }
 
     interface Map {
@@ -565,6 +576,8 @@ public interface Constants {
 
         String PROPERTY_TYPE = "property_type";
 
+        String PARENT_ID = "parent_id";
+
     }
 
     interface PlanDefinitionStatus {
@@ -596,5 +609,35 @@ public interface Constants {
         String INVALID_CLIENTS = "INValidClients";
         String TASK_UNPROCESSED_EVENTS = "taskUnprocessedEvents";
         String NULL_EVENT_SYNC_STATUS = "nullEventSyncStatus";
+    }
+
+    interface RequestCode {
+        int REQUEST_CODE_GET_JSON = 3432;
+
+        int REQUEST_CODE_GET_JSON_FRAGMENT = 3439;
+
+        int REQUEST_CODE_FAMILY_PROFILE = 3576;
+
+        int REQUEST_CODE_FILTER_TASKS = 3596;
+
+        int REQUEST_CODE_TASK_LISTS = 3617;
+    }
+
+
+    interface InterventionType {
+        String OPERATIONAL_AREA = "operational_area";
+        String STRUCTURE = "structure";
+        String FAMILY = "family";
+        String PERSON = "person";
+
+        List<String> FILTERABLE_INTERVENTION_TYPES = Arrays.asList(OPERATIONAL_AREA, STRUCTURE, FAMILY, PERSON);
+
+    }
+
+    interface Filter {
+        String CODE = "task_code";
+        String STATUS = "task_status";
+        String INTERVENTION_UNIT = "intervention_unit";
+        String FILTER_SORT_PARAMS = "filter_sort_params";
     }
 }
