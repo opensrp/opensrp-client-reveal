@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="task_details" type="id" />
+    <item name="filter_category" type="id" />
 </resources>

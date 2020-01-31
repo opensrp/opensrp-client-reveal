@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
@@ -27,6 +28,7 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.AlertDialogUtils;
@@ -37,6 +39,7 @@ import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.DrawerMenuView;
+import org.smartregister.reveal.view.FilterTasksActivity;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.reveal.view.TaskRegisterActivity;
 import org.smartregister.view.activity.BaseRegisterActivity;
@@ -50,7 +53,10 @@ import io.ona.kujaku.utils.Constants;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.smartregister.reveal.util.Constants.Action;
+import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
 
 /**
  * Created by samuelgithengi on 3/11/19.
@@ -72,6 +78,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     private RefreshRegisterReceiver refreshRegisterReceiver = new RefreshRegisterReceiver();
 
     private CardView indicatorsCardView;
+
+    private TextView filterTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,17 +107,44 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
             interventionTypeTv.setText(
                     getActivity().getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
         }
-        view.findViewById(R.id.txt_map_label).setOnClickListener(v -> startMapActivity());
+        view.findViewById(R.id.txt_map_label).setOnClickListener(v -> getPresenter().onOpenMapClicked());
         drawerView.initializeDrawerLayout();
         view.findViewById(R.id.drawerMenu).setOnClickListener(v -> drawerView.openDrawerLayout());
         drawerView.onResume();
 
         initializeProgressIndicatorViews(view);
+
+        filterTextView = view.findViewById(R.id.filter_text_view);
+        filterTextView.setOnClickListener(v -> {
+            getPresenter().onFilterTasksClicked();
+        });
+
+        TaskFilterParams filterParams = (TaskFilterParams) getActivity().getIntent().getSerializableExtra(FILTER_SORT_PARAMS);
+        if (filterParams != null) {
+            getPresenter().setTaskFilterParams(filterParams);
+        }
     }
 
-    private void startMapActivity() {
+    @Override
+    public void filter(String filterString, String joinTableString, String mainConditionString, boolean qrCode) {
+        getSearchCancelView().setVisibility(isEmpty(filterString) ? View.INVISIBLE : View.VISIBLE);
+        if (isEmpty(filterString)) {
+            org.smartregister.util.Utils.hideKeyboard(getActivity());
+        }
+        getPresenter().searchTasks(filterString);
+    }
+
+    @Override
+    public void startMapActivity(TaskFilterParams taskFilterParams) {
         Intent intent = new Intent(getContext(), ListTasksActivity.class);
-        startActivity(intent);
+        if (taskFilterParams != null) {
+            taskFilterParams.setSearchPhrase(getSearchView().getText().toString());
+            intent.putExtra(FILTER_SORT_PARAMS, taskFilterParams);
+        } else if (StringUtils.isNotBlank(getSearchView().getText())) {
+            intent.putExtra(FILTER_SORT_PARAMS, new TaskFilterParams(getSearchView().getText().toString()));
+        }
+        getActivity().setResult(RESULT_OK, intent);
+        getActivity().finish();
     }
 
     @Override
@@ -297,6 +332,37 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         ((TaskRegisterActivity) getActivity()).displayIndexCaseFragment(indexCase);
     }
 
+    @Override
+    public void setNumberOfFilters(int numberOfFilters) {
+        filterTextView.setText(getString(R.string.filters, numberOfFilters));
+        int padding = getResources().getDimensionPixelSize(R.dimen.filter_toggle_end_margin);
+        filterTextView.setPadding(padding, 0, padding, 0);
+    }
+
+    @Override
+    public void clearFilter() {
+        filterTextView.setText(getString(R.string.filter));
+        int padding = getResources().getDimensionPixelSize(R.dimen.filter_toggle_padding);
+        filterTextView.setPadding(padding, 0, padding, 0);
+    }
+
+    @Override
+    public TaskRegisterAdapter getAdapter() {
+        return taskAdapter;
+    }
+
+    @Override
+    public void openFilterActivity(TaskFilterParams filterParams) {
+        Intent intent = new Intent(getContext(), FilterTasksActivity.class);
+        intent.putExtra(FILTER_SORT_PARAMS, filterParams);
+        getActivity().startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
+    }
+
+    @Override
+    public void setSearchPhrase(String searchPhrase) {
+        getSearchView().setText(searchPhrase);
+    }
+
     public void setJsonFormUtils(RevealJsonFormUtils jsonFormUtils) {
         this.jsonFormUtils = jsonFormUtils;
     }
@@ -311,6 +377,9 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                 getPresenter().getLocationPresenter().onGetUserLocationFailed();
             }
             hasRequestedLocation = false;
+        } else if (requestCode == REQUEST_CODE_FILTER_TASKS && resultCode == RESULT_OK && data.hasExtra(FILTER_SORT_PARAMS)) {
+            TaskFilterParams filterParams = (TaskFilterParams) data.getSerializableExtra(FILTER_SORT_PARAMS);
+            getPresenter().filterTasks(filterParams);
         }
     }
 
