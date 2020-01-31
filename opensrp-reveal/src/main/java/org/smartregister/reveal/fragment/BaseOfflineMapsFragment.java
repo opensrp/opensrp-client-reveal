@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.smartregister.reveal.R;
@@ -16,6 +15,7 @@ import org.smartregister.reveal.contract.OfflineMapsFragmentContract;
 
 import io.ona.kujaku.services.MapboxOfflineDownloaderService;
 import io.ona.kujaku.utils.Constants;
+import timber.log.Timber;
 
 public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFragmentContract.View {
 
@@ -53,7 +53,7 @@ public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFrag
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
-                Log.i(TAG, intent.getExtras().toString());
+                Timber.i(TAG, intent.getExtras().toString());
                 if (bundle.containsKey(MapboxOfflineDownloaderService.KEY_RESULT_STATUS)
                         && bundle.containsKey(MapboxOfflineDownloaderService.KEY_RESULT_MESSAGE)
                         && bundle.containsKey(MapboxOfflineDownloaderService.KEY_RESULTS_PARENT_ACTION)
@@ -104,7 +104,7 @@ public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFrag
                     }
                 }
             } else {
-                Log.i(TAG, "Broadcast message has null Extras");
+                Timber.i(TAG, "Broadcast message has null Extras");
             }
 
         }

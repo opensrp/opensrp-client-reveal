@@ -7,7 +7,6 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 
 import com.mapbox.mapboxsdk.offline.OfflineManager;
@@ -23,6 +22,8 @@ import org.smartregister.reveal.util.OfflineMapHelper;
 
 import java.util.List;
 import java.util.Map;
+
+import timber.log.Timber;
 
 public class OfflineMapsActivity extends AppCompatActivity implements OfflineMapDownloadCallback {
 
@@ -121,7 +122,7 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
 
             @Override
             public void onError(String error) {
-                Log.e(TAG, "ERROR :: "  + error);
+                Timber.e(TAG, "ERROR :: "  + error);
             }
         });
     }

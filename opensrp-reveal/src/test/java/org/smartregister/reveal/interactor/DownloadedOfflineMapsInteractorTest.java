@@ -1,10 +1,15 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
+import android.support.v4.util.Pair;
+
+import com.mapbox.mapboxsdk.offline.OfflineRegion;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -14,13 +19,26 @@ import org.smartregister.domain.Location;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.DownloadedOfflineMapsContract;
+import org.smartregister.reveal.model.OfflineMapModel;
+import org.smartregister.reveal.util.TestingUtils;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.ona.kujaku.data.realm.RealmDatabase;
+import io.ona.kujaku.data.realm.objects.MapBoxOfflineQueueTask;
 
-import static org.mockito.ArgumentMatchers.anyObject;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -42,6 +60,9 @@ public class DownloadedOfflineMapsInteractorTest extends BaseUnitTest {
 
     @Mock
     private RealmDatabase realmDatabase;
+
+    @Captor
+    private ArgumentCaptor<List<OfflineMapModel>> offlineMapModelListArgumentCaptor;
 
     private Context context = RuntimeEnvironment.application;
 
@@ -66,15 +87,52 @@ public class DownloadedOfflineMapsInteractorTest extends BaseUnitTest {
     }
 
     @Test
-    public void testFetchLocationsWithOfflineMapDownloads() {
+    public void testFetchLocationsWithOfflineMapDownloads() throws Exception{
 
         List<String> locationIds = Collections.singletonList(locationId);
         List<Location> locations = Collections.singletonList(initLocation());
+        Pair<List<String>, Map<String, OfflineRegion>> offlineRegionInfo = TestingUtils.getOfflineRegionInfo();
+        List<OfflineMapModel> expectedOfflineMapModelList = Collections.singletonList(TestingUtils.getOfflineMapModel());
 
+        interactor = spy(interactor);
+
+        Whitebox.setInternalState(interactor, "offlineQueueTaskMap", TestingUtils.getOfflineQueueTaskMap());
+        doNothing().when(interactor).setOfflineQueueTaskMap(anyMap());
         when(locationRepository.getLocationsByIds(locationIds, false)).thenReturn(locations);
-        when(realmDatabase.getTasks()).thenReturn(null);
-        interactor.fetchLocationsWithOfflineMapDownloads(anyObject());
-        verify(presenter).onOAsWithOfflineDownloadsFetched(null);
+        when(interactor.populateOfflineMapModelList(anyList(), anyMap())).thenReturn(expectedOfflineMapModelList);
+
+        interactor.fetchLocationsWithOfflineMapDownloads(offlineRegionInfo);
+
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onOAsWithOfflineDownloadsFetched(offlineMapModelListArgumentCaptor.capture());
+        assertNotNull(offlineMapModelListArgumentCaptor.getValue());
+        List<OfflineMapModel> actualOfflineMapModelList = offlineMapModelListArgumentCaptor.getValue();
+        assertFalse(actualOfflineMapModelList.isEmpty());
+        assertEquals(expectedOfflineMapModelList.get(0).getDownloadAreaId(), actualOfflineMapModelList.get(0).getDownloadAreaId());
+
+    }
+
+    @Test
+    public void testPopulateOfflineMapModelList() throws Exception{
+
+        List<Location> locations = Collections.singletonList(initLocation());
+        Map<String, OfflineRegion> offlineRegionMap = new HashMap<>();
+        OfflineRegion expectedOfflineRegion = TestingUtils.createMockOfflineRegion();
+        offlineRegionMap.put(locationId, expectedOfflineRegion);
+
+        Map<String, MapBoxOfflineQueueTask> expectedOfflineQueueTaskMap = TestingUtils.getOfflineQueueTaskMap();
+
+        interactor = spy(interactor);
+        Whitebox.setInternalState(interactor, "offlineQueueTaskMap", expectedOfflineQueueTaskMap);
+
+        List<OfflineMapModel> actualOfflineMapModelList = interactor.populateOfflineMapModelList(locations, offlineRegionMap);
+
+        assertNotNull(actualOfflineMapModelList);
+        assertFalse(actualOfflineMapModelList.isEmpty());
+        assertEquals(locationId, actualOfflineMapModelList.get(0).getLocation().getId());
+        assertEquals("Polygon", actualOfflineMapModelList.get(0).getLocation().getType());
+        assertTrue(actualOfflineMapModelList.get(0).getLocation().isJurisdiction());
+        assertEquals(expectedOfflineQueueTaskMap.get(locationId).getDateCreated(), actualOfflineMapModelList.get(0).getDateCreated());
+
     }
 
     private Location initLocation() {

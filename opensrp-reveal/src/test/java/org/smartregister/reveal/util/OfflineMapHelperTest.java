@@ -46,10 +46,10 @@ public class OfflineMapHelperTest {
 
         List<String> offlineRegionNames = actualOfflineRegionInfo.first;
         assertFalse(offlineRegionNames.isEmpty());
-        assertEquals("Akros_1", offlineRegionNames.get(0));
+        assertEquals(TestingUtils.DUMMY_OPERATIONAL_AREA, offlineRegionNames.get(0));
 
         Map<String, OfflineRegion> modelMap = actualOfflineRegionInfo.second;
-        assertNotNull(modelMap.get("Akros_1"));
+        assertNotNull(modelMap.get(TestingUtils.DUMMY_OPERATIONAL_AREA));
     }
 
 

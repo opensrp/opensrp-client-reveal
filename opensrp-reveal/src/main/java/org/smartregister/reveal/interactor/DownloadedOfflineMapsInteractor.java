@@ -51,7 +51,7 @@ public class DownloadedOfflineMapsInteractor implements DownloadedOfflineMapsCon
 
         List<Location> operationalAreas = locationRepository.getLocationsByIds(offlineRegionInfo.first);
 
-        offlineQueueTaskMap = OfflineMapHelper.populateOfflineQueueTaskMap(realmDatabase);
+        setOfflineQueueTaskMap(OfflineMapHelper.populateOfflineQueueTaskMap(realmDatabase));
 
         appExecutors.mainThread().execute(new Runnable() {
             @Override
@@ -79,6 +79,10 @@ public class DownloadedOfflineMapsInteractor implements DownloadedOfflineMapsCon
         }
 
         return offlineMapModels;
+    }
+
+    public void setOfflineQueueTaskMap(Map<String, MapBoxOfflineQueueTask> offlineQueueTaskMap) {
+        this.offlineQueueTaskMap = offlineQueueTaskMap;
     }
 
 }
