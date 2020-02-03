@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,6 +26,7 @@
                 app:mapbox_uiAttributionGravity="center_horizontal|bottom"
                 app:mapbox_uiLogoGravity="center_horizontal|bottom"
                 app:mapbox_uiLogoMarginRight="30dp"
+                app:locationClient="android_gps_client"
                 app:mapbox_uiRotateGestures="false" />
 
             <android.support.design.widget.FloatingActionButton
@@ -39,7 +39,6 @@
                 app:backgroundTint="@color/white"
                 app:elevation="6dp"
                 app:fabSize="mini" />
-
 
             <FrameLayout
                 android:id="@+id/filter_tasks_count_layout"
