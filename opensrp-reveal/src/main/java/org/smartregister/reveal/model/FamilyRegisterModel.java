@@ -11,7 +11,7 @@ import org.smartregister.util.JsonFormUtils;
 
 import java.util.List;
 
-import static org.smartregister.reveal.util.FamilyConstants.DatabaseKeys.HOUSE_NUMBER;
+import static org.smartregister.reveal.util.FamilyConstants.DatabaseKeys.FAMILY_NAME;
 import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
 import static org.smartregister.util.JsonFormUtils.VALUE;
 
@@ -55,7 +55,7 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
     @Override
     public JSONObject getFormAsJson(String formName, String entityId, String currentLocationId) throws Exception {
         JSONObject form = super.getFormAsJson(formName, entityId, currentLocationId);
-        JSONObject houseNumberFieldJSONObject = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), HOUSE_NUMBER);
+        JSONObject houseNumberFieldJSONObject = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), FAMILY_NAME);
         if (houseNumberFieldJSONObject != null) {
             houseNumberFieldJSONObject.put(VALUE, this.structureName);
         }
