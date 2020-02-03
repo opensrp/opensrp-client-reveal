@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.google.common.annotations.VisibleForTesting;
 import com.mapbox.geojson.Feature;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -22,15 +23,20 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
+
+import timber.log.Timber;
 
 import static org.smartregister.domain.Task.INACTIVE_TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
@@ -62,6 +68,15 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
 
     private boolean isActionClicked = true;
 
+    private TaskFilterParams filterParams;
+
+    private boolean isTasksFiltered;
+
+    private ArrayList<TaskDetails> filteredTasks;
+
+    private int withinBuffer;
+
+    private boolean applyFilterOnTasksFound;
 
     public TaskRegisterFragmentPresenter(TaskRegisterFragmentContract.View view, String viewConfigurationIdentifier) {
         this(view, viewConfigurationIdentifier, null);
@@ -95,15 +110,18 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public void initializeQueries(String mainCondition) {
 
-        getView().initializeAdapter(visibleColumns);
+        if (getView().getAdapter() == null) {
+            getView().initializeAdapter(visibleColumns);
+        }
         lastLocation = getView().getLocationUtils().getLastLocation();
         if (lastLocation == null) {//if location client has not initialized use last location passed from map
             lastLocation = getView().getLastLocation();
         }
 
-        getView().showProgressView();
-
-        interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter(), getView().getContext().getString(R.string.house));
+        if (!isTasksFiltered) {
+            getView().showProgressView();
+            interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter(), getView().getContext().getString(R.string.house));
+        }
 
     }
 
@@ -157,6 +175,10 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             } else if (tasks.isEmpty()) {
                 getView().displayNotification(R.string.fetching_structure_title, R.string.no_structures_found);
                 getView().setTaskDetails(tasks);
+            } else if (applyFilterOnTasksFound) {
+                filterTasks(filterParams);
+                getView().setSearchPhrase(filterParams.getSearchPhrase());
+                applyFilterOnTasksFound = false;
             } else {
                 getView().setTaskDetails(tasks);
             }
@@ -245,6 +267,124 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     }
 
     @Override
+    public void searchTasks(String searchText) {
+        Timber.d("searching task matching %s", searchText);
+        if (StringUtils.isBlank(searchText)) {
+            setTasks(getActiveTasks(), this.withinBuffer);
+        } else {
+            List<TaskDetails> filteredTasks = new ArrayList<>();
+            int withinBuffer = 0;
+            for (TaskDetails task : getActiveTasks()) {
+                if (Utils.matchesSearchPhrase(task.getFamilyName(), searchText) ||
+                        Utils.matchesSearchPhrase(task.getStructureName(), searchText) ||
+                        Utils.matchesSearchPhrase(task.getHouseNumber(), searchText) ||
+                        Utils.matchesSearchPhrase(task.getFamilyMemberNames(), searchText)) {
+                    filteredTasks.add(task);
+                    if (task.getDistanceFromUser() > 0 && task.getDistanceFromUser() <= Utils.getLocationBuffer())
+                        withinBuffer++;
+                }
+            }
+            setTasks(filteredTasks, withinBuffer);
+        }
+    }
+
+    private void setTasks(List<TaskDetails> filteredTasks, int withinBuffer) {
+        getView().setTaskDetails(filteredTasks);
+        getView().setTotalTasks(withinBuffer);
+    }
+
+    @Override
+    public void filterTasks(TaskFilterParams filterParams) {
+        this.filterParams = filterParams;
+        if (filterParams.getCheckedFilters() == null || filterParams.getCheckedFilters().isEmpty()) {
+            applyEmptyFilter();
+            return;
+        }
+        filteredTasks = new ArrayList<>();
+        Set<String> filterStatus = filterParams.getCheckedFilters().get(Constants.Filter.STATUS);
+        Set<String> filterTaskCode = filterParams.getCheckedFilters().get(Constants.Filter.CODE);
+        Set<String> filterInterventionUnitTasks = Utils.getInterventionUnitCodes(filterParams.getCheckedFilters().get(Constants.Filter.INTERVENTION_UNIT));
+        getView().setNumberOfFilters(filterParams.getCheckedFilters().size());
+        Pattern pattern = Pattern.compile("~");
+        withinBuffer = 0;
+        for (TaskDetails taskDetails : tasks) {
+            if (matchesTask(taskDetails, pattern, filterStatus, filterTaskCode, filterInterventionUnitTasks)) {
+                filteredTasks.add(taskDetails);
+                if (taskDetails.getDistanceFromUser() > 0 && taskDetails.getDistanceFromUser() <= Utils.getLocationBuffer())
+                    withinBuffer++;
+            }
+        }
+        if (StringUtils.isNotBlank(filterParams.getSortBy())) {
+            sortTasks(filteredTasks, filterParams.getSortBy());
+        }
+        setTasks(filteredTasks, withinBuffer);
+        getView().setSearchPhrase("");
+        getView().hideProgressDialog();
+        getView().hideProgressView();
+        isTasksFiltered = true;
+    }
+
+    private void applyEmptyFilter() {
+        isTasksFiltered = false;
+        getView().clearFilter();
+        filteredTasks = null;
+        if (StringUtils.isNotBlank(filterParams.getSortBy())) {
+            sortTasks(tasks, filterParams.getSortBy());
+            getView().setTaskDetails(tasks);
+        }
+    }
+
+    private boolean matchesTask(TaskDetails taskDetails, Pattern pattern, Set<String> filterStatus, Set<String> filterTaskCode, Set<String> filterInterventionUnitTasks) {
+        boolean matches = true;
+        if (filterStatus != null) {
+            matches = StringUtils.isBlank(taskDetails.getAggregateBusinessStatus()) ? filterStatus.contains(taskDetails.getBusinessStatus()) : filterStatus.contains(taskDetails.getAggregateBusinessStatus());
+        }
+        if (matches && filterTaskCode != null) {
+            matches = matchesTaskCodeFilterList(taskDetails.getTaskCode(), filterTaskCode, pattern);
+        }
+        if (matches && filterInterventionUnitTasks != null) {
+            matches = matchesTaskCodeFilterList(taskDetails.getTaskCode(), filterInterventionUnitTasks, pattern);
+        }
+        return matches;
+    }
+
+    private void sortTasks(List<TaskDetails> filteredTasks, String sortBy) {
+        int sortType = Arrays.asList(getView().getContext().getResources().getStringArray(R.array.task_sort_options)).indexOf(sortBy);
+        if (sortType == 0) {// sort by distance default sort
+            Collections.sort(filteredTasks);
+        } else if (sortType == 1) {// sort by business status
+            Collections.sort(filteredTasks, (task, task2) -> {
+                String status = StringUtils.isBlank(task.getAggregateBusinessStatus()) ? task.getBusinessStatus() : task.getAggregateBusinessStatus();
+                String status2 = StringUtils.isBlank(task2.getAggregateBusinessStatus()) ? task2.getBusinessStatus() : task2.getAggregateBusinessStatus();
+                return status.compareTo(status2);
+            });
+        } else if (sortType == 2) {// sort by task type
+            Collections.sort(filteredTasks, (task, task2) -> task.getTaskCode().compareTo(task2.getTaskCode()));
+        }
+    }
+
+    @Override
+    public void onFilterTasksClicked() {
+        getView().openFilterActivity(filterParams);
+    }
+
+    @Override
+    public void setTaskFilterParams(TaskFilterParams filterParams) {
+        this.filterParams = filterParams;
+        applyFilterOnTasksFound = true;
+    }
+
+    @Override
+    public void onOpenMapClicked() {
+        getView().startMapActivity(filterParams);
+    }
+
+    private boolean matchesTaskCodeFilterList(String value, Set<String> filterList, Pattern pattern) {
+        String[] array = pattern.split(value);
+        return CollectionUtils.containsAny(Arrays.asList(array), filterList);
+    }
+
+    @Override
     public void onLocationValidated() {
         if (Constants.Intervention.REGISTER_FAMILY.equals(getTaskDetails().getTaskCode())) {
             getView().registerFamily(getTaskDetails());
@@ -273,5 +413,9 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             getView().displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
         else
             getView().openFamilyProfile(family, getTaskDetails());
+    }
+
+    private List<TaskDetails> getActiveTasks() {
+        return isTasksFiltered && filteredTasks != null ? filteredTasks : tasks;
     }
 }

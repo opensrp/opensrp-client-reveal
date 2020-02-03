@@ -51,6 +51,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -193,13 +194,16 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
     @Test
     public void testFetchLocations() {
+        String groupNameQuery = "Select structure._id as _id , COALESCE(ec_family.first_name,structure_name,name) , group_concat(ec_family_member.first_name||' '||ec_family_member.last_name) FROM structure LEFT JOIN ec_family ON structure._id = ec_family.structure_id collate nocase  LEFT JOIN ec_family_member ON ec_family.base_entity_id = ec_family_member.relational_id collate nocase  LEFT JOIN sprayed_structures ON structure._id = sprayed_structures.base_entity_id collate nocase  WHERE parent_id=?  GROUP BY structure._id";
         String plan = UUID.randomUUID().toString();
         String operationAreaId = operationArea.getId();
         setOperationArea(plan);
+        doReturn(createStructureNameCursor()).when(database).rawQuery(groupNameQuery, new String[]{operationAreaId});
         listTaskInteractor.fetchLocations(plan, operationAreaId);
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).getTasksByPlanAndGroup(plan, operationAreaId);
         verify(structureRepository, timeout(ASYNC_TIMEOUT)).getLocationsByParentId(operationAreaId);
         verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(jsonArgumentCaptor.capture(), featureArgumentCaptor.capture(), taskDetailsCaptor.capture());
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(groupNameQuery, new String[]{operationAreaId});
         assertEquals(operationAreaId, featureArgumentCaptor.getValue().id());
         FeatureCollection featureCollection = FeatureCollection.fromJson(jsonArgumentCaptor.getValue().toString());
         assertEquals("FeatureCollection", featureCollection.type());
@@ -211,6 +215,8 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals(task.getStatus().name(), feature.getStringProperty(Properties.TASK_STATUS));
         assertEquals(task.getCode(), feature.getStringProperty(Properties.TASK_CODE));
         assertEquals(Boolean.FALSE.toString(), feature.getStringProperty(Constants.GeoJSON.IS_INDEX_CASE));
+        assertEquals("Harry House", feature.getStringProperty(Constants.Properties.STRUCTURE_NAME));
+        assertEquals("Harry Pin, Jerry Kin", feature.getStringProperty(Properties.FAMILY_MEMBER_NAMES));
     }
 
 
@@ -220,12 +226,12 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         String operationAreaId = operationArea.getId();
         setOperationArea(plan);
         PreferencesUtil.getInstance().setCurrentPlan(plan);
-        PreferencesUtil.getInstance().setInterventionTypeForPlan(plan,"FI");
+        PreferencesUtil.getInstance().setInterventionTypeForPlan(plan, "FI");
         when(database.rawQuery(anyString(), eq(new String[]{plan, CASE_CONFIRMATION}))).thenReturn(createIndexCaseCursor());
         listTaskInteractor.fetchLocations(plan, operationAreaId);
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).getTasksByPlanAndGroup(plan, operationAreaId);
         verify(structureRepository, timeout(ASYNC_TIMEOUT)).getLocationsByParentId(operationAreaId);
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(jsonArgumentCaptor.capture(), featureArgumentCaptor.capture(),taskDetailsCaptor.capture());
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructuresFetched(jsonArgumentCaptor.capture(), featureArgumentCaptor.capture(), taskDetailsCaptor.capture());
         verify(database).rawQuery(anyString(), eq(new String[]{plan, CASE_CONFIRMATION}));
         assertEquals(operationAreaId, featureArgumentCaptor.getValue().id());
         FeatureCollection featureCollection = FeatureCollection.fromJson(jsonArgumentCaptor.getValue().toString());
@@ -237,7 +243,6 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals(task.getBusinessStatus(), feature.getStringProperty(Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS));
         assertEquals(task.getStatus().name(), feature.getStringProperty(Properties.TASK_STATUS));
         assertEquals(task.getCode(), feature.getStringProperty(Properties.TASK_CODE));
-        assertEquals(Boolean.TRUE.toString(), feature.getStringProperty(Constants.GeoJSON.IS_INDEX_CASE));
     }
 
 
@@ -279,6 +284,12 @@ public class ListTaskInteractorTest extends BaseUnitTest {
     private Cursor createPAOTCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{DatabaseKeys.PAOT_STATUS, DatabaseKeys.PAOT_COMMENTS, DatabaseKeys.LAST_UPDATED_DATE});
         cursor.addRow(new Object[]{"In-active", "Paot Active Comments", "11/02/1977"});
+        return cursor;
+    }
+
+    private Cursor createStructureNameCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[3]);
+        cursor.addRow(new Object[]{structure.getId(), "Harry House", "Harry Pin, Jerry Kin"});
         return cursor;
     }
 

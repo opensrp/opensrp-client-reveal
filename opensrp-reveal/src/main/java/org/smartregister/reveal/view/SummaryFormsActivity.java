@@ -21,7 +21,7 @@ import org.smartregister.reveal.util.RevealJsonFormUtils;
 import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
-import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
 
 public class SummaryFormsActivity extends AppCompatActivity implements OtherFormsContract.View {
 
