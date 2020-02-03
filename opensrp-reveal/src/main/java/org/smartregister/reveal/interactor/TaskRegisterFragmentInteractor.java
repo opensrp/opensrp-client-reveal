@@ -12,7 +12,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
-import org.smartregister.domain.Task;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.repository.EventClientRepository.event_column;
 import org.smartregister.repository.LocationRepository;
@@ -31,8 +30,11 @@ import java.util.List;
 import timber.log.Timber;
 
 import static org.smartregister.domain.Task.INACTIVE_TASK_STATUS;
+import static org.smartregister.domain.Task.TaskStatus.COMPLETED;
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
+import static org.smartregister.family.util.DBConstants.KEY.RELATIONAL_ID;
 import static org.smartregister.repository.EventClientRepository.Table.event;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.COMPLETED_TASK_COUNT;
@@ -42,6 +44,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPED_STRUC
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPED_TASKS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LATITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LONGITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
@@ -61,8 +64,10 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
+import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.FamilyConstants.DatabaseKeys.HOUSE_NUMBER;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
+import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 
 /**
  * Created by samuelgithengi on 3/18/19.
@@ -120,18 +125,21 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
     private String groupedRegisteredStructureTasksSelect(String mainCondition) {
         String tableName = TASK_TABLE;
         SmartRegisterQueryBuilder structureTasksQueryBuilder = new SmartRegisterQueryBuilder();
-        structureTasksQueryBuilder.selectInitiateMainTable(tableName, mainColumns(tableName), ID);
+        String[] columns = ArrayUtils.add(mainColumns(tableName), String.format("%s.%s||' '||%s.%s as %s ", FAMILY_MEMBER, FIRST_NAME, FAMILY_MEMBER, LAST_NAME, FAMILY_MEMBER_NAMES));
+        structureTasksQueryBuilder.selectInitiateMainTable(tableName, columns, ID);
         structureTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
                 STRUCTURES_TABLE, tableName, STRUCTURE_ID, STRUCTURES_TABLE, ID));
         structureTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s  COLLATE NOCASE",
                 FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
+        structureTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s  COLLATE NOCASE",
+                FAMILY_MEMBER, FAMILY, BASE_ENTITY_ID, FAMILY_MEMBER, RELATIONAL_ID));
         structureTasksQueryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
                 SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
         structureTasksQueryBuilder.mainCondition(mainCondition);
 
         return String.format(" SELECT %s.* , SUM(CASE WHEN status='%s' THEN 1 ELSE 0 END ) AS %s , COUNT(_id ) AS %s, " +
-                        "GROUP_CONCAT(%s || \"-\" || %s ) AS %s FROM ( ",
-                GROUPED_TASKS, Task.TaskStatus.COMPLETED.toString(), COMPLETED_TASK_COUNT, TASK_COUNT, CODE, BUSINESS_STATUS, GROUPED_STRUCTURE_TASK_CODE_AND_STATUS) + structureTasksQueryBuilder +
+                        "GROUP_CONCAT(%s || \"-\" || %s ) AS %s , GROUP_CONCAT(%s) as %s  FROM ( ",
+                GROUPED_TASKS, COMPLETED.toString(), COMPLETED_TASK_COUNT, TASK_COUNT, CODE, BUSINESS_STATUS, GROUPED_STRUCTURE_TASK_CODE_AND_STATUS, FAMILY_MEMBER_NAMES, FAMILY_MEMBER_NAMES) + structureTasksQueryBuilder +
                 String.format(" ) AS %s GROUP BY %s ", GROUPED_TASKS, STRUCTURE_ID);
 
     }
@@ -252,6 +260,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             task.setCompleteTaskCount(cursor.getInt(cursor.getColumnIndex(COMPLETED_TASK_COUNT)));
             task.setGroupedTaskCodeStatus(cursor.getString(cursor.getColumnIndex(GROUPED_STRUCTURE_TASK_CODE_AND_STATUS)));
             task.setHouseNumber(cursor.getString(cursor.getColumnIndex(HOUSE_NUMBER)));
+            task.setFamilyMemberNames(cursor.getString(cursor.getColumnIndex(FAMILY_MEMBER_NAMES)));
         }
         Location location = new Location((String) null);
 

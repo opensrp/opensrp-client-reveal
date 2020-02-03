@@ -171,14 +171,14 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 if (structure != null && client.getAddresses() != null && !client.getAddresses().isEmpty()) {
                     String houseNumber = client.getAddresses().get(0).getAddressField("address2");
                     if (StringUtils.isEmpty(houseNumber)) {
-                        return;
+                        structure.getProperties().getCustomProperties().put(Constants.Properties.STRUCTURE_NAME, client.getFirstName());
+                        structureRepository.addOrUpdate(structure);
                     } else if (structure.getProperties() != null
                             && !houseNumber.equalsIgnoreCase(structure.getProperties().getName())) {
                         structure.getProperties().setName(houseNumber);
                         structure.setSyncStatus(BaseRepository.TYPE_Created);
                         structureRepository.addOrUpdate(structure);
                     }
-
                 }
             }
             processEvent(event, client, clientClassification);
@@ -259,7 +259,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     }
 
     public String calculateBusinessStatus(Event event) {
-        if (EventType.FAMILY_REGISTRATION.equals(event.getEventType()) || EventType.FAMILY_MEMBER_REGISTRATION.equals(event.getEventType()) ) {
+        if (EventType.FAMILY_REGISTRATION.equals(event.getEventType()) || EventType.FAMILY_MEMBER_REGISTRATION.equals(event.getEventType())) {
             return BusinessStatus.COMPLETE;
         }
         Obs businessStatusObs = event.findObs(null, false, JsonForm.BUSINESS_STATUS);

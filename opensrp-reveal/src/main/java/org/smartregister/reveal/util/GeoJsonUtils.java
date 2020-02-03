@@ -1,7 +1,10 @@
 package org.smartregister.reveal.util;
 
+import android.support.annotation.NonNull;
+
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.model.StructureDetails;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +29,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMA
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE;
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
@@ -33,6 +37,7 @@ import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSIO
 import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE_LIST;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 
@@ -41,75 +46,26 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
  */
 public class GeoJsonUtils {
 
+    private static final String MDA_DISPENSE_TASK_COUNT = "mda_dispense_task_count";
 
-    public static String getGeoJsonFromStructuresAndTasks(List<Location> structures, Map<String, Set<Task>> tasks, String indexCase) {
+    public static String getGeoJsonFromStructuresAndTasks(List<Location> structures, Map<String, Set<Task>> tasks, String indexCase, Map<String, StructureDetails> structureNames) {
         for (Location structure : structures) {
             Set<Task> taskSet = tasks.get(structure.getId());
-            HashMap<String, String> taskProperties = null;
-            boolean familyRegistered = false;
-            boolean bednetDistributed = false;
-            boolean bloodScreeningDone = false;
-            boolean familyRegTaskExists = false;
-            boolean caseConfirmed = false;
-            boolean mdaAdhered = false;
-            boolean fullyReceived;
-            boolean nonReceived;
-            boolean nonEligible;
-            boolean partiallyReceived;
-            boolean bloodScreeningExists=false;
-            boolean ineligibleForFamReg=false;
-            String MDA_DISPENSE_TASK_COUNT = "mda_dispense_task_count";
+            HashMap<String, String> taskProperties = new HashMap<>();
+
+            StringBuilder interventionList = new StringBuilder();
 
             Map<String, Integer> mdaStatusMap = new HashMap<>();
             mdaStatusMap.put(FULLY_RECEIVED, 0);
             mdaStatusMap.put(NONE_RECEIVED, 0);
             mdaStatusMap.put(NOT_ELIGIBLE, 0);
             mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, 0);
-
+            StateWrapper state = new StateWrapper();
             if (taskSet == null)
                 continue;
             for (Task task : taskSet) {
-                if (Utils.isResidentialStructure(task.getCode())) {
-                    switch (task.getCode()) {
-                        case REGISTER_FAMILY:
-                            familyRegTaskExists = true;
-                            familyRegistered = COMPLETE.equals(task.getBusinessStatus());
-                            ineligibleForFamReg  = NOT_ELIGIBLE.equals((task.getBusinessStatus()));
-                            break;
-                        case BEDNET_DISTRIBUTION:
-                            bednetDistributed = COMPLETE.equals(task.getBusinessStatus());
-                            break;
-                        case BLOOD_SCREENING:
-                            if (!bloodScreeningDone) {
-                                bloodScreeningDone = COMPLETE.equals(task.getBusinessStatus());
-                            }
-                            bloodScreeningExists=true;
-                            break;
-                        case CASE_CONFIRMATION:
-                            caseConfirmed=COMPLETE.equals(task.getBusinessStatus());
-                            break;
-                        case MDA_ADHERENCE:
-                            mdaAdhered = COMPLETE.equals(task.getBusinessStatus());
-                            break;
-                        case MDA_DISPENSE:
-                            mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) + 1);
-                            switch (task.getBusinessStatus()) {
-                                case FULLY_RECEIVED :
-                                    mdaStatusMap.put(FULLY_RECEIVED, mdaStatusMap.get(FULLY_RECEIVED) + 1);
-                                    break;
-                                case NONE_RECEIVED:
-                                    mdaStatusMap.put(NONE_RECEIVED, mdaStatusMap.get(NONE_RECEIVED) + 1);
-                                    break;
-                                case NOT_ELIGIBLE:
-                                    mdaStatusMap.put(NOT_ELIGIBLE, mdaStatusMap.get(NOT_ELIGIBLE) + 1);
-                                    break;
-                            }
-                        default:
-                            break;
+                calculateState(task, state, mdaStatusMap);
 
-                    }
-
-                }
                 taskProperties = new HashMap<>();
                 taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
                 taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus()); // Set here for non residential structures
@@ -126,67 +82,140 @@ public class GeoJsonUtils {
                 taskProperties.put(LOCATION_UUID, structure.getProperties().getUid());
                 taskProperties.put(LOCATION_VERSION, structure.getProperties().getVersion() + "");
                 taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
-                taskProperties.put(STRUCTURE_NAME, structure.getProperties().getName());
+                interventionList.append(task.getCode());
+                interventionList.append("~");
 
             }
 
-            // The assumption is that a register structure task always exists if the structure has
-            // atleast one bednet distribution or blood screening task
-            if ( Utils.isResidentialStructure(taskProperties.get(TASK_CODE)) ) {
+            populateBusinessStatus(taskProperties, mdaStatusMap, state);
 
-                boolean familyRegTaskMissingOrFamilyRegComplete = familyRegistered || !familyRegTaskExists;
-
-                if (Utils.isFocusInvestigation()) {
-
-                    if (familyRegTaskMissingOrFamilyRegComplete &&
-                            bednetDistributed && bloodScreeningDone) {
-                        taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
-                    }  else if (familyRegTaskMissingOrFamilyRegComplete &&
-                             !bednetDistributed && (!bloodScreeningDone || (!bloodScreeningExists && !caseConfirmed)) ) {
-                        taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
-                    } else if (bednetDistributed && familyRegTaskMissingOrFamilyRegComplete) {
-                        taskProperties.put(TASK_BUSINESS_STATUS, BEDNET_DISTRIBUTED);
-                    } else if (bloodScreeningDone) {
-                        taskProperties.put(TASK_BUSINESS_STATUS, BLOOD_SCREENING_COMPLETE);
-                    } else if (ineligibleForFamReg) {
-                        taskProperties.put(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
-                    } else {
-                        taskProperties.put(TASK_BUSINESS_STATUS, NOT_VISITED);
-                    }
-
-                } else if (Utils.isMDA()) {
-
-
-                    fullyReceived = (mdaStatusMap.get(FULLY_RECEIVED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
-                    nonReceived = ( mdaStatusMap.get(NONE_RECEIVED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
-                    nonEligible = ( mdaStatusMap.get(NOT_ELIGIBLE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
-                    partiallyReceived = (!fullyReceived && (mdaStatusMap.get(FULLY_RECEIVED) > 0));
-
-                    if (familyRegTaskMissingOrFamilyRegComplete) {
-                        if (mdaAdhered) {
-                            taskProperties.put(TASK_BUSINESS_STATUS, ADHERENCE_VISIT_DONE);
-                        } else if (fullyReceived ) {
-                            taskProperties.put(TASK_BUSINESS_STATUS, FULLY_RECEIVED);
-                        } else if (partiallyReceived ) {
-                            taskProperties.put(TASK_BUSINESS_STATUS, PARTIALLY_RECEIVED);
-                        } else if (nonReceived ) {
-                            taskProperties.put(TASK_BUSINESS_STATUS, NONE_RECEIVED);
-                        } else if (nonEligible ) {
-                            taskProperties.put(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
-                        } else {
-                            taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
-                        }
-                    } else {
-                        taskProperties.put(TASK_BUSINESS_STATUS, NOT_VISITED);
-                    }
-
-                }
-
+            taskProperties.put(TASK_CODE_LIST, interventionList.toString());
+            if (structureNames.get(structure.getId()) != null) {
+                taskProperties.put(STRUCTURE_NAME, structureNames.get(structure.getId()).getStructureName());
+                taskProperties.put(FAMILY_MEMBER_NAMES, structureNames.get(structure.getId()).getFamilyMembersNames());
             }
-
             structure.getProperties().setCustomProperties(taskProperties);
 
         }
         return gson.toJson(structures);
+    }
+
+    private static void calculateState(Task task, StateWrapper state, @NonNull Map<String, Integer> mdaStatusMap) {
+        if (Utils.isResidentialStructure(task.getCode())) {
+            switch (task.getCode()) {
+                case REGISTER_FAMILY:
+                    state.familyRegTaskExists = true;
+                    state.familyRegistered = COMPLETE.equals(task.getBusinessStatus());
+                    state.ineligibleForFamReg = NOT_ELIGIBLE.equals((task.getBusinessStatus()));
+                    break;
+                case BEDNET_DISTRIBUTION:
+                    state.bednetDistributed = COMPLETE.equals(task.getBusinessStatus()) || NOT_ELIGIBLE.equals(task.getBusinessStatus());
+                    break;
+                case BLOOD_SCREENING:
+                    if (!state.bloodScreeningDone) {
+                        state.bloodScreeningDone = COMPLETE.equals(task.getBusinessStatus()) || NOT_ELIGIBLE.equals(task.getBusinessStatus());
+                    }
+                    state.bloodScreeningExists = true;
+                    break;
+                case CASE_CONFIRMATION:
+                    state.caseConfirmed = COMPLETE.equals(task.getBusinessStatus());
+                    break;
+                case MDA_ADHERENCE:
+                    state.mdaAdhered = COMPLETE.equals(task.getBusinessStatus()) || NOT_ELIGIBLE.equals(task.getBusinessStatus());
+                    break;
+                case MDA_DISPENSE:
+                    populateMDAStatus(task, mdaStatusMap);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+    }
+
+    private static void populateMDAStatus(Task task, Map<String, Integer> mdaStatusMap) {
+        mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) + 1);
+        switch (task.getBusinessStatus()) {
+            case FULLY_RECEIVED:
+                mdaStatusMap.put(FULLY_RECEIVED, mdaStatusMap.get(FULLY_RECEIVED) + 1);
+                break;
+            case NONE_RECEIVED:
+                mdaStatusMap.put(NONE_RECEIVED, mdaStatusMap.get(NONE_RECEIVED) + 1);
+                break;
+            case NOT_ELIGIBLE:
+                mdaStatusMap.put(NOT_ELIGIBLE, mdaStatusMap.get(NOT_ELIGIBLE) + 1);
+                break;
+        }
+    }
+
+    private static void populateBusinessStatus(HashMap<String, String> taskProperties, Map<String, Integer> mdaStatusMap, StateWrapper state) {
+        // The assumption is that a register structure task always exists if the structure has
+        // atleast one bednet distribution or blood screening task
+        if (Utils.isResidentialStructure(taskProperties.get(TASK_CODE))) {
+
+            boolean familyRegTaskMissingOrFamilyRegComplete = state.familyRegistered || !state.familyRegTaskExists;
+
+            if (Utils.isFocusInvestigation()) {
+
+                if (familyRegTaskMissingOrFamilyRegComplete &&
+                        state.bednetDistributed && state.bloodScreeningDone) {
+                    taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
+                } else if (familyRegTaskMissingOrFamilyRegComplete &&
+                        !state.bednetDistributed && (!state.bloodScreeningDone || (!state.bloodScreeningExists && !state.caseConfirmed))) {
+                    taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
+                } else if (state.bednetDistributed && familyRegTaskMissingOrFamilyRegComplete) {
+                    taskProperties.put(TASK_BUSINESS_STATUS, BEDNET_DISTRIBUTED);
+                } else if (state.bloodScreeningDone) {
+                    taskProperties.put(TASK_BUSINESS_STATUS, BLOOD_SCREENING_COMPLETE);
+                } else if (state.ineligibleForFamReg) {
+                    taskProperties.put(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
+                } else {
+                    taskProperties.put(TASK_BUSINESS_STATUS, NOT_VISITED);
+                }
+
+            } else if (Utils.isMDA()) {
+
+
+                state.fullyReceived = (mdaStatusMap.get(FULLY_RECEIVED).equals(mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)));
+                state.nonReceived = (mdaStatusMap.get(NONE_RECEIVED).equals(mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)));
+                state.nonEligible = (mdaStatusMap.get(NOT_ELIGIBLE).equals(mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)));
+                state.partiallyReceived = (!state.fullyReceived && (mdaStatusMap.get(FULLY_RECEIVED) > 0));
+
+                if (familyRegTaskMissingOrFamilyRegComplete) {
+                    if (state.mdaAdhered) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, ADHERENCE_VISIT_DONE);
+                    } else if (state.fullyReceived) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, FULLY_RECEIVED);
+                    } else if (state.partiallyReceived) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, PARTIALLY_RECEIVED);
+                    } else if (state.nonReceived) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, NONE_RECEIVED);
+                    } else if (state.nonEligible) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
+                    } else {
+                        taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
+                    }
+                } else {
+                    taskProperties.put(TASK_BUSINESS_STATUS, NOT_VISITED);
+                }
+
+            }
+
+        }
+    }
+
+    private static class StateWrapper {
+        private boolean familyRegistered = false;
+        private boolean bednetDistributed = false;
+        private boolean bloodScreeningDone = false;
+        private boolean familyRegTaskExists = false;
+        private boolean caseConfirmed = false;
+        private boolean mdaAdhered = false;
+        private boolean fullyReceived;
+        private boolean nonReceived;
+        private boolean nonEligible;
+        private boolean partiallyReceived;
+        private boolean bloodScreeningExists = false;
+        private boolean ineligibleForFamReg = false;
     }
 }
