@@ -8,11 +8,13 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 
+import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,11 +36,13 @@ import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
+import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PasswordDialogUtils;
@@ -46,8 +50,12 @@ import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.util.Utils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 import timber.log.Timber;
 
@@ -80,9 +88,12 @@ import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_
 import static org.smartregister.reveal.util.Constants.JsonForm.PROVINCE_NAME;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
+import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE_LIST;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
@@ -105,6 +116,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private PreferencesUtil prefsUtil;
 
     private FeatureCollection featureCollection;
+
+    private List<Feature> filterFeatureCollection;
+
+    private List<Feature> searchFeatureCollection;
 
     private Feature operationalArea;
 
@@ -135,6 +150,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private boolean markStructureIneligibleConfirmed;
 
     private String reasonUnligible;
+
+    private boolean isTasksFiltered;
+
+    private String searchPhrase;
+
+    private TaskFilterParams filterParams;
 
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
@@ -174,9 +195,18 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         drawerPresenter.setChangedCurrentSelection(false);
         if (structuresGeoJson.has(FEATURES)) {
             featureCollection = FeatureCollection.fromJson(structuresGeoJson.toString());
-            listTaskView.setGeoJsonSource(featureCollection, operationalArea, isChangeMapPosition());
+            isTasksFiltered = false;
+            if (filterParams != null && !filterParams.getCheckedFilters().isEmpty() && StringUtils.isBlank(searchPhrase)) {
+                filterFeatureCollection = null;
+                filterTasks(filterParams);
+            } else if (filterParams != null && !filterParams.getCheckedFilters().isEmpty()) {
+                searchFeatureCollection = null;
+                searchTasks(searchPhrase);
+            } else {
+                listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, isChangeMapPosition());
+            }
             this.operationalArea = operationalArea;
-            if (Utils.isEmptyCollection(featureCollection.features())) {
+            if (Utils.isEmptyCollection(getFeatureCollection().features())) {
                 listTaskView.displayNotification(R.string.fetching_structures_title, R.string.no_structures_found);
             }
         } else {
@@ -316,6 +346,23 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
     }
 
+    @Override
+    public void onFilterTasksClicked() {
+        listTaskView.openFilterTaskActivity(filterParams);
+    }
+
+    @Override
+    public void onOpenTaskRegisterClicked() {
+        listTaskView.openTaskRegister(filterParams);
+    }
+
+    @Override
+    public void setTaskFilterParams(TaskFilterParams filterParams) {
+        if (filterParams != null) {
+            filterTasks(filterParams);
+            listTaskView.setSearchPhrase(filterParams.getSearchPhrase());
+        }
+    }
 
     @Override
     public void onInterventionFormDetailsFetched(CardDetails cardDetails) {
@@ -432,21 +479,21 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void onFormSaved(@NonNull String structureId, String taskID, @NonNull TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
         listTaskView.hideProgressDialog();
         setChangeMapPosition(false);
-        for (Feature feature : featureCollection.features()) {
+        for (Feature feature : getFeatureCollection().features()) {
             if (structureId.equals(feature.id())) {
                 feature.addStringProperty(TASK_BUSINESS_STATUS, businessStatus);
                 feature.addStringProperty(TASK_STATUS, taskStatus.name());
                 break;
             }
         }
-        listTaskView.setGeoJsonSource(featureCollection, null, isChangeMapPosition());
+        listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
         listTaskInteractor.fetchInterventionDetails(interventionType, structureId, false);
     }
 
     @Override
     public void resetFeatureTasks(String structureId, Task task) {
         setChangeMapPosition(false);
-        for (Feature feature : featureCollection.features()) {
+        for (Feature feature : getFeatureCollection().features()) {
             if (structureId.equals(feature.id())) {
                 feature.addStringProperty(TASK_IDENTIFIER, task.getIdentifier());
                 feature.addStringProperty(TASK_CODE, task.getCode());
@@ -456,16 +503,16 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 break;
             }
         }
-        listTaskView.setGeoJsonSource(featureCollection, null, isChangeMapPosition());
+        listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
     }
 
     @Override
     public void onStructureAdded(Feature feature, JSONArray featureCoordinates, double zoomlevel) {
         listTaskView.closeAllCardViews();
         listTaskView.hideProgressDialog();
-        featureCollection.features().add(feature);
+        getFeatureCollection().features().add(feature);
         setChangeMapPosition(false);
-        listTaskView.setGeoJsonSource(featureCollection, null, isChangeMapPosition());
+        listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
         try {
             clickedPoint = new LatLng(featureCoordinates.getDouble(1), featureCoordinates.getDouble(0));
             listTaskView.displaySelectedFeature(feature, clickedPoint, zoomlevel);
@@ -553,7 +600,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onStructureMarkedInactive() {
-        for (Feature feature : featureCollection.features()) {
+        for (Feature feature : getFeatureCollection().features()) {
             if (selectedFeature.id().equals(feature.id())) {
                 feature.removeProperty(TASK_BUSINESS_STATUS);
                 feature.removeProperty(TASK_IDENTIFIER);
@@ -561,17 +608,17 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             }
         }
 
-        listTaskView.setGeoJsonSource(featureCollection, operationalArea, false);
+        listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, false);
     }
 
     @Override
     public void onMarkStructureIneligibleConfirmed() {
-        listTaskInteractor.markStructureAsIneligible(selectedFeature,reasonUnligible);
+        listTaskInteractor.markStructureAsIneligible(selectedFeature, reasonUnligible);
     }
 
     @Override
     public void onStructureMarkedIneligible() {
-        for (Feature feature : featureCollection.features()) {
+        for (Feature feature : getFeatureCollection().features()) {
             if (selectedFeature.id().equals(feature.id())) {
                 feature.addStringProperty(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
                 feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
@@ -579,7 +626,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             }
         }
 
-        listTaskView.setGeoJsonSource(featureCollection, operationalArea, false);
+        listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, false);
     }
 
     @Override
@@ -606,7 +653,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if (!revealApplication.isMyLocationComponentEnabled() && listTaskView.isMyLocationComponentActive()
                 || !listTaskView.isMyLocationComponentActive()) {
             listTaskView.focusOnUserLocation(false);
-            listTaskView.setGeoJsonSource(featureCollection, operationalArea, false);
+            if (!isTasksFiltered && StringUtils.isBlank(searchPhrase)) {
+                listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, false);
+            }
         }
     }
 
@@ -637,5 +686,72 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     public void setChangeMapPosition(boolean changeMapPosition) {
         this.changeMapPosition = changeMapPosition;
+    }
+
+    public void filterTasks(TaskFilterParams filterParams) {
+        this.filterParams = filterParams;
+        if (filterParams.getCheckedFilters() == null || filterParams.getCheckedFilters().isEmpty()) {
+            isTasksFiltered = false;
+            listTaskView.setNumberOfFilters(0);
+            return;
+        }
+        filterFeatureCollection = new ArrayList<>();
+        Set<String> filterStatus = filterParams.getCheckedFilters().get(Filter.STATUS);
+        Set<String> filterTaskCode = filterParams.getCheckedFilters().get(Filter.CODE);
+        Set<String> filterInterventionUnitTasks = org.smartregister.reveal.util.Utils.getInterventionUnitCodes(filterParams.getCheckedFilters().get(Filter.INTERVENTION_UNIT));
+        Pattern pattern = Pattern.compile("~");
+        for (Feature feature : featureCollection.features()) {
+            boolean matches = true;
+            if (filterStatus != null) {
+                matches = feature.hasProperty(TASK_BUSINESS_STATUS) && filterStatus.contains(feature.getStringProperty(TASK_BUSINESS_STATUS));
+            }
+            if (matches && filterTaskCode != null) {
+                matches = matchesTaskCodeFilterList(feature, filterTaskCode, pattern);
+            }
+            if (matches && filterInterventionUnitTasks != null) {
+                matches = matchesTaskCodeFilterList(feature, filterInterventionUnitTasks, pattern);
+            }
+            if (matches) {
+                filterFeatureCollection.add(feature);
+            }
+        }
+        listTaskView.setGeoJsonSource(FeatureCollection.fromFeatures(filterFeatureCollection), operationalArea, false);
+        listTaskView.setNumberOfFilters(filterParams.getCheckedFilters().size());
+        listTaskView.setSearchPhrase("");
+        isTasksFiltered = true;
+    }
+
+    private boolean matchesTaskCodeFilterList(Feature feature, Set<String> filterList, Pattern pattern) {
+        boolean matches = false;
+        JsonElement taskCodes = feature.getProperty(TASK_CODE_LIST);
+        if (taskCodes != null) {
+            String[] array = pattern.split(taskCodes.getAsString());
+            matches = CollectionUtils.containsAny(Arrays.asList(array), filterList);
+        }
+        return matches;
+
+    }
+
+    public void searchTasks(String searchPhrase) {
+        if (searchPhrase.isEmpty()) {
+            searchFeatureCollection = null;
+            listTaskView.setGeoJsonSource(filterFeatureCollection == null ? getFeatureCollection() : FeatureCollection.fromFeatures(filterFeatureCollection), operationalArea, false);
+        } else {
+            List<Feature> features = new ArrayList<>();
+            for (Feature feature : searchFeatureCollection != null && searchPhrase.length() > this.searchPhrase.length() ? searchFeatureCollection : Utils.isEmptyCollection(filterFeatureCollection) ? getFeatureCollection().features() : filterFeatureCollection) {
+                String structureName = feature.getStringProperty(STRUCTURE_NAME);
+                String familyMemberNames = feature.getStringProperty(FAMILY_MEMBER_NAMES);
+                if (org.smartregister.reveal.util.Utils.matchesSearchPhrase(structureName, searchPhrase) ||
+                        org.smartregister.reveal.util.Utils.matchesSearchPhrase(familyMemberNames, searchPhrase))
+                    features.add(feature);
+            }
+            searchFeatureCollection = features;
+            listTaskView.setGeoJsonSource(FeatureCollection.fromFeatures(searchFeatureCollection), operationalArea, false);
+        }
+        this.searchPhrase = searchPhrase;
+    }
+
+    private FeatureCollection getFeatureCollection() {
+        return isTasksFiltered && filterFeatureCollection != null ? FeatureCollection.fromFeatures(filterFeatureCollection) : featureCollection;
     }
 }

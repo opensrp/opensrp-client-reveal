@@ -17,9 +17,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -38,6 +41,7 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -57,6 +61,7 @@ import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.AlertDialogUtils;
@@ -79,13 +84,16 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_D
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
+import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
-import static org.smartregister.reveal.util.Constants.REQUEST_CODE_FAMILY_PROFILE;
-import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FAMILY_PROFILE;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_TASK_LISTS;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
@@ -136,9 +144,17 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private ImageButton myLocationButton;
 
-    private FloatingActionButton layerSwitcherFab;
+    private ImageButton layerSwitcherFab;
 
-    private LinearLayout progressIndicatorsGroupView;
+    private ImageButton filterTasksFab;
+
+    private FrameLayout filterCountLayout;
+
+    private TextView filterCountTextView;
+
+    private EditText searchView;
+
+    private CardDetailsUtil cardDetailsUtil = new CardDetailsUtil();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +181,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         findViewById(R.id.drawerMenu).setOnClickListener(this);
 
         initializeCardViews();
+
+        initializeToolbar();
 
         syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
     }
@@ -219,6 +237,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         findViewById(R.id.btn_collapse_indicators_card_view).setOnClickListener(this);
 
         findViewById(R.id.register_family).setOnClickListener(this);
+
     }
 
     @Override
@@ -286,7 +305,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
                         RevealMapHelper.addBaseLayers(kujakuMapView, style, ListTasksActivity.this);
 
-                        if (BuildConfig.BUILD_COUNTRY != Country.ZAMBIA) {
+                        if (getBuildCountry() != Country.ZAMBIA) {
                             layerSwitcherFab.setVisibility(View.GONE);
                         }
 
@@ -340,7 +359,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     public void positionMyLocationAndLayerSwitcher() {
         FrameLayout.LayoutParams myLocationButtonParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
-        if (BuildConfig.BUILD_COUNTRY != Country.ZAMBIA) {
+        if (getBuildCountry() != Country.ZAMBIA) {
             positionMyLocationAndLayerSwitcher(myLocationButtonParams, myLocationButtonParams.topMargin);
         } else {
             int progressHeight = getResources().getDimensionPixelSize(R.dimen.progress_height);
@@ -366,9 +385,33 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     private void initializeProgressIndicatorViews() {
-        progressIndicatorsGroupView = findViewById(R.id.progressIndicatorsGroupView);
+        LinearLayout progressIndicatorsGroupView = findViewById(R.id.progressIndicatorsGroupView);
         progressIndicatorsGroupView.setBackgroundColor(this.getResources().getColor(R.color.transluscent_white));
         progressIndicatorsGroupView.setOnClickListener(this);
+    }
+
+    private void initializeToolbar() {
+        searchView = findViewById(R.id.edt_search);
+        searchView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { //do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {//do nothing
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                listTaskPresenter.searchTasks(s.toString());
+            }
+        });
+        filterTasksFab = findViewById(R.id.filter_tasks_fab);
+        filterCountLayout = findViewById(R.id.filter_tasks_count_layout);
+        filterCountTextView = findViewById(R.id.filter_tasks_count);
+
+        filterTasksFab.setOnClickListener(this);
+        filterCountLayout.setOnClickListener(this);
     }
 
     @Override
@@ -396,26 +439,41 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 || v.getId() == R.id.btn_collapse_irs_verification_card_view) {
             closeCardView(v.getId());
         } else if (v.getId() == R.id.task_register) {
-            openTaskRegister();
+            listTaskPresenter.onOpenTaskRegisterClicked();
         } else if (v.getId() == R.id.drawerMenu) {
             drawerView.openDrawerLayout();
         } else if (v.getId() == R.id.progressIndicatorsGroupView) {
             openIndicatorsCardView();
+        } else if (v.getId() == R.id.filter_tasks_fab || v.getId() == R.id.filter_tasks_count_layout) {
+            listTaskPresenter.onFilterTasksClicked();
         }
     }
 
-    private void openIndicatorsCardView() {
+    @Override
+    public void openFilterTaskActivity(TaskFilterParams filterParams) {
+        Intent intent = new Intent(getContext(), FilterTasksActivity.class);
+        intent.putExtra(FILTER_SORT_PARAMS, filterParams);
+        startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
+    }
 
+    private void openIndicatorsCardView() {
         setViewVisibility(indicatorsCardView, true);
     }
 
-    private void openTaskRegister() {
+    @Override
+    public void openTaskRegister(TaskFilterParams filterParams) {
         Intent intent = new Intent(this, TaskRegisterActivity.class);
         intent.putExtra(TaskRegister.INTERVENTION_TYPE, getString(listTaskPresenter.getInterventionLabel()));
         if (getUserCurrentLocation() != null) {
             intent.putExtra(TaskRegister.LAST_USER_LOCATION, getUserCurrentLocation());
         }
-        startActivity(intent);
+        if (filterParams != null) {
+            filterParams.setSearchPhrase(searchView.getText().toString());
+            intent.putExtra(FILTER_SORT_PARAMS, filterParams);
+        } else if (StringUtils.isNotBlank(searchView.getText())) {
+            intent.putExtra(FILTER_SORT_PARAMS, new TaskFilterParams(searchView.getText().toString()));
+        }
+        startActivityForResult(intent, REQUEST_CODE_TASK_LISTS);
     }
 
 
@@ -468,15 +526,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void setGeoJsonSource(@NonNull FeatureCollection featureCollection, Feature operationalArea, boolean isChangeMapPosition) {
         if (geoJsonSource != null) {
-            double currentZoom = mMapboxMap.getCameraPosition().zoom;
             geoJsonSource.setGeoJson(featureCollection);
             if (operationalArea != null) {
                 CameraPosition cameraPosition = mMapboxMap.getCameraForGeometry(operationalArea.geometry());
-
                 if (listTaskPresenter.getInterventionLabel() == R.string.focus_investigation) {
                     Feature indexCase = revealMapHelper.getIndexCase(featureCollection);
                     if (indexCase != null) {
                         Location center = new RevealMappingHelper().getCenter(indexCase.geometry().toJson());
+                        double currentZoom = mMapboxMap.getCameraPosition().zoom;
                         cameraPosition = new CameraPosition.Builder()
                                 .target(new LatLng(center.getLatitude(), center.getLongitude())).zoom(currentZoom).build();
                     }
@@ -526,7 +583,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void openCardView(CardDetails cardDetails) {
-        CardDetailsUtil cardDetailsUtil = new CardDetailsUtil();
         if (cardDetails instanceof SprayCardDetails) {
             cardDetailsUtil.populateSprayCardTextViews((SprayCardDetails) cardDetails, this);
             sprayCardView.setVisibility(View.VISIBLE);
@@ -599,6 +655,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             String structureId = data.getStringExtra(STRUCTURE_ID);
             Task task = (Task) data.getSerializableExtra(TASK_ID);
             listTaskPresenter.resetFeatureTasks(structureId, task);
+        } else if (requestCode == REQUEST_CODE_FILTER_TASKS && resultCode == RESULT_OK && data.hasExtra(FILTER_SORT_PARAMS)) {
+            TaskFilterParams filterParams = (TaskFilterParams) data.getSerializableExtra(FILTER_SORT_PARAMS);
+            listTaskPresenter.filterTasks(filterParams);
+        } else if (requestCode == REQUEST_CODE_TASK_LISTS && resultCode == RESULT_OK && data.hasExtra(FILTER_SORT_PARAMS)) {
+            TaskFilterParams filterParams = (TaskFilterParams) data.getSerializableExtra(FILTER_SORT_PARAMS);
+            listTaskPresenter.setTaskFilterParams(filterParams);
         }
     }
 
@@ -724,11 +786,29 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 R.string.confirm_mark_location_inactive, R.string.confirm, R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(which == BUTTON_POSITIVE)
+                        if (which == BUTTON_POSITIVE)
                             listTaskPresenter.onMarkStructureInactiveConfirmed();
                         dialog.dismiss();
                     }
                 });
+    }
+
+    @Override
+    public void setNumberOfFilters(int numberOfFilters) {
+        if (numberOfFilters > 0) {
+            filterTasksFab.setVisibility(View.GONE);
+            filterCountLayout.setVisibility(View.VISIBLE);
+            filterCountTextView.setText(String.valueOf(numberOfFilters));
+        } else {
+            filterTasksFab.setVisibility(View.VISIBLE);
+            filterCountLayout.setVisibility(View.GONE);
+        }
+
+    }
+
+    @Override
+    public void setSearchPhrase(String searchPhrase) {
+        searchView.setText(searchPhrase);
     }
 
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {
@@ -744,5 +824,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 listTaskPresenter.refreshStructures(localSyncDone);
             }
         }
+    }
+
+    protected Country getBuildCountry() {
+        return BuildConfig.BUILD_COUNTRY;
     }
 }

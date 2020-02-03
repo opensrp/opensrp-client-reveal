@@ -6,8 +6,10 @@ import android.support.annotation.StringRes;
 
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.reveal.adapter.TaskRegisterAdapter;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.view.contract.BaseRegisterFragmentContract;
 
@@ -33,6 +35,15 @@ public interface TaskRegisterFragmentContract {
 
         void onIndexCaseFound(JSONObject indexCase, boolean isLinkedToJurisdiction);
 
+        void searchTasks(String searchText);
+
+        void filterTasks(TaskFilterParams filterParams);
+
+        void onFilterTasksClicked();
+
+        void setTaskFilterParams(TaskFilterParams filterParams);
+
+        void onOpenMapClicked();
     }
 
     interface View extends BaseRegisterFragmentContract.View, BaseFormFragmentContract.View {
@@ -60,6 +71,18 @@ public interface TaskRegisterFragmentContract {
         void openFamilyProfile(CommonPersonObjectClient family, BaseTaskDetails taskDetails);
 
         void displayIndexCaseDetails(JSONObject indexCase);
+
+        void setNumberOfFilters(int numberOfFilters);
+
+        void clearFilter();
+
+        TaskRegisterAdapter getAdapter();
+
+        void openFilterActivity(TaskFilterParams filterParams);
+
+        void setSearchPhrase(String searchPhrase);
+
+        void startMapActivity(TaskFilterParams taskFilterParams);
     }
 
 }

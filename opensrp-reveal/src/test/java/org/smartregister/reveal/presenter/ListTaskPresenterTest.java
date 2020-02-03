@@ -1,694 +1,364 @@
 package org.smartregister.reveal.presenter;
 
-import android.content.Context;
-import android.support.v7.app.AlertDialog;
+import android.graphics.PointF;
+import android.graphics.RectF;
 
+import com.google.gson.JsonPrimitive;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Projection;
 
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.AdditionalMatchers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
-import org.smartregister.domain.Location;
-import org.smartregister.domain.Task;
+import org.robolectric.RuntimeEnvironment;
+import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
-import org.smartregister.reveal.model.CardDetails;
-import org.smartregister.reveal.model.FamilyCardDetails;
-import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
-import org.smartregister.reveal.model.SprayCardDetails;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.Constants.JsonForm;
-import org.smartregister.reveal.util.PasswordDialogUtils;
+import org.smartregister.reveal.util.Constants.Filter;
+import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.reveal.util.RevealJsonFormUtils;
-import org.smartregister.reveal.util.Utils;
-import org.smartregister.util.AssetHandler;
+import org.smartregister.reveal.util.TestingUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
-import static org.smartregister.reveal.interactor.ListTaskInteractorPowerMockTest.mosquitoCollectionForm;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
-import static org.smartregister.reveal.util.Constants.Intervention.IRS;
-import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
-import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
-import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
-import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
-import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM;
-import static org.smartregister.reveal.util.Constants.JsonForm.THAILAND_LARVAL_DIPPING_FORM;
-import static org.smartregister.reveal.util.Constants.JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM;
-import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
-import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
-import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
-import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
+import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
+import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
 
 /**
- * @author Vincent Karuri
+ * Created by samuelgithengi on 1/27/20.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ListTaskPresenter.class, ValidateUserLocationPresenter.class, PasswordDialogUtils.class, PreferencesUtil.class, Utils.class, AssetHandler.class, Context.class})
-public class ListTaskPresenterTest {
-    private ListTaskContract.ListTaskView listTaskViewSpy;
+public class ListTaskPresenterTest extends BaseUnitTest {
+
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
+
     private ListTaskPresenter listTaskPresenter;
+
+    @Mock
+    private ListTaskContract.ListTaskView listTaskView;
+
+    @Mock
+    private BaseDrawerContract.Presenter drawerPresenter;
+
+    @Mock
     private ListTaskInteractor listTaskInteractor;
+
+    @Mock
+    private BaseDrawerContract.View drawerView;
+
+    @Mock
+    private MapboxMap mapboxMap;
+
+    @Mock
+    private Projection mapProjection;
+
+    @Mock
+    private Feature feature;
+
     @Captor
-    private ArgumentCaptor<Boolean> isRefreshMapAfterFeatureSelectCaptor;
+    private ArgumentCaptor<FeatureCollection> featureCollectionArgumentCaptor;
+
+    private PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
+
+    private String planId = UUID.randomUUID().toString();
+
+    private String operationalArea = UUID.randomUUID().toString();
+
+
+    private TaskFilterParams filterParams = TestingUtils.getFilterParams();
 
     @Before
-    public void setUp() throws Exception {
-        mockStaticMethods();
-
-        ValidateUserLocationPresenter validateUserLocationPresenterMock = mock(ValidateUserLocationPresenter.class);
-        whenNew(ValidateUserLocationPresenter.class).withAnyArguments().thenReturn(validateUserLocationPresenterMock);
-
-        listTaskInteractor = mock(ListTaskInteractor.class);
-        whenNew(ListTaskInteractor.class).withAnyArguments().thenReturn(listTaskInteractor);
-
-        RevealJsonFormUtils jsonFormUtils = mock(RevealJsonFormUtils.class);
-        when(jsonFormUtils.getFormJSON(any(), any(), any(), any(), any())).thenReturn(new JSONObject());
-        listTaskViewSpy = mock(ListTaskContract.ListTaskView.class);
-        when(listTaskViewSpy.getJsonFormUtils()).thenReturn(jsonFormUtils);
-        listTaskPresenter = new ListTaskPresenter(listTaskViewSpy, mock(BaseDrawerContract.Presenter.class));
-    }
-
-    @Test
-    public void testOnMosquitoCollectionFormSavedHidesProgressDialog() throws Exception {
-        Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
-
-        listTaskPresenter.onFormSaved(null, null, null, null, IRS);
-        verify(listTaskViewSpy).hideProgressDialog();
-    }
-
-    @Test
-    public void testOnLocationValidatedCallsStartFormWithCorrectArgumentsForIRSEventWithNullCardDetails() {
-        mockStaticMethods();
-
-        ListTaskPresenter listTaskPresenterSpy = spy(listTaskPresenter);
-
-        Feature feature = mock(Feature.class);
-        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeature", feature);
-
-        doNothing().when(listTaskViewSpy).startJsonForm(any(JSONObject.class));
-
-        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", Constants.Intervention.IRS);
-
-        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
-        Whitebox.setInternalState(listTaskPresenterSpy, "jsonFormUtils", formUtils);
-        doReturn(SPRAY_FORM).when(formUtils).getFormName(any(), any());
-
-        doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
-
-        listTaskPresenterSpy.onLocationValidated();
-
-        verify(formUtils, times(1)).getFormJSON(any(), eq(SPRAY_FORM), eq(feature), any(), any());
-
-        verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
-    }
-
-    @Test
-    public void testOnLocationValidatedCallsStartFormWithCorrectArgumentsForIRSEventWithCardDetails() {
-        mockStaticMethods();
-
-        ListTaskPresenter listTaskPresenterSpy = spy(listTaskPresenter);
-
-        Feature feature = mock(Feature.class);
-        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeature", feature);
-
-        doNothing().when(listTaskViewSpy).startJsonForm(any(JSONObject.class));
-        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", Constants.Intervention.IRS);
-
-        CardDetails cardDetails = new SprayCardDetails(null, null, null, null, null, null);
-
-        Whitebox.setInternalState(listTaskPresenterSpy, "cardDetails", cardDetails);
-
-        Whitebox.setInternalState(listTaskPresenterSpy, "changeInterventionStatus", true);
-
-        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
-        Whitebox.setInternalState(listTaskPresenterSpy, "jsonFormUtils", formUtils);
-        doReturn(SPRAY_FORM).when(formUtils).getFormName(any(), any());
-
-        doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
-
-        listTaskPresenterSpy.onLocationValidated();
-
-        verify(formUtils, times(1)).getFormJSON(any(), eq(SPRAY_FORM), eq(feature), any(), any());
-        verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
-    }
-
-    @Test
-    public void testOnLocationValidatedCallsStartFormWithCorrectArgumentsForMosquitoCollectionEventWithNullCardDetails() {
-        mockStaticMethods();
-
-        ListTaskPresenter listTaskPresenterSpy = spy(listTaskPresenter);
-
-        Feature feature = mock(Feature.class);
-        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeature", feature);
-
-        doNothing().when(listTaskViewSpy).startJsonForm(any(JSONObject.class));
-
-        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", MOSQUITO_COLLECTION);
-
-        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
-        Whitebox.setInternalState(listTaskPresenterSpy, "jsonFormUtils", formUtils);
-        doReturn(THAILAND_MOSQUITO_COLLECTION_FORM).when(formUtils).getFormName(any(), any());
-
-        doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
-        listTaskPresenterSpy.onLocationValidated();
-
-        verify(formUtils, times(1)).getFormJSON(any(), eq(THAILAND_MOSQUITO_COLLECTION_FORM), eq(feature), any(), any());
-
-        verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
-    }
-
-    @Test
-    public void testOnLocationValidatedCallsStartFormWithCorrectArgumentsForMosquitoCollectionEventWithCardDetails() {
-        mockStaticMethods();
-
-        ListTaskPresenter listTaskPresenterSpy = spy(listTaskPresenter);
-
-        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", MOSQUITO_COLLECTION);
-
-        CardDetails mosquitoCollectionCardDetails = new MosquitoHarvestCardDetails(null, null, null, null);
-
-        Whitebox.setInternalState(listTaskPresenterSpy, "cardDetails", mosquitoCollectionCardDetails);
-
-        Whitebox.setInternalState(listTaskPresenterSpy, "changeInterventionStatus", true);
-
-        Feature feature = mock(Feature.class);
-        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeature", feature);
-
-        doNothing().when(listTaskViewSpy).startJsonForm(any(JSONObject.class));
-
-        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
-        Whitebox.setInternalState(listTaskPresenterSpy, "jsonFormUtils", formUtils);
-        doReturn(THAILAND_MOSQUITO_COLLECTION_FORM).when(formUtils).getFormName(any(), any());
-
-        doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
-
-        listTaskPresenterSpy.onLocationValidated();
-
-        verify(formUtils, times(1)).getFormJSON(any(), eq(THAILAND_MOSQUITO_COLLECTION_FORM), eq(feature), any(), any());
-
-        verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
-    }
-
-    @Test
-    public void testOnLocationValidatedCallsStartFormWithCorrectArgumentsForLarvalDippingEventWithNullCardDetails() {
-        mockStaticMethods();
-
-        ListTaskPresenter listTaskPresenterSpy = spy(listTaskPresenter);
-
-        Feature feature = mock(Feature.class);
-        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeature", feature);
-
-        doNothing().when(listTaskViewSpy).startJsonForm(any(JSONObject.class));
-
-        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", LARVAL_DIPPING);
-
-        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
-        Whitebox.setInternalState(listTaskPresenterSpy, "jsonFormUtils", formUtils);
-        doReturn(THAILAND_LARVAL_DIPPING_FORM).when(formUtils).getFormName(any(), any());
-
-        doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
-
-        listTaskPresenterSpy.onLocationValidated();
-
-        verify(formUtils, times(1)).getFormJSON(any(), eq(THAILAND_LARVAL_DIPPING_FORM), eq(feature), any(), any());
-
-        verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
-    }
-
-
-    @Test
-    public void testOnLocationValidatedCallsStartFormWithCorrectArgumentsForPAO() {
-        mockStaticMethods();
-
-        ListTaskPresenter listTaskPresenterSpy = spy(listTaskPresenter);
-
-        Feature feature = mock(Feature.class);
-        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeature", feature);
-        MosquitoHarvestCardDetails cardDetails= new MosquitoHarvestCardDetails("Avctive","2019-08-19",null,PAOT);
-        Whitebox.setInternalState(listTaskPresenterSpy, "cardDetails", cardDetails);
-
-        doNothing().when(listTaskViewSpy).startJsonForm(any(JSONObject.class));
-
-        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", PAOT);
-
-        RevealJsonFormUtils formUtils = mock(RevealJsonFormUtils.class);
-        Whitebox.setInternalState(listTaskPresenterSpy, "jsonFormUtils", formUtils);
-        doReturn(JsonForm.PAOT_FORM).when(formUtils).getFormName(any(), any());
-
-        doReturn(new JSONObject()).when(formUtils).getFormJSON(any(), any(), any(), any(), any());
-
-        listTaskPresenterSpy.onLocationValidated();
-
-        verify(formUtils, times(1)).getFormJSON(any(), eq(JsonForm.PAOT_FORM), eq(feature), any(), any());
-
-        verify(listTaskViewSpy).startJsonForm(any(JSONObject.class));
-    }
-
-    @Test
-    public void testOnInterventionFormDetailsFetchedShouldSetChangeSprayStatusToTrueForSprayCard() {
-        assertFalse(Whitebox.getInternalState(listTaskPresenter, "changeInterventionStatus"));
-        listTaskPresenter.onInterventionFormDetailsFetched(mock(SprayCardDetails.class));
-        Assert.assertTrue(Whitebox.getInternalState(listTaskPresenter, "changeInterventionStatus"));
-    }
-
-    @Test
-    public void testOnInterventionFormDetailsFetchedShouldSetChangeMosquitoCollectionStatusToTrueForMosquitoCollectionCard() {
-        assertFalse(Whitebox.getInternalState(listTaskPresenter, "changeInterventionStatus"));
-        listTaskPresenter.onInterventionFormDetailsFetched(mock(MosquitoHarvestCardDetails.class));
-        Assert.assertTrue(Whitebox.getInternalState(listTaskPresenter, "changeInterventionStatus"));
-    }
-
-    @Test
-    public void testOnInterventionFormDetailsFetchedEnabledPasswordValidationStatus() throws Exception {
-        PowerMockito.when(Utils.validateFarStructures()).thenReturn(true);
-        listTaskPresenter = spy(listTaskPresenter);
-        listTaskPresenter.onInterventionFormDetailsFetched(mock(SprayCardDetails.class));
-        PowerMockito.verifyPrivate(listTaskPresenter).invoke("validateUserLocation");
-        PowerMockito.verifyPrivate(listTaskPresenter, never()).invoke("onLocationValidated");
-
-    }
-
-    @Test
-    public void testOnInterventionFormDetailsFetchedDisabledPasswordValidationStatus() throws Exception {
-        PowerMockito.when(Utils.validateFarStructures()).thenReturn(false);
-        listTaskPresenter = spy(listTaskPresenter);
-        listTaskPresenter.onInterventionFormDetailsFetched(mock(SprayCardDetails.class));
-        PowerMockito.verifyPrivate(listTaskPresenter, never()).invoke("validateUserLocation");
-        PowerMockito.verifyPrivate(listTaskPresenter).invoke("onLocationValidated");
-
-    }
-
-    @Test
-    public void testOnFeatureSelectedShouldShowErrorDialogWhenTaskIdentifierIsNull() throws Exception {
-        Feature feature = mock(Feature.class);
-
-        PreferencesUtil preferencesUtil = mock(PreferencesUtil.class);
-        Whitebox.setInternalState(listTaskPresenter, "prefsUtil", preferencesUtil);
-        doReturn("").when(preferencesUtil).getCurrentOperationalArea();
-        doNothing().when(listTaskViewSpy).displayNotification(anyString());
-
-        final String CUSTOM_ERROR_MESSAGE = "My error message";
-
-        Context context = mock(Context.class);
-        when(listTaskViewSpy.getContext()).thenReturn(context);
-        when(context.getString(anyInt(), any())).thenReturn(CUSTOM_ERROR_MESSAGE);
-
-        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature, false);
-
-        verify(listTaskViewSpy, times(1)).displayNotification(eq(CUSTOM_ERROR_MESSAGE));
-    }
-
-    @Test
-    public void testfetchMosquitoCollectionDetailsIsCalledForCompleteMosquitoCollectionTask() throws Exception {
-        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), anyString(), anyBoolean());
-        when(Utils.getPropertyValue(any(Feature.class), eq(FEATURE_SELECT_TASK_BUSINESS_STATUS))).thenReturn(COMPLETE);
-        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
-
-        Feature feature = mock(Feature.class);
-        doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
-
-        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature, false);
-
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
-    }
-
-    @Test
-    public void testfetchMosquitoCollectionDetailsIsCalledForInCompleteMosquitoCollectionTask() throws Exception {
-        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), anyString(), anyBoolean());
-        when(Utils.getPropertyValue(any(Feature.class), eq(FEATURE_SELECT_TASK_BUSINESS_STATUS))).thenReturn(INCOMPLETE);
-        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
-
-        Feature feature = mock(Feature.class);
-        doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
-
-        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature, false);
-
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
-    }
-
-    @Test
-    public void testfetchMosquitoCollectionDetailsIsCalledForInProgressMosquitoCollectionTask() throws Exception {
-        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), anyString(), anyBoolean());
-        when(Utils.getPropertyValue(any(Feature.class), eq(FEATURE_SELECT_TASK_BUSINESS_STATUS))).thenReturn(IN_PROGRESS);
-        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
-
-        Feature feature = mock(Feature.class);
-        doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
-
-        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature, false);
-
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
-    }
-
-    @Test
-    public void testfetchMosquitoCollectionDetailsIsCalledForNotEligibleMosquitoCollectionTask() throws Exception {
-        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), anyString(), anyBoolean());
-        when(Utils.getPropertyValue(any(Feature.class), eq(FEATURE_SELECT_TASK_BUSINESS_STATUS))).thenReturn(NOT_ELIGIBLE);
-        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
-
-        Feature feature = mock(Feature.class);
-        doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
-
-        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature, false);
-
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
-    }
-
-    @Test
-    public void testValidateUserLocationIsCalledForInCompleteMosquitoCollectionTask() throws Exception {
-        ListTaskInteractor listTaskInteractor = mock(ListTaskInteractor.class);
-
-        ListTaskPresenter listTaskPresenter = spy(this.listTaskPresenter);
-
+    public void setUp() {
+        org.smartregister.Context.bindtypes = new ArrayList<>();
+        listTaskPresenter = new ListTaskPresenter(listTaskView, drawerPresenter);
         Whitebox.setInternalState(listTaskPresenter, "listTaskInteractor", listTaskInteractor);
-
-        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(IRS), anyString(), anyBoolean());
-        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_BUSINESS_STATUS))).thenReturn(NOT_VISITED);
-        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(MOSQUITO_COLLECTION);
-        doReturn(mock(android.location.Location.class)).when(listTaskViewSpy).getUserCurrentLocation();
-
-        ValidateUserLocationPresenter locationPresenter = mock(ValidateUserLocationPresenter.class);
-        Whitebox.setInternalState(listTaskPresenter, "locationPresenter", locationPresenter);
-        doNothing().when(locationPresenter).requestUserLocation();
-        doNothing().when(locationPresenter).onGetUserLocation(any(android.location.Location.class));
-
-        Feature feature = mock(Feature.class);
-        doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
-        when(Utils.validateFarStructures()).thenReturn(true);
-
-        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature, false);
-
-        PowerMockito.verifyPrivate(listTaskPresenter, times(1)).invoke("validateUserLocation");
+        prefsUtil.setCurrentPlanId(planId);
+        prefsUtil.setCurrentOperationalArea(operationalArea);
     }
 
     @Test
-    public void testOpenCardViewIsCalledWithCorrectArgumentOnSprayCardDetailsFetched() {
-        SprayCardDetails sprayCardDetails = new SprayCardDetails(null, null, null, null, null, null);
-
-        doNothing().when(listTaskViewSpy).openCardView(any(CardDetails.class));
-        listTaskPresenter.onCardDetailsFetched(sprayCardDetails);
-
-        verify(listTaskViewSpy, times(1)).openCardView(eq(sprayCardDetails));
+    public void testOnDrawerClosed() {
+        when(drawerPresenter.isChangedCurrentSelection()).thenReturn(true);
+        listTaskPresenter.onDrawerClosed();
+        verify(listTaskView).showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
+        verify(listTaskInteractor).fetchLocations(planId, operationalArea);
     }
 
     @Test
-    public void testOpenCardViewIsCalledWithCorrectArgumentOnMosquitoCollectionCardDetailsFetched() {
-        MosquitoHarvestCardDetails mosquitoHarvestCardDetails = new MosquitoHarvestCardDetails(null, null, null, null);
+    public void testOnStructuresFetchedWithNoStructures() throws JSONException {
+        JSONObject features = new JSONObject();
+        features.put(Constants.GeoJSON.TYPE, Constants.GeoJSON.FEATURE_COLLECTION);
+        listTaskPresenter.onStructuresFetched(features, feature, new ArrayList<>());
+        verify(listTaskView).displayNotification(R.string.fetching_structures_title,
+                R.string.fetch_location_and_structures_failed, operationalArea);
 
-        doNothing().when(listTaskViewSpy).openCardView(any(CardDetails.class));
-        listTaskPresenter.onCardDetailsFetched(mosquitoHarvestCardDetails);
-
-        verify(listTaskViewSpy, times(1)).openCardView(eq(mosquitoHarvestCardDetails));
-    }
-
-    @Test
-    public void testFetchInterventionDetailsIsCalledForChangeSprayStatus() {
-        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mock(Feature.class));
-
-        doNothing().when(listTaskViewSpy).showProgressDialog(anyInt(), anyInt());
-
-        listTaskPresenter.onChangeInterventionStatus(IRS);
-
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(IRS), AdditionalMatchers.or(anyString(), isNull()), eq(true));
-    }
-
-    @Test
-    public void testFetchInterventionDetailsIsCalledForChangeMosquitoCollectionStatus() {
-        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mock(Feature.class));
-
-        doNothing().when(listTaskViewSpy).showProgressDialog(anyInt(), anyInt());
-
-        listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
-
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(true));
-    }
-
-    @Test
-    public void testFetchInterventionDetailsIsCalledForRecordLarvalDipping() {
-        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mock(Feature.class));
-
-        doNothing().when(listTaskViewSpy).showProgressDialog(anyInt(), anyInt());
-
-        listTaskPresenter.onChangeInterventionStatus(LARVAL_DIPPING);
-
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(LARVAL_DIPPING), AdditionalMatchers.or(anyString(), isNull()), eq(true));
+        verify(listTaskView).setGeoJsonSource(FeatureCollection.fromJson(features.toString()), feature, false);
+        verify(listTaskView).clearSelectedFeature();
+        verify(listTaskView).closeCardView(R.id.btn_collapse_spray_card_view);
+        verify(drawerPresenter).setChangedCurrentSelection(false);
     }
 
 
-
     @Test
-    public void testFetchInterventionDetailsIsCalledForOpenPAOTForm() {
-        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mock(Feature.class));
+    public void testOnStructuresFetchedWithEmptyFeatures() throws JSONException {
+        JSONObject features = new com.cocoahero.android.geojson.FeatureCollection().toJSON();
+        listTaskPresenter.onStructuresFetched(features, feature, new ArrayList<>());
+        verify(listTaskView).displayNotification(R.string.fetching_structures_title, R.string.no_structures_found);
 
-        doNothing().when(listTaskViewSpy).showProgressDialog(anyInt(), anyInt());
-
-        listTaskPresenter.onChangeInterventionStatus(PAOT);
-
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(PAOT), AdditionalMatchers.or(anyString(), isNull()), eq(true));
+        verify(listTaskView).setGeoJsonSource(FeatureCollection.fromJson(features.toString()), feature, false);
+        verify(listTaskView, never()).clearSelectedFeature();
+        verify(listTaskView, never()).closeCardView(R.id.btn_collapse_spray_card_view);
     }
 
-    @Test
-    public void testFetchSprayDetailsIsCalledAfterSprayFormIsSaved() {
-        Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
-
-        doNothing().when(listTaskViewSpy).hideProgressDialog();
-        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class), anyBoolean());
-        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(IRS), anyString(), anyBoolean());
-
-
-        listTaskPresenter.onFormSaved(null, null, null, null, IRS);
-
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(IRS), AdditionalMatchers.or(anyString(), isNull()), eq(false));
-    }
 
     @Test
-    public void testFetchMosquitoCollectionDetailsIsCalledAfterMosquitoCollectionFormIsSaved() {
-        Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
-
-        doNothing().when(listTaskViewSpy).hideProgressDialog();
-        doNothing().when(listTaskViewSpy).setGeoJsonSource(any(FeatureCollection.class), any(Feature.class), anyBoolean());
-        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), anyString(), anyBoolean());
-
-        listTaskPresenter.onFormSaved(null, null, null, null, MOSQUITO_COLLECTION);
-
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(MOSQUITO_COLLECTION), AdditionalMatchers.or(anyString(), isNull()), eq(false));
-    }
-
-    @Test
-    public void testChangeMapPositionIsSetToTrueWhenPresenterIsInitialized() throws Exception {
-
-        Assert.assertTrue(listTaskPresenter.isChangeMapPosition());
-    }
-
-    @Test
-    public void testChangeMapPositionIsSetToFalseOnStructureAddedIscalled() throws Exception {
-
-        Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
-        Whitebox.setInternalState(listTaskPresenter, "clickedPoint", mock(LatLng.class));
-
-        JSONArray featureCoordinates = new JSONArray("[32.64555352892119, -14.15491759447286]");
-
-        Assert.assertTrue(listTaskPresenter.isChangeMapPosition());
-
-        listTaskPresenter.onStructureAdded(null, featureCoordinates, 17);
-
-        assertFalse(listTaskPresenter.isChangeMapPosition());
-    }
-
-    @Test
-    public void testChangeMapPositionIsSetToFalseOnFormSavedIscalled() throws Exception {
-
-        Whitebox.setInternalState(listTaskPresenter, "featureCollection", mock(FeatureCollection.class));
-        Whitebox.setInternalState(listTaskPresenter, "clickedPoint", mock(LatLng.class));
-
-        Assert.assertTrue(listTaskPresenter.isChangeMapPosition());
-
-        listTaskPresenter.onFormSaved("1", null, Task.TaskStatus.COMPLETED, COMPLETE, null);
-
-        assertFalse(listTaskPresenter.isChangeMapPosition());
-    }
-
-    @Test
-    public void testChangeMapPositionIsSetToTrueWhenNonLocalSyncIsDone() throws Exception {
-
-        listTaskPresenter.setChangeMapPosition(false);
-        assertFalse(listTaskPresenter.isChangeMapPosition());
-
-        listTaskPresenter.refreshStructures(false);
-
-        Assert.assertTrue(listTaskPresenter.isChangeMapPosition());
-    }
-
-    @Test
-    public void testChangeMapPositionIsSetToFalseWhenLocalSyncIsDone() throws Exception {
-
-        Assert.assertTrue(listTaskPresenter.isChangeMapPosition());
-
-        listTaskPresenter.refreshStructures(true);
-
-        assertFalse(listTaskPresenter.isChangeMapPosition());
-    }
-
-    @Test
-    public void testOnResume() {
-
-        RevealApplication revealApplication = mock(RevealApplication.class);
-        when(revealApplication.isRefreshMapOnEventSaved()).thenReturn(true);
-        Whitebox.setInternalState(listTaskPresenter, "revealApplication", revealApplication);
-        listTaskPresenter.onResume();
-        assertFalse(listTaskPresenter.isChangeMapPosition());
-
-        verify(listTaskViewSpy).showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
-        verify(listTaskInteractor).fetchLocations(anyString(), anyString());
-    }
-
-    @Test
-    public void testOnResumeMapIsRefreshedAfterFeatureSelect() {
-
-        RevealApplication revealApplication = mock(RevealApplication.class);
-        when(revealApplication.isRefreshMapOnEventSaved()).thenReturn(false);
-        when(revealApplication.isRefreshMapOnEventSaved()).thenReturn(true);
-        Whitebox.setInternalState(listTaskPresenter, "revealApplication", revealApplication);
-        listTaskPresenter.onResume();
-
-        verify(listTaskViewSpy).showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
-        verify(listTaskInteractor).fetchLocations(anyString(), anyString());
-        verify(listTaskViewSpy).clearSelectedFeature();
-        verify(revealApplication).setRefreshMapOnEventSaved(isRefreshMapAfterFeatureSelectCaptor.capture());
-        assertFalse(isRefreshMapAfterFeatureSelectCaptor.getValue());
-    }
-
-    @Test
-    public void testSaveJsonForm() {
-        String form = "{\"form\"}";
-        listTaskPresenter.saveJsonForm(form);
-        verify(listTaskViewSpy).showProgressDialog(R.string.saving_title, R.string.saving_message);
-        verify(listTaskInteractor).saveJsonForm(form);
+    public void testOnStructuresFetched() throws JSONException {
+        FeatureCollection featureCollection = FeatureCollection.fromFeature(TestingUtils.getStructure());
+        listTaskPresenter.onStructuresFetched(new JSONObject(featureCollection.toJson()), feature, Collections.singletonList(TestingUtils.getTaskDetails()));
+        verify(drawerPresenter).setChangedCurrentSelection(false);
+        verify(listTaskView).setGeoJsonSource(featureCollection, feature, false);
+        assertEquals(feature, Whitebox.getInternalState(listTaskPresenter, "operationalArea"));
+        assertFalse(Whitebox.getInternalState(listTaskPresenter, "isTasksFiltered"));
 
     }
 
     @Test
-    public void testOnFormSaveFailure() {
-        listTaskPresenter.onFormSaveFailure(Constants.REGISTER_STRUCTURE_EVENT);
-        verify(listTaskViewSpy).hideProgressDialog();
-        verify(listTaskViewSpy).displayNotification(R.string.form_save_failure_title, R.string.add_structure_form_save_failure);
+    public void testOnStructuresFetchedWithFilterAndNoSearchFiltersStructures() throws JSONException {
+        FeatureCollection featureCollection = FeatureCollection.fromFeature(TestingUtils.getStructure());
+        TaskFilterParams params = TestingUtils.getFilterParams();
+        Whitebox.setInternalState(listTaskPresenter, "filterParams", params);
+        listTaskPresenter.onStructuresFetched(new JSONObject(featureCollection.toJson()), feature, Collections.singletonList(TestingUtils.getTaskDetails()));
+        verify(drawerPresenter).setChangedCurrentSelection(false);
+        verify(listTaskView).setGeoJsonSource(FeatureCollection.fromFeatures(new ArrayList<>()), null, false);
+        assertEquals(feature, Whitebox.getInternalState(listTaskPresenter, "operationalArea"));
+        assertTrue(Whitebox.getInternalState(listTaskPresenter, "isTasksFiltered"));
+        verify(listTaskView).setNumberOfFilters(params.getCheckedFilters().size());
+        verify(listTaskView).setSearchPhrase("");
+    }
+
+
+    @Test
+    public void testOnStructuresFetchedWithFilterAndSearchSearchesStructures() throws JSONException {
+        FeatureCollection featureCollection = FeatureCollection.fromFeature(TestingUtils.getStructure());
+        TaskFilterParams params = TestingUtils.getFilterParams();
+        Whitebox.setInternalState(listTaskPresenter, "filterParams", params);
+        Whitebox.setInternalState(listTaskPresenter, "searchPhrase", "Doe");
+        listTaskPresenter.onStructuresFetched(new JSONObject(featureCollection.toJson()), feature, Collections.singletonList(TestingUtils.getTaskDetails()));
+        verify(drawerPresenter).setChangedCurrentSelection(false);
+        verify(listTaskView).setGeoJsonSource(FeatureCollection.fromFeatures(new ArrayList<>()), null, false);
+        assertEquals(feature, Whitebox.getInternalState(listTaskPresenter, "operationalArea"));
     }
 
     @Test
-    public void testOnSprayFormSaveFailure() {
-        listTaskPresenter.onFormSaveFailure(Constants.SPRAY_EVENT);
-        verify(listTaskViewSpy).hideProgressDialog();
-        verify(listTaskViewSpy).displayNotification(R.string.form_save_failure_title, R.string.spray_form_save_failure);
+    public void testOnMapReady() {
+        listTaskPresenter.onMapReady();
+        verify(listTaskInteractor).fetchLocations(planId, operationalArea);
 
     }
 
     @Test
-    public void testFetchIneligibleFamilyRegDetailsIsCalledForNotEligibleFamilyRegistrationTask() throws Exception {
-        doNothing().when(listTaskInteractor).fetchInterventionDetails(eq(REGISTER_FAMILY), anyString(), anyBoolean());
-        when(Utils.getPropertyValue(any(Feature.class), eq(FEATURE_SELECT_TASK_BUSINESS_STATUS))).thenReturn(NOT_ELIGIBLE);
-        when(Utils.getPropertyValue(any(Feature.class), eq(TASK_CODE))).thenReturn(REGISTER_FAMILY);
+    public void testOnMapReadyWithNoPlanOrOprationalAreaSelected() {
+        when(drawerPresenter.getView()).thenReturn(drawerView);
+        prefsUtil.setCurrentOperationalArea("");
+        listTaskPresenter.onMapReady();
+        verify(listTaskView).displayNotification(R.string.select_campaign_operational_area_title, R.string.select_campaign_operational_area);
+        verify(drawerView).lockNavigationDrawerForSelection();
 
-        Feature feature = mock(Feature.class);
-        doReturn(true).when(feature).hasProperty(TASK_IDENTIFIER);
-
-        Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelected", feature, false);
-
-        verify(listTaskInteractor, times(1)).fetchInterventionDetails(eq(REGISTER_FAMILY), AdditionalMatchers.or(anyString(), isNull()), eq(false));
     }
 
     @Test
-    public void testOpenCardViewIsCalledWithCorrectArgumentOnFamilyCardDetailsFetched() {
-        FamilyCardDetails familyCardDetails = new FamilyCardDetails(null, null, null);
-
-        doNothing().when(listTaskViewSpy).openCardView(any(CardDetails.class));
-        listTaskPresenter.onCardDetailsFetched(familyCardDetails);
-
-        verify(listTaskViewSpy, times(1)).openCardView(eq(familyCardDetails));
-    }
-
-    public void testRequestUserPassword() {
-        listTaskPresenter.requestUserPassword();
-        AlertDialog passwordDialog = mock(AlertDialog.class);
-        Whitebox.setInternalState(listTaskInteractor, "passwordDialog", passwordDialog);
-        verify(passwordDialog).show();
-    }
-
-    public void testOnPasswordVerified() throws Exception {
-        listTaskPresenter = spy(listTaskPresenter);
-        listTaskPresenter.onPasswordVerified();
-        PowerMockito.verifyPrivate(listTaskPresenter).invoke("onLocationValidated");
+    public void testOnFilterTasksClicked() {
+        Whitebox.setInternalState(listTaskPresenter, "filterParams", filterParams);
+        listTaskPresenter.onFilterTasksClicked();
+        verify(listTaskView).openFilterTaskActivity(filterParams);
     }
 
     @Test
-    public void testOnLocationValidatedCallsDisplaysMarkStructureIneligibleDialog() {
-        mockStaticMethods();
-
-        ListTaskPresenter listTaskPresenterSpy = spy(listTaskPresenter);
-
-        Feature feature = mock(Feature.class);
-        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeature", feature);
-
-        doNothing().when(listTaskViewSpy).startJsonForm(any(JSONObject.class));
-
-        Whitebox.setInternalState(listTaskPresenterSpy, "selectedFeatureInterventionType", REGISTER_FAMILY);
-
-        Whitebox.setInternalState(listTaskPresenterSpy, "markStructureIneligibleConfirmed", true);
-
-        listTaskPresenterSpy.onLocationValidated();
-
-        verify(listTaskPresenterSpy).onMarkStructureIneligibleConfirmed();
+    public void testOnOpenTaskRegisterClicked() {
+        Whitebox.setInternalState(listTaskPresenter, "filterParams", filterParams);
+        listTaskPresenter.onOpenTaskRegisterClicked();
+        verify(listTaskView).openTaskRegister(filterParams);
     }
 
-    private void mockStaticMethods() {
-        mockStatic(Utils.class);
-        mockStatic(PreferencesUtil.class);
-        mockStatic(PasswordDialogUtils.class);
-        mockStatic(AssetHandler.class);
+    @Test
+    public void setTaskFilterParams() {
+        TaskFilterParams params = new TaskFilterParams("Doe");
+        listTaskPresenter.setTaskFilterParams(params);
+        verify(listTaskView).setSearchPhrase(params.getSearchPhrase());
+    }
 
-        when(AssetHandler.readFileFromAssetsFolder(AdditionalMatchers.or(isNull(), anyString()), AdditionalMatchers.or(isNull(), any(Context.class)))).thenReturn(mosquitoCollectionForm);
+    @Test
+    public void testOnMapClickedWithInvalidZoomLevel() {
+        CameraPosition cameraPosition = new CameraPosition.Builder().zoom(10).build();
+        when(mapboxMap.getCameraPosition()).thenReturn(cameraPosition);
+        listTaskPresenter.onMapClicked(mapboxMap, new LatLng(), false);
+        verify(listTaskView).displayToast(R.string.zoom_in_to_select);
+    }
 
-        PreferencesUtil preferencesUtil = mock(PreferencesUtil.class);
-        PowerMockito.when(preferencesUtil.getCurrentOperationalArea()).thenReturn(new JSONObject().toString());
-        PowerMockito.when(PreferencesUtil.getInstance()).thenReturn(preferencesUtil);
-        PowerMockito.when(preferencesUtil.getCurrentPlanId()).thenReturn(new JSONObject().toString());
+    @Test
+    public void testOnMapClickedMatches1Feature() {
+        LatLng clickedPoint = new LatLng(12.06766, -18.02341);
+        CameraPosition cameraPosition = new CameraPosition.Builder().zoom(19).build();
+        when(mapboxMap.getCameraPosition()).thenReturn(cameraPosition);
+        when(mapboxMap.getProjection()).thenReturn(mapProjection);
+        when(mapProjection.toScreenLocation(clickedPoint)).thenReturn(new PointF());
+        when(mapboxMap.queryRenderedFeatures(any(PointF.class), any())).thenReturn(new ArrayList<>());
+        when(mapboxMap.queryRenderedFeatures(any(RectF.class), any())).thenReturn(Collections.singletonList(feature));
+        when(listTaskView.getContext()).thenReturn(RuntimeEnvironment.application);
+        listTaskPresenter.onMapClicked(mapboxMap, clickedPoint, false);
+        verify(listTaskView).closeAllCardViews();
+        verify(listTaskView).displaySelectedFeature(feature, clickedPoint);
+    }
 
-        PowerMockito.when(Utils.getOperationalAreaLocation(anyString())).thenReturn(new Location());
+    @Test
+    public void testOnMapClickedMatchesMultipleFeature() {
+        LatLng clickedPoint = new LatLng(12.06766, -18.02341);
+        CameraPosition cameraPosition = new CameraPosition.Builder().zoom(19).build();
+        when(mapboxMap.getCameraPosition()).thenReturn(cameraPosition);
+        when(mapboxMap.getProjection()).thenReturn(mapProjection);
+        when(mapProjection.toScreenLocation(clickedPoint)).thenReturn(new PointF());
+        Feature structure = TestingUtils.getStructure();
+        when(mapboxMap.queryRenderedFeatures(any(PointF.class), any())).thenReturn(Arrays.asList(structure, feature));
+        when(listTaskView.getContext()).thenReturn(RuntimeEnvironment.application);
+        listTaskPresenter.onMapClicked(mapboxMap, clickedPoint, false);
+        verify(listTaskView).closeAllCardViews();
+        verify(listTaskView).displaySelectedFeature(structure, clickedPoint);
+    }
+
+    @Test
+    public void testFilterTasksWithNullParams() {
+        listTaskPresenter.filterTasks(new TaskFilterParams(""));
+        verify(listTaskView).setNumberOfFilters(0);
+        assertFalse(Whitebox.getInternalState(listTaskPresenter, "isTasksFiltered"));
+    }
+
+    @Test
+    public void testFilterTasksBusinessStatus() {
+        Feature structure = TestingUtils.getStructure();
+        TaskFilterParams params = new TaskFilterParams("", new HashMap<>());
+        params.getCheckedFilters().put(Filter.STATUS, Collections.singleton(NOT_VISITED));
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection", FeatureCollection.fromFeature(structure));
+        //match is filter for business status works no feature is returned
+        listTaskPresenter.filterTasks(params);
+        verify(listTaskView).setGeoJsonSource(FeatureCollection.fromFeatures(new ArrayList<>()), null, false);
+        assertTrue(Whitebox.getInternalState(listTaskPresenter, "isTasksFiltered"));
+
+
+        //match is filter for business status works feature is returned
+        structure.addStringProperty(Constants.Properties.TASK_BUSINESS_STATUS, NOT_VISITED);
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection", FeatureCollection.fromFeatures(new Feature[]{structure, feature}));
+        listTaskPresenter.filterTasks(params);
+        verify(listTaskView).setGeoJsonSource(FeatureCollection.fromFeature(structure), null, false);
+        assertTrue(Whitebox.getInternalState(listTaskPresenter, "isTasksFiltered"));
+
+
+    }
+
+
+    @Test
+    public void testFilterWithAllFilters() {
+        Feature structure = TestingUtils.getStructure();
+        TaskFilterParams params = new TaskFilterParams("", new HashMap<>());
+        params.getCheckedFilters().put(Filter.STATUS, Collections.singleton(NOT_VISITED));
+        params.getCheckedFilters().put(Filter.CODE, Collections.singleton(Intervention.IRS));
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection", FeatureCollection.fromFeature(structure));
+        //match is filter for business status works no feature is returned
+        listTaskPresenter.filterTasks(params);
+        verify(listTaskView).setGeoJsonSource(FeatureCollection.fromFeatures(new ArrayList<>()), null, false);
+        assertTrue(Whitebox.getInternalState(listTaskPresenter, "isTasksFiltered"));
+
+
+        //match is filter for business status works feature is returned
+        structure.addStringProperty(Constants.Properties.TASK_BUSINESS_STATUS, NOT_VISITED);
+        structure.addProperty(Constants.Properties.TASK_CODE_LIST, new JsonPrimitive(Intervention.IRS));
+        structure.addStringProperty(Constants.Properties.TASK_CODE, Intervention.IRS);
+
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection", FeatureCollection.fromFeatures(new Feature[]{structure, feature}));
+        listTaskPresenter.filterTasks(params);
+        verify(listTaskView).setGeoJsonSource(FeatureCollection.fromFeature(structure), null, false);
+        assertTrue(Whitebox.getInternalState(listTaskPresenter, "isTasksFiltered"));
+
+        //filter by intervention unit structure
+        params.getCheckedFilters().put(Filter.INTERVENTION_UNIT, Collections.singleton(InterventionType.STRUCTURE));
+        listTaskPresenter.filterTasks(params);
+        verify(listTaskView, times(2)).setGeoJsonSource(FeatureCollection.fromFeature(structure), null, false);
+
+        //no features are returned with wrong intervention unit
+        params.getCheckedFilters().put(Filter.INTERVENTION_UNIT, Collections.singleton(InterventionType.PERSON));
+        listTaskPresenter.filterTasks(params);
+        verify(listTaskView, times(2)).setGeoJsonSource(FeatureCollection.fromFeatures(new ArrayList<>()), null, false);
+
+
+    }
+
+
+    @Test
+    public void testSearchTasksWithEmptyPhrase() {
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection", FeatureCollection.fromFeatures(new Feature[]{feature}));
+        listTaskPresenter.searchTasks("");
+        verify(listTaskView).setGeoJsonSource(FeatureCollection.fromFeatures(new Feature[]{feature}), null, false);
+    }
+
+    @Test
+    public void testSearchTasks() throws JSONException {
+        com.cocoahero.android.geojson.Feature feature1 = new com.cocoahero.android.geojson.Feature();
+        feature1.setIdentifier("id1");
+        feature1.setProperties(new JSONObject().accumulate(STRUCTURE_NAME, "John Doe House"));
+
+        com.cocoahero.android.geojson.Feature feature2 = new com.cocoahero.android.geojson.Feature();
+        feature2.setIdentifier("id2");
+        feature2.setProperties(new JSONObject().accumulate(FAMILY_MEMBER_NAMES, "John Doe,Jane Doe,Helli Pad"));
+
+
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection",
+                FeatureCollection.fromFeatures(new Feature[]{Feature.fromJson(feature1.toJSON().toString()),
+                        Feature.fromJson(feature2.toJSON().toString())}));
+
+        listTaskPresenter.searchTasks("Doe");
+        verify(listTaskView).setGeoJsonSource(featureCollectionArgumentCaptor.capture(), eq(null), eq(false));
+        assertEquals(2, featureCollectionArgumentCaptor.getValue().features().size());
+
+        listTaskPresenter.searchTasks("House");
+        verify(listTaskView, times(2)).setGeoJsonSource(featureCollectionArgumentCaptor.capture(), eq(null), eq(false));
+        assertEquals(1, featureCollectionArgumentCaptor.getValue().features().size());
+        assertEquals("id1", featureCollectionArgumentCaptor.getValue().features().get(0).id());
+
+
+        listTaskPresenter.searchTasks("Helli");
+        verify(listTaskView, times(3)).setGeoJsonSource(featureCollectionArgumentCaptor.capture(), eq(null), eq(false));
+        assertEquals(1, featureCollectionArgumentCaptor.getValue().features().size());
+        assertEquals("id2", featureCollectionArgumentCaptor.getValue().features().get(0).id());
     }
 
 

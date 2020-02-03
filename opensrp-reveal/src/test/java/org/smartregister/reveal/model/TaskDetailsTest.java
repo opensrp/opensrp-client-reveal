@@ -1,15 +1,15 @@
 package org.smartregister.reveal.model;
 
 import org.junit.Test;
+import org.smartregister.reveal.BaseUnitTest;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class TaskDetailsTest {
+public class TaskDetailsTest extends BaseUnitTest {
 
     @Test
     public void testSetGroupedTaskCodeStatusForAllTasks() {
-
         String groupedTaskCodeStatusString = "RACD Register Family-Complete,Blood Screening-Complete,Bednet Distribution-Complete";
         TaskDetails taskDetails = new TaskDetails("task1");
 

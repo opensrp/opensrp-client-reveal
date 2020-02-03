@@ -289,4 +289,34 @@
     <string name="not_eligible_unoccupied">Not Eligible: Currently Unoccupied</string>
     <string name="not_eligible_other">Not Eligible: Other</string>
 
+    <string name="menu">Menu</string>
+    <string name="add_structure">Register Structure</string>
+    <string name="filter">Filter</string>
+    <string name="filters">Filters (%1$d)</string>
+    <string name="clear">Clear</string>
+    <string name="sort_by">Sort by</string>
+    <string name="status">Status</string>
+    <string name="structure">Structure</string>
+    <string name="person">Person</string>
+    <string name="family">Family</string>
+    <string name="task_type">Task type</string>
+    <string name="intervention_unit">Intervention Unit</string>
+    <string name="apply_filters">Apply Filters</string>
+    <string name="apply_filters_formatter">Apply Filters (%1$d)</string>
+    <string name="bcc_code">BCC</string>
+    <string name="mosquito_collection">Mosquito Collection</string>
+    <string name="larval_dipping">Larval dipping</string>
+    <string name="bednet_distribution">Bednet Distribution</string>
+    <string name="blood_screening">Blood Screening</string>
+    <string name="case_confirmation">Case Confirmation</string>
+    <string name="paot">PAOT</string>
+    <string name="mda_dispense">MDA Dispense</string>
+    <string name="mda_adherence">MDA Adherence</string>
+
+    <string-array name="task_sort_options">
+        <item>Distance (nearest first)</item>
+        <item>Status</item>
+        <item>Type</item>
+    </string-array>
+
 </resources>

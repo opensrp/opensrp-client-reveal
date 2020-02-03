@@ -19,6 +19,8 @@ public class BaseTaskDetails {
 
     private String structureId;
 
+    private  String familyMemberNames;
+
     public BaseTaskDetails(@NonNull String taskId) {
         this.taskId = taskId;
     }
@@ -69,6 +71,14 @@ public class BaseTaskDetails {
 
     public void setStructureId(String structureId) {
         this.structureId = structureId;
+    }
+
+    public String getFamilyMemberNames() {
+        return familyMemberNames;
+    }
+
+    public void setFamilyMemberNames(String familyMemberNames) {
+        this.familyMemberNames = familyMemberNames;
     }
 
     @Override

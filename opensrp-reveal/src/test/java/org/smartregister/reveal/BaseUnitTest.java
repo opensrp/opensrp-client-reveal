@@ -13,12 +13,15 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.smartregister.reveal.shadow.CustomFontTextViewShadow;
+import org.smartregister.reveal.shadow.RevealMapViewShadow;
+import org.smartregister.reveal.shadow.KujakuMapViewShadow;
+import org.smartregister.reveal.shadow.MapViewShadow;
 import org.smartregister.util.DateTimeTypeConverter;
 
 
 @RunWith(RobolectricTestRunner.class)
 @PowerMockRunnerDelegate(RobolectricTestRunner.class)
-@Config(application = TestRevealApplication.class, shadows = {CustomFontTextViewShadow.class}, sdk = Build.VERSION_CODES.P)
+@Config(application = TestRevealApplication.class, shadows = {CustomFontTextViewShadow.class, MapViewShadow.class, KujakuMapViewShadow.class, RevealMapViewShadow.class,}, sdk = Build.VERSION_CODES.P)
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
 public abstract class BaseUnitTest {
 

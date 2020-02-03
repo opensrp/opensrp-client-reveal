@@ -1,6 +1,7 @@
 package org.smartregister.reveal.view;
 
 import android.content.Intent;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
@@ -25,7 +26,7 @@ import java.util.List;
 import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
-import static org.smartregister.reveal.util.Constants.REQUEST_CODE_GET_JSON;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.TaskRegister;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 
@@ -69,12 +70,13 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
     protected void onActivityResultExtended(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
             String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
-            Timber.d( json);
+            Timber.d(json);
             getPresenter().saveJsonForm(json);
         } else {
             mBaseFragment.onActivityResult(requestCode, resultCode, data);
         }
     }
+
 
     @Override
     public List<String> getViewIdentifiers() {
@@ -91,7 +93,8 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
         findViewById(R.id.bottom_navigation).setVisibility(View.GONE);
     }
 
-    private TaskRegisterContract.Presenter getPresenter() {
+    @VisibleForTesting
+    public TaskRegisterContract.Presenter getPresenter() {
         return (TaskRegisterContract.Presenter) presenter;
     }
 
