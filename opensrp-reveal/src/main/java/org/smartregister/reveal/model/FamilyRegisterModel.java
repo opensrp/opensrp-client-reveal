@@ -55,9 +55,9 @@ public class FamilyRegisterModel extends BaseFamilyRegisterModel {
     @Override
     public JSONObject getFormAsJson(String formName, String entityId, String currentLocationId) throws Exception {
         JSONObject form = super.getFormAsJson(formName, entityId, currentLocationId);
-        JSONObject houseNumberFieldJSONObject = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), FAMILY_NAME);
-        if (houseNumberFieldJSONObject != null) {
-            houseNumberFieldJSONObject.put(VALUE, this.structureName);
+        JSONObject familyNameFieldJSONObject = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(form), FAMILY_NAME);
+        if (familyNameFieldJSONObject != null) {
+            familyNameFieldJSONObject.put(VALUE, this.structureName);
         }
         return form;
     }
