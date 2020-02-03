@@ -36,15 +36,12 @@ public class BaseOfflineMapsFragmentTest extends BaseUnitTest {
     @Captor
     private ArgumentCaptor<String> stringArgumentCaptor;
 
-    private BaseOfflineMapsFragment.MapDownloadReceiver mapDownloadReceiver;
-
     private  Context context = RuntimeEnvironment.application;
 
     private BaseOfflineMapsFragment baseOfflineMapsFragment;
 
     @Before
     public void setUp() {
-        mapDownloadReceiver = new BaseOfflineMapsFragment().new MapDownloadReceiver();
         baseOfflineMapsFragment = new BaseOfflineMapsFragment();
         AppCompatActivity activity = Robolectric.buildActivity(AppCompatActivity.class).create().start().get();
         activity.setContentView(R.layout.activity_offline_maps);
