@@ -56,6 +56,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
+import io.ona.kujaku.KujakuLibrary;
 import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.GLOBAL_CONFIGS;
@@ -131,6 +132,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         serverConfigs = new HashMap<>();
 
         Mapbox.getInstance(getApplicationContext(), BuildConfig.MAPBOX_SDK_ACCESS_TOKEN);
+        KujakuLibrary.init(getApplicationContext());
 
         //init Job Manager
         JobManager.create(this).addJobCreator(new RevealJobCreator());
