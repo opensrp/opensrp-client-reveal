@@ -43,7 +43,7 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
             getInstance().getRepository().getWritableDatabase().beginTransaction();
             boolean saved;
             try {
-                saved = interactorUtils.archiveClient(client.getCaseId());
+                saved = interactorUtils.archiveClient(client.getCaseId(), false);
                 getInstance().getRepository().getWritableDatabase().setTransactionSuccessful();
             } finally {
                 getInstance().getRepository().getWritableDatabase().endTransaction();

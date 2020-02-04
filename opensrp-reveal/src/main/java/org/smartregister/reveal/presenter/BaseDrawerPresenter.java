@@ -202,12 +202,14 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         try {
             prefsUtil.setCurrentProvince(name.get(1));
             prefsUtil.setCurrentDistrict(name.get(name.size() - districtOffset));
-            prefsUtil.setCurrentOperationalArea(name.get(name.size() - 1));
+            String operationalArea = name.get(name.size() - 1);
+            prefsUtil.setCurrentOperationalArea(operationalArea);
             Pair<String, String> facility = getFacilityFromOperationalArea(name.get(name.size() - districtOffset), name.get(name.size() - 1), entireTree);
             if (facility != null) {
                 prefsUtil.setCurrentFacility(facility.second);
                 prefsUtil.setCurrentFacilityLevel(facility.first);
             }
+            validateSelectedPlan(operationalArea);
         } catch (NullPointerException e) {
             Timber.e(e);
         }
@@ -330,6 +332,21 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     @Override
     public void onShowOfflineMaps() {
         getView().openOfflineMapsView();
+    }
+    private void validateSelectedPlan(String operationalArea) {
+        if (!prefsUtil.getCurrentPlanId().isEmpty()) {
+            interactor.validateCurrentPlan(operationalArea, prefsUtil.getCurrentPlanId());
+        }
+    }
+
+    @Override
+    public void onPlanValidated(boolean isValid) {
+        if (!isValid) {
+            prefsUtil.setCurrentPlanId("");
+            prefsUtil.setCurrentPlan("");
+            view.setPlan("");
+            view.lockNavigationDrawerForSelection();
+        }
     }
 
 }

@@ -200,7 +200,7 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
 
 
     @Test
-    public void testAchiveFamily() {
+    public void testArchiveFamily() {
         when(eventClientRepository.getWritableDatabase()).thenReturn(sqLiteDatabase);
         String familyId = UUID.randomUUID().toString();
         String structureId = UUID.randomUUID().toString();
@@ -213,8 +213,8 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
         interactor.archiveFamily(familyId, structureId);
 
         for (String familyMember : new ArrayList<>(familyMembers))
-            verify(interactorUtils, timeout(ASYNC_TIMEOUT)).archiveClient(familyMember);
-        verify(interactorUtils, timeout(ASYNC_TIMEOUT)).archiveClient(familyId);
+            verify(interactorUtils, timeout(ASYNC_TIMEOUT)).archiveClient(familyMember, false);
+        verify(interactorUtils, timeout(ASYNC_TIMEOUT)).archiveClient(familyId, true);
 
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).archiveTasksForEntity(structureId);
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).cancelTasksForEntity(structureId);

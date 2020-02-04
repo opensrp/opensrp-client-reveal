@@ -140,9 +140,9 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
                 List<String> familyMembers = commonRepository.findSearchIds(String.format(
                         "SELECT %s FROM %s where %s='%s' AND %s IS NULL",
                         BASE_ENTITY_ID, FAMILY_MEMBER, KEY.RELATIONAL_ID, familyBaseEntityId, DATE_REMOVED));
-                familyMembers.add(familyBaseEntityId);
+                interactorUtils.archiveClient(familyBaseEntityId, true);
                 for (String baseEntityId : familyMembers) {
-                    interactorUtils.archiveClient(baseEntityId);
+                    interactorUtils.archiveClient(baseEntityId, false);
                 }
                 taskRepository.cancelTasksForEntity(structureId);
                 taskRepository.archiveTasksForEntity(structureId);
