@@ -109,14 +109,16 @@ public class BaseInteractorTest extends BaseUnitTest {
     @Test
     public void testFetchFamilyDetails() {
         Whitebox.setInternalState(interactor, "commonRepository", commonRepository);
-        String stuctureId = UUID.randomUUID().toString();
-        when(database.rawQuery("SELECT base_entity_id FROM EC_FAMILY WHERE structure_id = ?", new String[]{stuctureId})).thenReturn(createFamilyCursor());
+        String structureId = UUID.randomUUID().toString();
+        String query = "SELECT base_entity_id FROM EC_FAMILY WHERE structure_id = ? AND date_removed IS NULL";
+        when(database.rawQuery(query, new String[]{structureId})).thenReturn(createFamilyCursor());
         CommonPersonObjectClient family = TestingUtils.getCommonPersonObjectClient();
         CommonPersonObject familyObject = new CommonPersonObject(family.getCaseId(),
                 null, family.getDetails(), "");
         familyObject.setColumnmaps(family.getColumnmaps());
         when(commonRepository.findByBaseEntityId("69df212c-33a7-4443-a8d5-289e48d90468")).thenReturn(familyObject);
-        interactor.fetchFamilyDetails(stuctureId);
+        interactor.fetchFamilyDetails(structureId);
+        verify(database).rawQuery(query, new String[]{structureId});
         verify(presenter, timeout(ASYNC_TIMEOUT)).onFamilyFound(clientArgumentCaptor.capture());
         assertEquals(family.entityId(), clientArgumentCaptor.getValue().entityId());
         assertEquals(family.getColumnmaps(), clientArgumentCaptor.getValue().getColumnmaps());
