@@ -118,7 +118,7 @@ public class BaseInteractorTest extends BaseUnitTest {
         familyObject.setColumnmaps(family.getColumnmaps());
         when(commonRepository.findByBaseEntityId("69df212c-33a7-4443-a8d5-289e48d90468")).thenReturn(familyObject);
         interactor.fetchFamilyDetails(structureId);
-        verify(database).rawQuery(query, new String[]{structureId});
+        verify(database,timeout(ASYNC_TIMEOUT)).rawQuery(query, new String[]{structureId});
         verify(presenter, timeout(ASYNC_TIMEOUT)).onFamilyFound(clientArgumentCaptor.capture());
         assertEquals(family.entityId(), clientArgumentCaptor.getValue().entityId());
         assertEquals(family.getColumnmaps(), clientArgumentCaptor.getValue().getColumnmaps());
