@@ -99,6 +99,16 @@
             "creates_case": [
               "ec_family_member"
             ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "Archive Family",
+            "closes_case": [
+              "ec_family"
+            ],
+            "creates_case": [
+              "ec_family"
+            ]
           }
         ]
       }
