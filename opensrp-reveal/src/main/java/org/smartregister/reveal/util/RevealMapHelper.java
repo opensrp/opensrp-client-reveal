@@ -103,7 +103,8 @@ public class RevealMapHelper {
     public static void addCustomLayers(@NonNull Style mMapboxMapStyle, Context context) {
 
         Expression dynamicIconSize = interpolate(linear(), zoom(),
-                literal(13.98f), literal(0),
+                literal(10.5), literal(0),
+                literal(13.98f), literal(0.3f),
                 literal(17.79f), literal(1.5f),
                 literal(18.8f), literal(2));
 
@@ -113,7 +114,8 @@ public class RevealMapHelper {
         SymbolLayer symbolLayer = new SymbolLayer(MOSQUITO_COLLECTION_LAYER, context.getString(R.string.reveal_datasource_name));
         symbolLayer.setProperties(
                 iconImage(MOSQUITO_COLLECTION_ICON),
-                iconSize(dynamicIconSize));
+                iconSize(dynamicIconSize),
+                iconAllowOverlap(true));
         symbolLayer.setFilter(eq(get(TYPE), StructureType.MOSQUITO_COLLECTION_POINT));
         mMapboxMapStyle.addLayer(symbolLayer);
 
@@ -123,7 +125,8 @@ public class RevealMapHelper {
         symbolLayer = new SymbolLayer(LARVAL_BREEDING_LAYER, context.getString(R.string.reveal_datasource_name));
         symbolLayer.setProperties(
                 iconImage(LARVAL_BREEDING_ICON),
-                iconSize(dynamicIconSize));
+                iconSize(dynamicIconSize),
+                iconAllowOverlap(true));
         symbolLayer.setFilter(eq(get(TYPE), StructureType.LARVAL_BREEDING_SITE));
         mMapboxMapStyle.addLayer(symbolLayer);
 
@@ -133,7 +136,8 @@ public class RevealMapHelper {
         symbolLayer = new SymbolLayer(POTENTIAL_AREA_OF_TRANSMISSION_LAYER, context.getString(R.string.reveal_datasource_name));
         symbolLayer.setProperties(
                 iconImage(POTENTIAL_AREA_OF_TRANSMISSION_ICON),
-                iconSize(dynamicIconSize));
+                iconSize(dynamicIconSize),
+                iconAllowOverlap(true));
         symbolLayer.setFilter(eq(get(TYPE), StructureType.POTENTIAL_AREA_OF_TRANSMISSION));
         mMapboxMapStyle.addLayer(symbolLayer);
     }
