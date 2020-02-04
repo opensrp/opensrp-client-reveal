@@ -341,6 +341,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             prefsUtil.setCurrentPlanId("");
             prefsUtil.setCurrentPlan("");
             view.setPlan("");
+            view.lockNavigationDrawerForSelection();
         }
     }
 
