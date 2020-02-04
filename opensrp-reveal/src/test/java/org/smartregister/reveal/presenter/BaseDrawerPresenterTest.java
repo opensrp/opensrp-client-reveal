@@ -10,15 +10,18 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.domain.PlanDefinition;
+import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.interactor.BaseDrawerInteractor;
 import org.smartregister.reveal.util.PreferencesUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -27,6 +30,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.ACTIVE;
 import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.COMPLETE;
@@ -49,6 +53,9 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
 
     @Mock
     private BaseDrawerInteractor interactor;
+
+    @Mock
+    private LocationHelper locationHelper;
 
     @Captor
     private ArgumentCaptor<List<String>> plansCaptor;
@@ -155,5 +162,37 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
 
     }
 
+
+    @Test
+    public void testOnOperationalAreaSelectedValidatesPlan() {
+        String planId = UUID.randomUUID().toString();
+        String operationArea = UUID.randomUUID().toString();
+        when(preferencesUtil.getCurrentPlanId()).thenReturn(planId);
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn(operationArea);
+        ArrayList<String> list = new ArrayList<>(Arrays.asList("Eastern", "Chadiza", "Chadiza RHC", operationArea));
+        Whitebox.setInternalState(presenter, "locationHelper", locationHelper);
+        Whitebox.setInternalState(presenter, "interactor", interactor);
+        presenter.onOperationalAreaSelectorClicked(list);
+        verify(interactor).validateCurrentPlan(operationArea, planId);
+
+    }
+
+    @Test
+    public void testOnPlanValidatedFailsClearsPlan() {
+        presenter.onPlanValidated(false);
+        verify(preferencesUtil).setCurrentPlanId("");
+        verify(preferencesUtil).setCurrentPlan("");
+        verify(view).setPlan("");
+        verify(view).lockNavigationDrawerForSelection();
+    }
+
+    @Test
+    public void testOnPlanValidatedDoesNotClearPlan() {
+        presenter.onPlanValidated(true);
+        verifyZeroInteractions(preferencesUtil);
+        verifyZeroInteractions(interactor);
+        verifyZeroInteractions(view);
+
+    }
 
 }

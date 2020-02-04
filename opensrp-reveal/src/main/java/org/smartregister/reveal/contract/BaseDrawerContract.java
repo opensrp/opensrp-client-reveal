@@ -81,10 +81,14 @@ public interface BaseDrawerContract {
         void onViewResumed();
 
         boolean isPlanAndOperationalAreaSelected();
+
+        void onPlanValidated(boolean isValid);
     }
 
     interface Interactor {
 
         void fetchPlans(String jurisdictionName);
+
+        void validateCurrentPlan(String selectedOperationalArea, String currentPlanId);
     }
 }
