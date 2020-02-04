@@ -58,6 +58,8 @@ public interface Constants {
     String DBNAME = "drishti.db";
     String COPYDBNAME = "reveal";
 
+    String DG_ID_PLACEHOLDER = "DIGITAL_GLOBE_ID";
+
     interface CONFIGURATION {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";
@@ -263,9 +265,8 @@ public interface Constants {
         int MAX_SELECT_ZOOM_LEVEL = 16;
         int CLICK_SELECT_RADIUS = 24;
         String NAME_PROPERTY = "name";
-        double DOWNLOAD_MAX_ZOOM = 20.0;
-        double DOWNLOAD_MIN_ZOOM = 0.0;
-        String MAPBOX_STYLE = "mapbox://styles/ona/cj9jueph7034i2rphe0gp3o6m";
+        double DOWNLOAD_MAX_ZOOM = 21.0;
+        double DOWNLOAD_MIN_ZOOM = 13.5;
     }
 
     interface JsonForm {

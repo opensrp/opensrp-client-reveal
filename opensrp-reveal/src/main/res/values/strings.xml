@@ -41,6 +41,7 @@
 
     <string name="reveal_satellite_style" translatable="false">asset://reveal-streets-satellite.json</string>
     <string name="reveal_streets_style" translatable="false">reveal-streets-style.json</string>
+    <string name="reveal_offline_map_download_style" translatable="false">map-download-style.json</string>
     <string name="reveal_datasource_name" translatable="false">reveal-data-set</string>
     <string name="reveal_layer_polygons" translatable="false">reveal-data-polygons</string>
     <string name="reveal_layer_points" translatable="false">reveal-data-points</string>
@@ -329,5 +330,7 @@
         <item>Status</item>
         <item>Type</item>
     </string-array>
+
+    <string name="localhost_url">http://localhost:%1$d/</string>
 
 </resources>

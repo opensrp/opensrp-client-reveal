@@ -12,6 +12,8 @@ import com.mapbox.turf.TurfMeasurement;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.R;
+import org.smartregister.reveal.server.JavaHTTPServer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +29,6 @@ import io.ona.kujaku.utils.LogUtil;
 import static io.ona.kujaku.data.MapBoxDownloadTask.MAP_NAME;
 import static org.smartregister.reveal.util.Constants.Map.DOWNLOAD_MAX_ZOOM;
 import static org.smartregister.reveal.util.Constants.Map.DOWNLOAD_MIN_ZOOM;
-import static org.smartregister.reveal.util.Constants.Map.MAPBOX_STYLE;
 
 /**
  * Created by Richard Kareko on 1/30/20.
@@ -103,7 +104,7 @@ public class OfflineMapHelper {
         double bottomLeftLat = minY;
         double bottomLeftLng = minX;
 
-        String mapboxStyle = MAPBOX_STYLE;
+        String mapboxStyle = context.getString(R.string.localhost_url, JavaHTTPServer.PORT);
 
         LatLng topLeftBound = new LatLng(topLeftLat, topLeftLng);
         LatLng topRightBound = new LatLng(topRightLat, topRightLng);
