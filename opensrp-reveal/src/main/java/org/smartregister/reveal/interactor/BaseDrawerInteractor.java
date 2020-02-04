@@ -3,7 +3,6 @@ package org.smartregister.reveal.interactor;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.repository.LocationRepository;
-import org.smartregister.repository.PlanDefinitionRepository;
 import org.smartregister.repository.PlanDefinitionSearchRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
