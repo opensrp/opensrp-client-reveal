@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.mapbox.mapboxsdk.style.layers.Layer;
 import com.mapbox.mapboxsdk.style.layers.PropertyValue;
-import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 
 import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
