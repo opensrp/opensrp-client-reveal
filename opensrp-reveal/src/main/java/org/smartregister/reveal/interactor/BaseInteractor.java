@@ -68,6 +68,7 @@ import timber.log.Timber;
 
 import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
 import static org.smartregister.family.util.DBConstants.KEY.BASE_ENTITY_ID;
+import static org.smartregister.family.util.DBConstants.KEY.DATE_REMOVED;
 import static org.smartregister.family.util.Utils.metadata;
 import static org.smartregister.reveal.application.RevealApplication.getInstance;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
@@ -433,8 +434,8 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             Cursor cursor = null;
             CommonPersonObjectClient family = null;
             try {
-                cursor = database.rawQuery(String.format("SELECT %s FROM %S WHERE %s = ?",
-                        INTENT_KEY.BASE_ENTITY_ID, TABLE_NAME.FAMILY, STRUCTURE_ID), new String[]{structureId});
+                cursor = database.rawQuery(String.format("SELECT %s FROM %S WHERE %s = ? AND %s IS NULL",
+                        INTENT_KEY.BASE_ENTITY_ID, TABLE_NAME.FAMILY, STRUCTURE_ID, DATE_REMOVED), new String[]{structureId});
                 if (cursor.moveToNext()) {
                     String baseEntityId = cursor.getString(0);
                     setCommonRepository();

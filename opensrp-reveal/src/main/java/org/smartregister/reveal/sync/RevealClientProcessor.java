@@ -238,7 +238,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         String taskIdentifier = event.getDetails().get(TASK_IDENTIFIER);
         Task task = taskRepository.getTaskByIdentifier(taskIdentifier);
         String operationalAreaId = null;
-        if (task != null) {
+        if (task != null && task.getStatus() != Task.TaskStatus.CANCELLED && task.getStatus() != Task.TaskStatus.ARCHIVED) {
             task.setBusinessStatus(calculateBusinessStatus(event));
             task.setStatus(Task.TaskStatus.COMPLETED);
             task.setLastModified(new DateTime());

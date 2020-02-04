@@ -15,6 +15,7 @@ import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.sync.RevealClientProcessor;
+import org.smartregister.reveal.util.FamilyConstants.EventType;
 
 import java.util.Collections;
 
@@ -64,7 +65,7 @@ public class InteractorUtils {
     }
 
 
-    public boolean archiveClient(String baseEntityId) {
+    public boolean archiveClient(String baseEntityId, boolean isFamily) {
         taskRepository.cancelTasksForEntity(baseEntityId);
         taskRepository.archiveTasksForEntity(baseEntityId);
         JSONObject eventsByBaseEntityId = eventClientRepository.getEventsByBaseEntityId(baseEntityId);
@@ -91,7 +92,8 @@ public class InteractorUtils {
             clientJsonObject.getJSONObject("attributes").put("dateRemoved", now);
             eventClientRepository.addorUpdateClient(baseEntityId, clientJsonObject);
 
-            Event archiveEvent = FamilyJsonFormUtils.createFamilyEvent(baseEntityId, Utils.getCurrentLocationId(), null, FamilyConstants.EventType.ARCHIVE_FAMILY_MEMBER);
+            Event archiveEvent = FamilyJsonFormUtils.createFamilyEvent(baseEntityId, Utils.getCurrentLocationId(),
+                    null, isFamily ? EventType.ARCHIVE_FAMILY : EventType.ARCHIVE_FAMILY_MEMBER);
 
             JSONObject eventJson = new JSONObject(gson.toJson(archiveEvent));
             eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
