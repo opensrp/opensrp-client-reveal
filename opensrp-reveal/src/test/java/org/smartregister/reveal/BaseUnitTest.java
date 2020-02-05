@@ -13,6 +13,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.smartregister.reveal.shadow.CustomFontTextViewShadow;
+import org.smartregister.reveal.shadow.AsyncTaskShadow;
 import org.smartregister.reveal.shadow.OfflineManagerShadow;
 import org.smartregister.reveal.shadow.GeoJsonSourceShadow;
 import org.smartregister.reveal.shadow.LayerShadow;
@@ -30,7 +31,8 @@ import org.smartregister.util.DateTimeTypeConverter;
 @Config(application = TestRevealApplication.class, shadows = {CustomFontTextViewShadow.class,
         MapViewShadow.class, KujakuMapViewShadow.class, RevealMapViewShadow.class,
         LayerShadow.class, SymbolLayerShadow.class, LineLayerShadow.class,
-        GeoJsonSourceShadow.class, SourceShadow.class, OfflineManagerShadow.class}, sdk = Build.VERSION_CODES.P)
+        GeoJsonSourceShadow.class, SourceShadow.class, OfflineManagerShadow.class,
+        AsyncTaskShadow.class}, sdk = Build.VERSION_CODES.P)
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
 public abstract class BaseUnitTest {
 
