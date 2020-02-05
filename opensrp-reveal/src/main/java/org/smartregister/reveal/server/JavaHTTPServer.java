@@ -17,16 +17,16 @@ import java.util.StringTokenizer;
 
 public class JavaHTTPServer implements Runnable{
 
-    static final String DEFAULT_STYLE_JSON_FILE = "map-download-style.json";
-    static final String DEFAULT_DG_ID_PLACEHOLDER = "DIGITAL_GLOBE_ID";
+    private static final String DEFAULT_STYLE_JSON_FILE = "map-download-style.json";
+    private static final String DEFAULT_DG_ID_PLACEHOLDER = "DIGITAL_GLOBE_ID";
     public static String digitalGlobeIdPlaceHolder;
     public static String styleJsonFile;
-    static String styleJson;
+    private static String styleJson;
     // port to listen connection
     public static final int PORT = 8783;
 
     // verbose mode
-    static final boolean verbose = true;
+    private static final boolean verbose = true;
 
     // Client Connection via Socket Class
     private Socket connect;
@@ -69,7 +69,7 @@ public class JavaHTTPServer implements Runnable{
     public void run() {
         // we manage our particular client connection
         BufferedReader in = null; PrintWriter out = null; BufferedOutputStream dataOut = null;
-        String fileRequested = null;
+        String fileRequested;
 
         try {
             // we read characters from the client via input stream on the socket
@@ -85,16 +85,16 @@ public class JavaHTTPServer implements Runnable{
             StringTokenizer parse = new StringTokenizer(input);
             String method = parse.nextToken().toUpperCase(); // we get the HTTP method of the client
 
-            fileRequested = DEFAULT_STYLE_JSON_FILE;
+            fileRequested = styleJsonFile;
 
             int fileLength = styleJson.getBytes().length;
             String content = getContentType(fileRequested);
 
-            if (method.equals("GET")) { // GET method so we return content
+            if ("GET".equals(method)) { // GET method so we return content
                 byte[] fileData = styleJson.getBytes();
 
                 // send HTTP Headers
-               out.println("HTTP/1.1 200 OK");
+                out.println("HTTP/1.1 200 OK");
                 out.println("Server: Java HTTP Server from SSaurel : 1.0");
                 out.println("Date: " + new Date());
                 out.println("Content-type: " + content);

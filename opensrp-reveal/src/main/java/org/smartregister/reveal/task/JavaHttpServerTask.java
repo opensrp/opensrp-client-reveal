@@ -13,7 +13,7 @@ import static org.smartregister.reveal.util.Constants.DG_ID_PLACEHOLDER;
  */
 
 public class JavaHttpServerTask extends AsyncTask<Void, Void, Void> {
-    Context context;
+    private Context context;
 
     public JavaHttpServerTask(Context context) {
         this.context = context;
