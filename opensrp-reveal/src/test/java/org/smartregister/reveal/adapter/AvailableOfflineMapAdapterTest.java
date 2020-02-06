@@ -33,6 +33,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.DOWNLOAD_STARTED;
 import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.READY;
+import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.SELECTED_FOR_DOWNLOAD;
 
 /**
  * Created by Richard Kareko on 1/24/20.
@@ -106,7 +107,7 @@ public class AvailableOfflineMapAdapterTest extends BaseUnitTest {
     @Test
     public void testOnbindViewHolderForSelectedForDownloadStatus() {
         OfflineMapModel model = TestingUtils.getOfflineMapModel();
-        model.setOfflineMapStatus(READY);
+        model.setOfflineMapStatus(SELECTED_FOR_DOWNLOAD);
         adapter.setOfflineMapModels(Collections.singletonList(model));
         LinearLayout vg = new LinearLayout(context);
         AvailableOfflineMapViewHolder holder = adapter.onCreateViewHolder(vg,0);

@@ -15,6 +15,8 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.StringTokenizer;
 
+import timber.log.Timber;
+
 public class JavaHTTPServer implements Runnable{
 
     private static final String DEFAULT_STYLE_JSON_FILE = "map-download-style.json";
@@ -38,7 +40,7 @@ public class JavaHTTPServer implements Runnable{
     public static void init() {
         try {
             ServerSocket serverConnect = new ServerSocket(PORT);
-            System.out.println("Server started.\nListening for connections on port : " + PORT + " ...\n");
+            Timber.i("Server started.\nListening for connections on port : " + PORT + " ...\n");
 
             digitalGlobeIdPlaceHolder = StringUtils.isNotBlank(digitalGlobeIdPlaceHolder) ? digitalGlobeIdPlaceHolder : DEFAULT_DG_ID_PLACEHOLDER;
             styleJsonFile = StringUtils.isNotBlank(styleJsonFile) ? styleJsonFile : DEFAULT_STYLE_JSON_FILE;
@@ -61,7 +63,7 @@ public class JavaHTTPServer implements Runnable{
 
 
         } catch (IOException e) {
-            System.err.println("Server Connection error : " + e.getMessage());
+            Timber.i("Server Connection error : " + e.getMessage());
         }
     }
 
@@ -121,11 +123,11 @@ public class JavaHTTPServer implements Runnable{
                 dataOut.close();
                 connect.close(); // we close socket connection
             } catch (Exception e) {
-                System.err.println("Error closing stream : " + e.getMessage());
+                Timber.e("Error closing stream : " + e.getMessage());
             }
 
             if (verbose) {
-                System.out.println("Connection closed.\n");
+                Timber.i("Connection closed.\n");
             }
         }
 
