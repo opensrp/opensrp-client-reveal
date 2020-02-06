@@ -20,6 +20,7 @@ import org.smartregister.reveal.util.TestingUtils;
 
 import static io.ona.kujaku.services.MapboxOfflineDownloaderService.SERVICE_ACTION.DELETE_MAP;
 import static io.ona.kujaku.services.MapboxOfflineDownloaderService.SERVICE_ACTION.DOWNLOAD_MAP;
+import static io.ona.kujaku.services.MapboxOfflineDownloaderService.SERVICE_ACTION.STOP_CURRENT_DOWNLOAD;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -124,5 +125,17 @@ public class BaseOfflineMapsFragmentTest extends BaseUnitTest {
 
     }
 
+    @Test
+    public void testHandleSuccessResponseForStoppedMapDownload() {
+        baseOfflineMapsFragment = spy(baseOfflineMapsFragment);
+        Whitebox.setInternalState(baseOfflineMapsFragment, "serviceAction", STOP_CURRENT_DOWNLOAD);
+        Whitebox.setInternalState(baseOfflineMapsFragment, "mapUniqueName", TestingUtils.DUMMY_OPERATIONAL_AREA);
+
+        baseOfflineMapsFragment.handleSuccessResponse();
+
+        verify(baseOfflineMapsFragment).downloadStopped(stringArgumentCaptor.capture());
+        assertEquals(TestingUtils.DUMMY_OPERATIONAL_AREA, stringArgumentCaptor.getValue());
+
+    }
 
 }

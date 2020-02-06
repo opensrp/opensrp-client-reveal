@@ -16,6 +16,8 @@ public interface AvailableOfflineMapsContract extends OfflineMapsFragmentContrac
 
         void onDownloadComplete(String operationalAreaId);
 
+        void onDownloadStopped(String operationalAreaId);
+
     }
 
     interface View {
@@ -24,7 +26,12 @@ public interface AvailableOfflineMapsContract extends OfflineMapsFragmentContrac
 
         void disableCheckBox(String operationalAreaId);
 
+        void enableCheckBox(String operationalAreaId);
+
         void moveDownloadedOAToDownloadedList(String operationalAreaId);
+
+        void removeOperationalAreaToDownload(String operationalAreaId);
+
     }
 
     interface Interactor {

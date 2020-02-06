@@ -150,6 +150,21 @@ public class AvailableOfflineMapsFragmentTest extends BaseUnitTest {
 
     }
 
+    @Test
+    public void testEnableCheckBox() {
+
+        List<OfflineMapModel> originalOfflineMapModelList = initializeOfflineMapModelList();
+        assertEquals(READY, originalOfflineMapModelList.get(0).getOfflineMapStatus());
+
+        fragment.enableCheckBox(originalOfflineMapModelList.get(0).getDownloadAreaId());
+
+        List<OfflineMapModel> actualOfflineMapModelList = (Whitebox.getInternalState(fragment, "offlineMapModelList"));
+        assertNotNull(actualOfflineMapModelList);
+        assertFalse(actualOfflineMapModelList.isEmpty());
+        assertEquals(READY, actualOfflineMapModelList.get(0).getOfflineMapStatus());
+
+    }
+
     @Test (expected = UnsupportedOperationException.class)
     public void testMoveDownloadedOAToDownloadedList() {
         Whitebox.setInternalState(fragment, "callback", callback);
@@ -268,5 +283,15 @@ public class AvailableOfflineMapsFragmentTest extends BaseUnitTest {
         return OfflineMapModelList;
     }
 
+    @Test (expected = UnsupportedOperationException.class)
+    public void testRemoveOperationalAreaToDownload() {
+        Whitebox.setInternalState(fragment, "operationalAreasToDownload", Collections.singletonList(TestingUtils.getOperationalArea()));
+        List<Location> originalOperationalAreasToDownload = (Whitebox.getInternalState(fragment, "operationalAreasToDownload"));
+        assertFalse(originalOperationalAreasToDownload.isEmpty());
+
+        fragment.removeOperationalAreaToDownload(originalOperationalAreasToDownload.get(0).getId());
+        List<Location> updatedOperationalAreasToDownload = (Whitebox.getInternalState(fragment, "operationalAreasToDownload"));
+        assertTrue(updatedOperationalAreasToDownload.isEmpty());
+    }
 
 }

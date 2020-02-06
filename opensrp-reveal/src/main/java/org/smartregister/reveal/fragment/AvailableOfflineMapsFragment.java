@@ -159,6 +159,23 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
     }
 
     @Override
+    public void enableCheckBox(String operationalAreaId) {
+        if (adapter ==null) {
+            return;
+        }
+        for (OfflineMapModel offlineMapModel: offlineMapModelList ) {
+            if (offlineMapModel.getDownloadAreaId().equals(operationalAreaId)){
+                if (offlineMapModel.getOfflineMapStatus() == OfflineMapModel.OfflineMapStatus.DOWNLOADED) {
+                    return;
+                }
+                offlineMapModel.setOfflineMapStatus(OfflineMapModel.OfflineMapStatus.READY);
+            }
+        }
+
+        setOfflineMapModelList(offlineMapModelList);
+    }
+
+    @Override
     public void moveDownloadedOAToDownloadedList(String operationalAreaId) {
         for (OfflineMapModel offlineMapModel : offlineMapModelList) {
             if (offlineMapModel.getDownloadAreaId().equals(operationalAreaId)) {
@@ -169,6 +186,17 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
                 return;
             }
         }
+    }
+
+    @Override
+    public void removeOperationalAreaToDownload(String operationalAreaId) {
+        for (Location location: this.operationalAreasToDownload ) {
+            if (location.getId().equals(operationalAreaId)) {
+                this.operationalAreasToDownload.remove(location);
+                return;
+            }
+        }
+
     }
 
     public void initiateMapDownload() {
@@ -201,6 +229,11 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
     @Override
     protected void downloadStarted(String mapUniqueName) {
         presenter.onDownloadStarted(mapUniqueName);
+    }
+
+    @Override
+    protected void downloadStopped(String mapUniqueName) {
+        presenter.onDownloadStopped(mapUniqueName);
     }
 
     public void updateOperationalAreasToDownload(OfflineMapModel offlineMapModel){

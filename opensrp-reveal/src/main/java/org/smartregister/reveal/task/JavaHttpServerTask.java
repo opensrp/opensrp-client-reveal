@@ -27,8 +27,7 @@ public class JavaHttpServerTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        String[] args = {"test"};
-        JavaHTTPServer.main(args);
+        JavaHTTPServer.init();
         return null;
     }
 }

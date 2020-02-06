@@ -3,6 +3,8 @@ package org.smartregister.reveal.presenter;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -15,6 +17,7 @@ import org.smartregister.reveal.model.OfflineMapModel;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -31,6 +34,12 @@ public class AvailableOfflineMapsPresenterTest extends BaseUnitTest {
     @Mock
     private AvailableOfflineMapsInteractor interactor;
 
+    @Captor
+    private ArgumentCaptor<String> stringArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<List<String>> stringListArgumentCaptor;
+
     private AvailableOfflineMapsPresenter presenter;
 
     private String operationalArea = "Akros_1";
@@ -44,15 +53,14 @@ public class AvailableOfflineMapsPresenterTest extends BaseUnitTest {
 
     @Test
     public void testFetchAvailableOAsForMapDownLoad() {
-
         presenter.fetchAvailableOAsForMapDownLoad(Collections.singletonList(operationalArea));
-        verify(interactor).fetchAvailableOAsForMapDownLoad(Collections.singletonList(operationalArea));
+        verify(interactor).fetchAvailableOAsForMapDownLoad(stringListArgumentCaptor.capture());
+        assertEquals(operationalArea, stringListArgumentCaptor.getValue().get(0));
 
     }
 
     @Test
     public void testOnFetchAvailableOAsForMapDownLoad() {
-
         List<OfflineMapModel> offlineMapModels = Collections.singletonList(new OfflineMapModel());
         presenter.onFetchAvailableOAsForMapDownLoad(offlineMapModels);
         verify(view).setOfflineMapModelList(offlineMapModels);
@@ -61,18 +69,26 @@ public class AvailableOfflineMapsPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnDownloadStarted() {
-
         presenter.onDownloadStarted(operationalArea);
-        verify(view).disableCheckBox(operationalArea);
+        verify(view).disableCheckBox(stringArgumentCaptor.capture());
+        assertEquals(operationalArea, stringArgumentCaptor.getValue());
 
     }
 
     @Test
     public void testOnDownloadComplete() {
-
         presenter.onDownloadComplete(operationalArea);
-        verify(view).moveDownloadedOAToDownloadedList(operationalArea);
+        verify(view).moveDownloadedOAToDownloadedList(stringArgumentCaptor.capture());
+        assertEquals(operationalArea, stringArgumentCaptor.getValue());
 
+    }
+
+    @Test
+    public void testOnDownloadStopped() {
+        presenter.onDownloadStopped(operationalArea);
+        verify(view).removeOperationalAreaToDownload(operationalArea);
+        verify(view).enableCheckBox(stringArgumentCaptor.capture());
+        assertEquals(operationalArea, stringArgumentCaptor.getValue());
     }
 
 }

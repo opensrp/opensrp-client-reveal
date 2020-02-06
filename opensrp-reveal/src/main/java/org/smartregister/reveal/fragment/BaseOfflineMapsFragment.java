@@ -98,7 +98,7 @@ public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFrag
         // We should disable the stop offline download button if it was stopped successfully
         if (serviceAction == MapboxOfflineDownloaderService.SERVICE_ACTION.STOP_CURRENT_DOWNLOAD) {
             currentMapDownload = null;
-            // setCanStopMapDownload(false);
+            downloadStopped(mapUniqueName);
         } else if (serviceAction == MapboxOfflineDownloaderService.SERVICE_ACTION.DELETE_MAP) {
             mapDeletedSuccessfully(mapUniqueName);
         } else {
@@ -136,6 +136,10 @@ public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFrag
     }
 
     protected void mapDeletedSuccessfully(String mapUniqueName) {
+        // implement in child class
+    }
+
+    protected void downloadStopped(String mapUniqueName) {
         // implement in child class
     }
 }

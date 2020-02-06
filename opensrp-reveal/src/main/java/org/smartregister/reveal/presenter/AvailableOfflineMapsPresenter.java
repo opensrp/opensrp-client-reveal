@@ -37,4 +37,10 @@ public class AvailableOfflineMapsPresenter implements AvailableOfflineMapsContra
         view.moveDownloadedOAToDownloadedList(operationalAreaId);
     }
 
+    @Override
+    public void onDownloadStopped(String operationalAreaId) {
+        view.removeOperationalAreaToDownload(operationalAreaId);
+        view.enableCheckBox(operationalAreaId);
+    }
+
 }
