@@ -23,7 +23,7 @@ import org.smartregister.reveal.contract.AvailableOfflineMapsContract;
 import org.smartregister.reveal.contract.OfflineMapDownloadCallback;
 import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.presenter.AvailableOfflineMapsPresenter;
-import org.smartregister.reveal.task.JavaHttpServerTask;
+import org.smartregister.reveal.task.FileHttpServerTask;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.OfflineMapHelper;
 import org.smartregister.util.DateTimeTypeConverter;
@@ -68,7 +68,7 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
         }
         btnDownloadMap = null;
 
-        new JavaHttpServerTask(getContext()).execute();
+        new FileHttpServerTask(getContext()).execute();
 
 
     }

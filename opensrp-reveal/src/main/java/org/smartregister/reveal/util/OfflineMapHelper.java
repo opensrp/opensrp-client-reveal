@@ -13,8 +13,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.server.JavaHTTPServer;
+import org.smartregister.reveal.server.FileHTTPServer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,7 @@ import io.ona.kujaku.helpers.OfflineServiceHelper;
 import io.ona.kujaku.utils.LogUtil;
 
 import static io.ona.kujaku.data.MapBoxDownloadTask.MAP_NAME;
+import static org.smartregister.reveal.util.Constants.DG_ID_PLACEHOLDER;
 import static org.smartregister.reveal.util.Constants.Map.DOWNLOAD_MAX_ZOOM;
 import static org.smartregister.reveal.util.Constants.Map.DOWNLOAD_MIN_ZOOM;
 
@@ -104,7 +106,7 @@ public class OfflineMapHelper {
         double bottomLeftLat = minY;
         double bottomLeftLng = minX;
 
-        String mapboxStyle = context.getString(R.string.localhost_url, JavaHTTPServer.PORT);
+        String mapboxStyle = context.getString(R.string.localhost_url, FileHTTPServer.PORT);
 
         LatLng topLeftBound = new LatLng(topLeftLat, topLeftLng);
         LatLng topRightBound = new LatLng(topRightLat, topRightLng);
@@ -126,6 +128,15 @@ public class OfflineMapHelper {
                 , bottomLeftBound
                 , zoomRange
         );
+    }
+
+    public static void initializeFileHTTPServer(Context context) {
+        try {
+            FileHTTPServer httpServer = new FileHTTPServer(context.getString(R.string.reveal_offline_map_download_style), DG_ID_PLACEHOLDER);
+            httpServer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
