@@ -132,7 +132,7 @@ public class OfflineMapHelper {
 
     public static void initializeFileHTTPServer(Context context) {
         try {
-            FileHTTPServer httpServer = new FileHTTPServer(context.getString(R.string.reveal_offline_map_download_style), DG_ID_PLACEHOLDER);
+            FileHTTPServer httpServer = new FileHTTPServer(context, context.getString(R.string.reveal_offline_map_download_style), DG_ID_PLACEHOLDER);
             httpServer.start();
         } catch (IOException e) {
             e.printStackTrace();

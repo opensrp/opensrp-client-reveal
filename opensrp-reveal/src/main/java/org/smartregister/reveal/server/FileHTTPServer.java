@@ -1,8 +1,9 @@
 package org.smartregister.reveal.server;
 
+import android.content.Context;
+
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.reveal.BuildConfig;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.util.Utils;
 
 import java.io.BufferedReader;
@@ -16,7 +17,7 @@ import java.util.Locale;
 import timber.log.Timber;
 
 /**
- * A minimal HTTP server that serves a static file (e.g mapbox style json file)
+ * A minimal HTTP server that serves a mapbox style json file
  */
 public class FileHTTPServer {
     public static final int PORT = 9783;
@@ -27,18 +28,19 @@ public class FileHTTPServer {
 
     private final FileHTTPServer.ServerThread server;
 
-    public FileHTTPServer(String styleJsonFile, String  digitalGlobeIdPlaceHolder) throws IOException {
+    public FileHTTPServer(Context context, String styleJsonFile, String  digitalGlobeIdPlaceHolder) throws IOException {
         final ServerSocket socket = createBoundSocket(PORT);
+        String dgIdPlaceHolder;
         if (socket == null) {
             throw new IOException("Could not find an available port");
         }
         server = new ServerThread(socket);
 
-        digitalGlobeIdPlaceHolder = StringUtils.isNotBlank(digitalGlobeIdPlaceHolder) ? digitalGlobeIdPlaceHolder : DEFAULT_DG_ID_PLACEHOLDER;
+        dgIdPlaceHolder = StringUtils.isNotBlank(digitalGlobeIdPlaceHolder) ? digitalGlobeIdPlaceHolder : DEFAULT_DG_ID_PLACEHOLDER;
         styleJson = StringUtils.isNotBlank(styleJsonFile) ? styleJsonFile : DEFAULT_STYLE_JSON_FILE;
 
-        styleJson = Utils.readAssetContents(RevealApplication.getInstance().getApplicationContext(), styleJsonFile);
-        styleJson = styleJson.replace(digitalGlobeIdPlaceHolder, BuildConfig.DG_CONNECT_ID);
+        styleJson = Utils.readAssetContents(context, styleJsonFile);
+        styleJson = styleJson.replace(dgIdPlaceHolder, BuildConfig.DG_CONNECT_ID);
     }
 
     public void start() {
