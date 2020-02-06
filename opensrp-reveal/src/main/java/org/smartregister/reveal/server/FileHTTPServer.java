@@ -27,9 +27,10 @@ public class FileHTTPServer {
     private String styleJson;
 
     private final FileHTTPServer.ServerThread server;
+    private final ServerSocket socket;
 
     public FileHTTPServer(Context context, String styleJsonFile, String  digitalGlobeIdPlaceHolder) throws IOException {
-        final ServerSocket socket = createBoundSocket(PORT);
+        socket = createBoundSocket(PORT);
         String dgIdPlaceHolder;
         if (socket == null) {
             throw new IOException("Could not find an available port");
@@ -49,6 +50,18 @@ public class FileHTTPServer {
 
     public boolean isStarted() {
         return server.isAlive();
+    }
+
+    /**
+     * Permanently closes all sockets.
+     */
+    public void destroy() {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            Timber.w(e);
+        }
+        server.interrupt();
     }
 
     /**

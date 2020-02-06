@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
  */
 
 public class FileHTTPServerTest extends BaseUnitTest {
-    Context context = RuntimeEnvironment.application;
+    private Context context = RuntimeEnvironment.application;
 
     @Before
     public void setUp() {
