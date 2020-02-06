@@ -22,7 +22,7 @@ public class RevealApplicationTest extends BaseUnitTest {
 
     private RevealApplication revealApplication;
     private UserService userService;
-    Context context;
+    private Context context;
 
     @Before
     public void setUp() throws Exception {
