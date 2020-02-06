@@ -2,7 +2,6 @@ package org.smartregister.reveal.application;
 
 import android.content.Context;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -23,11 +22,12 @@ public class RevealApplicationTest extends BaseUnitTest {
 
     private RevealApplication revealApplication;
     private UserService userService;
-    Context context = RuntimeEnvironment.application;
+    Context context;
 
     @Before
     public void setUp() throws Exception {
         revealApplication = Mockito.spy(RevealApplication.getInstance());
+        context = RuntimeEnvironment.application;
         userService = Mockito.spy(revealApplication.getContext().userService());
         ReflectionHelpers.setField(revealApplication.getContext(), "userService", userService);
     }
