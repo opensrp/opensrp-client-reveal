@@ -3,6 +3,7 @@ package org.smartregister.reveal.task;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.OfflineMapHelper;
 
 /**
@@ -18,7 +19,7 @@ public class FileHttpServerTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        OfflineMapHelper.initializeFileHTTPServer(context);
+        OfflineMapHelper.initializeFileHTTPServer(context, Constants.DG_ID_PLACEHOLDER);
         return null;
     }
 }

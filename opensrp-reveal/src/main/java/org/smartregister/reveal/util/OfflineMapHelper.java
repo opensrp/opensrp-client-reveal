@@ -28,7 +28,6 @@ import io.ona.kujaku.helpers.OfflineServiceHelper;
 import io.ona.kujaku.utils.LogUtil;
 
 import static io.ona.kujaku.data.MapBoxDownloadTask.MAP_NAME;
-import static org.smartregister.reveal.util.Constants.DG_ID_PLACEHOLDER;
 import static org.smartregister.reveal.util.Constants.Map.DOWNLOAD_MAX_ZOOM;
 import static org.smartregister.reveal.util.Constants.Map.DOWNLOAD_MIN_ZOOM;
 
@@ -130,9 +129,9 @@ public class OfflineMapHelper {
         );
     }
 
-    public static void initializeFileHTTPServer(Context context) {
+    public static void initializeFileHTTPServer(Context context, String digitalGlobeIdPlaceholder) {
         try {
-            FileHTTPServer httpServer = new FileHTTPServer(context, context.getString(R.string.reveal_offline_map_download_style), DG_ID_PLACEHOLDER);
+            FileHTTPServer httpServer = new FileHTTPServer(context, context.getString(R.string.reveal_offline_map_download_style), digitalGlobeIdPlaceholder);
             httpServer.start();
         } catch (IOException e) {
             e.printStackTrace();
