@@ -135,6 +135,23 @@ public class DownloadedOfflineMapsInteractorTest extends BaseUnitTest {
 
     }
 
+    @Test
+    public void testSetOfflineQueueTaskMap() throws Exception {
+
+        Map<String, MapBoxOfflineQueueTask> originalOfflineQueueTaskMap = Whitebox.getInternalState(interactor, "offlineQueueTaskMap");
+        assertTrue(originalOfflineQueueTaskMap.isEmpty());
+
+        Map<String, MapBoxOfflineQueueTask> expectedOfflineQueueTaskMap = TestingUtils.getOfflineQueueTaskMap();
+
+        interactor.setOfflineQueueTaskMap(expectedOfflineQueueTaskMap);
+
+        Map<String, MapBoxOfflineQueueTask> actualOfflineQueueTaskMap = Whitebox.getInternalState(interactor, "offlineQueueTaskMap");
+        assertFalse(actualOfflineQueueTaskMap.isEmpty());
+        assertEquals(1, actualOfflineQueueTaskMap.size());
+        assertEquals(expectedOfflineQueueTaskMap.get("location_1").getDateCreated(), actualOfflineQueueTaskMap.get("location_1").getDateCreated());
+
+    }
+
     private Location initLocation() {
         Location location = new Location();
         location.setType("Polygon");

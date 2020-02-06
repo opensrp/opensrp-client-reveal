@@ -195,4 +195,10 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
 
     }
 
+    @Test
+    public void testOnShowOfflineMaps() {
+        presenter.onShowOfflineMaps();
+        verify(view).openOfflineMapsView();
+    }
+
 }

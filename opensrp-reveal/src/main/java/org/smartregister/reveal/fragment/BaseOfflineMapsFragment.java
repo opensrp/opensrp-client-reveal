@@ -112,7 +112,7 @@ public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFrag
                         // setCanStopMapDownload(false);
                     } else {
                         // setCanStopMapDownload(true);
-                        displayToast(getContext().getApplicationContext().getString(R.string.map_download_progress, Double.valueOf(message)));
+                        displayToast(getString(R.string.map_download_progress, Double.valueOf(message)));
                         downloadStarted(mapUniqueName);
                     }
                 } else {
