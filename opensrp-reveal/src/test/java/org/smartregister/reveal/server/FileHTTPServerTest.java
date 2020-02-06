@@ -2,14 +2,15 @@ package org.smartregister.reveal.server;
 
 import android.content.Context;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.util.OfflineMapHelper;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -23,10 +24,21 @@ import static org.junit.Assert.assertTrue;
 
 public class FileHTTPServerTest extends BaseUnitTest {
     private Context context = RuntimeEnvironment.application;
+    private FileHTTPServer httpServer;
 
     @Before
     public void setUp() {
-        OfflineMapHelper.initializeFileHTTPServer(context, "dummy_dg_id_placeholder");
+        try {
+            httpServer = new FileHTTPServer(context, context.getString(R.string.reveal_offline_map_download_style), "dummy_dg_id_placeholder");
+            httpServer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @After
+    public void tearDown() {
+        httpServer.destroy();
     }
 
     @Test
