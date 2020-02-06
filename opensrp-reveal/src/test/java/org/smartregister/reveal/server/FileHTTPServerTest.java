@@ -38,7 +38,9 @@ public class FileHTTPServerTest extends BaseUnitTest {
 
     @After
     public void tearDown() {
-        httpServer.destroy();
+        if (httpServer != null) {
+            httpServer.destroy();
+        }
     }
 
     @Test
