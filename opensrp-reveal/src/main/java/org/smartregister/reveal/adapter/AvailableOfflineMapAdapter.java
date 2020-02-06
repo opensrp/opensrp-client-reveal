@@ -51,6 +51,12 @@ public class AvailableOfflineMapAdapter extends RecyclerView.Adapter<AvailableOf
             case DOWNLOAD_STARTED:
                 viewHolder.enableCheckBox(false);
                 viewHolder.displayDownloadingLabel(true);
+                viewHolder.checkCheckBox(true);
+                break;
+            case SELECTED_FOR_DOWNLOAD:
+                viewHolder.enableCheckBox(true);
+                viewHolder.checkCheckBox(true);
+                viewHolder.displayDownloadingLabel(false);
                 break;
             default:
                 break;

@@ -17,7 +17,8 @@ public class OfflineMapModel {
     public enum OfflineMapStatus {
         READY,
         DOWNLOAD_STARTED,
-        DOWNLOADED
+        DOWNLOADED,
+        SELECTED_FOR_DOWNLOAD
     }
 
     private OfflineMapStatus offlineMapStatus;

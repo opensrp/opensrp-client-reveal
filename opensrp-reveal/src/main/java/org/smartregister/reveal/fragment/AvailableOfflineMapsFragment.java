@@ -135,6 +135,7 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
         OfflineMapModel offlineMapModel = (OfflineMapModel) view.getTag(R.id.offline_map_checkbox);
 
         if (checkBox.isChecked()) {
+            offlineMapModel.setOfflineMapStatus(OfflineMapModel.OfflineMapStatus.SELECTED_FOR_DOWNLOAD);
             operationalAreasToDownload.add(offlineMapModel.getLocation());
         } else {
             operationalAreasToDownload.remove(offlineMapModel.getLocation());

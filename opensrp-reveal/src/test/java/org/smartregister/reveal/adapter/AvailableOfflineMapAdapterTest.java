@@ -2,6 +2,7 @@ package org.smartregister.reveal.adapter;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -78,8 +79,9 @@ public class AvailableOfflineMapAdapterTest extends BaseUnitTest {
         AvailableOfflineMapViewHolder holder = adapter.onCreateViewHolder(vg,0);
         adapter.onBindViewHolder(holder, 0);
 
-        assertTrue((holder.itemView.findViewById(R.id.offline_map_checkbox).isEnabled()));
-        assertFalse((holder.itemView.findViewById(R.id.offline_map_checkbox)).isSelected());
+        CheckBox offlineMapCheckbox = holder.itemView.findViewById(R.id.offline_map_checkbox);
+        assertTrue(offlineMapCheckbox.isEnabled());
+        assertFalse(offlineMapCheckbox.isSelected());
         assertEquals(View.GONE, holder.itemView.findViewById(R.id.downloading_label).getVisibility());
 
     }
@@ -93,9 +95,27 @@ public class AvailableOfflineMapAdapterTest extends BaseUnitTest {
         AvailableOfflineMapViewHolder holder = adapter.onCreateViewHolder(vg,0);
         adapter.onBindViewHolder(holder, 0);
 
-        assertFalse((holder.itemView.findViewById(R.id.offline_map_checkbox).isEnabled()));
+        CheckBox offlineMapCheckbox = holder.itemView.findViewById(R.id.offline_map_checkbox);
+        assertFalse(offlineMapCheckbox.isEnabled());
         assertEquals(View.VISIBLE, holder.itemView.findViewById(R.id.downloading_label).getVisibility());
+        assertTrue(offlineMapCheckbox.isChecked());
         assertEquals(context.getString(R.string.downloading), ((TextView) holder.itemView.findViewById(R.id.downloading_label)).getText());
+
+    }
+
+    @Test
+    public void testOnbindViewHolderForSelectedForDownloadStatus() {
+        OfflineMapModel model = TestingUtils.getOfflineMapModel();
+        model.setOfflineMapStatus(READY);
+        adapter.setOfflineMapModels(Collections.singletonList(model));
+        LinearLayout vg = new LinearLayout(context);
+        AvailableOfflineMapViewHolder holder = adapter.onCreateViewHolder(vg,0);
+        adapter.onBindViewHolder(holder, 0);
+
+        CheckBox offlineMapCheckbox = holder.itemView.findViewById(R.id.offline_map_checkbox);
+        assertTrue(offlineMapCheckbox.isEnabled());
+        assertFalse(offlineMapCheckbox.isSelected());
+        assertEquals(View.GONE, holder.itemView.findViewById(R.id.downloading_label).getVisibility());
 
     }
 
