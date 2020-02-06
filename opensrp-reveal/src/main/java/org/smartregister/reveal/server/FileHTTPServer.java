@@ -23,20 +23,19 @@ public class FileHTTPServer {
 
     private static final String DEFAULT_STYLE_JSON_FILE = "map-download-style.json";
     private static final String DEFAULT_DG_ID_PLACEHOLDER = "DIGITAL_GLOBE_ID";
-    private static String styleJson;
+    private String styleJson;
 
     private final FileHTTPServer.ServerThread server;
-    private final ServerSocket socket;
 
     public FileHTTPServer(String styleJsonFile, String  digitalGlobeIdPlaceHolder) throws IOException {
-        socket = createBoundSocket(PORT);
+        final ServerSocket socket = createBoundSocket(PORT);
         if (socket == null) {
             throw new IOException("Could not find an available port");
         }
         server = new ServerThread(socket);
 
         digitalGlobeIdPlaceHolder = StringUtils.isNotBlank(digitalGlobeIdPlaceHolder) ? digitalGlobeIdPlaceHolder : DEFAULT_DG_ID_PLACEHOLDER;
-        styleJsonFile = StringUtils.isNotBlank(styleJsonFile) ? styleJsonFile : DEFAULT_STYLE_JSON_FILE;
+        styleJson = StringUtils.isNotBlank(styleJsonFile) ? styleJsonFile : DEFAULT_STYLE_JSON_FILE;
 
         styleJson = Utils.readAssetContents(RevealApplication.getInstance().getApplicationContext(), styleJsonFile);
         styleJson = styleJson.replace(digitalGlobeIdPlaceHolder, BuildConfig.DG_CONNECT_ID);
@@ -64,7 +63,7 @@ public class FileHTTPServer {
     }
 
     class ServerThread extends Thread {
-        final ServerSocket socket;
+        private final ServerSocket socket;
 
         ServerThread(ServerSocket socket) {
             this.socket = socket;
@@ -87,7 +86,7 @@ public class FileHTTPServer {
     }
 
     class ResponseThread extends Thread {
-        final Socket connection;
+        private final Socket connection;
 
         ResponseThread(Socket connection) {
             this.connection = connection;
@@ -145,8 +144,8 @@ public class FileHTTPServer {
     }
 
     public static class Response {
-        byte[] data;
-        String contentType;
+        private byte[] data;
+        private String contentType;
 
         public Response(byte[] data, String contentType) {
             this.data = data;
