@@ -35,6 +35,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.job.LocationTaskServiceJob;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
+import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
@@ -332,6 +333,18 @@ public class Utils {
         formTag.appVersion = BuildConfig.VERSION_CODE;
         formTag.appVersionName = BuildConfig.VERSION_NAME;
         return formTag;
+    }
+
+
+    public static void tagEventMetadata(Event event, FormTag formTag) {
+        event.setProviderId(formTag.providerId);
+        event.setLocationId(formTag.locationId);
+        event.setChildLocationId(formTag.childLocationId);
+        event.setTeam(formTag.team);
+        event.setTeamId(formTag.teamId);
+        event.setClientDatabaseVersion(formTag.databaseVersion);
+        event.setClientApplicationVersion(formTag.appVersion);
+        event.addDetails(Properties.APP_VERSION_NAME, formTag.appVersionName);
     }
 
     public static void recreateEventAndClients(String query, String[] params, SQLiteDatabase db, FormTag formTag, String tableName, String eventType, String entityType, RecreateECUtil util) {
