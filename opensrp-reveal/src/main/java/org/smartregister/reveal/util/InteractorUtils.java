@@ -95,7 +95,7 @@ public class InteractorUtils {
 
             Event archiveEvent = FamilyJsonFormUtils.createFamilyEvent(baseEntityId, Utils.getCurrentLocationId(),
                     null, isFamily ? EventType.ARCHIVE_FAMILY : EventType.ARCHIVE_FAMILY_MEMBER);
-            archiveEvent.addObs(new Obs().withValue(now).withFieldCode("dateRemoved").withFieldType("formsubmissionField"));
+            archiveEvent.addObs(new Obs().withValue(now).withFieldCode("dateArchived").withFieldType("formsubmissionField"));
 
             JSONObject eventJson = new JSONObject(gson.toJson(archiveEvent));
             eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
