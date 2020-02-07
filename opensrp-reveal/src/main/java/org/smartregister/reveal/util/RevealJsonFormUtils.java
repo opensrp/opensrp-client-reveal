@@ -29,10 +29,12 @@ import org.smartregister.util.AssetHandler;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import timber.log.Timber;
 
@@ -425,5 +427,9 @@ public class RevealJsonFormUtils {
         return null;
     }
 
-
+    public static org.smartregister.clientandeventmodel.Event createTaskEvent(String baseEntityId, String locationId, Map<String, String> details, String  eventType, String entityType) {
+        org.smartregister.clientandeventmodel.Event taskEvent = (org.smartregister.clientandeventmodel.Event) new org.smartregister.clientandeventmodel.Event().withBaseEntityId(baseEntityId).withEventDate(new Date()). withEventType(eventType)
+                .withLocationId(locationId).withEntityType(entityType).withFormSubmissionId(UUID.randomUUID().toString()).withDateCreated(new Date());
+        return taskEvent;
+    }
 }

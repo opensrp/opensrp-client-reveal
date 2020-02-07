@@ -31,6 +31,8 @@ public interface Constants {
 
     String BEHAVIOUR_CHANGE_COMMUNICATION = "behaviour_change_communication";
 
+    String TASK_RESET_EVENT = "reset_task";
+
     String STRUCTURE = "Structure";
 
     String FOCUS = "FOCUS";

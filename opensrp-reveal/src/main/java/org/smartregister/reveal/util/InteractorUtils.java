@@ -2,6 +2,8 @@ package org.smartregister.reveal.util;
 
 import android.database.Cursor;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,6 +11,7 @@ import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.Task;
 import org.smartregister.domain.db.Client;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.repository.BaseRepository;
@@ -17,11 +20,16 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import timber.log.Timber;
 
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.util.JsonFormUtils.gson;
 
@@ -110,4 +118,66 @@ public class InteractorUtils {
         }
         return saved;
     }
+
+    public boolean archiveEventsForTask(SQLiteDatabase db, String taskIdentifier) {
+        boolean archived = true;
+        Task task = taskRepository.getTaskByIdentifier(taskIdentifier);
+        List<String> formSubmissionIds = getFormSubmissionIdsFromEventTask(db, taskIdentifier);
+        List<EventClient> eventClients = eventClientRepository.fetchEventClients(formSubmissionIds);
+        DateTime now = new DateTime();
+        JSONArray taskEvents = new JSONArray();
+
+        if(eventClients == null || eventClients.isEmpty()) {
+            return false;
+        }
+
+        try {
+
+            for (EventClient eventClient: eventClients) {
+                org.smartregister.domain.db.Event event = eventClient.getEvent();
+                JSONObject eventJson = new JSONObject(gson.toJson(event));
+                eventJson.put("dateVoided", now);
+                eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
+                taskEvents.put(eventJson);
+            }
+
+            eventClientRepository.batchInsertEvents(taskEvents, 0);
+
+            Event resetTaskEvent = RevealJsonFormUtils.createTaskEvent(task.getForEntity(), Utils.getCurrentLocationId(),
+                    null, Constants.TASK_RESET_EVENT, Constants.STRUCTURE);
+            JSONObject eventJson = new JSONObject(gson.toJson(resetTaskEvent));
+            eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
+            eventClientRepository.addEvent(task.getForEntity(), eventJson);
+
+
+        } catch (Exception e) {
+            Timber.e(e);
+            archived = false;
+        }
+
+        return archived;
+    }
+
+    List<String> getFormSubmissionIdsFromEventTask(SQLiteDatabase db, String taskIdentifier) {
+        List<String> formSubmissionIds = new ArrayList<>();
+        Cursor cursor = null;
+
+        try {
+            String query = String.format("select %s from %s where %s = ?",
+                    BASE_ENTITY_ID, EVENT_TASK_TABLE, TASK_ID);
+            cursor = db.rawQuery(query, new String[]{taskIdentifier});
+
+            while (cursor.moveToNext()) {
+                formSubmissionIds.add(cursor.getString(cursor.getColumnIndex(BASE_ENTITY_ID)));
+            }
+
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return formSubmissionIds;
+    }
+
 }

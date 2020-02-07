@@ -24,6 +24,7 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import java.util.List;
 import java.util.UUID;
 
+import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
@@ -75,7 +76,7 @@ public class TaskUtils {
         task.setIdentifier(UUID.randomUUID().toString());
         task.setPlanIdentifier(prefsUtil.getCurrentPlanId());
         task.setGroupIdentifier(Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId());
-        task.setStatus(Task.TaskStatus.READY);
+        task.setStatus(READY);
         task.setBusinessStatus(businessStatus);
         task.setPriority(3);
         task.setCode(intervention);
@@ -141,4 +142,15 @@ public class TaskUtils {
 
         }
     }
+
+    public void resetTask(String taskIdentifier) {
+        Task task = taskRepository.getTaskByIdentifier(taskIdentifier);
+        task.setBusinessStatus(BusinessStatus.NOT_VISITED);
+        task.setStatus(READY);
+        task.setLastModified(new DateTime());
+        task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+
+    }
+
+
 }
