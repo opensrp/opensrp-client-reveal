@@ -125,7 +125,7 @@ public class Utils {
         return cache.get(operationalArea, new CacheableData<Location>() {
             @Override
             public Location fetch() {
-                return RevealApplication.getInstance().getLocationRepository().getLocationByName(PreferencesUtil.getInstance().getCurrentOperationalArea());
+                return RevealApplication.getInstance().getLocationRepository().getLocationByName(operationalArea);
             }
         });
     }
