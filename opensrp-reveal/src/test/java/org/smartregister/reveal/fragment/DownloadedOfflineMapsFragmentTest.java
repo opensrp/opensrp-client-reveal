@@ -153,12 +153,12 @@ public class DownloadedOfflineMapsFragmentTest extends BaseUnitTest {
         assertEquals(expectedOfflineMapModel.getLocation().getId(), updatedOfflineMapModelList.get(0).getLocation().getId());
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test
     public void testMapDeletedSuccessfully() {
         Whitebox.setInternalState(fragment, "callback", callback);
         OfflineMapModel expectedOfflineMapModel = TestingUtils.getOfflineMapModel();
         expectedOfflineMapModel.setOfflineMapStatus(DOWNLOADED);
-        List<OfflineMapModel> originalDownloadedOfflineMapModelList = Collections.singletonList(expectedOfflineMapModel);
+        List<OfflineMapModel> originalDownloadedOfflineMapModelList =  new ArrayList<>(Collections.singletonList(expectedOfflineMapModel));
         Whitebox.setInternalState(fragment, "downloadedOfflineMapModelList", originalDownloadedOfflineMapModelList);
 
         fragment.mapDeletedSuccessfully(expectedOfflineMapModel.getDownloadAreaId());
