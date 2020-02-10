@@ -132,9 +132,11 @@ public class FileHTTPServer {
         protected FileHTTPServer.Response getResponse(String request) {
             if (request.startsWith("GET /")) {
                 return new FileHTTPServer.Response(styleJson.getBytes(),  "text/plain");
+            } else {
+                Timber.w("Ignoring request: %s", request);
+                return null;
             }
-            Timber.w("Ignoring request: %s", request);
-            return null;
+
         }
 
         protected void sendResponse(Socket connection, FileHTTPServer.Response response) {

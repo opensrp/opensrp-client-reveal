@@ -32,7 +32,7 @@ import org.smartregister.util.PropertiesConverter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implements AvailableOfflineMapsContract.View {
+public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implements AvailableOfflineMapsContract.View, View.OnClickListener {
 
     private RecyclerView offlineMapRecyclerView;
 
@@ -48,6 +48,8 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
 
     private Button btnDownloadMap;
 
+    private static Gson gson;
+
 
     public static AvailableOfflineMapsFragment newInstance(Bundle bundle) {
 
@@ -55,8 +57,10 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
         if (bundle != null) {
             fragment.setArguments(bundle);
         }
-
         fragment.setPresenter(new AvailableOfflineMapsPresenter(fragment));
+        gson = new GsonBuilder().setDateFormat(Constants.DateFormat.EVENT_DATE_FORMAT_Z)
+                .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
+                .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
         return fragment;
     }
 
@@ -87,35 +91,18 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
 
         btnDownloadMap = view.findViewById(R.id.download_map);
 
-        btnDownloadMap.setOnClickListener(onClickListener);
+        btnDownloadMap.setOnClickListener(this);
 
     }
 
     private void initializeAdapter() {
-        adapter = new AvailableOfflineMapAdapter(this.getContext(), onClickListener);
+        adapter = new AvailableOfflineMapAdapter(this.getContext(), this);
         offlineMapRecyclerView.setAdapter(adapter);
         if (offlineMapModelList != null) {
             setOfflineMapModelList(offlineMapModelList);
         }
 
     }
-
-    private View.OnClickListener onClickListener = new View.OnClickListener(){
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.offline_map_checkbox:
-                    updateOperationalAreasToDownload(view);
-                    break;
-                case R.id.download_map:
-                    initiateMapDownload();
-                    break;
-                default:
-                        break;
-            }
-
-        }
-    };
 
     @Override
     public void setOfflineMapModelList(List<OfflineMapModel> offlineMapModelList) {
@@ -148,10 +135,8 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
             return;
         }
         for (OfflineMapModel offlineMapModel: offlineMapModelList ) {
-            if (offlineMapModel.getDownloadAreaId().equals(operationalAreaId)){
-                if (offlineMapModel.getOfflineMapStatus() == OfflineMapModel.OfflineMapStatus.DOWNLOAD_STARTED) {
-                    return;
-                }
+            if (offlineMapModel.getDownloadAreaId().equals(operationalAreaId)
+                    && offlineMapModel.getOfflineMapStatus() != OfflineMapModel.OfflineMapStatus.DOWNLOAD_STARTED){
                 offlineMapModel.setOfflineMapStatus(OfflineMapModel.OfflineMapStatus.DOWNLOAD_STARTED);
             }
         }
@@ -165,10 +150,8 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
             return;
         }
         for (OfflineMapModel offlineMapModel: offlineMapModelList ) {
-            if (offlineMapModel.getDownloadAreaId().equals(operationalAreaId)){
-                if (offlineMapModel.getOfflineMapStatus() == OfflineMapModel.OfflineMapStatus.DOWNLOADED) {
-                    return;
-                }
+            if (offlineMapModel.getDownloadAreaId().equals(operationalAreaId)
+                    && offlineMapModel.getOfflineMapStatus() != OfflineMapModel.OfflineMapStatus.DOWNLOADED){
                 offlineMapModel.setOfflineMapStatus(OfflineMapModel.OfflineMapStatus.READY);
             }
         }
@@ -178,32 +161,35 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
 
     @Override
     public void moveDownloadedOAToDownloadedList(String operationalAreaId) {
+        List<OfflineMapModel> toRemove = new ArrayList<>();
         for (OfflineMapModel offlineMapModel : offlineMapModelList) {
             if (offlineMapModel.getDownloadAreaId().equals(operationalAreaId)) {
                 offlineMapModel.setOfflineMapStatus(OfflineMapModel.OfflineMapStatus.DOWNLOADED);
                 callback.onMapDownloaded(offlineMapModel);
-                offlineMapModelList.remove(offlineMapModel);
+                toRemove.add(offlineMapModel);
                 setOfflineMapModelList(offlineMapModelList);
-                return;
+                break;
             }
         }
+
+        offlineMapModelList.removeAll(toRemove);
+
     }
 
     @Override
     public void removeOperationalAreaToDownload(String operationalAreaId) {
+        List<Location> toRemove = new ArrayList<>();
         for (Location location: this.operationalAreasToDownload ) {
             if (location.getId().equals(operationalAreaId)) {
-                this.operationalAreasToDownload.remove(location);
-                return;
+                toRemove.add(location);
             }
         }
+
+        this.operationalAreasToDownload.removeAll(toRemove);
 
     }
 
     public void initiateMapDownload() {
-        Gson gson = new GsonBuilder().setDateFormat(Constants.DateFormat.EVENT_DATE_FORMAT_Z)
-                .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
-                .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
 
         if (this.operationalAreasToDownload == null || this.operationalAreasToDownload.isEmpty()) {
             displayToast(getString(R.string.select_offline_map_to_download));
@@ -233,6 +219,11 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
     }
 
     @Override
+    protected void mapDeletedSuccessfully(String mapUniqueName) {
+        // Do nothing
+    }
+
+    @Override
     protected void downloadStopped(String mapUniqueName) {
         presenter.onDownloadStopped(mapUniqueName);
     }
@@ -250,4 +241,17 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
         this.presenter = presenter;
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.offline_map_checkbox:
+                updateOperationalAreasToDownload(view);
+                break;
+            case R.id.download_map:
+                initiateMapDownload();
+                break;
+            default:
+                break;
+        }
+    }
 }

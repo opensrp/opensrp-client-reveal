@@ -38,7 +38,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
-import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.DOWNLOADED;
 import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.DOWNLOAD_STARTED;
 import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.READY;
 
@@ -165,7 +164,7 @@ public class AvailableOfflineMapsFragmentTest extends BaseUnitTest {
 
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test
     public void testMoveDownloadedOAToDownloadedList() {
         Whitebox.setInternalState(fragment, "callback", callback);
         List<OfflineMapModel> originalOfflineMapModelList = initializeOfflineMapModelList();
@@ -175,8 +174,7 @@ public class AvailableOfflineMapsFragmentTest extends BaseUnitTest {
 
         List<OfflineMapModel> actualOfflineMapModelList = (Whitebox.getInternalState(fragment, "offlineMapModelList"));
         assertNotNull(actualOfflineMapModelList);
-        assertFalse(actualOfflineMapModelList.isEmpty());
-        assertEquals(DOWNLOADED, actualOfflineMapModelList.get(0).getOfflineMapStatus());
+        assertTrue(actualOfflineMapModelList.isEmpty());
 
     }
 
@@ -274,7 +272,7 @@ public class AvailableOfflineMapsFragmentTest extends BaseUnitTest {
         OfflineMapModel originalOfflineMapModel = TestingUtils.getOfflineMapModel();
         originalOfflineMapModel.setOfflineMapStatus(READY);
 
-        List<OfflineMapModel> OfflineMapModelList = Collections.singletonList(originalOfflineMapModel);
+        List<OfflineMapModel> OfflineMapModelList = new ArrayList<>(Collections.singletonList(originalOfflineMapModel));
         Whitebox.setInternalState(fragment, "offlineMapModelList", OfflineMapModelList);
 
         List<OfflineMapModel> originalOfflineMapModelList = (Whitebox.getInternalState(fragment, "offlineMapModelList"));
@@ -283,9 +281,9 @@ public class AvailableOfflineMapsFragmentTest extends BaseUnitTest {
         return OfflineMapModelList;
     }
 
-    @Test (expected = UnsupportedOperationException.class)
+    @Test
     public void testRemoveOperationalAreaToDownload() {
-        Whitebox.setInternalState(fragment, "operationalAreasToDownload", Collections.singletonList(TestingUtils.getOperationalArea()));
+        Whitebox.setInternalState(fragment, "operationalAreasToDownload", new ArrayList<>(Collections.singletonList(TestingUtils.getOperationalArea())));
         List<Location> originalOperationalAreasToDownload = (Whitebox.getInternalState(fragment, "operationalAreasToDownload"));
         assertFalse(originalOperationalAreasToDownload.isEmpty());
 

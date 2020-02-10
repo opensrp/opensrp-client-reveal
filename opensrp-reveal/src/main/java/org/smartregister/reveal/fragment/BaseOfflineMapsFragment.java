@@ -17,10 +17,8 @@ import io.ona.kujaku.services.MapboxOfflineDownloaderService;
 import io.ona.kujaku.utils.Constants;
 import timber.log.Timber;
 
-public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFragmentContract.View {
+public abstract class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFragmentContract.View {
 
-
-    private static final String TAG = BaseOfflineMapsFragment.class.getName();
     private MapDownloadReceiver mapDownloadReceiver = new MapDownloadReceiver();
 
     private String mapUniqueName;
@@ -58,7 +56,7 @@ public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFrag
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
-                Timber.i(TAG, intent.getExtras().toString());
+                Timber.i( intent.getExtras().toString());
                 if (bundle.containsKey(MapboxOfflineDownloaderService.KEY_RESULT_STATUS)
                         && bundle.containsKey(MapboxOfflineDownloaderService.KEY_RESULT_MESSAGE)
                         && bundle.containsKey(MapboxOfflineDownloaderService.KEY_RESULTS_PARENT_ACTION)
@@ -77,7 +75,7 @@ public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFrag
                     }
                 }
             } else {
-                Timber.i(TAG, "Broadcast message has null Extras");
+                Timber.i( "Broadcast message has null Extras");
             }
 
         }
@@ -127,19 +125,11 @@ public class BaseOfflineMapsFragment extends Fragment implements OfflineMapsFrag
         return (!doubleString.isEmpty() && doubleString.matches(doubleRegex));
     }
 
-    protected void downloadCompleted(String mapUniqueName) {
-        // Implement in child class
-    }
+    protected abstract void downloadCompleted(String mapUniqueName);
 
-    protected void downloadStarted(String mapUniqueName) {
-        // Implement in child class
-    }
+    protected abstract void downloadStarted(String mapUniqueName);
 
-    protected void mapDeletedSuccessfully(String mapUniqueName) {
-        // implement in child class
-    }
+    protected abstract void mapDeletedSuccessfully(String mapUniqueName);
 
-    protected void downloadStopped(String mapUniqueName) {
-        // implement in child class
-    }
+    protected abstract void downloadStopped(String mapUniqueName);
 }

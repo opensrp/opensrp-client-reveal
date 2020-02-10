@@ -29,7 +29,7 @@ import java.util.Map;
 
 import io.ona.kujaku.helpers.OfflineServiceHelper;
 
-public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment implements DownloadedOfflineMapsContract.View {
+public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment implements DownloadedOfflineMapsContract.View, View.OnClickListener {
 
     private RecyclerView downloadedMapsRecyclerView;
 
@@ -62,8 +62,13 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    protected void downloadCompleted(String mapUniqueName) {
+        // Do nothing
+    }
+
+    @Override
+    protected void downloadStarted(String mapUniqueName) {
+        // Do nothing
     }
 
     @Nullable
@@ -92,26 +97,12 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
     }
 
     private void initializeAdapter() {
-        adapter = new DownloadedOfflineMapAdapter(this.getContext(), onClickListener);
+        adapter = new DownloadedOfflineMapAdapter(this.getContext(), this);
         downloadedMapsRecyclerView.setAdapter(adapter);
         if (downloadedOfflineMapModelList != null) {
             setDownloadedOfflineMapModelList(downloadedOfflineMapModelList);
         }
     }
-
-    private View.OnClickListener onClickListener = new View.OnClickListener(){
-        @Override
-        public void onClick(View view) {
-
-            switch (view.getId()) {
-                case R.id.offline_map_checkbox:
-                    updateOfflineMapsTodelete(view);
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
     public void updateOfflineMapsTodelete(View view) {
         CheckBox checkBox = (CheckBox) view;
@@ -128,8 +119,7 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
     public void setDownloadedOfflineMapModelList(List<OfflineMapModel> downloadedOfflineMapModelList) {
         if (downloadedOfflineMapModelList == null) {
             return;
-        }
-        if (adapter == null) {
+        } else if (adapter == null) {
             this.downloadedOfflineMapModelList = downloadedOfflineMapModelList;
         } else {
             adapter.setOfflineMapModels(downloadedOfflineMapModelList);
@@ -175,6 +165,11 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
         setDownloadedOfflineMapModelList(downloadedOfflineMapModelList);
     }
 
+    @Override
+    protected void downloadStopped(String mapUniqueName) {
+
+    }
+
     public void setOfflineMapDownloadCallback(OfflineMapDownloadCallback callBack) {
         this.callback = callBack;
     }
@@ -190,4 +185,14 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
         this.presenter = presenter;
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.offline_map_checkbox:
+                updateOfflineMapsTodelete(view);
+                break;
+            default:
+                break;
+        }
+    }
 }

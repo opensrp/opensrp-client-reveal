@@ -26,13 +26,19 @@ public class AvailableOfflineMapsInteractor implements AvailableOfflineMapsContr
 
 
     @Override
-    public void fetchAvailableOAsForMapDownLoad(List<String> locationIds) {
+    public void fetchAvailableOAsForMapDownLoad(final List<String> locationIds) {
 
-        List<Location> operationalAreas = locationRepository.getLocationsByIds(locationIds, false);
+        Runnable runnable = new Runnable() {
+            public void run() {
+                List<Location> operationalAreas = locationRepository.getLocationsByIds(locationIds, false);
 
-        appExecutors.mainThread().execute(() -> {
-            presenter.onFetchAvailableOAsForMapDownLoad(populateOfflineMapModelList(operationalAreas));
-        });
+                appExecutors.mainThread().execute(() -> {
+                    presenter.onFetchAvailableOAsForMapDownLoad(populateOfflineMapModelList(operationalAreas));
+                });
+            }
+        };
+
+        appExecutors.diskIO().execute(runnable);
 
     }
 

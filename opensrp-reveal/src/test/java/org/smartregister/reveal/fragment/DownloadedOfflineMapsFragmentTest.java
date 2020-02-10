@@ -41,7 +41,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.Mockito.verify;
 import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.DOWNLOADED;
-import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.READY;
 
 /**
  * Created by Richard Kareko on 1/27/20.
@@ -158,16 +157,21 @@ public class DownloadedOfflineMapsFragmentTest extends BaseUnitTest {
         Whitebox.setInternalState(fragment, "callback", callback);
         OfflineMapModel expectedOfflineMapModel = TestingUtils.getOfflineMapModel();
         expectedOfflineMapModel.setOfflineMapStatus(DOWNLOADED);
-        List<OfflineMapModel> originalDownloadedOfflineMapModelList =  new ArrayList<>(Collections.singletonList(expectedOfflineMapModel));
-        Whitebox.setInternalState(fragment, "downloadedOfflineMapModelList", originalDownloadedOfflineMapModelList);
+        List<OfflineMapModel> offlineMapModelList =  new ArrayList<>(Collections.singletonList(expectedOfflineMapModel));
+        Whitebox.setInternalState(fragment, "downloadedOfflineMapModelList", offlineMapModelList);
+
+        List<OfflineMapModel> originalDownloadedOfflineMapModelList = Whitebox.getInternalState(fragment, "downloadedOfflineMapModelList");
+        assertNotNull(originalDownloadedOfflineMapModelList);
+        assertEquals(1, originalDownloadedOfflineMapModelList.size());
+        assertEquals(expectedOfflineMapModel.getLocation().getId(), originalDownloadedOfflineMapModelList.get(0).getLocation().getId());
+        assertEquals(DOWNLOADED, originalDownloadedOfflineMapModelList.get(0).getOfflineMapStatus());
 
         fragment.mapDeletedSuccessfully(expectedOfflineMapModel.getDownloadAreaId());
 
         verify(callback).onOfflineMapDeleted(offlineMapModelCaptor.capture());
         List<OfflineMapModel> updatedDownloadedOfflineMapModelList = Whitebox.getInternalState(fragment, "downloadedOfflineMapModelList");
-        assertNotNull(updatedDownloadedOfflineMapModelList);
-        assertEquals(expectedOfflineMapModel.getLocation().getId(), updatedDownloadedOfflineMapModelList.get(0).getLocation().getId());
-        assertEquals(READY, updatedDownloadedOfflineMapModelList.get(0).getOfflineMapStatus());
+        assertTrue(updatedDownloadedOfflineMapModelList.isEmpty());
+
     }
 
     @Test

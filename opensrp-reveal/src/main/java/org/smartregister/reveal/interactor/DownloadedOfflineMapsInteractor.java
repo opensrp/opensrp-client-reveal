@@ -42,23 +42,31 @@ public class DownloadedOfflineMapsInteractor implements DownloadedOfflineMapsCon
     }
 
     @Override
-    public void fetchLocationsWithOfflineMapDownloads(Pair<List<String>, Map<String, OfflineRegion>> offlineRegionInfo) {
+    public void fetchLocationsWithOfflineMapDownloads(final Pair<List<String>, Map<String, OfflineRegion>> offlineRegionInfo) {
 
-        if (offlineRegionInfo == null || offlineRegionInfo.first == null) {
-            presenter.onOAsWithOfflineDownloadsFetched(null);
-            return;
-        }
-
-        List<Location> operationalAreas = locationRepository.getLocationsByIds(offlineRegionInfo.first);
-
-        setOfflineQueueTaskMap(OfflineMapHelper.populateOfflineQueueTaskMap(realmDatabase));
-
-        appExecutors.mainThread().execute(new Runnable() {
-            @Override
+        Runnable runnable = new Runnable() {
             public void run() {
-                presenter.onOAsWithOfflineDownloadsFetched(populateOfflineMapModelList(operationalAreas, offlineRegionInfo.second));
+                if (offlineRegionInfo == null || offlineRegionInfo.first == null) {
+                    presenter.onOAsWithOfflineDownloadsFetched(null);
+                    return;
+                }
+
+                List<Location> operationalAreas = locationRepository.getLocationsByIds(offlineRegionInfo.first);
+
+                setOfflineQueueTaskMap(OfflineMapHelper.populateOfflineQueueTaskMap(realmDatabase));
+
+                List<OfflineMapModel> offlineMapModels = populateOfflineMapModelList(operationalAreas, offlineRegionInfo.second);
+
+                appExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        presenter.onOAsWithOfflineDownloadsFetched(offlineMapModels);
+                    }
+                });
             }
-        });
+        };
+
+        appExecutors.diskIO().execute(runnable);
 
     }
 
