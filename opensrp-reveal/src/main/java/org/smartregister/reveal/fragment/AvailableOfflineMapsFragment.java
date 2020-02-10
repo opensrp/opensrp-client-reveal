@@ -48,7 +48,9 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
 
     private Button btnDownloadMap;
 
-    private static Gson gson;
+    private static Gson gson = new GsonBuilder().setDateFormat(Constants.DateFormat.EVENT_DATE_FORMAT_Z)
+                .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
+            .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
 
 
     public static AvailableOfflineMapsFragment newInstance(Bundle bundle) {
@@ -58,9 +60,7 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
             fragment.setArguments(bundle);
         }
         fragment.setPresenter(new AvailableOfflineMapsPresenter(fragment));
-        gson = new GsonBuilder().setDateFormat(Constants.DateFormat.EVENT_DATE_FORMAT_Z)
-                .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
-                .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
+
         return fragment;
     }
 

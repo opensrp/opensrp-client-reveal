@@ -2,7 +2,6 @@ package org.smartregister.reveal.fragment;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 
@@ -233,12 +232,6 @@ public class AvailableOfflineMapsFragmentTest extends BaseUnitTest {
         verify(presenter).fetchAvailableOAsForMapDownLoad(stringListCaptor.capture());
         assertNotNull(stringListCaptor.getValue());
         assertEquals(expectedOfflineRegionNames.get(0), stringListCaptor.getValue().get(0));
-    }
-
-    @Test
-    public void testSetOnclickListener() {
-        View.OnClickListener onClickListener = Whitebox.getInternalState(fragment, "onClickListener");
-        assertNotNull(onClickListener);
     }
 
     @Test
