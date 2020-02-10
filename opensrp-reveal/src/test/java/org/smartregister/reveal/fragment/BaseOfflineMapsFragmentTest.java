@@ -43,7 +43,7 @@ public class BaseOfflineMapsFragmentTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        baseOfflineMapsFragment = new BaseOfflineMapsFragment();
+        baseOfflineMapsFragment = new AvailableOfflineMapsFragment();
         AppCompatActivity activity = Robolectric.buildActivity(AppCompatActivity.class).create().start().get();
         activity.setContentView(R.layout.activity_offline_maps);
         activity.getSupportFragmentManager().beginTransaction().add(baseOfflineMapsFragment, "Base").commit();

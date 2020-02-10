@@ -167,7 +167,7 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
 
     @Override
     protected void downloadStopped(String mapUniqueName) {
-
+        // Do nothing
     }
 
     public void setOfflineMapDownloadCallback(OfflineMapDownloadCallback callBack) {
