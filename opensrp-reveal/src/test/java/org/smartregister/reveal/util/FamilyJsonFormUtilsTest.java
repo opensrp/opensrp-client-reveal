@@ -24,7 +24,6 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Cache;
-import org.smartregister.util.CacheableData;
 import org.smartregister.util.DateUtil;
 import org.smartregister.util.FormUtils;
 import org.smartregister.util.JsonFormUtils;
