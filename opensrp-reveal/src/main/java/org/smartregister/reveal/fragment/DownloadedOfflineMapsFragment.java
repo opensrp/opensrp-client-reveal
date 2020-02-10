@@ -161,13 +161,16 @@ public class DownloadedOfflineMapsFragment extends BaseOfflineMapsFragment imple
         if (adapter ==null) {
             return;
         }
+
+        List<OfflineMapModel> toRemove = new ArrayList<>();
         for (OfflineMapModel offlineMapModel: downloadedOfflineMapModelList ) {
             if (offlineMapModel.getDownloadAreaId().equals(mapUniqueName)){
-                downloadedOfflineMapModelList.remove(offlineMapModel);
+                toRemove.add(offlineMapModel);
                 offlineMapModel.setOfflineMapStatus(OfflineMapModel.OfflineMapStatus.READY);
                 callback.onOfflineMapDeleted(offlineMapModel);
             }
         }
+        downloadedOfflineMapModelList.removeAll(toRemove);
 
         setDownloadedOfflineMapModelList(downloadedOfflineMapModelList);
     }
