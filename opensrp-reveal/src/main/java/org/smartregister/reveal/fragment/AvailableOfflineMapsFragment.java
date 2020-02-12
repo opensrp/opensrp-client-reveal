@@ -161,18 +161,21 @@ public class AvailableOfflineMapsFragment extends BaseOfflineMapsFragment implem
 
     @Override
     public void moveDownloadedOAToDownloadedList(String operationalAreaId) {
-        List<OfflineMapModel> toRemove = new ArrayList<>();
+        List<OfflineMapModel> toRemoveFromAvailableList = new ArrayList<>();
+        List<Location> toRemoveFromDownloadList = new ArrayList<>();
         for (OfflineMapModel offlineMapModel : offlineMapModelList) {
             if (offlineMapModel.getDownloadAreaId().equals(operationalAreaId)) {
                 offlineMapModel.setOfflineMapStatus(OfflineMapModel.OfflineMapStatus.DOWNLOADED);
                 callback.onMapDownloaded(offlineMapModel);
-                toRemove.add(offlineMapModel);
+                toRemoveFromAvailableList.add(offlineMapModel);
+                toRemoveFromDownloadList.add(offlineMapModel.getLocation());
                 setOfflineMapModelList(offlineMapModelList);
                 break;
             }
         }
 
-        offlineMapModelList.removeAll(toRemove);
+        offlineMapModelList.removeAll(toRemoveFromAvailableList);
+        operationalAreasToDownload.removeAll(toRemoveFromDownloadList);
 
     }
 
