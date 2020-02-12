@@ -35,7 +35,7 @@ public class AvailableOfflineMapViewHolderTest extends BaseUnitTest {
     public MockitoRule rule = MockitoJUnit.rule();
 
     @Mock
-    View.OnClickListener onClickListener;
+    private View.OnClickListener onClickListener;
 
     private AvailableOfflineMapViewHolder viewHolder;
 
