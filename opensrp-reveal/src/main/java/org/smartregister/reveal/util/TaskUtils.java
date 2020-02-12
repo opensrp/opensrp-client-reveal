@@ -171,6 +171,7 @@ public class TaskUtils {
                 taskRepository.addOrUpdate(task);
                 break;
         }
+        RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
 
     }
 
