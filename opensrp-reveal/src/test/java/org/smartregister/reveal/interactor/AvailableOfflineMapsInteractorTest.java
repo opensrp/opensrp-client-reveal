@@ -69,7 +69,7 @@ public class AvailableOfflineMapsInteractorTest extends BaseUnitTest {
         when(locationRepository.getLocationsByIds(locationIds, false)).thenReturn(locations);
 
         interactor.fetchAvailableOAsForMapDownLoad(locationIds);
-        verify(locationRepository).getLocationsByIds(locationIdsCaptor.capture(), booleanArgumentCaptor.capture());
+        verify(locationRepository, timeout(ASYNC_TIMEOUT)).getLocationsByIds(locationIdsCaptor.capture(), booleanArgumentCaptor.capture());
         verify(presenter, timeout(ASYNC_TIMEOUT)).onFetchAvailableOAsForMapDownLoad(offlineMapModelListArgumentCaptor.capture());
         verifyNoMoreInteractions(presenter);
         verifyNoMoreInteractions(locationRepository);

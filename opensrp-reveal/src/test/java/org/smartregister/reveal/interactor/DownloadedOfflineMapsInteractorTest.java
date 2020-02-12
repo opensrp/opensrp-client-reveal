@@ -81,7 +81,7 @@ public class DownloadedOfflineMapsInteractorTest extends BaseUnitTest {
     @Test
     public void testFetchLocationsWithOfflineMapDownloadsWithNullParams() {
         interactor.fetchLocationsWithOfflineMapDownloads(null);
-        verify(presenter).onOAsWithOfflineDownloadsFetched(null);
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onOAsWithOfflineDownloadsFetched(null);
         verifyNoMoreInteractions(presenter);
         verifyNoMoreInteractions(locationRepository);
     }
