@@ -1,5 +1,6 @@
 package org.smartregister.reveal.interactor;
 
+import android.content.Context;
 import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 
@@ -24,6 +25,8 @@ import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.reveal.util.InteractorUtils;
+import org.smartregister.reveal.util.TaskUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,6 +64,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     private SQLiteDatabase database;
     private StructureTasksContract.Presenter presenter;
     private StructureRepository structureRepository;
+    private InteractorUtils interactorUtils;
 
     public StructureTasksInteractor(StructureTasksContract.Presenter presenter) {
         this(presenter, RevealApplication.getInstance().getAppExecutors(), RevealApplication.getInstance().getRepository().getReadableDatabase(), RevealApplication.getInstance().getStructureRepository());
@@ -74,6 +78,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
         this.appExecutors = appExecutors;
         this.database = database;
         this.structureRepository = structureRepository;
+        this.interactorUtils = new InteractorUtils(RevealApplication.getInstance().getTaskRepository(), eventClientRepository, clientProcessor);
     }
 
     @Override
@@ -161,6 +166,14 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
             }
         });
 
+    }
+
+    @Override
+    public void resetTaskInfo(Context context, StructureTaskDetails taskDetails) {
+        appExecutors.diskIO().execute(() -> {
+            TaskUtils.getInstance().resetTask(context, taskDetails);
+            interactorUtils.archiveEventsForTask(getDatabase(), taskDetails.getTaskId());
+        });
     }
 
 
