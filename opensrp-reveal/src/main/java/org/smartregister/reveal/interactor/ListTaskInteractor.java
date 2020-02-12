@@ -69,6 +69,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.REPORT_SPRAY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STICKER_SPRAY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
@@ -341,10 +342,10 @@ public class ListTaskInteractor extends BaseInteractor {
         Cursor cursor = null;
         String structureId = null;
         try {
-            String query = getMemberTasksSelect(String.format("%s=? AND %s=?",
-                    PLAN_ID, CODE), new String[]{});
+            String query = getMemberTasksSelect(String.format("%s=? AND %s=? AND %s == ?" ,
+                    PLAN_ID, CODE, STATUS), new String[]{});
             Timber.d(query);
-            cursor = getDatabase().rawQuery(query, new String[]{planId, CASE_CONFIRMATION});
+            cursor = getDatabase().rawQuery(query, new String[]{planId, CASE_CONFIRMATION, Task.TaskStatus.COMPLETED.name()});
             if (cursor.moveToNext()) {
                 structureId = cursor.getString(0);
             }

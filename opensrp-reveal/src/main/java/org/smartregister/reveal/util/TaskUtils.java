@@ -18,12 +18,14 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
 
 import java.util.List;
 import java.util.UUID;
 
+import static org.smartregister.domain.Task.TaskStatus.CANCELLED;
 import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
@@ -118,6 +120,11 @@ public class TaskUtils {
                 R.string.mda_adherence_desciption);
     }
 
+    public void generateCaseConfirmationTask(Context context, String entityId, String structureId) {
+        generateTask(context, entityId, structureId, BusinessStatus.NOT_VISITED, Intervention.CASE_CONFIRMATION,
+                R.string.case_confirmation_description);
+    }
+
     public void tagEventTaskDetails(List<Event> events, SQLiteDatabase sqLiteDatabase) {
         for (Event event : events) {
             Cursor cursor = null;
@@ -143,12 +150,27 @@ public class TaskUtils {
         }
     }
 
-    public void resetTask(String taskIdentifier) {
-        Task task = taskRepository.getTaskByIdentifier(taskIdentifier);
-        task.setBusinessStatus(BusinessStatus.NOT_VISITED);
-        task.setStatus(READY);
-        task.setLastModified(new DateTime());
-        task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+    public void resetTask(Context context, BaseTaskDetails taskDetails) {
+        Task task = taskRepository.getTaskByIdentifier(taskDetails.getTaskId());
+
+        switch(taskDetails.getTaskCode()) {
+            case Intervention.CASE_CONFIRMATION:
+                task.setStatus(CANCELLED);
+                task.setLastModified(new DateTime());
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                taskRepository.addOrUpdate(task);
+                generateCaseConfirmationTask(context,
+                        Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(),
+                        null);
+                break;
+            default:
+                task.setBusinessStatus(BusinessStatus.NOT_VISITED);
+                task.setStatus(READY);
+                task.setLastModified(new DateTime());
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                taskRepository.addOrUpdate(task);
+                break;
+        }
 
     }
 

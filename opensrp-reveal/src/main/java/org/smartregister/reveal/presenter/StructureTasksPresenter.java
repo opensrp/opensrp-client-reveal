@@ -163,6 +163,11 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     }
 
     @Override
+    public void resetTaskInfo(StructureTaskDetails taskDetails) {
+        interactor.resetTaskInfo(getView().getContext(), taskDetails);
+    }
+
+    @Override
     public void onFormSaved(@NonNull String structureId, String taskID, @NonNull TaskStatus taskStatus, @NonNull String businessStatus, String interventionType) {
         getView().hideProgressDialog();
         getView().updateTask(taskID, taskStatus, businessStatus);

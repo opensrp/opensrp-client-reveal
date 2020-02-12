@@ -4,11 +4,9 @@ import android.content.Context;
 
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.Event;
-import org.smartregister.reveal.model.EventTask;
 import org.smartregister.reveal.model.StructureTaskDetails;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -33,6 +31,8 @@ public interface StructureTasksContract {
         void onIndexConfirmationFormSaved(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks);
 
         void onEventFound(Event event);
+
+        void resetTaskInfo(StructureTaskDetails taskDetails);
     }
 
     interface Interactor extends BaseContract.BaseInteractor {
@@ -42,6 +42,8 @@ public interface StructureTasksContract {
         void getStructure(StructureTaskDetails details);
 
         void findLastEvent(StructureTaskDetails taskDetails);
+
+        void resetTaskInfo(Context context, StructureTaskDetails taskDetails);
     }
 
     interface View extends UserLocationContract.UserLocationView, BaseFormFragmentContract.View {
