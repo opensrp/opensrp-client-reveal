@@ -172,7 +172,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     public void resetTaskInfo(Context context, StructureTaskDetails taskDetails) {
         appExecutors.diskIO().execute(() -> {
             TaskUtils.getInstance().resetTask(context, taskDetails);
-            interactorUtils.archiveEventsForTask(getDatabase(), taskDetails.getTaskId());
+            interactorUtils.archiveEventsForTask(getDatabase(), taskDetails);
         });
     }
 
