@@ -9,6 +9,7 @@ import android.widget.TextView;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.robolectric.RuntimeEnvironment;
@@ -33,6 +34,9 @@ public class AvailableOfflineMapViewHolderTest extends BaseUnitTest {
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
 
+    @Mock
+    View.OnClickListener onClickListener;
+
     private AvailableOfflineMapViewHolder viewHolder;
 
     private Context context = RuntimeEnvironment.application;
@@ -55,13 +59,6 @@ public class AvailableOfflineMapViewHolderTest extends BaseUnitTest {
         Date dateCreated = new Date();
         expectedOfflineMapModel.setDateCreated(dateCreated);
         expectedOfflineMapModel.setOfflineMapStatus(DOWNLOADED);
-
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // do nothing
-            }
-        };
 
         viewHolder.setItemViewListener(expectedOfflineMapModel, onClickListener);
 
@@ -131,6 +128,7 @@ public class AvailableOfflineMapViewHolderTest extends BaseUnitTest {
 
         TextView downloadingLabel = viewHolder.itemView.findViewById(R.id.offline_map_label);
         assertNotNull(downloadingLabel);
+        assertEquals(View.GONE, downloadingLabel.getWindowVisibility());
     }
 
 
