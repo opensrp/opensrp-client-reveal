@@ -429,15 +429,15 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (v.getId() == R.id.btn_record_mosquito_collection) {
             listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
         } else if (v.getId() == R.id.btn_undo_mosquito_collection) {
-            listTaskPresenter.onUndoInterventionStatus(MOSQUITO_COLLECTION);
+            displayResetInterventionTaskDialog(MOSQUITO_COLLECTION);
         } else if (v.getId() == R.id.btn_record_larval_dipping) {
             listTaskPresenter.onChangeInterventionStatus(LARVAL_DIPPING);
         } else if (v.getId() == R.id.btn_undo_larval_dipping) {
-            listTaskPresenter.onUndoInterventionStatus(LARVAL_DIPPING);
+            displayResetInterventionTaskDialog(LARVAL_DIPPING);
         } else if (v.getId() == R.id.btn_edit_paot_details) {
             listTaskPresenter.onChangeInterventionStatus(PAOT);
         } else if (v.getId() == R.id.btn_undo_paot_details) {
-            listTaskPresenter.onUndoInterventionStatus(PAOT);
+            displayResetInterventionTaskDialog(PAOT);
         } else if (v.getId() == R.id.btn_collapse_spray_card_view) {
             setViewVisibility(tvReason, false);
             closeCardView(v.getId());
@@ -840,5 +840,18 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     protected Country getBuildCountry() {
         return BuildConfig.BUILD_COUNTRY;
+    }
+
+
+    public void displayResetInterventionTaskDialog(String interventionType) {
+        AlertDialogUtils.displayNotificationWithCallback(this, R.string.undo_task_title,
+                R.string.undo_task_msg, R.string.confirm, R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == BUTTON_POSITIVE)
+                            listTaskPresenter.onUndoInterventionStatus(interventionType);
+                        dialog.dismiss();
+                    }
+                });
     }
 }

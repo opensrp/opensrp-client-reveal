@@ -71,5 +71,7 @@ public interface StructureTasksContract {
         void updateNumberOfTasks();
 
         void updateTasks(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks);
+
+        void displayResetTaskInfoDialog(StructureTaskDetails taskDetails);
     }
 }

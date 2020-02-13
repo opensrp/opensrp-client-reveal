@@ -95,7 +95,7 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
                     getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
                     interactor.getStructure(details);
                 } else if(isUndo) {
-                    resetTaskInfo(details);
+                    getView().displayResetTaskInfoDialog(details);
                 } else {
                     getView().displayToast("Task Completed");
                 }

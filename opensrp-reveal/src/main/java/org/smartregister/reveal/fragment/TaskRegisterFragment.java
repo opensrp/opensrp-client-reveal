@@ -56,6 +56,7 @@ import io.ona.kujaku.utils.Constants;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.smartregister.reveal.util.Constants.Action;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
@@ -211,11 +212,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
-                            case DialogInterface.BUTTON_POSITIVE:
+                            case BUTTON_POSITIVE:
                                 getPresenter().onTaskSelected(details, view.getId() == R.id.task_action);
                                 break;
                             case DialogInterface.BUTTON_NEGATIVE:
-                                getPresenter().resetTaskInfo(details);
+                                displayResetTaskInfoDialog(details);
                                 break;
                             default:
                                 break;
@@ -224,6 +225,18 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                     }
 
          } );
+    }
+
+    public void displayResetTaskInfoDialog(TaskDetails details) {
+        AlertDialogUtils.displayNotificationWithCallback(getContext(), R.string.undo_task_title,
+                R.string.undo_task_msg, R.string.confirm, R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == BUTTON_POSITIVE)
+                            getPresenter().resetTaskInfo(details);
+                        dialog.dismiss();
+                    }
+                });
     }
 
     @Override
