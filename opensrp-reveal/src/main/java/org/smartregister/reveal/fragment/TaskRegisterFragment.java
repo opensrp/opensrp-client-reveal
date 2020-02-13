@@ -59,7 +59,7 @@ import static android.app.Activity.RESULT_OK;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.smartregister.reveal.util.Constants.Action;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
-import static org.smartregister.reveal.util.Constants.Intervention.TASK_RESET_INTERVENTIONS;
+import static org.smartregister.reveal.util.Constants.Intervention.TASK_RESET_RESET_INTERVENTIONS;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
 
 /**
@@ -196,7 +196,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     protected void onViewClicked(View view) {
         TaskDetails details = (TaskDetails) view.getTag(R.id.task_details);
 
-        if (TASK_RESET_INTERVENTIONS.contains(details.getTaskCode())
+        if (TASK_RESET_RESET_INTERVENTIONS.contains(details.getTaskCode())
                 && Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
             displayTaskActionDialog(details, view);
         } else {
