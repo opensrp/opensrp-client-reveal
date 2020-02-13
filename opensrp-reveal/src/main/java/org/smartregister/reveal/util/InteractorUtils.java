@@ -4,6 +4,7 @@ import android.database.Cursor;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -135,23 +136,24 @@ public class InteractorUtils {
         DateTime now = new DateTime();
         JSONArray taskEvents = new JSONArray();
 
-        if(eventClients == null || eventClients.isEmpty()) {
-            return false;
-        }
-
         try {
 
-            for (EventClient eventClient: eventClients) {
-                org.smartregister.domain.db.Event event = eventClient.getEvent();
-                JSONObject eventJson = new JSONObject(gson.toJson(event));
-                eventJson.put("dateVoided", now);
-                eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
-                taskEvents.put(eventJson);
+            if (eventClients != null && !eventClients.isEmpty()) {
+                for (EventClient eventClient: eventClients) {
+                    org.smartregister.domain.db.Event event = eventClient.getEvent();
+                    JSONObject eventJson = new JSONObject(gson.toJson(event));
+                    eventJson.put("dateVoided", now);
+                    eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
+                    taskEvents.put(eventJson);
+                }
+
+                eventClientRepository.batchInsertEvents(taskEvents, 0);
             }
 
-            eventClientRepository.batchInsertEvents(taskEvents, 0);
+            // use original task.for in cases such as Case Confirmation where the task.for changes to point to operational area
+            String taskForEntity = StringUtils.isNotEmpty(taskDetails.getTaskEntity()) ? taskDetails.getTaskEntity() : task.getForEntity();
 
-            Event resetTaskEvent = RevealJsonFormUtils.createTaskEvent(task.getForEntity(), Utils.getCurrentLocationId(),
+            Event resetTaskEvent = RevealJsonFormUtils.createTaskEvent(taskForEntity, Utils.getCurrentLocationId(),
                     null, Constants.TASK_RESET_EVENT, Constants.STRUCTURE);
             JSONObject eventJson = new JSONObject(gson.toJson(resetTaskEvent));
             eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);

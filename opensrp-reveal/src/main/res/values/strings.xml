@@ -324,5 +324,7 @@
     <string name="choose_action">Choose action</string>
     <string name="view_details">View Details</string>
     <string name="undo">Undo</string>
+    <string name="reseting_task_title">Resetting Task Information</string>
+    <string name="reseting_task_msg">Resetting Task Information. Please wait</string>
 
 </resources>

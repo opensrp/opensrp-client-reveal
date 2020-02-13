@@ -221,13 +221,19 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.btn_record_mosquito_collection).setOnClickListener(this);
 
+        findViewById(R.id.btn_undo_mosquito_collection).setOnClickListener(this);
+
         findViewById(R.id.btn_collapse_larval_breeding_card_view).setOnClickListener(this);
 
         findViewById(R.id.btn_record_larval_dipping).setOnClickListener(this);
 
+        findViewById(R.id.btn_undo_larval_dipping).setOnClickListener(this);
+
         findViewById(R.id.btn_collapse_paot_card_view).setOnClickListener(this);
 
         findViewById(R.id.btn_edit_paot_details).setOnClickListener(this);
+
+        findViewById(R.id.btn_undo_paot_details).setOnClickListener(this);
 
         findViewById(R.id.btn_collapse_irs_verification_card_view).setOnClickListener(this);
 
@@ -422,10 +428,16 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             listTaskPresenter.onChangeInterventionStatus(IRS);
         } else if (v.getId() == R.id.btn_record_mosquito_collection) {
             listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
+        } else if (v.getId() == R.id.btn_undo_mosquito_collection) {
+            listTaskPresenter.onUndoInterventionStatus(MOSQUITO_COLLECTION);
         } else if (v.getId() == R.id.btn_record_larval_dipping) {
             listTaskPresenter.onChangeInterventionStatus(LARVAL_DIPPING);
+        } else if (v.getId() == R.id.btn_undo_larval_dipping) {
+            listTaskPresenter.onUndoInterventionStatus(LARVAL_DIPPING);
         } else if (v.getId() == R.id.btn_edit_paot_details) {
             listTaskPresenter.onChangeInterventionStatus(PAOT);
+        } else if (v.getId() == R.id.btn_undo_paot_details) {
+            listTaskPresenter.onUndoInterventionStatus(PAOT);
         } else if (v.getId() == R.id.btn_collapse_spray_card_view) {
             setViewVisibility(tvReason, false);
             closeCardView(v.getId());

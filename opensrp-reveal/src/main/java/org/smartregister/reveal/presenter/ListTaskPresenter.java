@@ -376,6 +376,16 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
     }
 
+    @Override
+    public void onInterventionTaskInfoReset(boolean success) {
+        listTaskView.hideProgressDialog();
+        if (revealApplication.isRefreshMapOnEventSaved()) {
+            refreshStructures(true);
+            listTaskView.clearSelectedFeature();
+            revealApplication.setRefreshMapOnEventSaved(false);
+        }
+    }
+
 
     @Override
     public void onCardDetailsFetched(CardDetails cardDetails) {
@@ -468,6 +478,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.showProgressDialog(R.string.fetching_paot_title, R.string.fetching_paot_message);
         }
         listTaskInteractor.fetchInterventionDetails(interventionType, selectedFeature.id(), true);
+    }
+
+    public void onUndoInterventionStatus(String interventionType) {
+        listTaskView.showProgressDialog(R.string.reseting_task_title, R.string.reseting_task_msg);
+        listTaskInteractor.resetInterventionTaskInfo(listTaskView.getContext(), interventionType, selectedFeature.id());
     }
 
     public void saveJsonForm(String json) {

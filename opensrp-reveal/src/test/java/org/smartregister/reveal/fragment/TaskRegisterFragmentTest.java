@@ -174,6 +174,7 @@ public class TaskRegisterFragmentTest extends BaseUnitTest {
     public void testOnViewClicked() {
         View view = fragment.getView();
         TaskDetails details = TestingUtils.getTaskDetails();
+        details.setTaskCode(Constants.Intervention.REGISTER_FAMILY);
         view.setTag(R.id.task_details, details);
         fragment.onViewClicked(view);
         verify(presenter).onTaskSelected(details, false);

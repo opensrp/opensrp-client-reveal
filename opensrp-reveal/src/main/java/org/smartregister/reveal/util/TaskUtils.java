@@ -120,11 +120,6 @@ public class TaskUtils {
                 R.string.mda_adherence_desciption);
     }
 
-    public void generateCaseConfirmationTask(Context context, String entityId, String structureId) {
-        generateTask(context, entityId, structureId, BusinessStatus.NOT_VISITED, Intervention.CASE_CONFIRMATION,
-                R.string.case_confirmation_description);
-    }
-
     public void tagEventTaskDetails(List<Event> events, SQLiteDatabase sqLiteDatabase) {
         for (Event event : events) {
             Cursor cursor = null;
@@ -152,25 +147,18 @@ public class TaskUtils {
 
     public void resetTask(Context context, BaseTaskDetails taskDetails) {
         Task task = taskRepository.getTaskByIdentifier(taskDetails.getTaskId());
+        String operationalAreaId = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId();
 
-        switch(taskDetails.getTaskCode()) {
-            case Intervention.CASE_CONFIRMATION:
-                task.setStatus(CANCELLED);
-                task.setLastModified(new DateTime());
-                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
-                taskRepository.addOrUpdate(task);
-                generateCaseConfirmationTask(context,
-                        Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(),
-                        null);
-                break;
-            default:
-                task.setBusinessStatus(BusinessStatus.NOT_VISITED);
-                task.setStatus(READY);
-                task.setLastModified(new DateTime());
-                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
-                taskRepository.addOrUpdate(task);
-                break;
+        if (Intervention.CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
+            task.setForEntity(operationalAreaId);
         }
+
+        task.setBusinessStatus(BusinessStatus.NOT_VISITED);
+        task.setStatus(READY);
+        task.setLastModified(new DateTime());
+        task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+        taskRepository.addOrUpdate(task);
+
         RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
 
     }

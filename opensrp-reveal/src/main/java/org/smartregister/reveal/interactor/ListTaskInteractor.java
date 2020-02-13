@@ -1,5 +1,7 @@
 package org.smartregister.reveal.interactor;
 
+import android.content.Context;
+
 import com.mapbox.geojson.Feature;
 
 import net.sqlcipher.Cursor;
@@ -27,6 +29,7 @@ import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.StructureDetails;
+import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.CardDetailsUtil;
@@ -37,6 +40,7 @@ import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.GeoJsonUtils;
 import org.smartregister.reveal.util.IndicatorUtils;
 import org.smartregister.reveal.util.InteractorUtils;
+import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.HashMap;
@@ -107,9 +111,9 @@ public class ListTaskInteractor extends BaseInteractor {
     public ListTaskInteractor(ListTaskContract.Presenter presenter) {
         super(presenter);
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(SPRAYED_STRUCTURES);
-        interactorUtils = new InteractorUtils();
         structureRepository = RevealApplication.getInstance().getContext().getStructureRepository();
         taskRepository = RevealApplication.getInstance().getTaskRepository();
+        interactorUtils = new InteractorUtils(taskRepository, eventClientRepository, clientProcessor);
     }
 
     public void fetchInterventionDetails(String interventionType, String featureId, boolean isForForm) {
@@ -342,10 +346,10 @@ public class ListTaskInteractor extends BaseInteractor {
         Cursor cursor = null;
         String structureId = null;
         try {
-            String query = getMemberTasksSelect(String.format("%s=? AND %s=? AND %s == ?" ,
-                    PLAN_ID, CODE, STATUS), new String[]{});
+            String query = getMemberTasksSelect(String.format("%s=? AND %s=? " ,
+                    PLAN_ID, CODE), new String[]{});
             Timber.d(query);
-            cursor = getDatabase().rawQuery(query, new String[]{planId, CASE_CONFIRMATION, Task.TaskStatus.COMPLETED.name()});
+            cursor = getDatabase().rawQuery(query, new String[]{planId, CASE_CONFIRMATION});
             if (cursor.moveToNext()) {
                 structureId = cursor.getString(0);
             }
@@ -427,4 +431,80 @@ public class ListTaskInteractor extends BaseInteractor {
             }
         });
     }
+
+    private String[] getStructureColumns() {
+        return new String[]{
+                TASK_TABLE + "." + ID,
+                TASK_TABLE + "." + CODE,
+                TASK_TABLE + "." + FOR,
+                TASK_TABLE + "." + BUSINESS_STATUS,
+                TASK_TABLE + "." + STATUS,
+                TASK_TABLE + "." + STRUCTURE_ID
+        };
+    }
+
+    private String getTaskSelect(String mainCondition) {
+        SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
+        queryBuilder.selectInitiateMainTable(TASK_TABLE, getStructureColumns(), ID);
+        return queryBuilder.mainCondition(mainCondition);
+    }
+
+    public void resetInterventionTaskInfo(Context context, String interventionType, String featureId) {
+        String sql = String.format(getTaskSelect("%s = ? and %s = ?"),
+                    FOR, CODE);
+        boolean[] taskInfoResetSuccessful = {false};
+
+        final String SQL = sql;
+
+        appExecutors.diskIO().execute(() -> {
+            StructureTaskDetails taskDetails = null;
+            Cursor cursor = null;
+
+            try {
+                cursor = getDatabase().rawQuery(SQL, new String[]{featureId, interventionType});
+                while (cursor.moveToNext()) {
+                    taskDetails = readTaskDetails(cursor);
+                }
+                cursor.close();
+
+                if (taskDetails == null) {
+                    appExecutors.mainThread().execute(()-> {
+                        getPresenter().onInterventionTaskInfoReset(false);
+                    });
+                    return;
+                }
+
+                // Reset task info
+                TaskUtils.getInstance().resetTask(context, taskDetails);
+                interactorUtils.archiveEventsForTask(getDatabase(), taskDetails);
+
+                taskInfoResetSuccessful[0] = true;
+
+            } catch (Exception e) {
+                taskInfoResetSuccessful[0] = false;
+               Timber.e(e, "Error querying tasks details for " + featureId);
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+
+            appExecutors.mainThread().execute(()-> {
+                getPresenter().onInterventionTaskInfoReset(taskInfoResetSuccessful[0]);
+            });
+        });
+
+
+    }
+
+    private StructureTaskDetails readTaskDetails(Cursor cursor) {
+        StructureTaskDetails task = new StructureTaskDetails(cursor.getString(cursor.getColumnIndex(ID)));
+        task.setTaskCode(cursor.getString(cursor.getColumnIndex(CODE)));
+        task.setTaskEntity(cursor.getString(cursor.getColumnIndex(FOR)));
+        task.setBusinessStatus(cursor.getString(cursor.getColumnIndex(BUSINESS_STATUS)));
+        task.setTaskStatus(cursor.getString(cursor.getColumnIndex(STATUS)));
+        task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
+        return task;
+    }
+
 }
