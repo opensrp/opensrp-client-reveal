@@ -33,6 +33,8 @@ public interface StructureTasksContract {
         void onEventFound(Event event);
 
         void resetTaskInfo(StructureTaskDetails taskDetails);
+
+        void onOnTaskInfoReset(String structureId);
     }
 
     interface Interactor extends BaseContract.BaseInteractor {

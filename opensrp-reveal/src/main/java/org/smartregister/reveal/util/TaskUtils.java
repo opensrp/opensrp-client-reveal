@@ -25,7 +25,6 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import java.util.List;
 import java.util.UUID;
 
-import static org.smartregister.domain.Task.TaskStatus.CANCELLED;
 import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;

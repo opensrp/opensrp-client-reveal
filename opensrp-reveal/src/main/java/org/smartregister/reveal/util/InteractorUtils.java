@@ -170,7 +170,7 @@ public class InteractorUtils {
         return archived;
     }
 
-    List<String> getFormSubmissionIdsFromEventTask(SQLiteDatabase db, String taskIdentifier) {
+    public List<String> getFormSubmissionIdsFromEventTask(SQLiteDatabase db, String taskIdentifier) {
         List<String> formSubmissionIds = new ArrayList<>();
         Cursor cursor = null;
 
