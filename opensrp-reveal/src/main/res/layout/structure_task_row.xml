@@ -45,9 +45,21 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:src="@drawable/ic_edit_task"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/view_undo"
         app:layout_constraintEnd_toStartOf="@id/task_action"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/view_undo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_undo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_edit"
+        app:layout_constraintEnd_toStartOf="@id/task_action" />
+
 
     <TextView
         android:id="@+id/task_action"

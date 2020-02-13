@@ -36,6 +36,8 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
 
     private TextView detailsTextView;
 
+    private ImageView viewUndoImageView;
+
     public StructureTaskViewHolder(@NonNull View itemView) {
         super(itemView);
         context = itemView.getContext();
@@ -44,6 +46,7 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
         viewEditImageView = itemView.findViewById(R.id.view_edit);
         lastEditedTextView = itemView.findViewById(R.id.last_edited);
         detailsTextView = itemView.findViewById(R.id.task_details);
+        viewUndoImageView = itemView.findViewById(R.id.view_undo);
     }
 
     public void setTaskName(String name) {
@@ -76,6 +79,8 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
 
             viewEditImageView.setVisibility(View.VISIBLE);
             setClickHandler(onClickListener, taskDetails, viewEditImageView);
+            viewUndoImageView.setVisibility(View.VISIBLE);
+            setClickHandler(onClickListener, taskDetails, viewUndoImageView);
             Date lastEdited = taskDetails.getLastEdited();
             if (lastEdited != null) {
                 lastEditedTextView.setVisibility(View.VISIBLE);
@@ -87,6 +92,7 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
         } else {
             viewEditImageView.setVisibility(View.GONE);
             lastEditedTextView.setVisibility(View.GONE);
+            viewUndoImageView.setVisibility(View.GONE);
         }
         setClickHandler(onClickListener, taskDetails, actionTextView);
 

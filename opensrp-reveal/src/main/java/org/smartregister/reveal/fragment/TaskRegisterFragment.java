@@ -1,9 +1,11 @@
 package org.smartregister.reveal.fragment;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Task;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.reveal.BuildConfig;
@@ -56,6 +59,7 @@ import static android.app.Activity.RESULT_OK;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.smartregister.reveal.util.Constants.Action;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
+import static org.smartregister.reveal.util.Constants.Intervention.TASK_RESET_INTERVENTIONS;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
 
 /**
@@ -191,7 +195,35 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     protected void onViewClicked(View view) {
         TaskDetails details = (TaskDetails) view.getTag(R.id.task_details);
-        getPresenter().onTaskSelected(details, view.getId() == R.id.task_action);
+
+        if (TASK_RESET_INTERVENTIONS.contains(details.getTaskCode())
+                && Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
+            displayTaskActionDialog(details, view);
+        } else {
+            getPresenter().onTaskSelected(details, view.getId() == R.id.task_action);
+        }
+
+    }
+
+    private void displayTaskActionDialog(TaskDetails details, View view) {
+        AlertDialogUtils.displayNotificationWithCallback(getContext(), R.string.select_task_action,
+                R.string.choose_action, R.string.view_details, R.string.undo, new Dialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                getPresenter().onTaskSelected(details, view.getId() == R.id.task_action);
+                                break;
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                getPresenter().resetTaskInfo(details);
+                                break;
+                            default:
+                                break;
+                        }
+                        dialog.dismiss();
+                    }
+
+         } );
     }
 
     @Override

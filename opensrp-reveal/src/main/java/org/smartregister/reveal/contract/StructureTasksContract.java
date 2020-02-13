@@ -22,7 +22,7 @@ public interface StructureTasksContract {
 
         void onTasksFound(List<StructureTaskDetails> taskDetailsList, StructureTaskDetails incompleteIndexCase);
 
-        void onTaskSelected(StructureTaskDetails details, boolean isEdit);
+        void onTaskSelected(StructureTaskDetails details, boolean isEdit, boolean isUndo);
 
         void saveJsonForm(String json);
 
