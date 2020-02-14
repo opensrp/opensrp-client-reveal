@@ -4,7 +4,6 @@ import android.database.Cursor;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,7 +11,6 @@ import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
-import org.smartregister.domain.Task;
 import org.smartregister.domain.db.Client;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.repository.BaseRepository;
@@ -31,9 +29,13 @@ import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.CASE_CONFIRMATION_FIELD;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TASK_TABLE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TYPE_FIELD;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.FORM_SUBMISSION_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.util.JsonFormUtils.gson;
@@ -126,12 +128,11 @@ public class InteractorUtils {
 
     public boolean archiveEventsForTask(SQLiteDatabase db, BaseTaskDetails taskDetails) {
         boolean archived = true;
-        Task task = taskRepository.getTaskByIdentifier(taskDetails.getTaskId());
 
-        if (task == null) {
+        if (taskDetails == null) {
             return false;
         }
-        List<String> formSubmissionIds = getFormSubmissionIdsFromEventTask(db, task.getIdentifier());
+        List<String> formSubmissionIds = getFormSubmissionIdsFromEventTask(db, taskDetails);
         List<EventClient> eventClients = eventClientRepository.fetchEventClients(formSubmissionIds);
         DateTime now = new DateTime();
         JSONArray taskEvents = new JSONArray();
@@ -150,16 +151,13 @@ public class InteractorUtils {
                 eventClientRepository.batchInsertEvents(taskEvents, 0);
             }
 
-            // use original task.for in cases such as Case Confirmation where the task.for changes to point to operational area
-            String taskForEntity = StringUtils.isNotEmpty(taskDetails.getTaskEntity()) ? taskDetails.getTaskEntity() : task.getForEntity();
-
-            Event resetTaskEvent = RevealJsonFormUtils.createTaskEvent(taskForEntity, Utils.getCurrentLocationId(),
+            Event resetTaskEvent = RevealJsonFormUtils.createTaskEvent(taskDetails.getTaskEntity(), Utils.getCurrentLocationId(),
                     null, Constants.TASK_RESET_EVENT, Constants.STRUCTURE);
             JSONObject eventJson = new JSONObject(gson.toJson(resetTaskEvent));
             eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
 
-            populateEventDetails(eventJson, task.getIdentifier(), taskDetails.getBusinessStatus(), taskDetails.getTaskStatus(), taskDetails.getStructureId());
-            eventClientRepository.addEvent(task.getForEntity(), eventJson);
+            populateEventDetails(eventJson, taskDetails.getTaskId(), taskDetails.getBusinessStatus(), taskDetails.getTaskStatus(), taskDetails.getStructureId());
+            eventClientRepository.addEvent(taskDetails.getTaskEntity(), eventJson);
 
 
         } catch (Exception e) {
@@ -170,17 +168,32 @@ public class InteractorUtils {
         return archived;
     }
 
-    public List<String> getFormSubmissionIdsFromEventTask(SQLiteDatabase db, String taskIdentifier) {
+    public List<String> getFormSubmissionIdsFromEventTask(SQLiteDatabase db, BaseTaskDetails taskDetails) {
         List<String> formSubmissionIds = new ArrayList<>();
         Cursor cursor = null;
 
-        try {
-            String query = String.format("select %s from %s where %s = ?",
-                    BASE_ENTITY_ID, EVENT_TASK_TABLE, TASK_ID);
-            cursor = db.rawQuery(query, new String[]{taskIdentifier});
+        String query;
 
-            while (cursor.moveToNext()) {
-                formSubmissionIds.add(cursor.getString(cursor.getColumnIndex(BASE_ENTITY_ID)));
+
+        try {
+
+            if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
+                query = String.format("select %s from event where baseEntityId = ?  and %s = ?",
+                        FORM_SUBMISSION_ID, EVENT_TYPE_FIELD);
+                cursor = db.rawQuery(query, new String[]{taskDetails.getTaskEntity(), CASE_CONFIRMATION_FIELD});
+
+                while (cursor.moveToNext()) {
+                    formSubmissionIds.add(cursor.getString(cursor.getColumnIndex(FORM_SUBMISSION_ID)));
+                }
+
+            } else {
+                query = String.format("select %s from %s where %s = ?",
+                        BASE_ENTITY_ID, EVENT_TASK_TABLE, TASK_ID);
+                cursor = db.rawQuery(query, new String[]{taskDetails.getTaskId()});
+
+                while (cursor.moveToNext()) {
+                    formSubmissionIds.add(cursor.getString(cursor.getColumnIndex(BASE_ENTITY_ID)));
+                }
             }
 
         } finally {

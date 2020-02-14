@@ -581,6 +581,12 @@ public interface Constants {
 
         String PARENT_ID = "parent_id";
 
+        String FORM_SUBMISSION_ID = "formSubmissionId";
+
+        String EVENT_TYPE_FIELD = "eventType";
+
+        String CASE_CONFIRMATION_FIELD = "case_confirmation";
+
     }
 
     interface PlanDefinitionStatus {
