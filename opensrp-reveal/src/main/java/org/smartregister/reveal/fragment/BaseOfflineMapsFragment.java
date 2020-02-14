@@ -83,13 +83,11 @@ public abstract class BaseOfflineMapsFragment extends Fragment implements Offlin
 
     public void handleFailureResponse() {
         if (!TextUtils.isEmpty(message) &&
-                !message.contains("MapBox Tile Count limit exceeded")) {
+                (!message.contains("MapBox Tile Count limit exceeded")
+                        || serviceAction == MapboxOfflineDownloaderService.SERVICE_ACTION.DELETE_MAP)) {
             displayError(R.id.download_map,  message);
         }
 
-        if (serviceAction == MapboxOfflineDownloaderService.SERVICE_ACTION.DELETE_MAP && !TextUtils.isEmpty(message)) {
-            displayError(R.id.download_map, message);
-        }
     }
 
     public void handleSuccessResponse() {
