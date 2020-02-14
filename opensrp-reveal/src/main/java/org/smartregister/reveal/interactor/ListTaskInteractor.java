@@ -345,7 +345,7 @@ public class ListTaskInteractor extends BaseInteractor {
         Cursor cursor = null;
         String structureId = null;
         try {
-            String query = getMemberTasksSelect(String.format("%s=? AND %s=? " ,
+            String query = getMemberTasksSelect(String.format("%s=? AND %s=? ",
                     PLAN_ID, CODE), new String[]{});
             Timber.d(query);
             cursor = getDatabase().rawQuery(query, new String[]{planId, CASE_CONFIRMATION});
@@ -450,7 +450,7 @@ public class ListTaskInteractor extends BaseInteractor {
 
     public void resetInterventionTaskInfo(Context context, String interventionType, String featureId) {
         String sql = String.format(getTaskSelect("%s = ? and %s = ?"),
-                    FOR, CODE);
+                FOR, CODE);
 
         final String SQL = sql;
 
@@ -460,24 +460,15 @@ public class ListTaskInteractor extends BaseInteractor {
             boolean taskInfoResetSuccessful = false;
             try {
                 cursor = getDatabase().rawQuery(SQL, new String[]{featureId, interventionType});
-                while (cursor.moveToNext()) {
+                if (cursor.moveToNext()) {
                     taskDetails = readTaskDetails(cursor);
+                    // Reset task info
+                    interactorUtils.resetTaskInfo(context, getDatabase(), taskDetails);
+                    taskInfoResetSuccessful = true;
                 }
-                cursor.close();
-
-                if (taskDetails == null) {
-                    appExecutors.mainThread().execute(()-> {
-                        getPresenter().onInterventionTaskInfoReset(false);
-                    });
-                    return;
-                }
-
-                // Reset task info
-                interactorUtils.resetTaskInfo(context, getDatabase(), taskDetails);
-                taskInfoResetSuccessful = true;
 
             } catch (Exception e) {
-               Timber.e(e, "Error querying tasks details for " + featureId);
+                Timber.e(e, "Error querying tasks details for %s", featureId);
             } finally {
                 if (cursor != null) {
                     cursor.close();
@@ -485,7 +476,7 @@ public class ListTaskInteractor extends BaseInteractor {
             }
 
             boolean finalTaskInfoResetSuccessful = taskInfoResetSuccessful;
-            appExecutors.mainThread().execute(()-> {
+            appExecutors.mainThread().execute(() -> {
                 getPresenter().onInterventionTaskInfoReset(finalTaskInfoResetSuccessful);
             });
         });
