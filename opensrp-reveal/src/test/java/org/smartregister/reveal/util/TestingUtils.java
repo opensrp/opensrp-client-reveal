@@ -1,15 +1,20 @@
 package org.smartregister.reveal.util;
 
 import android.location.Location;
+import android.support.v4.util.Pair;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mapbox.geojson.Feature;
+import com.mapbox.mapboxsdk.offline.OfflineRegion;
 
 import org.joda.time.DateTime;
+import org.json.JSONObject;
+import org.mockito.Mockito;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
+import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
@@ -19,13 +24,19 @@ import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.util.DateTimeTypeConverter;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import io.ona.kujaku.data.realm.objects.MapBoxOfflineQueueTask;
+
+import static io.ona.kujaku.downloaders.MapBoxOfflineResourcesDownloader.METADATA_JSON_FIELD_REGION_NAME;
 import static org.smartregister.family.util.DBConstants.KEY;
+import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.DOWNLOADED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 
 /**
@@ -43,6 +54,7 @@ public class TestingUtils {
 
     public static String caseConfirmstionEventJSON = "{\"_id\":\"463e8cd4-acba-4f12-bbff-8435bced0227\",\"obs\":[],\"_rev\":\"v1\",\"type\":\"Event\",\"teamId\":\"09962f7c-8dab-4dee-96e2-354382aec76a\",\"details\":{\"family_name\":\"วีรศักดิ์\",\"focus_id\":\"2301110301\",\"focus_name\":\"ท่ากุ่มบน(ชายเขา)\",\"surname\":\"กัวติด\",\"first_name\":\"วีรศักดิ์\",\"age\":\"20\",\"case_number\":\"131412000001031181107101758977\",\"case_classification\":\"Bz\",\"focus_status\":\"B1\",\"focus_reason\":\"Investigation\",\"species\":\"V\",\"investigtion_date\":\"2018-11-06T00:00:00.000+0000\",\"ep1_create_date\":\"2018-11-07T10:10:27.673+0000\",\"ep3_create_date\":\"2018-11-07T10:17:58.977+0000\",\"house_number\":\"114\",\"plan_id\":\"10f9e9fa-ce34-4b27-a961-72fab5206ab6\"},\"version\":null,\"duration\":0,\"eventDate\":\"2019-01-08T09:14:32.807+02:00\",\"eventType\":\"Case Details\",\"entityType\":\"Case Details\",\"providerId\":\"nifi-user\",\"dateCreated\":\"2019-06-25T15:08:19.182+02:00\",\"identifiers\":{},\"baseEntityId\":\"bd73f7d7-4387-4b6b-b632-acb03c4ea160\",\"serverVersion\":null,\"formSubmissionId\":\"9c53270a-97f7-11e9-bc42-526af7764f64\"}";
 
+    public static final String DUMMY_OPERATIONAL_AREA = "Akros_1";
 
     public static TaskDetails getTaskDetails() {
         TaskDetails taskDetails = new TaskDetails(UUID.randomUUID().toString());
@@ -91,6 +103,12 @@ public class TestingUtils {
         return task;
     }
 
+    public static OfflineMapModel getOfflineMapModel() {
+        OfflineMapModel model = new OfflineMapModel();
+        model.setOfflineMapStatus(DOWNLOADED);
+        model.setLocation(TestingUtils.gson.fromJson(TestingUtils.operationalAreaGeoJSON, org.smartregister.domain.Location.class));
+        return model;
+    }
     public static Feature getStructure() {
         return Feature.fromJson(structureJSON);
     }
@@ -105,6 +123,50 @@ public class TestingUtils {
 
     public static org.smartregister.domain.Location getOperationalArea() {
         return gson.fromJson(operationalAreaGeoJSON, org.smartregister.domain.Location.class);
+    }
+
+    public static OfflineRegion createMockOfflineRegion() throws Exception {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(METADATA_JSON_FIELD_REGION_NAME, DUMMY_OPERATIONAL_AREA);
+
+        byte[] metadata = jsonObject.toString().getBytes("utf-8");
+
+        final OfflineRegion offlineRegion = Mockito.mock(OfflineRegion.class);
+
+        Mockito.when(offlineRegion.getMetadata())
+                .thenReturn(metadata);
+
+        return offlineRegion;
+    }
+
+    public static Pair<List<String>, Map<String, OfflineRegion>> getOfflineRegionInfo() throws Exception {
+        List<String> offlineRegionNames = Collections.singletonList(DUMMY_OPERATIONAL_AREA);
+
+        MapBoxOfflineQueueTask offlineQueueTask = getMapBoxOfflineQueueTask();
+
+        Map<String, MapBoxOfflineQueueTask> offlineQueueTaskMap = new HashMap<>();
+        offlineQueueTaskMap.put(DUMMY_OPERATIONAL_AREA, offlineQueueTask);
+
+        return new Pair(offlineRegionNames, offlineQueueTaskMap);
+    }
+
+    public static MapBoxOfflineQueueTask getMapBoxOfflineQueueTask() throws Exception {
+        JSONObject task = new JSONObject();
+        task.put(METADATA_JSON_FIELD_REGION_NAME, DUMMY_OPERATIONAL_AREA);
+        MapBoxOfflineQueueTask offlineQueueTask = new MapBoxOfflineQueueTask();
+        offlineQueueTask.setTaskStatus(MapBoxOfflineQueueTask.TASK_STATUS_DONE);
+        offlineQueueTask.setTaskType(MapBoxOfflineQueueTask.TASK_TYPE_DOWNLOAD);
+        offlineQueueTask.setTask(task);
+        return offlineQueueTask;
+    }
+
+    public static Map<String, MapBoxOfflineQueueTask> getOfflineQueueTaskMap() throws Exception {
+        Map<String, MapBoxOfflineQueueTask> offlineQueueTaskMap = new HashMap<>();
+
+        MapBoxOfflineQueueTask offlineQueueTask = getMapBoxOfflineQueueTask();
+        offlineQueueTask.setDateCreated(new Date());
+        offlineQueueTaskMap.put("location_1",offlineQueueTask);
+        return offlineQueueTaskMap;
     }
 
 }

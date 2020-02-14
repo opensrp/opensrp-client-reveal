@@ -170,6 +170,7 @@ dependencies {
         exclude group: 'com.android.volley'
     }
 
+
     implementation('org.smartregister:opensrp-client-core:1.8.25-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
@@ -180,7 +181,7 @@ dependencies {
         exclude group: 'org.apache.httpcomponents', module: 'httpmime'
         exclude group: 'com.github.ybq', module: 'Android-SpinKit'
     }
-    implementation('org.smartregister:opensrp-client-configurable-views:1.1.3-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-configurable-views:1.1.5-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'org.smartregister', module: 'opensrp-client-core'
         exclude group: 'com.android.support', module: 'appcompat-v7'
@@ -196,7 +197,7 @@ dependencies {
         exclude group: 'io.ona.rdt-capture', module: 'lib'
     }
 
-    implementation('org.smartregister:opensrp-client-family:1.2.30-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-family:1.2.31-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'org.smartregister', module: 'opensrp-client-core'
         exclude group: 'org.smartregister', module: 'opensrp-client-native-form'

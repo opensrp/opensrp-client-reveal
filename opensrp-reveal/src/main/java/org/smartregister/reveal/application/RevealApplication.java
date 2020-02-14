@@ -56,6 +56,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
+import io.ona.kujaku.data.realm.RealmDatabase;
 import io.ona.kujaku.KujakuLibrary;
 import timber.log.Timber;
 
@@ -91,6 +92,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     private FeatureCollection featureCollection;
 
     private FamilyMetadata metadata;
+
+    private RealmDatabase realmDatabase;
 
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
@@ -349,6 +352,14 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         }
         return planDefinitionSearchRepository;
     }
+
+    public RealmDatabase getRealmDatabase(android.content.Context context) {
+        if (realmDatabase == null) {
+            realmDatabase = RealmDatabase.init(context);
+        }
+        return realmDatabase;
+    }
+
 
     @NonNull
     @Override

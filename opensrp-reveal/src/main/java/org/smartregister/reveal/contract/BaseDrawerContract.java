@@ -56,6 +56,8 @@ public interface BaseDrawerContract {
         Presenter getPresenter();
 
         void onResume();
+
+        void openOfflineMapsView();
     }
 
     interface Presenter {
@@ -79,6 +81,8 @@ public interface BaseDrawerContract {
         View getView();
 
         void onViewResumed();
+
+        void onShowOfflineMaps();
 
         boolean isPlanAndOperationalAreaSelected();
 
