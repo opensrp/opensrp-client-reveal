@@ -329,6 +329,10 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     }
 
+    @Override
+    public void onShowOfflineMaps() {
+        getView().openOfflineMapsView();
+    }
     private void validateSelectedPlan(String operationalArea) {
         if (!prefsUtil.getCurrentPlanId().isEmpty()) {
             interactor.validateCurrentPlan(operationalArea, prefsUtil.getCurrentPlanId());

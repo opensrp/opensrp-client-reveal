@@ -13,6 +13,8 @@ import org.smartregister.reveal.util.AppExecutors;
 
 import java.util.concurrent.Executors;
 
+import io.ona.kujaku.data.realm.RealmDatabase;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -48,4 +50,9 @@ public class TestRevealApplication extends RevealApplication {
         return repository;
     }
 
+    @Override
+    public RealmDatabase getRealmDatabase(android.content.Context context) {
+
+        return mock(RealmDatabase.class);
+    }
 }

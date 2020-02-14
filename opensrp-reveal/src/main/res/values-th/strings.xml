@@ -197,4 +197,7 @@
     <string name="partially_sprayed">Partially Sprayed</string>
 
     <string name="opensrp_url" translatable="false">@string/opensrp_base_url</string>
+
+    <!-- form -->
+    <string name="add_fam">ทะเบียนครัวเรือน</string>
 </resources>

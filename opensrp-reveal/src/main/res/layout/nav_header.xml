@@ -77,6 +77,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_navMenu_p2pSyncBtn" />
 
+    <TextView
+        android:id="@+id/btn_navMenu_offline_maps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:text="@string/offline_maps"
+        android:textColor="@color/button_blue"
+        android:textSize="18sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_navMenu_summaryForms" />
+
 
     <View
         android:id="@+id/header_separator"
@@ -87,7 +100,7 @@
         android:background="#DEDEDE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_navMenu_summaryForms" />
+        app:layout_constraintTop_toBottomOf="@id/btn_navMenu_offline_maps" />
 
 
 

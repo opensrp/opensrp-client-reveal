@@ -23,6 +23,7 @@
     <string name="campaign">Plan</string>
     <string name="operational_area">Operational Area</string>
 
+    <string name="offline_maps">Offline Maps</string>
     <string name="app_version">Version %1$s</string>
     <string name="app_updated">Updated %1$s</string>
     <string name="district">District:</string>
@@ -40,6 +41,7 @@
 
     <string name="reveal_satellite_style" translatable="false">asset://reveal-streets-satellite.json</string>
     <string name="reveal_streets_style" translatable="false">reveal-streets-style.json</string>
+    <string name="reveal_offline_map_download_style" translatable="false">map-download-style.json</string>
     <string name="reveal_datasource_name" translatable="false">reveal-data-set</string>
     <string name="reveal_layer_polygons" translatable="false">reveal-data-polygons</string>
     <string name="reveal_layer_points" translatable="false">reveal-data-points</string>
@@ -289,6 +291,16 @@
     <string name="eligible">Eligible</string>
     <string name="not_eligible_unoccupied">Not Eligible: Currently Unoccupied</string>
     <string name="not_eligible_other">Not Eligible: Other</string>
+    <string name="available">available</string>
+    <string name="downloaded">Downloaded</string>
+    <string name="download">Download</string>
+    <string name="downloading">Downloading</string>
+    <string name="delete">Delete</string>
+    <string name="select_offline_map_to_delete">Please select an offline map to delete</string>
+    <string name="select_offline_map_to_download">Please select an offline map to download</string>
+    <string name="offline_map_size">Size %1$s Downloaded %2$s </string>
+    <string name="download_finished_successfuly">Download finished successfuly</string>
+    <string name="map_download_progress">Downloading: %,.2f %%</string>
 
     <string name="menu">Menu</string>
     <string name="add_structure">Register Structure</string>
@@ -314,6 +326,10 @@
     <string name="mda_dispense">MDA Dispense</string>
     <string name="mda_adherence">MDA Adherence</string>
 
+
+    <!-- form -->
+    <string name="add_fam">Household registration</string>
+
     <string-array name="task_sort_options">
         <item>Distance (nearest first)</item>
         <item>Status</item>
@@ -328,5 +344,6 @@
     <string name="reseting_task_msg">Resetting Task Information. Please wait</string>
     <string name="undo_task_title">Are you sure you want to clear all data associated with this event?</string>
     <string name="undo_task_msg">You will not be able to recover this data and this task will be marked as incomplete</string>
+    <string name="localhost_url">http://localhost:%1$d/</string>
 
 </resources>
