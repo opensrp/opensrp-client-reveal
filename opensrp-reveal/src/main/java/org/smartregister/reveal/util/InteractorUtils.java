@@ -140,17 +140,16 @@ public class InteractorUtils {
 
         try {
 
-            JSONArray eventClietJsonArray = new JSONArray(gson.toJson(eventClients));
+            JSONArray eventClientJsonArray = new JSONArray(gson.toJson(eventClients));
 
-            if (eventClietJsonArray != null && eventClietJsonArray.length() > 1) {
-                for (int i=0; i < eventClietJsonArray.length(); i++) {
-                    JSONObject eventJson = eventClietJsonArray.getJSONObject(i);
-                    eventJson.put("dateVoided", now);
-                    eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
-                    taskEvents.put(eventJson);
-                }
-                eventClientRepository.batchInsertEvents(taskEvents, 0);
+            for (int i = 0; i < eventClientJsonArray.length(); i++) {
+                JSONObject eventJson = eventClientJsonArray.getJSONObject(i);
+                eventJson.put("dateVoided", now);
+                eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
+                taskEvents.put(eventJson);
             }
+            eventClientRepository.batchInsertEvents(taskEvents, 0);
+
 
             Event resetTaskEvent = RevealJsonFormUtils.createTaskEvent(taskDetails.getTaskEntity(), Utils.getCurrentLocationId(),
                     null, Constants.TASK_RESET_EVENT, Constants.STRUCTURE);
