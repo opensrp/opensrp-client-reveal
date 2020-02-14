@@ -31,9 +31,13 @@ import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.CASE_CONFIRMATION_FIELD;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TASK_TABLE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TYPE_FIELD;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.FORM_SUBMISSION_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.util.JsonFormUtils.gson;
@@ -131,7 +135,7 @@ public class InteractorUtils {
         if (task == null) {
             return false;
         }
-        List<String> formSubmissionIds = getFormSubmissionIdsFromEventTask(db, task.getIdentifier());
+        List<String> formSubmissionIds = getFormSubmissionIdsFromEventTask(db, task);
         List<EventClient> eventClients = eventClientRepository.fetchEventClients(formSubmissionIds);
         DateTime now = new DateTime();
         JSONArray taskEvents = new JSONArray();
@@ -170,17 +174,32 @@ public class InteractorUtils {
         return archived;
     }
 
-    public List<String> getFormSubmissionIdsFromEventTask(SQLiteDatabase db, String taskIdentifier) {
+    public List<String> getFormSubmissionIdsFromEventTask(SQLiteDatabase db, Task task) {
         List<String> formSubmissionIds = new ArrayList<>();
         Cursor cursor = null;
 
-        try {
-            String query = String.format("select %s from %s where %s = ?",
-                    BASE_ENTITY_ID, EVENT_TASK_TABLE, TASK_ID);
-            cursor = db.rawQuery(query, new String[]{taskIdentifier});
+        String query;
 
-            while (cursor.moveToNext()) {
-                formSubmissionIds.add(cursor.getString(cursor.getColumnIndex(BASE_ENTITY_ID)));
+
+        try {
+
+            if (CASE_CONFIRMATION.equals(task.getCode())) {
+                query = String.format("select %s from event where baseEntityId = ?  and %s = ?",
+                        FORM_SUBMISSION_ID, EVENT_TYPE_FIELD);
+                cursor = db.rawQuery(query, new String[]{task.getForEntity(), CASE_CONFIRMATION_FIELD});
+
+                while (cursor.moveToNext()) {
+                    formSubmissionIds.add(cursor.getString(cursor.getColumnIndex(FORM_SUBMISSION_ID)));
+                }
+
+            } else {
+                query = String.format("select %s from %s where %s = ?",
+                        BASE_ENTITY_ID, EVENT_TASK_TABLE, TASK_ID);
+                cursor = db.rawQuery(query, new String[]{task.getIdentifier()});
+
+                while (cursor.moveToNext()) {
+                    formSubmissionIds.add(cursor.getString(cursor.getColumnIndex(BASE_ENTITY_ID)));
+                }
             }
 
         } finally {

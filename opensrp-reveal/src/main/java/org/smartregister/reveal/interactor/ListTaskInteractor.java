@@ -452,14 +452,13 @@ public class ListTaskInteractor extends BaseInteractor {
     public void resetInterventionTaskInfo(Context context, String interventionType, String featureId) {
         String sql = String.format(getTaskSelect("%s = ? and %s = ?"),
                     FOR, CODE);
-        boolean[] taskInfoResetSuccessful = {false};
 
         final String SQL = sql;
 
         appExecutors.diskIO().execute(() -> {
             StructureTaskDetails taskDetails = null;
             Cursor cursor = null;
-
+            boolean taskInfoResetSuccessful = false;
             try {
                 cursor = getDatabase().rawQuery(SQL, new String[]{featureId, interventionType});
                 while (cursor.moveToNext()) {
@@ -478,10 +477,9 @@ public class ListTaskInteractor extends BaseInteractor {
                 TaskUtils.getInstance().resetTask(context, taskDetails);
                 interactorUtils.archiveEventsForTask(getDatabase(), taskDetails);
 
-                taskInfoResetSuccessful[0] = true;
+                taskInfoResetSuccessful = true;
 
             } catch (Exception e) {
-                taskInfoResetSuccessful[0] = false;
                Timber.e(e, "Error querying tasks details for " + featureId);
             } finally {
                 if (cursor != null) {
@@ -489,8 +487,9 @@ public class ListTaskInteractor extends BaseInteractor {
                 }
             }
 
+            boolean finalTaskInfoResetSuccessful = taskInfoResetSuccessful;
             appExecutors.mainThread().execute(()-> {
-                getPresenter().onInterventionTaskInfoReset(taskInfoResetSuccessful[0]);
+                getPresenter().onInterventionTaskInfoReset(finalTaskInfoResetSuccessful);
             });
         });
 
