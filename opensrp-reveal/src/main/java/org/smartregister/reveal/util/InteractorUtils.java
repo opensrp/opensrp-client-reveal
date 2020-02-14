@@ -16,7 +16,6 @@ import org.smartregister.domain.db.EventClient;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.TaskRepository;
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
@@ -27,7 +26,6 @@ import java.util.List;
 
 import timber.log.Timber;
 
-import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CASE_CONFIRMATION_FIELD;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TASK_TABLE;
@@ -37,7 +35,6 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUC
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
-import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.util.JsonFormUtils.gson;
 
 public class InteractorUtils {
@@ -48,10 +45,13 @@ public class InteractorUtils {
 
     private RevealClientProcessor clientProcessor;
 
+    private RevealJsonFormUtils jsonFormUtils;
+
     public InteractorUtils(TaskRepository taskRepository, EventClientRepository eventClientRepository, RevealClientProcessor clientProcessor) {
         this.taskRepository = taskRepository;
         this.eventClientRepository = eventClientRepository;
         this.clientProcessor = clientProcessor;
+        jsonFormUtils = new RevealJsonFormUtils();
     }
 
 
@@ -139,15 +139,15 @@ public class InteractorUtils {
 
         try {
 
-            if (eventClients != null && !eventClients.isEmpty()) {
-                for (EventClient eventClient: eventClients) {
-                    org.smartregister.domain.db.Event event = eventClient.getEvent();
-                    JSONObject eventJson = new JSONObject(gson.toJson(event));
+            JSONArray eventClietJsonArray = new JSONArray(gson.toJson(eventClients));
+
+            if (eventClietJsonArray != null && eventClietJsonArray.length() > 1) {
+                for (int i=0; i < eventClietJsonArray.length(); i++) {
+                    JSONObject eventJson = eventClietJsonArray.getJSONObject(i);
                     eventJson.put("dateVoided", now);
                     eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
                     taskEvents.put(eventJson);
                 }
-
                 eventClientRepository.batchInsertEvents(taskEvents, 0);
             }
 
@@ -156,7 +156,7 @@ public class InteractorUtils {
             JSONObject eventJson = new JSONObject(gson.toJson(resetTaskEvent));
             eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
 
-            populateEventDetails(eventJson, taskDetails.getTaskId(), taskDetails.getBusinessStatus(), taskDetails.getTaskStatus(), taskDetails.getStructureId());
+            eventJson = jsonFormUtils.populateFormDetails(eventJson.toString(), taskDetails.getTaskEntity(), taskDetails.getStructureId(), taskDetails.getTaskId(), taskDetails.getBusinessStatus(), taskDetails.getTaskStatus(), null, null);
             eventClientRepository.addEvent(taskDetails.getTaskEntity(), eventJson);
 
 
@@ -203,21 +203,6 @@ public class InteractorUtils {
         }
 
         return formSubmissionIds;
-    }
-
-    private void populateEventDetails(JSONObject eventJson, String taskIdentifier,
-                                      String taskBusinessStatus, String taskStatus, String structureId){
-        try {
-            JSONObject formData = new JSONObject();
-            formData.put(Constants.Properties.TASK_IDENTIFIER, taskIdentifier);
-            formData.put(TASK_BUSINESS_STATUS, taskBusinessStatus);
-            formData.put(Constants.Properties.TASK_STATUS, taskStatus);
-            formData.put(Constants.Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
-            formData.put(Constants.Properties.LOCATION_ID, structureId);
-            eventJson.put(DETAILS, formData);
-        } catch (JSONException e) {
-            Timber.e(e);
-        }
     }
 
 }

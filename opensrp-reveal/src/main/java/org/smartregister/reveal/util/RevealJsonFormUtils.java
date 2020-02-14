@@ -158,7 +158,7 @@ public class RevealJsonFormUtils {
     }
 
 
-    private JSONObject populateFormDetails(String formString, String entityId, String structureId, String taskIdentifier,
+    public JSONObject populateFormDetails(String formString, String entityId, String structureId, String taskIdentifier,
                                            String taskBusinessStatus, String taskStatus, String structureUUID,
                                            Integer structureVersion) throws JSONException {
 
