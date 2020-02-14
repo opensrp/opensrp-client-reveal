@@ -42,8 +42,6 @@ import static org.smartregister.family.util.DBConstants.KEY.VILLAGE_TOWN;
  */
 public class FamilyJsonFormUtils extends JsonFormUtils {
 
-    private static final String TAG = FamilyJsonFormUtils.class.getName();
-
     private LocationPickerView locationPickerView;
 
     private FormUtils formUtils;
