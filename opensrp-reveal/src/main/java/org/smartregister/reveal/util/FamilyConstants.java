@@ -15,6 +15,7 @@ public interface FamilyConstants {
 
     interface EventType {
         String FAMILY_REGISTRATION = "Family Registration";
+        String FAMILY_REGISTRATION_INELIGIBLE = "Family Registration Ineligible";
         String FAMILY_MEMBER_REGISTRATION = "Family Member Registration";
 
         String UPDATE_FAMILY_REGISTRATION = "Update Family Registration";

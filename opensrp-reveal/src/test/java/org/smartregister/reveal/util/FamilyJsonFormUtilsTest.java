@@ -11,9 +11,11 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Location;
 import org.smartregister.family.util.DBConstants.KEY;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.repository.AllSharedPreferences;
@@ -21,6 +23,7 @@ import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.util.AssetHandler;
+import org.smartregister.util.Cache;
 import org.smartregister.util.DateUtil;
 import org.smartregister.util.FormUtils;
 import org.smartregister.util.JsonFormUtils;
@@ -74,6 +77,9 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
 
     @Mock
     private LocationHelper locationHelper;
+
+    @Mock
+    private Location location;
 
     private Context context = RuntimeEnvironment.application;
 
@@ -277,9 +283,13 @@ public class FamilyJsonFormUtilsTest extends BaseUnitTest {
         allSharedPreferences.updateANMUserName("user1132");
         allSharedPreferences.saveDefaultTeam("user1132", "Ateam");
         allSharedPreferences.saveDefaultTeamId("user1132", "2342fsdfds99");
-        allSharedPreferences.saveDefaultLocalityId("user1132", "13k083-jhnf33");
+        Cache<Location> cache = new Cache<>();
+        cache.get("13k083-jhnf33", () -> location);
+        when(location.getId()).thenReturn("loc123");
+        Whitebox.setInternalState(Utils.class, "cache", cache);
+        PreferencesUtil.getInstance().setCurrentOperationalArea("13k083-jhnf33");
         Event event = FamilyJsonFormUtils.createFamilyEvent(baseEntityId, updateFamilyEvent.getLocationId(), updateFamilyEvent.getDetails(), UPDATE_FAMILY_MEMBER_REGISTRATION);
-        assertEquals("13k083-jhnf33", event.getLocationId());
+        assertEquals("loc123", event.getLocationId());
         assertEquals("user1132", event.getProviderId());
         assertEquals("2342fsdfds99", event.getTeamId());
         assertEquals("Ateam", event.getTeam());
