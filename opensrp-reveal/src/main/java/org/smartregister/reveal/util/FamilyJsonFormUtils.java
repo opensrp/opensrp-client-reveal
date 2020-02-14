@@ -42,8 +42,6 @@ import static org.smartregister.family.util.DBConstants.KEY.VILLAGE_TOWN;
  */
 public class FamilyJsonFormUtils extends JsonFormUtils {
 
-    private static final String TAG = FamilyJsonFormUtils.class.getName();
-
     private LocationPickerView locationPickerView;
 
     private FormUtils formUtils;
@@ -280,13 +278,13 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         }
     }
 
-    public static Event createFamilyEvent(String baseEntityId, String locationId, Map<String, String> details, String  eventType) {
+    public static Event createFamilyEvent(String baseEntityId, String locationId, Map<String, String> details, String eventType) {
         FamilyMetadata familyMetadata = RevealApplication.getInstance().getMetadata();
         Event updateMemberNameEvent =
                 (Event) new Event().withBaseEntityId(baseEntityId).withEventDate(new Date()).withEventType(eventType)
                         .withLocationId(locationId).withEntityType(familyMetadata.familyMemberRegister.tableName)
                         .withFormSubmissionId(UUID.randomUUID().toString()).withDateCreated(new Date());
-        tagSyncMetadata(RevealApplication.getInstance().getContext().allSharedPreferences(), updateMemberNameEvent);
+        org.smartregister.reveal.util.Utils.tagEventMetadata(updateMemberNameEvent, org.smartregister.reveal.util.Utils.getFormTag());
         updateMemberNameEvent.setDetails(details);
         return updateMemberNameEvent;
     }
