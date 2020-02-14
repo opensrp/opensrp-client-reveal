@@ -410,8 +410,8 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
     @Override
     public void resetTaskInfo(Context context, TaskDetails taskDetails) {
         appExecutors.diskIO().execute(() -> {
-            TaskUtils.getInstance().resetTask(context, taskDetails);
             interactorUtils.archiveEventsForTask(getDatabase(), taskDetails);
+            TaskUtils.getInstance().resetTask(context, taskDetails);
         });
     }
 }

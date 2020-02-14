@@ -474,8 +474,8 @@ public class ListTaskInteractor extends BaseInteractor {
                 }
 
                 // Reset task info
-                TaskUtils.getInstance().resetTask(context, taskDetails);
                 interactorUtils.archiveEventsForTask(getDatabase(), taskDetails);
+                TaskUtils.getInstance().resetTask(context, taskDetails);
 
                 taskInfoResetSuccessful = true;
 
