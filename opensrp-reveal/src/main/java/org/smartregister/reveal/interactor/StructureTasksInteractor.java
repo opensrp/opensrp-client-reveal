@@ -26,7 +26,6 @@ import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.InteractorUtils;
-import org.smartregister.reveal.util.TaskUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -171,8 +170,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     @Override
     public void resetTaskInfo(Context context, StructureTaskDetails taskDetails) {
         appExecutors.diskIO().execute(() -> {
-            interactorUtils.archiveEventsForTask(getDatabase(), taskDetails);
-            TaskUtils.getInstance().resetTask(context, taskDetails);
+            interactorUtils.resetTaskInfo(context, getDatabase(), taskDetails);
 
             appExecutors.mainThread().execute(() -> {
                 presenter.onOnTaskInfoReset(taskDetails.getStructureId());

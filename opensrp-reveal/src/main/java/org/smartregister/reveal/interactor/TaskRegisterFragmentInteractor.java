@@ -23,7 +23,6 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.InteractorUtils;
-import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.ArrayList;
@@ -410,8 +409,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
     @Override
     public void resetTaskInfo(Context context, TaskDetails taskDetails) {
         appExecutors.diskIO().execute(() -> {
-            interactorUtils.archiveEventsForTask(getDatabase(), taskDetails);
-            TaskUtils.getInstance().resetTask(context, taskDetails);
+            interactorUtils.resetTaskInfo(context, getDatabase(), taskDetails);
         });
     }
 }

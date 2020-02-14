@@ -40,7 +40,6 @@ import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.GeoJsonUtils;
 import org.smartregister.reveal.util.IndicatorUtils;
 import org.smartregister.reveal.util.InteractorUtils;
-import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.HashMap;
@@ -474,9 +473,7 @@ public class ListTaskInteractor extends BaseInteractor {
                 }
 
                 // Reset task info
-                interactorUtils.archiveEventsForTask(getDatabase(), taskDetails);
-                TaskUtils.getInstance().resetTask(context, taskDetails);
-
+                interactorUtils.resetTaskInfo(context, getDatabase(), taskDetails);
                 taskInfoResetSuccessful = true;
 
             } catch (Exception e) {
