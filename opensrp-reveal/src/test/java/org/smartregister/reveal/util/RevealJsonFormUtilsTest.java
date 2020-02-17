@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
+import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Geometry;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
@@ -20,6 +21,8 @@ import org.smartregister.util.AssetHandler;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static org.junit.Assert.assertEquals;
@@ -28,6 +31,8 @@ import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLL
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
+import static org.smartregister.reveal.util.Constants.STRUCTURE;
+import static org.smartregister.reveal.util.Constants.TASK_RESET_EVENT;
 
 /**
  * Created by Vincent Karuri on 25/04/2019
@@ -135,5 +140,23 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
 
         JSONObject jsonObject = revealJsonFormUtils.getFormJSON(context, JsonForm.BLOOD_SCREENING_FORM, task, structure);
         assertEquals(jsonObject.getJSONObject("details").getString(Constants.Properties.FORM_VERSION), "0.0.1");
+    }
+
+    @Test
+    public void testCreateEvent() {
+
+        String baseEntityId = UUID.randomUUID().toString();
+        String locationId = UUID.randomUUID().toString();
+        Map<String, String> details = new HashMap<>();
+        String  eventType =  TASK_RESET_EVENT;
+        String entityType = STRUCTURE;
+
+        Event actualEvent = revealJsonFormUtils.createTaskEvent(baseEntityId, locationId, details, eventType, entityType);
+
+        assertEquals(baseEntityId, actualEvent.getBaseEntityId());
+        assertEquals(locationId, actualEvent.getLocationId());
+        assertEquals(eventType, actualEvent.getEventType());
+        assertEquals(entityType, actualEvent.getEntityType());
+        assertEquals(baseEntityId, actualEvent.getBaseEntityId());
     }
 }
