@@ -147,7 +147,7 @@ public class InteractorUtils {
             JSONArray eventClientJsonArray = new JSONArray(gson.toJson(eventClients));
 
             for (int i = 0; i < eventClientJsonArray.length(); i++) {
-                JSONObject eventJson = eventClientJsonArray.getJSONObject(i);
+                JSONObject eventJson = eventClientJsonArray.getJSONObject(i).getJSONObject("event");
                 eventJson.put("dateVoided", now);
                 eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
                 taskEvents.put(eventJson);
