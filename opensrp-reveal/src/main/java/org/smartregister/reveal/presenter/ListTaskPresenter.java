@@ -379,6 +379,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public void onInterventionTaskInfoReset(boolean success) {
         listTaskView.hideProgressDialog();
+        listTaskView.closeAllCardViews();
         if (revealApplication.isRefreshMapOnEventSaved()) {
             refreshStructures(true);
             listTaskView.clearSelectedFeature();
