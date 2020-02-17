@@ -25,6 +25,7 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
@@ -88,6 +89,9 @@ public class ListTaskPresenterTest extends BaseUnitTest {
 
     @Captor
     private ArgumentCaptor<FeatureCollection> featureCollectionArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<String> stringArgumentCaptor;
 
     private PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
 
@@ -361,5 +365,14 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         assertEquals("id2", featureCollectionArgumentCaptor.getValue().features().get(0).id());
     }
 
+    @Test
+    public void testOnInterventionTaskInfoReset() {
+        RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
+        listTaskPresenter.onInterventionTaskInfoReset(true);
+
+        verify(listTaskView).hideProgressDialog();
+        verify(listTaskView).clearSelectedFeature();
+        assertFalse(RevealApplication.getInstance().isRefreshMapOnEventSaved());
+    }
 
 }

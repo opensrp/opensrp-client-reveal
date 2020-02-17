@@ -2,6 +2,7 @@ package org.smartregister.reveal.view;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.support.design.widget.Snackbar;
@@ -78,6 +79,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -92,6 +94,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.FIRST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FAMILY_PROFILE;
@@ -793,6 +796,23 @@ public class ListTasksActivityTest extends BaseUnitTest {
         listTasksActivity.setSearchPhrase(searchBy);
         assertEquals(searchBy, ((TextView) listTasksActivity.findViewById(R.id.edt_search)).getText().toString());
         verify(listTaskPresenter).searchTasks(searchBy);
+    }
+
+
+    @Test
+    public void testDisplayResetTaskInfoDialog() {
+        Whitebox.setInternalState(listTasksActivity, "listTaskPresenter", listTaskPresenter);
+        listTasksActivity.displayResetInterventionTaskDialog(BEDNET_DISTRIBUTION);
+
+        AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(alertDialog.isShowing());
+
+        TextView tv = alertDialog.findViewById(android.R.id.message);
+        assertEquals(getString(R.string.undo_task_msg), tv.getText());
+
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).performClick();
+        verify(listTaskPresenter).onUndoInterventionStatus(eq(BEDNET_DISTRIBUTION));
+        assertFalse(alertDialog.isShowing());
     }
 
 
