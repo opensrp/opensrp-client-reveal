@@ -2,7 +2,6 @@ package org.smartregister.reveal.view;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.support.design.widget.Snackbar;
@@ -810,7 +809,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
         TextView tv = alertDialog.findViewById(android.R.id.message);
         assertEquals(getString(R.string.undo_task_msg), tv.getText());
 
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).performClick();
+        alertDialog.getButton(BUTTON_POSITIVE).performClick();
         verify(listTaskPresenter).onUndoInterventionStatus(eq(BEDNET_DISTRIBUTION));
         assertFalse(alertDialog.isShowing());
     }

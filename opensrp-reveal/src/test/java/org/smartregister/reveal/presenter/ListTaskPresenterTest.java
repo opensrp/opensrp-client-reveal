@@ -90,9 +90,6 @@ public class ListTaskPresenterTest extends BaseUnitTest {
     @Captor
     private ArgumentCaptor<FeatureCollection> featureCollectionArgumentCaptor;
 
-    @Captor
-    private ArgumentCaptor<String> stringArgumentCaptor;
-
     private PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
 
     private String planId = UUID.randomUUID().toString();
