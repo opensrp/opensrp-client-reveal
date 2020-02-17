@@ -170,7 +170,7 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     }
 
     @Override
-    public void onOnTaskInfoReset(String structureId) {
+    public void onTaskInfoReset(String structureId) {
         findTasks(structureId);
     }
 

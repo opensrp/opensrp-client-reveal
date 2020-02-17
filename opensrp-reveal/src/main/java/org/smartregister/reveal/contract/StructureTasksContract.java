@@ -34,7 +34,7 @@ public interface StructureTasksContract {
 
         void resetTaskInfo(StructureTaskDetails taskDetails);
 
-        void onOnTaskInfoReset(String structureId);
+        void onTaskInfoReset(String structureId);
     }
 
     interface Interactor extends BaseContract.BaseInteractor {

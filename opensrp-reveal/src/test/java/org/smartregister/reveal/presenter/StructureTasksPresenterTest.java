@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -124,6 +125,27 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
     }
 
     @Test
+    public void testUndoCompleteTaskSelectedDisplaysTaskInfoDialog() {
+        StructureTaskDetails task = TestingUtils.getStructureTaskDetails();
+        task.setTaskStatus(Task.TaskStatus.COMPLETED.name());
+        presenter.onTaskSelected(task, false, true);
+        verify(view).displayResetTaskInfoDialog(taskDetailsArgumentCaptor.capture());
+        assertEquals(task.getTaskId(), taskDetailsArgumentCaptor.getValue().getTaskId());
+    }
+
+    @Test
+    public void testEditCompleteTaskSelectedDisplaysTaskInfoDialog() {
+        StructureTaskDetails task = TestingUtils.getStructureTaskDetails();
+        task.setTaskStatus(Task.TaskStatus.COMPLETED.name());
+        task.setEdit(false);
+        presenter.onTaskSelected(task, true, false);
+        verify(view).showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
+        verify(interactor).getStructure(taskDetailsArgumentCaptor.capture());
+        assertEquals(task.getTaskId(), taskDetailsArgumentCaptor.getValue().getTaskId());
+        assertTrue(taskDetailsArgumentCaptor.getValue().isEdit());
+    }
+
+    @Test
     public void testOnTaskSelectedBCCTaskGetStructureDetails() {
         StructureTaskDetails task = TestingUtils.getStructureTaskDetails();
         task.setTaskCode(Intervention.BCC);
@@ -209,5 +231,32 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
         verify(view).hideProgressDialog();
         verify(view).updateTasks(taskId, Task.TaskStatus.IN_PROGRESS, Constants.BusinessStatus.NOT_SPRAYED, Collections.EMPTY_SET);
     }
+
+    @Test
+    public void testResetTaskInfo() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        presenter.resetTaskInfo(taskDetails);
+        verify(interactor).resetTaskInfo(any(), taskDetailsArgumentCaptor.capture());
+        assertEquals(taskDetails.getTaskId(), taskDetailsArgumentCaptor.getValue().getTaskId());
+    }
+
+    @Test
+    public void testOnTaskInfoReset() {
+        String planId = UUID.randomUUID().toString();
+        String structureId = UUID.randomUUID().toString();
+        String jurisdictionId = UUID.randomUUID().toString();
+        when(prefsUtil.getCurrentPlanId()).thenReturn(planId);
+        when(prefsUtil.getCurrentOperationalArea()).thenReturn(jurisdictionId);
+
+        Location jurisdiction = new Location();
+        jurisdiction.setId(jurisdictionId);
+        Cache<Location> cache = mock(Cache.class);
+        when(cache.get(anyString(), any())).thenReturn(jurisdiction);
+        Whitebox.setInternalState(Utils.class, cache);
+
+        presenter.onTaskInfoReset(structureId);
+        verify(interactor).findTasks(structureId, planId, jurisdictionId);
+    }
+
 
 }
