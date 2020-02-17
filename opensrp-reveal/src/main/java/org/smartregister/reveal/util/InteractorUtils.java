@@ -28,6 +28,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CASE_CONFIRMATION_FIELD;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TASK_TABLE;
@@ -35,6 +36,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TYPE_FI
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FORM_SUBMISSION_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
+import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.util.JsonFormUtils.gson;
@@ -179,10 +181,18 @@ public class InteractorUtils {
 
         try {
 
-            if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
+            if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode()) || BCC.equals(taskDetails.getTaskCode())) {
+                String eventTypeField= null;
+
+                if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
+                    eventTypeField = CASE_CONFIRMATION_FIELD;
+                } else if(BCC.equals(taskDetails.getTaskCode())) {
+                    eventTypeField = BEHAVIOUR_CHANGE_COMMUNICATION;
+                }
+
                 query = String.format("select %s from event where baseEntityId = ?  and %s = ?",
                         FORM_SUBMISSION_ID, EVENT_TYPE_FIELD);
-                cursor = db.rawQuery(query, new String[]{taskDetails.getTaskEntity(), CASE_CONFIRMATION_FIELD});
+                cursor = db.rawQuery(query, new String[]{taskDetails.getTaskEntity(), eventTypeField});
 
                 while (cursor.moveToNext()) {
                     formSubmissionIds.add(cursor.getString(cursor.getColumnIndex(FORM_SUBMISSION_ID)));
