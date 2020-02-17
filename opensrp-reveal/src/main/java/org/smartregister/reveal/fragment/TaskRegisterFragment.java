@@ -206,7 +206,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     }
 
-    private void displayTaskActionDialog(TaskDetails details, View view) {
+    public void displayTaskActionDialog(TaskDetails details, View view) {
         AlertDialogUtils.displayNotificationWithCallback(getContext(), R.string.select_task_action,
                 R.string.choose_action, R.string.view_details, R.string.undo, new Dialog.OnClickListener() {
                     @Override

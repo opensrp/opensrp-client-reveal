@@ -12,6 +12,8 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -49,11 +51,14 @@ import io.ona.kujaku.utils.Constants.RequestCode;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -94,6 +99,9 @@ public class TaskRegisterFragmentTest extends BaseUnitTest {
 
     @Mock
     private ValidateUserLocationPresenter locationPresenter;
+
+    @Captor
+    private ArgumentCaptor<TaskDetails> taskDetailsArgumentCaptor;
 
 
     @Before
@@ -392,5 +400,40 @@ public class TaskRegisterFragmentTest extends BaseUnitTest {
         verify(presenter).filterTasks(params);
     }
 
+    @Test
+    public void testDisplayResetTaskInfoDialog() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        fragment.displayResetTaskInfoDialog(taskDetails);
+
+        AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(alertDialog.isShowing());
+
+        TextView tv = alertDialog.findViewById(android.R.id.message);
+        assertEquals(getString(R.string.undo_task_msg), tv.getText());
+
+        Whitebox.setInternalState(fragment, "presenter", presenter);
+        alertDialog.getButton(BUTTON_POSITIVE).performClick();
+        verify(presenter).resetTaskInfo(taskDetailsArgumentCaptor.capture());
+        assertEquals(taskDetails.getTaskId(), taskDetailsArgumentCaptor.getValue().getTaskId());
+        assertFalse(alertDialog.isShowing());
+    }
+
+    @Test
+    public void testDisplayTaskActionDialogForEdit() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        fragment.displayTaskActionDialog(taskDetails, mock(View.class));
+
+        AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(alertDialog.isShowing());
+
+        TextView tv = alertDialog.findViewById(android.R.id.message);
+        assertEquals(getString(R.string.choose_action), tv.getText());
+
+        Whitebox.setInternalState(fragment, "presenter", presenter);
+        alertDialog.getButton(BUTTON_POSITIVE).performClick();
+        verify(presenter).onTaskSelected(taskDetailsArgumentCaptor.capture(), anyBoolean());
+        assertEquals(taskDetails.getTaskId(), taskDetailsArgumentCaptor.getValue().getTaskId());
+        assertFalse(alertDialog.isShowing());
+    }
 
 }
