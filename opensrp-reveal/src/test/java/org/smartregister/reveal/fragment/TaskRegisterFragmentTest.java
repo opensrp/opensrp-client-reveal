@@ -25,6 +25,7 @@ import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.ShadowProgressDialog;
 import org.robolectric.shadows.ShadowToast;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
@@ -51,6 +52,7 @@ import io.ona.kujaku.utils.Constants.RequestCode;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -60,11 +62,13 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FIRST_NAME;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
 
@@ -186,6 +190,22 @@ public class TaskRegisterFragmentTest extends BaseUnitTest {
         view.setTag(R.id.task_details, details);
         fragment.onViewClicked(view);
         verify(presenter).onTaskSelected(details, false);
+    }
+
+    @Test
+    public void testOnViewClickedForTaskReset() {
+        View view = fragment.getView();
+        TaskDetails details = TestingUtils.getTaskDetails();
+        details.setTaskStatus(Task.TaskStatus.COMPLETED.name());
+        details.setTaskCode(CASE_CONFIRMATION);
+        view.setTag(R.id.task_details, details);
+
+        fragment.onViewClicked(view);
+        AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(alertDialog.isShowing());
+
+        TextView tv = alertDialog.findViewById(android.R.id.message);
+        assertEquals(getString(R.string.choose_action), tv.getText());
     }
 
     @Test
@@ -432,6 +452,25 @@ public class TaskRegisterFragmentTest extends BaseUnitTest {
         Whitebox.setInternalState(fragment, "presenter", presenter);
         alertDialog.getButton(BUTTON_POSITIVE).performClick();
         verify(presenter).onTaskSelected(taskDetailsArgumentCaptor.capture(), anyBoolean());
+        assertEquals(taskDetails.getTaskId(), taskDetailsArgumentCaptor.getValue().getTaskId());
+        assertFalse(alertDialog.isShowing());
+    }
+
+    @Test
+    public void testDisplayTaskActionDialogForUndo() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        fragment = spy(fragment);
+        fragment.displayTaskActionDialog(taskDetails, mock(View.class));
+
+        AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(alertDialog.isShowing());
+
+        TextView tv = alertDialog.findViewById(android.R.id.message);
+        assertEquals(getString(R.string.choose_action), tv.getText());
+
+        Whitebox.setInternalState(fragment, "presenter", presenter);
+        alertDialog.getButton(BUTTON_NEGATIVE).performClick();
+        verify(fragment).displayResetTaskInfoDialog(taskDetailsArgumentCaptor.capture());
         assertEquals(taskDetails.getTaskId(), taskDetailsArgumentCaptor.getValue().getTaskId());
         assertFalse(alertDialog.isShowing());
     }
