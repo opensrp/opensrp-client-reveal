@@ -21,20 +21,27 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.util.Cache;
 
+import java.util.Iterator;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.repository.BaseRepository.TYPE_Unsynced;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
+import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 
 /**
  * Created by Richard Kareko on 2/17/20.
@@ -54,17 +61,29 @@ public class TaskUtilsTests extends BaseUnitTest {
     @Captor
     private ArgumentCaptor<Task> taskArgumentCaptor;
 
+    @Captor
+    private ArgumentCaptor<String> stringArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Integer> integerArgumentCaptor;
+
     private Context context;
 
     private TaskUtils taskUtils;
 
     private String jurisdictionId;
 
+    private String expectedEntityId;
+
+    private String expectedStructureId;
+
 
     @Before
     public void setUp() {
         context = RuntimeEnvironment.application;
         jurisdictionId = UUID.randomUUID().toString();
+        expectedEntityId = UUID.randomUUID().toString();
+        expectedStructureId = UUID.randomUUID().toString();
         taskUtils = TaskUtils.getInstance();
         Whitebox.setInternalState(taskUtils, "taskRepository", taskRepository);
 
@@ -108,8 +127,6 @@ public class TaskUtilsTests extends BaseUnitTest {
     @Test
     public void testGenerateTask() {
 
-        String expectedEntityId = UUID.randomUUID().toString();
-        String expectedStructureId = UUID.randomUUID().toString();
         String expectedBusinessStatus = NOT_VISITED;
         String expectedIntervention = BEDNET_DISTRIBUTION;
         int expectedDescription = R.string.bednet_distribution_description;
@@ -129,4 +146,97 @@ public class TaskUtilsTests extends BaseUnitTest {
         assertEquals(BaseRepository.TYPE_Created, actualTask.getSyncStatus());
 
     }
+
+    @Test
+    public void testGenerateRegisterFamilyTask() {
+
+        taskUtils = spy(taskUtils);
+
+        taskUtils.generateRegisterFamilyTask(context, expectedEntityId);
+
+        verify(taskUtils).generateTask(eq(context), stringArgumentCaptor.capture(), stringArgumentCaptor.capture(),
+                stringArgumentCaptor.capture(), stringArgumentCaptor.capture(), integerArgumentCaptor.capture());
+
+        Iterator<String> iterator = stringArgumentCaptor.getAllValues().iterator();
+        assertEquals(expectedEntityId, iterator.next());
+        assertEquals(expectedEntityId, iterator.next());
+        assertEquals(NOT_VISITED, iterator.next());
+        assertEquals(REGISTER_FAMILY, iterator.next());
+        assertEquals(R.string.register_family_description, integerArgumentCaptor.getValue().intValue());
+    }
+
+    @Test
+    public void testGenerateBloodScreeningTask() {
+
+        taskUtils = spy(taskUtils);
+
+        taskUtils.generateBloodScreeningTask(context, expectedEntityId, expectedStructureId);
+
+        verify(taskUtils).generateTask(eq(context), stringArgumentCaptor.capture(), stringArgumentCaptor.capture(),
+                stringArgumentCaptor.capture(), stringArgumentCaptor.capture(), integerArgumentCaptor.capture());
+
+        Iterator<String> iterator = stringArgumentCaptor.getAllValues().iterator();
+        assertEquals(expectedEntityId, iterator.next());
+        assertEquals(expectedStructureId, iterator.next());
+        assertEquals(NOT_VISITED, iterator.next());
+        assertEquals(BLOOD_SCREENING, iterator.next());
+        assertEquals(R.string.blood_screening_description, integerArgumentCaptor.getValue().intValue());
+    }
+
+    @Test
+    public void testGenerateBednetDistributionTask() {
+
+        taskUtils = spy(taskUtils);
+
+        taskUtils.generateBedNetDistributionTask(context, expectedEntityId);
+
+        verify(taskUtils).generateTask(eq(context), stringArgumentCaptor.capture(), stringArgumentCaptor.capture(),
+                stringArgumentCaptor.capture(), stringArgumentCaptor.capture(), integerArgumentCaptor.capture());
+
+        Iterator<String> iterator = stringArgumentCaptor.getAllValues().iterator();
+        assertEquals(expectedEntityId, iterator.next());
+        assertEquals(expectedEntityId, iterator.next());
+        assertEquals(NOT_VISITED, iterator.next());
+        assertEquals(BEDNET_DISTRIBUTION, iterator.next());
+        assertEquals(R.string.bednet_distribution_description, integerArgumentCaptor.getValue().intValue());
+    }
+
+    @Test
+    public void testGenerateMDADispenceTask() {
+
+        taskUtils = spy(taskUtils);
+
+        taskUtils.generateMDADispenseTask(context, expectedEntityId, expectedStructureId);
+
+        verify(taskUtils).generateTask(eq(context), stringArgumentCaptor.capture(), stringArgumentCaptor.capture(),
+                stringArgumentCaptor.capture(), stringArgumentCaptor.capture(), integerArgumentCaptor.capture());
+
+        Iterator<String> iterator = stringArgumentCaptor.getAllValues().iterator();
+        assertEquals(expectedEntityId, iterator.next());
+        assertEquals(expectedStructureId, iterator.next());
+        assertEquals(NOT_VISITED, iterator.next());
+        assertEquals(MDA_DISPENSE, iterator.next());
+        assertEquals(R.string.mda_dispense_desciption, integerArgumentCaptor.getValue().intValue());
+    }
+
+    @Test
+    public void testGenerateMDAAdherenceTask() {
+
+        taskUtils = spy(taskUtils);
+
+        taskUtils.generateMDAAdherenceTask(context, expectedEntityId, expectedStructureId);
+
+        verify(taskUtils).generateTask(eq(context), stringArgumentCaptor.capture(), stringArgumentCaptor.capture(),
+                stringArgumentCaptor.capture(), stringArgumentCaptor.capture(), integerArgumentCaptor.capture());
+
+        Iterator<String> iterator = stringArgumentCaptor.getAllValues().iterator();
+        assertEquals(expectedEntityId, iterator.next());
+        assertEquals(expectedStructureId, iterator.next());
+        assertEquals(NOT_VISITED, iterator.next());
+        assertEquals(MDA_ADHERENCE, iterator.next());
+        assertEquals(R.string.mda_adherence_desciption, integerArgumentCaptor.getValue().intValue());
+    }
+
+
+
 }
