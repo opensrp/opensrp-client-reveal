@@ -4,8 +4,9 @@ import net.sqlcipher.Cursor;
 import net.sqlcipher.MatrixCursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -14,20 +15,23 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
-import org.robolectric.RuntimeEnvironment;
+import org.smartregister.domain.db.Event;
+import org.smartregister.domain.db.EventClient;
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
@@ -63,7 +67,16 @@ public class InteractorUtilsTest extends BaseUnitTest {
     SQLiteDatabase database;
 
     @Captor
-    ArgumentCaptor<BaseTaskDetails> baseTaskDetailsArgumentCaptor;
+    ArgumentCaptor<JSONArray> jsonArrayArgumentCaptor;
+
+    @Captor
+    ArgumentCaptor<Long> longArgumentCaptor;
+
+    @Captor
+    ArgumentCaptor<String> stringArgumentCaptor;
+
+    @Captor
+    ArgumentCaptor<JSONObject> jsonObjectArgumentCaptor;
 
     private InteractorUtils interactorUtils;
 
@@ -123,17 +136,40 @@ public class InteractorUtilsTest extends BaseUnitTest {
         assertEquals(formSubmissionId, actualFormSubmissionIds.get(0));
     }
 
-    @Ignore
     @Test
-    public void testResetTaskInfo() {
+    public void testArchiveEventsForTask() throws Exception {
+        BaseTaskDetails taskDetails = TestingUtils.getTaskDetails();
+        taskDetails.setTaskCode(BLOOD_SCREENING);
 
-        BaseTaskDetails taskDetails = new BaseTaskDetails("task-identifier");
+        Event event = new Event();
+        event.setBaseEntityId(baseEntityId);
+        EventClient eventClient = new EventClient(event);
+        List<EventClient> eventClientList = new ArrayList<>();
+        eventClientList.add(eventClient);
 
-        interactorUtils = spy(interactorUtils);
-        interactorUtils.resetTaskInfo(RuntimeEnvironment.application, database, taskDetails);
-        verify(interactorUtils).archiveEventsForTask(any(), baseTaskDetailsArgumentCaptor.capture());
+        when(database.rawQuery(anyString(), any())).thenReturn(createEventCursor());
+        when(eventClientRepository.fetchEventClients(any())).thenReturn(eventClientList);
+
+        interactorUtils.archiveEventsForTask(database, taskDetails);
+
+        verify(eventClientRepository).batchInsertEvents(jsonArrayArgumentCaptor.capture(), longArgumentCaptor.capture());
+
+        JSONObject actualEvent = jsonArrayArgumentCaptor.getAllValues().get(0).getJSONObject(0);
+
+        assertEquals(0, longArgumentCaptor.getValue().intValue());
+        assertNotNull(actualEvent.get("dateVoided"));
+        assertEquals(BaseRepository.TYPE_Unsynced, actualEvent.get(EventClientRepository.event_column.syncStatus.name()));
+
+        verify(eventClientRepository).addEvent(stringArgumentCaptor.capture(), jsonObjectArgumentCaptor.capture());
+
+        assertEquals(taskDetails.getTaskEntity(), stringArgumentCaptor.getValue());
+
+        //JSONObject actualResetTaskEvent = jsonObjectArgumentCaptor.getValue();
+        //assertEquals(BaseRepository.TYPE_Unsynced, actualResetTaskEvent.get(EventClientRepository.event_column.syncStatus.name()));
+
 
     }
+
 
     private Cursor createEventCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{FORM_SUBMISSION_ID, BASE_ENTITY_ID});
