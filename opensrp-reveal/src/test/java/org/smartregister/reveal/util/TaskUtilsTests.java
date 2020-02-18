@@ -2,6 +2,9 @@ package org.smartregister.reveal.util;
 
 import android.content.Context;
 
+import net.sqlcipher.MatrixCursor;
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -12,20 +15,26 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
+import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.util.Cache;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -57,6 +66,9 @@ public class TaskUtilsTests extends BaseUnitTest {
 
     @Mock
     private PreferencesUtil prefsUtil;
+
+    @Mock
+    private SQLiteDatabase sqLiteDatabase;
 
     @Captor
     private ArgumentCaptor<Task> taskArgumentCaptor;
@@ -237,6 +249,42 @@ public class TaskUtilsTests extends BaseUnitTest {
         assertEquals(R.string.mda_adherence_desciption, integerArgumentCaptor.getValue().intValue());
     }
 
+    @Test
+    public void testTagEventTaskdetails() {
 
+        Event event = new Event();
+        event.setEventId("event-it");
+
+        List<Event> eventList = new ArrayList<>();
+        event.setDetails(new HashMap<>());
+        eventList.add(event);
+
+        assertNull(event.getDetails().get(Constants.Properties.TASK_IDENTIFIER));
+        assertNull(event.getDetails().get(Constants.Properties.TASK_BUSINESS_STATUS));
+        assertNull(event.getDetails().get(Constants.Properties.TASK_STATUS));
+        assertNull(event.getDetails().get(Constants.Properties.LOCATION_ID));
+        assertNull(event.getDetails().get(Constants.Properties.APP_VERSION_NAME));
+        assertNull(event.getLocationId());
+
+
+        Task expectedTask = TestingUtils.getTask("task-id");
+        MatrixCursor cursor = TestingUtils.getTaskCursor(expectedTask.getIdentifier());
+
+        when(sqLiteDatabase.rawQuery("select * from task where for =? and status =? and code =? limit 1",
+                new String[]{event.getBaseEntityId(), Task.TaskStatus.COMPLETED.name(),
+                        Constants.Intervention.IRS})).thenReturn(cursor);
+        when(taskRepository.readCursor(cursor)).thenReturn(expectedTask);
+
+        taskUtils.tagEventTaskDetails(eventList, sqLiteDatabase);
+
+        assertEquals(expectedTask.getIdentifier(), event.getDetails().get(Constants.Properties.TASK_IDENTIFIER));
+        assertEquals(expectedTask.getBusinessStatus(), event.getDetails().get(Constants.Properties.TASK_BUSINESS_STATUS));
+        assertEquals(expectedTask.getStatus().name(), event.getDetails().get(Constants.Properties.TASK_STATUS));
+        assertEquals(expectedTask.getForEntity(), event.getDetails().get(Constants.Properties.LOCATION_ID));
+        assertEquals(BuildConfig.VERSION_NAME, event.getDetails().get(Constants.Properties.APP_VERSION_NAME));
+        assertEquals(expectedTask.getGroupIdentifier(), event.getLocationId());
+
+
+    }
 
 }
