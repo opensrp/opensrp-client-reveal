@@ -45,6 +45,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 
 /**
  * Created by samuelgithengi on 3/27/19.
@@ -108,17 +109,17 @@ public class TestingUtils {
         task.setCode(Intervention.CASE_CONFIRMATION);
         task.setForEntity(entityId);
         task.setGroupIdentifier("Akros_1_id");
+        task.setStructureId("structure-id");
         return task;
     }
 
-    public static MatrixCursor getTaskCursor(String entityId) {
-        String[] COLUMNS = {"_id", STATUS, BUSINESS_STATUS,  CODE, FOR, GROUPID};
+    public static MatrixCursor getTaskCursor(Task task ) {
+        String[] COLUMNS = {"_id", STATUS, BUSINESS_STATUS,  CODE, FOR, GROUPID, STRUCTURE_ID};
 
         MatrixCursor cursor = new MatrixCursor(COLUMNS);
-        Task task = getTask(entityId);
 
         cursor.addRow(new Object[]{task.getIdentifier(), task.getStatus().name(),
-                task.getBusinessStatus(), task.getCode(), task.getForEntity(), task.getGroupIdentifier()});
+                task.getBusinessStatus(), task.getCode(), task.getForEntity(), task.getGroupIdentifier(), task.getStructureId()});
         return cursor;
     }
 

@@ -17,21 +17,25 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.robolectric.RuntimeEnvironment;
 import org.smartregister.Context;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
+import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.Properties;
+import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestDataUtils;
 import org.smartregister.reveal.util.TestingUtils;
@@ -56,6 +60,7 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 
 /**
@@ -78,6 +83,9 @@ public class ListTaskInteractorTest extends BaseUnitTest {
     @Mock
     private StructureRepository structureRepository;
 
+    @Mock
+    private InteractorUtils interactorUtils;
+
     @Captor
     private ArgumentCaptor<CardDetails> cardDetailsCaptor;
 
@@ -89,6 +97,9 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
     @Captor
     private ArgumentCaptor<List<TaskDetails>> taskDetailsCaptor;
+
+    @Captor
+    private ArgumentCaptor<BaseTaskDetails> baseTaskDetailsArgumentCaptor;
 
     private ListTaskInteractor listTaskInteractor;
 
@@ -105,6 +116,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         Whitebox.setInternalState(listTaskInteractor, "database", database);
         Whitebox.setInternalState(listTaskInteractor, "taskRepository", taskRepository);
         Whitebox.setInternalState(listTaskInteractor, "structureRepository", structureRepository);
+        Whitebox.setInternalState(listTaskInteractor, "interactorUtils", interactorUtils);
     }
 
     @Test
@@ -258,6 +270,54 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals("Paot Active Comments", cardDetails.getComments());
         assertEquals("11/02/1977", cardDetails.getStartDate());
         assertEquals(Intervention.PAOT, cardDetails.getInterventionType());
+    }
+
+    @Test
+    public void testGetTaskSelect() {
+        String expectedQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.structure_id FROM task";
+        String actualQuery = listTaskInteractor.getTaskSelect("");
+        assertEquals(expectedQuery, actualQuery);
+    }
+
+    @Test
+    public void testReadTaskDetails() {
+        Task expectedTask = TestingUtils.getTask("task-entity-id");
+        MatrixCursor taskCursor = TestingUtils.getTaskCursor(expectedTask);
+        taskCursor.moveToNext();
+
+        StructureTaskDetails taskdetails = listTaskInteractor.readTaskDetails(taskCursor);
+
+        assertEquals(expectedTask.getIdentifier(), taskdetails.getTaskId());
+        assertEquals(expectedTask.getCode(), taskdetails.getTaskCode());
+        assertEquals(expectedTask.getForEntity(), taskdetails.getTaskEntity());
+        assertEquals(expectedTask.getBusinessStatus(), taskdetails.getBusinessStatus());
+        assertEquals(expectedTask.getStatus().name(), taskdetails.getTaskStatus());
+        assertEquals(expectedTask.getStructureId(), taskdetails.getStructureId());
+
+    }
+
+    @Test
+    public void testResetInterventionTaskInfo() {
+        Task expectedTask = TestingUtils.getTask("task-entity-id");
+        MatrixCursor taskCursor = TestingUtils.getTaskCursor(expectedTask);
+
+        when(database.rawQuery(any(), any())).thenReturn(taskCursor);
+
+        listTaskInteractor.resetInterventionTaskInfo(RuntimeEnvironment.application, BEDNET_DISTRIBUTION, expectedTask.getStructureId());
+
+        verify(interactorUtils, timeout(ASYNC_TIMEOUT)).resetTaskInfo(any(), any(), baseTaskDetailsArgumentCaptor.capture());
+
+        BaseTaskDetails taskDetails = baseTaskDetailsArgumentCaptor.getValue();
+
+        assertEquals(expectedTask.getCode(), taskDetails.getTaskCode());
+        assertEquals(expectedTask.getForEntity(), taskDetails.getTaskEntity());
+        assertEquals(expectedTask.getBusinessStatus(), taskDetails.getBusinessStatus());
+        assertEquals(expectedTask.getStatus().name(), taskDetails.getTaskStatus());
+        assertEquals(expectedTask.getStructureId(), taskDetails.getStructureId());
+
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onInterventionTaskInfoReset(eq(true));
+
+
     }
 
 

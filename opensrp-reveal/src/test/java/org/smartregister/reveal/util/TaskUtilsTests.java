@@ -268,7 +268,7 @@ public class TaskUtilsTests extends BaseUnitTest {
 
 
         Task expectedTask = TestingUtils.getTask("task-id");
-        MatrixCursor cursor = TestingUtils.getTaskCursor(expectedTask.getIdentifier());
+        MatrixCursor cursor = TestingUtils.getTaskCursor(expectedTask);
 
         when(sqLiteDatabase.rawQuery("select * from task where for =? and status =? and code =? limit 1",
                 new String[]{event.getBaseEntityId(), Task.TaskStatus.COMPLETED.name(),

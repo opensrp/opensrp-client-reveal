@@ -442,7 +442,7 @@ public class ListTaskInteractor extends BaseInteractor {
         };
     }
 
-    private String getTaskSelect(String mainCondition) {
+    public String getTaskSelect(String mainCondition) {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
         queryBuilder.selectInitiateMainTable(TASK_TABLE, getStructureColumns(), ID);
         return queryBuilder.mainCondition(mainCondition);
@@ -484,7 +484,7 @@ public class ListTaskInteractor extends BaseInteractor {
 
     }
 
-    private StructureTaskDetails readTaskDetails(Cursor cursor) {
+    public StructureTaskDetails readTaskDetails(Cursor cursor) {
         StructureTaskDetails task = new StructureTaskDetails(cursor.getString(cursor.getColumnIndex(ID)));
         task.setTaskCode(cursor.getString(cursor.getColumnIndex(CODE)));
         task.setTaskEntity(cursor.getString(cursor.getColumnIndex(FOR)));
