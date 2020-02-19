@@ -105,6 +105,14 @@ public class CardDetailsUtilTest extends BaseUnitTest {
     }
 
     @Test
+    public void testCardDetailsSetsDefaultStatusColorForNullBusinessStatus() {
+        CardDetails cardDetails = new CardDetails(null);
+        assertEquals(cardDetails.getStatusColor().intValue(), R.color.task_not_done);
+        formatCardDetails(cardDetails);
+        assertEquals(cardDetails.getStatusColor().intValue(), R.color.task_not_done);
+    }
+
+    @Test
     public void testPopulateSprayCardTextViewsShouldPopulateCorrectValues() {
         final String PROPERTY_TYPE = "Residential";
         final String SPRAY_DATE = "today";
