@@ -15,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.commonregistry.CommonPersonObject;
+import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.db.Event;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.repository.BaseRepository;
@@ -41,6 +43,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.FORM_SUBMISSI
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 
 /**
  * Created by Richard Kareko on 2/18/20.
@@ -65,6 +68,9 @@ public class InteractorUtilsTest extends BaseUnitTest {
 
     @Mock
     private SQLiteDatabase database;
+    
+    @Mock
+    private CommonRepository commonRepository;
 
     @Captor
     private ArgumentCaptor<JSONArray> jsonArrayArgumentCaptor;
@@ -76,12 +82,17 @@ public class InteractorUtilsTest extends BaseUnitTest {
     private ArgumentCaptor<String> stringArgumentCaptor;
 
     @Captor
+    private ArgumentCaptor<String[]> stringArrayArgumentCaptor;
+
+    @Captor
     private ArgumentCaptor<JSONObject> jsonObjectArgumentCaptor;
 
     private InteractorUtils interactorUtils;
 
     private String formSubmissionId;
     private String baseEntityId;
+    private String caseId;
+    private String relationId;
 
     @Before
     public void setUp() {
@@ -89,6 +100,8 @@ public class InteractorUtilsTest extends BaseUnitTest {
         Whitebox.setInternalState(interactorUtils, "jsonFormUtils", jsonFormUtils);
         formSubmissionId = UUID.randomUUID().toString();
         baseEntityId = UUID.randomUUID().toString();
+        caseId = UUID.randomUUID().toString();
+        relationId = UUID.randomUUID().toString();
     }
 
     @Test
@@ -166,10 +179,34 @@ public class InteractorUtilsTest extends BaseUnitTest {
 
     }
 
+    @Test
+    public void testFetchSprayDetails() {
+
+        String structureId = UUID.randomUUID().toString();
+
+        when(eventClientRepository.getWritableDatabase()).thenReturn(database);
+        when(database.rawQuery(anyString(), any())).thenReturn(createCommonPersonObjectCursor());
+        when(commonRepository.getCommonPersonObjectFromCursor(any())).thenReturn(new CommonPersonObject(caseId, relationId, null, "common"));
+        CommonPersonObject commonPersonObject = interactorUtils.fetchSprayDetails(IRS, structureId, eventClientRepository, commonRepository);
+
+        verify(database).rawQuery(stringArgumentCaptor.capture(), stringArrayArgumentCaptor.capture());
+        assertEquals(stringArgumentCaptor.getValue(), "select s.*, id as _id from sprayed_structures s where base_entity_id = ?");
+        assertEquals(structureId, stringArrayArgumentCaptor.getAllValues().get(0)[0]);
+        assertEquals(caseId, commonPersonObject.getCaseId());
+        assertEquals(relationId, commonPersonObject.getRelationalId());
+
+    }
+
 
     private Cursor createEventCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{FORM_SUBMISSION_ID, BASE_ENTITY_ID});
         cursor.addRow(new Object[]{formSubmissionId, baseEntityId});
+        return cursor;
+    }
+
+    private Cursor createCommonPersonObjectCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{"_id", "relationalid"});
+        cursor.addRow(new Object[]{caseId, relationId});
         return cursor;
     }
 }
