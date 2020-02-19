@@ -64,19 +64,19 @@ public class InteractorUtilsTest extends BaseUnitTest {
     private RevealJsonFormUtils jsonFormUtils;
 
     @Mock
-    SQLiteDatabase database;
+    private SQLiteDatabase database;
 
     @Captor
-    ArgumentCaptor<JSONArray> jsonArrayArgumentCaptor;
+    private ArgumentCaptor<JSONArray> jsonArrayArgumentCaptor;
 
     @Captor
-    ArgumentCaptor<Long> longArgumentCaptor;
+    private ArgumentCaptor<Long> longArgumentCaptor;
 
     @Captor
-    ArgumentCaptor<String> stringArgumentCaptor;
+    private ArgumentCaptor<String> stringArgumentCaptor;
 
     @Captor
-    ArgumentCaptor<JSONObject> jsonObjectArgumentCaptor;
+    private ArgumentCaptor<JSONObject> jsonObjectArgumentCaptor;
 
     private InteractorUtils interactorUtils;
 
@@ -163,10 +163,6 @@ public class InteractorUtilsTest extends BaseUnitTest {
         verify(eventClientRepository).addEvent(stringArgumentCaptor.capture(), jsonObjectArgumentCaptor.capture());
 
         assertEquals(taskDetails.getTaskEntity(), stringArgumentCaptor.getValue());
-
-        //JSONObject actualResetTaskEvent = jsonObjectArgumentCaptor.getValue();
-        //assertEquals(BaseRepository.TYPE_Unsynced, actualResetTaskEvent.get(EventClientRepository.event_column.syncStatus.name()));
-
 
     }
 
