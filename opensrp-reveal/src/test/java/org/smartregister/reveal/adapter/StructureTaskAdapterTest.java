@@ -135,7 +135,7 @@ public class StructureTaskAdapterTest extends BaseUnitTest {
         StructureTaskViewHolder holder = adapter.onCreateViewHolder(vg, 0);
         adapter.onBindViewHolder(holder, 0);
 
-        assertEquals("Family Registration", ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
+        assertEquals("Household Registration", ((TextView) holder.itemView.findViewById(R.id.task_name)).getText());
         assertEquals("Register Family", ((TextView) holder.itemView.findViewById(R.id.task_action)).getText());
     }
 
