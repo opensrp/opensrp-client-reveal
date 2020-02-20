@@ -1,7 +1,10 @@
 package org.smartregister.reveal.presenter;
 
+import android.app.Activity;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.support.v7.app.AlertDialog;
+import android.widget.TextView;
 
 import com.google.gson.JsonPrimitive;
 import com.mapbox.geojson.Feature;
@@ -22,8 +25,11 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.shadows.ShadowAlertDialog;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -44,6 +50,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -55,14 +62,21 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.domain.Task.TaskStatus.IN_PROGRESS;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.BEDNET_DISTRIBUTED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
+import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
+import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 
 /**
  * Created by samuelgithengi on 1/27/20.
@@ -126,6 +140,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         Whitebox.setInternalState(listTaskPresenter, "listTaskInteractor", listTaskInteractor);
         prefsUtil.setCurrentPlanId(planId);
         prefsUtil.setCurrentOperationalArea(operationalArea);
+        when(listTaskView.getContext()).thenReturn(Robolectric.buildActivity(Activity.class).resume().get());
     }
 
     @Test
@@ -484,4 +499,141 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         verify(listTaskView).clearSelectedFeature();
         assertFalse(RevealApplication.getInstance().isRefreshMapOnEventSaved());
     }
+
+    @Test
+    public void testDisplayMarkStructureIneligibleDialog() {
+
+        Whitebox.setInternalState(listTaskPresenter, "markStructureIneligibleConfirmed", false);
+        Whitebox.setInternalState(listTaskPresenter, "reasonUnEligible", "eligible");
+
+        assertFalse(Whitebox.getInternalState(listTaskPresenter, "markStructureIneligibleConfirmed"));
+        assertEquals("eligible", Whitebox.getInternalState(listTaskPresenter, "reasonUnEligible"));
+        listTaskPresenter.displayMarkStructureIneligibleDialog();
+
+        AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(alertDialog.isShowing());
+
+        TextView tv = alertDialog.findViewById(android.R.id.message);
+        assertEquals(getString(R.string.is_structure_eligible_for_fam_reg), tv.getText());
+
+        alertDialog.getButton(BUTTON_NEGATIVE).performClick();
+        assertFalse(alertDialog.isShowing());
+
+        assertTrue(Whitebox.getInternalState(listTaskPresenter, "markStructureIneligibleConfirmed"));
+        assertEquals(listTaskView.getContext().getString(R.string.not_eligible_unoccupied),
+                Whitebox.getInternalState(listTaskPresenter, "reasonUnEligible"));
+
+    }
+
+    @Test
+    public void testOnUndoInterventionStatus() throws Exception {
+
+        com.cocoahero.android.geojson.Feature feature1 = new com.cocoahero.android.geojson.Feature();
+        feature1.setIdentifier("id1");
+
+
+        Feature mapboxFeature = Feature.fromJson(feature1.toJSON().toString());
+
+
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mapboxFeature);
+
+        listTaskPresenter.onUndoInterventionStatus(BLOOD_SCREENING);
+
+        verify(listTaskView).showProgressDialog(R.string.reseting_task_title, R.string.reseting_task_msg);
+        verify(listTaskInteractor).resetInterventionTaskInfo(listTaskView.getContext(), BLOOD_SCREENING, mapboxFeature.id());
+
+    }
+
+    @Test
+    public void testSaveJsonForm() {
+        String jsonString = "{\"name\":\"trever\"}";
+
+        listTaskPresenter.saveJsonForm(jsonString);
+        verify(listTaskView).showProgressDialog(R.string.saving_title, R.string.saving_message);
+        verify(listTaskInteractor).saveJsonForm(jsonString);
+    }
+
+    @Test
+    public void testOnFormSaved() throws Exception{
+        String structureId = "id1";
+        String taskId = "taskId";
+
+        com.cocoahero.android.geojson.Feature feature1 = new com.cocoahero.android.geojson.Feature();
+        feature1.setIdentifier(structureId);
+        feature1.setProperties(new JSONObject());
+
+
+        Feature mapboxFeature = Feature.fromJson(feature1.toJSON().toString());
+        assertNull(mapboxFeature.getStringProperty(TASK_BUSINESS_STATUS));
+        assertNull(mapboxFeature.getStringProperty(TASK_STATUS));
+
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection",
+                FeatureCollection.fromFeatures(new Feature[]{mapboxFeature}));
+
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mapboxFeature);
+
+        listTaskPresenter.onFormSaved(structureId, taskId, IN_PROGRESS, COMPLETE, BLOOD_SCREENING);
+
+        verify(listTaskView).hideProgressDialog();
+
+        verify(listTaskView).setGeoJsonSource(featureCollectionArgumentCaptor.capture(), any(), booleanArgumentCaptor.capture());
+        assertFalse(booleanArgumentCaptor.getValue());
+        assertEquals(COMPLETE, featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_BUSINESS_STATUS));
+        assertEquals(IN_PROGRESS.name(), featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_STATUS));
+
+        verify(listTaskInteractor).fetchInterventionDetails(BLOOD_SCREENING, structureId, false);
+    }
+
+    @Test
+    public void testResetFeatureTasks() throws Exception {
+        String structureId = "id1";
+        com.cocoahero.android.geojson.Feature feature1 = new com.cocoahero.android.geojson.Feature();
+        feature1.setIdentifier(structureId);
+        feature1.setProperties(new JSONObject());
+
+
+        Feature mapboxFeature = Feature.fromJson(feature1.toJSON().toString());
+        assertNull(mapboxFeature.getStringProperty(TASK_BUSINESS_STATUS));
+        assertNull(mapboxFeature.getStringProperty(TASK_STATUS));
+        assertNull(mapboxFeature.getStringProperty(TASK_IDENTIFIER));
+        assertNull(mapboxFeature.getStringProperty(TASK_CODE));
+        assertNull(mapboxFeature.getStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS));
+
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection",
+                FeatureCollection.fromFeatures(new Feature[]{mapboxFeature}));
+
+        Task task = TestingUtils.getTask("entityid");
+
+        listTaskPresenter.resetFeatureTasks(structureId, task);
+
+        verify(listTaskView).setGeoJsonSource(featureCollectionArgumentCaptor.capture(), any(), booleanArgumentCaptor.capture());
+        assertFalse(booleanArgumentCaptor.getValue());
+        assertEquals(task.getBusinessStatus(), featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_BUSINESS_STATUS));
+        assertEquals(task.getBusinessStatus(), featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS));
+        assertEquals(task.getStatus().name(), featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_STATUS));
+        assertEquals(task.getIdentifier(), featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_IDENTIFIER));
+        assertEquals(task.getCode(), featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_CODE));
+
+    }
+
+    @Test
+    public void testOnFormSaveFailureForSprayEvent() {
+
+        listTaskPresenter.onFormSaveFailure(SPRAY_EVENT);
+
+        verify(listTaskView).hideProgressDialog();
+        verify(listTaskView).displayNotification(R.string.form_save_failure_title, R.string.spray_form_save_failure);
+    }
+
+    @Test
+    public void testOnFormSaveFailureForStructureEvent() {
+
+        listTaskPresenter.onFormSaveFailure(REGISTER_STRUCTURE_EVENT);
+
+        verify(listTaskView).hideProgressDialog();
+        verify(listTaskView).displayNotification(R.string.form_save_failure_title, R.string.add_structure_form_save_failure);
+    }
+
+
+
 }
