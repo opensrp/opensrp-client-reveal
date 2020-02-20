@@ -20,10 +20,14 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.Context;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Task;
+import org.smartregister.domain.db.Event;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
@@ -59,9 +63,17 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.domain.Task.TaskStatus.COMPLETED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
+import static org.smartregister.reveal.util.Constants.Properties.APP_VERSION_NAME;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_ID;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
+import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
 /**
  * Created by samuelgithengi on 5/22/19.
@@ -86,6 +98,9 @@ public class ListTaskInteractorTest extends BaseUnitTest {
     @Mock
     private InteractorUtils interactorUtils;
 
+    @Mock
+    private EventClientRepository eventClientRepository;
+
     @Captor
     private ArgumentCaptor<CardDetails> cardDetailsCaptor;
 
@@ -100,6 +115,18 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
     @Captor
     private ArgumentCaptor<BaseTaskDetails> baseTaskDetailsArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Location> locationArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<String> stringArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<JSONObject> jsonObjectArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Task> taskArgumentCaptor;
 
     private ListTaskInteractor listTaskInteractor;
 
@@ -117,6 +144,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         Whitebox.setInternalState(listTaskInteractor, "taskRepository", taskRepository);
         Whitebox.setInternalState(listTaskInteractor, "structureRepository", structureRepository);
         Whitebox.setInternalState(listTaskInteractor, "interactorUtils", interactorUtils);
+        Whitebox.setInternalState(listTaskInteractor, "eventClientRepository", eventClientRepository);
     }
 
     @Test
@@ -222,7 +250,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals(1, featureCollection.features().size());
         Feature feature = featureCollection.features().get(0);
         assertEquals(structure.getId(), feature.id());
-        assertEquals(task.getIdentifier(), feature.getStringProperty(Properties.TASK_IDENTIFIER));
+        assertEquals(task.getIdentifier(), feature.getStringProperty(TASK_IDENTIFIER));
         assertEquals(task.getBusinessStatus(), feature.getStringProperty(Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS));
         assertEquals(task.getStatus().name(), feature.getStringProperty(Properties.TASK_STATUS));
         assertEquals(task.getCode(), feature.getStringProperty(Properties.TASK_CODE));
@@ -251,7 +279,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals(1, featureCollection.features().size());
         Feature feature = featureCollection.features().get(0);
         assertEquals(structure.getId(), feature.id());
-        assertEquals(task.getIdentifier(), feature.getStringProperty(Properties.TASK_IDENTIFIER));
+        assertEquals(task.getIdentifier(), feature.getStringProperty(TASK_IDENTIFIER));
         assertEquals(task.getBusinessStatus(), feature.getStringProperty(Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS));
         assertEquals(task.getStatus().name(), feature.getStringProperty(Properties.TASK_STATUS));
         assertEquals(task.getCode(), feature.getStringProperty(Properties.TASK_CODE));
@@ -320,6 +348,65 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
     }
 
+    @Test
+    public void testMarkStructureAsInactive() {
+
+        Location location = TestingUtils.getOperationalArea();
+        location.getProperties().setStatus(LocationProperty.PropertyStatus.INACTIVE);
+        assertEquals(LocationProperty.PropertyStatus.INACTIVE, location.getProperties().getStatus());
+
+        when(structureRepository.getLocationById(anyString())).thenReturn(location);
+        Feature feature = TestingUtils.getStructure();
+
+        listTaskInteractor.markStructureAsInactive(feature);
+
+        verify(structureRepository).getLocationById(stringArgumentCaptor.capture());
+        assertEquals(feature.id(), stringArgumentCaptor.getValue());
+        verify(structureRepository).addOrUpdate(locationArgumentCaptor.capture());
+        assertEquals(LocationProperty.PropertyStatus.INACTIVE, locationArgumentCaptor.getValue().getProperties().getStatus());
+        verify(taskRepository).cancelTasksForEntity(stringArgumentCaptor.capture());
+        assertEquals(feature.id(), stringArgumentCaptor.getValue());
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructureMarkedInactive();
+    }
+
+    @Test
+    public void testMarkStructureAsIneligible() {
+
+        Feature feature = TestingUtils.getStructure();
+
+        String taskIdentifier = getPropertyValue(feature, TASK_IDENTIFIER);
+        String reasonUnEligible = "Not Eligible: Other";
+        Task task = TestingUtils.getTask("entity-id");
+        task.setIdentifier(taskIdentifier);
+        String expectedStatus = task.getStatus().name();
+        String expectedBusinessStatus = task.getBusinessStatus();
+
+        when(taskRepository.getTaskByIdentifier(anyString())).thenReturn(task);
+
+        listTaskInteractor.markStructureAsIneligible(feature,reasonUnEligible);
+
+        verify(taskRepository).getTaskByIdentifier(stringArgumentCaptor.capture());
+        assertEquals(taskIdentifier, stringArgumentCaptor.getValue());
+
+        verify(taskRepository).addOrUpdate(taskArgumentCaptor.capture());
+        Task actualTask = taskArgumentCaptor.getValue();
+        assertEquals(NOT_ELIGIBLE, actualTask.getBusinessStatus());
+        assertEquals(COMPLETED, task.getStatus());
+        assertNotNull(task.getLastModified());
+        assertEquals(taskIdentifier, task.getIdentifier());
+
+
+        verify(eventClientRepository).addEvent(stringArgumentCaptor.capture(),jsonObjectArgumentCaptor.capture());
+        Event actualEvent = taskGson.fromJson(jsonObjectArgumentCaptor.getValue().toString(), Event.class);
+        assertEquals(BuildConfig.VERSION_NAME, actualEvent.getDetails().get(APP_VERSION_NAME));
+        assertEquals(expectedBusinessStatus, actualEvent.getDetails().get(TASK_BUSINESS_STATUS));
+        assertEquals(feature.id(), actualEvent.getDetails().get(LOCATION_ID));
+        assertEquals(expectedStatus, actualEvent.getDetails().get(TASK_STATUS));
+
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructureMarkedIneligible();
+
+
+    }
 
     private Cursor createSprayCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{"spray_status", "not_sprayed_reason",
