@@ -23,6 +23,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -45,16 +46,23 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.BEDNET_DISTRIBUTED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
+import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 
 /**
  * Created by samuelgithengi on 1/27/20.
@@ -89,6 +97,18 @@ public class ListTaskPresenterTest extends BaseUnitTest {
 
     @Captor
     private ArgumentCaptor<FeatureCollection> featureCollectionArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Feature> featureArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Boolean> booleanArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<String> stringArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<CommonPersonObjectClient> commonPersonObjectClientArgumentCaptor;
 
     private PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
 
@@ -372,4 +392,96 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         assertFalse(RevealApplication.getInstance().isRefreshMapOnEventSaved());
     }
 
+    @Test
+    public void testOnstructureMarkedInactive() throws Exception {
+
+        com.cocoahero.android.geojson.Feature feature1 = new com.cocoahero.android.geojson.Feature();
+        feature1.setIdentifier("id1");
+        feature1.setProperties(new JSONObject()
+                .accumulate(TASK_BUSINESS_STATUS, BEDNET_DISTRIBUTED)
+                .accumulate(TASK_IDENTIFIER, "task1"));
+
+
+        Feature mapboxFeature = Feature.fromJson(feature1.toJSON().toString());
+        assertEquals(BEDNET_DISTRIBUTED, mapboxFeature.getStringProperty(TASK_BUSINESS_STATUS));
+        assertEquals("task1", mapboxFeature.getStringProperty(TASK_IDENTIFIER));
+
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection",
+                FeatureCollection.fromFeatures(new Feature[]{mapboxFeature}));
+
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mapboxFeature);
+
+        listTaskPresenter.onStructureMarkedInactive();
+        verify(listTaskView).setGeoJsonSource(featureCollectionArgumentCaptor.capture(), any(), booleanArgumentCaptor.capture());
+        assertFalse(booleanArgumentCaptor.getValue());
+        assertNull(featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_BUSINESS_STATUS));
+        assertNull(featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_IDENTIFIER));
+    }
+
+    @Test
+    public void testOnMarkStructureInEligibleConfirmed() throws Exception {
+
+        com.cocoahero.android.geojson.Feature feature1 = new com.cocoahero.android.geojson.Feature();
+        feature1.setIdentifier("id1");
+        Feature mapboxFeature = Feature.fromJson(feature1.toJSON().toString());
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mapboxFeature);
+        Whitebox.setInternalState(listTaskPresenter, "reasonUnEligible", "No residents");
+        listTaskPresenter.onMarkStructureIneligibleConfirmed();
+
+        verify(listTaskInteractor).markStructureAsIneligible(featureArgumentCaptor.capture(), stringArgumentCaptor.capture());
+        assertEquals("No residents", stringArgumentCaptor.getValue());
+        assertEquals(mapboxFeature.id(), featureArgumentCaptor.getValue().id());
+    }
+
+    @Test
+    public void testOnStructureMarkedIneligible() throws Exception {
+        com.cocoahero.android.geojson.Feature feature1 = new com.cocoahero.android.geojson.Feature();
+        feature1.setIdentifier("id1");
+        feature1.setProperties(new JSONObject());
+
+
+        Feature mapboxFeature = Feature.fromJson(feature1.toJSON().toString());
+        assertNull(mapboxFeature.getStringProperty(TASK_BUSINESS_STATUS));
+        assertNull(mapboxFeature.getStringProperty(TASK_IDENTIFIER));
+
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection",
+                FeatureCollection.fromFeatures(new Feature[]{mapboxFeature}));
+
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mapboxFeature);
+
+        listTaskPresenter.onStructureMarkedIneligible();
+        verify(listTaskView).setGeoJsonSource(featureCollectionArgumentCaptor.capture(), any(), booleanArgumentCaptor.capture());
+        assertFalse(booleanArgumentCaptor.getValue());
+        assertEquals(NOT_ELIGIBLE, featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_BUSINESS_STATUS));
+        assertEquals(NOT_ELIGIBLE, featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS));
+    }
+
+    @Test
+    public void testOnFamilyFound() {
+        CommonPersonObjectClient family = new CommonPersonObjectClient("caseId", null, "test family");
+
+        listTaskPresenter.onFamilyFound(family);
+
+        verify(listTaskView).openStructureProfile(commonPersonObjectClientArgumentCaptor.capture());
+        assertEquals("caseId", commonPersonObjectClientArgumentCaptor.getValue().getCaseId());
+        assertEquals("test family", commonPersonObjectClientArgumentCaptor.getValue().getName());
+    }
+
+    @Test
+    public void testOnFamilyFoundWithNullParam() {
+
+        listTaskPresenter.onFamilyFound(null);
+        verify(listTaskView).displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
+    }
+
+    @Test
+    public void testOnResume() {
+        RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
+        listTaskPresenter = spy(listTaskPresenter);
+        listTaskPresenter.onResume();
+
+        verify(listTaskPresenter).refreshStructures(true);
+        verify(listTaskView).clearSelectedFeature();
+        assertFalse(RevealApplication.getInstance().isRefreshMapOnEventSaved());
+    }
 }

@@ -149,7 +149,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private boolean markStructureIneligibleConfirmed;
 
-    private String reasonUnligible;
+    private String reasonUnEligible;
 
     private boolean isTasksFiltered;
 
@@ -629,7 +629,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onMarkStructureIneligibleConfirmed() {
-        listTaskInteractor.markStructureAsIneligible(selectedFeature, reasonUnligible);
+        listTaskInteractor.markStructureAsIneligible(selectedFeature, reasonUnEligible);
     }
 
     @Override
@@ -675,7 +675,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
     }
 
-    private void displayMarkStructureIneligibleDialog() {
+    public void displayMarkStructureIneligibleDialog() {
 
         AlertDialogUtils.displayNotificationWithCallback(listTaskView.getContext(), R.string.mark_location_ineligible,
                 R.string.is_structure_eligible_for_fam_reg, R.string.eligible, R.string.not_eligible_unoccupied, R.string.not_eligible_other, new DialogInterface.OnClickListener() {
@@ -683,7 +683,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == BUTTON_NEGATIVE || which == BUTTON_NEUTRAL) {
                             markStructureIneligibleConfirmed = true;
-                            reasonUnligible = which == BUTTON_NEGATIVE ? listTaskView.getContext().getString(R.string.not_eligible_unoccupied) : listTaskView.getContext().getString(R.string.not_eligible_other);
+                            reasonUnEligible = which == BUTTON_NEGATIVE ? listTaskView.getContext().getString(R.string.not_eligible_unoccupied) : listTaskView.getContext().getString(R.string.not_eligible_other);
                         }
                         if (validateFarStructures()) {
                             validateUserLocation();
