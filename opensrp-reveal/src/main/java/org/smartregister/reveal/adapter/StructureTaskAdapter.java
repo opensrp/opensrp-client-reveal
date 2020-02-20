@@ -58,7 +58,7 @@ public class StructureTaskAdapter extends RecyclerView.Adapter<StructureTaskView
                 action = context.getString(R.string.detect_case);
             } else if (Intervention.REGISTER_FAMILY.equals(taskDetails.getTaskCode())) {
                 action = context.getString(R.string.register_family);
-                name = context.getString(R.string.family_registration);
+                name = context.getString(R.string.add_fam);
             } else if (Intervention.MDA_ADHERENCE.equals(taskDetails.getTaskCode())) {
                 action = context.getString(R.string.adhere_mda);
             } else if (Intervention.MDA_DISPENSE.equals(taskDetails.getTaskCode())) {
