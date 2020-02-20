@@ -30,6 +30,8 @@ import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.FamilyCardDetails;
+import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.StructureTaskDetails;
@@ -64,6 +66,7 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smartregister.domain.Task.TaskStatus.COMPLETED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
@@ -405,7 +408,38 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
         verify(presenter, timeout(ASYNC_TIMEOUT)).onStructureMarkedIneligible();
 
+    }
 
+    @Test
+    public void testCreateIRSVerificationCardDetails() {
+
+        String feature = UUID.randomUUID().toString();
+        when(database.rawQuery(any(), any())).thenReturn(createIRSVerificationCursor());
+        listTaskInteractor.fetchInterventionDetails(Intervention.IRS_VERIFICATION, feature, true);
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery("SELECT true_structure, eligible_structure, report_spray, chalk_spray, sticker_spray, card_spray FROM irs_verification WHERE id= ?", new String[]{feature});
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onInterventionFormDetailsFetched(cardDetailsCaptor.capture());
+        IRSVerificationCardDetails cardDetails = (IRSVerificationCardDetails) cardDetailsCaptor.getValue();
+        assertEquals("Yes", cardDetails.getTrueStructure());
+        assertEquals("Yes", cardDetails.getEligStruc());
+        assertEquals("sprayed", cardDetails.getReportedSprayStatus());
+        assertEquals("No chalk", cardDetails.getChalkSprayStatus());
+        assertEquals("No sticker", cardDetails.getStickerSprayStatus());
+        assertEquals("No card", cardDetails.getCardSprayStatus());
+
+    }
+
+    @Test
+    public void testCreateFamilyCardDetails() {
+
+        String feature = UUID.randomUUID().toString();
+        when(database.rawQuery(any(), any())).thenReturn(createFamilyCursor());
+        listTaskInteractor.fetchInterventionDetails(Intervention.REGISTER_FAMILY, feature, true);
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery("SELECT business_status, authored_on, owner FROM task WHERE for = ?", new String[]{feature});
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onInterventionFormDetailsFetched(cardDetailsCaptor.capture());
+        FamilyCardDetails cardDetails = (FamilyCardDetails) cardDetailsCaptor.getValue();
+        assertEquals(IN_PROGRESS, cardDetails.getStatus());
+        assertEquals("11/02/1977", cardDetails.getDateCreated());
+        assertEquals("Nifi-User", cardDetails.getOwner());
     }
 
     private Cursor createSprayCursor() {
@@ -440,5 +474,17 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         return cursor;
     }
 
+    private Cursor createIRSVerificationCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{DatabaseKeys.TRUE_STRUCTURE, DatabaseKeys.ELIGIBLE_STRUCTURE,
+                DatabaseKeys.REPORT_SPRAY, DatabaseKeys.CHALK_SPRAY, DatabaseKeys.STICKER_SPRAY, DatabaseKeys.CARD_SPRAY});
+        cursor.addRow(new Object[]{"Yes", "Yes", "sprayed", "No chalk", "No sticker", "No card"});
+        return cursor;
+    }
+
+    private Cursor createFamilyCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{DatabaseKeys.BUSINESS_STATUS, DatabaseKeys.AUTHORED_ON, DatabaseKeys.OWNER});
+        cursor.addRow(new Object[]{IN_PROGRESS, "11/02/1977", "Nifi-User"});
+        return cursor;
+    }
 
 }
