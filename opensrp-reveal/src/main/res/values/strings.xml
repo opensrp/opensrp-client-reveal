@@ -328,7 +328,7 @@
 
 
     <!-- form -->
-    <string name="add_fam">Household registration</string>
+    <string name="add_fam">Household Registration</string>
 
     <string-array name="task_sort_options">
         <item>Distance (nearest first)</item>
