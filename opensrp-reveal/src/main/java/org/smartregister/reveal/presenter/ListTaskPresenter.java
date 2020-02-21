@@ -435,7 +435,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
 
-    private void startForm(Feature feature, CardDetails cardDetails, String interventionType) {
+    public void startForm(Feature feature, CardDetails cardDetails, String interventionType) {
         String formName = jsonFormUtils.getFormName(null, interventionType);
         String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();
         String familyHead = null;

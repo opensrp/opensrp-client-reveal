@@ -47,6 +47,7 @@ import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.TestingUtils;
 
 import java.util.ArrayList;
@@ -75,6 +76,8 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
+import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
@@ -116,6 +119,9 @@ public class ListTaskPresenterTest extends BaseUnitTest {
     @Mock
     private Feature feature;
 
+    @Mock
+    private RevealJsonFormUtils jsonFormUtils;
+
     @Captor
     private ArgumentCaptor<FeatureCollection> featureCollectionArgumentCaptor;
 
@@ -148,6 +154,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         org.smartregister.Context.bindtypes = new ArrayList<>();
         listTaskPresenter = new ListTaskPresenter(listTaskView, drawerPresenter);
         Whitebox.setInternalState(listTaskPresenter, "listTaskInteractor", listTaskInteractor);
+        Whitebox.setInternalState(listTaskPresenter, "jsonFormUtils", jsonFormUtils);
         prefsUtil.setCurrentPlanId(planId);
         prefsUtil.setCurrentOperationalArea(operationalArea);
         when(listTaskView.getContext()).thenReturn(Robolectric.buildActivity(Activity.class).resume().get());
@@ -740,6 +747,60 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         assertEquals("No sticker", actualCardDetails.getStickerSprayStatus());
         assertEquals("No card", actualCardDetails.getCardSprayStatus());
 
+    }
+
+    @Test
+    public void testOnLocationValidatedForMarkStructureIneligible() {
+
+        Whitebox.setInternalState(listTaskPresenter, "markStructureIneligibleConfirmed", true);
+        assertTrue(Whitebox.getInternalState(listTaskPresenter, "markStructureIneligibleConfirmed"));
+        listTaskPresenter = spy(listTaskPresenter);
+        listTaskPresenter.onLocationValidated();
+
+        verify(listTaskPresenter).onMarkStructureIneligibleConfirmed();
+        assertFalse(Whitebox.getInternalState(listTaskPresenter, "markStructureIneligibleConfirmed"));
+    }
+
+    @Test
+    public void testOnLocationValidatedForRegisterFamily() {
+
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeatureInterventionType", REGISTER_FAMILY);
+
+        listTaskPresenter.onLocationValidated();
+
+        verify(listTaskView).registerFamily();
+    }
+
+    @Test
+    public void testOnLocationValidatedForCardDetailsWithChangeInterventionStatusFalse() {
+
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeatureInterventionType", PAOT);
+        Whitebox.setInternalState(listTaskPresenter, "changeInterventionStatus", false);
+        listTaskPresenter = spy(listTaskPresenter);
+        listTaskPresenter.onLocationValidated();
+
+        verify(listTaskPresenter).startForm(featureArgumentCaptor.capture(), cardDetailsArgumentCaptor.capture(), stringArgumentCaptor.capture());
+        assertNull(cardDetailsArgumentCaptor.getValue());
+        assertEquals(PAOT, stringArgumentCaptor.getValue());
+    }
+
+    @Test
+    public void testOnlocationValidatedForCardDetailWithChangeInterventionTrue() {
+        FamilyCardDetails expectedCardDetails = new FamilyCardDetails(COMPLETE, "19 Jan 1970", "nifi-user");
+        Whitebox.setInternalState(listTaskPresenter, "cardDetails", expectedCardDetails);
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeatureInterventionType", PAOT);
+        Whitebox.setInternalState(listTaskPresenter, "changeInterventionStatus", true);
+        listTaskPresenter = spy(listTaskPresenter);
+        listTaskPresenter.onLocationValidated();
+
+        verify(listTaskPresenter).startForm(featureArgumentCaptor.capture(), cardDetailsArgumentCaptor.capture(), stringArgumentCaptor.capture());
+        assertEquals(PAOT, stringArgumentCaptor.getValue());
+
+        FamilyCardDetails actualCardDetails = (FamilyCardDetails) cardDetailsArgumentCaptor.getValue();
+
+        assertEquals(COMPLETE, actualCardDetails.getStatus());
+        assertEquals("nifi-user", actualCardDetails.getOwner());
+        assertEquals("19 Jan 1970", actualCardDetails.getDateCreated());
     }
 
 }
