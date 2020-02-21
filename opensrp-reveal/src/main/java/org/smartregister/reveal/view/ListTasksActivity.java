@@ -213,6 +213,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.change_spray_status).setOnClickListener(this);
 
+        findViewById(R.id.btn_undo_spray).setOnClickListener(this);
+
         findViewById(R.id.register_family).setOnClickListener(this);
 
         findViewById(R.id.task_register).setOnClickListener(this);
@@ -426,6 +428,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             listTaskPresenter.onAddStructureClicked(revealMapHelper.isMyLocationComponentActive(this, myLocationButton));
         } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeInterventionStatus(IRS);
+        } else if (v.getId() == R.id.btn_undo_spray) {
+            displayResetInterventionTaskDialog(IRS);
         } else if (v.getId() == R.id.btn_record_mosquito_collection) {
             listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
         } else if (v.getId() == R.id.btn_undo_mosquito_collection) {
