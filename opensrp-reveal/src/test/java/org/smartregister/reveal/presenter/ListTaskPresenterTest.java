@@ -36,6 +36,10 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
+import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.FamilyCardDetails;
+import org.smartregister.reveal.model.IRSVerificationCardDetails;
+import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Filter;
@@ -66,6 +70,7 @@ import static org.smartregister.domain.Task.TaskStatus.IN_PROGRESS;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.BEDNET_DISTRIBUTED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
@@ -120,6 +125,9 @@ public class ListTaskPresenterTest extends BaseUnitTest {
 
     @Captor
     private ArgumentCaptor<String> stringArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<CardDetails> cardDetailsArgumentCaptor;
 
     @Captor
     private ArgumentCaptor<CommonPersonObjectClient> commonPersonObjectClientArgumentCaptor;
@@ -634,6 +642,89 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         verify(listTaskView).displayNotification(R.string.form_save_failure_title, R.string.add_structure_form_save_failure);
     }
 
+    @Test
+    public void testOnInterventionFormDetailsFetched() {
+        assertNull(Whitebox.getInternalState(listTaskPresenter, "cardDetails"));
+        assertFalse(Whitebox.getInternalState(listTaskPresenter, "changeInterventionStatus"));
 
+        FamilyCardDetails expectedCardDetails = new FamilyCardDetails(COMPLETE, "12-2-2020", "nifi-user");
+
+        listTaskPresenter.onInterventionFormDetailsFetched(expectedCardDetails);
+
+        verify(listTaskView).hideProgressDialog();
+        assertTrue(Whitebox.getInternalState(listTaskPresenter, "changeInterventionStatus"));
+
+        FamilyCardDetails actualCardDetails = Whitebox.getInternalState(listTaskPresenter, "cardDetails");
+        assertEquals(expectedCardDetails.getStatus(), actualCardDetails.getStatus());
+        assertEquals(expectedCardDetails.getDateCreated(), actualCardDetails.getDateCreated());
+        assertEquals(expectedCardDetails.getOwner(), actualCardDetails.getOwner());
+
+    }
+
+    @Test
+    public void testOnFamilyCardDetailsFetched() {
+
+        FamilyCardDetails expectedCardDetails = new FamilyCardDetails(COMPLETE, "1582279044", "nifi-user");
+
+        listTaskPresenter.onCardDetailsFetched(expectedCardDetails);
+
+        verify(listTaskView).openCardView(cardDetailsArgumentCaptor.capture());
+
+        FamilyCardDetails actualCardDetails = (FamilyCardDetails) cardDetailsArgumentCaptor.getValue();
+
+        assertEquals(COMPLETE, actualCardDetails.getStatus());
+        assertEquals("nifi-user", actualCardDetails.getOwner());
+        assertEquals("19 Jan 1970", actualCardDetails.getDateCreated());
+
+
+    }
+
+    @Test
+    public void testOnSprayCardDetailsFetched() {
+
+        SprayCardDetails expectedCardDetails = new SprayCardDetails(NOT_SPRAYED, "Residential", "2014-07-04T12:08:56.235-0700", "gideon", "Mark", "Available");
+
+        listTaskPresenter.onCardDetailsFetched(expectedCardDetails);
+
+        verify(listTaskView).openCardView(cardDetailsArgumentCaptor.capture());
+
+        SprayCardDetails actualCardDetails = (SprayCardDetails) cardDetailsArgumentCaptor.getValue();
+
+        assertEquals(NOT_SPRAYED, actualCardDetails.getStatus());
+        assertEquals("Residential", actualCardDetails.getPropertyType());
+        assertEquals("04 Jul 2014", actualCardDetails.getSprayDate());
+        assertEquals("gideon", actualCardDetails.getSprayOperator());
+        assertEquals("Mark", actualCardDetails.getFamilyHead());
+        assertEquals("Available", actualCardDetails.getReason());
+
+    }
+
+    @Test
+    public void testOnMosquitoHarvestCardDetailsFetched() {
+
+        IRSVerificationCardDetails expectedCardDetails = new IRSVerificationCardDetails(NOT_VISITED,
+                "yes", "no", "sprayed", "No chalk",
+                "No sticker", "No card");
+
+
+        listTaskPresenter.onCardDetailsFetched(expectedCardDetails);
+
+        verify(listTaskView).openCardView(cardDetailsArgumentCaptor.capture());
+
+        IRSVerificationCardDetails actualCardDetails = (IRSVerificationCardDetails) cardDetailsArgumentCaptor.getValue();
+
+        assertEquals(NOT_VISITED, actualCardDetails.getStatus());
+        assertEquals("yes", actualCardDetails.getTrueStructure());
+        assertEquals("no", actualCardDetails.getEligStruc());
+        assertEquals("sprayed", actualCardDetails.getReportedSprayStatus());
+        assertEquals("No chalk", actualCardDetails.getChalkSprayStatus());
+        assertEquals("No sticker", actualCardDetails.getStickerSprayStatus());
+        assertEquals("No card", actualCardDetails.getCardSprayStatus());
+    }
+
+    @Test
+    public void testOnIRSVerificationCardDetailsFetched() {
+
+    }
 
 }
