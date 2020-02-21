@@ -39,6 +39,7 @@ import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
+import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
@@ -73,6 +74,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBL
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
+import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
@@ -702,6 +704,23 @@ public class ListTaskPresenterTest extends BaseUnitTest {
     @Test
     public void testOnMosquitoHarvestCardDetailsFetched() {
 
+        MosquitoHarvestCardDetails expectedCardDetails = new MosquitoHarvestCardDetails(NOT_VISITED, "2019-07-04", "2019-08-05", MOSQUITO_COLLECTION);
+
+
+        listTaskPresenter.onCardDetailsFetched(expectedCardDetails);
+
+        verify(listTaskView).openCardView(cardDetailsArgumentCaptor.capture());
+
+        MosquitoHarvestCardDetails actualCardDetails = (MosquitoHarvestCardDetails) cardDetailsArgumentCaptor.getValue();
+
+        assertEquals(NOT_VISITED, actualCardDetails.getStatus());
+        assertEquals("2019-07-04", actualCardDetails.getStartDate());
+        assertEquals("2019-08-05", actualCardDetails.getEndDate());
+        assertEquals(MOSQUITO_COLLECTION, actualCardDetails.getInterventionType());
+    }
+
+    @Test
+    public void testOnIRSVerificationCardDetailsFetched() {
         IRSVerificationCardDetails expectedCardDetails = new IRSVerificationCardDetails(NOT_VISITED,
                 "yes", "no", "sprayed", "No chalk",
                 "No sticker", "No card");
@@ -720,10 +739,6 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         assertEquals("No chalk", actualCardDetails.getChalkSprayStatus());
         assertEquals("No sticker", actualCardDetails.getStickerSprayStatus());
         assertEquals("No card", actualCardDetails.getCardSprayStatus());
-    }
-
-    @Test
-    public void testOnIRSVerificationCardDetailsFetched() {
 
     }
 
