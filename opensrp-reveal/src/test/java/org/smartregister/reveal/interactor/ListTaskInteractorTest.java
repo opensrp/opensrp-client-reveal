@@ -441,7 +441,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals("11/02/1977", cardDetails.getDateCreated());
         assertEquals("Nifi-User", cardDetails.getOwner());
     }
-
+  
     private Cursor createSprayCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{"spray_status", "not_sprayed_reason",
                 "not_sprayed_other_reason", "property_type", "spray_date", "spray_operator", "family_head_name"});

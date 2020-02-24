@@ -52,6 +52,7 @@ import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.Constants.TASK_RESET_EVENT;
 
 /**
  * @author Vincent Karuri
@@ -179,6 +180,25 @@ public class RevealClientProcessorPowerMockTest {
         Whitebox.invokeMethod(clientProcessor, "updateTask", event, true);
 
         assertEquals(task.getSyncStatus(), BaseRepository.TYPE_Unsynced);
+    }
+
+    @Test
+    public void testUpdateTaskShouldNotBeCalledForResetTaskEvent() throws Exception {
+        mockStaticMethods();
+        mockRepositories();
+
+        List<EventClient> eventClients = new ArrayList<>();
+        event.setEventType(TASK_RESET_EVENT);
+        event.withObs(new Obs("", "", TASK_RESET_EVENT, "", Collections.singletonList("Active"), "", "", new ArrayList<>()));
+
+        EventClient eventClient = new EventClient(event, null);
+        eventClients.add(eventClient);
+
+        PowerMockito.doReturn(new ClientClassification()).when(clientProcessor, "assetJsonToJava", anyString(), any());
+        clientProcessor.processClient(eventClients, true);
+
+        verify(structureRepository, never()).addOrUpdate(any(Location.class));
+        verify(taskRepository, never()).addOrUpdate(any(Task.class));
     }
 
     private void mockStaticMethods() {

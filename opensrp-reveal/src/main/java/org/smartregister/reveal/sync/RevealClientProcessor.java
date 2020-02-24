@@ -46,6 +46,7 @@ import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.Constants.TASK_RESET_EVENT;
 import static org.smartregister.reveal.util.FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION;
 import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
@@ -114,6 +115,8 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     processUpdateFamilyRegistrationEvent(event, eventClient.getClient(), clientClassification, localEvents);
                 } else if (eventType.equals(Constants.EventType.PAOT_EVENT)) {
                     operationalAreaId = processEvent(event, clientClassification, localEvents, JsonForm.PAOT_STATUS);
+                } else if (eventType.equals(TASK_RESET_EVENT)) {
+                    // Do nothing
                 } else {
                     Client client = eventClient.getClient();
 
