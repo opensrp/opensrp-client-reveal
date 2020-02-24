@@ -165,7 +165,7 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
 
         interactor.resetTaskInfo(RuntimeEnvironment.application, taskDetails);
 
-        verify(interactorUtils, timeout(ASYNC_TIMEOUT)).resetTaskInfo(any(), any(), taskArgumentCaptor.capture());
+        verify(interactorUtils, timeout(ASYNC_TIMEOUT)).resetTaskInfo(any(), taskArgumentCaptor.capture());
         assertEquals(taskDetails.getTaskId(), taskArgumentCaptor.getValue().getTaskId());
         assertEquals(structureId, taskArgumentCaptor.getValue().getStructureId());
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTaskInfoReset(stringArgumentCaptor.capture());

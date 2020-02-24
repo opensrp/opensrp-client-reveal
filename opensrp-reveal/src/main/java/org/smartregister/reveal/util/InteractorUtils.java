@@ -1,6 +1,5 @@
 package org.smartregister.reveal.util;
 
-import android.content.Context;
 import android.database.Cursor;
 
 import net.sqlcipher.database.SQLiteDatabase;
@@ -215,7 +214,7 @@ public class InteractorUtils {
         return formSubmissionIds;
     }
 
-    public boolean resetTaskInfo(Context context, SQLiteDatabase db, BaseTaskDetails taskDetails) {
+    public boolean resetTaskInfo(SQLiteDatabase db, BaseTaskDetails taskDetails) {
         return archiveEventsForTask(db, taskDetails) && TaskUtils.getInstance().resetTask(taskDetails);
     }
 

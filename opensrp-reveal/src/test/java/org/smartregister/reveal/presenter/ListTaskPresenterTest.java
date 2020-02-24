@@ -555,7 +555,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         listTaskPresenter.onUndoInterventionStatus(BLOOD_SCREENING);
 
         verify(listTaskView).showProgressDialog(R.string.reseting_task_title, R.string.reseting_task_msg);
-        verify(listTaskInteractor).resetInterventionTaskInfo(listTaskView.getContext(), BLOOD_SCREENING, mapboxFeature.id());
+        verify(listTaskInteractor).resetInterventionTaskInfo(BLOOD_SCREENING, mapboxFeature.id());
 
     }
 

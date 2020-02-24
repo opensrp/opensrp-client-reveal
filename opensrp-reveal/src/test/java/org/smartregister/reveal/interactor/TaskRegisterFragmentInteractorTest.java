@@ -359,7 +359,7 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         when(interactorUtils.getFormSubmissionIdsFromEventTask(any(), any())).thenReturn(null);
 
         interactor.resetTaskInfo(RuntimeEnvironment.application, taskDetails);
-        verify(interactorUtils, timeout(ASYNC_TIMEOUT)).resetTaskInfo(any(), any(), taskDetailArgumentCaptor.capture());
+        verify(interactorUtils, timeout(ASYNC_TIMEOUT)).resetTaskInfo(any(), taskDetailArgumentCaptor.capture());
 
         assertEquals(taskDetails.getTaskEntity(), taskDetailArgumentCaptor.getValue().getTaskEntity());
         assertEquals(taskDetails.getTaskStatus(), taskDetailArgumentCaptor.getValue().getTaskStatus());

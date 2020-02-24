@@ -17,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
-import org.robolectric.RuntimeEnvironment;
 import org.smartregister.Context;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
@@ -333,10 +332,11 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         MatrixCursor taskCursor = TestingUtils.getTaskCursor(expectedTask);
 
         when(database.rawQuery(any(), any())).thenReturn(taskCursor);
+        when(interactorUtils.resetTaskInfo(any(),any())).thenReturn(true);
 
-        listTaskInteractor.resetInterventionTaskInfo(RuntimeEnvironment.application, BEDNET_DISTRIBUTION, expectedTask.getStructureId());
+        listTaskInteractor.resetInterventionTaskInfo(BEDNET_DISTRIBUTION, expectedTask.getStructureId());
 
-        verify(interactorUtils, timeout(ASYNC_TIMEOUT)).resetTaskInfo(any(), any(), baseTaskDetailsArgumentCaptor.capture());
+        verify(interactorUtils, timeout(ASYNC_TIMEOUT)).resetTaskInfo(any(), baseTaskDetailsArgumentCaptor.capture());
 
         BaseTaskDetails taskDetails = baseTaskDetailsArgumentCaptor.getValue();
 

@@ -1,7 +1,5 @@
 package org.smartregister.reveal.interactor;
 
-import android.content.Context;
-
 import com.mapbox.geojson.Feature;
 
 import net.sqlcipher.Cursor;
@@ -448,7 +446,7 @@ public class ListTaskInteractor extends BaseInteractor {
         return queryBuilder.mainCondition(mainCondition);
     }
 
-    public void resetInterventionTaskInfo(Context context, String interventionType, String featureId) {
+    public void resetInterventionTaskInfo(String interventionType, String featureId) {
         String sql = String.format(getTaskSelect("%s = ? and %s = ?"),
                 FOR, CODE);
 
@@ -473,7 +471,7 @@ public class ListTaskInteractor extends BaseInteractor {
             }
 
             // Reset task info
-            taskInfoResetSuccessful = interactorUtils.resetTaskInfo(context, getDatabase(), taskDetails);
+            taskInfoResetSuccessful = interactorUtils.resetTaskInfo(getDatabase(), taskDetails);
 
 
             boolean finalTaskInfoResetSuccessful = taskInfoResetSuccessful;

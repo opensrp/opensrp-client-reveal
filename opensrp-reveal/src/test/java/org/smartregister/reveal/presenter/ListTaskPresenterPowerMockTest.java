@@ -684,7 +684,7 @@ public class ListTaskPresenterPowerMockTest {
 
         listTaskPresenter.onUndoInterventionStatus(BEDNET_DISTRIBUTION);
 
-        verify(listTaskInteractor, times(1)).resetInterventionTaskInfo(any(), eq(BEDNET_DISTRIBUTION), any());
+        verify(listTaskInteractor, times(1)).resetInterventionTaskInfo(eq(BEDNET_DISTRIBUTION), any());
     }
 
 

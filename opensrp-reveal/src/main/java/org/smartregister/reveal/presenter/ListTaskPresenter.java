@@ -483,7 +483,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     public void onUndoInterventionStatus(String interventionType) {
         listTaskView.showProgressDialog(R.string.reseting_task_title, R.string.reseting_task_msg);
-        listTaskInteractor.resetInterventionTaskInfo(listTaskView.getContext(), interventionType, selectedFeature.id());
+        listTaskInteractor.resetInterventionTaskInfo(interventionType, selectedFeature.id());
     }
 
     public void saveJsonForm(String json) {
