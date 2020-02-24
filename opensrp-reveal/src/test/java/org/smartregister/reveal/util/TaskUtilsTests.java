@@ -124,7 +124,7 @@ public class TaskUtilsTests extends BaseUnitTest {
 
         when(taskRepository.getTaskByIdentifier(anyString())).thenReturn(task);
 
-        taskUtils.resetTask(RuntimeEnvironment.application, taskDetails);
+        taskUtils.resetTask(taskDetails);
 
         verify(taskRepository).addOrUpdate(taskArgumentCaptor.capture());
         assertEquals(task.getIdentifier(), taskArgumentCaptor.getValue().getIdentifier());

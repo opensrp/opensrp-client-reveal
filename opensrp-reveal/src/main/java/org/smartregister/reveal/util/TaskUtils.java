@@ -25,6 +25,8 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import java.util.List;
 import java.util.UUID;
 
+import timber.log.Timber;
+
 import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
@@ -144,21 +146,31 @@ public class TaskUtils {
         }
     }
 
-    public void resetTask(Context context, BaseTaskDetails taskDetails) {
-        Task task = taskRepository.getTaskByIdentifier(taskDetails.getTaskId());
-        String operationalAreaId = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId();
+    public boolean resetTask(BaseTaskDetails taskDetails) {
 
-        if (Intervention.CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
-            task.setForEntity(operationalAreaId);
+        boolean taskResetSuccessful = false;
+        try {
+            Task task = taskRepository.getTaskByIdentifier(taskDetails.getTaskId());
+            String operationalAreaId = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId();
+
+            if (Intervention.CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
+                task.setForEntity(operationalAreaId);
+            }
+
+            task.setBusinessStatus(BusinessStatus.NOT_VISITED);
+            task.setStatus(READY);
+            task.setLastModified(new DateTime());
+            task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+            taskRepository.addOrUpdate(task);
+
+            RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
+
+            taskResetSuccessful = true;
+        } catch (Exception e) {
+            Timber.e(e);
         }
 
-        task.setBusinessStatus(BusinessStatus.NOT_VISITED);
-        task.setStatus(READY);
-        task.setLastModified(new DateTime());
-        task.setSyncStatus(BaseRepository.TYPE_Unsynced);
-        taskRepository.addOrUpdate(task);
-
-        RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
+        return taskResetSuccessful;
 
     }
 

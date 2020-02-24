@@ -462,10 +462,6 @@ public class ListTaskInteractor extends BaseInteractor {
                 cursor = getDatabase().rawQuery(SQL, new String[]{featureId, interventionType});
                 if (cursor.moveToNext()) {
                     taskDetails = readTaskDetails(cursor);
-                    cursor.close();
-                    // Reset task info
-                    interactorUtils.resetTaskInfo(context, getDatabase(), taskDetails);
-                    taskInfoResetSuccessful = true;
                 }
 
             } catch (Exception e) {
@@ -475,6 +471,10 @@ public class ListTaskInteractor extends BaseInteractor {
                     cursor.close();
                 }
             }
+
+            // Reset task info
+            taskInfoResetSuccessful = interactorUtils.resetTaskInfo(context, getDatabase(), taskDetails);
+
 
             boolean finalTaskInfoResetSuccessful = taskInfoResetSuccessful;
             appExecutors.mainThread().execute(() -> {

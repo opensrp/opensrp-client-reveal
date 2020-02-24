@@ -215,9 +215,8 @@ public class InteractorUtils {
         return formSubmissionIds;
     }
 
-    public void resetTaskInfo(Context context, SQLiteDatabase db, BaseTaskDetails taskDetails) {
-        archiveEventsForTask(db, taskDetails);
-        TaskUtils.getInstance().resetTask(context, taskDetails);
+    public boolean resetTaskInfo(Context context, SQLiteDatabase db, BaseTaskDetails taskDetails) {
+        return archiveEventsForTask(db, taskDetails) && TaskUtils.getInstance().resetTask(taskDetails);
     }
 
 }

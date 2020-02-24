@@ -116,7 +116,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 } else if (eventType.equals(Constants.EventType.PAOT_EVENT)) {
                     operationalAreaId = processEvent(event, clientClassification, localEvents, JsonForm.PAOT_STATUS);
                 } else if (eventType.equals(TASK_RESET_EVENT)) {
-                    // Do nothing
+                    continue;
                 } else {
                     Client client = eventClient.getClient();
 
