@@ -1,6 +1,5 @@
 package org.smartregister.reveal.presenter;
 
-import android.app.Activity;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.v7.app.AlertDialog;
@@ -25,7 +24,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
-import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
@@ -157,7 +155,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         Whitebox.setInternalState(listTaskPresenter, "jsonFormUtils", jsonFormUtils);
         prefsUtil.setCurrentPlanId(planId);
         prefsUtil.setCurrentOperationalArea(operationalArea);
-        when(listTaskView.getContext()).thenReturn(Robolectric.buildActivity(Activity.class).resume().get());
+        when(listTaskView.getContext()).thenReturn(RuntimeEnvironment.application);
     }
 
     @Test

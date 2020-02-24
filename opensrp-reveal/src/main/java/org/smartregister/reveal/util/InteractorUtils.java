@@ -175,9 +175,7 @@ public class InteractorUtils {
     public List<String> getFormSubmissionIdsFromEventTask(SQLiteDatabase db, BaseTaskDetails taskDetails) {
         List<String> formSubmissionIds = new ArrayList<>();
         Cursor cursor = null;
-
         String query;
-
 
         try {
 

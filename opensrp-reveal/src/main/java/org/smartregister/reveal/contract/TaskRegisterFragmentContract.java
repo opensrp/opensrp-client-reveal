@@ -47,6 +47,8 @@ public interface TaskRegisterFragmentContract {
         void onOpenMapClicked();
 
         void resetTaskInfo(TaskDetails taskDetails);
+
+        void onTaskInfoReset();
     }
 
     interface View extends BaseRegisterFragmentContract.View, BaseFormFragmentContract.View {

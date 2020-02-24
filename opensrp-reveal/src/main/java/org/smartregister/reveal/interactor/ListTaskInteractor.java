@@ -462,6 +462,7 @@ public class ListTaskInteractor extends BaseInteractor {
                 cursor = getDatabase().rawQuery(SQL, new String[]{featureId, interventionType});
                 if (cursor.moveToNext()) {
                     taskDetails = readTaskDetails(cursor);
+                    cursor.close();
                     // Reset task info
                     interactorUtils.resetTaskInfo(context, getDatabase(), taskDetails);
                     taskInfoResetSuccessful = true;
