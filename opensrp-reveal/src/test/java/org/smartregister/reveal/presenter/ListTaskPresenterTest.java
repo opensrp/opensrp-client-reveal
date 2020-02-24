@@ -1,7 +1,10 @@
 package org.smartregister.reveal.presenter;
 
+import android.app.Activity;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.support.v7.app.AlertDialog;
+import android.widget.TextView;
 
 import com.google.gson.JsonPrimitive;
 import com.mapbox.geojson.Feature;
@@ -22,19 +25,29 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.shadows.ShadowAlertDialog;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
+import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.FamilyCardDetails;
+import org.smartregister.reveal.model.IRSVerificationCardDetails;
+import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
+import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.TestingUtils;
 
 import java.util.ArrayList;
@@ -43,18 +56,37 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.domain.Task.TaskStatus.IN_PROGRESS;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.BEDNET_DISTRIBUTED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
+import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
+import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
+import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
+import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
+import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
+import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 
 /**
  * Created by samuelgithengi on 1/27/20.
@@ -87,8 +119,26 @@ public class ListTaskPresenterTest extends BaseUnitTest {
     @Mock
     private Feature feature;
 
+    @Mock
+    private RevealJsonFormUtils jsonFormUtils;
+
     @Captor
     private ArgumentCaptor<FeatureCollection> featureCollectionArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Feature> featureArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Boolean> booleanArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<String> stringArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<CardDetails> cardDetailsArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<CommonPersonObjectClient> commonPersonObjectClientArgumentCaptor;
 
     private PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
 
@@ -104,8 +154,10 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         org.smartregister.Context.bindtypes = new ArrayList<>();
         listTaskPresenter = new ListTaskPresenter(listTaskView, drawerPresenter);
         Whitebox.setInternalState(listTaskPresenter, "listTaskInteractor", listTaskInteractor);
+        Whitebox.setInternalState(listTaskPresenter, "jsonFormUtils", jsonFormUtils);
         prefsUtil.setCurrentPlanId(planId);
         prefsUtil.setCurrentOperationalArea(operationalArea);
+        when(listTaskView.getContext()).thenReturn(Robolectric.buildActivity(Activity.class).resume().get());
     }
 
     @Test
@@ -370,6 +422,385 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         verify(listTaskView).hideProgressDialog();
         verify(listTaskView).clearSelectedFeature();
         assertFalse(RevealApplication.getInstance().isRefreshMapOnEventSaved());
+    }
+
+    @Test
+    public void testOnstructureMarkedInactive() throws Exception {
+
+        com.cocoahero.android.geojson.Feature feature1 = new com.cocoahero.android.geojson.Feature();
+        feature1.setIdentifier("id1");
+        feature1.setProperties(new JSONObject()
+                .accumulate(TASK_BUSINESS_STATUS, BEDNET_DISTRIBUTED)
+                .accumulate(TASK_IDENTIFIER, "task1"));
+
+
+        Feature mapboxFeature = Feature.fromJson(feature1.toJSON().toString());
+        assertEquals(BEDNET_DISTRIBUTED, mapboxFeature.getStringProperty(TASK_BUSINESS_STATUS));
+        assertEquals("task1", mapboxFeature.getStringProperty(TASK_IDENTIFIER));
+
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection",
+                FeatureCollection.fromFeatures(new Feature[]{mapboxFeature}));
+
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mapboxFeature);
+
+        listTaskPresenter.onStructureMarkedInactive();
+        verify(listTaskView).setGeoJsonSource(featureCollectionArgumentCaptor.capture(), any(), booleanArgumentCaptor.capture());
+        assertFalse(booleanArgumentCaptor.getValue());
+        assertNull(featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_BUSINESS_STATUS));
+        assertNull(featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_IDENTIFIER));
+    }
+
+    @Test
+    public void testOnMarkStructureInEligibleConfirmed() throws Exception {
+
+        com.cocoahero.android.geojson.Feature feature1 = new com.cocoahero.android.geojson.Feature();
+        feature1.setIdentifier("id1");
+        Feature mapboxFeature = Feature.fromJson(feature1.toJSON().toString());
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mapboxFeature);
+        Whitebox.setInternalState(listTaskPresenter, "reasonUnEligible", "No residents");
+        listTaskPresenter.onMarkStructureIneligibleConfirmed();
+
+        verify(listTaskInteractor).markStructureAsIneligible(featureArgumentCaptor.capture(), stringArgumentCaptor.capture());
+        assertEquals("No residents", stringArgumentCaptor.getValue());
+        assertEquals(mapboxFeature.id(), featureArgumentCaptor.getValue().id());
+    }
+
+    @Test
+    public void testOnStructureMarkedIneligible() throws Exception {
+        com.cocoahero.android.geojson.Feature feature1 = new com.cocoahero.android.geojson.Feature();
+        feature1.setIdentifier("id1");
+        feature1.setProperties(new JSONObject());
+
+
+        Feature mapboxFeature = Feature.fromJson(feature1.toJSON().toString());
+        assertNull(mapboxFeature.getStringProperty(TASK_BUSINESS_STATUS));
+        assertNull(mapboxFeature.getStringProperty(TASK_IDENTIFIER));
+
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection",
+                FeatureCollection.fromFeatures(new Feature[]{mapboxFeature}));
+
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mapboxFeature);
+
+        listTaskPresenter.onStructureMarkedIneligible();
+        verify(listTaskView).setGeoJsonSource(featureCollectionArgumentCaptor.capture(), any(), booleanArgumentCaptor.capture());
+        assertFalse(booleanArgumentCaptor.getValue());
+        assertEquals(NOT_ELIGIBLE, featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_BUSINESS_STATUS));
+        assertEquals(NOT_ELIGIBLE, featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS));
+    }
+
+    @Test
+    public void testOnFamilyFound() {
+        CommonPersonObjectClient family = new CommonPersonObjectClient("caseId", null, "test family");
+
+        listTaskPresenter.onFamilyFound(family);
+
+        verify(listTaskView).openStructureProfile(commonPersonObjectClientArgumentCaptor.capture());
+        assertEquals("caseId", commonPersonObjectClientArgumentCaptor.getValue().getCaseId());
+        assertEquals("test family", commonPersonObjectClientArgumentCaptor.getValue().getName());
+    }
+
+    @Test
+    public void testOnFamilyFoundWithNullParam() {
+
+        listTaskPresenter.onFamilyFound(null);
+        verify(listTaskView).displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
+    }
+
+    @Test
+    public void testOnResume() {
+        RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
+        listTaskPresenter = spy(listTaskPresenter);
+        listTaskPresenter.onResume();
+
+        verify(listTaskPresenter).refreshStructures(true);
+        verify(listTaskView).clearSelectedFeature();
+        assertFalse(RevealApplication.getInstance().isRefreshMapOnEventSaved());
+    }
+
+    @Test
+    public void testDisplayMarkStructureIneligibleDialog() {
+
+        Whitebox.setInternalState(listTaskPresenter, "markStructureIneligibleConfirmed", false);
+        Whitebox.setInternalState(listTaskPresenter, "reasonUnEligible", "eligible");
+
+        assertFalse(Whitebox.getInternalState(listTaskPresenter, "markStructureIneligibleConfirmed"));
+        assertEquals("eligible", Whitebox.getInternalState(listTaskPresenter, "reasonUnEligible"));
+        listTaskPresenter.displayMarkStructureIneligibleDialog();
+
+        AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(alertDialog.isShowing());
+
+        TextView tv = alertDialog.findViewById(android.R.id.message);
+        assertEquals(getString(R.string.is_structure_eligible_for_fam_reg), tv.getText());
+
+        alertDialog.getButton(BUTTON_NEGATIVE).performClick();
+        assertFalse(alertDialog.isShowing());
+
+        assertTrue(Whitebox.getInternalState(listTaskPresenter, "markStructureIneligibleConfirmed"));
+        assertEquals(listTaskView.getContext().getString(R.string.not_eligible_unoccupied),
+                Whitebox.getInternalState(listTaskPresenter, "reasonUnEligible"));
+
+    }
+
+    @Test
+    public void testOnUndoInterventionStatus() throws Exception {
+
+        com.cocoahero.android.geojson.Feature feature1 = new com.cocoahero.android.geojson.Feature();
+        feature1.setIdentifier("id1");
+
+
+        Feature mapboxFeature = Feature.fromJson(feature1.toJSON().toString());
+
+
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mapboxFeature);
+
+        listTaskPresenter.onUndoInterventionStatus(BLOOD_SCREENING);
+
+        verify(listTaskView).showProgressDialog(R.string.reseting_task_title, R.string.reseting_task_msg);
+        verify(listTaskInteractor).resetInterventionTaskInfo(listTaskView.getContext(), BLOOD_SCREENING, mapboxFeature.id());
+
+    }
+
+    @Test
+    public void testSaveJsonForm() {
+        String jsonString = "{\"name\":\"trever\"}";
+
+        listTaskPresenter.saveJsonForm(jsonString);
+        verify(listTaskView).showProgressDialog(R.string.saving_title, R.string.saving_message);
+        verify(listTaskInteractor).saveJsonForm(jsonString);
+    }
+
+    @Test
+    public void testOnFormSaved() throws Exception{
+        String structureId = "id1";
+        String taskId = "taskId";
+
+        com.cocoahero.android.geojson.Feature feature1 = new com.cocoahero.android.geojson.Feature();
+        feature1.setIdentifier(structureId);
+        feature1.setProperties(new JSONObject());
+
+
+        Feature mapboxFeature = Feature.fromJson(feature1.toJSON().toString());
+        assertNull(mapboxFeature.getStringProperty(TASK_BUSINESS_STATUS));
+        assertNull(mapboxFeature.getStringProperty(TASK_STATUS));
+
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection",
+                FeatureCollection.fromFeatures(new Feature[]{mapboxFeature}));
+
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mapboxFeature);
+
+        listTaskPresenter.onFormSaved(structureId, taskId, IN_PROGRESS, COMPLETE, BLOOD_SCREENING);
+
+        verify(listTaskView).hideProgressDialog();
+
+        verify(listTaskView).setGeoJsonSource(featureCollectionArgumentCaptor.capture(), any(), booleanArgumentCaptor.capture());
+        assertFalse(booleanArgumentCaptor.getValue());
+        assertEquals(COMPLETE, featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_BUSINESS_STATUS));
+        assertEquals(IN_PROGRESS.name(), featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_STATUS));
+
+        verify(listTaskInteractor).fetchInterventionDetails(BLOOD_SCREENING, structureId, false);
+    }
+
+    @Test
+    public void testResetFeatureTasks() throws Exception {
+        String structureId = "id1";
+        com.cocoahero.android.geojson.Feature feature1 = new com.cocoahero.android.geojson.Feature();
+        feature1.setIdentifier(structureId);
+        feature1.setProperties(new JSONObject());
+
+
+        Feature mapboxFeature = Feature.fromJson(feature1.toJSON().toString());
+        assertNull(mapboxFeature.getStringProperty(TASK_BUSINESS_STATUS));
+        assertNull(mapboxFeature.getStringProperty(TASK_STATUS));
+        assertNull(mapboxFeature.getStringProperty(TASK_IDENTIFIER));
+        assertNull(mapboxFeature.getStringProperty(TASK_CODE));
+        assertNull(mapboxFeature.getStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS));
+
+        Whitebox.setInternalState(listTaskPresenter, "featureCollection",
+                FeatureCollection.fromFeatures(new Feature[]{mapboxFeature}));
+
+        Task task = TestingUtils.getTask("entityid");
+
+        listTaskPresenter.resetFeatureTasks(structureId, task);
+
+        verify(listTaskView).setGeoJsonSource(featureCollectionArgumentCaptor.capture(), any(), booleanArgumentCaptor.capture());
+        assertFalse(booleanArgumentCaptor.getValue());
+        assertEquals(task.getBusinessStatus(), featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_BUSINESS_STATUS));
+        assertEquals(task.getBusinessStatus(), featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS));
+        assertEquals(task.getStatus().name(), featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_STATUS));
+        assertEquals(task.getIdentifier(), featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_IDENTIFIER));
+        assertEquals(task.getCode(), featureCollectionArgumentCaptor.getValue().features().get(0).getStringProperty(TASK_CODE));
+
+    }
+
+    @Test
+    public void testOnFormSaveFailureForSprayEvent() {
+
+        listTaskPresenter.onFormSaveFailure(SPRAY_EVENT);
+
+        verify(listTaskView).hideProgressDialog();
+        verify(listTaskView).displayNotification(R.string.form_save_failure_title, R.string.spray_form_save_failure);
+    }
+
+    @Test
+    public void testOnFormSaveFailureForStructureEvent() {
+
+        listTaskPresenter.onFormSaveFailure(REGISTER_STRUCTURE_EVENT);
+
+        verify(listTaskView).hideProgressDialog();
+        verify(listTaskView).displayNotification(R.string.form_save_failure_title, R.string.add_structure_form_save_failure);
+    }
+
+    @Test
+    public void testOnInterventionFormDetailsFetched() {
+        assertNull(Whitebox.getInternalState(listTaskPresenter, "cardDetails"));
+        assertFalse(Whitebox.getInternalState(listTaskPresenter, "changeInterventionStatus"));
+
+        FamilyCardDetails expectedCardDetails = new FamilyCardDetails(COMPLETE, "12-2-2020", "nifi-user");
+
+        listTaskPresenter.onInterventionFormDetailsFetched(expectedCardDetails);
+
+        verify(listTaskView).hideProgressDialog();
+        assertTrue(Whitebox.getInternalState(listTaskPresenter, "changeInterventionStatus"));
+
+        FamilyCardDetails actualCardDetails = Whitebox.getInternalState(listTaskPresenter, "cardDetails");
+        assertEquals(expectedCardDetails.getStatus(), actualCardDetails.getStatus());
+        assertEquals(expectedCardDetails.getDateCreated(), actualCardDetails.getDateCreated());
+        assertEquals(expectedCardDetails.getOwner(), actualCardDetails.getOwner());
+
+    }
+
+    @Test
+    public void testOnFamilyCardDetailsFetched() {
+
+        FamilyCardDetails expectedCardDetails = new FamilyCardDetails(COMPLETE, "1582279044", "nifi-user");
+
+        listTaskPresenter.onCardDetailsFetched(expectedCardDetails);
+
+        verify(listTaskView).openCardView(cardDetailsArgumentCaptor.capture());
+
+        FamilyCardDetails actualCardDetails = (FamilyCardDetails) cardDetailsArgumentCaptor.getValue();
+
+        assertEquals(COMPLETE, actualCardDetails.getStatus());
+        assertEquals("nifi-user", actualCardDetails.getOwner());
+        assertEquals("19 Jan 1970", actualCardDetails.getDateCreated());
+
+
+    }
+
+    @Test
+    public void testOnSprayCardDetailsFetched() {
+
+        SprayCardDetails expectedCardDetails = new SprayCardDetails(NOT_SPRAYED, "Residential", "2014-07-04T12:08:56.235-0700", "gideon", "Mark", "Available");
+
+        listTaskPresenter.onCardDetailsFetched(expectedCardDetails);
+
+        verify(listTaskView).openCardView(cardDetailsArgumentCaptor.capture());
+
+        SprayCardDetails actualCardDetails = (SprayCardDetails) cardDetailsArgumentCaptor.getValue();
+
+        assertEquals(NOT_SPRAYED, actualCardDetails.getStatus());
+        assertEquals("Residential", actualCardDetails.getPropertyType());
+        assertEquals("04 Jul 2014", actualCardDetails.getSprayDate());
+        assertEquals("gideon", actualCardDetails.getSprayOperator());
+        assertEquals("Mark", actualCardDetails.getFamilyHead());
+        assertEquals("Available", actualCardDetails.getReason());
+
+    }
+
+    @Test
+    public void testOnMosquitoHarvestCardDetailsFetched() {
+
+        MosquitoHarvestCardDetails expectedCardDetails = new MosquitoHarvestCardDetails(NOT_VISITED, "2019-07-04", "2019-08-05", MOSQUITO_COLLECTION);
+
+
+        listTaskPresenter.onCardDetailsFetched(expectedCardDetails);
+
+        verify(listTaskView).openCardView(cardDetailsArgumentCaptor.capture());
+
+        MosquitoHarvestCardDetails actualCardDetails = (MosquitoHarvestCardDetails) cardDetailsArgumentCaptor.getValue();
+
+        assertEquals(NOT_VISITED, actualCardDetails.getStatus());
+        assertEquals("2019-07-04", actualCardDetails.getStartDate());
+        assertEquals("2019-08-05", actualCardDetails.getEndDate());
+        assertEquals(MOSQUITO_COLLECTION, actualCardDetails.getInterventionType());
+    }
+
+    @Test
+    public void testOnIRSVerificationCardDetailsFetched() {
+        IRSVerificationCardDetails expectedCardDetails = new IRSVerificationCardDetails(NOT_VISITED,
+                "yes", "no", "sprayed", "No chalk",
+                "No sticker", "No card");
+
+
+        listTaskPresenter.onCardDetailsFetched(expectedCardDetails);
+
+        verify(listTaskView).openCardView(cardDetailsArgumentCaptor.capture());
+
+        IRSVerificationCardDetails actualCardDetails = (IRSVerificationCardDetails) cardDetailsArgumentCaptor.getValue();
+
+        assertEquals(NOT_VISITED, actualCardDetails.getStatus());
+        assertEquals("yes", actualCardDetails.getTrueStructure());
+        assertEquals("no", actualCardDetails.getEligStruc());
+        assertEquals("sprayed", actualCardDetails.getReportedSprayStatus());
+        assertEquals("No chalk", actualCardDetails.getChalkSprayStatus());
+        assertEquals("No sticker", actualCardDetails.getStickerSprayStatus());
+        assertEquals("No card", actualCardDetails.getCardSprayStatus());
+
+    }
+
+    @Test
+    public void testOnLocationValidatedForMarkStructureIneligible() {
+
+        Whitebox.setInternalState(listTaskPresenter, "markStructureIneligibleConfirmed", true);
+        assertTrue(Whitebox.getInternalState(listTaskPresenter, "markStructureIneligibleConfirmed"));
+        listTaskPresenter = spy(listTaskPresenter);
+        listTaskPresenter.onLocationValidated();
+
+        verify(listTaskPresenter).onMarkStructureIneligibleConfirmed();
+        assertFalse(Whitebox.getInternalState(listTaskPresenter, "markStructureIneligibleConfirmed"));
+    }
+
+    @Test
+    public void testOnLocationValidatedForRegisterFamily() {
+
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeatureInterventionType", REGISTER_FAMILY);
+
+        listTaskPresenter.onLocationValidated();
+
+        verify(listTaskView).registerFamily();
+    }
+
+    @Test
+    public void testOnLocationValidatedForCardDetailsWithChangeInterventionStatusFalse() {
+
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeatureInterventionType", PAOT);
+        Whitebox.setInternalState(listTaskPresenter, "changeInterventionStatus", false);
+        listTaskPresenter = spy(listTaskPresenter);
+        listTaskPresenter.onLocationValidated();
+
+        verify(listTaskPresenter).startForm(featureArgumentCaptor.capture(), cardDetailsArgumentCaptor.capture(), stringArgumentCaptor.capture());
+        assertNull(cardDetailsArgumentCaptor.getValue());
+        assertEquals(PAOT, stringArgumentCaptor.getValue());
+    }
+
+    @Test
+    public void testOnlocationValidatedForCardDetailWithChangeInterventionTrue() {
+        FamilyCardDetails expectedCardDetails = new FamilyCardDetails(COMPLETE, "19 Jan 1970", "nifi-user");
+        Whitebox.setInternalState(listTaskPresenter, "cardDetails", expectedCardDetails);
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeatureInterventionType", PAOT);
+        Whitebox.setInternalState(listTaskPresenter, "changeInterventionStatus", true);
+        listTaskPresenter = spy(listTaskPresenter);
+        listTaskPresenter.onLocationValidated();
+
+        verify(listTaskPresenter).startForm(featureArgumentCaptor.capture(), cardDetailsArgumentCaptor.capture(), stringArgumentCaptor.capture());
+        assertEquals(PAOT, stringArgumentCaptor.getValue());
+
+        FamilyCardDetails actualCardDetails = (FamilyCardDetails) cardDetailsArgumentCaptor.getValue();
+
+        assertEquals(COMPLETE, actualCardDetails.getStatus());
+        assertEquals("nifi-user", actualCardDetails.getOwner());
+        assertEquals("19 Jan 1970", actualCardDetails.getDateCreated());
     }
 
 }
