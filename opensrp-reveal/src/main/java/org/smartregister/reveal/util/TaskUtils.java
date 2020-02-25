@@ -18,12 +18,16 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
 
 import java.util.List;
 import java.util.UUID;
 
+import timber.log.Timber;
+
+import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
@@ -75,7 +79,7 @@ public class TaskUtils {
         task.setIdentifier(UUID.randomUUID().toString());
         task.setPlanIdentifier(prefsUtil.getCurrentPlanId());
         task.setGroupIdentifier(Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId());
-        task.setStatus(Task.TaskStatus.READY);
+        task.setStatus(READY);
         task.setBusinessStatus(businessStatus);
         task.setPriority(3);
         task.setCode(intervention);
@@ -141,4 +145,34 @@ public class TaskUtils {
 
         }
     }
+
+    public boolean resetTask(BaseTaskDetails taskDetails) {
+
+        boolean taskResetSuccessful = false;
+        try {
+            Task task = taskRepository.getTaskByIdentifier(taskDetails.getTaskId());
+            String operationalAreaId = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId();
+
+            if (Intervention.CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
+                task.setForEntity(operationalAreaId);
+            }
+
+            task.setBusinessStatus(BusinessStatus.NOT_VISITED);
+            task.setStatus(READY);
+            task.setLastModified(new DateTime());
+            task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+            taskRepository.addOrUpdate(task);
+
+            RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
+
+            taskResetSuccessful = true;
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+
+        return taskResetSuccessful;
+
+    }
+
+
 }

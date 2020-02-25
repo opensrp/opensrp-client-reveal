@@ -87,13 +87,15 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     }
 
     @Override
-    public void onTaskSelected(StructureTaskDetails details, boolean isEdit) {
+    public void onTaskSelected(StructureTaskDetails details, boolean isEdit, boolean isUndo) {
         if (details != null) {
             if (TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
                 if (isEdit) {
                     details.setEdit(true);
                     getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
                     interactor.getStructure(details);
+                } else if(isUndo) {
+                    getView().displayResetTaskInfoDialog(details);
                 } else {
                     getView().displayToast("Task Completed");
                 }
@@ -160,6 +162,16 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
         }
         getView().hideProgressDialog();
 
+    }
+
+    @Override
+    public void resetTaskInfo(StructureTaskDetails taskDetails) {
+        interactor.resetTaskInfo(getView().getContext(), taskDetails);
+    }
+
+    @Override
+    public void onTaskInfoReset(String structureId) {
+        findTasks(structureId);
     }
 
     @Override

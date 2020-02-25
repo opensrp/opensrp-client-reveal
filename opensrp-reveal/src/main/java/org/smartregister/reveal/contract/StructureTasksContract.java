@@ -4,11 +4,9 @@ import android.content.Context;
 
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.Event;
-import org.smartregister.reveal.model.EventTask;
 import org.smartregister.reveal.model.StructureTaskDetails;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -24,7 +22,7 @@ public interface StructureTasksContract {
 
         void onTasksFound(List<StructureTaskDetails> taskDetailsList, StructureTaskDetails incompleteIndexCase);
 
-        void onTaskSelected(StructureTaskDetails details, boolean isEdit);
+        void onTaskSelected(StructureTaskDetails details, boolean isEdit, boolean isUndo);
 
         void saveJsonForm(String json);
 
@@ -33,6 +31,10 @@ public interface StructureTasksContract {
         void onIndexConfirmationFormSaved(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks);
 
         void onEventFound(Event event);
+
+        void resetTaskInfo(StructureTaskDetails taskDetails);
+
+        void onTaskInfoReset(String structureId);
     }
 
     interface Interactor extends BaseContract.BaseInteractor {
@@ -42,6 +44,8 @@ public interface StructureTasksContract {
         void getStructure(StructureTaskDetails details);
 
         void findLastEvent(StructureTaskDetails taskDetails);
+
+        void resetTaskInfo(Context context, StructureTaskDetails taskDetails);
     }
 
     interface View extends UserLocationContract.UserLocationView, BaseFormFragmentContract.View {
@@ -67,5 +71,7 @@ public interface StructureTasksContract {
         void updateNumberOfTasks();
 
         void updateTasks(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks);
+
+        void displayResetTaskInfoDialog(StructureTaskDetails taskDetails);
     }
 }

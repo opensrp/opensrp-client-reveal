@@ -92,6 +92,8 @@ public interface ListTaskContract {
 
         void onInterventionFormDetailsFetched(CardDetails finalCardDetails);
 
+        void onInterventionTaskInfoReset(boolean success);
+
         Feature getSelectedFeature();
 
         @StringRes

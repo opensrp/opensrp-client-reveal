@@ -2,6 +2,8 @@ package org.smartregister.reveal.util;
 
 import android.database.Cursor;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,14 +17,26 @@ import org.smartregister.domain.db.EventClient;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.TaskRepository;
+import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import timber.log.Timber;
 
+import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.CASE_CONFIRMATION_FIELD;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TASK_TABLE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TYPE_FIELD;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.FORM_SUBMISSION_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
+import static org.smartregister.reveal.util.Constants.Intervention.BCC;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.util.JsonFormUtils.gson;
 
@@ -34,10 +48,13 @@ public class InteractorUtils {
 
     private RevealClientProcessor clientProcessor;
 
+    private RevealJsonFormUtils jsonFormUtils;
+
     public InteractorUtils(TaskRepository taskRepository, EventClientRepository eventClientRepository, RevealClientProcessor clientProcessor) {
         this.taskRepository = taskRepository;
         this.eventClientRepository = eventClientRepository;
         this.clientProcessor = clientProcessor;
+        jsonFormUtils = new RevealJsonFormUtils();
     }
 
 
@@ -112,4 +129,93 @@ public class InteractorUtils {
         }
         return saved;
     }
+
+    public boolean archiveEventsForTask(SQLiteDatabase db, BaseTaskDetails taskDetails) {
+        boolean archived = true;
+
+        if (taskDetails == null) {
+            return false;
+        }
+        List<String> formSubmissionIds = getFormSubmissionIdsFromEventTask(db, taskDetails);
+        List<EventClient> eventClients = eventClientRepository.fetchEventClients(formSubmissionIds);
+        DateTime now = new DateTime();
+        JSONArray taskEvents = new JSONArray();
+
+        try {
+
+            JSONArray eventClientJsonArray = new JSONArray(gson.toJson(eventClients));
+
+            for (int i = 0; i < eventClientJsonArray.length(); i++) {
+                JSONObject eventJson = eventClientJsonArray.getJSONObject(i).getJSONObject("event");
+                eventJson.put("dateVoided", now);
+                eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
+                taskEvents.put(eventJson);
+            }
+            eventClientRepository.batchInsertEvents(taskEvents, 0);
+
+
+            Event resetTaskEvent = RevealJsonFormUtils.createTaskEvent(taskDetails.getTaskEntity(), Utils.getCurrentLocationId(),
+                    null, Constants.TASK_RESET_EVENT, Constants.STRUCTURE);
+            JSONObject eventJson = new JSONObject(gson.toJson(resetTaskEvent));
+            eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
+
+            eventJson = jsonFormUtils.populateFormDetails(eventJson.toString(), taskDetails.getTaskEntity(), taskDetails.getStructureId(), taskDetails.getTaskId(), taskDetails.getBusinessStatus(), taskDetails.getTaskStatus(), null, null);
+            eventClientRepository.addEvent(taskDetails.getTaskEntity(), eventJson);
+
+
+        } catch (Exception e) {
+            Timber.e(e);
+            archived = false;
+        }
+
+        return archived;
+    }
+
+    public List<String> getFormSubmissionIdsFromEventTask(SQLiteDatabase db, BaseTaskDetails taskDetails) {
+        List<String> formSubmissionIds = new ArrayList<>();
+        Cursor cursor = null;
+        String query;
+
+        try {
+
+            if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode()) || BCC.equals(taskDetails.getTaskCode())) {
+                String eventTypeField= null;
+
+                if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
+                    eventTypeField = CASE_CONFIRMATION_FIELD;
+                } else if(BCC.equals(taskDetails.getTaskCode())) {
+                    eventTypeField = BEHAVIOUR_CHANGE_COMMUNICATION;
+                }
+
+                query = String.format("select %s from event where baseEntityId = ?  and %s = ?",
+                        FORM_SUBMISSION_ID, EVENT_TYPE_FIELD);
+                cursor = db.rawQuery(query, new String[]{taskDetails.getTaskEntity(), eventTypeField});
+
+                while (cursor.moveToNext()) {
+                    formSubmissionIds.add(cursor.getString(cursor.getColumnIndex(FORM_SUBMISSION_ID)));
+                }
+
+            } else {
+                query = String.format("select %s from %s where %s = ?",
+                        BASE_ENTITY_ID, EVENT_TASK_TABLE, TASK_ID);
+                cursor = db.rawQuery(query, new String[]{taskDetails.getTaskId()});
+
+                while (cursor.moveToNext()) {
+                    formSubmissionIds.add(cursor.getString(cursor.getColumnIndex(BASE_ENTITY_ID)));
+                }
+            }
+
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return formSubmissionIds;
+    }
+
+    public boolean resetTaskInfo(SQLiteDatabase db, BaseTaskDetails taskDetails) {
+        return archiveEventsForTask(db, taskDetails) && TaskUtils.getInstance().resetTask(taskDetails);
+    }
+
 }

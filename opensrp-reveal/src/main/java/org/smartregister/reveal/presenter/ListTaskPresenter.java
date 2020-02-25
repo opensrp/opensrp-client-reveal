@@ -149,7 +149,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private boolean markStructureIneligibleConfirmed;
 
-    private String reasonUnligible;
+    private String reasonUnEligible;
 
     private boolean isTasksFiltered;
 
@@ -376,6 +376,17 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
     }
 
+    @Override
+    public void onInterventionTaskInfoReset(boolean success) {
+        listTaskView.hideProgressDialog();
+        listTaskView.closeAllCardViews();
+        if (revealApplication.isRefreshMapOnEventSaved()) {
+            refreshStructures(true);
+            listTaskView.clearSelectedFeature();
+            revealApplication.setRefreshMapOnEventSaved(false);
+        }
+    }
+
 
     @Override
     public void onCardDetailsFetched(CardDetails cardDetails) {
@@ -424,7 +435,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
 
-    private void startForm(Feature feature, CardDetails cardDetails, String interventionType) {
+    public void startForm(Feature feature, CardDetails cardDetails, String interventionType) {
         String formName = jsonFormUtils.getFormName(null, interventionType);
         String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();
         String familyHead = null;
@@ -468,6 +479,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.showProgressDialog(R.string.fetching_paot_title, R.string.fetching_paot_message);
         }
         listTaskInteractor.fetchInterventionDetails(interventionType, selectedFeature.id(), true);
+    }
+
+    public void onUndoInterventionStatus(String interventionType) {
+        listTaskView.showProgressDialog(R.string.reseting_task_title, R.string.reseting_task_msg);
+        listTaskInteractor.resetInterventionTaskInfo(interventionType, selectedFeature.id());
     }
 
     public void saveJsonForm(String json) {
@@ -613,7 +629,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onMarkStructureIneligibleConfirmed() {
-        listTaskInteractor.markStructureAsIneligible(selectedFeature, reasonUnligible);
+        listTaskInteractor.markStructureAsIneligible(selectedFeature, reasonUnEligible);
     }
 
     @Override
@@ -659,7 +675,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
     }
 
-    private void displayMarkStructureIneligibleDialog() {
+    public void displayMarkStructureIneligibleDialog() {
 
         AlertDialogUtils.displayNotificationWithCallback(listTaskView.getContext(), R.string.mark_location_ineligible,
                 R.string.is_structure_eligible_for_fam_reg, R.string.eligible, R.string.not_eligible_unoccupied, R.string.not_eligible_other, new DialogInterface.OnClickListener() {
@@ -667,7 +683,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == BUTTON_NEGATIVE || which == BUTTON_NEUTRAL) {
                             markStructureIneligibleConfirmed = true;
-                            reasonUnligible = which == BUTTON_NEGATIVE ? listTaskView.getContext().getString(R.string.not_eligible_unoccupied) : listTaskView.getContext().getString(R.string.not_eligible_other);
+                            reasonUnEligible = which == BUTTON_NEGATIVE ? listTaskView.getContext().getString(R.string.not_eligible_unoccupied) : listTaskView.getContext().getString(R.string.not_eligible_other);
                         }
                         if (validateFarStructures()) {
                             validateUserLocation();

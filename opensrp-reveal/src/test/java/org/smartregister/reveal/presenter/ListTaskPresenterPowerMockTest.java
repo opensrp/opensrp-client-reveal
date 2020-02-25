@@ -62,6 +62,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
@@ -674,6 +675,18 @@ public class ListTaskPresenterPowerMockTest {
 
         verify(listTaskPresenterSpy).onMarkStructureIneligibleConfirmed();
     }
+
+    @Test
+    public void testOnUndoingInterventionStatus() {
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mock(Feature.class));
+
+        doNothing().when(listTaskViewSpy).showProgressDialog(anyInt(), anyInt());
+
+        listTaskPresenter.onUndoInterventionStatus(BEDNET_DISTRIBUTION);
+
+        verify(listTaskInteractor, times(1)).resetInterventionTaskInfo(eq(BEDNET_DISTRIBUTION), any());
+    }
+
 
     private void mockStaticMethods() {
         mockStatic(Utils.class);

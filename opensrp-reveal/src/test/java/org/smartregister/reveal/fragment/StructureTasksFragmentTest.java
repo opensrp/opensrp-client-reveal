@@ -2,6 +2,7 @@ package org.smartregister.reveal.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
@@ -86,6 +89,9 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
 
     @Mock
     private ValidateUserLocationPresenter locationPresenter;
+
+    @Captor
+    private ArgumentCaptor<StructureTaskDetails> taskDetailsArgumentCaptor;
 
     private StructureTasksFragment fragment;
 
@@ -278,7 +284,7 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
         view.setTag(R.id.task_details, taskDetails);
         view.setOnClickListener(onClickListener);
         view.performClick();
-        verify(presenter).onTaskSelected(taskDetails, R.id.view_edit == view.getId());
+        verify(presenter).onTaskSelected(taskDetails, R.id.view_edit == view.getId(), false);
     }
 
 
@@ -322,6 +328,24 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
         Button button = Whitebox.getInternalState(fragment, "detectCaseButton");
         button.performClick();
         verify(presenter).onDetectCase();
+    }
+
+    @Test
+    public void testDisplayResetTaskInfoDialog() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        fragment.displayResetTaskInfoDialog(taskDetails);
+
+        AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(alertDialog.isShowing());
+
+        TextView tv = alertDialog.findViewById(android.R.id.message);
+        assertEquals(getString(R.string.undo_task_msg), tv.getText());
+
+        Whitebox.setInternalState(fragment, "presenter", presenter);
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).performClick();
+        verify(presenter).resetTaskInfo(taskDetailsArgumentCaptor.capture());
+        assertEquals(taskDetails.getTaskId(), taskDetailsArgumentCaptor.getValue().getTaskId());
+        assertFalse(alertDialog.isShowing());
     }
 
 }

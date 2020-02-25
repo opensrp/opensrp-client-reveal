@@ -19,19 +19,28 @@ import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.Context;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Task;
+import org.smartregister.domain.db.Event;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.CardDetails;
+import org.smartregister.reveal.model.FamilyCardDetails;
+import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
+import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.Properties;
+import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestDataUtils;
 import org.smartregister.reveal.util.TestingUtils;
@@ -55,8 +64,18 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.domain.Task.TaskStatus.COMPLETED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
+import static org.smartregister.reveal.util.Constants.Properties.APP_VERSION_NAME;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_ID;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
+import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
 /**
  * Created by samuelgithengi on 5/22/19.
@@ -78,6 +97,12 @@ public class ListTaskInteractorTest extends BaseUnitTest {
     @Mock
     private StructureRepository structureRepository;
 
+    @Mock
+    private InteractorUtils interactorUtils;
+
+    @Mock
+    private EventClientRepository eventClientRepository;
+
     @Captor
     private ArgumentCaptor<CardDetails> cardDetailsCaptor;
 
@@ -89,6 +114,21 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
     @Captor
     private ArgumentCaptor<List<TaskDetails>> taskDetailsCaptor;
+
+    @Captor
+    private ArgumentCaptor<BaseTaskDetails> baseTaskDetailsArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Location> locationArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<String> stringArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<JSONObject> jsonObjectArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Task> taskArgumentCaptor;
 
     private ListTaskInteractor listTaskInteractor;
 
@@ -105,6 +145,8 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         Whitebox.setInternalState(listTaskInteractor, "database", database);
         Whitebox.setInternalState(listTaskInteractor, "taskRepository", taskRepository);
         Whitebox.setInternalState(listTaskInteractor, "structureRepository", structureRepository);
+        Whitebox.setInternalState(listTaskInteractor, "interactorUtils", interactorUtils);
+        Whitebox.setInternalState(listTaskInteractor, "eventClientRepository", eventClientRepository);
     }
 
     @Test
@@ -210,7 +252,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals(1, featureCollection.features().size());
         Feature feature = featureCollection.features().get(0);
         assertEquals(structure.getId(), feature.id());
-        assertEquals(task.getIdentifier(), feature.getStringProperty(Properties.TASK_IDENTIFIER));
+        assertEquals(task.getIdentifier(), feature.getStringProperty(TASK_IDENTIFIER));
         assertEquals(task.getBusinessStatus(), feature.getStringProperty(Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS));
         assertEquals(task.getStatus().name(), feature.getStringProperty(Properties.TASK_STATUS));
         assertEquals(task.getCode(), feature.getStringProperty(Properties.TASK_CODE));
@@ -239,7 +281,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals(1, featureCollection.features().size());
         Feature feature = featureCollection.features().get(0);
         assertEquals(structure.getId(), feature.id());
-        assertEquals(task.getIdentifier(), feature.getStringProperty(Properties.TASK_IDENTIFIER));
+        assertEquals(task.getIdentifier(), feature.getStringProperty(TASK_IDENTIFIER));
         assertEquals(task.getBusinessStatus(), feature.getStringProperty(Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS));
         assertEquals(task.getStatus().name(), feature.getStringProperty(Properties.TASK_STATUS));
         assertEquals(task.getCode(), feature.getStringProperty(Properties.TASK_CODE));
@@ -260,7 +302,146 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals(Intervention.PAOT, cardDetails.getInterventionType());
     }
 
+    @Test
+    public void testGetTaskSelect() {
+        String expectedQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.structure_id FROM task";
+        String actualQuery = listTaskInteractor.getTaskSelect("");
+        assertEquals(expectedQuery, actualQuery);
+    }
 
+    @Test
+    public void testReadTaskDetails() {
+        Task expectedTask = TestingUtils.getTask("task-entity-id");
+        MatrixCursor taskCursor = TestingUtils.getTaskCursor(expectedTask);
+        taskCursor.moveToNext();
+
+        StructureTaskDetails taskdetails = listTaskInteractor.readTaskDetails(taskCursor);
+
+        assertEquals(expectedTask.getIdentifier(), taskdetails.getTaskId());
+        assertEquals(expectedTask.getCode(), taskdetails.getTaskCode());
+        assertEquals(expectedTask.getForEntity(), taskdetails.getTaskEntity());
+        assertEquals(expectedTask.getBusinessStatus(), taskdetails.getBusinessStatus());
+        assertEquals(expectedTask.getStatus().name(), taskdetails.getTaskStatus());
+        assertEquals(expectedTask.getStructureId(), taskdetails.getStructureId());
+
+    }
+
+    @Test
+    public void testResetInterventionTaskInfo() {
+        Task expectedTask = TestingUtils.getTask("task-entity-id");
+        MatrixCursor taskCursor = TestingUtils.getTaskCursor(expectedTask);
+
+        when(database.rawQuery(any(), any())).thenReturn(taskCursor);
+        when(interactorUtils.resetTaskInfo(any(),any())).thenReturn(true);
+
+        listTaskInteractor.resetInterventionTaskInfo(BEDNET_DISTRIBUTION, expectedTask.getStructureId());
+
+        verify(interactorUtils, timeout(ASYNC_TIMEOUT)).resetTaskInfo(any(), baseTaskDetailsArgumentCaptor.capture());
+
+        BaseTaskDetails taskDetails = baseTaskDetailsArgumentCaptor.getValue();
+
+        assertEquals(expectedTask.getCode(), taskDetails.getTaskCode());
+        assertEquals(expectedTask.getForEntity(), taskDetails.getTaskEntity());
+        assertEquals(expectedTask.getBusinessStatus(), taskDetails.getBusinessStatus());
+        assertEquals(expectedTask.getStatus().name(), taskDetails.getTaskStatus());
+        assertEquals(expectedTask.getStructureId(), taskDetails.getStructureId());
+
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onInterventionTaskInfoReset(eq(true));
+
+
+    }
+
+    @Test
+    public void testMarkStructureAsInactive() {
+
+        Location location = TestingUtils.getOperationalArea();
+        location.getProperties().setStatus(LocationProperty.PropertyStatus.INACTIVE);
+        assertEquals(LocationProperty.PropertyStatus.INACTIVE, location.getProperties().getStatus());
+
+        when(structureRepository.getLocationById(anyString())).thenReturn(location);
+        Feature feature = TestingUtils.getStructure();
+
+        listTaskInteractor.markStructureAsInactive(feature);
+
+        verify(structureRepository).getLocationById(stringArgumentCaptor.capture());
+        assertEquals(feature.id(), stringArgumentCaptor.getValue());
+        verify(structureRepository).addOrUpdate(locationArgumentCaptor.capture());
+        assertEquals(LocationProperty.PropertyStatus.INACTIVE, locationArgumentCaptor.getValue().getProperties().getStatus());
+        verify(taskRepository).cancelTasksForEntity(stringArgumentCaptor.capture());
+        assertEquals(feature.id(), stringArgumentCaptor.getValue());
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructureMarkedInactive();
+    }
+
+    @Test
+    public void testMarkStructureAsIneligible() {
+
+        Feature feature = TestingUtils.getStructure();
+
+        String taskIdentifier = getPropertyValue(feature, TASK_IDENTIFIER);
+        String reasonUnEligible = "Not Eligible: Other";
+        Task task = TestingUtils.getTask("entity-id");
+        task.setIdentifier(taskIdentifier);
+        String expectedStatus = task.getStatus().name();
+        String expectedBusinessStatus = task.getBusinessStatus();
+
+        when(taskRepository.getTaskByIdentifier(anyString())).thenReturn(task);
+
+        listTaskInteractor.markStructureAsIneligible(feature,reasonUnEligible);
+
+        verify(taskRepository).getTaskByIdentifier(stringArgumentCaptor.capture());
+        assertEquals(taskIdentifier, stringArgumentCaptor.getValue());
+
+        verify(taskRepository).addOrUpdate(taskArgumentCaptor.capture());
+        Task actualTask = taskArgumentCaptor.getValue();
+        assertEquals(NOT_ELIGIBLE, actualTask.getBusinessStatus());
+        assertEquals(COMPLETED, task.getStatus());
+        assertNotNull(task.getLastModified());
+        assertEquals(taskIdentifier, task.getIdentifier());
+
+
+        verify(eventClientRepository).addEvent(stringArgumentCaptor.capture(),jsonObjectArgumentCaptor.capture());
+        Event actualEvent = taskGson.fromJson(jsonObjectArgumentCaptor.getValue().toString(), Event.class);
+        assertEquals(BuildConfig.VERSION_NAME, actualEvent.getDetails().get(APP_VERSION_NAME));
+        assertEquals(expectedBusinessStatus, actualEvent.getDetails().get(TASK_BUSINESS_STATUS));
+        assertEquals(feature.id(), actualEvent.getDetails().get(LOCATION_ID));
+        assertEquals(expectedStatus, actualEvent.getDetails().get(TASK_STATUS));
+
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructureMarkedIneligible();
+
+    }
+
+    @Test
+    public void testCreateIRSVerificationCardDetails() {
+
+        String feature = UUID.randomUUID().toString();
+        when(database.rawQuery(any(), any())).thenReturn(createIRSVerificationCursor());
+        listTaskInteractor.fetchInterventionDetails(Intervention.IRS_VERIFICATION, feature, true);
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery("SELECT true_structure, eligible_structure, report_spray, chalk_spray, sticker_spray, card_spray FROM irs_verification WHERE id= ?", new String[]{feature});
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onInterventionFormDetailsFetched(cardDetailsCaptor.capture());
+        IRSVerificationCardDetails cardDetails = (IRSVerificationCardDetails) cardDetailsCaptor.getValue();
+        assertEquals("Yes", cardDetails.getTrueStructure());
+        assertEquals("Yes", cardDetails.getEligStruc());
+        assertEquals("sprayed", cardDetails.getReportedSprayStatus());
+        assertEquals("No chalk", cardDetails.getChalkSprayStatus());
+        assertEquals("No sticker", cardDetails.getStickerSprayStatus());
+        assertEquals("No card", cardDetails.getCardSprayStatus());
+
+    }
+
+    @Test
+    public void testCreateFamilyCardDetails() {
+
+        String feature = UUID.randomUUID().toString();
+        when(database.rawQuery(any(), any())).thenReturn(createFamilyCursor());
+        listTaskInteractor.fetchInterventionDetails(Intervention.REGISTER_FAMILY, feature, true);
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery("SELECT business_status, authored_on, owner FROM task WHERE for = ?", new String[]{feature});
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onInterventionFormDetailsFetched(cardDetailsCaptor.capture());
+        FamilyCardDetails cardDetails = (FamilyCardDetails) cardDetailsCaptor.getValue();
+        assertEquals(IN_PROGRESS, cardDetails.getStatus());
+        assertEquals("11/02/1977", cardDetails.getDateCreated());
+        assertEquals("Nifi-User", cardDetails.getOwner());
+    }
+  
     private Cursor createSprayCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{"spray_status", "not_sprayed_reason",
                 "not_sprayed_other_reason", "property_type", "spray_date", "spray_operator", "family_head_name"});
@@ -293,5 +474,17 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         return cursor;
     }
 
+    private Cursor createIRSVerificationCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{DatabaseKeys.TRUE_STRUCTURE, DatabaseKeys.ELIGIBLE_STRUCTURE,
+                DatabaseKeys.REPORT_SPRAY, DatabaseKeys.CHALK_SPRAY, DatabaseKeys.STICKER_SPRAY, DatabaseKeys.CARD_SPRAY});
+        cursor.addRow(new Object[]{"Yes", "Yes", "sprayed", "No chalk", "No sticker", "No card"});
+        return cursor;
+    }
+
+    private Cursor createFamilyCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{DatabaseKeys.BUSINESS_STATUS, DatabaseKeys.AUTHORED_ON, DatabaseKeys.OWNER});
+        cursor.addRow(new Object[]{IN_PROGRESS, "11/02/1977", "Nifi-User"});
+        return cursor;
+    }
 
 }

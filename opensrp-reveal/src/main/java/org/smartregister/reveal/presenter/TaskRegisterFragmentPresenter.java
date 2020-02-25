@@ -379,6 +379,18 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         getView().startMapActivity(filterParams);
     }
 
+    @Override
+    public void resetTaskInfo(TaskDetails taskDetails) {
+        interactor.resetTaskInfo(getView().getContext(), taskDetails);
+    }
+
+    @Override
+    public void onTaskInfoReset() {
+        // refresh task list
+        getView().showProgressView();
+        interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter(), getView().getContext().getString(R.string.house));
+    }
+
     private boolean matchesTaskCodeFilterList(String value, Set<String> filterList, Pattern pattern) {
         String[] array = pattern.split(value);
         return CollectionUtils.containsAny(Arrays.asList(array), filterList);

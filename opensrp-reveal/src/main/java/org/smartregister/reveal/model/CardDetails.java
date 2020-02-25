@@ -1,5 +1,7 @@
 package org.smartregister.reveal.model;
 
+import org.smartregister.reveal.R;
+
 /**
  * @author Vincent Karuri
  */
@@ -7,7 +9,7 @@ package org.smartregister.reveal.model;
 public class CardDetails {
     protected String status;
     private int statusMessage;
-    private Integer statusColor;
+    private int statusColor = R.color.task_not_done;
     private String reason;
     private String comments;
 

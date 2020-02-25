@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.robolectric.RuntimeEnvironment;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.BaseUnitTest;
@@ -25,6 +26,7 @@ import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestingUtils;
 
@@ -82,6 +84,9 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
     @Mock
     private StructureRepository structureRepository;
 
+    @Mock
+    private InteractorUtils interactorUtils;
+
     @Captor
     private ArgumentCaptor<List<TaskDetails>> taskListCaptor;
 
@@ -90,6 +95,9 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
 
     @Captor
     private ArgumentCaptor<JSONObject> jsonCaptor;
+
+    @Captor
+    private ArgumentCaptor<TaskDetails> taskDetailArgumentCaptor;
 
     private TaskRegisterFragmentInteractor interactor;
 
@@ -106,6 +114,7 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         interactor = new TaskRegisterFragmentInteractor(presenter, 70f);
         Whitebox.setInternalState(interactor, "structureRepository", structureRepository);
         Whitebox.setInternalState(interactor, "database", database);
+        Whitebox.setInternalState(interactor, "interactorUtils", interactorUtils);
         groupId = UUID.randomUUID().toString();
         planId = UUID.randomUUID().toString();
         mainSelectQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name , ec_family.house_number FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? AND status NOT IN (?,?) ";
@@ -339,6 +348,22 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         assertEquals(event, jsonCaptor.getValue().toString());
         verifyNoMoreInteractions(database);
         verifyNoMoreInteractions(presenter);
+    }
+
+
+    @Test
+    public void testResetTaskInfo() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+
+        when(interactorUtils.archiveEventsForTask(any(), any())).thenReturn(true);
+        when(interactorUtils.getFormSubmissionIdsFromEventTask(any(), any())).thenReturn(null);
+
+        interactor.resetTaskInfo(RuntimeEnvironment.application, taskDetails);
+        verify(interactorUtils, timeout(ASYNC_TIMEOUT)).resetTaskInfo(any(), taskDetailArgumentCaptor.capture());
+
+        assertEquals(taskDetails.getTaskEntity(), taskDetailArgumentCaptor.getValue().getTaskEntity());
+        assertEquals(taskDetails.getTaskStatus(), taskDetailArgumentCaptor.getValue().getTaskStatus());
+        assertEquals(taskDetails.getBusinessStatus(), taskDetailArgumentCaptor.getValue().getBusinessStatus());
     }
 
     private Cursor createCursor(String taskId, String intervention) {

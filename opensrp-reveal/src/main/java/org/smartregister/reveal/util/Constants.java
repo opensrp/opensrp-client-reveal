@@ -31,6 +31,8 @@ public interface Constants {
 
     String BEHAVIOUR_CHANGE_COMMUNICATION = "behaviour_change_communication";
 
+    String TASK_RESET_EVENT = "reset_task";
+
     String STRUCTURE = "Structure";
 
     String FOCUS = "FOCUS";
@@ -193,6 +195,10 @@ public interface Constants {
                 REGISTER_FAMILY, PAOT);
 
         List<String> MDA_INTERVENTIONS = Arrays.asList(REGISTER_FAMILY, MDA_ADHERENCE, MDA_DISPENSE);
+
+        List<String> TASK_RESET_INTERVENTIONS = Arrays.asList(MOSQUITO_COLLECTION,
+                LARVAL_DIPPING, BCC, CASE_CONFIRMATION,
+                PAOT, IRS, IRS_VERIFICATION);
 
     }
 
@@ -578,6 +584,12 @@ public interface Constants {
         String PROPERTY_TYPE = "property_type";
 
         String PARENT_ID = "parent_id";
+
+        String FORM_SUBMISSION_ID = "formSubmissionId";
+
+        String EVENT_TYPE_FIELD = "eventType";
+
+        String CASE_CONFIRMATION_FIELD = "case_confirmation";
 
     }
 

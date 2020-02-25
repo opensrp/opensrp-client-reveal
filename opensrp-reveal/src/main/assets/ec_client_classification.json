@@ -9,7 +9,8 @@
             "field": "eventType",
             "field_value": "Spray",
             "creates_case": [
-              "sprayed_structures"
+              "sprayed_structures",
+              "event_task"
             ]
           },
           {
@@ -51,14 +52,16 @@
             "field": "eventType",
             "field_value": "mosquito_collection",
             "creates_case": [
-              "mosquito_collections"
+              "mosquito_collections",
+              "event_task"
             ]
           },
           {
             "field": "eventType",
             "field_value": "larval_dipping",
             "creates_case": [
-              "larval_dippings"
+              "larval_dippings",
+              "event_task"
             ]
           },
           {
@@ -73,7 +76,8 @@
             "field": "eventType",
             "field_value": "PAOT",
             "creates_case": [
-              "potential_area_of_transmission"
+              "potential_area_of_transmission",
+              "event_task"
             ]
           },
           {
@@ -87,7 +91,8 @@
             "field": "eventType",
             "field_value": "irs_verification",
             "creates_case": [
-              "irs_verification"
+              "irs_verification",
+              "event_task"
             ]
           },
           {

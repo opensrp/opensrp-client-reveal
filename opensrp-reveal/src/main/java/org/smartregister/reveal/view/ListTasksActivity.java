@@ -213,6 +213,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.change_spray_status).setOnClickListener(this);
 
+        findViewById(R.id.btn_undo_spray).setOnClickListener(this);
+
         findViewById(R.id.register_family).setOnClickListener(this);
 
         findViewById(R.id.task_register).setOnClickListener(this);
@@ -221,13 +223,19 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.btn_record_mosquito_collection).setOnClickListener(this);
 
+        findViewById(R.id.btn_undo_mosquito_collection).setOnClickListener(this);
+
         findViewById(R.id.btn_collapse_larval_breeding_card_view).setOnClickListener(this);
 
         findViewById(R.id.btn_record_larval_dipping).setOnClickListener(this);
 
+        findViewById(R.id.btn_undo_larval_dipping).setOnClickListener(this);
+
         findViewById(R.id.btn_collapse_paot_card_view).setOnClickListener(this);
 
         findViewById(R.id.btn_edit_paot_details).setOnClickListener(this);
+
+        findViewById(R.id.btn_undo_paot_details).setOnClickListener(this);
 
         findViewById(R.id.btn_collapse_irs_verification_card_view).setOnClickListener(this);
 
@@ -420,12 +428,20 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             listTaskPresenter.onAddStructureClicked(revealMapHelper.isMyLocationComponentActive(this, myLocationButton));
         } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeInterventionStatus(IRS);
+        } else if (v.getId() == R.id.btn_undo_spray) {
+            displayResetInterventionTaskDialog(IRS);
         } else if (v.getId() == R.id.btn_record_mosquito_collection) {
             listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
+        } else if (v.getId() == R.id.btn_undo_mosquito_collection) {
+            displayResetInterventionTaskDialog(MOSQUITO_COLLECTION);
         } else if (v.getId() == R.id.btn_record_larval_dipping) {
             listTaskPresenter.onChangeInterventionStatus(LARVAL_DIPPING);
+        } else if (v.getId() == R.id.btn_undo_larval_dipping) {
+            displayResetInterventionTaskDialog(LARVAL_DIPPING);
         } else if (v.getId() == R.id.btn_edit_paot_details) {
             listTaskPresenter.onChangeInterventionStatus(PAOT);
+        } else if (v.getId() == R.id.btn_undo_paot_details) {
+            displayResetInterventionTaskDialog(PAOT);
         } else if (v.getId() == R.id.btn_collapse_spray_card_view) {
             setViewVisibility(tvReason, false);
             closeCardView(v.getId());
@@ -828,5 +844,18 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     protected Country getBuildCountry() {
         return BuildConfig.BUILD_COUNTRY;
+    }
+
+
+    public void displayResetInterventionTaskDialog(String interventionType) {
+        AlertDialogUtils.displayNotificationWithCallback(this, R.string.undo_task_title,
+                R.string.undo_task_msg, R.string.confirm, R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == BUTTON_POSITIVE)
+                            listTaskPresenter.onUndoInterventionStatus(interventionType);
+                        dialog.dismiss();
+                    }
+                });
     }
 }

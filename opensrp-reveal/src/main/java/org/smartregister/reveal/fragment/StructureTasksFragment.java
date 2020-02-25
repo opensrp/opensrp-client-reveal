@@ -2,6 +2,7 @@ package org.smartregister.reveal.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON_FRAGMENT;
 
@@ -133,7 +135,9 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         @Override
         public void onClick(View view) {
             StructureTaskDetails details = (StructureTaskDetails) view.getTag(R.id.task_details);
-            presenter.onTaskSelected(details, R.id.view_edit == view.getId());
+            presenter.onTaskSelected(details,
+                    R.id.view_edit == view.getId(),
+                    R.id.view_undo == view.getId());
         }
     };
 
@@ -226,6 +230,19 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     @Override
     public void updateTasks(String taskID, Task.TaskStatus taskStatus, String businessStatus, Set<Task> removedTasks) {
         adapter.updateTasks(taskID, taskStatus, businessStatus, removedTasks);
+    }
+
+    @Override
+    public void displayResetTaskInfoDialog(StructureTaskDetails taskDetails) {
+        AlertDialogUtils.displayNotificationWithCallback(getContext(), R.string.undo_task_title,
+                R.string.undo_task_msg, R.string.confirm, R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == BUTTON_POSITIVE)
+                            presenter.resetTaskInfo(taskDetails);
+                        dialog.dismiss();
+                    }
+                });
     }
 
     @Override

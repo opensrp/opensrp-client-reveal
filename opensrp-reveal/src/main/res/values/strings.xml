@@ -168,6 +168,7 @@
     <string name="register_family_description">Visit the residential structure and register each family member</string>
     <string name="mda_dispense_desciption">Visit all residential structures (100%) dispense prophylaxis to each registered person</string>
     <string name="mda_adherence_desciption">"Visit all residential structures (100%) and confirm adherence of each registered person</string>
+    <string name="case_confirmation_description">Case Confirmation</string>
     <string name="house">House</string>
 
     <string name="unenumerated_structure">Unenumerated Structure</string>
@@ -335,6 +336,14 @@
         <item>Type</item>
     </string-array>
 
+    <string name="select_task_action">Select action to perform</string>
+    <string name="choose_action">Choose action</string>
+    <string name="view_details">View Details</string>
+    <string name="undo">Undo</string>
+    <string name="reseting_task_title">Resetting Task Information</string>
+    <string name="reseting_task_msg">Resetting Task Information. Please wait</string>
+    <string name="undo_task_title">Are you sure you want to clear all data associated with this event?</string>
+    <string name="undo_task_msg">You will not be able to recover this data and this task will be marked as incomplete</string>
     <string name="localhost_url">http://localhost:%1$d/</string>
 
 </resources>

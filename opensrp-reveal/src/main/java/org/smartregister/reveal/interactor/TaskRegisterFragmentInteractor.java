@@ -1,5 +1,6 @@
 package org.smartregister.reveal.interactor;
 
+import android.content.Context;
 import android.location.Location;
 import android.support.v4.util.Pair;
 import android.text.TextUtils;
@@ -21,6 +22,7 @@ import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Properties;
+import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.ArrayList;
@@ -72,10 +74,11 @@ import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_ME
 /**
  * Created by samuelgithengi on 3/18/19.
  */
-public class TaskRegisterFragmentInteractor extends BaseInteractor {
+public class TaskRegisterFragmentInteractor extends BaseInteractor implements TaskRegisterFragmentContract.Interactor {
 
     private final LocationRepository locationRepository;
     private final Float locationBuffer;
+    private InteractorUtils interactorUtils;
 
 
     private int structuresWithinBuffer = 0;
@@ -90,6 +93,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
         super(presenter);
         this.locationBuffer = locationBuffer;
         locationRepository = RevealApplication.getInstance().getLocationRepository();
+        interactorUtils = new InteractorUtils(RevealApplication.getInstance().getTaskRepository(), eventClientRepository, clientProcessor);
     }
 
     private String mainSelect(String mainCondition) {
@@ -400,5 +404,16 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor {
             });
         });
 
+    }
+
+    @Override
+    public void resetTaskInfo(Context context, TaskDetails taskDetails) {
+        appExecutors.diskIO().execute(() -> {
+            interactorUtils.resetTaskInfo(getDatabase(), taskDetails);
+        });
+
+        appExecutors.mainThread().execute(() -> {
+            getPresenter().onTaskInfoReset();
+        });
     }
 }

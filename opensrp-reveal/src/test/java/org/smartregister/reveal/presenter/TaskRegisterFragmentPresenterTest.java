@@ -106,6 +106,9 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Captor
     private ArgumentCaptor<List<TaskDetails>> taskDetailsArgumentCaptor;
 
+    @Captor
+    private ArgumentCaptor<TaskDetails> taskDetailArgumentCaptor;
+
     private TaskRegisterFragmentPresenter presenter;
 
     private Set<View> visibleColumns;
@@ -716,6 +719,19 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         presenter.onOpenMapClicked();
 
         verify(view).startMapActivity(params);
+    }
+
+    @Test
+    public void testResetTaskInfo() {
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+
+        presenter.resetTaskInfo(taskDetails);
+
+        verify(interactor).resetTaskInfo(any(), taskDetailArgumentCaptor.capture());
+        assertEquals(taskDetails.getTaskEntity(), taskDetailArgumentCaptor.getValue().getTaskEntity());
+        assertEquals(taskDetails.getTaskStatus(), taskDetailArgumentCaptor.getValue().getTaskStatus());
+        assertEquals(taskDetails.getBusinessStatus(), taskDetailArgumentCaptor.getValue().getBusinessStatus());
+
     }
 
 

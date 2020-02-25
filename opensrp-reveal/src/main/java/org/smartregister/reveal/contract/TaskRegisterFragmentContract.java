@@ -1,6 +1,7 @@
 package org.smartregister.reveal.contract;
 
 
+import android.content.Context;
 import android.location.Location;
 import android.support.annotation.StringRes;
 
@@ -44,6 +45,10 @@ public interface TaskRegisterFragmentContract {
         void setTaskFilterParams(TaskFilterParams filterParams);
 
         void onOpenMapClicked();
+
+        void resetTaskInfo(TaskDetails taskDetails);
+
+        void onTaskInfoReset();
     }
 
     interface View extends BaseRegisterFragmentContract.View, BaseFormFragmentContract.View {
@@ -84,5 +89,10 @@ public interface TaskRegisterFragmentContract {
 
         void startMapActivity(TaskFilterParams taskFilterParams);
     }
+
+    interface Interactor {
+        void resetTaskInfo(Context context, TaskDetails taskDetails);
+    }
+
 
 }
