@@ -1,6 +1,5 @@
 package org.smartregister.reveal.fragment;
 
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
@@ -12,7 +11,6 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.presenter.StatsFragmentPresenter;
@@ -43,7 +41,7 @@ public class StatsFragmentTest extends BaseUnitTest {
     public MockitoRule rule = MockitoJUnit.rule();
 
     @Mock
-    StatsFragmentPresenter presenter;
+    private StatsFragmentPresenter presenter;
 
     private StatsFragment fragment;
 
