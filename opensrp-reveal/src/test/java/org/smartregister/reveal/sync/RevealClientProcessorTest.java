@@ -45,8 +45,16 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
+import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
+import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
+import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
+import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
+import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION;
 
 /**
@@ -308,6 +316,75 @@ public class RevealClientProcessorTest extends BaseUnitTest {
         assertEquals(event.getEventType(), eventArgumentCaptor.getValue().getEventType());
         assertEquals(client.getBaseEntityId(), clientArgumentCaptor.getValue().getBaseEntityId());
 
+    }
+
+    @Test
+    public void testProcessRegisterStructureEvent() throws Exception {
+
+        String locationParent = UUID.randomUUID().toString();
+        String eventId = UUID.randomUUID().toString();
+        String baseEntityId = UUID.randomUUID().toString();
+        event.setBaseEntityId(baseEntityId);
+        event.getDetails().put(LOCATION_PARENT, locationParent);
+        event.setEventId(eventId);
+        event.setEventType(REGISTER_STRUCTURE_EVENT);
+        clientProcessor = spy(clientProcessor);
+
+        clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
+
+        verify(clientProcessor).processEvent(eventArgumentCaptor.capture(), clientArgumentCaptor.capture(), any());
+        assertEquals(event.getEventId(), eventArgumentCaptor.getValue().getEventId());
+        assertEquals(event.getEventType(), eventArgumentCaptor.getValue().getEventType());
+        assertEquals(baseEntityId, clientArgumentCaptor.getValue().getBaseEntityId());
+
+    }
+
+    @Test
+    public void testProcessLarvalDippingEvent() throws Exception {
+
+        testLocationInterventionEvet(LARVAL_DIPPING_EVENT);
+    }
+
+    @Test
+    public void testProcessBednetDistributionEvent() throws Exception {
+
+        testLocationInterventionEvet(BEDNET_DISTRIBUTION_EVENT);
+    }
+
+    @Test
+    public void testProcessBehaviouralChangeEvent() throws Exception {
+
+        testLocationInterventionEvet(BEHAVIOUR_CHANGE_COMMUNICATION);
+    }
+
+    @Test
+    public void testProcessMosquitoCollectionEvent() throws Exception {
+
+        testLocationInterventionEvet(MOSQUITO_COLLECTION_EVENT);
+    }
+
+    @Test
+    public void testProcessIRSVerificationEvent() throws Exception {
+
+        testLocationInterventionEvet(IRS_VERIFICATION);
+    }
+
+    private void testLocationInterventionEvet( String eventType) throws Exception{
+        String taskIdentifier = UUID.randomUUID().toString();
+        String eventId = UUID.randomUUID().toString();
+        String baseEntityId = UUID.randomUUID().toString();
+        event.setBaseEntityId(baseEntityId);
+        event.getDetails().put(TASK_IDENTIFIER, taskIdentifier);
+        event.setEventId(eventId);
+        event.setEventType(eventType);
+        clientProcessor = spy(clientProcessor);
+
+        clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
+
+        verify(clientProcessor).processEvent(eventArgumentCaptor.capture(), clientArgumentCaptor.capture(), any());
+        assertEquals(event.getEventId(), eventArgumentCaptor.getValue().getEventId());
+        assertEquals(event.getEventType(), eventArgumentCaptor.getValue().getEventType());
+        assertEquals(baseEntityId, clientArgumentCaptor.getValue().getBaseEntityId());
     }
 
 
