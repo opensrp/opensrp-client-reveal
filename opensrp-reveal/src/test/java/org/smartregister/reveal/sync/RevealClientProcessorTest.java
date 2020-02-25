@@ -342,37 +342,67 @@ public class RevealClientProcessorTest extends BaseUnitTest {
     @Test
     public void testProcessLarvalDippingEvent() throws Exception {
 
-        testLocationInterventionEvet(LARVAL_DIPPING_EVENT);
+        String baseEntityId = UUID.randomUUID().toString();
+        setUpLocationInterventionEventTest(LARVAL_DIPPING_EVENT, baseEntityId);
+
+        verify(clientProcessor).processEvent(eventArgumentCaptor.capture(), clientArgumentCaptor.capture(), any());
+        assertEquals(event.getEventId(), eventArgumentCaptor.getValue().getEventId());
+        assertEquals(event.getEventType(), eventArgumentCaptor.getValue().getEventType());
+        assertEquals(baseEntityId, clientArgumentCaptor.getValue().getBaseEntityId());
     }
 
     @Test
     public void testProcessBednetDistributionEvent() throws Exception {
 
-        testLocationInterventionEvet(BEDNET_DISTRIBUTION_EVENT);
+        String baseEntityId = UUID.randomUUID().toString();
+        setUpLocationInterventionEventTest(BEDNET_DISTRIBUTION_EVENT, baseEntityId);
+
+        verify(clientProcessor).processEvent(eventArgumentCaptor.capture(), clientArgumentCaptor.capture(), any());
+        assertEquals(event.getEventId(), eventArgumentCaptor.getValue().getEventId());
+        assertEquals(event.getEventType(), eventArgumentCaptor.getValue().getEventType());
+        assertEquals(baseEntityId, clientArgumentCaptor.getValue().getBaseEntityId());
     }
 
     @Test
     public void testProcessBehaviouralChangeEvent() throws Exception {
 
-        testLocationInterventionEvet(BEHAVIOUR_CHANGE_COMMUNICATION);
+        String baseEntityId = UUID.randomUUID().toString();
+        setUpLocationInterventionEventTest(BEHAVIOUR_CHANGE_COMMUNICATION, baseEntityId);
+
+        verify(clientProcessor).processEvent(eventArgumentCaptor.capture(), clientArgumentCaptor.capture(), any());
+        assertEquals(event.getEventId(), eventArgumentCaptor.getValue().getEventId());
+        assertEquals(event.getEventType(), eventArgumentCaptor.getValue().getEventType());
+        assertEquals(baseEntityId, clientArgumentCaptor.getValue().getBaseEntityId());
     }
 
     @Test
     public void testProcessMosquitoCollectionEvent() throws Exception {
 
-        testLocationInterventionEvet(MOSQUITO_COLLECTION_EVENT);
+        String baseEntityId = UUID.randomUUID().toString();
+        setUpLocationInterventionEventTest(MOSQUITO_COLLECTION_EVENT, baseEntityId);
+
+        verify(clientProcessor).processEvent(eventArgumentCaptor.capture(), clientArgumentCaptor.capture(), any());
+        assertEquals(event.getEventId(), eventArgumentCaptor.getValue().getEventId());
+        assertEquals(event.getEventType(), eventArgumentCaptor.getValue().getEventType());
+        assertEquals(baseEntityId, clientArgumentCaptor.getValue().getBaseEntityId());
     }
 
     @Test
     public void testProcessIRSVerificationEvent() throws Exception {
 
-        testLocationInterventionEvet(IRS_VERIFICATION);
+        String baseEntityId = UUID.randomUUID().toString();
+        setUpLocationInterventionEventTest(IRS_VERIFICATION, baseEntityId);
+
+        verify(clientProcessor).processEvent(eventArgumentCaptor.capture(), clientArgumentCaptor.capture(), any());
+        assertEquals(event.getEventId(), eventArgumentCaptor.getValue().getEventId());
+        assertEquals(event.getEventType(), eventArgumentCaptor.getValue().getEventType());
+        assertEquals(baseEntityId, clientArgumentCaptor.getValue().getBaseEntityId());
+
     }
 
-    private void testLocationInterventionEvet( String eventType) throws Exception{
+    private void setUpLocationInterventionEventTest(String eventType, String baseEntityId) throws Exception{
         String taskIdentifier = UUID.randomUUID().toString();
         String eventId = UUID.randomUUID().toString();
-        String baseEntityId = UUID.randomUUID().toString();
         event.setBaseEntityId(baseEntityId);
         event.getDetails().put(TASK_IDENTIFIER, taskIdentifier);
         event.setEventId(eventId);
@@ -380,11 +410,6 @@ public class RevealClientProcessorTest extends BaseUnitTest {
         clientProcessor = spy(clientProcessor);
 
         clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
-
-        verify(clientProcessor).processEvent(eventArgumentCaptor.capture(), clientArgumentCaptor.capture(), any());
-        assertEquals(event.getEventId(), eventArgumentCaptor.getValue().getEventId());
-        assertEquals(event.getEventType(), eventArgumentCaptor.getValue().getEventType());
-        assertEquals(baseEntityId, clientArgumentCaptor.getValue().getBaseEntityId());
     }
 
 
