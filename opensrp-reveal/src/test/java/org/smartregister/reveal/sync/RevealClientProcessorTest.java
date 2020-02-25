@@ -15,6 +15,8 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Task;
+import org.smartregister.domain.db.Address;
+import org.smartregister.domain.db.Client;
 import org.smartregister.domain.db.Event;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.db.Obs;
@@ -29,15 +31,23 @@ import org.smartregister.util.JsonFormUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
+import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
+import static org.smartregister.reveal.util.FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION;
 
 /**
  * Created by samuelgithengi on 3/13/19.
@@ -62,6 +72,12 @@ public class RevealClientProcessorTest extends BaseUnitTest {
 
     @Captor
     private ArgumentCaptor<Location> structureCaptor;
+
+    @Captor
+    private ArgumentCaptor<Event> eventArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Client> clientArgumentCaptor;
 
     private Context context = RuntimeEnvironment.application;
 
@@ -214,6 +230,85 @@ public class RevealClientProcessorTest extends BaseUnitTest {
         verify(structureRepository).addOrUpdate(structureCaptor.capture());
         assertEquals("Residential Structure", structureCaptor.getValue().getProperties().getType());
 
+    }
+
+    @Test
+    public void testProcessUpdateFamilyRegistrationEvent() throws Exception {
+
+        String houseNumber = "Ted House";
+        String baseEntityId = UUID.randomUUID().toString();
+        String eventId = UUID.randomUUID().toString();
+        event.setEventId(eventId);
+        event.setEventType(UPDATE_FAMILY_REGISTRATION);
+        event.getDetails().put(LOCATION_UUID, "baseEntityId");
+        Location structure = new Location();
+        LocationProperty property = new LocationProperty();
+        property.setName("Robin House");
+        structure.setProperties(property);
+        structure.setProperties(new LocationProperty());
+        structure.setSyncStatus(BaseRepository.TYPE_Synced);
+        Client client = new Client(baseEntityId);
+        Address address = new Address();
+        Map<String, String> addressFields = new HashMap<>();
+        addressFields.put("address2", houseNumber);
+        address.setAddressFields(addressFields);
+        client.setAddresses(Collections.singletonList(address));
+
+        when(structureRepository.getLocationById(event.getDetails().get(LOCATION_UUID))).thenReturn(structure);
+
+        clientProcessor = spy(clientProcessor);
+
+        clientProcessor.processClient(Collections.singletonList(new EventClient(event, client)), true);
+
+        verify(structureRepository).addOrUpdate(structureCaptor.capture());
+        assertEquals(houseNumber, structureCaptor.getValue().getProperties().getName());
+        assertEquals(BaseRepository.TYPE_Created, structureCaptor.getValue().getSyncStatus());
+
+        verify(clientProcessor).processEvent(eventArgumentCaptor.capture(), clientArgumentCaptor.capture(), any());
+        assertEquals(event.getEventId(), eventArgumentCaptor.getValue().getEventId());
+        assertEquals(event.getEventType(), eventArgumentCaptor.getValue().getEventType());
+        assertEquals(client.getBaseEntityId(), clientArgumentCaptor.getValue().getBaseEntityId());
 
     }
+
+    @Test
+    public void testProcessUpdateFamilyRegistrationEventWithNullAddress() throws Exception {
+
+        String baseEntityId = UUID.randomUUID().toString();
+        String eventId = UUID.randomUUID().toString();
+        event.setEventId(eventId);
+        event.setEventType(UPDATE_FAMILY_REGISTRATION);
+        event.getDetails().put(LOCATION_UUID, "baseEntityId");
+        Location structure = new Location();
+        LocationProperty property = new LocationProperty();
+        property.setName("Robin House");
+        structure.setProperties(property);
+        structure.setProperties(new LocationProperty());
+        structure.setSyncStatus(BaseRepository.TYPE_Unsynced);
+        Client client = new Client(baseEntityId);
+        client.setFirstName("Jordan");
+        Address address = new Address();
+        Map<String, String> addressFields = new HashMap<>();
+        address.setAddressFields(addressFields);
+        client.setAddresses(Collections.singletonList(address));
+
+        when(structureRepository.getLocationById(event.getDetails().get(LOCATION_UUID))).thenReturn(structure);
+
+        clientProcessor = spy(clientProcessor);
+
+        clientProcessor.processClient(Collections.singletonList(new EventClient(event, client)), true);
+
+        verify(structureRepository).addOrUpdate(structureCaptor.capture());
+        assertEquals(client.getFirstName(), structureCaptor.getValue().getProperties().getCustomProperties().get(STRUCTURE_NAME));
+        assertNull(structureCaptor.getValue().getProperties().getName());
+        assertEquals(BaseRepository.TYPE_Unsynced, structureCaptor.getValue().getSyncStatus());
+
+        verify(clientProcessor).processEvent(eventArgumentCaptor.capture(), clientArgumentCaptor.capture(), any());
+        assertEquals(event.getEventId(), eventArgumentCaptor.getValue().getEventId());
+        assertEquals(event.getEventType(), eventArgumentCaptor.getValue().getEventType());
+        assertEquals(client.getBaseEntityId(), clientArgumentCaptor.getValue().getBaseEntityId());
+
+    }
+
+
 }
