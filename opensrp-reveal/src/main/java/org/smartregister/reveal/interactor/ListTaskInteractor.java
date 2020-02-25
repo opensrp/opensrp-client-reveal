@@ -405,10 +405,6 @@ public class ListTaskInteractor extends BaseInteractor {
             details.put(Constants.Properties.TASK_STATUS, task.getStatus().name());
             details.put(Constants.Properties.LOCATION_ID, feature.id());
             details.put(Constants.Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
-            task.setBusinessStatus(NOT_ELIGIBLE);
-            task.setStatus(Task.TaskStatus.COMPLETED);
-            task.setLastModified(new DateTime());
-            taskRepository.addOrUpdate(task);
 
             Event event = FamilyJsonFormUtils.createFamilyEvent(task.getForEntity(), feature.id(), details, FamilyConstants.EventType.FAMILY_REGISTRATION_INELIGIBLE);
             event.addObs(new Obs().withValue(reasonUnligible).withFieldCode("eligible").withFieldType("formsubmissionField"));
