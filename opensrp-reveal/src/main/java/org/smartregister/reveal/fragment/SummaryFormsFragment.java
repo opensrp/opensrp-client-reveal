@@ -75,25 +75,25 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
     private void initializeViews(View view)
     {
         btnDailySummary = view.findViewById(R.id.summary_daily_summary);
-        btnDailySummary.setOnClickListener(this);
-
         btnTeamLeaderDos = view.findViewById(R.id.summary_team_leader_dos);
-        btnTeamLeaderDos.setOnClickListener(this);
-
         btnCbSprayArea = view.findViewById(R.id.summary_cb_spray_area);
-        btnCbSprayArea.setOnClickListener(this);
-
         btnIrsSaDecision = view.findViewById(R.id.summary_irs_sa_decision);
-        btnIrsSaDecision.setOnClickListener(this);
-
         btnMobilization = view.findViewById(R.id.summary_mobilization_form);
-        btnMobilization.setOnClickListener(this);
-
         btnIrsFieldOfficer = view.findViewById(R.id.summary_irs_field_officer);
-        btnIrsFieldOfficer.setOnClickListener(this);
-
         btnVerificationForm = view.findViewById(R.id.summary_verification_form);
+
+        setClickListeners();
+    }
+
+    private void setClickListeners() {
+        btnDailySummary.setOnClickListener(this);
+        btnTeamLeaderDos.setOnClickListener(this);
+        btnCbSprayArea.setOnClickListener(this);
+        btnIrsSaDecision.setOnClickListener(this);
+        btnMobilization.setOnClickListener(this);
+        btnIrsFieldOfficer.setOnClickListener(this);
         btnVerificationForm.setOnClickListener(this);
+
     }
 
     @Override
