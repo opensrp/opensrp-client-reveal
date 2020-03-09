@@ -117,4 +117,28 @@ public class StructureTaskViewHolderTest extends BaseUnitTest {
 
     }
 
+    @Test
+    public void testSetTaskNameForTestedBloodScreeningTask() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        taskDetails.setBusinessStatus(BusinessStatus.TESTED);
+        viewHolder.setTaskAction(taskDetails, registerActionHandler);
+        TextView action = viewHolder.itemView.findViewById(R.id.task_action);
+        assertEquals(BusinessStatus.TESTED, action.getText());
+        assertEquals(taskDetails, action.getTag(R.id.task_details));
+        assertNull(action.getBackground());
+        assertEquals(context.getColor(R.color.sprayed), action.getCurrentTextColor());
+    }
+
+    @Test
+    public void testSetTaskNameForNotTestedBloodScreeningTask() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        taskDetails.setBusinessStatus(BusinessStatus.NOT_TESTED);
+        viewHolder.setTaskAction(taskDetails, registerActionHandler);
+        TextView action = viewHolder.itemView.findViewById(R.id.task_action);
+        assertEquals(BusinessStatus.NOT_TESTED, action.getText());
+        assertEquals(taskDetails, action.getTag(R.id.task_details));
+        assertNull(action.getBackground());
+        assertEquals(context.getColor(R.color.sprayed), action.getCurrentTextColor());
+    }
+
 }

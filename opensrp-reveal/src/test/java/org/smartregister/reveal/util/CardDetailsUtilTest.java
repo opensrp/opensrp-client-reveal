@@ -37,9 +37,11 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_TESTED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.TESTED;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
@@ -229,6 +231,9 @@ public class CardDetailsUtilTest extends BaseUnitTest {
         assertEquals(INCOMPLETE, getTranslatedBusinessStatus(INCOMPLETE));
         assertEquals(NOT_ELIGIBLE, getTranslatedBusinessStatus(NOT_ELIGIBLE));
         assertEquals(IN_PROGRESS, getTranslatedBusinessStatus(IN_PROGRESS));
+        assertEquals(TESTED, getTranslatedBusinessStatus(TESTED));
+        assertEquals(NOT_TESTED, getTranslatedBusinessStatus(NOT_TESTED));
+
 
     }
 
@@ -418,6 +423,20 @@ public class CardDetailsUtilTest extends BaseUnitTest {
         assertEquals(tvFamilyHead.getVisibility(), View.GONE);
         assertEquals(tvReason.getVisibility(), View.GONE);
         assertEquals(btnChangeSprayStatus.getVisibility(), View.GONE);
+    }
+
+    @Test
+    public void testFormatCardDetailsTestedShouldSetCorrectColor() {
+        CardDetails cardDetails = new CardDetails(TESTED);
+        formatCardDetails(cardDetails);
+        assertEquals(cardDetails.getStatusColor().intValue(), R.color.sprayed);
+    }
+
+    @Test
+    public void testFormatCardDetailsNotTestedShouldSetCorrectColor() {
+        CardDetails cardDetails = new CardDetails(TESTED);
+        formatCardDetails(cardDetails);
+        assertEquals(cardDetails.getStatusColor().intValue(), R.color.sprayed);
     }
 
 }
