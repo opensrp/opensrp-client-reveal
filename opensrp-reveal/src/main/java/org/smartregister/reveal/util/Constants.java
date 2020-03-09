@@ -235,6 +235,10 @@ public interface Constants {
         String NOT_ELIGIBLE = "Not Eligible";
         String IN_PROGRESS = "In Progress";
 
+        //BLOOD SCREENING status
+        String TESTED = "Tested";
+        String NOT_TESTED = "Not Tested";
+
 
         //MDA status
         String FULLY_RECEIVED = "Fully Received";
@@ -257,6 +261,8 @@ public interface Constants {
 
         List<String> MDA_BUSINESS_STATUS = Arrays.asList(NOT_VISITED, FULLY_RECEIVED, NONE_RECEIVED,
                 ADHERENCE_VISIT_DONE, PARTIALLY_RECEIVED, COMPLETE, NOT_ELIGIBLE);
+
+        List<String> ELIGIBLE_BLOOD_SCREENING_BUSINESS_STATUS = Arrays.asList(COMPLETE, TESTED, NOT_TESTED);
     }
 
     interface BusinessStatusWrapper {

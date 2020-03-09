@@ -27,9 +27,11 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_TESTED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.TESTED;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
@@ -55,6 +57,8 @@ public class CardDetailsUtil {
             case BusinessStatus.SPRAYED:
             case BusinessStatus.COMPLETE:
             case BusinessStatus.FULLY_RECEIVED:
+            case TESTED:
+            case NOT_TESTED:
                 cardDetails.setStatusColor(R.color.sprayed);
                 cardDetails.setStatusMessage(R.string.details_sprayed);
                 cardDetails.setReason(null);
@@ -242,6 +246,10 @@ public class CardDetailsUtil {
                 return context.getString(R.string.in_progress);
             case PARTIALLY_SPRAYED:
                 return context.getString(R.string.partially_sprayed);
+            case TESTED:
+                return context.getString(R.string.tested);
+            case NOT_TESTED:
+                return context.getString(R.string.not_tested);
             default:
                 return businessStatus;
         }

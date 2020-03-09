@@ -18,6 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import static org.smartregister.reveal.util.Constants.BusinessStatus.ELIGIBLE_BLOOD_SCREENING_BUSINESS_STATUS;
+
 /**
  * Created by samuelgithengi on 4/11/19.
  */
@@ -74,8 +76,10 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
             actionTextView.setTextColor(context.getResources().getColor(R.color.task_not_done));
         }
 
-        if (BusinessStatus.COMPLETE.equals(taskDetails.getBusinessStatus()) &&
-                (Intervention.BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode()) || Intervention.BLOOD_SCREENING.equals(taskDetails.getTaskCode()))) {
+        if ( (BusinessStatus.COMPLETE.equals(taskDetails.getBusinessStatus()) &&
+                Intervention.BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode())) ||
+                (ELIGIBLE_BLOOD_SCREENING_BUSINESS_STATUS.contains(taskDetails.getBusinessStatus()) &&
+                        Intervention.BLOOD_SCREENING.equals(taskDetails.getTaskCode())) ) {
 
             viewEditImageView.setVisibility(View.VISIBLE);
             setClickHandler(onClickListener, taskDetails, viewEditImageView);
