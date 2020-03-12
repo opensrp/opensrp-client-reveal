@@ -182,6 +182,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     private void populateEventsPerTask(List<StructureTaskDetails> tasks) {
         SQLiteStatement eventsPerTask = database.compileStatement("SELECT count(*) as events_per_task FROM event_task WHERE task_id = ?");
         SQLiteStatement lastEventDate = database.compileStatement("SELECT max(event_date) FROM event_task WHERE task_id = ?");
+        SQLiteStatement personTested = database.compileStatement("SELECT person_tested FROM event_task WHERE task_id = ?");
         try {
             for (StructureTaskDetails task : tasks) {
                 EventTask eventTask = new EventTask();
@@ -193,6 +194,11 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                     lastEventDate.bindString(1, task.getTaskId());
                     eventTask.setLastEventDate(lastEventDate.simpleQueryForString());
                     task.setLastEdited(DateUtil.parseDate(eventTask.getLastEventDate()));
+                }
+
+                if (Intervention.BLOOD_SCREENING.equals(task.getTaskCode())) {
+                    personTested.bindString(1, task.getTaskId());
+                    task.setPersonTested(personTested.simpleQueryForString());
                 }
 
             }

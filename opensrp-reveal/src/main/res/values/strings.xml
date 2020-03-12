@@ -346,4 +346,7 @@
     <string name="undo_task_msg">You will not be able to recover this data and this task will be marked as incomplete</string>
     <string name="localhost_url">http://localhost:%1$d/</string>
 
+    <string name="tested">Tested</string>
+    <string name="not_tested">Not Tested</string>
+    <string name="yes">Yes</string>
 </resources>
