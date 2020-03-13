@@ -39,6 +39,7 @@ import static org.smartregister.family.util.DBConstants.KEY.DOB;
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.LAST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.MIDDLE_NAME;
+import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
@@ -145,7 +146,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     public void findLastEvent(StructureTaskDetails taskDetails) {
 
         appExecutors.diskIO().execute(() -> {
-            String eventType = taskDetails.getTaskCode().equals(Intervention.BLOOD_SCREENING) ? Constants.BLOOD_SCREENING_EVENT : Constants.BEDNET_DISTRIBUTION_EVENT;
+            String eventType = taskDetails.getTaskCode().equals(Intervention.BLOOD_SCREENING) ? BLOOD_SCREENING_EVENT : Constants.BEDNET_DISTRIBUTION_EVENT;
             String events = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
                     event_column.json, EventClientRepository.Table.event.name(), event_column.baseEntityId, event_column.eventType, event_column.updatedAt);
             Cursor cursor = null;
@@ -182,7 +183,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     private void populateEventsPerTask(List<StructureTaskDetails> tasks) {
         SQLiteStatement eventsPerTask = database.compileStatement("SELECT count(*) as events_per_task FROM event_task WHERE task_id = ?");
         SQLiteStatement lastEventDate = database.compileStatement("SELECT max(event_date) FROM event_task WHERE task_id = ?");
-        SQLiteStatement personTested = database.compileStatement("SELECT person_tested FROM event_task WHERE task_id = ? order by event_date DESC");
+
         try {
             for (StructureTaskDetails task : tasks) {
                 EventTask eventTask = new EventTask();
@@ -194,11 +195,11 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                     lastEventDate.bindString(1, task.getTaskId());
                     eventTask.setLastEventDate(lastEventDate.simpleQueryForString());
                     task.setLastEdited(DateUtil.parseDate(eventTask.getLastEventDate()));
+
                 }
 
-                if (Intervention.BLOOD_SCREENING.equals(task.getTaskCode())) {
-                    personTested.bindString(1, task.getTaskId());
-                    task.setPersonTested(personTested.simpleQueryForString());
+                if (Intervention.BLOOD_SCREENING.equals(task.getTaskCode())){
+                    setPersonTested(task,eventTask.getEventsPerTask() > 1);
                 }
 
             }
@@ -216,6 +217,21 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
 
     }
 
+    private void setPersonTested(StructureTaskDetails task, boolean isEdit) {
+        if (isEdit){
+            String personTestWithEditsSql = "select person_tested from event_task where id in " +
+                    "(select formSubmissionId from event where baseEntityId = ? and eventType = ? " +
+                    "order by updatedAt desc limit 1)";
+            SQLiteStatement personTestWithEdits = database.compileStatement(personTestWithEditsSql);
+            personTestWithEdits.bindString(1, task.getTaskEntity());
+            personTestWithEdits.bindString(2, BLOOD_SCREENING_EVENT);
+            task.setPersonTested(personTestWithEdits.simpleQueryForString());
+        } else {
+            SQLiteStatement personTested = database.compileStatement("SELECT person_tested FROM event_task WHERE task_id = ?");
+            personTested.bindString(1, task.getTaskId());
+            task.setPersonTested(personTested.simpleQueryForString());
+        }
+    }
 
     private String getTaskSelect(String mainCondition) {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
