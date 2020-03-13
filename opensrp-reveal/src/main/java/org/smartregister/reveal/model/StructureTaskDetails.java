@@ -17,6 +17,8 @@ public class StructureTaskDetails extends BaseTaskDetails {
 
     private Date lastEdited;
 
+    private String personTested;
+
     public StructureTaskDetails(@NonNull String taskId) {
         super(taskId);
     }
@@ -51,5 +53,13 @@ public class StructureTaskDetails extends BaseTaskDetails {
 
     public void setLastEdited(Date lastEdited) {
         this.lastEdited = lastEdited;
+    }
+
+    public String getPersonTested() {
+        return personTested;
+    }
+
+    public void setPersonTested(String personTested) {
+        this.personTested = personTested;
     }
 }

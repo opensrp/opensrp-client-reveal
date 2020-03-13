@@ -347,4 +347,7 @@
     <string name="localhost_url">http://localhost:%1$d/</string>
     <string name="index_case_confirmed">Index Case Confirmed</string>
 
+    <string name="tested">Tested</string>
+    <string name="not_tested">Not Tested</string>
+    <string name="yes">Yes</string>
 </resources>
