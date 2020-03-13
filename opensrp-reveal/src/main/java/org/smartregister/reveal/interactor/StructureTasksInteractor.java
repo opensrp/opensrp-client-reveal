@@ -182,7 +182,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     private void populateEventsPerTask(List<StructureTaskDetails> tasks) {
         SQLiteStatement eventsPerTask = database.compileStatement("SELECT count(*) as events_per_task FROM event_task WHERE task_id = ?");
         SQLiteStatement lastEventDate = database.compileStatement("SELECT max(event_date) FROM event_task WHERE task_id = ?");
-        SQLiteStatement personTested = database.compileStatement("SELECT person_tested FROM event_task WHERE task_id = ?");
+        SQLiteStatement personTested = database.compileStatement("SELECT person_tested FROM event_task WHERE task_id = ? order by event_date DESC");
         try {
             for (StructureTaskDetails task : tasks) {
                 EventTask eventTask = new EventTask();
