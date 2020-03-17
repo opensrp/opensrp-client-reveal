@@ -40,6 +40,8 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.pluginscalebar.ScaleBarOptions;
+import com.mapbox.pluginscalebar.ScaleBarPlugin;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
@@ -316,6 +318,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         if (getBuildCountry() != Country.ZAMBIA) {
                             layerSwitcherFab.setVisibility(View.GONE);
                         }
+
+                        ScaleBarPlugin scaleBarPlugin = new ScaleBarPlugin(kujakuMapView, mapboxMap);
+
+                        // Create a ScaleBarOptions object to use the Plugin's default styling
+                        scaleBarPlugin.create(new ScaleBarOptions(getContext()));
 
                     }
                 });
