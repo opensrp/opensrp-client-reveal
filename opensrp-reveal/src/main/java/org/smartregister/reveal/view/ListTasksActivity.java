@@ -319,10 +319,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                             layerSwitcherFab.setVisibility(View.GONE);
                         }
 
-                        ScaleBarPlugin scaleBarPlugin = new ScaleBarPlugin(kujakuMapView, mapboxMap);
-
-                        // Create a ScaleBarOptions object to use the Plugin's default styling
-                        scaleBarPlugin.create(new ScaleBarOptions(getContext()));
+                        initScaleBarPlugin(mapboxMap);
 
                     }
                 });
@@ -360,6 +357,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     }
 
+    private void initScaleBarPlugin(MapboxMap mapboxMap) {
+        ScaleBarPlugin scaleBarPlugin = new ScaleBarPlugin(kujakuMapView, mapboxMap);
+
+        // Create a ScaleBarOptions object to use the Plugin's default styling
+        scaleBarPlugin.create(new ScaleBarOptions(getContext()));
+    }
 
     private void positionMyLocationAndLayerSwitcher(FrameLayout.LayoutParams myLocationButtonParams, int bottomMargin) {
 
