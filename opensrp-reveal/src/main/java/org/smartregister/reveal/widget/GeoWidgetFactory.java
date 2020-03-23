@@ -259,7 +259,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         mapboxMap.setCameraPosition(cameraPosition);
                     }
                 } else {
-                    mapView.focusOnUserLocation(true, bufferRadius);
+                    mapView.focusOnUserLocation(true, bufferRadius, RenderMode.COMPASS);
                 }
 
 
