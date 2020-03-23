@@ -360,8 +360,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private void initScaleBarPlugin(MapboxMap mapboxMap) {
         ScaleBarPlugin scaleBarPlugin = new ScaleBarPlugin(kujakuMapView, mapboxMap);
 
-        // Create a ScaleBarOptions object to use the Plugin's default styling
-        scaleBarPlugin.create(new ScaleBarOptions(getContext()));
+        // Create a ScaleBarOptions object to use custom styling
+        ScaleBarOptions scaleBarOptions = new ScaleBarOptions(getContext());
+        scaleBarOptions.setTextColor(R.color.distance_scale_text);
+        scaleBarOptions.setTextSize(R.dimen.distance_scale_text_size);
+
+        scaleBarPlugin.create(scaleBarOptions);
     }
 
     private void positionMyLocationAndLayerSwitcher(FrameLayout.LayoutParams myLocationButtonParams, int bottomMargin) {
