@@ -17,6 +17,7 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
@@ -748,7 +749,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
     public void testFocusOnUserLocation() {
         Whitebox.setInternalState(listTasksActivity, "kujakuMapView", kujakuMapView);
         listTasksActivity.focusOnUserLocation(true);
-        verify(kujakuMapView).focusOnUserLocation(true);
+        verify(kujakuMapView).focusOnUserLocation(true, RenderMode.COMPASS);
     }
 
     @Test
