@@ -200,4 +200,7 @@
 
     <!-- form -->
     <string name="add_fam">ทะเบียนครัวเรือน</string>
+
+    <string name="tested">Tested</string>
+    <string name="not_tested">Not Tested</string>
 </resources>
