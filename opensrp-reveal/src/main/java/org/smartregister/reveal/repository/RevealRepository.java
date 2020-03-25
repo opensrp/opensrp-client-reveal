@@ -40,6 +40,7 @@ import static org.smartregister.repository.EventClientRepository.Table.event;
 import static org.smartregister.repository.EventClientRepository.event_column.baseEntityId;
 import static org.smartregister.repository.EventClientRepository.event_column.eventType;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PROPERTY_TYPE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAY_STATUS;
@@ -99,6 +100,9 @@ public class RevealRepository extends Repository {
                     break;
                 case 4:
                     upgradeToVersion4(db);
+                    break;
+                case 5:
+                    upgradeToVersion5(db);
                     break;
                 default:
                     break;
@@ -183,6 +187,11 @@ public class RevealRepository extends Repository {
         Utils.recreateEventAndClients(query, new String[]{}, db, Utils.getFormTag(), PAOT_TABLE, PAOT_EVENT, STRUCTURE, util);
     }
 
+    private void upgradeToVersion5(SQLiteDatabase db) {
+        if (!isColumnExists(db, EVENT_TASK_TABLE, DatabaseKeys.PERSON_TESTED)) {
+            db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s VARCHAR ", EVENT_TASK_TABLE, DatabaseKeys.PERSON_TESTED));
+        }
+    }
 
     @Override
     public SQLiteDatabase getReadableDatabase() {
