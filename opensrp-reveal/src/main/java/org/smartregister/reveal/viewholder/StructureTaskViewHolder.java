@@ -64,7 +64,9 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
 
     public void setTaskAction(StructureTaskDetails taskDetails, View.OnClickListener onClickListener) {
         if (!BusinessStatus.NOT_VISITED.equals(taskDetails.getBusinessStatus())) {
-            if (StringUtils.isNotBlank(taskDetails.getPersonTested())
+            if (Intervention.CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
+                actionTextView.setText(context.getResources().getString(R.string.index_case_confirmed));
+            } else if (StringUtils.isNotBlank(taskDetails.getPersonTested())
                     && Intervention.BLOOD_SCREENING.equals(taskDetails.getTaskCode())
                     && BusinessStatus.COMPLETE.equals(taskDetails.getBusinessStatus())) {
                 String screening = context.getString(R.string.yes).equals(taskDetails.getPersonTested()) ?
