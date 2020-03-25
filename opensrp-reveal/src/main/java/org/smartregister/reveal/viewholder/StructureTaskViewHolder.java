@@ -63,7 +63,11 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
 
     public void setTaskAction(StructureTaskDetails taskDetails, View.OnClickListener onClickListener) {
         if (!BusinessStatus.NOT_VISITED.equals(taskDetails.getBusinessStatus())) {
-            actionTextView.setText(CardDetailsUtil.getTranslatedBusinessStatus(taskDetails.getBusinessStatus()));
+            if (Intervention.CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
+                actionTextView.setText(context.getResources().getString(R.string.index_case_confirmed));
+            } else {
+                actionTextView.setText(CardDetailsUtil.getTranslatedBusinessStatus(taskDetails.getBusinessStatus()));
+            }
             actionTextView.setBackground(null);
             CardDetails cardDetails = new CardDetails(taskDetails.getBusinessStatus());
             CardDetailsUtil.formatCardDetails(cardDetails);
