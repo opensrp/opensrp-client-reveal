@@ -112,6 +112,7 @@ android {
             buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '90'
             buildConfigField "boolean", "DISPLAY_OUTSIDE_OPERATIONAL_AREA_MASK", 'false'
+            buildConfigField "boolean", "DISPLAY_DISTANCE_SCALE", 'true'
 
         }
 
@@ -129,6 +130,7 @@ android {
             buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '60'
             buildConfigField "boolean", "DISPLAY_OUTSIDE_OPERATIONAL_AREA_MASK", 'false'
+            buildConfigField "boolean", "DISPLAY_DISTANCE_SCALE", 'true'
 
             testCoverageEnabled true
         }

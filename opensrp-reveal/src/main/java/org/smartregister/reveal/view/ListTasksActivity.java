@@ -98,6 +98,7 @@ import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_G
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_TASK_LISTS;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
+import static org.smartregister.reveal.util.Utils.displayDistanceScale;
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
 import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
@@ -319,8 +320,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                             layerSwitcherFab.setVisibility(View.GONE);
                         }
 
-                        initScaleBarPlugin(mapboxMap);
-
+                        if(displayDistanceScale()) {
+                            initScaleBarPlugin(mapboxMap);
+                        }
                     }
                 });
 

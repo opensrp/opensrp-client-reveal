@@ -391,4 +391,14 @@ public class Utils {
 
     }
 
+    /**
+     * Uses the server setting "DISPLAY_DISTANCE_SCALE" to determine whether to display the distance scale
+     * If this variable is not available on the server the value is retrieved from BuildConfig.DISPLAY_DISTANCE_SCALE
+     *
+     * @return displayDistanceScale
+     */
+    public static Boolean displayDistanceScale() {
+        return Boolean.valueOf(getGlobalConfig(CONFIGURATION.DISPLAY_DISTANCE_SCALE, BuildConfig.DISPLAY_DISTANCE_SCALE + ""));
+    }
+
 }
