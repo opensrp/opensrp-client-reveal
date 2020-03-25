@@ -320,9 +320,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                             layerSwitcherFab.setVisibility(View.GONE);
                         }
 
-                        if(displayDistanceScale()) {
-                            initScaleBarPlugin(mapboxMap);
-                        }
+                        initScaleBarPlugin(mapboxMap);
+
                     }
                 });
 
@@ -360,14 +359,15 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     private void initScaleBarPlugin(MapboxMap mapboxMap) {
-        ScaleBarPlugin scaleBarPlugin = new ScaleBarPlugin(kujakuMapView, mapboxMap);
+        if(displayDistanceScale()) {
+            ScaleBarPlugin scaleBarPlugin = new ScaleBarPlugin(kujakuMapView, mapboxMap);
+            // Create a ScaleBarOptions object to use custom styling
+            ScaleBarOptions scaleBarOptions = new ScaleBarOptions(getContext());
+            scaleBarOptions.setTextColor(R.color.distance_scale_text);
+            scaleBarOptions.setTextSize(R.dimen.distance_scale_text_size);
 
-        // Create a ScaleBarOptions object to use custom styling
-        ScaleBarOptions scaleBarOptions = new ScaleBarOptions(getContext());
-        scaleBarOptions.setTextColor(R.color.distance_scale_text);
-        scaleBarOptions.setTextSize(R.dimen.distance_scale_text_size);
-
-        scaleBarPlugin.create(scaleBarOptions);
+            scaleBarPlugin.create(scaleBarOptions);
+        }
     }
 
     private void positionMyLocationAndLayerSwitcher(FrameLayout.LayoutParams myLocationButtonParams, int bottomMargin) {
