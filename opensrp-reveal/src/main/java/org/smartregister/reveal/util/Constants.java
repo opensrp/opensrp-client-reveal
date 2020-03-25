@@ -104,7 +104,7 @@ public interface Constants {
         String MDA_COMMUNITY_HEALTH_WORKERS = "mda_community_health_workers";
         String MDA_ADHERENCE_OFFICERS = "mda_adherence_officers";
         String MDA_CATCHMENT_AREAS = "mda_catchment_areas";
-        String DISPLAY_DISTANCE_SCALE = "Display_Distance_Scale";
+        String DISPLAY_DISTANCE_SCALE = "display_distance_scale";
 
     }
 
