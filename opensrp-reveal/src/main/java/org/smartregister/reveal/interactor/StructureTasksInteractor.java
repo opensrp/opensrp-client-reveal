@@ -218,18 +218,33 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     }
 
     private void setPersonTested(StructureTaskDetails task, boolean isEdit) {
-        if (isEdit){
-            String personTestWithEditsSql = "select person_tested from event_task where id in " +
-                    "(select formSubmissionId from event where baseEntityId = ? and eventType = ? " +
-                    "order by updatedAt desc limit 1)";
-            SQLiteStatement personTestWithEdits = database.compileStatement(personTestWithEditsSql);
-            personTestWithEdits.bindString(1, task.getTaskEntity());
-            personTestWithEdits.bindString(2, BLOOD_SCREENING_EVENT);
-            task.setPersonTested(personTestWithEdits.simpleQueryForString());
-        } else {
-            SQLiteStatement personTested = database.compileStatement("SELECT person_tested FROM event_task WHERE task_id = ?");
-            personTested.bindString(1, task.getTaskId());
-            task.setPersonTested(personTested.simpleQueryForString());
+
+        SQLiteStatement personTestWithEdits = null;
+        SQLiteStatement personTested = null;
+
+        try {
+            if (isEdit){
+                String personTestWithEditsSql = "select person_tested from event_task where id in " +
+                        "(select formSubmissionId from event where baseEntityId = ? and eventType = ? " +
+                        "order by updatedAt desc limit 1)";
+                personTestWithEdits = database.compileStatement(personTestWithEditsSql);
+                personTestWithEdits.bindString(1, task.getTaskEntity());
+                personTestWithEdits.bindString(2, BLOOD_SCREENING_EVENT);
+                task.setPersonTested(personTestWithEdits.simpleQueryForString());
+            } else {
+                personTested = database.compileStatement("SELECT person_tested FROM event_task WHERE task_id = ?");
+                personTested.bindString(1, task.getTaskId());
+                task.setPersonTested(personTested.simpleQueryForString());
+            }
+        } catch (SQLException e) {
+            Timber.e(e, "Error querying person tested values ");
+        } finally {
+            if (personTestWithEdits != null) {
+                personTestWithEdits.close();
+            }
+            if (personTested != null) {
+                personTested.close();
+            }
         }
     }
 
