@@ -549,6 +549,14 @@
           "json_mapping": {
             "field": "eventDate"
           }
+        },
+        {
+          "column_name": "person_tested",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "personTested"
+          }
         }
       ]
     }
