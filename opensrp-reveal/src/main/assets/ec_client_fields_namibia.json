@@ -568,6 +568,46 @@
           }
         }
       ]
+    },
+    {
+      "name": "event_task",
+      "columns": [
+        {
+          "column_name": "base_entity_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "formSubmissionId"
+          }
+        },
+        {
+          "column_name": "task_entity_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "baseEntityId"
+          }
+        },
+        {
+          "column_name": "event_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "id"
+          }
+        },
+        {
+          "column_name": "task_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "details.taskIdentifier"
+          }
+        },
+        {
+          "column_name": "event_date",
+          "type": "Event",
+          "json_mapping": {
+            "field": "eventDate"
+          }
+        }
+      ]
     }
   ]
 }
