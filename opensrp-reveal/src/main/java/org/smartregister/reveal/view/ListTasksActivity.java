@@ -804,7 +804,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void focusOnUserLocation(boolean focusOnUserLocation) {
-        kujakuMapView.focusOnUserLocation(focusOnUserLocation);
+        kujakuMapView.focusOnUserLocation(focusOnUserLocation, RenderMode.COMPASS);
     }
 
     @Override
