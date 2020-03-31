@@ -170,6 +170,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
             AlertDialogUtils.displayNotification(getView().getContext(), R.string.archive_family,
                     R.string.archive_family_failed, familyName);
         } else {
+            RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
             getView().returnToMapView(structureId, task);
         }
     }
