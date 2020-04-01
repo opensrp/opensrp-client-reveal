@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.StructureTaskDetails;
@@ -63,7 +64,17 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
 
     public void setTaskAction(StructureTaskDetails taskDetails, View.OnClickListener onClickListener) {
         if (!BusinessStatus.NOT_VISITED.equals(taskDetails.getBusinessStatus())) {
-            actionTextView.setText(CardDetailsUtil.getTranslatedBusinessStatus(taskDetails.getBusinessStatus()));
+            if (Intervention.CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
+                actionTextView.setText(context.getResources().getString(R.string.index_case_confirmed));
+            } else if (StringUtils.isNotBlank(taskDetails.getPersonTested())
+                    && Intervention.BLOOD_SCREENING.equals(taskDetails.getTaskCode())
+                    && BusinessStatus.COMPLETE.equals(taskDetails.getBusinessStatus())) {
+                String screening = context.getString(R.string.yes).equals(taskDetails.getPersonTested()) ?
+                        context.getString(R.string.tested) : context.getString(R.string.not_tested);
+                actionTextView.setText(screening);
+            } else {
+                actionTextView.setText(CardDetailsUtil.getTranslatedBusinessStatus(taskDetails.getBusinessStatus()));
+            }
             actionTextView.setBackground(null);
             CardDetails cardDetails = new CardDetails(taskDetails.getBusinessStatus());
             CardDetailsUtil.formatCardDetails(cardDetails);

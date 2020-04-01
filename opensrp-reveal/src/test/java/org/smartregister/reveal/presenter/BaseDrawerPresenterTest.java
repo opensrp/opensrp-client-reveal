@@ -10,6 +10,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.domain.PlanDefinition;
+import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.BaseDrawerContract;
@@ -27,6 +28,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -199,6 +202,30 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
     public void testOnShowOfflineMaps() {
         presenter.onShowOfflineMaps();
         verify(view).openOfflineMapsView();
+    }
+
+    @Test
+    public void testOnOperationalAreaSelectedValidatesPlanWhenOAHasNoNodes() {
+        String planId = UUID.randomUUID().toString();
+        String operationArea = UUID.randomUUID().toString();
+        when(preferencesUtil.getCurrentPlanId()).thenReturn(planId);
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn(operationArea);
+        ArrayList<String> list = new ArrayList<>(Arrays.asList("Eastern", "Chadiza", "Chadiza RHC", operationArea));
+        Whitebox.setInternalState(presenter, "locationHelper", locationHelper);
+        Whitebox.setInternalState(presenter, "interactor", interactor);
+
+        FormLocation facilityFormLocation = new FormLocation();
+        facilityFormLocation.name = "Chadiza 1";
+        facilityFormLocation.nodes = null;
+
+        FormLocation districtFormLocation = new FormLocation();
+        districtFormLocation.name = "Chadiza RHC";
+        districtFormLocation.nodes = Collections.singletonList(facilityFormLocation);
+
+        when(locationHelper.generateLocationHierarchyTree(anyBoolean(), any())).thenReturn(Collections.singletonList(districtFormLocation));
+        presenter.onOperationalAreaSelectorClicked(list);
+        verify(interactor).validateCurrentPlan(operationArea, planId);
+
     }
 
 }

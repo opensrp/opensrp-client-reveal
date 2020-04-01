@@ -16,6 +16,8 @@ import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.domain.db.Event;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.StructureTasksContract;
@@ -25,6 +27,7 @@ import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.TestingUtils;
+import org.smartregister.util.JsonFormUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -39,6 +42,7 @@ import static org.smartregister.domain.Task.TaskStatus.ARCHIVED;
 import static org.smartregister.domain.Task.TaskStatus.CANCELLED;
 import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.family.util.DBConstants.KEY.DOB;
+import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
@@ -46,6 +50,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
+import static org.smartregister.reveal.util.TestingUtils.bloodScreeningEventJSON;
 
 /**
  * Created by samuelgithengi on 4/24/19.
@@ -75,6 +80,9 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
 
     @Captor
     private ArgumentCaptor<String> stringArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Event> eventArgumentaCaptor;
 
     private StructureTasksInteractor interactor;
 
@@ -172,6 +180,24 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
         assertEquals(structureId, stringArgumentCaptor.getValue());
     }
 
+    @Test
+    public void testFindLastBloodScreeningEvent() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        taskDetails.setTaskCode(Intervention.BLOOD_SCREENING);
+
+        Event expectedEvent = JsonFormUtils.gson.fromJson(bloodScreeningEventJSON, Event.class);
+        String eventsSql = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
+                EventClientRepository.event_column.json, EventClientRepository.Table.event.name(), EventClientRepository.event_column.baseEntityId, EventClientRepository.event_column.eventType, EventClientRepository.event_column.updatedAt);
+        when(database.rawQuery(eventsSql, new String[]{taskDetails.getTaskEntity(), BLOOD_SCREENING_EVENT})).thenReturn(createEventJsonCursor());
+        interactor.findLastEvent(taskDetails);
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onEventFound(eventArgumentaCaptor.capture());
+        assertEquals(expectedEvent.getBaseEntityId(), eventArgumentaCaptor.getValue().getBaseEntityId());
+        assertEquals(expectedEvent.getFormSubmissionId(), eventArgumentaCaptor.getValue().getFormSubmissionId());
+        assertEquals(expectedEvent.getEventType(), eventArgumentaCaptor.getValue().getEventType());
+        assertEquals(expectedEvent.getLocationId(), eventArgumentaCaptor.getValue().getLocationId());
+    }
+
+
     private Cursor createCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{
                 ID,
@@ -236,4 +262,16 @@ public class StructureTasksInteractorTest extends BaseUnitTest {
         });
         return cursor;
     }
+
+    private Cursor createEventJsonCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{
+                "json"
+        });
+        cursor.addRow(new Object[]{
+                bloodScreeningEventJSON
+        });
+        return cursor;
+    }
+
+
 }
