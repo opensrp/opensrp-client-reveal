@@ -23,6 +23,7 @@ import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.DatabaseMigrationUtils;
@@ -188,7 +189,7 @@ public class RevealRepository extends Repository {
     }
 
     private void upgradeToVersion5(SQLiteDatabase db) {
-        if (!isColumnExists(db, EVENT_TASK_TABLE, DatabaseKeys.PERSON_TESTED)) {
+        if (BuildConfig.BUILD_COUNTRY == Country.THAILAND && !isColumnExists(db, EVENT_TASK_TABLE, DatabaseKeys.PERSON_TESTED)) {
             db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s VARCHAR ", EVENT_TASK_TABLE, DatabaseKeys.PERSON_TESTED));
         }
     }
