@@ -21,7 +21,7 @@ import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.SummaryFormsActivity;
 
-public class SummaryFormsFragment extends Fragment implements OtherFormsfragmentContract.View {
+public class SummaryFormsFragment extends Fragment implements OtherFormsfragmentContract.View, View.OnClickListener {
     
     private OtherFormsFragmentPresenter presenter;
 
@@ -30,6 +30,20 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
     private ProgressDialog progressDialog;
 
     private LocationUtils locationUtils;
+
+    private Button btnDailySummary;
+
+    private Button btnTeamLeaderDos;
+
+    private Button btnCbSprayArea;
+
+    private Button btnIrsSaDecision;
+
+    private Button btnMobilization;
+
+    private Button btnIrsFieldOfficer;
+
+    private Button btnVerificationForm;
 
     public static SummaryFormsFragment newInstance(Bundle bundle) {
 
@@ -60,54 +74,26 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
 
     private void initializeViews(View view)
     {
-       Button daily_summary = view.findViewById(R.id.summary_daily_summary);
-        daily_summary.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.DAILY_SUMMARY_ZAMBIA);
-            }
-        });
+        btnDailySummary = view.findViewById(R.id.summary_daily_summary);
+        btnTeamLeaderDos = view.findViewById(R.id.summary_team_leader_dos);
+        btnCbSprayArea = view.findViewById(R.id.summary_cb_spray_area);
+        btnIrsSaDecision = view.findViewById(R.id.summary_irs_sa_decision);
+        btnMobilization = view.findViewById(R.id.summary_mobilization_form);
+        btnIrsFieldOfficer = view.findViewById(R.id.summary_irs_field_officer);
+        btnVerificationForm = view.findViewById(R.id.summary_verification_form);
 
-        Button team_leader_dos = view.findViewById(R.id.summary_team_leader_dos);
-        team_leader_dos.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.TEAM_LEADER_DOS_ZAMBIA);
-            }
-        });
+        setClickListeners();
+    }
 
-        Button cb_spray_area = view.findViewById(R.id.summary_cb_spray_area);
-        cb_spray_area.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.CB_SPRAY_AREA_ZAMBIA);
-            }
-        });
+    private void setClickListeners() {
+        btnDailySummary.setOnClickListener(this);
+        btnTeamLeaderDos.setOnClickListener(this);
+        btnCbSprayArea.setOnClickListener(this);
+        btnIrsSaDecision.setOnClickListener(this);
+        btnMobilization.setOnClickListener(this);
+        btnIrsFieldOfficer.setOnClickListener(this);
+        btnVerificationForm.setOnClickListener(this);
 
-        Button irs_sa_decision = view.findViewById(R.id.summary_irs_sa_decision);
-        irs_sa_decision.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.IRS_SA_DECISION_ZAMBIA);
-            }
-        });
-
-        Button mobilization = view.findViewById(R.id.summary_mobilization_form);
-        mobilization.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.MOBILIZATION_FORM_ZAMBIA);
-            }
-        });
-
-        Button irs_field_officer = view.findViewById(R.id.summary_irs_field_officer);
-        irs_field_officer.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.IRS_FIELD_OFFICER_ZAMBIA);
-            }
-        });
-
-        Button verification_form = view.findViewById(R.id.summary_verification_form);
-        verification_form.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.VERIFICATION_FORM_ZAMBIA);
-            }
-        });
     }
 
     @Override
@@ -160,4 +146,32 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
         this.jsonFormUtils = jsonFormUtils;
     }
 
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()) {
+            case R.id.summary_daily_summary:
+                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.DAILY_SUMMARY_ZAMBIA);
+                break;
+            case R.id.summary_team_leader_dos:
+                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.TEAM_LEADER_DOS_ZAMBIA);
+                break;
+            case R.id.summary_cb_spray_area:
+                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.CB_SPRAY_AREA_ZAMBIA);
+                break;
+            case R.id.summary_irs_sa_decision:
+                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.IRS_SA_DECISION_ZAMBIA);
+                break;
+            case R.id.summary_mobilization_form:
+                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.MOBILIZATION_FORM_ZAMBIA);
+                break;
+            case R.id.summary_irs_field_officer:
+                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.IRS_FIELD_OFFICER_ZAMBIA);
+                break;
+            case R.id.summary_verification_form:
+                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.VERIFICATION_FORM_ZAMBIA);
+                break;
+            default:
+                break;
+        }
+    }
 }
