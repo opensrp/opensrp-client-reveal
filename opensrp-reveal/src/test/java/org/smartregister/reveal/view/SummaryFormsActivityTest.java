@@ -1,6 +1,8 @@
 package org.smartregister.reveal.view;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +34,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
 
 /**
  * Created by Richard Kareko on 4/1/20.
@@ -48,8 +53,14 @@ public class SummaryFormsActivityTest extends BaseUnitTest {
     @Mock
     private RevealJsonFormUtils jsonFormUtils;
 
+    @Mock
+    private Intent intent;
+
     @Captor
     private ArgumentCaptor<JSONObject> jsonObjectArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<String> stringArgumentCaptor;
 
     private SummaryFormsActivity summaryFormsActivity;
 
@@ -64,6 +75,8 @@ public class SummaryFormsActivityTest extends BaseUnitTest {
     @Test
     public void testOnCreate() {
         assertNotNull(summaryFormsActivity);
+        assertNotNull(Whitebox.getInternalState(summaryFormsActivity, "jsonFormUtils"));
+        assertNotNull(Whitebox.getInternalState(summaryFormsActivity, "presenter"));
     }
 
     @Test
@@ -93,5 +106,19 @@ public class SummaryFormsActivityTest extends BaseUnitTest {
 
         verify(jsonFormUtils).startJsonForm(jsonObjectArgumentCaptor.capture(), any());
         assertNotNull(jsonObjectArgumentCaptor.getValue());
+    }
+
+    @Test
+    public void testOnActivityResult() throws JSONException {
+        Whitebox.setInternalState(summaryFormsActivity, "presenter", presenter);
+        JSONObject jsonForm = new JSONObject(TestingUtils.structureJSON);
+        when(intent.hasExtra(JSON_FORM_PARAM_JSON)).thenReturn(true);
+        when(intent.getStringExtra(JSON_FORM_PARAM_JSON)).thenReturn(jsonForm.toString());
+
+        summaryFormsActivity = spy(summaryFormsActivity);
+        summaryFormsActivity.onActivityResult(REQUEST_CODE_GET_JSON, Activity.RESULT_OK, intent);
+
+        verify(presenter).saveJsonForm(stringArgumentCaptor.capture());
+        assertEquals(jsonForm.toString(), stringArgumentCaptor.getValue());
     }
 }
