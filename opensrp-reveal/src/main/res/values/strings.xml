@@ -345,5 +345,9 @@
     <string name="undo_task_title">Are you sure you want to clear all data associated with this event?</string>
     <string name="undo_task_msg">You will not be able to recover this data and this task will be marked as incomplete</string>
     <string name="localhost_url">http://localhost:%1$d/</string>
+    <string name="index_case_confirmed">Index Case Confirmed</string>
 
+    <string name="tested">Tested</string>
+    <string name="not_tested">Not Tested</string>
+    <string name="yes">Yes</string>
 </resources>

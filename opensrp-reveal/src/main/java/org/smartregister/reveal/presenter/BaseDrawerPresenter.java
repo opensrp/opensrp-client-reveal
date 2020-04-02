@@ -245,6 +245,8 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             if (!districtLocation.name.equals(district))
                 continue;
             for (FormLocation facilityLocation : districtLocation.nodes) {
+                if (facilityLocation.nodes == null)
+                    continue;
                 for (FormLocation operationalAreaLocation : facilityLocation.nodes) {
                     if (operationalAreaLocation.name.equals(operationalArea)) {
                         return new Pair<>(facilityLocation.level, facilityLocation.name);

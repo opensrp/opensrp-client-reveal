@@ -591,6 +591,10 @@ public interface Constants {
 
         String CASE_CONFIRMATION_FIELD = "case_confirmation";
 
+        String EVENT_TABLE = "event";
+
+        String PERSON_TESTED = "person_tested";
+
     }
 
     interface PlanDefinitionStatus {

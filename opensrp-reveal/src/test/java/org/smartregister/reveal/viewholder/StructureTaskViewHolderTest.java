@@ -26,7 +26,10 @@ import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 
 /**
  * Created by samuelgithengi on 4/18/19.
@@ -113,8 +116,47 @@ public class StructureTaskViewHolderTest extends BaseUnitTest {
         assertEquals("Charity Otala, 30", nameTextView.getText());
         assertEquals(BEDNET_DISTRIBUTION, detailsTextView.getText());
         assertEquals(View.VISIBLE, detailsTextView.getVisibility());
+    }
 
+    @Test
+    public void testSetTaskNameForTestedBloodScreeningTask() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        taskDetails.setBusinessStatus(BusinessStatus.COMPLETE);
+        taskDetails.setPersonTested(getString(R.string.yes));
+        taskDetails.setTaskCode(BLOOD_SCREENING);
+        viewHolder.setTaskAction(taskDetails, registerActionHandler);
+        TextView action = viewHolder.itemView.findViewById(R.id.task_action);
+        assertEquals(getString(R.string.tested), action.getText());
+        assertEquals(taskDetails, action.getTag(R.id.task_details));
+        assertNull(action.getBackground());
+        assertEquals(context.getColor(R.color.sprayed), action.getCurrentTextColor());
+    }
 
+    @Test
+    public void testSetTaskNameForNotTestedBloodScreeningTask() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        taskDetails.setBusinessStatus(BusinessStatus.COMPLETE);
+        taskDetails.setPersonTested(getString(R.string.no));
+        taskDetails.setTaskCode(BLOOD_SCREENING);
+        viewHolder.setTaskAction(taskDetails, registerActionHandler);
+        TextView action = viewHolder.itemView.findViewById(R.id.task_action);
+        assertEquals(getString(R.string.not_tested), action.getText());
+        assertEquals(taskDetails, action.getTag(R.id.task_details));
+        assertNull(action.getBackground());
+        assertEquals(context.getColor(R.color.sprayed), action.getCurrentTextColor());
+    }
+
+    @Test
+    public void testSetTaskNameForVisitedCaseConfirmationTask() {
+        StructureTaskDetails taskDetails = TestingUtils.getStructureTaskDetails();
+        taskDetails.setTaskCode(CASE_CONFIRMATION);
+        taskDetails.setBusinessStatus(COMPLETE);
+        viewHolder.setTaskAction(taskDetails, registerActionHandler);
+        TextView action = viewHolder.itemView.findViewById(R.id.task_action);
+        assertEquals(context.getString(R.string.index_case_confirmed), action.getText());
+        assertEquals(taskDetails, action.getTag(R.id.task_details));
+        assertNull(action.getBackground());
+        assertEquals(context.getColor(R.color.sprayed), action.getCurrentTextColor());
     }
 
 }
