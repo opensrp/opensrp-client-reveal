@@ -391,6 +391,14 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         verify(taskRepository).getTaskByIdentifier(stringArgumentCaptor.capture());
         assertEquals(taskIdentifier, stringArgumentCaptor.getValue());
 
+        verify(taskRepository).addOrUpdate(taskArgumentCaptor.capture());
+        Task actualTask = taskArgumentCaptor.getValue();
+        assertEquals(NOT_ELIGIBLE, actualTask.getBusinessStatus());
+        assertEquals(COMPLETED, task.getStatus());
+        assertNotNull(task.getLastModified());
+        assertEquals(taskIdentifier, task.getIdentifier());
+
+
         verify(eventClientRepository).addEvent(stringArgumentCaptor.capture(),jsonObjectArgumentCaptor.capture());
         Event actualEvent = taskGson.fromJson(jsonObjectArgumentCaptor.getValue().toString(), Event.class);
         assertEquals(BuildConfig.VERSION_NAME, actualEvent.getDetails().get(APP_VERSION_NAME));
