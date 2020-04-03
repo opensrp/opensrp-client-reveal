@@ -47,5 +47,7 @@
     <color name="search_textfield_background_grey">@color/white</color>
     <color name="task_filter_gray">#8B8B8B</color>
 
+    <color name="distance_scale_text">@color/white</color>
+
 
 </resources>

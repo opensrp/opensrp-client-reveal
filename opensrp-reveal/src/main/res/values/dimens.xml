@@ -55,6 +55,8 @@
     <dimen name="filter_toggle_bottom_margin">8dp</dimen>
     <dimen name="filter_toggle_padding">32dp</dimen>
 
+    <dimen name="distance_scale_text_size">14dp</dimen>
+
 </resources>
 
 
