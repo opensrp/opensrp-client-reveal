@@ -535,7 +535,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             LocationComponent locationComponent = kujakuMapView.getMapboxLocationComponentWrapper()
                     .getLocationComponent();
             locationComponent.applyStyle(getApplicationContext(), R.style.LocationComponentStyling);
-            locationComponent.setRenderMode(RenderMode.COMPASS);
         }
     }
 

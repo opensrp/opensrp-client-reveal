@@ -385,7 +385,6 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
             LocationComponent locationComponent = mapView.getMapboxLocationComponentWrapper()
                     .getLocationComponent();
             locationComponent.applyStyle(mapView.getContext(), R.style.LocationComponentStyling);
-            locationComponent.setRenderMode(RenderMode.COMPASS);
         }
     }
 
