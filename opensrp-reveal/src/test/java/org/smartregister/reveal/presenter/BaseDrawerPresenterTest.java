@@ -13,6 +13,7 @@ import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.interactor.BaseDrawerInteractor;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -31,12 +32,14 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.ACTIVE;
 import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 
 /**
  * @author Richard Kareko
@@ -60,6 +63,9 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
     @Mock
     private LocationHelper locationHelper;
 
+    @Mock
+    private BaseDrawerContract.DrawerActivity drawerActivity;
+
     @Captor
     private ArgumentCaptor<List<String>> plansCaptor;
 
@@ -70,6 +76,7 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
     public void setUp() {
         presenter = new BaseDrawerPresenter(view, mock(BaseDrawerContract.DrawerActivity.class));
         Whitebox.setInternalState(presenter, "prefsUtil", preferencesUtil);
+        Whitebox.setInternalState(presenter, "drawerActivity", drawerActivity);
 
     }
 
@@ -226,6 +233,98 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
         presenter.onOperationalAreaSelectorClicked(list);
         verify(interactor).validateCurrentPlan(operationArea, planId);
 
+    }
+
+    @Test
+    public void testOnViewResumedWithViewNotInitialized() {
+
+        when(preferencesUtil.getCurrentPlan()).thenReturn("IRS Lusaka");
+        Whitebox.setInternalState(presenter, "locationHelper", locationHelper);
+        List<String> defaultLocations = new ArrayList<>();
+        defaultLocations.add("Lusaka");
+        defaultLocations.add("Mtendere");
+        when(locationHelper.generateDefaultLocationHierarchy(any())).thenReturn(defaultLocations);
+
+        assertFalse(Whitebox.getInternalState(presenter, "viewInitialized"));
+
+        presenter.onViewResumed();
+
+        assertTrue(Whitebox.getInternalState(presenter, "viewInitialized"));
+        verify(view).setOperator();
+        verify(view).setDistrict("Lusaka");
+        verify(view).setFacility("Mtendere", HEALTH_CENTER);
+        verify(view).setPlan("IRS Lusaka");
+
+    }
+
+    @Test
+    public void testOnViewResumedWithViewInitialized() {
+
+        Whitebox.setInternalState(presenter, "viewInitialized", true);
+        when(preferencesUtil.getCurrentPlan()).thenReturn("IRS Lusaka");
+
+        assertTrue(Whitebox.getInternalState(presenter, "viewInitialized"));
+        assertFalse(Whitebox.getInternalState(presenter, "changedCurrentSelection"));
+
+        presenter = spy(presenter);
+        presenter.onViewResumed();
+
+        assertTrue(Whitebox.getInternalState(presenter, "changedCurrentSelection"));
+        verify(presenter).onDrawerClosed();
+
+    }
+
+    @Test
+    public void testIsChangedCurrentSelectio() {
+        Whitebox.setInternalState(presenter, "changedCurrentSelection", true);
+
+        boolean actualIsChangedCurrentSelection = presenter.isChangedCurrentSelection();
+
+        assertTrue(actualIsChangedCurrentSelection);
+    }
+
+    @Test
+    public void testSetChangedCurrentSelectio() {
+        assertFalse(Whitebox.getInternalState(presenter, "changedCurrentSelection"));
+
+        presenter.setChangedCurrentSelection(true);
+
+        assertTrue(Whitebox.getInternalState(presenter, "changedCurrentSelection"));
+    }
+
+    @Test
+    public void testOnDraweClosed() {
+        presenter.onDrawerClosed();
+        verify(drawerActivity).onDrawerClosed();
+    }
+
+    @Test
+    public void testOnShowPlanSelectorWhenCurrentPlanIsBlank() {
+        presenter.onShowPlanSelector();
+        verify(view).displayNotification(R.string.operational_area, R.string.operational_area_not_selected);
+    }
+
+    @Test
+    public void testOnShowPlanSelector() {
+        Whitebox.setInternalState(presenter, "interactor", interactor);
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn("Lusaka");
+        presenter.onShowPlanSelector();
+        verify(interactor).fetchPlans("Lusaka");
+    }
+
+    @Test
+    public void testOnPlanSelectorClicked() {
+        ArrayList<String> name = new ArrayList<>();
+        name.add("IRS Lusaka");
+        ArrayList<String> value = new ArrayList<>();
+        value.add("plan_1");
+        assertFalse(Whitebox.getInternalState(presenter, "changedCurrentSelection"));
+
+        presenter.onPlanSelectorClicked(value, name);
+        verify(preferencesUtil).setCurrentPlan("IRS Lusaka");
+        verify(preferencesUtil).setCurrentPlanId("plan_1");
+        verify(view).setPlan("IRS Lusaka");
+        assertTrue(Whitebox.getInternalState(presenter, "changedCurrentSelection"));
     }
 
 }
