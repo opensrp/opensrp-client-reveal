@@ -16,6 +16,7 @@ import org.mockito.Mockito;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
+import org.smartregister.domain.form.FormLocation;
 import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
@@ -25,6 +26,7 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.util.DateTimeTypeConverter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -191,6 +193,29 @@ public class TestingUtils {
         offlineQueueTask.setDateCreated(new Date());
         offlineQueueTaskMap.put("location_1",offlineQueueTask);
         return offlineQueueTaskMap;
+    }
+
+    public static FormLocation generateLocationHierarchy() {
+        FormLocation facilityFormLocation = new FormLocation();
+        facilityFormLocation.name = "Chadiza 1";
+        facilityFormLocation.nodes = null;
+        FormLocation districtFormLocation = new FormLocation();
+        districtFormLocation.name = "Chadiza RHC";
+        ArrayList<FormLocation> facilityFormLocations = new ArrayList<>();
+        facilityFormLocations.add(facilityFormLocation);
+        districtFormLocation.nodes = facilityFormLocations;
+        FormLocation provinceFormLocation = new FormLocation();
+        provinceFormLocation.name = "Lusaka";
+        ArrayList<FormLocation> districtFormLocations = new ArrayList<>();
+        districtFormLocations.add(facilityFormLocation);
+        provinceFormLocation.nodes = districtFormLocations;
+        FormLocation countryFormLocation= new FormLocation();
+        countryFormLocation.name = "Zambia";
+        ArrayList<FormLocation> provinceFormLocations = new ArrayList<>();
+        provinceFormLocations.add(facilityFormLocation);
+        countryFormLocation.nodes = provinceFormLocations;
+
+        return countryFormLocation;
     }
 
 }
