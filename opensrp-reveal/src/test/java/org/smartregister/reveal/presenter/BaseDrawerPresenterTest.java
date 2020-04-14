@@ -1,4 +1,5 @@
 package org.smartregister.reveal.presenter;
+import android.support.v4.util.Pair;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,9 +14,11 @@ import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.interactor.BaseDrawerInteractor;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.TestingUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,13 +33,23 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.ACTIVE;
 import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.Tags.COUNTRY;
+import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
+import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
+import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
+import static org.smartregister.reveal.util.Constants.Tags.PROVINCE;
+import static org.smartregister.reveal.util.Constants.Tags.REGION;
+import static org.smartregister.reveal.util.Constants.Tags.SUB_DISTRICT;
 
 /**
  * @author Richard Kareko
@@ -60,16 +73,26 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
     @Mock
     private LocationHelper locationHelper;
 
+    @Mock
+    private BaseDrawerContract.DrawerActivity drawerActivity;
+
     @Captor
     private ArgumentCaptor<List<String>> plansCaptor;
 
     @Captor
     private ArgumentCaptor<String> entireTreeString;
 
+    @Captor
+    private ArgumentCaptor<ArrayList<String>> arrayListArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Pair<String, ArrayList<String>>> pairArgumentCaptor;
+
     @Before
     public void setUp() {
         presenter = new BaseDrawerPresenter(view, mock(BaseDrawerContract.DrawerActivity.class));
         Whitebox.setInternalState(presenter, "prefsUtil", preferencesUtil);
+        Whitebox.setInternalState(presenter, "drawerActivity", drawerActivity);
 
     }
 
@@ -214,18 +237,132 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
         Whitebox.setInternalState(presenter, "locationHelper", locationHelper);
         Whitebox.setInternalState(presenter, "interactor", interactor);
 
-        FormLocation facilityFormLocation = new FormLocation();
-        facilityFormLocation.name = "Chadiza 1";
-        facilityFormLocation.nodes = null;
-
-        FormLocation districtFormLocation = new FormLocation();
-        districtFormLocation.name = "Chadiza RHC";
-        districtFormLocation.nodes = Collections.singletonList(facilityFormLocation);
-
-        when(locationHelper.generateLocationHierarchyTree(anyBoolean(), any())).thenReturn(Collections.singletonList(districtFormLocation));
+        FormLocation locationHierarchy = TestingUtils.generateLocationHierarchy();
+        when(locationHelper.generateLocationHierarchyTree(anyBoolean(), any())).thenReturn(Collections.singletonList(locationHierarchy));
         presenter.onOperationalAreaSelectorClicked(list);
         verify(interactor).validateCurrentPlan(operationArea, planId);
 
+    }
+
+    @Test
+    public void testOnViewResumedWithViewNotInitialized() {
+
+        when(preferencesUtil.getCurrentPlan()).thenReturn("IRS Lusaka");
+        Whitebox.setInternalState(presenter, "locationHelper", locationHelper);
+        List<String> defaultLocations = new ArrayList<>();
+        defaultLocations.add("Lusaka");
+        defaultLocations.add("Mtendere");
+        when(locationHelper.generateDefaultLocationHierarchy(any())).thenReturn(defaultLocations);
+
+        assertFalse(Whitebox.getInternalState(presenter, "viewInitialized"));
+
+        presenter.onViewResumed();
+
+        assertTrue(Whitebox.getInternalState(presenter, "viewInitialized"));
+        verify(view).setOperator();
+        verify(view).setDistrict("Lusaka");
+        verify(view).setFacility("Mtendere", HEALTH_CENTER);
+        verify(view).setPlan("IRS Lusaka");
+
+    }
+
+    @Test
+    public void testOnViewResumedWithViewInitialized() {
+
+        Whitebox.setInternalState(presenter, "viewInitialized", true);
+        when(preferencesUtil.getCurrentPlan()).thenReturn("IRS Lusaka");
+
+        assertTrue(Whitebox.getInternalState(presenter, "viewInitialized"));
+        assertFalse(Whitebox.getInternalState(presenter, "changedCurrentSelection"));
+
+        presenter = spy(presenter);
+        presenter.onViewResumed();
+
+        assertTrue(Whitebox.getInternalState(presenter, "changedCurrentSelection"));
+        verify(presenter).onDrawerClosed();
+
+    }
+
+    @Test
+    public void testIsChangedCurrentSelectio() {
+        Whitebox.setInternalState(presenter, "changedCurrentSelection", true);
+
+        boolean actualIsChangedCurrentSelection = presenter.isChangedCurrentSelection();
+
+        assertTrue(actualIsChangedCurrentSelection);
+    }
+
+    @Test
+    public void testSetChangedCurrentSelectio() {
+        assertFalse(Whitebox.getInternalState(presenter, "changedCurrentSelection"));
+
+        presenter.setChangedCurrentSelection(true);
+
+        assertTrue(Whitebox.getInternalState(presenter, "changedCurrentSelection"));
+    }
+
+    @Test
+    public void testOnDraweClosed() {
+        presenter.onDrawerClosed();
+        verify(drawerActivity).onDrawerClosed();
+    }
+
+    @Test
+    public void testOnShowPlanSelectorWhenCurrentPlanIsBlank() {
+        presenter.onShowPlanSelector();
+        verify(view).displayNotification(R.string.operational_area, R.string.operational_area_not_selected);
+    }
+
+    @Test
+    public void testOnShowPlanSelector() {
+        Whitebox.setInternalState(presenter, "interactor", interactor);
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn("Lusaka");
+        presenter.onShowPlanSelector();
+        verify(interactor).fetchPlans("Lusaka");
+    }
+
+    @Test
+    public void testOnPlanSelectorClicked() {
+        ArrayList<String> name = new ArrayList<>();
+        name.add("IRS Lusaka");
+        ArrayList<String> value = new ArrayList<>();
+        value.add("plan_1");
+        assertFalse(Whitebox.getInternalState(presenter, "changedCurrentSelection"));
+
+        presenter.onPlanSelectorClicked(value, name);
+        verify(preferencesUtil).setCurrentPlan("IRS Lusaka");
+        verify(preferencesUtil).setCurrentPlanId("plan_1");
+        verify(view).setPlan("IRS Lusaka");
+        assertTrue(Whitebox.getInternalState(presenter, "changedCurrentSelection"));
+    }
+
+    @Test
+    public void testOnShowOperationalAreaSelector() {
+        when(preferencesUtil.getPreferenceValue(anyString())).thenReturn("akros_1");
+        when(preferencesUtil.getCurrentPlan()).thenReturn("IRS Lusaka");
+        Whitebox.setInternalState(presenter, "locationHelper", locationHelper);
+        List<String> defaultLocations = new ArrayList<>();
+        defaultLocations.add("Lusaka");
+        defaultLocations.add("Mtendere");
+        when(locationHelper.generateDefaultLocationHierarchy(any())).thenReturn(defaultLocations);
+
+        FormLocation locationHierarchy = TestingUtils.generateLocationHierarchy();
+        when(locationHelper.generateLocationHierarchyTree(anyBoolean(), any())).thenReturn(Collections.singletonList(locationHierarchy));
+
+        presenter.onShowOperationalAreaSelector();
+
+        verify(locationHelper, times(2)).generateDefaultLocationHierarchy(arrayListArgumentCaptor.capture());
+        assertTrue(arrayListArgumentCaptor.getValue().contains(COUNTRY));
+        assertTrue(arrayListArgumentCaptor.getValue().contains(PROVINCE));
+        assertTrue(arrayListArgumentCaptor.getValue().contains(REGION));
+        assertTrue(arrayListArgumentCaptor.getValue().contains(DISTRICT));
+        assertTrue(arrayListArgumentCaptor.getValue().contains(SUB_DISTRICT));
+        assertTrue(arrayListArgumentCaptor.getValue().contains(OPERATIONAL_AREA));
+
+        verify(view).showOperationalAreaSelector(pairArgumentCaptor.capture());
+        assertEquals("[{\"name\":\"Zambia\",\"nodes\":[{\"name\":\"Chadiza 1\"}]}]", pairArgumentCaptor.getValue().first );
+        assertTrue(pairArgumentCaptor.getValue().second.contains("Lusaka"));
+        assertTrue(pairArgumentCaptor.getValue().second.contains("Mtendere"));
     }
 
 }

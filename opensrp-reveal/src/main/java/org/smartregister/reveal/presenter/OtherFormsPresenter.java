@@ -24,12 +24,6 @@ public class OtherFormsPresenter implements OtherFormsContract.Presenter {
     }
 
     @Override
-    public void startFormActivity(JSONObject jsonObject) {
-        this.view = view;
-        this.interactor = new OtherFormsInteractor(this);
-    }
-
-    @Override
     public void saveJsonForm(String json) {
         view.showProgressDialog(R.string.saving_dialog_title);
         interactor.saveJsonForm(json);

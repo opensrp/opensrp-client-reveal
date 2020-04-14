@@ -2,6 +2,7 @@ package org.smartregister.reveal;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,8 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -22,6 +25,9 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.android.controller.ActivityController;
 import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.view.contract.BaseLoginContract;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class LoginActivityTest extends BaseActivityUnitTest {
 
@@ -39,6 +45,9 @@ public class LoginActivityTest extends BaseActivityUnitTest {
 
     @Mock
     private Button loginButton;
+
+    @Captor
+    private ArgumentCaptor<Intent> intentArgumentCaptor;
 
     @Before
     public void setUp() {
@@ -233,6 +242,20 @@ public class LoginActivityTest extends BaseActivityUnitTest {
     public void testGetActivityContextReturnsCorrectInstance() {
         LoginActivity spyActivity = Mockito.spy(loginActivity);
         Assert.assertEquals(spyActivity, spyActivity.getActivityContext());
+    }
+
+    @Test
+    public void testGoToHome() {
+
+        LoginActivity spyActivity = Mockito.spy(loginActivity);
+        Whitebox.setInternalState(spyActivity, "mLoginPresenter", presenter);
+
+        spyActivity.goToHome(false);
+
+        Mockito.verify(spyActivity).startActivity(intentArgumentCaptor.capture());
+        assertNotNull(intentArgumentCaptor.getValue());
+        assertEquals(".view.ListTasksActivity", intentArgumentCaptor.getValue().getComponent().getShortClassName());
+        Mockito.verify(spyActivity).finish();
     }
 
     @Override
