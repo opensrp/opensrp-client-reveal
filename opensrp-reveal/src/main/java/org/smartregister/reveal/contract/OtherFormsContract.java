@@ -18,8 +18,6 @@ public interface OtherFormsContract {
 
     interface Presenter extends BaseContract.BasePresenter {
 
-        void startFormActivity(JSONObject jsonObject);
-
         void saveJsonForm(String json);
 
     }
