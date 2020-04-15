@@ -9,6 +9,8 @@ import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 
+import java.util.List;
+
 /**
  * Created by samuelgithengi on 11/29/18.
  */
@@ -114,6 +116,16 @@ public class RevealSyncConfiguration extends SyncConfiguration {
             sharedPreferences = RevealApplication.getInstance().getContext().userService().getAllSharedPreferences();
         }
         return sharedPreferences.fetchDefaultTeamId(sharedPreferences.fetchRegisteredANM());
+    }
+
+    @Override
+    public List<String> getSynchronizedLocationTags() {
+        return null;
+    }
+
+    @Override
+    public String getTopAllowedLocationLevel() {
+        return null;
     }
 
     @Override
