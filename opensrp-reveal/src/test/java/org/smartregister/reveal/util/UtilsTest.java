@@ -34,8 +34,10 @@ import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENI
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.DISPLAY_DISTANCE_SCALE;
 import static org.smartregister.reveal.util.Utils.createCircleFeature;
 import static org.smartregister.reveal.util.Utils.displayAddStructureOutOfBoundaryWarningDialog;
+import static org.smartregister.reveal.util.Utils.displayDistanceScale;
 import static org.smartregister.reveal.util.Utils.getAdminPasswordNotNearStructures;
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
 import static org.smartregister.reveal.util.Utils.getInterventionLabel;
@@ -195,6 +197,17 @@ public class UtilsTest {
         when(revealApplication.getServerConfigs()).thenReturn(settings);
         assertFalse(displayAddStructureOutOfBoundaryWarningDialog());
 
+    }
+
+    @Test
+    public void testDisplayDistanceScaleReturnsTrueWhenSettingsValueIsTrue() throws Exception {
+        RevealApplication revealApplication = initRevealApplicationMock();
+
+        Map<String, Object> settings = new HashMap<>();
+        settings.put(DISPLAY_DISTANCE_SCALE, "true");
+
+        when(revealApplication.getServerConfigs()).thenReturn(settings);
+        assertTrue(displayDistanceScale());
     }
 
 }
