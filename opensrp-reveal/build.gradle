@@ -112,6 +112,7 @@ android {
             buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '90'
             buildConfigField "boolean", "DISPLAY_OUTSIDE_OPERATIONAL_AREA_MASK", 'false'
+            buildConfigField "boolean", "DISPLAY_DISTANCE_SCALE", 'true'
 
         }
 
@@ -129,6 +130,7 @@ android {
             buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '60'
             buildConfigField "boolean", "DISPLAY_OUTSIDE_OPERATIONAL_AREA_MASK", 'false'
+            buildConfigField "boolean", "DISPLAY_DISTANCE_SCALE", 'true'
 
             testCoverageEnabled true
         }
@@ -224,6 +226,7 @@ dependencies {
         transitive = true;
     }
     implementation 'com.github.ybq:Android-SpinKit:1.2.0'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-scalebar-v8:0.3.0'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.apache.maven:maven-ant-tasks:2.1.3'
     testImplementation('com.squareup:fest-android:1.0.8') { exclude module: 'support-v4' }
