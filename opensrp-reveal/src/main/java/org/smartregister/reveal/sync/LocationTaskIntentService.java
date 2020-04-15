@@ -84,6 +84,7 @@ public class LocationTaskIntentService extends IntentService {
         sendSyncStatusBroadcastMessage(FetchStatus.fetchStarted);
         LocationServiceHelper locationServiceHelper = new LocationServiceHelper(
                 RevealApplication.getInstance().getLocationRepository(),
+                RevealApplication.getInstance().getLocationTagRepository(),
                 RevealApplication.getInstance().getStructureRepository());
         TaskServiceHelper taskServiceHelper = TaskServiceHelper.getInstance();
         PlanIntentServiceHelper planServiceHelper = PlanIntentServiceHelper.getInstance();

@@ -3,6 +3,7 @@ package org.smartregister.reveal.view;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -18,8 +19,10 @@ import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Projection;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.pluginscalebar.ScaleBarWidget;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -149,11 +152,17 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Mock
     private ILocationClient locationClient;
 
+    @Mock
+    private Projection projection;
+
     @Captor
     private ArgumentCaptor<BoundaryLayer> boundaryLayerArgumentCaptor;
 
     @Captor
     private ArgumentCaptor<CameraPosition> cameraPositionArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<ScaleBarWidget> scaleBarWidgetArgumentCaptor;
 
     @Before
     public void setUp() {
@@ -812,6 +821,22 @@ public class ListTasksActivityTest extends BaseUnitTest {
         alertDialog.getButton(BUTTON_POSITIVE).performClick();
         verify(listTaskPresenter).onUndoInterventionStatus(eq(BEDNET_DISTRIBUTION));
         assertFalse(alertDialog.isShowing());
+    }
+
+    @Test
+    public void testInitScaleBarPlugin() {
+        Whitebox.setInternalState(listTasksActivity, "kujakuMapView", kujakuMapView);
+        when(projection.getMetersPerPixelAtLatitude(12.06766)).thenReturn(1.0);
+        LatLng target = new LatLng(12.06766, -18.02341);
+        when(mMapboxMap.getCameraPosition()).thenReturn(new CameraPosition.Builder().zoom(18).target(target).build());
+        when(mMapboxMap.getProjection()).thenReturn(projection);
+        listTasksActivity.initializeScaleBarPlugin(mMapboxMap);
+        verify(kujakuMapView).addView(scaleBarWidgetArgumentCaptor.capture());
+        ScaleBarWidget actualScaleBarWidget = scaleBarWidgetArgumentCaptor.getValue();
+        assertNotNull(actualScaleBarWidget);
+        assertEquals(Color.WHITE, actualScaleBarWidget.getTextColor());
+        assertEquals(14d, actualScaleBarWidget.getTextSize(), 0);
+
     }
 
 
