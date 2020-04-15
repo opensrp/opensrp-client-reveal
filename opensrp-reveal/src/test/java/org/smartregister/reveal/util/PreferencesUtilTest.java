@@ -1,5 +1,6 @@
 package org.smartregister.reveal.util;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.application.RevealApplication;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
@@ -36,6 +38,11 @@ public class PreferencesUtilTest extends BaseUnitTest {
     public void setUp() {
         preferencesUtil = PreferencesUtil.getInstance();
         Whitebox.setInternalState(preferencesUtil, "allSharedPreferences", allSharedPreferences);
+    }
+
+    @After
+    public void tearDown() {
+        Whitebox.setInternalState(preferencesUtil, "allSharedPreferences", RevealApplication.getInstance().getContext().allSharedPreferences());
     }
 
     @Test
