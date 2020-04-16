@@ -840,5 +840,14 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     }
 
+    @Test
+    public void testDisplayNotificationWithSingleParam() {
+        listTasksActivity.displayNotification(context.getString(R.string.confirm_archive_family));
+        AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(alertDialog.isShowing());
+        TextView tv = alertDialog.findViewById(android.R.id.message);
+        assertEquals("Confirm Household Archival", tv.getText());
+    }
+
 
 }
