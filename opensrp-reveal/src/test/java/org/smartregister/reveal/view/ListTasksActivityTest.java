@@ -18,6 +18,7 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Projection;
 import com.mapbox.mapboxsdk.style.layers.LineLayer;
@@ -757,7 +758,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
     public void testFocusOnUserLocation() {
         Whitebox.setInternalState(listTasksActivity, "kujakuMapView", kujakuMapView);
         listTasksActivity.focusOnUserLocation(true);
-        verify(kujakuMapView).focusOnUserLocation(true);
+        verify(kujakuMapView).focusOnUserLocation(true, RenderMode.COMPASS);
     }
 
     @Test
@@ -837,6 +838,15 @@ public class ListTasksActivityTest extends BaseUnitTest {
         assertEquals(Color.WHITE, actualScaleBarWidget.getTextColor());
         assertEquals(14d, actualScaleBarWidget.getTextSize(), 0);
 
+    }
+
+    @Test
+    public void testDisplayNotificationWithSingleParam() {
+        listTasksActivity.displayNotification(context.getString(R.string.confirm_archive_family));
+        AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
+        assertTrue(alertDialog.isShowing());
+        TextView tv = alertDialog.findViewById(android.R.id.message);
+        assertEquals("Confirm Household Archival", tv.getText());
     }
 
 
