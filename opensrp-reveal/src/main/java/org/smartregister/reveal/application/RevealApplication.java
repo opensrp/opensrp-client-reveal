@@ -30,6 +30,7 @@ import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.repository.AllSettings;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.LocationRepository;
+import org.smartregister.repository.LocationTagRepository;
 import org.smartregister.repository.PlanDefinitionRepository;
 import org.smartregister.repository.PlanDefinitionSearchRepository;
 import org.smartregister.repository.Repository;
@@ -235,6 +236,10 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     public LocationRepository getLocationRepository() {
         return CoreLibrary.getInstance().context().getLocationRepository();
+    }
+
+    public LocationTagRepository getLocationTagRepository() {
+        return CoreLibrary.getInstance().context().getLocationTagRepository();
     }
 
     public AllSettings getSettingsRepository() {

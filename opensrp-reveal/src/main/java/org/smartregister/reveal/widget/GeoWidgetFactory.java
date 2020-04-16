@@ -259,7 +259,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         mapboxMap.setCameraPosition(cameraPosition);
                     }
                 } else {
-                    mapView.focusOnUserLocation(true, bufferRadius);
+                    mapView.focusOnUserLocation(true, bufferRadius, RenderMode.COMPASS);
                 }
 
 
@@ -385,7 +385,6 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
             LocationComponent locationComponent = mapView.getMapboxLocationComponentWrapper()
                     .getLocationComponent();
             locationComponent.applyStyle(mapView.getContext(), R.style.LocationComponentStyling);
-            locationComponent.setRenderMode(RenderMode.COMPASS);
         }
     }
 
