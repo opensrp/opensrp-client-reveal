@@ -31,10 +31,10 @@ public class WithinOperationAreaValidatorTest extends BaseUnitTest {
     public MockitoRule rule = MockitoJUnit.rule();
 
     @Mock
-    RevealMapView revealMapView;
+    private RevealMapView revealMapView;
 
     @Mock
-    Feature operationalArea;
+    private Feature operationalArea;
 
     @Mock
     private MapboxMap mapboxMap;
