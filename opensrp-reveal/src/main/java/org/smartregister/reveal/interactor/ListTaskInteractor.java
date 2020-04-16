@@ -48,6 +48,7 @@ import java.util.Set;
 import timber.log.Timber;
 
 import static org.smartregister.domain.LocationProperty.PropertyStatus.INACTIVE;
+import static org.smartregister.family.util.DBConstants.KEY.DATE_REMOVED;
 import static org.smartregister.family.util.DBConstants.KEY.RELATIONAL_ID;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
@@ -309,10 +310,10 @@ public class ListTaskInteractor extends BaseInteractor {
         queryBuilder.selectInitiateMainTable(STRUCTURES_TABLE, new String[]{
                 String.format("COALESCE(%s.%s,%s,%s)", FAMILY, FIRST_NAME, STRUCTURE_NAME, NAME),
                 String.format("group_concat(%s.%s||' '||%s.%s)", FAMILY_MEMBER, FIRST_NAME, FAMILY_MEMBER, LAST_NAME)}, ID);
-        queryBuilder.customJoin(String.format("LEFT JOIN %s ON %s.%s = %s.%s collate nocase ",
-                FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
-        queryBuilder.customJoin(String.format("LEFT JOIN %s ON %s.%s = %s.%s collate nocase ",
-                FAMILY_MEMBER, FAMILY, BASE_ENTITY_ID, FAMILY_MEMBER, RELATIONAL_ID));
+        queryBuilder.customJoin(String.format("LEFT JOIN %s ON %s.%s = %s.%s AND %s.%s IS NULL collate nocase ",
+                FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID, FAMILY, DATE_REMOVED));
+        queryBuilder.customJoin(String.format("LEFT JOIN %s ON %s.%s = %s.%s AND %s.%s IS NULL collate nocase ",
+                FAMILY_MEMBER, FAMILY, BASE_ENTITY_ID, FAMILY_MEMBER, RELATIONAL_ID, FAMILY_MEMBER, DATE_REMOVED));
         queryBuilder.customJoin(String.format("LEFT JOIN %s ON %s.%s = %s.%s collate nocase ",
                 SPRAYED_STRUCTURES, STRUCTURES_TABLE, ID, SPRAYED_STRUCTURES, BASE_ENTITY_ID));
         return queryBuilder.mainCondition(mainCondition);
