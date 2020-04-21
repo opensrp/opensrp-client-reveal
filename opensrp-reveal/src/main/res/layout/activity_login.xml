@@ -140,6 +140,16 @@
                 android:text="@string/login_text"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/partner_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="68dp"
+                android:visibility="gone"
+                android:layout_gravity="bottom|right"
+                android:contentDescription="bvbd logo"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_logo_login" />
         </LinearLayout>
     </RelativeLayout>
 </ScrollView>
