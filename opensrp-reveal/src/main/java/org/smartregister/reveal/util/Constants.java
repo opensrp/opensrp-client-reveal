@@ -464,6 +464,7 @@ public interface Constants {
         String BOTSWANA_EC_CLIENT_FIELDS = "ec_client_fields_botswana.json";
         String ZAMBIA_EC_CLIENT_FIELDS = "ec_client_fields_zambia.json";
         String REFAPP_EC_CLIENT_FIELDS = "ec_client_fields_refapp.json";
+        String NTD_EC_CLIENT_FIELDS = "ec_client_fields_ntd.json";
     }
 
 
@@ -488,9 +489,15 @@ public interface Constants {
 
     }
 
+    interface ChildRegister {
+        String VIEW_IDENTIFIER = "child_register";
+    }
+
     interface DatabaseKeys {
 
         String TASK_TABLE = "task";
+
+        String CHILD_TABLE = "ec_child";
 
         String SPRAYED_STRUCTURES = "sprayed_structures";
 
@@ -541,6 +548,12 @@ public interface Constants {
         String FIRST_NAME = "first_name";
 
         String LAST_NAME = "last_name";
+
+        String MIDDLE_NAME = "middle_name";
+
+        String GENDER = "gender";
+
+        String GRADE = "grade";
 
         String GROUPED_STRUCTURE_TASK_CODE_AND_STATUS = "grouped_structure_task_code_and_status";
 
@@ -596,6 +609,7 @@ public interface Constants {
 
         String PERSON_TESTED = "person_tested";
 
+        String DOB = "dob";
     }
 
     interface PlanDefinitionStatus {

@@ -57,8 +57,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.fabric.sdk.android.Fabric;
-import io.ona.kujaku.data.realm.RealmDatabase;
 import io.ona.kujaku.KujakuLibrary;
+import io.ona.kujaku.data.realm.RealmDatabase;
 import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.GLOBAL_CONFIGS;
@@ -124,6 +124,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.ZAMBIA_EC_CLIENT_FIELDS);
         } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
             CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.REFAPP_EC_CLIENT_FIELDS);
+        } else if (BuildConfig.BUILD_COUNTRY == Country.NTD_SCHOOL || BuildConfig.BUILD_COUNTRY == Country.NTD_COMMUNITY) {
+            CoreLibrary.getInstance().setEcClientFieldsFile(Constants.ECClientConfig.NTD_EC_CLIENT_FIELDS);
         }
         ConfigurableViewsLibrary.init(context);
         FamilyLibrary.init(context, getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);

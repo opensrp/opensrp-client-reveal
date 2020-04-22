@@ -2,9 +2,12 @@ package org.smartregister.reveal.activity;
 
 import android.content.Intent;
 
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.presenter.LoginPresenter;
+import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.view.ChildRegisterActivity;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.task.SaveTeamLocationsTask;
 import org.smartregister.view.activity.BaseLoginActivity;
@@ -27,7 +30,13 @@ public class LoginActivity extends BaseLoginActivity implements BaseLoginContrac
         if (remote) {
             org.smartregister.util.Utils.startAsyncTask(new SaveTeamLocationsTask(), null);
         }
-        Intent intent = new Intent(this, ListTasksActivity.class);
+
+        Class<?> startActivity = ListTasksActivity.class;
+
+        if (BuildConfig.BUILD_COUNTRY == Country.NTD_SCHOOL)
+            startActivity = ChildRegisterActivity.class;
+
+        Intent intent = new Intent(this, startActivity);
         startActivity(intent);
 
         finish();
