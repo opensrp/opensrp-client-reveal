@@ -15,6 +15,7 @@ import org.smartregister.reveal.BuildConfig;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -115,4 +116,25 @@ public class RevealSyncConfigurationTest extends BaseUnitTest {
     public void updateClientDetailsTable() {
         assertFalse(syncConfiguration.updateClientDetailsTable());
     }
+
+    @Test
+    public void testGetConnectionTimeOut() {
+        assertEquals(300000, syncConfiguration.getConnectTimeout());
+    }
+
+    @Test
+    public void testIsSyncUsingPost() {
+        assertTrue(syncConfiguration.isSyncUsingPost());
+    }
+
+    @Test
+    public void testGetSynchronizationTags() {
+        assertNull(syncConfiguration.getSynchronizedLocationTags());
+    }
+
+    @Test
+    public void testGetSettingsSyncFilterParam() {
+        assertEquals(SyncFilter.TEAM_ID, syncConfiguration.getSettingsSyncFilterParam());
+    }
+
 }
