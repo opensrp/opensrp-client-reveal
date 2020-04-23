@@ -11,7 +11,9 @@ import java.util.Map;
 public interface ChildRegisterFragmentContract {
 
     interface View extends ListContract.View<Child> {
+        void openFilterFragment();
 
+        void startChildRegistrationForm();
     }
 
     interface Presenter extends ListContract.Presenter<Child> {

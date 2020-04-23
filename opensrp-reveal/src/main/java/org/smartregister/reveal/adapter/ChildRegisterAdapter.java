@@ -29,8 +29,10 @@ public class ChildRegisterAdapter extends ListableAdapter<Child, ListableViewHol
 
     public static class ChildViewHolder extends ListableViewHolder<Child> {
 
-        private TextView tvName, tvDetails;
-        private View currentView, linearLayoutAction;
+        private TextView tvName;
+        private TextView tvDetails;
+        private View currentView;
+        private View linearLayoutAction;
 
         private ChildViewHolder(@NonNull View itemView) {
             super(itemView);

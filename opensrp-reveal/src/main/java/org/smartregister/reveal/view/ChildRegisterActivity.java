@@ -1,21 +1,29 @@
 package org.smartregister.reveal.view;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.fragment.ChildFilterFragment;
 import org.smartregister.reveal.fragment.ChildRegisterFragment;
 import org.smartregister.view.activity.SecuredActivity;
 
 public class ChildRegisterActivity extends SecuredActivity {
     public static final String DISPLAY_FRAGMENT = "DISPLAY_FRAGMENT";
 
+    public static void startFragment(Activity activity, String fragmentName) {
+        Intent intent = new Intent(activity, ChildRegisterActivity.class);
+        intent.putExtra(DISPLAY_FRAGMENT, fragmentName);
+        activity.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.child_register_activity);
-
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -23,7 +31,7 @@ public class ChildRegisterActivity extends SecuredActivity {
             Fragment fragment = getDestinationFragment(fragmentName);
             if (fragment != null)
                 switchToFragment(fragment);
-        }else{
+        } else {
             switchToFragment(getDestinationFragment(ChildRegisterFragment.TAG));
         }
     }
@@ -40,6 +48,9 @@ public class ChildRegisterActivity extends SecuredActivity {
             return null;
 
         switch (destinationFragment) {
+            case ChildFilterFragment
+                    .TAG:
+                return new ChildFilterFragment();
             default:
                 return new ChildRegisterFragment();
         }
@@ -47,11 +58,11 @@ public class ChildRegisterActivity extends SecuredActivity {
 
     @Override
     protected void onCreation() {
-
+        // do nothing
     }
 
     @Override
     protected void onResumption() {
-
+        // do nothing
     }
 }

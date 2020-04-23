@@ -3,14 +3,20 @@ package org.smartregister.reveal.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.ChildRegisterAdapter;
+import org.smartregister.reveal.contract.BaseDrawerContract;
+import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.model.ChildModel;
 import org.smartregister.reveal.presenter.ChildRegisterFragmentPresenter;
-import org.smartregister.view.ListContract;
+import org.smartregister.reveal.view.ChildRegisterActivity;
+import org.smartregister.reveal.view.DrawerMenuView;
 import org.smartregister.view.adapter.ListableAdapter;
 import org.smartregister.view.fragment.BaseListFragment;
 import org.smartregister.view.viewholder.ListableViewHolder;
@@ -20,8 +26,46 @@ import java.util.concurrent.Callable;
 
 import timber.log.Timber;
 
-public class ChildRegisterFragment extends BaseListFragment<Child> {
+public class ChildRegisterFragment extends BaseListFragment<Child> implements ChildRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity {
     public static final String TAG = "ChildRegisterFragment";
+
+    private BaseDrawerContract.View drawerView;
+
+    @Override
+    public void bindLayout() {
+        super.bindLayout();
+        drawerView = new DrawerMenuView(this);
+
+        drawerView.initializeDrawerLayout();
+        view.findViewById(R.id.drawerMenu).setOnClickListener(v -> drawerView.openDrawerLayout());
+
+        drawerView.onResume();
+
+        TextView mapText = view.findViewById(R.id.txt_map_label);
+        mapText.setText("+ Add");
+        mapText.setOnClickListener(v -> startChildRegistrationForm());
+
+        TextView searchText = view.findViewById(R.id.edt_search);
+        searchText.setHint("Search Students");
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                loadPresenter().search(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        view.findViewById(R.id.filter_text_view).setOnClickListener(v -> openFilterFragment());
+    }
 
     @NonNull
     @Override
@@ -64,12 +108,27 @@ public class ChildRegisterFragment extends BaseListFragment<Child> {
 
     @NonNull
     @Override
-    public ListContract.Presenter<Child> loadPresenter() {
+    public ChildRegisterFragmentPresenter loadPresenter() {
         if (presenter == null) {
             presenter = new ChildRegisterFragmentPresenter()
                     .with(this)
                     .withModel(new ChildModel());
         }
-        return presenter;
+        return (ChildRegisterFragmentPresenter) presenter;
+    }
+
+    @Override
+    public void onDrawerClosed() {
+        // to do -> re render the details
+    }
+
+    @Override
+    public void openFilterFragment() {
+        ChildRegisterActivity.startFragment(getActivity(), ChildFilterFragment.TAG);
+    }
+
+    @Override
+    public void startChildRegistrationForm() {
+
     }
 }
