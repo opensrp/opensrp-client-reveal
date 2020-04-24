@@ -44,140 +44,144 @@
         android:fillViewport="true"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/FilterTaskStyle.Label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sort students by"
-                android:textStyle="bold" />
-
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
-
-                <RadioButton
-                    android:id="@+id/radio_grade_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Grade and last name" />
-
-                <RadioButton
-                    android:id="@+id/radio_grade_age"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Grade and age" />
-
-                <RadioButton
-                    android:id="@+id/radio_age"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Age" />
-            </RadioGroup>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
-                android:background="@color/lighter_grey" />
-
-            <TextView
-                android:id="@+id/filer_by_grade"
-                style="@style/FilterTaskStyle.Label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:text="Filter by grade"
-                android:textStyle="bold" />
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/linearLayoutGrades"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <CheckBox
+                <TextView
+                    style="@style/FilterTaskStyle.Label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="onCheckboxClicked"
-                    android:text="1a" />
+                    android:text="@string/sort_students_by"
+                    android:textStyle="bold" />
 
-                <CheckBox
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+
+                    <RadioButton
+                        android:id="@+id/radioGradeName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="@string/grade_and_last_name" />
+
+                    <RadioButton
+                        android:id="@+id/radioGradeAge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/grade_and_age" />
+
+                    <RadioButton
+                        android:id="@+id/radioAge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/age" />
+
+                </RadioGroup>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/lighter_grey" />
+
+                <TextView
+                    android:id="@+id/filer_by_grade"
+                    style="@style/FilterTaskStyle.Label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1b" />
+                    android:layout_marginBottom="0dp"
+                    android:text="@string/filter_by_grade"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutGrades"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp">
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1a" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/lighter_grey" />
+
+                <TextView
+                    android:id="@+id/task_type_label"
+                    style="@style/FilterTaskStyle.Label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/filter_by_age"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutAges"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp">
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="6" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/lighter_grey" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/lighter_grey" />
+
+                <Button
+                    android:id="@+id/apply_filters"
+                    style="@style/FilterTaskStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/apply_filters_bg"
+                    android:text="@string/apply_filters"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white" />
+
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/lighter_grey" />
-
-            <TextView
-                android:id="@+id/task_type_label"
-                style="@style/FilterTaskStyle.Label"
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="@style/Base.Widget.AppCompat.ProgressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Filter by age"
-                android:textStyle="bold" />
+                android:layout_centerInParent="true"
+                android:visibility="visible" />
 
-
-            <LinearLayout
-                android:id="@+id/linearLayoutAges"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
-
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="onCheckboxClicked"
-                    android:text="6" />
-
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="7" />
-
-            </LinearLayout>
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/lighter_grey" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/lighter_grey" />
-
-
-            <Button
-                android:id="@+id/apply_filters"
-                style="@style/FilterTaskStyle"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="bottom|center"
-                android:layout_marginBottom="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/apply_filters_bg"
-                android:text="@string/apply_filters"
-                android:textAllCaps="true"
-                android:textColor="@color/white" />
-
-        </LinearLayout>
+        </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

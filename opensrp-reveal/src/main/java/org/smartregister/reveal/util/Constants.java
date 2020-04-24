@@ -555,6 +555,8 @@ public interface Constants {
 
         String GRADE = "grade";
 
+        String AGE = "age";
+
         String GROUPED_STRUCTURE_TASK_CODE_AND_STATUS = "grouped_structure_task_code_and_status";
 
         String GROUPED_TASKS = "grouped_tasks";
@@ -671,5 +673,17 @@ public interface Constants {
         String STATUS = "task_status";
         String INTERVENTION_UNIT = "intervention_unit";
         String FILTER_SORT_PARAMS = "filter_sort_params";
+    }
+
+    interface ChildFilter {
+        String FILTER_PAYLOAD = "filter_payload";
+
+        String FILTER_AGE = "filter_age";
+        String FILTER_GRADE = "filter_grade";
+
+        String SORT = "sort";
+        String SORT_GRADE = "sort_grade";
+        String SORT_AGE = "sort_age";
+        String SORT_LAST_NAME = "sort_last_name";
     }
 }

@@ -124,7 +124,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
     @Override
     public void openFilterFragment() {
-        ChildRegisterActivity.startFragment(getActivity(), ChildFilterFragment.TAG);
+        ChildRegisterActivity.startFragment(getActivity(), ChildFilterFragment.TAG, null, false);
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.Menu;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.fragment.ChildFilterFragment;
@@ -14,9 +15,15 @@ import org.smartregister.view.activity.SecuredActivity;
 public class ChildRegisterActivity extends SecuredActivity {
     public static final String DISPLAY_FRAGMENT = "DISPLAY_FRAGMENT";
 
-    public static void startFragment(Activity activity, String fragmentName) {
+    public static void startFragment(Activity activity, String fragmentName, Bundle bundle, boolean clearStack) {
         Intent intent = new Intent(activity, ChildRegisterActivity.class);
         intent.putExtra(DISPLAY_FRAGMENT, fragmentName);
+
+        if (bundle != null)
+            intent.putExtras(bundle);
+        if (clearStack)
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
         activity.startActivity(intent);
     }
 
@@ -29,8 +36,10 @@ public class ChildRegisterActivity extends SecuredActivity {
         if (bundle != null) {
             String fragmentName = bundle.getString(DISPLAY_FRAGMENT);
             Fragment fragment = getDestinationFragment(fragmentName);
-            if (fragment != null)
+            if (fragment != null) {
+                fragment.setArguments(bundle);
                 switchToFragment(fragment);
+            }
         } else {
             switchToFragment(getDestinationFragment(ChildRegisterFragment.TAG));
         }
@@ -54,6 +63,11 @@ public class ChildRegisterActivity extends SecuredActivity {
             default:
                 return new ChildRegisterFragment();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return false;
     }
 
     @Override
