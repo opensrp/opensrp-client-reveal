@@ -1,5 +1,7 @@
 package org.smartregister.reveal.model;
 
+import android.support.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.dao.AbstractDao;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
@@ -7,24 +9,21 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.util.QueryComposer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import timber.log.Timber;
 
 public class ChildModel extends AbstractDao implements ChildRegisterFragmentContract.Model {
 
     @Override
-    public List<Child> filterChildren(Map<String, String> filterArgs, String sortArgs) {
+    public List<Child> searchAndFilter(String schoolID, @Nullable HashMap<String, List<String>> sortAndFilter, @Nullable String searchText) {
         QueryComposer composer = getDefaultComposer();
+        if (StringUtils.isNotBlank(searchText))
+            composer.withWhereClause(Constants.DatabaseKeys.FIRST_NAME + " like '%" + searchText + "%'");
 
-        if (StringUtils.isNotBlank(sortArgs)) {
-            composer.withSortColumn(sortArgs);
-        } else {
-            composer
-                    .withSortColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.FIRST_NAME)
-                    .withSortColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.LAST_NAME);
-        }
+        extractSort(composer, sortAndFilter);
+        extractFilter(composer, sortAndFilter);
 
         try {
             return AbstractDao.readData(composer.generateQuery(), getChildDataMap());
@@ -34,27 +33,43 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
         }
     }
 
-    @Override
-    public List<Child> searchChildren(String searchText, String sortArgs) {
-        QueryComposer composer = getDefaultComposer();
-
-        if (StringUtils.isNotBlank(searchText))
-            composer.withWhereClause(Constants.DatabaseKeys.FIRST_NAME + " like '%" + searchText + "%'");
-
-        if (StringUtils.isNotBlank(sortArgs)) {
-            composer.withSortColumn(sortArgs);
-        } else {
-            composer
-                    .withSortColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.FIRST_NAME)
-                    .withSortColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.LAST_NAME);
+    private void extractSort(QueryComposer composer, @Nullable HashMap<String, List<String>> sortAndFilter) {
+        if (sortAndFilter != null) {
+            List<String> params = sortAndFilter.get(Constants.ChildFilter.SORT);
+            if (params != null && params.size() > 0) {
+                for (String s : params) {
+                    composer.withSortColumn(s);
+                }
+            }
         }
+    }
 
-        try {
-            return AbstractDao.readData(composer.generateQuery(), getChildDataMap());
-        } catch (QueryComposer.InvalidQueryException e) {
-            Timber.e(e);
-            return new ArrayList<>();
+    private void extractFilter(QueryComposer composer, @Nullable HashMap<String, List<String>> sortAndFilter) {
+        if (sortAndFilter != null) {
+            List<String> paramsGrade = sortAndFilter.get(Constants.ChildFilter.FILTER_GRADE);
+            if (paramsGrade != null && paramsGrade.size() > 0) {
+                composer.withWhereClause(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.GRADE + " in ( " +
+                        toCSV(paramsGrade) + ")");
+            }
+
+            List<String> paramsAge = sortAndFilter.get(Constants.ChildFilter.FILTER_AGE);
+            if (paramsAge != null && paramsAge.size() > 0) {
+                composer.withWhereClause(" cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', " + Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.DOB + ") as int) in ( " +
+                        toCSV(paramsAge) + ")");
+            }
         }
+    }
+
+    private String toCSV(List<String> results) {
+        StringBuilder builder = new StringBuilder();
+        int size = results.size();
+        while (size > 0) {
+            builder.append(results.get(size - 1));
+            if (size > 1)
+                builder.append(" , ");
+            size--;
+        }
+        return builder.toString();
     }
 
     private QueryComposer getDefaultComposer() {
@@ -66,6 +81,7 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
                 .withColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.MIDDLE_NAME)
                 .withColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.GENDER)
                 .withColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.GRADE)
+                .withColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.UNIQUE_ID)
 
                 .withMainTable(Constants.DatabaseKeys.CHILD_TABLE);
     }
@@ -80,6 +96,7 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
             child.setMiddleName(getCursorValue(cursor, Constants.DatabaseKeys.MIDDLE_NAME));
             child.setGender(getCursorValue(cursor, Constants.DatabaseKeys.GENDER));
             child.setGrade(getCursorValue(cursor, Constants.DatabaseKeys.GRADE));
+            child.setUniqueID(getCursorValue(cursor, Constants.DatabaseKeys.UNIQUE_ID));
             if (child.getGrade() == null)
                 child.setGrade("Grade " +
                         (StringUtils.isNotBlank(child.getFirstName()) ? child.getFirstName().substring(0, 1) : "Unknown")

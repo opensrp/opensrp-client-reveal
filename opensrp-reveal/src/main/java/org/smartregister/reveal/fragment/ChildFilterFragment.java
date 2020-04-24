@@ -27,7 +27,6 @@ import org.smartregister.reveal.view.ChildRegisterActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import timber.log.Timber;
@@ -108,27 +107,22 @@ public class ChildFilterFragment extends Fragment implements ChildFilterFragment
     }
 
     @Override
-    public void resetFilters(Map<String, List<String>> filters) {
-
-    }
-
-    @Override
     public HashMap<String, List<String>> getFilterValues() {
         HashMap<String, List<String>> result = new HashMap<>();
         // get sort
         List<String> sort = new ArrayList<>();
         if (radioGradeName.isChecked()) {
-            sort.add(Constants.ChildFilter.SORT_GRADE);
-            sort.add(Constants.ChildFilter.SORT_LAST_NAME);
+            sort.add(Constants.DatabaseKeys.GRADE);
+            sort.add(Constants.DatabaseKeys.LAST_NAME);
         }
 
         if (radioGradeAge.isChecked()) {
-            sort.add(Constants.ChildFilter.SORT_GRADE);
-            sort.add(Constants.ChildFilter.SORT_AGE);
+            sort.add(Constants.DatabaseKeys.GRADE);
+            sort.add(Constants.DatabaseKeys.DOB + " DESC ");
         }
 
         if (radioAge.isChecked())
-            sort.add(Constants.ChildFilter.SORT_AGE);
+            sort.add(Constants.DatabaseKeys.DOB + " DESC ");
 
         result.put(Constants.ChildFilter.SORT, sort);
 
@@ -208,7 +202,7 @@ public class ChildFilterFragment extends Fragment implements ChildFilterFragment
     public void executeFilter() {
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.ChildFilter.FILTER_PAYLOAD, getFilterValues());
-        ChildRegisterActivity.startFragment(getActivity(), ChildRegisterFragment.TAG, null, true);
+        ChildRegisterActivity.startFragment(getActivity(), ChildRegisterFragment.TAG, bundle, true);
         getActivity().finish();
     }
 }

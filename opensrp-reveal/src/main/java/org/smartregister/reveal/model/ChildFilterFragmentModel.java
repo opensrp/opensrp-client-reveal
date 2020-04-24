@@ -17,7 +17,8 @@ public class ChildFilterFragmentModel extends AbstractDao implements ChildFilter
         QueryComposer composer = new QueryComposer()
                 .withColumn("distinct " + Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.GRADE)
                 .withMainTable(Constants.DatabaseKeys.CHILD_TABLE)
-                .withSortColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.GRADE);
+                .withSortColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.GRADE)
+                .withWhereClause(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.GRADE + " is not null");
 
         DataMap<String> dataMap = cursor -> getCursorValue(cursor, Constants.DatabaseKeys.GRADE);
 
@@ -35,6 +36,7 @@ public class ChildFilterFragmentModel extends AbstractDao implements ChildFilter
                 .withColumn("distinct cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', " + Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.DOB + ") as int) as " + Constants.DatabaseKeys.AGE)
                 .withMainTable(Constants.DatabaseKeys.CHILD_TABLE)
                 .withSortColumn(Constants.DatabaseKeys.AGE)
+                .withWhereClause(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.DOB + " != '' ")
                 .withLimitClause(0, 10);
 
         DataMap<String> dataMap = cursor -> getCursorValue(cursor, Constants.DatabaseKeys.AGE);

@@ -52,6 +52,8 @@ public class ChildRegisterAdapter extends GroupedListableAdapter<Child, GroupedL
         @Override
         public void bindView(Child child, ListContract.View<Child> view) {
             tvName.setText(child.getFullName());
+            String details = "#" + child.getUniqueID() + " \u00B7 " + child.getGender() + " \u00B7 Age " + child.getAge();
+            tvDetails.setText(details);
             currentView.setOnClickListener(v -> view.onListItemClicked(child, v.getId()));
         }
 
@@ -67,7 +69,7 @@ public class ChildRegisterAdapter extends GroupedListableAdapter<Child, GroupedL
 
         @Override
         public void bindHeader(Child currentObject, @Nullable Child previousObject, ListContract.View<Child> view) {
-            if(previousObject == null || !currentObject.getGrade().equals(previousObject.getGrade())) {
+            if (previousObject == null || !currentObject.getGrade().equals(previousObject.getGrade())) {
                 tvHeader.setVisibility(View.VISIBLE);
                 tvHeader.setText(currentObject.getGrade());
             }

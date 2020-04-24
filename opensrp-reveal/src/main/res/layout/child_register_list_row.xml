@@ -22,7 +22,9 @@
         android:id="@+id/rlDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvHeader">
+        android:layout_below="@+id/tvHeader"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <LinearLayout
             android:id="@+id/patient_column"
@@ -61,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="0dp"
                 android:paddingLeft="0dp"
-                android:paddingTop="0dp"
+                android:paddingTop="5dp"
                 android:text="Age 33, GA: 33 weeks"
                 android:textColor="@color/light_grey_text"
                 android:textSize="@dimen/register_list_desc_size"
@@ -97,11 +99,11 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:stateListAnimator="@drawable/button"
-                android:text="Home Visit"
+                android:text="Record Dose"
                 android:textAllCaps="false"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/vaccine_blue_bg_st"
-                android:textSize="@dimen/register_list_due_size"
+                android:textSize="18sp"
                 android:typeface="normal" />
 
         </LinearLayout>

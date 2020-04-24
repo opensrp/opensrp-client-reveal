@@ -112,11 +112,6 @@
                     android:paddingRight="10dp"
                     android:paddingBottom="10dp">
 
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1a" />
-
                 </LinearLayout>
 
                 <View
@@ -140,11 +135,6 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:paddingBottom="10dp">
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="6" />
 
                 </LinearLayout>
 

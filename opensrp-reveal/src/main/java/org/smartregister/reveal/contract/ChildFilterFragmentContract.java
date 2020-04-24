@@ -20,8 +20,6 @@ public interface ChildFilterFragmentContract {
 
         void reloadParameters();
 
-        void resetFilters(Map<String, List<String>> filters);
-
         HashMap<String, List<String>> getFilterValues();
 
         void clearFilters();

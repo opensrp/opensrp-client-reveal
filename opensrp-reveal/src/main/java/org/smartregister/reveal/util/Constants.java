@@ -555,6 +555,8 @@ public interface Constants {
 
         String GRADE = "grade";
 
+        String UNIQUE_ID = "unique_id";
+
         String AGE = "age";
 
         String GROUPED_STRUCTURE_TASK_CODE_AND_STATUS = "grouped_structure_task_code_and_status";
@@ -682,8 +684,5 @@ public interface Constants {
         String FILTER_GRADE = "filter_grade";
 
         String SORT = "sort";
-        String SORT_GRADE = "sort_grade";
-        String SORT_AGE = "sort_age";
-        String SORT_LAST_NAME = "sort_last_name";
     }
 }

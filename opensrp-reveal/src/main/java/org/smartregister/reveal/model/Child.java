@@ -1,9 +1,10 @@
 package org.smartregister.reveal.model;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Years;
 import org.smartregister.view.ListContract;
 
 import java.util.Date;
@@ -87,14 +88,9 @@ public class Child implements ListContract.Identifiable {
         return (StringUtils.trim(StringUtils.capitalize(firstName)) + " " + StringUtils.trim(StringUtils.capitalize(lastName))).trim();
     }
 
-    /**
-     * Returns a context aware age String
-     *
-     * @param context
-     * @return
-     */
-    public String getAge(Context context) {
-        return null;
+    public int getAge() {
+        DateTime dob = new DateTime(getBirthDate());
+        return Years.yearsBetween(dob, new DateTime()).getYears();
     }
 
     @NonNull
