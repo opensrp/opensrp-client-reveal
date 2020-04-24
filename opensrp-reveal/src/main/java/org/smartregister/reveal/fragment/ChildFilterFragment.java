@@ -2,6 +2,7 @@ package org.smartregister.reveal.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Consumer;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -115,39 +116,59 @@ public class ChildFilterFragment extends Fragment implements ChildFilterFragment
     public HashMap<String, List<String>> getFilterValues() {
         HashMap<String, List<String>> result = new HashMap<>();
         // get sort
-        result.put(Constants.ChildFilter.SORT, new ArrayList<>());
+        List<String> sort = new ArrayList<>();
+        if (radioGradeName.isChecked()) {
+            sort.add(Constants.ChildFilter.SORT_GRADE);
+            sort.add(Constants.ChildFilter.SORT_LAST_NAME);
+        }
 
-        // get grade filter
-        result.put(Constants.ChildFilter.FILTER_GRADE, new ArrayList<>());
+        if (radioGradeAge.isChecked()) {
+            sort.add(Constants.ChildFilter.SORT_GRADE);
+            sort.add(Constants.ChildFilter.SORT_AGE);
+        }
 
-        // get age filter
-        result.put(Constants.ChildFilter.FILTER_AGE, new ArrayList<>());
+        if (radioAge.isChecked())
+            sort.add(Constants.ChildFilter.SORT_AGE);
+
+        result.put(Constants.ChildFilter.SORT, sort);
+
+        result.put(Constants.ChildFilter.FILTER_GRADE, getSelectedCheckBoxValues(linearLayoutGrades));
+        result.put(Constants.ChildFilter.FILTER_AGE, getSelectedCheckBoxValues(linearLayoutAges));
 
         return result;
     }
 
+    private void readLayoutCheckBoxes(LinearLayout rootLayout, Consumer<CheckBox> consumer) {
+        int childCount = rootLayout.getChildCount();
+        while (childCount > 0) {
+            View view = rootLayout.getChildAt(childCount - 1);
+            if (view instanceof CheckBox)
+                consumer.accept(((CheckBox) view));
+
+            childCount--;
+        }
+    }
+
+    private void resetCheckBoxes(LinearLayout rootLayout) {
+        readLayoutCheckBoxes(rootLayout, checkBox -> checkBox.setChecked(false));
+    }
+
+    private List<String> getSelectedCheckBoxValues(LinearLayout rootLayout) {
+        List<String> selectedValues = new ArrayList<>();
+
+        readLayoutCheckBoxes(rootLayout, checkBox -> {
+            if (checkBox.isChecked())
+                selectedValues.add(checkBox.getText().toString());
+        });
+
+        return selectedValues;
+    }
+
     @Override
     public void clearFilters() {
-
         radioGradeName.setChecked(true);
-
-        int gradeCount = linearLayoutGrades.getChildCount();
-        while (gradeCount > 0) {
-            View view = linearLayoutGrades.getChildAt(gradeCount - 1);
-            if (view instanceof CheckBox)
-                ((CheckBox) view).setChecked(false);
-
-            gradeCount--;
-        }
-
-        int ageCount = linearLayoutAges.getChildCount();
-        while (ageCount > 0) {
-            View view = linearLayoutAges.getChildAt(ageCount - 1);
-            if (view instanceof CheckBox)
-                ((CheckBox) view).setChecked(false);
-
-            ageCount--;
-        }
+        resetCheckBoxes(linearLayoutGrades);
+        resetCheckBoxes(linearLayoutAges);
     }
 
     @Override
