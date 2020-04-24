@@ -18,8 +18,13 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
     public List<Child> filterChildren(Map<String, String> filterArgs, String sortArgs) {
         QueryComposer composer = getDefaultComposer();
 
-        if (StringUtils.isNotBlank(sortArgs))
+        if (StringUtils.isNotBlank(sortArgs)) {
             composer.withSortColumn(sortArgs);
+        } else {
+            composer
+                    .withSortColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.FIRST_NAME)
+                    .withSortColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.LAST_NAME);
+        }
 
         try {
             return AbstractDao.readData(composer.generateQuery(), getChildDataMap());
@@ -36,8 +41,13 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
         if (StringUtils.isNotBlank(searchText))
             composer.withWhereClause(Constants.DatabaseKeys.FIRST_NAME + " like '%" + searchText + "%'");
 
-        if (StringUtils.isNotBlank(sortArgs))
+        if (StringUtils.isNotBlank(sortArgs)) {
             composer.withSortColumn(sortArgs);
+        } else {
+            composer
+                    .withSortColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.FIRST_NAME)
+                    .withSortColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.LAST_NAME);
+        }
 
         try {
             return AbstractDao.readData(composer.generateQuery(), getChildDataMap());
@@ -70,6 +80,10 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
             child.setMiddleName(getCursorValue(cursor, Constants.DatabaseKeys.MIDDLE_NAME));
             child.setGender(getCursorValue(cursor, Constants.DatabaseKeys.GENDER));
             child.setGrade(getCursorValue(cursor, Constants.DatabaseKeys.GRADE));
+            if (child.getGrade() == null)
+                child.setGrade("Grade " +
+                        (StringUtils.isNotBlank(child.getFirstName()) ? child.getFirstName().substring(0, 1) : "Unknown")
+                );
             return child;
         };
     }

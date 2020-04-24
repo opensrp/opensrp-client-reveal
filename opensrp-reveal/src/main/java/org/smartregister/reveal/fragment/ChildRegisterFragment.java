@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.ChildRegisterAdapter;
+import org.smartregister.reveal.adapter.GroupedListableAdapter;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.model.Child;
@@ -17,9 +18,8 @@ import org.smartregister.reveal.model.ChildModel;
 import org.smartregister.reveal.presenter.ChildRegisterFragmentPresenter;
 import org.smartregister.reveal.view.ChildRegisterActivity;
 import org.smartregister.reveal.view.DrawerMenuView;
-import org.smartregister.view.adapter.ListableAdapter;
+import org.smartregister.reveal.viewholder.GroupedListableViewHolder;
 import org.smartregister.view.fragment.BaseListFragment;
-import org.smartregister.view.viewholder.ListableViewHolder;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -42,11 +42,11 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
         drawerView.onResume();
 
         TextView mapText = view.findViewById(R.id.txt_map_label);
-        mapText.setText("+ Add");
+        mapText.setText(R.string.label_add);
         mapText.setOnClickListener(v -> startChildRegistrationForm());
 
         TextView searchText = view.findViewById(R.id.edt_search);
-        searchText.setHint("Search Students");
+        searchText.setHint(R.string.search_students);
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -102,7 +102,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
     @NonNull
     @Override
-    public ListableAdapter<Child, ListableViewHolder<Child>> adapter() {
+    public GroupedListableAdapter<Child, GroupedListableViewHolder<Child>> adapter() {
         return new ChildRegisterAdapter(list, this);
     }
 

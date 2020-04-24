@@ -356,4 +356,6 @@
     <string name="sort_students_by">Sort students by</string>
     <string name="filter_by_grade">Filter by grade</string>
     <string name="filter_by_age">Filter by age</string>
+    <string name="label_add">+ Add</string>
+    <string name="search_students">Search Students</string>
 </resources>

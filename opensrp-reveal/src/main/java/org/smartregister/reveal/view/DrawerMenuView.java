@@ -137,7 +137,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
         operationalAreaTextView.setOnClickListener(this);
 
-        planTextView.setOnClickListener(this);
+        if (planTextView != null)
+            planTextView.setOnClickListener(this);
 
         if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) { // Enable P2P sync and other forms
             p2pSyncTextView.setVisibility(View.VISIBLE);
@@ -145,7 +146,6 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
             summaryFormsTextView.setVisibility(View.VISIBLE);
             summaryFormsTextView.setOnClickListener(this);
-
         }
 
         offlineMapTextView.setVisibility(View.VISIBLE);
@@ -176,7 +176,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     @Override
     public void setPlan(String campaign) {
-        planTextView.setText(campaign);
+        if (planTextView != null)
+            planTextView.setText(campaign);
     }
 
     @Override
@@ -329,6 +330,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     private void startP2PActivity() {
         getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
     }
+
     @Override
     public void openOfflineMapsView() {
         Intent intent = new Intent(getContext(), OfflineMapsActivity.class);
