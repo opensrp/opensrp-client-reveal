@@ -1,6 +1,6 @@
 package org.smartregister.reveal.interactor;
 
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;

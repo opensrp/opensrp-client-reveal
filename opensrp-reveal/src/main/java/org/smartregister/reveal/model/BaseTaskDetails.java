@@ -1,6 +1,6 @@
 package org.smartregister.reveal.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by samuelgithengi on 4/11/19.

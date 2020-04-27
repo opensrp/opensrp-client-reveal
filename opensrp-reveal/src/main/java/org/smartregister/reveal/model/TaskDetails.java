@@ -1,7 +1,7 @@
 package org.smartregister.reveal.model;
 
 import android.location.Location;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.reveal.util.Utils;

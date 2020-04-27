@@ -2,7 +2,7 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.widget.ImageButton;
 
 import com.mapbox.mapboxsdk.camera.CameraPosition;
