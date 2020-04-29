@@ -173,7 +173,7 @@ dependencies {
     }
 
 
-    implementation('org.smartregister:opensrp-client-core:1.10.1-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.10.9-KIG-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.guava', module: 'guava'

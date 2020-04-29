@@ -132,4 +132,9 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     public SyncFilter getSettingsSyncFilterParam() {
         return SyncFilter.TEAM_ID;
     }
+
+    @Override
+    public boolean shouldClearDataOnLogout() {
+        return true;
+    }
 }
