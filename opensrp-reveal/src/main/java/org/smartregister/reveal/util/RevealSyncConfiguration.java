@@ -134,7 +134,7 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     }
 
     @Override
-    public boolean shouldClearDataOnLogout() {
+    public boolean clearDataOnNewTeamLogin() {
         return true;
     }
 }
