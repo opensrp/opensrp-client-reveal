@@ -1,8 +1,10 @@
 package org.smartregister.reveal.presenter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.json.JSONObject;
 import org.smartregister.reveal.contract.CallableInteractor;
 import org.smartregister.reveal.contract.CallableInteractorCallBack;
 import org.smartregister.reveal.contract.ChildProfileContract;
@@ -90,6 +92,36 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
             model = new ChildProfileModel();
 
         return model;
+    }
+
+    @Override
+    public void startChildRegistrationForm(Context context, String baseEntityID) {
+        CallableInteractor myInteractor = getInteractor();
+        ChildProfileContract.Model model = getModel();
+        Callable<JSONObject> callable = () -> model.getRegistrationEditForm(context, baseEntityID);
+        myInteractor.execute(callable, new CallableInteractorCallBack<JSONObject>() {
+            @Override
+            public void onResult(JSONObject jsonObject) {
+                ChildProfileContract.View view = getView();
+                if (view != null) {
+                    if (jsonObject != null) {
+                        view.startJsonForm(jsonObject);
+                    } else {
+                        view.onError(new IllegalArgumentException("Form not found"));
+                    }
+                    view.setLoadingState(false);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ChildProfileContract.View view = getView();
+                if (view != null) {
+                    view.onError(ex);
+                    view.setLoadingState(false);
+                }
+            }
+        });
     }
 
 

@@ -1,9 +1,12 @@
 package org.smartregister.reveal.contract;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.util.QueryComposer;
 import org.smartregister.view.contract.BaseProfileContract;
@@ -21,6 +24,8 @@ public interface ChildProfileContract {
         void onError(Exception e);
 
         void startEditForm();
+
+        void startJsonForm(JSONObject form);
     }
 
     interface Presenter extends BaseProfileContract.Presenter {
@@ -37,6 +42,8 @@ public interface ChildProfileContract {
 
         @NonNull
         Model getModel();
+
+        void startChildRegistrationForm(Context context, String baseEntityID);
     }
 
     interface Model {
@@ -44,6 +51,9 @@ public interface ChildProfileContract {
         @WorkerThread
         @Nullable
         Child getChild(String baseEntityID) throws QueryComposer.InvalidQueryException;
+
+        @WorkerThread
+        JSONObject getRegistrationEditForm(Context context, String baseEntityID) throws JSONException;
 
     }
 }

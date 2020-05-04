@@ -1,12 +1,16 @@
 package org.smartregister.reveal.model;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.smartregister.dao.AbstractDao;
 import org.smartregister.reveal.contract.ChildProfileContract;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.util.QueryComposer;
+import org.smartregister.util.Utils;
 
 public class ChildProfileModel extends AbstractDao implements ChildProfileContract.Model {
 
@@ -45,5 +49,11 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
         };
 
         return AbstractDao.readSingleValue(composer.generateQuery(), dataMap);
+    }
+
+    @Override
+    public JSONObject getRegistrationEditForm(Context context, String baseEntityID) throws JSONException {
+        String jsonForm = Utils.readAssetContents(context, Constants.JsonForm.NTD_CHILD_REGISTRATION);
+        return new JSONObject(jsonForm);
     }
 }
