@@ -104,7 +104,12 @@
             android:name=".view.OfflineMapsActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.ChildRegisterActivity" />
+        <activity
+            android:name=".view.ChildRegisterActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".view.ChildProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service android:name=".sync.LocationTaskIntentService" />
         <service android:name=".sync.RevealSettingsSyncIntentService" />
