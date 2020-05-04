@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.smartregister.reveal.R;
@@ -39,6 +40,7 @@ public class ChildRegisterAdapter extends GroupedListableAdapter<Child, GroupedL
         private View currentView;
         private View linearLayoutAction;
         private TextView tvHeader;
+        private Button btnDue;
 
         private ChildViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -47,6 +49,7 @@ public class ChildRegisterAdapter extends GroupedListableAdapter<Child, GroupedL
             tvName = itemView.findViewById(R.id.patient_name);
             tvDetails = itemView.findViewById(R.id.tvDetails);
             linearLayoutAction = itemView.findViewById(R.id.linearLayoutAction);
+            btnDue = itemView.findViewById(R.id.btnDue);
         }
 
         @Override
@@ -55,6 +58,8 @@ public class ChildRegisterAdapter extends GroupedListableAdapter<Child, GroupedL
             String details = "#" + child.getUniqueID() + " \u00B7 " + child.getGender() + " \u00B7 Age " + child.getAge();
             tvDetails.setText(details);
             currentView.setOnClickListener(v -> view.onListItemClicked(child, v.getId()));
+            linearLayoutAction.setOnClickListener(v -> view.onListItemClicked(child, v.getId()));
+            btnDue.setOnClickListener(v -> view.onListItemClicked(child, v.getId()));
         }
 
         @Override
@@ -64,7 +69,7 @@ public class ChildRegisterAdapter extends GroupedListableAdapter<Child, GroupedL
 
             tvName.setText("");
             tvDetails.setText("");
-            linearLayoutAction.setVisibility(View.GONE);
+            ///linearLayoutAction.setVisibility(View.GONE);
         }
 
         @Override

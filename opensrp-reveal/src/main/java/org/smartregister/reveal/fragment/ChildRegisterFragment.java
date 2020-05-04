@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.ChildRegisterAdapter;
 import org.smartregister.reveal.adapter.GroupedListableAdapter;
@@ -20,6 +21,7 @@ import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.model.ChildModel;
 import org.smartregister.reveal.presenter.ChildRegisterFragmentPresenter;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.ChildProfileActivity;
 import org.smartregister.reveal.view.ChildRegisterActivity;
 import org.smartregister.reveal.view.DrawerMenuView;
@@ -41,6 +43,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     @Nullable
     private HashMap<String, List<String>> filterAndSearch;
     private String locationName = "";
+    private RevealJsonFormUtils revealJsonFormUtils = new RevealJsonFormUtils();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -120,7 +123,11 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
     @Override
     public void onListItemClicked(Child child, int layoutID) {
-        ChildProfileActivity.startMe(getActivity(), child.getBaseEntityID());
+        if (layoutID == R.id.linearLayoutAction || layoutID == R.id.btnDue) {
+            startRecordMDAForm(child.getBaseEntityID());
+        } else {
+            ChildProfileActivity.startMe(getActivity(), child.getBaseEntityID());
+        }
     }
 
     @Override
@@ -161,6 +168,16 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
     @Override
     public void startChildRegistrationForm() {
+        loadPresenter().startChildRegistrationForm(getContext());
+    }
 
+    @Override
+    public void startRecordMDAForm(String baseEntityID) {
+        loadPresenter().startMDAForm(getContext(), baseEntityID);
+    }
+
+    @Override
+    public void startJsonForm(JSONObject form) {
+        revealJsonFormUtils.startJsonForm(form, getActivity());
     }
 }

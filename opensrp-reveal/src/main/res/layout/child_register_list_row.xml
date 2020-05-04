@@ -87,7 +87,7 @@
             android:paddingBottom="@dimen/register_list_top_bottom_padding">
 
             <Button
-                android:id="@+id/due_button"
+                android:id="@+id/btnDue"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

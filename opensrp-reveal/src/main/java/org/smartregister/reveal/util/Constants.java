@@ -364,6 +364,11 @@ public interface Constants {
 
         String REFAPP_CASE_CONFIRMATION_FORM = "json.form/refapp_case_confirmation.json";
 
+        String NTD_CHILD_REGISTRATION = "json.form/ntd_child_registration.json";
+
+        String NTD_MASS_DRUG_ADMINISTRATION = "json.form/ntd_mma_adr.json";
+
+        String NTD_DRUG_DISPENSE = "json.form/ntd_mma_dispense.json";
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 

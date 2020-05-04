@@ -1,8 +1,12 @@
 package org.smartregister.reveal.contract;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.view.ListContract;
 
@@ -15,11 +19,23 @@ public interface ChildRegisterFragmentContract {
         void openFilterFragment();
 
         void startChildRegistrationForm();
+
+        void startRecordMDAForm(String baseEntityID);
+
+        void startJsonForm(JSONObject form);
     }
 
     interface Presenter extends ListContract.Presenter<Child> {
 
         void search(String schoolID, @Nullable HashMap<String, List<String>> sortAndFilter, @Nullable String searchText);
+
+        void startMDAForm(Context context, String baseEntityID);
+
+        void startChildRegistrationForm(Context context);
+
+        @NonNull
+        CallableInteractor getCallableInteractor();
+
     }
 
     interface Model extends ListContract.Model<Child> {
@@ -27,6 +43,11 @@ public interface ChildRegisterFragmentContract {
         @WorkerThread
         List<Child> searchAndFilter(String schoolID, @Nullable HashMap<String, List<String>> sortAndFilter, @Nullable String searchText);
 
+        @WorkerThread
+        JSONObject getMDAForm(Context context, String baseEntityID) throws JSONException;
+
+        @WorkerThread
+        JSONObject getRegistrationForm(Context context) throws JSONException;
     }
 
 }

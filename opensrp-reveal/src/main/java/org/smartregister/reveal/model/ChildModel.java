@@ -1,12 +1,16 @@
 package org.smartregister.reveal.model;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.smartregister.dao.AbstractDao;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.util.QueryComposer;
+import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +35,19 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
             Timber.e(e);
             return new ArrayList<>();
         }
+    }
+
+    @Override
+    public JSONObject getMDAForm(Context context, String baseEntityID) throws JSONException {
+        // read form and inject base id
+        String jsonForm = Utils.readAssetContents(context, Constants.JsonForm.NTD_MASS_DRUG_ADMINISTRATION);
+        return new JSONObject(jsonForm);
+    }
+
+    @Override
+    public JSONObject getRegistrationForm(Context context) throws JSONException {
+        String jsonForm = Utils.readAssetContents(context, Constants.JsonForm.NTD_CHILD_REGISTRATION);
+        return new JSONObject(jsonForm);
     }
 
     private void extractSort(QueryComposer composer, @Nullable HashMap<String, List<String>> sortAndFilter) {
