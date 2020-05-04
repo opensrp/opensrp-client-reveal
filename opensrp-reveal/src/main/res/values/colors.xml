@@ -49,5 +49,6 @@
 
     <color name="distance_scale_text">@color/white</color>
 
+    <color name="light_gray">#FAFAFA</color>
 
 </resources>

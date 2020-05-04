@@ -2,35 +2,36 @@ package org.smartregister.reveal.interactor;
 
 import android.support.annotation.VisibleForTesting;
 
-import org.smartregister.reveal.contract.ChildFilterFragmentContract;
+import org.smartregister.reveal.contract.CallableInteractor;
+import org.smartregister.reveal.contract.CallableInteractorCallBack;
 import org.smartregister.util.AppExecutors;
 
 import java.util.concurrent.Callable;
 
 import timber.log.Timber;
 
-public class ChildFilterFragmentInteractor<T> implements ChildFilterFragmentContract.Interactor<T> {
+public class GenericInteractor implements CallableInteractor {
 
     protected AppExecutors appExecutors;
 
-    public ChildFilterFragmentInteractor() {
+    public GenericInteractor() {
         appExecutors = new AppExecutors();
     }
 
     @VisibleForTesting
-    ChildFilterFragmentInteractor(AppExecutors appExecutors) {
+    GenericInteractor(AppExecutors appExecutors) {
         this.appExecutors = appExecutors;
     }
 
     @Override
-    public void runRequest(Callable<T> callable, ChildFilterFragmentContract.InteractorCallBack<T> callBack) {
+    public <T> void execute(Callable<T> callable, CallableInteractorCallBack<T> callBack) {
         Runnable runnable = () -> {
             try {
                 T result = callable.call();
-                appExecutors.mainThread().execute(() -> callBack.onFetchResults(result));
+                appExecutors.mainThread().execute(() -> callBack.onResult(result));
             } catch (Exception e) {
                 Timber.e(e);
-                appExecutors.mainThread().execute(() -> callBack.onFetchError(e));
+                appExecutors.mainThread().execute(() -> callBack.onError(e));
             }
         };
         appExecutors.execute(runnable, AppExecutors.Request.DISK_THREAD);

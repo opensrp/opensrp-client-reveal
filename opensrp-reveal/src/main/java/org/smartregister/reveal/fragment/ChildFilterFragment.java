@@ -18,7 +18,7 @@ import android.widget.Toast;
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.ChildFilterFragmentContract;
-import org.smartregister.reveal.interactor.ChildFilterFragmentInteractor;
+import org.smartregister.reveal.interactor.GenericInteractor;
 import org.smartregister.reveal.model.ChildFilterFragmentModel;
 import org.smartregister.reveal.presenter.ChildFilterFragmentPresenter;
 import org.smartregister.reveal.util.Constants;
@@ -94,7 +94,7 @@ public class ChildFilterFragment extends Fragment implements ChildFilterFragment
         if (presenter == null) {
             presenter = new ChildFilterFragmentPresenter()
                     .usingView(this)
-                    .usingInteractor(new ChildFilterFragmentInteractor<>())
+                    .usingInteractor(new GenericInteractor())
                     .usingModel(new ChildFilterFragmentModel());
         }
         return presenter;

@@ -2,6 +2,8 @@ package org.smartregister.reveal.presenter;
 
 import android.support.annotation.Nullable;
 
+import org.smartregister.reveal.contract.CallableInteractor;
+import org.smartregister.reveal.contract.CallableInteractorCallBack;
 import org.smartregister.reveal.contract.ChildFilterFragmentContract;
 
 import java.lang.ref.WeakReference;
@@ -11,21 +13,21 @@ import java.util.concurrent.Callable;
 public class ChildFilterFragmentPresenter implements ChildFilterFragmentContract.Presenter {
 
     private WeakReference<ChildFilterFragmentContract.View> weakReference;
-    private ChildFilterFragmentContract.Interactor<List<String>> interactor;
+    private CallableInteractor interactor;
     private ChildFilterFragmentContract.Model model;
 
     @Override
     public void fetchUniqueGrades(String schoolID) {
         ChildFilterFragmentContract.Model myModel = getModel();
-        ChildFilterFragmentContract.Interactor<List<String>> myInteractor = getInteractor();
+        CallableInteractor myInteractor = getInteractor();
 
         if (myModel != null && myInteractor != null && getView() != null) {
             Callable<List<String>> callable = () -> myModel.fetchUniqueGrades(schoolID);
             getView().setLoadingState(true);
 
-            myInteractor.runRequest(callable, new ChildFilterFragmentContract.InteractorCallBack<List<String>>() {
+            myInteractor.execute(callable, new CallableInteractorCallBack<List<String>>() {
                 @Override
-                public void onFetchResults(List<String> results) {
+                public void onResult(List<String> results) {
                     ChildFilterFragmentContract.View view = getView();
                     if (view != null) {
                         view.onGradesFetched(results);
@@ -34,7 +36,7 @@ public class ChildFilterFragmentPresenter implements ChildFilterFragmentContract
                 }
 
                 @Override
-                public void onFetchError(Exception ex) {
+                public void onError(Exception ex) {
                     ChildFilterFragmentContract.View view = getView();
                     if (view != null) {
                         view.onError(ex);
@@ -48,15 +50,15 @@ public class ChildFilterFragmentPresenter implements ChildFilterFragmentContract
     @Override
     public void fetchUniqueAges(String schoolID) {
         ChildFilterFragmentContract.Model myModel = getModel();
-        ChildFilterFragmentContract.Interactor<List<String>> myInteractor = getInteractor();
+        CallableInteractor myInteractor = getInteractor();
 
         if (myModel != null && myInteractor != null && getView() != null) {
             Callable<List<String>> callable = () -> myModel.fetchUniqueAges(schoolID);
             getView().setLoadingState(true);
 
-            myInteractor.runRequest(callable, new ChildFilterFragmentContract.InteractorCallBack<List<String>>() {
+            myInteractor.execute(callable, new CallableInteractorCallBack<List<String>>() {
                 @Override
-                public void onFetchResults(List<String> results) {
+                public void onResult(List<String> results) {
                     ChildFilterFragmentContract.View view = getView();
                     if (view != null) {
                         view.onAgesFetched(results);
@@ -65,7 +67,7 @@ public class ChildFilterFragmentPresenter implements ChildFilterFragmentContract
                 }
 
                 @Override
-                public void onFetchError(Exception ex) {
+                public void onError(Exception ex) {
                     ChildFilterFragmentContract.View view = getView();
                     if (view != null) {
                         view.onError(ex);
@@ -105,12 +107,12 @@ public class ChildFilterFragmentPresenter implements ChildFilterFragmentContract
 
     @Nullable
     @Override
-    public ChildFilterFragmentContract.Interactor<List<String>> getInteractor() {
+    public CallableInteractor getInteractor() {
         return interactor;
     }
 
     @Override
-    public ChildFilterFragmentContract.Presenter usingInteractor(ChildFilterFragmentContract.Interactor<List<String>> interactor) {
+    public ChildFilterFragmentContract.Presenter usingInteractor(CallableInteractor interactor) {
         this.interactor = interactor;
         return this;
     }

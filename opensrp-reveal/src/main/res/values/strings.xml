@@ -358,4 +358,7 @@
     <string name="filter_by_age">Filter by age</string>
     <string name="label_add">+ Add</string>
     <string name="search_students">Search Students</string>
+    <string name="edit">Edit</string>
+    <string name="child_age">Age %s</string>
+
 </resources>

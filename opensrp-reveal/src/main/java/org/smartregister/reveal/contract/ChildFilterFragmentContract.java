@@ -6,8 +6,6 @@ import android.support.annotation.WorkerThread;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
 
 public interface ChildFilterFragmentContract {
 
@@ -52,9 +50,9 @@ public interface ChildFilterFragmentContract {
         Presenter usingModel(Model model);
 
         @Nullable
-        Interactor<List<String>> getInteractor();
+        CallableInteractor getInteractor();
 
-        Presenter usingInteractor(Interactor<List<String>> interactor);
+        Presenter usingInteractor(CallableInteractor interactor);
     }
 
     interface Model {
@@ -64,20 +62,6 @@ public interface ChildFilterFragmentContract {
 
         @WorkerThread
         List<String> fetchUniqueAges(String schoolID);
-
-    }
-
-    interface Interactor<T> {
-
-        void runRequest(Callable<T> callable, InteractorCallBack<T> callBack);
-
-    }
-
-    interface InteractorCallBack<T> {
-
-        void onFetchResults(T results);
-
-        void onFetchError(Exception ex);
 
     }
 }

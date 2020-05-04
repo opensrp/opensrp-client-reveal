@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/collapsing_toolbar_appbarlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_gray">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/collapsing_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:contentInsetStart="0dp"
+                android:contentInsetLeft="0dp"
+                android:contentInsetEnd="0dp"
+                android:contentInsetRight="0dp"
+                android:theme="@style/AppTheme.AppBarOverlay.Light"
+                app:contentInsetEnd="0dp"
+                app:contentInsetLeft="0dp"
+                app:contentInsetRight="0dp"
+                app:contentInsetStart="0dp"
+                app:contentInsetStartWithNavigation="0dp"
+                app:layout_collapseMode="pin">
+
+                <org.smartregister.view.customcontrols.CustomFontTextView
+                    android:id="@+id/toolbar_title"
+                    style="@style/CustomFontTextViewStyle.ClientList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Back"
+                    android:gravity="center_vertical|left"
+                    android:paddingStart="0dp"
+                    android:paddingLeft="0dp"
+                    android:textColor="@color/customAppThemeBlue"
+                    android:textSize="17sp" />
+            </android.support.v7.widget.Toolbar>
+
+            <LinearLayout
+                android:id="@+id/profile_name_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="20dp"
+                app:layout_collapseMode="parallax">
+
+                <org.smartregister.view.customcontrols.CustomFontTextView
+                    android:id="@+id/tvNames"
+                    style="@style/CustomFontTextViewStyle.ClientList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:paddingLeft="0dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/register_member_name_size" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <org.smartregister.view.customcontrols.CustomFontTextView
+                        android:id="@+id/tvNumber"
+                        style="@style/CustomFontTextViewStyle.ClientList.Light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/register_member_village_size" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/profile_dot_separator_margin"
+                        android:layout_marginRight="@dimen/profile_dot_separator_margin"
+                        android:text="\u00b7"
+                        android:textColor="@android:color/black" />
+
+                    <org.smartregister.view.customcontrols.CustomFontTextView
+                        android:id="@+id/tvGender"
+                        style="@style/CustomFontTextViewStyle.ClientList.Light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:paddingLeft="0dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/register_member_village_size" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/profile_dot_separator_margin"
+                        android:layout_marginRight="@dimen/profile_dot_separator_margin"
+                        android:text="\u00b7"
+                        android:textColor="@android:color/black" />
+
+
+                    <org.smartregister.view.customcontrols.CustomFontTextView
+                        android:id="@+id/tvAge"
+                        style="@style/CustomFontTextViewStyle.ClientList.Light"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingLeft="0dp"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/register_member_village_size" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@+id/last_visit_row"
+            android:background="@color/light_grey"
+            android:visibility="visible" />
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Base.Widget.AppCompat.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="visible" />
+
+</android.support.design.widget.CoordinatorLayout>

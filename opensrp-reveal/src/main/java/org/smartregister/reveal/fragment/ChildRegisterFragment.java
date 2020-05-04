@@ -20,6 +20,7 @@ import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.model.ChildModel;
 import org.smartregister.reveal.presenter.ChildRegisterFragmentPresenter;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.view.ChildProfileActivity;
 import org.smartregister.reveal.view.ChildRegisterActivity;
 import org.smartregister.reveal.view.DrawerMenuView;
 import org.smartregister.reveal.viewholder.GroupedListableViewHolder;
@@ -119,7 +120,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
     @Override
     public void onListItemClicked(Child child, int layoutID) {
-        Toast.makeText(getContext(), "You clicked on " + child.getFullName(), Toast.LENGTH_SHORT).show();
+        ChildProfileActivity.startMe(getActivity(), child.getBaseEntityID());
     }
 
     @Override
