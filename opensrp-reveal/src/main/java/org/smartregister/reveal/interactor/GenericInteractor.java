@@ -25,6 +25,11 @@ public class GenericInteractor implements CallableInteractor {
 
     @Override
     public <T> void execute(Callable<T> callable, CallableInteractorCallBack<T> callBack) {
+        execute(callable, callBack, AppExecutors.Request.DISK_THREAD);
+    }
+
+    @Override
+    public <T> void execute(Callable<T> callable, CallableInteractorCallBack<T> callBack, AppExecutors.Request request) {
         Runnable runnable = () -> {
             try {
                 T result = callable.call();
@@ -34,6 +39,6 @@ public class GenericInteractor implements CallableInteractor {
                 appExecutors.mainThread().execute(() -> callBack.onError(e));
             }
         };
-        appExecutors.execute(runnable, AppExecutors.Request.DISK_THREAD);
+        appExecutors.execute(runnable, request);
     }
 }

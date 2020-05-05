@@ -12,6 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
+import org.smartregister.domain.FetchStatus;
+import org.smartregister.domain.ResponseErrorStatus;
+import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.ChildRegisterAdapter;
 import org.smartregister.reveal.adapter.GroupedListableAdapter;
@@ -26,6 +29,7 @@ import org.smartregister.reveal.view.ChildProfileActivity;
 import org.smartregister.reveal.view.ChildRegisterActivity;
 import org.smartregister.reveal.view.DrawerMenuView;
 import org.smartregister.reveal.viewholder.GroupedListableViewHolder;
+import org.smartregister.util.Utils;
 import org.smartregister.view.fragment.BaseListFragment;
 
 import java.io.Serializable;
@@ -35,7 +39,7 @@ import java.util.concurrent.Callable;
 
 import timber.log.Timber;
 
-public class ChildRegisterFragment extends BaseListFragment<Child> implements ChildRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity {
+public class ChildRegisterFragment extends BaseListFragment<Child> implements ChildRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity, SyncStatusBroadcastReceiver.SyncStatusListener {
     public static final String TAG = "ChildRegisterFragment";
 
     private BaseDrawerContract.View drawerView;
@@ -44,6 +48,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     private HashMap<String, List<String>> filterAndSearch;
     private String locationName = "";
     private RevealJsonFormUtils revealJsonFormUtils = new RevealJsonFormUtils();
+    private TextView searchTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,7 +78,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
         mapText.setText(R.string.label_add);
         mapText.setOnClickListener(v -> startChildRegistrationForm());
 
-        TextView searchTextView = view.findViewById(R.id.edt_search);
+        searchTextView = view.findViewById(R.id.edt_search);
         searchTextView.setHint(R.string.search_students);
         searchTextView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -179,5 +184,72 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     @Override
     public void startJsonForm(JSONObject form) {
         revealJsonFormUtils.startJsonForm(form, getActivity());
+    }
+
+
+    @Override
+    public void onResume() {
+        SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        SyncStatusBroadcastReceiver.getInstance().removeSyncStatusListener(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onSyncStart() {
+        refreshSyncStatusViews(null);
+    }
+
+    @Override
+    public void onSyncInProgress(FetchStatus fetchStatus) {
+        refreshSyncStatusViews(fetchStatus);
+    }
+
+    @Override
+    public void onSyncComplete(FetchStatus fetchStatus) {
+        refreshSyncStatusViews(fetchStatus);
+    }
+
+    private void refreshSyncStatusViews(FetchStatus fetchStatus) {
+        if (SyncStatusBroadcastReceiver.getInstance().isSyncing()) {
+            Utils.showShortToast(getActivity(), getString(org.smartregister.R.string.syncing));
+            Timber.i(getString(org.smartregister.R.string.syncing));
+        } else {
+            if (fetchStatus != null) {
+
+                if (fetchStatus.equals(FetchStatus.fetchedFailed)) {
+                    if (fetchStatus.displayValue().equals(ResponseErrorStatus.malformed_url.name())) {
+                        Utils.showShortToast(getActivity(), getString(org.smartregister.R.string.sync_failed_malformed_url));
+                        Timber.i(getString(org.smartregister.R.string.sync_failed_malformed_url));
+                    } else if (fetchStatus.displayValue().equals(ResponseErrorStatus.timeout.name())) {
+                        Utils.showShortToast(getActivity(), getString(org.smartregister.R.string.sync_failed_timeout_error));
+                        Timber.i(getString(org.smartregister.R.string.sync_failed_timeout_error));
+                    } else {
+                        Utils.showShortToast(getActivity(), getString(org.smartregister.R.string.sync_failed));
+                        Timber.i(getString(org.smartregister.R.string.sync_failed));
+                    }
+
+                } else if (fetchStatus.equals(FetchStatus.fetched)
+                        || fetchStatus.equals(FetchStatus.nothingFetched)) {
+
+                    searchPresenter(searchTextView.getText().toString());
+
+                    Utils.showShortToast(getActivity(), getString(org.smartregister.R.string.sync_complete));
+                    Timber.i(getString(org.smartregister.R.string.sync_complete));
+
+                } else if (fetchStatus.equals(FetchStatus.noConnection)) {
+
+                    Utils.showShortToast(getActivity(), getString(org.smartregister.R.string.sync_failed_no_internet));
+                    Timber.i(getString(org.smartregister.R.string.sync_failed_no_internet));
+                }
+            } else {
+                Timber.i("Fetch Status NULL");
+            }
+
+        }
     }
 }
