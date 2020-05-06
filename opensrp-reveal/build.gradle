@@ -8,6 +8,11 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.5.3'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.3'
         classpath 'io.fabric.tools:gradle:1.25.4'
+
+        // Google Services plugin
+        classpath 'com.google.gms:google-services:4.3.3'
+        // Add the dependency for the Performance Monitoring plugin
+        classpath 'com.google.firebase:perf-plugin:1.3.1'  // Performance Monitoring plugin
     }
 }
 
@@ -25,6 +30,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'io.fabric'
+// Apply the Performance Monitoring plugin
+apply plugin: 'com.google.firebase.firebase-perf'
 
 jacoco {
     toolVersion = "0.8.0"
@@ -229,6 +236,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.apache.maven:maven-ant-tasks:2.1.3'
     testImplementation('com.squareup:fest-android:1.0.8') { exclude module: 'support-v4' }
+    // Add the dependency for the Performance Monitoring library
+    implementation 'com.google.firebase:firebase-perf:19.0.7'
     implementation 'com.mapbox.mapboxsdk:mapbox-sdk-turf:5.1.0'
 
     testImplementation 'org.mockito:mockito-inline:2.13.0'
@@ -278,3 +287,6 @@ task javadoc(type: Javadoc) {
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     classpath += configurations.compile
 }
+
+// Google services plugin
+apply plugin: 'com.google.gms.google-services'
