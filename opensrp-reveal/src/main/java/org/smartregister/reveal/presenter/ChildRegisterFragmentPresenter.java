@@ -4,13 +4,13 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 
 import org.json.JSONObject;
-import org.smartregister.reveal.contract.CallableInteractor;
-import org.smartregister.reveal.contract.CallableInteractorCallBack;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
-import org.smartregister.reveal.interactor.GenericInteractor;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.model.ChildModel;
 import org.smartregister.util.AppExecutors;
+import org.smartregister.util.CallableInteractor;
+import org.smartregister.util.CallableInteractorCallBack;
+import org.smartregister.util.GenericInteractor;
 import org.smartregister.view.ListContract;
 import org.smartregister.view.presenter.ListPresenter;
 

@@ -8,6 +8,7 @@ import android.support.annotation.WorkerThread;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.reveal.model.Child;
+import org.smartregister.util.CallableInteractor;
 import org.smartregister.util.QueryComposer;
 import org.smartregister.view.contract.BaseProfileContract;
 

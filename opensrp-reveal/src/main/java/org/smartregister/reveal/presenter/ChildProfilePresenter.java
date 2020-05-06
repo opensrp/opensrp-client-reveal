@@ -5,11 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.json.JSONObject;
-import org.smartregister.reveal.contract.CallableInteractor;
-import org.smartregister.reveal.contract.CallableInteractorCallBack;
 import org.smartregister.reveal.contract.ChildProfileContract;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.model.ChildProfileModel;
+import org.smartregister.util.CallableInteractor;
+import org.smartregister.util.CallableInteractorCallBack;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.Callable;

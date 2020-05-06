@@ -2,9 +2,9 @@ package org.smartregister.reveal.presenter;
 
 import android.support.annotation.Nullable;
 
-import org.smartregister.reveal.contract.CallableInteractor;
-import org.smartregister.reveal.contract.CallableInteractorCallBack;
 import org.smartregister.reveal.contract.ChildFilterFragmentContract;
+import org.smartregister.util.CallableInteractor;
+import org.smartregister.util.CallableInteractorCallBack;
 
 import java.lang.ref.WeakReference;
 import java.util.List;

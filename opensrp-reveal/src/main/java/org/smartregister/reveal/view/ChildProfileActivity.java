@@ -19,11 +19,11 @@ import android.widget.Toast;
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.ChildProfileContract;
-import org.smartregister.reveal.interactor.GenericInteractor;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.presenter.ChildProfilePresenter;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
+import org.smartregister.util.GenericInteractor;
 import org.smartregister.view.activity.BaseProfileActivity;
 
 import java.util.concurrent.atomic.AtomicInteger;

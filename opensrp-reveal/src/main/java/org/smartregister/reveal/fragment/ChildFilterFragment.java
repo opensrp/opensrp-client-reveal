@@ -18,11 +18,11 @@ import android.widget.Toast;
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.ChildFilterFragmentContract;
-import org.smartregister.reveal.interactor.GenericInteractor;
 import org.smartregister.reveal.model.ChildFilterFragmentModel;
 import org.smartregister.reveal.presenter.ChildFilterFragmentPresenter;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.view.ChildRegisterActivity;
+import org.smartregister.util.GenericInteractor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
