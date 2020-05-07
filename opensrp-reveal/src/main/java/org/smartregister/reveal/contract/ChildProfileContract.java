@@ -26,7 +26,9 @@ public interface ChildProfileContract {
 
         void startEditForm();
 
-        void startJsonForm(JSONObject form);
+        void startADRForm();
+
+        void startJsonForm(JSONObject jsonObject, String formTitle);
     }
 
     interface Presenter extends BaseProfileContract.Presenter {
@@ -45,6 +47,8 @@ public interface ChildProfileContract {
         Model getModel();
 
         void startChildRegistrationForm(Context context, String baseEntityID);
+
+        void startADRForm(Context context, String baseEntityID);
     }
 
     interface Model {
@@ -55,6 +59,9 @@ public interface ChildProfileContract {
 
         @WorkerThread
         JSONObject getRegistrationEditForm(Context context, String baseEntityID) throws JSONException;
+
+        @WorkerThread
+        JSONObject getADRForm(Context context, String baseEntityID) throws JSONException;
 
     }
 }

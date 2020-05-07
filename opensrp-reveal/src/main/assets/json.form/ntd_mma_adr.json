@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "mma_adr",
+  "encounter_type": "MMA_ADR",
   "entity_id": "",
   "metadata": {
     "start": {
@@ -113,7 +113,18 @@
             "key": "other",
             "text": "Other (specify)"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-mma-adr-relevance.yml"
+            }
+          }
+        }
       },
       {
         "key": "other_mmaAdrType",
@@ -123,10 +134,14 @@
         "type": "edit_text",
         "hint": "Specify other type",
         "text_size": "8sp",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": ""
+              "rules-file": "ntd-mma-adr-relevance.yml"
             }
           }
         }
@@ -151,7 +166,18 @@
             "key": "severe",
             "text": "Severe"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-mma-adr-relevance.yml"
+            }
+          }
+        }
       },
       {
         "key": "mmaAdrOutcome",
@@ -177,7 +203,18 @@
             "key": "died",
             "text": "Died"
           }
-        ]
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-mma-adr-relevance.yml"
+            }
+          }
+        }
       }
     ]
   }

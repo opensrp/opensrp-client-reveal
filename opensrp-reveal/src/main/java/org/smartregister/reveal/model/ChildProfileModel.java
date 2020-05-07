@@ -56,4 +56,10 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
         String jsonForm = Utils.readAssetContents(context, Constants.JsonForm.NTD_CHILD_REGISTRATION);
         return new JSONObject(jsonForm);
     }
+
+    @Override
+    public JSONObject getADRForm(Context context, String baseEntityID) throws JSONException {
+        String jsonForm = Utils.readAssetContents(context, Constants.JsonForm.NTD_DRUG_ADVERSE_REACTION);
+        return new JSONObject(jsonForm);
+    }
 }

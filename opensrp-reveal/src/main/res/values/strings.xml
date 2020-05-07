@@ -359,9 +359,11 @@
     <string name="label_add">+ Add</string>
     <string name="search_students">Search Students</string>
     <string name="edit">Edit</string>
-    <string name="child_age">Age %s</string>
+    <string name="child_age">Age %d</string>
     <string name="add_student">Add student</string>
+    <string name="edit_student">Edit student</string>
     <string name="mass_drug_administration">Visit child and dispense drugs</string>
     <string name="record_dose">Record dose</string>
+    <string name="record_adr">Record ADR</string>
 
 </resources>

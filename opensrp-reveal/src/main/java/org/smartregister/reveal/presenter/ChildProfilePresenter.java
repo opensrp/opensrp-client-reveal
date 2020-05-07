@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.json.JSONObject;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.ChildProfileContract;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.model.ChildProfileModel;
@@ -65,7 +66,7 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
     @Override
     public CallableInteractor getInteractor() {
         if (callableInteractor == null)
-            throw new IllegalStateException("Intercator is not set");
+            throw new IllegalStateException("Interacator is not set");
 
         return callableInteractor;
     }
@@ -105,7 +106,37 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
                 ChildProfileContract.View view = getView();
                 if (view != null) {
                     if (jsonObject != null) {
-                        view.startJsonForm(jsonObject);
+                        view.startJsonForm(jsonObject, context.getString(R.string.edit_student));
+                    } else {
+                        view.onError(new IllegalArgumentException("Form not found"));
+                    }
+                    view.setLoadingState(false);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ChildProfileContract.View view = getView();
+                if (view != null) {
+                    view.onError(ex);
+                    view.setLoadingState(false);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void startADRForm(Context context, String baseEntityID) {
+        CallableInteractor myInteractor = getInteractor();
+        ChildProfileContract.Model model = getModel();
+        Callable<JSONObject> callable = () -> model.getADRForm(context, baseEntityID);
+        myInteractor.execute(callable, new CallableInteractorCallBack<JSONObject>() {
+            @Override
+            public void onResult(JSONObject jsonObject) {
+                ChildProfileContract.View view = getView();
+                if (view != null) {
+                    if (jsonObject != null) {
+                        view.startJsonForm(jsonObject, context.getString(R.string.record_adr));
                     } else {
                         view.onError(new IllegalArgumentException("Form not found"));
                     }

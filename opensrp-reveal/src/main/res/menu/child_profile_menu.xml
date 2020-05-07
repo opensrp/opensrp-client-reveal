@@ -6,4 +6,9 @@
         android:enabled="true"
         android:title="@string/edit"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/record_adverse_drugs"
+        android:enabled="true"
+        android:title="@string/record_adr"
+        app:showAsAction="never" />
 </menu>

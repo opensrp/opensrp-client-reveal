@@ -16,13 +16,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.vijay.jsonwizard.constants.JsonFormConstants;
+import com.vijay.jsonwizard.domain.Form;
+
 import org.json.JSONObject;
+import org.smartregister.family.activity.FamilyWizardFormActivity;
+import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.ChildProfileContract;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.presenter.ChildProfilePresenter;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.util.GenericInteractor;
 import org.smartregister.view.activity.BaseProfileActivity;
 
@@ -98,6 +102,9 @@ public class ChildProfileActivity extends BaseProfileActivity implements ChildPr
         if (i == R.id.edit_child) {
             startEditForm();
             return true;
+        } else if (i == R.id.record_adverse_drugs) {
+            startADRForm();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -152,7 +159,23 @@ public class ChildProfileActivity extends BaseProfileActivity implements ChildPr
     }
 
     @Override
-    public void startJsonForm(JSONObject form) {
-        new RevealJsonFormUtils().startJsonForm(form, this);
+    public void startADRForm() {
+        getPresenter().startADRForm(getBaseContext(), childBaseEntityID);
+    }
+
+    @Override
+    public void startJsonForm(JSONObject jsonObject, String formTitle) {
+        Form form = new Form();
+        form.setName(formTitle);
+        form.setActionBarBackground(org.smartregister.family.R.color.family_actionbar);
+        form.setNavigationBackground(org.smartregister.family.R.color.family_navigation);
+        form.setHomeAsUpIndicator(org.smartregister.family.R.mipmap.ic_cross_white);
+        form.setPreviousLabel(getResources().getString(org.smartregister.family.R.string.back));
+        form.setWizard(false);
+
+        Intent intent = new Intent(this, FamilyWizardFormActivity.class);
+        intent.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonObject.toString());
+        intent.putExtra(JsonFormConstants.JSON_FORM_KEY.FORM, form);
+        startActivityForResult(intent, JsonFormUtils.REQUEST_CODE_GET_JSON);
     }
 }

@@ -1,0 +1,28 @@
+---
+name: step1_mmaAdrType
+description: step1_mmaAdrType
+priority: 1
+condition: "step1_mmaAdr.contains('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_other_mmaAdrType
+description: step1_other_mmaAdrType
+priority: 1
+condition: "step1_mmaAdrType.contains('other')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_mmaAdrGrade
+description: step1_mmaAdrGrade
+priority: 1
+condition: "step1_mmaAdr.contains('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_mmaAdrOutcome
+description: step1_mmaAdrOutcome
+priority: 1
+condition: "step1_mmaAdr.contains('Yes')"
+actions:
+  - "isRelevant = true"
