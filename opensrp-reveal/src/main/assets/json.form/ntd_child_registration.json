@@ -86,14 +86,18 @@
       {
         "key": "sactaNationalId",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
+        "openmrs_entity": "person_identifier",
+        "openmrs_entity_id": "national_id",
         "type": "edit_text",
         "hint": "National ID",
         "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Please enter the ID"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number."
         },
         "relevance": {
           "rules-engine": {
@@ -106,19 +110,31 @@
       {
         "key": "sactaRevealId",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
+        "openmrs_entity": "person_identifier",
+        "openmrs_entity_id": "reveal_id",
         "type": "edit_text",
         "hint": "Reveal ID",
         "text_size": "8sp",
+        "read_only": true,
         "v_required": {
           "value": "true",
           "err": "Please enter the ID"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number."
         },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
               "rules-file": "ntd-child-registration-relevance.yml"
+            }
+          }
+        },
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-child-registration-calculation.yml"
             }
           }
         }
@@ -189,13 +205,6 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-family-member-relevance.yml"
-            }
-          }
         }
       },
       {
@@ -207,7 +216,7 @@
         "label": "Date of birth estimated",
         "options": [
           {
-            "key": "dob_unknown",
+            "key": "sactaDobUnk",
             "text": "DOB unknown",
             "text_size": "18px",
             "value": "false"
@@ -222,6 +231,7 @@
         "type": "edit_text",
         "hint": "Child's age",
         "text_size": "8sp",
+        "read_only": true,
         "v_numeric_integer": {
           "value": "true",
           "err": "Please enter a number"
@@ -234,43 +244,33 @@
           "value": "120",
           "err": "Age must be equal or less than 120"
         },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-family-member-relevance.yml"
-            }
-          }
-        },
         "v_required": {
           "value": true,
           "err": "Please enter the age"
+        },
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-child-registration-calculation.yml"
+            }
+          }
         }
       },
       {
         "key": "sactaAgeCat",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "gender",
-        "type": "native_radio",
-        "label": "Age category",
-        "options": [
-          {
-            "key": "6-10",
-            "text": "6-10"
-          },
-          {
-            "key": "11-15",
-            "text": "11-15"
-          },
-          {
-            "key": "16-18",
-            "text": "16-18"
-          },
-          {
-            "key": "Adult",
-            "text": "Adult"
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "age_category",
+        "type": "edit_text",
+        "read_only": true,
+        "hint": "Age category",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-child-registration-calculation.yml"
+            }
           }
-        ],
+        },
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -279,8 +279,8 @@
       {
         "key": "sactaCurrEnroll",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "school_enrolled",
         "type": "native_radio",
         "label": "Is this child currently enrolled in school?",
         "options": [
@@ -301,18 +301,25 @@
       {
         "key": "sactaCurrSchName",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "school_name",
         "type": "edit_text",
         "hint": "Name of school attending, if from another school",
         "edit_type": "name",
-        "text_size": "8sp"
+        "text_size": "8sp",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-child-registration-relevance.yml"
+            }
+          }
+        }
       },
       {
         "key": "sactaGrade",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "grade",
         "type": "native_radio",
         "label": "School grade",
         "options": [
@@ -368,13 +375,20 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-child-registration-relevance.yml"
+            }
+          }
         }
       },
       {
         "key": "sactaClass",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "grade_class",
         "type": "edit_text",
         "hint": "Grade class (e.g. 1A, 1B, 1C/D)",
         "edit_type": "name",
@@ -382,6 +396,13 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-child-registration-relevance.yml"
+            }
+          }
         }
       }
     ]
