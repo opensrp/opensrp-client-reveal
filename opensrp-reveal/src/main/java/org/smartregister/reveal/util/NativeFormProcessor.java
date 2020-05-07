@@ -26,6 +26,7 @@ import org.smartregister.util.JsonFormUtils;
 import java.util.Collections;
 import java.util.Date;
 
+import static org.smartregister.family.util.JsonFormUtils.RELATIONSHIPS;
 import static org.smartregister.reveal.application.RevealApplication.getInstance;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.METADATA;
@@ -88,7 +89,7 @@ public class NativeFormProcessor {
         return formData;
     }
 
-    public NativeFormProcessor bindTaskDetails(Task task) throws JSONException {
+    public NativeFormProcessor tagTaskDetails(Task task) throws JSONException {
         JSONObject formData = getOrCreateDetailsNode();
         formData.put(Constants.Properties.TASK_IDENTIFIER, task.getIdentifier());
         formData.put(Constants.Properties.TASK_BUSINESS_STATUS, task.getBusinessStatus());
@@ -96,7 +97,7 @@ public class NativeFormProcessor {
         return this;
     }
 
-    public NativeFormProcessor bindLocationData(Location location) throws JSONException {
+    public NativeFormProcessor tagLocationData(Location location) throws JSONException {
         JSONObject formData = getOrCreateDetailsNode();
         formData.put(Constants.Properties.LOCATION_ID, location.getId());
         formData.put(Constants.Properties.LOCATION_UUID, location.getId());
@@ -170,6 +171,35 @@ public class NativeFormProcessor {
         return this;
     }
 
+    /**
+     * when updating client info
+     *
+     * @return
+     * @throws JSONException
+     */
+    public NativeFormProcessor mergeAndSaveClient() throws JSONException {
+        JSONObject updatedClientJson = new JSONObject(JsonFormUtils.gson.toJson(createClient()));
+
+        JSONObject originalClientJsonObject = getSyncHelper().getClient(createClient().getBaseEntityId());
+
+        JSONObject mergedJson = JsonFormUtils.merge(originalClientJsonObject, updatedClientJson);
+
+        //retain existing relationships, relationships are deleted on @Link org.smartregister.util.JsonFormUtils.createBaseClient
+        JSONObject relationships = mergedJson.optJSONObject(RELATIONSHIPS);
+        if ((relationships == null || relationships.length() == 0) && originalClientJsonObject != null) {
+            mergedJson.put(RELATIONSHIPS, originalClientJsonObject.optJSONObject(RELATIONSHIPS));
+        }
+
+        getSyncHelper().addClient(createClient().getBaseEntityId(), mergedJson);
+        return this;
+    }
+
+    /**
+     * for new clients
+     *
+     * @return
+     * @throws JSONException
+     */
     public NativeFormProcessor saveClient() throws JSONException {
         JSONObject clientJson = new JSONObject(org.smartregister.family.util.JsonFormUtils.gson.toJson(createClient()));
         getSyncHelper().addClient(createClient().getBaseEntityId(), clientJson);

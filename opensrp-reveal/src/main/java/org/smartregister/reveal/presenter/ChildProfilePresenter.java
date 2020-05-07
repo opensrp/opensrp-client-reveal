@@ -8,20 +8,24 @@ import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.ChildProfileContract;
-import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.model.ChildProfileModel;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.NativeFormProcessor;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.CallableInteractor;
 import org.smartregister.util.CallableInteractorCallBack;
 
 import java.lang.ref.WeakReference;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import timber.log.Timber;
+
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.CHILD_TABLE;
+import static org.smartregister.reveal.util.Constants.EventType.UPDATE_CHILD_REGISTRATION;
 
 public class ChildProfilePresenter implements ChildProfileContract.Presenter {
 
@@ -163,7 +167,58 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
 
     @Override
     public void updateChild(JSONObject jsonObject, Context context) {
+        CallableInteractor myInteractor = getInteractor();
 
+        Callable<Boolean> callable = () -> {
+
+            Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+            String entityId = UUID.randomUUID().toString();
+            new NativeFormProcessor(jsonObject.toString())
+
+                    // update metadata
+                    .withBindType(CHILD_TABLE)
+                    .withEncounterType(UPDATE_CHILD_REGISTRATION)
+                    .withEntityId(entityId)
+                    .tagLocationData(operationalArea)
+                    .tagEventMetadata()
+
+                    // create and save client
+                    .hasClient(true)
+                    .mergeAndSaveClient()
+
+                    // create and save event to db
+                    .saveEvent()
+
+                    // execute client processing
+                    .clientProcessForm();
+
+            TaskUtils.getInstance().generateDrugAdministrationTask(context, entityId);
+
+            return true;
+        };
+
+        myInteractor.execute(callable, new CallableInteractorCallBack<Boolean>() {
+            @Override
+            public void onResult(Boolean aBoolean) {
+                ChildProfileContract.View view = getView();
+                if (view != null) {
+                    if (aBoolean) {
+                        view.reloadFromSource();
+                    } else {
+                        view.onError(new Exception("An error while saving"));
+                    }
+                    view.setLoadingState(false);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ChildProfileContract.View view = getView();
+                if (view == null) return;
+                view.onError(ex);
+                view.setLoadingState(false);
+            }
+        });
     }
 
     @Override
@@ -182,7 +237,7 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
                     .withBindType(Constants.EventType.MDA_ADVERSE_DRUG_REACTION)
                     .withEncounterType(Constants.EventType.MDA_ADVERSE_DRUG_REACTION)
                     .withEntityId(entityId)
-                    .bindLocationData(operationalArea)
+                    .tagLocationData(operationalArea)
                     .tagEventMetadata()
 
                     // save and client

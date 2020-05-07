@@ -21,7 +21,6 @@ import org.smartregister.reveal.util.NativeFormProcessor;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
-import org.smartregister.sync.helper.ECSyncHelper;
 import org.smartregister.util.AppExecutors;
 import org.smartregister.util.CallableInteractor;
 import org.smartregister.util.CallableInteractorCallBack;
@@ -139,7 +138,7 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
                     .withBindType(CHILD_TABLE)
                     .withEncounterType(REGISTER_CHILD_EVENT)
                     .withEntityId(entityId)
-                    .bindLocationData(operationalArea)
+                    .tagLocationData(operationalArea)
                     .tagEventMetadata()
 
                     // create and save client
@@ -219,8 +218,8 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
             // save event details
             Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
             processor
-                    .bindLocationData(operationalArea)
-                    .bindTaskDetails(task)
+                    .tagLocationData(operationalArea)
+                    .tagTaskDetails(task)
                     .tagEventMetadata()
 
                     // save and client
