@@ -52,16 +52,16 @@
     }
   },
   "step1": {
-    "title": "Register child",
+    "title": "Add Student",
     "fields": [
       {
-        "key": "sactaNationalId",
+        "key": "unique_id",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "National ID",
-        "text_size": "8sp",
+        "openmrs_entity": "person_identifier",
+        "openmrs_entity_id": "opensrp_id",
+        "type": "hidden",
+        "hint": "ID",
+        "read_only": "True",
         "v_required": {
           "value": "true",
           "err": "Please enter the ID"
@@ -76,7 +76,7 @@
         "label": "",
         "options": [
           {
-            "key": "sactaNoNationalId",
+            "key": "noNationalID",
             "text": "Child does not have a national ID",
             "text_size": "18px",
             "value": "true"
@@ -84,12 +84,52 @@
         ]
       },
       {
-        "key": "first_name",
+        "key": "sactaNationalId",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "National ID",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the ID"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-child-registration-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sactaRevealId",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Reveal ID",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the ID"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-child-registration-relevance.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sactaGivenName",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
         "openmrs_entity_id": "first_name",
         "type": "edit_text",
-        "hint": "Given name",
+        "hint": "Child's given name",
         "edit_type": "name",
         "text_size": "8sp",
         "v_required": {
@@ -98,12 +138,12 @@
         }
       },
       {
-        "key": "last_name",
+        "key": "sactaSurname",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
         "openmrs_entity_id": "last_name",
         "type": "edit_text",
-        "hint": "Surname",
+        "hint": "Child's surname",
         "edit_type": "name",
         "text_size": "8sp",
         "v_required": {
@@ -112,12 +152,12 @@
         }
       },
       {
-        "key": "sex",
+        "key": "sactaSex",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
         "openmrs_entity_id": "gender",
         "type": "native_radio",
-        "label": "Sex",
+        "label": "Child's allocated sex at birth",
         "options": [
           {
             "key": "Male",
@@ -134,12 +174,12 @@
         }
       },
       {
-        "key": "dob",
+        "key": "sactaDob",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
         "openmrs_entity_id": "birthdate",
         "type": "date_picker",
-        "hint": "Date of birth (DOB)",
+        "hint": "Child's date of birth",
         "expanded": false,
         "duration": {
           "label": "Age"
@@ -159,12 +199,12 @@
         }
       },
       {
-        "key": "dob_unknown",
+        "key": "sactaDobUnk",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
         "openmrs_entity_id": "birthdateApprox",
         "type": "check_box",
-        "label": "",
+        "label": "Date of birth estimated",
         "options": [
           {
             "key": "dob_unknown",
@@ -175,12 +215,12 @@
         ]
       },
       {
-        "key": "age",
+        "key": "sactaAge",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_attribute",
         "openmrs_entity_id": "age_entered",
         "type": "edit_text",
-        "hint": "Age",
+        "hint": "Child's age",
         "text_size": "8sp",
         "v_numeric_integer": {
           "value": "true",
@@ -204,6 +244,36 @@
         "v_required": {
           "value": true,
           "err": "Please enter the age"
+        }
+      },
+      {
+        "key": "sactaAgeCat",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "gender",
+        "type": "native_radio",
+        "label": "Age category",
+        "options": [
+          {
+            "key": "6-10",
+            "text": "6-10"
+          },
+          {
+            "key": "11-15",
+            "text": "11-15"
+          },
+          {
+            "key": "16-18",
+            "text": "16-18"
+          },
+          {
+            "key": "Adult",
+            "text": "Adult"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
         }
       },
       {

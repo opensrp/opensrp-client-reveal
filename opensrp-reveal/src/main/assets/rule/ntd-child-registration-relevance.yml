@@ -1,0 +1,14 @@
+---
+name: step1_sactaNationalId
+description: step1_sactaNationalId
+priority: 1
+condition: "!step1_sactaNoNationalId.contains('noNationalID')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sactaRevealId
+description: step1_sactaRevealId
+priority: 1
+condition: "step1_sactaNoNationalId.contains('noNationalID')"
+actions:
+  - "isRelevant = true"
