@@ -61,7 +61,7 @@
         "openmrs_entity_id": "opensrp_id",
         "type": "hidden",
         "hint": "ID",
-        "read_only": "True",
+        "read_only": true,
         "v_required": {
           "value": "true",
           "err": "Please enter the ID"
@@ -79,7 +79,7 @@
             "key": "noNationalID",
             "text": "Child does not have a national ID",
             "text_size": "18px",
-            "value": "true"
+            "value": "false"
           }
         ]
       },
@@ -213,11 +213,11 @@
         "openmrs_entity": "person",
         "openmrs_entity_id": "birthdateApprox",
         "type": "check_box",
-        "label": "Date of birth estimated",
+        "label": "",
         "options": [
           {
             "key": "sactaDobUnk",
-            "text": "DOB unknown",
+            "text": "Date of birth estimated",
             "text_size": "18px",
             "value": "false"
           }

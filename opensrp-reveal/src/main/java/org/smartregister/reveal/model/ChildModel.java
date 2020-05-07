@@ -7,18 +7,23 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.dao.AbstractDao;
+import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.util.QueryComposer;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import timber.log.Timber;
 
 public class ChildModel extends AbstractDao implements ChildRegisterFragmentContract.Model {
+
+    private RevealJsonFormUtils revealJsonFormUtils = new RevealJsonFormUtils();
 
     @Override
     public List<Child> searchAndFilter(String schoolID, @Nullable HashMap<String, List<String>> sortAndFilter, @Nullable String searchText) {
@@ -47,7 +52,18 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
     @Override
     public JSONObject getRegistrationForm(Context context) throws JSONException {
         String jsonForm = Utils.readAssetContents(context, Constants.JsonForm.NTD_CHILD_REGISTRATION);
-        return new JSONObject(jsonForm);
+        JSONObject jsonObject = new JSONObject(jsonForm);
+
+        // new id
+        jsonObject.put(Constants.Properties.BASE_ENTITY_ID, UUID.randomUUID().toString());
+        // inject unique id
+
+        String uniqueID = new UniqueIdRepository().getNextUniqueId().getOpenmrsId();
+        if (StringUtils.isBlank(uniqueID))
+            throw new IllegalStateException("No local unique ID");
+
+        revealJsonFormUtils.populateField(jsonObject, Constants.DatabaseKeys.UNIQUE_ID, uniqueID, "value");
+        return jsonObject;
     }
 
     private void extractSort(QueryComposer composer, @Nullable HashMap<String, List<String>> sortAndFilter) {

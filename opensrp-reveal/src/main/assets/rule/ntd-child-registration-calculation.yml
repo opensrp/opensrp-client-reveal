@@ -4,7 +4,7 @@ description: sactaRevealId status
 priority: 1
 condition: "true"
 actions:
-  - "calculation = step1_sactaRevealId = ((step1_sactaDob != null && step1_sactaDob != '') ? step1_sactaDob.substring(6,10) + step1_sactaDob.substring(3,5) + step1_sactaDob.substring(0,2) : '00000000') + step1_unique_id "
+  - "calculation = step1_sactaRevealId = ((step1_sactaDob != null && step1_sactaDob != '') ? step1_sactaDob.substring(6,10) + step1_sactaDob.substring(3,5) + step1_sactaDob.substring(0,2) : '00000000') + step1_unique_id.replace('-','') "
 ---
 name: step1_sactaAge
 description: sactaAge status
