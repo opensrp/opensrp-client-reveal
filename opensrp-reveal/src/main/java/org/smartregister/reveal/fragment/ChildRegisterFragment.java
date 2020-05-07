@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.vijay.jsonwizard.domain.Form;
+
 import org.json.JSONObject;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.ResponseErrorStatus;
@@ -20,11 +22,11 @@ import org.smartregister.reveal.adapter.ChildRegisterAdapter;
 import org.smartregister.reveal.adapter.GroupedListableAdapter;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
+import org.smartregister.reveal.contract.FormProcessor;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.model.ChildModel;
 import org.smartregister.reveal.presenter.ChildRegisterFragmentPresenter;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.ChildProfileActivity;
 import org.smartregister.reveal.view.ChildRegisterActivity;
 import org.smartregister.reveal.view.DrawerMenuView;
@@ -39,7 +41,8 @@ import java.util.concurrent.Callable;
 
 import timber.log.Timber;
 
-public class ChildRegisterFragment extends BaseListFragment<Child> implements ChildRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity, SyncStatusBroadcastReceiver.SyncStatusListener {
+public class ChildRegisterFragment extends BaseListFragment<Child> implements ChildRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity, SyncStatusBroadcastReceiver.SyncStatusListener,
+        FormProcessor.Requester {
     public static final String TAG = "ChildRegisterFragment";
 
     private BaseDrawerContract.View drawerView;
@@ -47,7 +50,6 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     @Nullable
     private HashMap<String, List<String>> filterAndSearch;
     private String locationName = "";
-    private RevealJsonFormUtils revealJsonFormUtils = new RevealJsonFormUtils();
     private TextView searchTextView;
 
     @Override
@@ -182,13 +184,24 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     }
 
     @Override
-    public void startJsonForm(JSONObject form) {
-        revealJsonFormUtils.startJsonForm(form, getActivity());
+    public void startJsonForm(JSONObject jsonObject) {
+        Form form = new Form();
+        form.setName(getString(R.string.add_student));
+        form.setActionBarBackground(org.smartregister.family.R.color.family_actionbar);
+        form.setNavigationBackground(org.smartregister.family.R.color.family_navigation);
+        form.setHomeAsUpIndicator(org.smartregister.family.R.mipmap.ic_cross_white);
+        form.setPreviousLabel(getResources().getString(org.smartregister.family.R.string.back));
+        form.setWizard(false);
+
+        getHostFormProcessor().startForm(jsonObject, form, this);
     }
 
 
     @Override
     public void onResume() {
+        if (!(getActivity() instanceof FormProcessor.Host))
+            throw new IllegalStateException("Host activity must implement org.smartregister.reveal.contract.FormProcessor.Host");
+
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
         super.onResume();
     }
@@ -251,5 +264,15 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
             }
 
         }
+    }
+
+    @Override
+    public void onFormProcessingResult(String jsonForm) {
+        loadPresenter().saveChild(jsonForm);
+    }
+
+    @Override
+    public FormProcessor.Host getHostFormProcessor() {
+        return (FormProcessor.Host) getActivity();
     }
 }

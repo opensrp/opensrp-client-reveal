@@ -37,6 +37,7 @@ public interface ChildRegisterFragmentContract {
         @NonNull
         CallableInteractor getCallableInteractor();
 
+        void saveChild(String jsonString);
     }
 
     interface Model extends ListContract.Model<Child> {

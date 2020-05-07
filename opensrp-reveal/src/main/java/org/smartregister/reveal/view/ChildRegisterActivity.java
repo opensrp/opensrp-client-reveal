@@ -7,13 +7,21 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 
+import com.vijay.jsonwizard.constants.JsonFormConstants;
+import com.vijay.jsonwizard.domain.Form;
+
+import org.json.JSONObject;
+import org.smartregister.family.activity.FamilyWizardFormActivity;
+import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.contract.FormProcessor;
 import org.smartregister.reveal.fragment.ChildFilterFragment;
 import org.smartregister.reveal.fragment.ChildRegisterFragment;
 import org.smartregister.view.activity.SecuredActivity;
 
-public class ChildRegisterActivity extends SecuredActivity {
+public class ChildRegisterActivity extends SecuredActivity implements FormProcessor.Host {
     public static final String DISPLAY_FRAGMENT = "DISPLAY_FRAGMENT";
+    private FormProcessor.Requester requester;
 
     public static void startFragment(Activity activity, String fragmentName, Bundle bundle, boolean clearStack) {
         Intent intent = new Intent(activity, ChildRegisterActivity.class);
@@ -78,5 +86,28 @@ public class ChildRegisterActivity extends SecuredActivity {
     @Override
     protected void onResumption() {
         // do nothing
+    }
+
+    @Override
+    public void startForm(JSONObject jsonObject, Form form, FormProcessor.Requester requester) {
+        this.requester = requester;
+
+        Intent intent = new Intent(this, FamilyWizardFormActivity.class);
+        intent.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonObject.toString());
+        intent.putExtra(JsonFormConstants.JSON_FORM_KEY.FORM, form);
+        startActivityForResult(intent, JsonFormUtils.REQUEST_CODE_GET_JSON);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == JsonFormUtils.REQUEST_CODE_GET_JSON && resultCode == Activity.RESULT_OK) {
+            String jsonString = data.getStringExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON);
+            if (jsonString != null && requester != null) {
+                requester.onFormProcessingResult(jsonString);
+                requester = null;
+            }
+        }else{
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }
