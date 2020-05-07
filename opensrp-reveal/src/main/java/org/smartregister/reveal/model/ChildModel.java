@@ -17,7 +17,6 @@ import org.smartregister.util.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 import timber.log.Timber;
 
@@ -127,10 +126,6 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
             child.setGender(getCursorValue(cursor, Constants.DatabaseKeys.GENDER));
             child.setGrade(getCursorValue(cursor, Constants.DatabaseKeys.GRADE));
             child.setUniqueID(getCursorValue(cursor, Constants.DatabaseKeys.UNIQUE_ID));
-            if (child.getGrade() == null)
-                child.setGrade("Grade " +
-                        (StringUtils.isNotBlank(child.getFirstName()) ? child.getFirstName().substring(0, 1) : "Unknown")
-                );
             return child;
         };
     }

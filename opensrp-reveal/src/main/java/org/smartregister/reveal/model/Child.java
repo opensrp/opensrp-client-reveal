@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.view.ListContract;
 
 import java.util.Date;
@@ -19,6 +20,7 @@ public class Child implements ListContract.Identifiable {
     private String gender;
     private String uniqueID;
     private String grade;
+    private Constants.BusinessStatus taskStatus;
 
     public String getBaseEntityID() {
         return baseEntityID;
@@ -91,6 +93,14 @@ public class Child implements ListContract.Identifiable {
     public int getAge() {
         DateTime dob = new DateTime(getBirthDate());
         return Years.yearsBetween(dob, new DateTime()).getYears();
+    }
+
+    public Constants.BusinessStatus getTaskStatus() {
+        return taskStatus;
+    }
+
+    public void setTaskStatus(Constants.BusinessStatus taskStatus) {
+        this.taskStatus = taskStatus;
     }
 
     @NonNull

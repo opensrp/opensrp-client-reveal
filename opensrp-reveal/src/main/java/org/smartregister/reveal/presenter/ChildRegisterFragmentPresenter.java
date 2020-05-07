@@ -191,7 +191,7 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
                 ChildRegisterFragmentContract.View view = getView();
                 if (view != null) {
                     if (aBoolean) {
-                        view.refreshView();
+                        view.reloadFromSource();
                     } else {
                         view.onFetchError(new Exception("An error while saving"));
                     }

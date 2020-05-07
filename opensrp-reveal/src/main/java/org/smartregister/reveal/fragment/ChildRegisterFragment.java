@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.vijay.jsonwizard.domain.Form;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.ResponseErrorStatus;
@@ -100,6 +101,8 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
         });
 
         view.findViewById(R.id.filter_text_view).setOnClickListener(v -> openFilterFragment());
+        if(StringUtils.isBlank(drawerView.getOperationalArea()))
+            drawerView.openDrawerLayout();
     }
 
     private void searchPresenter(String searchText) {
@@ -197,7 +200,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     }
 
     @Override
-    public void reloadView() {
+    public void reloadFromSource() {
         searchPresenter(searchTextView.getText().toString());
     }
 
@@ -207,8 +210,12 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
             throw new IllegalStateException("Host activity must implement org.smartregister.reveal.contract.FormProcessor.Host");
 
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
-        if (drawerView != null)
+        if (drawerView != null) {
             drawerView.onResume();
+
+            if(StringUtils.isBlank(drawerView.getOperationalArea()))
+                drawerView.openDrawerLayout();
+        }
         super.onResume();
     }
 

@@ -25,7 +25,7 @@ public interface ChildRegisterFragmentContract {
 
         void startJsonForm(JSONObject form);
 
-        void reloadView();
+        void reloadFromSource();
     }
 
     interface Presenter extends ListContract.Presenter<Child> {
