@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -141,7 +142,7 @@ public class NativeFormProcessor {
     }
 
     private org.smartregister.domain.db.Client getDomainClient() throws JSONException {
-        if (domainClient == null) {
+        if (hasClient && domainClient == null) {
             JSONObject clientJson = new JSONObject(gson.toJson(createClient()));
             domainClient = gson.fromJson(clientJson.toString(), org.smartregister.domain.db.Client.class);
         }
@@ -192,6 +193,16 @@ public class NativeFormProcessor {
             CoreLibrary.getInstance().context().getUniqueIdRepository().close(uniqueID);
         }
         return this;
+    }
+
+    public String getFieldValue(String fieldKey) throws JSONException {
+        String value = null;
+
+        JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(jsonForm), fieldKey);
+        if (field != null && field.has(JsonFormConstants.VALUE))
+            value = field.getString(JsonFormConstants.VALUE);
+
+        return StringUtils.isBlank(value) ? "" : value;
     }
 
     private ECSyncHelper getSyncHelper() {

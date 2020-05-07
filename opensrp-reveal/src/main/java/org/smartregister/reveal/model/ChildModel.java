@@ -10,6 +10,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.CoreLibrary;
 import org.smartregister.dao.AbstractDao;
+import org.smartregister.domain.Task;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -47,7 +49,9 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
     public JSONObject getMDAForm(Context context, String baseEntityID) throws JSONException {
         // read form and inject base id
         String jsonForm = Utils.readAssetContents(context, Constants.JsonForm.NTD_MASS_DRUG_ADMINISTRATION);
-        return new JSONObject(jsonForm);
+        JSONObject jsonObject = new JSONObject(jsonForm);
+        jsonObject.put(Constants.Properties.BASE_ENTITY_ID, baseEntityID);
+        return jsonObject;
     }
 
     @Override
@@ -62,6 +66,15 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
 
         revealJsonFormUtils.populateField(jsonObject, Constants.DatabaseKeys.UNIQUE_ID, uniqueID, JsonFormConstants.VALUE);
         return jsonObject;
+    }
+
+    @Override
+    public Task getCurrentTask(Context context, String baseEntityID) {
+        String taskSQL = "select _id from task where for = '" + baseEntityID + "' and code = '" + Constants.Intervention.MDA_DISPENSE + "' order by  authored_on desc limit 1";
+        DataMap<String> dataMap = cursor -> getCursorValue(cursor, "_id");
+
+        String taskId = AbstractDao.readSingleValue(taskSQL, dataMap);
+        return RevealApplication.getInstance().getContext().getTaskRepository().getTaskByIdentifier(taskId);
     }
 
     private void extractSort(QueryComposer composer, @Nullable HashMap<String, List<String>> sortAndFilter) {
@@ -134,7 +147,7 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
             child.setGrade(getCursorValue(cursor, Constants.DatabaseKeys.GRADE));
             child.setUniqueID(getCursorValue(cursor, Constants.DatabaseKeys.UNIQUE_ID));
             child.setTaskStatus(getCursorValue(cursor, Constants.DatabaseKeys.STATUS));
-            if(child.getGrade() == null)
+            if (child.getGrade() == null)
                 child.setGrade("");
 
             return child;

@@ -73,17 +73,23 @@ public class ChildRegisterAdapter extends GroupedListableAdapter<Child, GroupedL
                     linearLayoutAction.setOnClickListener(v -> view.onListItemClicked(child, v.getId()));
                     linearLayoutAction.setVisibility(View.VISIBLE);
 
+                    btnDue.setText(context.getResources().getString(R.string.record_dose));
                     btnDue.setTextColor(context.getResources().getColor(R.color.mda_partially_received));
                     btnDue.setBackground(context.getResources().getDrawable(R.drawable.due_dose_bg));
                     break;
                 case Constants.BusinessStatus.VISITED_DRUG_ADMINISTERED:
+                    linearLayoutAction.setOnClickListener(null);
+                    linearLayoutAction.setVisibility(View.VISIBLE);
 
-                    btnDue.setTextColor(context.getResources().getColor(R.color.structure_tasks_complete));
+                    btnDue.setText(context.getResources().getString(R.string.dose_given));
+                    btnDue.setTextColor(context.getResources().getColor(R.color.alert_complete_green));
                     btnDue.setBackground(null);
                     break;
                 case Constants.BusinessStatus.VISITED_DRUG_NOT_ADMINISTERED:
+                    linearLayoutAction.setOnClickListener(null);
                     linearLayoutAction.setVisibility(View.VISIBLE);
 
+                    btnDue.setText(context.getResources().getString(R.string.not_given));
                     btnDue.setTextColor(context.getResources().getColor(R.color.dark_grey));
                     btnDue.setBackground(null);
                     break;

@@ -7,6 +7,7 @@ import android.support.annotation.WorkerThread;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.util.CallableInteractor;
 import org.smartregister.view.ListContract;
@@ -55,6 +56,7 @@ public interface ChildRegisterFragmentContract {
         @WorkerThread
         JSONObject getRegistrationForm(Context context) throws JSONException;
 
+        Task getCurrentTask(Context context, String baseEntityID);
     }
 
 }

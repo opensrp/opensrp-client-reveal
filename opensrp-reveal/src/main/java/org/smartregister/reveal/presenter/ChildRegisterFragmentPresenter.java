@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
@@ -190,9 +191,43 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
         CallableInteractor myInteractor = getCallableInteractor();
 
         Callable<Boolean> callable = () -> {
-            // TODO
-            throw new Exception("Not yet implemented");
-            //return true;
+
+            ChildModel model = getModel();
+            String entityId = new JSONObject(jsonString).getString(Constants.Properties.BASE_ENTITY_ID);
+
+            // update metadata
+            NativeFormProcessor processor = new NativeFormProcessor(jsonString)
+                    .withBindType(Constants.EventType.MDA_DISPENSE)
+                    .withEncounterType(Constants.EventType.MDA_DISPENSE)
+                    .withEntityId(entityId);
+
+            // get task
+            Task task = model.getCurrentTask(context, entityId);
+
+            // update the task
+            boolean completed = processor.getFieldValue("mmaDrugAdmin").equalsIgnoreCase("Yes");
+
+            task.setBusinessStatus(completed ?
+                    Constants.BusinessStatus.VISITED_DRUG_ADMINISTERED :
+                    Constants.BusinessStatus.VISITED_DRUG_NOT_ADMINISTERED
+            );
+
+            task.setStatus(Task.TaskStatus.COMPLETED);
+            task.setLastModified(new DateTime());
+            RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
+
+            // save event details
+            Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+            processor
+                    .bindLocationData(operationalArea)
+                    .bindTaskDetails(task)
+                    .tagEventMetadata()
+
+                    // save and client
+                    .saveEvent()
+                    .clientProcessForm();
+
+            return true;
         };
 
         myInteractor.execute(callable, new CallableInteractorCallBack<Boolean>() {
