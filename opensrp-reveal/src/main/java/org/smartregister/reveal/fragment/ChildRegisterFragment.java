@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.ResponseErrorStatus;
@@ -41,6 +43,8 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import timber.log.Timber;
+
+import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
 
 public class ChildRegisterFragment extends BaseListFragment<Child> implements ChildRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity, SyncStatusBroadcastReceiver.SyncStatusListener,
         FormProcessor.Requester {
@@ -281,7 +285,19 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
     @Override
     public void onFormProcessingResult(String jsonForm) {
-        loadPresenter().saveChild(jsonForm, getContext());
+
+        try {
+            JSONObject jsonFormString = new JSONObject(jsonForm);
+            String title = jsonFormString.getString(ENCOUNTER_TYPE);
+
+            if(title.equals(Constants.EventType.CHILD_REGISTRATION)){
+                loadPresenter().saveChild(jsonForm, getContext());
+            }else if(title.equals(Constants.EventType.MDA_DISPENSE)){
+                loadPresenter().saveMDAForm(jsonForm, getContext());
+            }
+        } catch (JSONException e) {
+            Timber.e(e);
+        }
     }
 
     @Override

@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "MDA_DISPENSE",
+  "encounter_type": "mda_dispense",
   "entity_id": "",
   "metadata": {
     "start": {

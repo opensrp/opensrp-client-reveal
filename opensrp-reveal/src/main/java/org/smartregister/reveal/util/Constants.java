@@ -219,6 +219,8 @@ public interface Constants {
         String MDA_ADHERENCE = "mda_adherence";
 
         String IRS_VERIFICATION = "irs_verification";
+
+        String CHILD_REGISTRATION = "Child Registration";
     }
 
     interface Tables {

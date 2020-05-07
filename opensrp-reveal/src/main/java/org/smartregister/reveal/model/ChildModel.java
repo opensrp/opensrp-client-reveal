@@ -134,6 +134,9 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
             child.setGrade(getCursorValue(cursor, Constants.DatabaseKeys.GRADE));
             child.setUniqueID(getCursorValue(cursor, Constants.DatabaseKeys.UNIQUE_ID));
             child.setTaskStatus(getCursorValue(cursor, Constants.DatabaseKeys.STATUS));
+            if(child.getGrade() == null)
+                child.setGrade("");
+
             return child;
         };
     }

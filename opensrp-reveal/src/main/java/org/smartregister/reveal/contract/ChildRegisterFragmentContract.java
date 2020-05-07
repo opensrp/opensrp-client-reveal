@@ -40,6 +40,8 @@ public interface ChildRegisterFragmentContract {
         CallableInteractor getCallableInteractor();
 
         void saveChild(String jsonString, Context context);
+
+        void saveMDAForm(String jsonString, Context context);
     }
 
     interface Model extends ListContract.Model<Child> {
