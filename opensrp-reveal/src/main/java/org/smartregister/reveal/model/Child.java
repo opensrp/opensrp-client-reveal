@@ -20,7 +20,7 @@ public class Child implements ListContract.Identifiable {
     private String gender;
     private String uniqueID;
     private String grade;
-    private Constants.BusinessStatus taskStatus;
+    private String taskStatus;
 
     public String getBaseEntityID() {
         return baseEntityID;
@@ -95,11 +95,11 @@ public class Child implements ListContract.Identifiable {
         return Years.yearsBetween(dob, new DateTime()).getYears();
     }
 
-    public Constants.BusinessStatus getTaskStatus() {
+    public String getTaskStatus() {
         return taskStatus;
     }
 
-    public void setTaskStatus(Constants.BusinessStatus taskStatus) {
+    public void setTaskStatus(String taskStatus) {
         this.taskStatus = taskStatus;
     }
 

@@ -230,6 +230,8 @@ public interface Constants {
 
     interface BusinessStatus {
         String NOT_VISITED = "Not Visited";
+        String VISITED_DRUG_NOT_ADMINISTERED = "Visited, Drug Not Administered";
+        String VISITED_DRUG_ADMINISTERED = "Visited, Drug Administered";
         String NOT_SPRAYED = "Not Sprayed";
         String SPRAYED = "Sprayed";
         String NOT_SPRAYABLE = "Not Sprayable";

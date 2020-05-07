@@ -1,5 +1,6 @@
 package org.smartregister.reveal.adapter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -8,8 +9,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.Child;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.viewholder.GroupedListableViewHolder;
 import org.smartregister.view.ListContract;
 
@@ -41,6 +44,7 @@ public class ChildRegisterAdapter extends GroupedListableAdapter<Child, GroupedL
         private View linearLayoutAction;
         private TextView tvHeader;
         private Button btnDue;
+        private Context context;
 
         private ChildViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -50,6 +54,7 @@ public class ChildRegisterAdapter extends GroupedListableAdapter<Child, GroupedL
             tvDetails = itemView.findViewById(R.id.tvDetails);
             linearLayoutAction = itemView.findViewById(R.id.linearLayoutAction);
             btnDue = itemView.findViewById(R.id.btnDue);
+            context = itemView.getContext();
         }
 
         @Override
@@ -58,8 +63,32 @@ public class ChildRegisterAdapter extends GroupedListableAdapter<Child, GroupedL
             String details = "#" + child.getUniqueID() + " \u00B7 " + child.getGender() + " \u00B7 Age " + child.getAge();
             tvDetails.setText(details);
             currentView.setOnClickListener(v -> view.onListItemClicked(child, v.getId()));
-            linearLayoutAction.setOnClickListener(v -> view.onListItemClicked(child, v.getId()));
             btnDue.setOnClickListener(v -> view.onListItemClicked(child, v.getId()));
+
+            if (StringUtils.isBlank(child.getTaskStatus()))
+                return;
+
+            switch (child.getTaskStatus()) {
+                case Constants.BusinessStatus.NOT_VISITED:
+                    linearLayoutAction.setOnClickListener(v -> view.onListItemClicked(child, v.getId()));
+                    linearLayoutAction.setVisibility(View.VISIBLE);
+
+                    btnDue.setTextColor(context.getResources().getColor(R.color.mda_partially_received));
+                    btnDue.setBackground(context.getResources().getDrawable(R.drawable.due_dose_bg));
+                    break;
+                case Constants.BusinessStatus.VISITED_DRUG_ADMINISTERED:
+
+                    btnDue.setTextColor(context.getResources().getColor(R.color.structure_tasks_complete));
+                    btnDue.setBackground(null);
+                    break;
+                case Constants.BusinessStatus.VISITED_DRUG_NOT_ADMINISTERED:
+                    linearLayoutAction.setVisibility(View.VISIBLE);
+
+                    btnDue.setTextColor(context.getResources().getColor(R.color.dark_grey));
+                    btnDue.setBackground(null);
+                    break;
+            }
+
         }
 
         @Override
@@ -69,7 +98,9 @@ public class ChildRegisterAdapter extends GroupedListableAdapter<Child, GroupedL
 
             tvName.setText("");
             tvDetails.setText("");
-            ///linearLayoutAction.setVisibility(View.GONE);
+            linearLayoutAction.setVisibility(View.GONE);
+            linearLayoutAction.setOnClickListener(null);
+            btnDue.setBackground(null);
         }
 
         @Override
