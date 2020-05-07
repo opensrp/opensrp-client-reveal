@@ -3,9 +3,12 @@ package org.smartregister.reveal.model;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import com.vijay.jsonwizard.constants.JsonFormConstants;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.CoreLibrary;
 import org.smartregister.dao.AbstractDao;
 import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
@@ -54,11 +57,11 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
         JSONObject jsonObject = new JSONObject(jsonForm);
 
         // inject unique id
-        String uniqueID = new UniqueIdRepository().getNextUniqueId().getOpenmrsId();
+        String uniqueID = CoreLibrary.getInstance().context().getUniqueIdRepository().getNextUniqueId().getOpenmrsId();
         if (StringUtils.isBlank(uniqueID))
             throw new IllegalStateException("No local unique ID");
 
-        revealJsonFormUtils.populateField(jsonObject, Constants.DatabaseKeys.UNIQUE_ID, uniqueID, "value");
+        revealJsonFormUtils.populateField(jsonObject, Constants.DatabaseKeys.UNIQUE_ID, uniqueID, JsonFormConstants.VALUE);
         return jsonObject;
     }
 

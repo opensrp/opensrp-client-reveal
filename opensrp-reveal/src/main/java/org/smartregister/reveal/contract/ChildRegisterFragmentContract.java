@@ -23,7 +23,7 @@ public interface ChildRegisterFragmentContract {
 
         void startRecordMDAForm(String baseEntityID);
 
-        void startJsonForm(JSONObject form);
+        void startJsonForm(JSONObject form, String formTitle);
 
         void reloadFromSource();
     }

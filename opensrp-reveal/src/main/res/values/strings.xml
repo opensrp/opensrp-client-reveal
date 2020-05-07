@@ -362,5 +362,6 @@
     <string name="child_age">Age %s</string>
     <string name="add_student">Add student</string>
     <string name="mass_drug_administration">Visit child and dispense drugs</string>
+    <string name="record_dose">Record dose</string>
 
 </resources>

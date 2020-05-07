@@ -187,9 +187,9 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     }
 
     @Override
-    public void startJsonForm(JSONObject jsonObject) {
+    public void startJsonForm(JSONObject jsonObject, String formTitle) {
         Form form = new Form();
-        form.setName(getString(R.string.add_student));
+        form.setName(formTitle);
         form.setActionBarBackground(org.smartregister.family.R.color.family_actionbar);
         form.setNavigationBackground(org.smartregister.family.R.color.family_navigation);
         form.setHomeAsUpIndicator(org.smartregister.family.R.mipmap.ic_cross_white);

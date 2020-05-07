@@ -109,6 +109,13 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -143,6 +150,13 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -160,7 +174,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-mda-dispense-relevance.yml"
+              "rules-file": "ntd_mma_dispense-relevance.yml"
             }
           }
         }
@@ -189,6 +203,13 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -199,18 +220,11 @@
         "type": "edit_text",
         "hint": "PZQ pills to be given",
         "read_only": "True",
-        "text_size": "8sp"
-      },
-      {
-        "key": "mmaPzqDosage",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "hidden",
-        "calculation": {
+        "text_size": "8sp",
+        "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": ""
+              "rules-file": "ntd_mma_dispense-relevance.yml"
             }
           }
         }
@@ -255,6 +269,13 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -273,7 +294,14 @@
             "key": "No",
             "text": "No"
           }
-        ]
+        ],
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
+        }
       },
       {
         "key": "mmaAdr",
@@ -295,6 +323,13 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -338,7 +373,14 @@
             "key": "other",
             "text": "Other (specify)"
           }
-        ]
+        ],
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
+        }
       },
       {
         "key": "other_mmaAdrType",
@@ -351,7 +393,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": ""
+              "rules-file": "ntd_mma_dispense-relevance.yml"
             }
           }
         }
@@ -376,7 +418,14 @@
             "key": "severe",
             "text": "Severe"
           }
-        ]
+        ],
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
+        }
       },
       {
         "key": "mmaAdrOutcome",
@@ -402,6 +451,15 @@
             "key": "died",
             "text": "Died"
           }
-        ]
-      },
+        ],
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
+        }
       }
+    ]
+  }
+}

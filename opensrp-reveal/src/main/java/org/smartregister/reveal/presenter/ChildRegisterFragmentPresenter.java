@@ -17,11 +17,13 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.model.ChildModel;
 import org.smartregister.reveal.sync.RevealClientProcessor;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.JsonClientProcessingUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -33,6 +35,7 @@ import org.smartregister.util.CallableInteractor;
 import org.smartregister.util.CallableInteractorCallBack;
 import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.GenericInteractor;
+import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
 import org.smartregister.view.ListContract;
 import org.smartregister.view.presenter.ListPresenter;
@@ -76,7 +79,7 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
                     ChildRegisterFragmentContract.View view = getView();
                     if (view != null) {
                         if (jsonObject != null) {
-                            view.startJsonForm(jsonObject);
+                            view.startJsonForm(jsonObject, context.getString(R.string.record_dose));
                         } else {
                             view.onFetchError(new IllegalArgumentException("Form not found"));
                         }
@@ -108,7 +111,7 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
                     ChildRegisterFragmentContract.View view = getView();
                     if (view != null) {
                         if (jsonObject != null) {
-                            view.startJsonForm(jsonObject);
+                            view.startJsonForm(jsonObject, context.getString(R.string.add_student));
                         } else {
                             view.onFetchError(new IllegalArgumentException("Form not found"));
                         }
@@ -182,6 +185,13 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
             // create a task
             TaskUtils taskUtils = TaskUtils.getInstance();
             taskUtils.generateDrugAdministrationTask(context, entityId);
+
+            // extract and close ids
+            JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(jsonForm), Constants.DatabaseKeys.UNIQUE_ID);
+            if (field != null) {
+                String uniqueID = field.getString(JsonFormConstants.VALUE);
+                CoreLibrary.getInstance().context().getUniqueIdRepository().close(uniqueID);
+            }
             return true;
         };
 
