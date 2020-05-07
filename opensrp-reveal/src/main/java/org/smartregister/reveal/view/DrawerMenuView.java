@@ -187,7 +187,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     @Override
     public String getPlan() {
-        return planTextView.getText().toString();
+        return planTextView != null ? planTextView.getText().toString() : "";
     }
 
     @Override

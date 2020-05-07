@@ -122,7 +122,49 @@
           "column_name": "grade",
           "type": "Client",
           "json_mapping": {
-            "field": "identifiers.grade"
+            "field": "attributes.grade"
+          }
+        },
+        {
+          "column_name": "grade_class",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.grade_class"
+          }
+        },
+        {
+          "column_name": "national_id",
+          "type": "Client",
+          "json_mapping": {
+            "field": "identifiers.national_id"
+          }
+        },
+        {
+          "column_name": "reveal_id",
+          "type": "Client",
+          "json_mapping": {
+            "field": "identifiers.reveal_id"
+          }
+        },
+        {
+          "column_name": "approx_dob",
+          "type": "Client",
+          "json_mapping": {
+            "field": "birthdateApprox"
+          }
+        },
+        {
+          "column_name": "school_enrolled",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.school_enrolled"
+          }
+        },
+        {
+          "column_name": "school_name",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.school_name"
           }
         }
       ]

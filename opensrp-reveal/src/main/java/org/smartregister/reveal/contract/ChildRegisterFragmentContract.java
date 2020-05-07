@@ -24,6 +24,8 @@ public interface ChildRegisterFragmentContract {
         void startRecordMDAForm(String baseEntityID);
 
         void startJsonForm(JSONObject form);
+
+        void reloadView();
     }
 
     interface Presenter extends ListContract.Presenter<Child> {
@@ -37,7 +39,7 @@ public interface ChildRegisterFragmentContract {
         @NonNull
         CallableInteractor getCallableInteractor();
 
-        void saveChild(String jsonString);
+        void saveChild(String jsonString, Context context);
     }
 
     interface Model extends ListContract.Model<Child> {
@@ -50,6 +52,7 @@ public interface ChildRegisterFragmentContract {
 
         @WorkerThread
         JSONObject getRegistrationForm(Context context) throws JSONException;
+
     }
 
 }

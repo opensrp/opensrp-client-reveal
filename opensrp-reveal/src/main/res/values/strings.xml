@@ -361,5 +361,6 @@
     <string name="edit">Edit</string>
     <string name="child_age">Age %s</string>
     <string name="add_student">Add student</string>
+    <string name="mass_drug_administration">Visit child and dispense drugs</string>
 
 </resources>

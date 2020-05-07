@@ -54,10 +54,7 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
         String jsonForm = Utils.readAssetContents(context, Constants.JsonForm.NTD_CHILD_REGISTRATION);
         JSONObject jsonObject = new JSONObject(jsonForm);
 
-        // new id
-        jsonObject.put(Constants.Properties.BASE_ENTITY_ID, UUID.randomUUID().toString());
         // inject unique id
-
         String uniqueID = new UniqueIdRepository().getNextUniqueId().getOpenmrsId();
         if (StringUtils.isBlank(uniqueID))
             throw new IllegalStateException("No local unique ID");

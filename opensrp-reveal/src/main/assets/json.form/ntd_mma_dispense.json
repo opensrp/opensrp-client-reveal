@@ -51,7 +51,6 @@
     "display_back_button": "true",
     "fields": [
       {
-      {
         "key": "mmaConsent",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",

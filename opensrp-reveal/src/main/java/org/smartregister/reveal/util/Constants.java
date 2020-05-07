@@ -23,6 +23,8 @@ public interface Constants {
 
     String MOSQUITO_COLLECTION_EVENT = "mosquito_collection";
 
+    String REGISTER_CHILD_EVENT = "Child Registration";
+
     String LARVAL_DIPPING_EVENT = "larval_dipping";
 
     String BEDNET_DISTRIBUTION_EVENT = "bednet_distribution";

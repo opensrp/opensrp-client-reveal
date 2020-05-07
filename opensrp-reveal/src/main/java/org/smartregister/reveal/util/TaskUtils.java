@@ -73,6 +73,11 @@ public class TaskUtils {
                 R.string.bednet_distribution_description);
     }
 
+    public void generateDrugAdministrationTask(Context context, String entityId) {
+        generateTask(context, entityId, entityId, BusinessStatus.NOT_VISITED, Intervention.MDA_DISPENSE,
+                R.string.mass_drug_administration);
+    }
+
     public Task generateTask(Context context, String entityId, String structureId, String businessStatus, String intervention, @StringRes int description) {
         Task task = new Task();
         DateTime now = new DateTime();

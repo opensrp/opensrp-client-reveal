@@ -196,6 +196,10 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
         getHostFormProcessor().startForm(jsonObject, form, this);
     }
 
+    @Override
+    public void reloadView() {
+        searchPresenter(searchTextView.getText().toString());
+    }
 
     @Override
     public void onResume() {
@@ -203,6 +207,8 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
             throw new IllegalStateException("Host activity must implement org.smartregister.reveal.contract.FormProcessor.Host");
 
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
+        if (drawerView != null)
+            drawerView.onResume();
         super.onResume();
     }
 
@@ -268,7 +274,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
     @Override
     public void onFormProcessingResult(String jsonForm) {
-        loadPresenter().saveChild(jsonForm);
+        loadPresenter().saveChild(jsonForm, getContext());
     }
 
     @Override
