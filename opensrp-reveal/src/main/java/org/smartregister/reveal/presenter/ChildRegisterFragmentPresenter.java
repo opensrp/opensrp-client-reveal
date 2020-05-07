@@ -254,10 +254,6 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
         });
     }
 
-    public ECSyncHelper getSyncHelper() {
-        return ECSyncHelper.getInstance(RevealApplication.getInstance().getContext().applicationContext());
-    }
-
     @Override
     public ChildRegisterFragmentContract.View getView() {
         return (ChildRegisterFragmentContract.View) super.getView();

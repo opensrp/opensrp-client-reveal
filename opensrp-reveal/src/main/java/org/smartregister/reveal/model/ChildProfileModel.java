@@ -12,6 +12,8 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.util.QueryComposer;
 import org.smartregister.util.Utils;
 
+import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
+
 public class ChildProfileModel extends AbstractDao implements ChildProfileContract.Model {
 
     @Nullable
@@ -54,12 +56,17 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
     @Override
     public JSONObject getRegistrationEditForm(Context context, String baseEntityID) throws JSONException {
         String jsonForm = Utils.readAssetContents(context, Constants.JsonForm.NTD_CHILD_REGISTRATION);
-        return new JSONObject(jsonForm);
+        JSONObject jsonObject = new JSONObject(jsonForm);
+        jsonObject.put(Constants.Properties.BASE_ENTITY_ID, baseEntityID);
+        jsonObject.put(ENCOUNTER_TYPE, Constants.EventType.UPDATE_CHILD_REGISTRATION);
+        return jsonObject;
     }
 
     @Override
     public JSONObject getADRForm(Context context, String baseEntityID) throws JSONException {
         String jsonForm = Utils.readAssetContents(context, Constants.JsonForm.NTD_DRUG_ADVERSE_REACTION);
-        return new JSONObject(jsonForm);
+        JSONObject jsonObject = new JSONObject(jsonForm);
+        jsonObject.put(Constants.Properties.BASE_ENTITY_ID, baseEntityID);
+        return jsonObject;
     }
 }

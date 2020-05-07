@@ -5,10 +5,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.json.JSONObject;
+import org.smartregister.domain.Location;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.ChildProfileContract;
+import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.model.ChildProfileModel;
+import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.NativeFormProcessor;
+import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.CallableInteractor;
 import org.smartregister.util.CallableInteractorCallBack;
 
@@ -155,6 +161,60 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
         });
     }
 
+    @Override
+    public void updateChild(JSONObject jsonObject, Context context) {
+
+    }
+
+    @Override
+    public void saveADRForm(JSONObject jsonObject, Context context) {
+        CallableInteractor myInteractor = getInteractor();
+
+        Callable<Boolean> callable = () -> {
+
+            String entityId = jsonObject.getString(Constants.Properties.BASE_ENTITY_ID);
+
+            // save event details
+            Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+
+            // update metadata
+            new NativeFormProcessor(jsonObject.toString())
+                    .withBindType(Constants.EventType.MDA_ADVERSE_DRUG_REACTION)
+                    .withEncounterType(Constants.EventType.MDA_ADVERSE_DRUG_REACTION)
+                    .withEntityId(entityId)
+                    .bindLocationData(operationalArea)
+                    .tagEventMetadata()
+
+                    // save and client
+                    .saveEvent()
+                    .clientProcessForm();
+
+            return true;
+        };
+
+        myInteractor.execute(callable, new CallableInteractorCallBack<Boolean>() {
+            @Override
+            public void onResult(Boolean aBoolean) {
+                ChildProfileContract.View view = getView();
+                if (view != null) {
+                    if (aBoolean) {
+                        view.reloadFromSource();
+                    } else {
+                        view.onError(new Exception("An error while saving"));
+                    }
+                    view.setLoadingState(false);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ChildProfileContract.View view = getView();
+                if (view == null) return;
+                view.onError(ex);
+                view.setLoadingState(false);
+            }
+        });
+    }
 
     @Override
     public void onDestroy(boolean b) {

@@ -29,6 +29,8 @@ public interface ChildProfileContract {
         void startADRForm();
 
         void startJsonForm(JSONObject jsonObject, String formTitle);
+
+        void reloadFromSource();
     }
 
     interface Presenter extends BaseProfileContract.Presenter {
@@ -49,6 +51,10 @@ public interface ChildProfileContract {
         void startChildRegistrationForm(Context context, String baseEntityID);
 
         void startADRForm(Context context, String baseEntityID);
+
+        void updateChild(JSONObject jsonObject, Context context);
+
+        void saveADRForm(JSONObject jsonObject, Context context);
     }
 
     interface Model {

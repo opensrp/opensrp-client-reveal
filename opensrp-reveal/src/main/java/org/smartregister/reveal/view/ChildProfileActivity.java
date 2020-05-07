@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.family.activity.FamilyWizardFormActivity;
 import org.smartregister.family.util.JsonFormUtils;
@@ -33,6 +34,8 @@ import org.smartregister.view.activity.BaseProfileActivity;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import timber.log.Timber;
+
+import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
 
 public class ChildProfileActivity extends BaseProfileActivity implements ChildProfileContract.View {
 
@@ -177,5 +180,33 @@ public class ChildProfileActivity extends BaseProfileActivity implements ChildPr
         intent.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonObject.toString());
         intent.putExtra(JsonFormConstants.JSON_FORM_KEY.FORM, form);
         startActivityForResult(intent, JsonFormUtils.REQUEST_CODE_GET_JSON);
+    }
+
+    @Override
+    public void reloadFromSource() {
+        fetchProfileData();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == JsonFormUtils.REQUEST_CODE_GET_JSON && resultCode == Activity.RESULT_OK) {
+            String jsonString = data.getStringExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON);
+            try {
+                JSONObject jsonObject = new JSONObject(jsonString);
+                String title = jsonObject.getString(ENCOUNTER_TYPE);
+
+                if (title.equals(Constants.EventType.UPDATE_CHILD_REGISTRATION)) {
+                    getPresenter().updateChild(jsonObject, getApplicationContext());
+                } else if (title.equals(Constants.EventType.MDA_ADVERSE_DRUG_REACTION)) {
+                    getPresenter().saveADRForm(jsonObject, getApplicationContext());
+                }
+
+            } catch (JSONException e) {
+                Timber.e(e);
+            }
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

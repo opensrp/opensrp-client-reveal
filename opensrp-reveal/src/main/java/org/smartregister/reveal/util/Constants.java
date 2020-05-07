@@ -216,11 +216,15 @@ public interface Constants {
 
         String MDA_DISPENSE = "mda_dispense";
 
+        String MDA_ADVERSE_DRUG_REACTION = "mma_adr";
+
         String MDA_ADHERENCE = "mda_adherence";
 
         String IRS_VERIFICATION = "irs_verification";
 
         String CHILD_REGISTRATION = "Child Registration";
+
+        String UPDATE_CHILD_REGISTRATION = "Update Child Registration";
     }
 
     interface Tables {
