@@ -17,7 +17,6 @@ import org.smartregister.domain.Task;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BuildConfig;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.sync.helper.ECSyncHelper;
 import org.smartregister.util.DateTimeTypeConverter;
@@ -122,7 +121,7 @@ public class NativeFormProcessor {
 
     private Client createClient() throws JSONException {
         if (hasClient && _client == null)
-            _client = org.smartregister.util.JsonFormUtils.createBaseClient(
+            _client = JsonFormUtils.createBaseClient(
                     getFields(),
                     JsonClientProcessingUtils.formTag(allSharedPreferences),
                     entityId
@@ -133,7 +132,7 @@ public class NativeFormProcessor {
 
     private Event createEvent() throws JSONException {
         if (_event == null)
-            _event = org.smartregister.util.JsonFormUtils.createEvent(
+            _event = JsonFormUtils.createEvent(
                     getFields(),
                     getJSONObject(jsonForm, METADATA),
                     JsonClientProcessingUtils.formTag(allSharedPreferences),
@@ -209,7 +208,7 @@ public class NativeFormProcessor {
      * @throws JSONException
      */
     public NativeFormProcessor saveClient() throws JSONException {
-        JSONObject clientJson = new JSONObject(org.smartregister.family.util.JsonFormUtils.gson.toJson(createClient()));
+        JSONObject clientJson = new JSONObject(gson.toJson(createClient()));
         getSyncHelper().addClient(createClient().getBaseEntityId(), clientJson);
         return this;
     }
@@ -244,7 +243,7 @@ public class NativeFormProcessor {
     }
 
     private ECSyncHelper getSyncHelper() {
-        return ECSyncHelper.getInstance(RevealApplication.getInstance().getContext().applicationContext());
+        return ECSyncHelper.getInstance(getInstance().getContext().applicationContext());
     }
 
     public NativeFormProcessor populateValues(Map<String, Object> dictionary) throws JSONException {

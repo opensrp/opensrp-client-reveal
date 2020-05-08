@@ -13,13 +13,11 @@ import org.smartregister.reveal.model.ChildProfileModel;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.NativeFormProcessor;
 import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.CallableInteractor;
 import org.smartregister.util.CallableInteractorCallBack;
 
 import java.lang.ref.WeakReference;
-import java.util.UUID;
 import java.util.concurrent.Callable;
 
 import timber.log.Timber;

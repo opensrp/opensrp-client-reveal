@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Years;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.view.ListContract;
 
 import java.util.Date;

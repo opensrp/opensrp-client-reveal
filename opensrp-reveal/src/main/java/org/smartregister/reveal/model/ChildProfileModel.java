@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.dao.AbstractDao;
@@ -94,11 +93,11 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
         values.put("sactaClass", getFormValue(clientJson.getJSONObject("attributes"), "grade_class"));
 
 
-        NativeFormProcessor processor = new NativeFormProcessor(jsonObject)
+        new NativeFormProcessor(jsonObject)
                 .populateValues(values);
 
         String noID = getFormValue(clientJson.getJSONObject("attributes"), "has_no_id").toString();
-        if(StringUtils.isNotBlank(noID)){
+        if (StringUtils.isNotBlank(noID)) {
             JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(jsonObject), "sactaNoNationalId");
             field.getJSONArray("options").getJSONObject(0).put(JsonFormConstants.VALUE, true);
         }

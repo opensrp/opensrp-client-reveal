@@ -93,6 +93,10 @@ public class ChildRegisterAdapter extends GroupedListableAdapter<Child, GroupedL
                     btnDue.setTextColor(context.getResources().getColor(R.color.dark_grey));
                     btnDue.setBackground(null);
                     break;
+                default:
+                    linearLayoutAction.setOnClickListener(null);
+                    linearLayoutAction.setVisibility(View.GONE);
+                    break;
             }
 
         }

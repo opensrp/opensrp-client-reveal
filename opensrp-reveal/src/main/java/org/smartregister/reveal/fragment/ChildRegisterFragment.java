@@ -90,7 +90,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
         searchTextView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                // do nothing
             }
 
             @Override
@@ -100,7 +100,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                // do nothing
             }
         });
 
