@@ -153,6 +153,8 @@ android {
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '60'
             buildConfigField "boolean", "DISPLAY_OUTSIDE_OPERATIONAL_AREA_MASK", 'false'
             buildConfigField "boolean", "DISPLAY_DISTANCE_SCALE", 'true'
+            buildConfigField "String", "OAUTH_CLIENT_ID", '"xxxxxxxxxx"'
+            buildConfigField "String", "OAUTH_CLIENT_SECRET", '"xxxxxxxxxxx"'
 
             testCoverageEnabled true
         }
@@ -188,7 +190,6 @@ dependencies {
         exclude group: 'com.android.volley'
         exclude group: 'stax', module: 'stax-api'
     }
-
 
     implementation('org.smartregister:opensrp-client-core:2.0.0-OAUTH-PRV-SNAPSHOT@aar') {
 

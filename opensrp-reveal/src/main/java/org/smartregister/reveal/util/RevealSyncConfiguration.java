@@ -148,5 +148,4 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     public Class<? extends BaseLoginActivity> getAuthenticationActivity() {
         return LoginActivity.class;
     }
-
 }

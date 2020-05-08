@@ -45,4 +45,14 @@ public class LoginInteractor extends BaseLoginInteractor implements BaseLoginCon
         }
         super.loginWithLocalFlag(view, localLogin, userName, password);
     }
+
+    @Override
+    protected String getOauthAccountType() {
+        return "org.smartregister.reveal";
+    }
+
+    @Override
+    protected String getOauthAccountName() {
+        return "OpenSRP : Reveal";
+    }
 }
