@@ -131,4 +131,14 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     public boolean clearDataOnNewTeamLogin() {
         return true;
     }
+
+    @Override
+    public String oauthClientId() {
+        return null;
+    }
+
+    @Override
+    public String oauthClientSecret() {
+        return null;
+    }
 }

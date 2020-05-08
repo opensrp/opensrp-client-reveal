@@ -39,10 +39,20 @@ public class LoginInteractor extends BaseLoginInteractor implements BaseLoginCon
 
     @Override
     public void loginWithLocalFlag(WeakReference<BaseLoginContract.View> view, boolean localLogin, String userName, String password) {
-        if(!localLogin){
+        if (!localLogin) {
             RevealApplication.getInstance().getContext().getHttpAgent().setConnectTimeout(CoreLibrary.getInstance().getSyncConfiguration().getConnectTimeout());
             RevealApplication.getInstance().getContext().getHttpAgent().setReadTimeout(CoreLibrary.getInstance().getSyncConfiguration().getReadTimeout());
         }
         super.loginWithLocalFlag(view, localLogin, userName, password);
+    }
+
+    @Override
+    protected String getOauthAccountType() {
+        return "org.smartregister.reveal";
+    }
+
+    @Override
+    protected String getOauthAccountName() {
+        return "OpenSRP : Reveal";
     }
 }
