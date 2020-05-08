@@ -172,8 +172,8 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
         Callable<Boolean> callable = () -> {
 
             Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
-            String entityId = UUID.randomUUID().toString();
-            new NativeFormProcessor(jsonObject.toString())
+            String entityId = jsonObject.getString(Constants.Properties.BASE_ENTITY_ID);
+            new NativeFormProcessor(jsonObject)
 
                     // update metadata
                     .withBindType(CHILD_TABLE)
@@ -191,8 +191,6 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
 
                     // execute client processing
                     .clientProcessForm();
-
-            TaskUtils.getInstance().generateDrugAdministrationTask(context, entityId);
 
             return true;
         };
@@ -233,7 +231,7 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
             Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
 
             // update metadata
-            new NativeFormProcessor(jsonObject.toString())
+            new NativeFormProcessor(jsonObject)
                     .withBindType(Constants.EventType.MDA_ADVERSE_DRUG_REACTION)
                     .withEncounterType(Constants.EventType.MDA_ADVERSE_DRUG_REACTION)
                     .withEntityId(entityId)

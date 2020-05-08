@@ -220,6 +220,8 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
             if(StringUtils.isBlank(drawerView.getOperationalArea()))
                 drawerView.openDrawerLayout();
         }
+
+        reloadFromSource();
         super.onResume();
     }
 

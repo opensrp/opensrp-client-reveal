@@ -64,7 +64,7 @@ public interface ChildProfileContract {
         Child getChild(String baseEntityID) throws QueryComposer.InvalidQueryException;
 
         @WorkerThread
-        JSONObject getRegistrationEditForm(Context context, String baseEntityID) throws JSONException;
+        JSONObject getRegistrationEditForm(Context context, String baseEntityID) throws Exception;
 
         @WorkerThread
         JSONObject getADRForm(Context context, String baseEntityID) throws JSONException;

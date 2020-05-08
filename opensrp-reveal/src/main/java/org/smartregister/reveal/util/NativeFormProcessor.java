@@ -25,6 +25,7 @@ import org.smartregister.util.JsonFormUtils;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 
 import static org.smartregister.family.util.JsonFormUtils.RELATIONSHIPS;
 import static org.smartregister.reveal.application.RevealApplication.getInstance;
@@ -51,6 +52,13 @@ public class NativeFormProcessor {
 
     public NativeFormProcessor(String jsonString) throws JSONException {
         this.jsonForm = new JSONObject(jsonString);
+        allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
+        gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
+    }
+
+    public NativeFormProcessor(JSONObject jsonObject) {
+        this.jsonForm = jsonObject;
         allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
         gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
                 .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
@@ -237,5 +245,25 @@ public class NativeFormProcessor {
 
     private ECSyncHelper getSyncHelper() {
         return ECSyncHelper.getInstance(RevealApplication.getInstance().getContext().applicationContext());
+    }
+
+    public NativeFormProcessor populateValues(Map<String, Object> dictionary) throws JSONException {
+        int step = 1;
+        while (jsonForm.has("step" + step)) {
+            JSONObject jsonStepObject = jsonForm.getJSONObject("step" + step);
+            JSONArray array = jsonStepObject.getJSONArray(JsonFormConstants.FIELDS);
+            int position = 0;
+            while (position < array.length()) {
+                JSONObject object = array.getJSONObject(position);
+                String key = object.getString(JsonFormConstants.KEY);
+                if (dictionary.containsKey(key))
+                    object.put(JsonFormConstants.VALUE, dictionary.get(key));
+
+                position++;
+            }
+
+            step++;
+        }
+        return this;
     }
 }
