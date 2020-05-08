@@ -36,8 +36,7 @@ public class ChildFilterFragmentModel extends AbstractDao implements ChildFilter
                 .withColumn("distinct cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', " + Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.DOB + ") as int) as " + Constants.DatabaseKeys.AGE)
                 .withMainTable(Constants.DatabaseKeys.CHILD_TABLE)
                 .withSortColumn(Constants.DatabaseKeys.AGE)
-                .withWhereClause(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.DOB + " != '' ")
-                .withLimitClause(0, 10);
+                .withWhereClause(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.DOB + " != '' ");
 
         DataMap<String> dataMap = cursor -> getCursorValue(cursor, Constants.DatabaseKeys.AGE);
 

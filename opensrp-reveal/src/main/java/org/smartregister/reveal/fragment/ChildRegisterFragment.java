@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
 
 import org.apache.commons.lang3.StringUtils;
@@ -105,7 +104,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
         });
 
         view.findViewById(R.id.filter_text_view).setOnClickListener(v -> openFilterFragment());
-        if(StringUtils.isBlank(drawerView.getOperationalArea()))
+        if (StringUtils.isBlank(drawerView.getOperationalArea()))
             drawerView.openDrawerLayout();
     }
 
@@ -217,7 +216,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
         if (drawerView != null) {
             drawerView.onResume();
 
-            if(StringUtils.isBlank(drawerView.getOperationalArea()))
+            if (StringUtils.isBlank(drawerView.getOperationalArea()))
                 drawerView.openDrawerLayout();
         }
 
@@ -292,9 +291,9 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
             JSONObject jsonFormString = new JSONObject(jsonForm);
             String title = jsonFormString.getString(ENCOUNTER_TYPE);
 
-            if(title.equals(Constants.EventType.CHILD_REGISTRATION)){
+            if (title.equals(Constants.EventType.CHILD_REGISTRATION)) {
                 loadPresenter().saveChild(jsonForm, getContext());
-            }else if(title.equals(Constants.EventType.MDA_DISPENSE)){
+            } else if (title.equals(Constants.EventType.MDA_DISPENSE)) {
                 loadPresenter().saveMDAForm(jsonForm, getContext());
             }
         } catch (JSONException e) {
