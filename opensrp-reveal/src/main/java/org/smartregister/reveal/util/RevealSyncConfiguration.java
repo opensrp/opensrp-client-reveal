@@ -134,11 +134,11 @@ public class RevealSyncConfiguration extends SyncConfiguration {
 
     @Override
     public String oauthClientId() {
-        return null;
+        return BuildConfig.OAUTH_CLIENT_ID;
     }
 
     @Override
     public String oauthClientSecret() {
-        return null;
+        return BuildConfig.OAUTH_CLIENT_SECRET;
     }
 }
