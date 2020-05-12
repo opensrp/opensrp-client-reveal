@@ -10,9 +10,9 @@
 
     <CheckBox
         android:id="@+id/offline_map_checkbox"
-        android:layout_width="60dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="348dp"
+        android:layout_marginStart="20dp"
         android:gravity="center_horizontal"
         android:paddingTop="@dimen/task_register_padding"
         android:paddingBottom="0dp"
@@ -21,9 +21,9 @@
         android:textColor="#FAAB00"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@id/downloading_label"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.785" />
+        app:layout_constraintVertical_bias="0.44" />
 
     <TextView
         android:id="@+id/offline_map_label"
