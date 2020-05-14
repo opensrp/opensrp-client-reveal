@@ -350,4 +350,11 @@
     <string name="tested">Tested</string>
     <string name="not_tested">Not Tested</string>
     <string name="yes">Yes</string>
+
+    <string name="drawing_boundaries_delete">Delete Point</string>
+    <string name="drawing_boundaries_start_draw">Start Drawing</string>
+    <string name="drawing_boundaries_stop_draw">Stop Drawing</string>
+    <string name="drawing_boundaries_circle_clicked">Circle clicked</string>
+    <string name="drawing_boundaries_circle_not_clicked">Circle not clicked</string>
+    <string name="edit_foci_boundary">Edit Foci Boundary</string>
 </resources>
