@@ -77,6 +77,13 @@
           }
         },
         {
+          "column_name": "location",
+          "type": "Event",
+          "json_mapping": {
+            "field": "locationId"
+          }
+        },
+        {
           "column_name": "first_name",
           "type": "Client",
           "json_mapping": {

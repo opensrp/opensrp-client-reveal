@@ -31,7 +31,7 @@ public interface ChildRegisterFragmentContract {
 
     interface Presenter extends ListContract.Presenter<Child> {
 
-        void search(String schoolID, @Nullable HashMap<String, List<String>> sortAndFilter, @Nullable String searchText);
+        void search(@Nullable HashMap<String, List<String>> sortAndFilter, @Nullable String searchText);
 
         void startMDAForm(Context context, String baseEntityID);
 
@@ -48,7 +48,7 @@ public interface ChildRegisterFragmentContract {
     interface Model extends ListContract.Model<Child> {
 
         @WorkerThread
-        List<Child> searchAndFilter(String schoolID, @Nullable HashMap<String, List<String>> sortAndFilter, @Nullable String searchText);
+        List<Child> searchAndFilter(@Nullable HashMap<String, List<String>> sortAndFilter, @Nullable String searchText);
 
         @WorkerThread
         JSONObject getMDAForm(Context context, String baseEntityID) throws JSONException;
@@ -57,6 +57,8 @@ public interface ChildRegisterFragmentContract {
         JSONObject getRegistrationForm(Context context) throws JSONException;
 
         Task getCurrentTask(Context context, String baseEntityID);
+
+        String getCurrentLocationID();
     }
 
 }

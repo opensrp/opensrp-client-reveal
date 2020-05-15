@@ -528,6 +528,8 @@ public interface Constants {
 
         String FOR = "for";
 
+        String LOCATION = "location";
+
         String BUSINESS_STATUS = "business_status";
 
         String STATUS = "status";

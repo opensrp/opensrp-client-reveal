@@ -14,6 +14,7 @@ import org.smartregister.domain.Task;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.JsonClientProcessingUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.util.QueryComposer;
 import org.smartregister.util.Utils;
@@ -29,13 +30,18 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
     private RevealJsonFormUtils revealJsonFormUtils = new RevealJsonFormUtils();
 
     @Override
-    public List<Child> searchAndFilter(String schoolID, @Nullable HashMap<String, List<String>> sortAndFilter, @Nullable String searchText) {
+    public List<Child> searchAndFilter(@Nullable HashMap<String, List<String>> sortAndFilter, @Nullable String searchText) {
         QueryComposer composer = getDefaultComposer();
         if (StringUtils.isNotBlank(searchText))
             composer.withWhereClause(Constants.DatabaseKeys.FIRST_NAME + " like '%" + searchText + "%' or " +
-                    Constants.DatabaseKeys.LAST_NAME  + " like '%" + searchText + "%' or " +
-                    Constants.DatabaseKeys.UNIQUE_ID  + " like '%" + searchText + "%' "
+                    Constants.DatabaseKeys.LAST_NAME + " like '%" + searchText + "%' or " +
+                    Constants.DatabaseKeys.UNIQUE_ID + " like '%" + searchText + "%' "
             );
+
+        String currentArea = getCurrentLocationID();
+        if (StringUtils.isNotBlank(currentArea))
+            composer.withWhereClause(Constants.DatabaseKeys.LOCATION + " = '" + currentArea + "'");
+
 
         extractSort(composer, sortAndFilter);
         extractFilter(composer, sortAndFilter);
@@ -46,6 +52,11 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
             Timber.e(e);
             return new ArrayList<>();
         }
+    }
+
+    @Override
+    public String getCurrentLocationID() {
+        return JsonClientProcessingUtils.getCurrentLocationID(CoreLibrary.getInstance().context().allSharedPreferences());
     }
 
     @Override

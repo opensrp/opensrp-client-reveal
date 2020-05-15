@@ -109,14 +109,14 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     }
 
     private void searchPresenter(String searchText) {
-        loadPresenter().search(locationName, filterAndSearch, searchText);
+        loadPresenter().search(filterAndSearch, searchText);
     }
 
     @NonNull
     @Override
     protected Callable<List<Child>> onStartCallable(@Nullable Bundle bundle) {
         ChildModel model = presenter.getModel();
-        return () -> model.searchAndFilter(locationName, filterAndSearch, locationName);
+        return () -> model.searchAndFilter(filterAndSearch, "");
     }
 
     @Override
@@ -171,7 +171,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
         // to do -> re render the details
         locationName = drawerView.getOperationalArea();
         tvTitle.setText(locationName);
-        searchPresenter(locationName);
+        searchPresenter("");
     }
 
     @Override

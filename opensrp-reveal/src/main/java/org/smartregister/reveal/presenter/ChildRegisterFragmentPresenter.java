@@ -47,9 +47,9 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
     private CallableInteractor callableInteractor;
 
     @Override
-    public void search(String schoolID, @Nullable HashMap<String, List<String>> sortAndFilter, @Nullable String searchText) {
+    public void search(@Nullable HashMap<String, List<String>> sortAndFilter, @Nullable String searchText) {
         ChildModel model = getModel();
-        this.fetchList(() -> model.searchAndFilter(schoolID, sortAndFilter, searchText), AppExecutors.Request.DISK_THREAD);
+        this.fetchList(() -> model.searchAndFilter(sortAndFilter, searchText), AppExecutors.Request.DISK_THREAD);
     }
 
     @Override

@@ -2,9 +2,12 @@ package org.smartregister.reveal.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.clientandeventmodel.Event;
+import org.smartregister.domain.Location;
 import org.smartregister.domain.tag.FormTag;
 import org.smartregister.family.FamilyLibrary;
 import org.smartregister.repository.AllSharedPreferences;
+
+import timber.log.Timber;
 
 public class JsonClientProcessingUtils {
 
@@ -30,10 +33,22 @@ public class JsonClientProcessingUtils {
     }
 
     public static String getCurrentLocationID(AllSharedPreferences allSharedPreferences) {
-        String providerId = allSharedPreferences.fetchRegisteredANM();
-        String userLocationId = allSharedPreferences.fetchUserLocalityId(providerId);
-        if (StringUtils.isBlank(userLocationId)) {
-            userLocationId = allSharedPreferences.fetchDefaultLocalityId(providerId);
+        Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+        String userLocationId = null;
+        try {
+            userLocationId = operationalArea.getProperties().getUid();
+            if (userLocationId == null)
+                userLocationId = operationalArea.getProperties().getCustomProperties().get("OpenMRS_Id");
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+
+        if (userLocationId == null) {
+            String providerId = allSharedPreferences.fetchRegisteredANM();
+            userLocationId = allSharedPreferences.fetchUserLocalityId(providerId);
+            if (StringUtils.isBlank(userLocationId)) {
+                userLocationId = allSharedPreferences.fetchDefaultLocalityId(providerId);
+            }
         }
         return userLocationId;
     }
