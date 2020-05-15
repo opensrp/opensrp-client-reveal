@@ -54,10 +54,6 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
             child.setGender(getCursorValue(cursor, Constants.DatabaseKeys.GENDER));
             child.setGrade(getCursorValue(cursor, Constants.DatabaseKeys.GRADE));
             child.setUniqueID(getCursorValue(cursor, Constants.DatabaseKeys.UNIQUE_ID));
-            if (child.getGrade() == null)
-                child.setGrade("Grade " +
-                        (StringUtils.isNotBlank(child.getFirstName()) ? child.getFirstName().substring(0, 1) : "Unknown")
-                );
             return child;
         };
 

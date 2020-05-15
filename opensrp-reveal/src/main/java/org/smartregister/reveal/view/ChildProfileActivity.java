@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.family.activity.FamilyWizardFormActivity;
@@ -132,7 +133,8 @@ public class ChildProfileActivity extends BaseProfileActivity implements ChildPr
 
     @Override
     public void onFetchResult(Child child) {
-        tvNames.setText(child.getFullName() + ", " + child.getGrade());
+        String names = StringUtils.isBlank(child.getGrade()) ? child.getFullName() : child.getFullName() + ", " + child.getGrade();
+        tvNames.setText(names);
         tvNumber.setText(child.getUniqueID());
         tvGender.setText(child.getGender());
         tvAge.setText(getString(R.string.child_age, child.getAge()));
