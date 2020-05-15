@@ -32,7 +32,10 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
     public List<Child> searchAndFilter(String schoolID, @Nullable HashMap<String, List<String>> sortAndFilter, @Nullable String searchText) {
         QueryComposer composer = getDefaultComposer();
         if (StringUtils.isNotBlank(searchText))
-            composer.withWhereClause(Constants.DatabaseKeys.FIRST_NAME + " like '%" + searchText + "%'");
+            composer.withWhereClause(Constants.DatabaseKeys.FIRST_NAME + " like '%" + searchText + "%' or " +
+                    Constants.DatabaseKeys.LAST_NAME  + " like '%" + searchText + "%' or " +
+                    Constants.DatabaseKeys.UNIQUE_ID  + " like '%" + searchText + "%' "
+            );
 
         extractSort(composer, sortAndFilter);
         extractFilter(composer, sortAndFilter);

@@ -63,13 +63,13 @@ public class ChildRegisterAdapter extends GroupedListableAdapter<Child, GroupedL
             String details = "#" + child.getUniqueID() + " \u00B7 " + child.getGender() + " \u00B7 Age " + child.getAge();
             tvDetails.setText(details);
             currentView.setOnClickListener(v -> view.onListItemClicked(child, v.getId()));
-            btnDue.setOnClickListener(v -> view.onListItemClicked(child, v.getId()));
 
             if (StringUtils.isBlank(child.getTaskStatus()))
                 return;
 
             switch (child.getTaskStatus()) {
                 case Constants.BusinessStatus.NOT_VISITED:
+                    btnDue.setOnClickListener(v -> view.onListItemClicked(child, v.getId()));
                     linearLayoutAction.setOnClickListener(v -> view.onListItemClicked(child, v.getId()));
                     linearLayoutAction.setVisibility(View.VISIBLE);
 
@@ -78,6 +78,7 @@ public class ChildRegisterAdapter extends GroupedListableAdapter<Child, GroupedL
                     btnDue.setBackground(context.getResources().getDrawable(R.drawable.due_dose_bg));
                     break;
                 case Constants.BusinessStatus.VISITED_DRUG_ADMINISTERED:
+                    btnDue.setOnClickListener(null);
                     linearLayoutAction.setOnClickListener(null);
                     linearLayoutAction.setVisibility(View.VISIBLE);
 
@@ -86,6 +87,7 @@ public class ChildRegisterAdapter extends GroupedListableAdapter<Child, GroupedL
                     btnDue.setBackground(null);
                     break;
                 case Constants.BusinessStatus.VISITED_DRUG_NOT_ADMINISTERED:
+                    btnDue.setOnClickListener(null);
                     linearLayoutAction.setOnClickListener(null);
                     linearLayoutAction.setVisibility(View.VISIBLE);
 
@@ -94,6 +96,7 @@ public class ChildRegisterAdapter extends GroupedListableAdapter<Child, GroupedL
                     btnDue.setBackground(null);
                     break;
                 default:
+                    btnDue.setOnClickListener(null);
                     linearLayoutAction.setOnClickListener(null);
                     linearLayoutAction.setVisibility(View.GONE);
                     break;
