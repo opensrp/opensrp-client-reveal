@@ -234,6 +234,13 @@
               "rules-file": "ntd_mma_dispense-relevance.yml"
             }
           }
+        },
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-calculation.yml"
+            }
+          }
         }
       },
       {
