@@ -51,28 +51,6 @@
     "display_back_button": "true",
     "fields": [
       {
-        "key": "mmaAdr",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "ADR reported?",
-        "options": [
-          {
-            "key": "Yes",
-            "text": "Yes"
-          },
-          {
-            "key": "No",
-            "text": "No"
-          }
-        ],
-        "v_required": {
-          "value": true,
-          "err": "This field is required"
-        }
-      },
-      {
         "key": "mmaAdrType",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -107,7 +85,7 @@
           },
           {
             "key": "Shock",
-            "text": "shock"
+            "text": "Shock"
           },
           {
             "key": "other",
@@ -117,13 +95,6 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "ntd-mma-adr-relevance.yml"
-            }
-          }
         }
       },
       {
@@ -170,13 +141,6 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "ntd-mma-adr-relevance.yml"
-            }
-          }
         }
       },
       {
@@ -207,13 +171,6 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "ntd-mma-adr-relevance.yml"
-            }
-          }
         }
       }
     ]
