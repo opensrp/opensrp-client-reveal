@@ -1,4 +1,11 @@
 ---
+name: step1_mmaheight
+description: step1_mmaheight
+priority: 1
+condition: "step1_mmaConsent.contains('Yes')"
+actions:
+  - "isRelevant = true"
+---
 name: step1_mmaDrugAdmin
 description: step1_mmaDrugAdmin
 priority: 1
@@ -30,7 +37,7 @@ actions:
 name: step1_mmaPzqDosage
 description: step1_mmaPzqDosage
 priority: 1
-condition: "step1_mmaTreatCateg.contains('albOneTab') || step1_mmaTreatCateg.contains('PrazPlusAlb')"
+condition: "step1_mmaTreatCateg.contains('PrazByHeight') || step1_mmaTreatCateg.contains('PrazPlusAlb')"
 actions:
   - "isRelevant = true"
 ---
@@ -45,40 +52,5 @@ name: step1_mmaAlbGiven
 description: step1_mmaAlbGiven
 priority: 1
 condition: "step1_mmaTreatCateg.contains('PrazByHeight') || step1_mmaTreatCateg.contains('PrazPlusAlb')"
-actions:
-  - "isRelevant = true"
----
-name: step1_mmaAdr
-description: step1_mmaAdr
-priority: 1
-condition: "step1_mmaDrugAdmin.contains('Yes')"
-actions:
-  - "isRelevant = true"
----
-name: step1_mmaAdrType
-description: step1_mmaAdrType
-priority: 1
-condition: "step1_mmaAdr.contains('Yes')"
-actions:
-  - "isRelevant = true"
----
-name: step1_other_mmaAdrType
-description: step1_other_mmaAdrType
-priority: 1
-condition: "step1_mmaAdrType.contains('other')"
-actions:
-  - "isRelevant = true"
----
-name: step1_mmaAdrGrade
-description: step1_mmaAdrGrade
-priority: 1
-condition: "step1_mmaAdr.contains('Yes')"
-actions:
-  - "isRelevant = true"
----
-name: step1_mmaAdrOutcome
-description: step1_mmaAdrOutcome
-priority: 1
-condition: "step1_mmaAdr.contains('Yes')"
 actions:
   - "isRelevant = true"

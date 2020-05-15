@@ -87,6 +87,13 @@
         "v_required": {
           "value": true,
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_mma_dispense-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -293,163 +300,6 @@
           {
             "key": "No",
             "text": "No"
-          }
-        ],
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "ntd_mma_dispense-relevance.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "mmaAdr",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "ADR reported?",
-        "options": [
-          {
-            "key": "Yes",
-            "text": "Yes"
-          },
-          {
-            "key": "No",
-            "text": "No"
-          }
-        ],
-        "v_required": {
-          "value": true,
-          "err": "This field is required"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "ntd_mma_dispense-relevance.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "mmaAdrType",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "check_box",
-        "label": "ADR type",
-        "combine_checkbox_option_values": "true",
-        "options": [
-          {
-            "key": "vomitting",
-            "text": "Vomitting"
-          },
-          {
-            "key": "rash",
-            "text": "Rash"
-          },
-          {
-            "key": "headache",
-            "text": "Headache"
-          },
-          {
-            "key": "diarrhea",
-            "text": "Diarrhea"
-          },
-          {
-            "key": "convulsions",
-            "text": "Convulsions"
-          },
-          {
-            "key": "visual_impairment",
-            "text": "Visual impairment"
-          },
-          {
-            "key": "Shock",
-            "text": "shock"
-          },
-          {
-            "key": "other",
-            "text": "Other (specify)"
-          }
-        ],
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "ntd_mma_dispense-relevance.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "other_mmaAdrType",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Specify other type",
-        "text_size": "8sp",
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "ntd_mma_dispense-relevance.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "mmaAdrGrade",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "ADR grade",
-        "options": [
-          {
-            "key": "mild",
-            "text": "Mild"
-          },
-          {
-            "key": "moderate",
-            "text": "Moderate"
-          },
-          {
-            "key": "severe",
-            "text": "Severe"
-          }
-        ],
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "ntd_mma_dispense-relevance.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "mmaAdrOutcome",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "ADR outcome",
-        "options": [
-          {
-            "key": "resolved",
-            "text": "Resolved"
-          },
-          {
-            "key": "requiredOutpatientTreatment",
-            "text": "Required outpatient treatment"
-          },
-          {
-            "key": "admission",
-            "text": "Admission"
-          },
-          {
-            "key": "died",
-            "text": "Died"
           }
         ],
         "relevance": {
