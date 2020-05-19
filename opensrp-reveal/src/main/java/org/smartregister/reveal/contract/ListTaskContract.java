@@ -114,5 +114,7 @@ public interface ListTaskContract {
         void onOpenTaskRegisterClicked();
 
         void setTaskFilterParams(TaskFilterParams filterParams);
+
+        void onFociBoundaryLongClicked();
     }
 }
