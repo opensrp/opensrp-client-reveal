@@ -172,9 +172,9 @@ dependencies {
         exclude group: 'com.android.volley'
     }
 
-    implementation('org.smartregister:opensrp-client-core:1.10.6-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:1.11.3-doc-config-SNAPSHOT@aar') {
         transitive = true
-        exclude group: 'com.github.bmelnychuk', module: 'atv'
+        /*exclude group: 'com.github.bmelnychuk', module: 'atv'*/
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.google.android.gms', module: 'play-services-vision'
@@ -188,7 +188,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 
-    implementation('org.smartregister:opensrp-client-native-form:1.6.40-SNAPSHOT@aar') {
+/*    implementation('org.smartregister:opensrp-client-native-form:1.6.40-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.android.support', module: 'cardview-v7'
@@ -196,7 +196,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-v4'
         exclude group: 'com.android.support', module: 'design'
         exclude group: 'io.ona.rdt-capture', module: 'lib'
-    }
+    }*/
 
     implementation('org.smartregister:opensrp-client-family:1.2.32-SNAPSHOT@aar') {
         transitive = true
