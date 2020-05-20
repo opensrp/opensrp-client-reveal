@@ -58,6 +58,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
+import org.smartregister.reveal.interactor.BaseDrawerInteractor;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
@@ -158,6 +159,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private EditText searchView;
 
     private CardDetailsUtil cardDetailsUtil = new CardDetailsUtil();
+
+    private BaseDrawerContract.Interactor interactor = new BaseDrawerInteractor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -764,8 +767,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void onSyncComplete(FetchStatus fetchStatus) {
+    public void onSyncComplete(FetchStatus fetchStatus)
+    {
         onSyncInProgress(fetchStatus);
+        interactor.checkSynced();
     }
 
     @Override

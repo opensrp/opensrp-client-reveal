@@ -27,6 +27,7 @@ import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
+import org.smartregister.reveal.interactor.BaseDrawerInteractor;
 import org.smartregister.reveal.presenter.BaseDrawerPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Tags;
@@ -65,9 +66,12 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     private BaseDrawerContract.DrawerActivity activity;
 
+    private BaseDrawerContract.Interactor interactor;
+
     public DrawerMenuView(BaseDrawerContract.DrawerActivity activity) {
         this.activity = activity;
         presenter = new BaseDrawerPresenter(this, activity);
+        interactor = new BaseDrawerInteractor(presenter);
     }
 
     @Override
@@ -178,6 +182,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
         syncLabel = headerView.findViewById(R.id.sync_label);
         syncBadge = getContext().findViewById(R.id.sync_badge);
+        interactor.checkSynced();
         boolean synced = RevealApplication.getInstance().getSynced();
         if(synced)
         {

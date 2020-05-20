@@ -94,5 +94,7 @@ public interface BaseDrawerContract {
         void fetchPlans(String jurisdictionName);
 
         void validateCurrentPlan(String selectedOperationalArea, String currentPlanId);
+
+        void checkSynced();
     }
 }
