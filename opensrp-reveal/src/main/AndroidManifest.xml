@@ -23,7 +23,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:label">
+        tools:replace="android:label, android:theme">
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -105,12 +105,18 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name="org.smartregister.view.activity.DynamicJsonFormActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
         <service android:name=".sync.LocationTaskIntentService" />
         <service android:name=".sync.RevealSettingsSyncIntentService" />
         <service android:name=".sync.RevealSyncIntentService" />
         <service android:name="org.smartregister.sync.intent.PullUniqueIdsIntentService" />
         <service android:name="org.smartregister.sync.intent.ValidateIntentService" />
         <service android:name="org.smartregister.sync.intent.ExtendedSyncIntentService" />
+        <service android:name="org.smartregister.sync.intent.DocumentConfigurationIntentService" />
     </application>
 
 </manifest>
