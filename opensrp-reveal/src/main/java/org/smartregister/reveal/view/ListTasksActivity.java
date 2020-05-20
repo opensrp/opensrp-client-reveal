@@ -770,7 +770,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void onSyncComplete(FetchStatus fetchStatus)
     {
         onSyncInProgress(fetchStatus);
+        //Check sync status
         interactor.checkSynced();
+        boolean synced = RevealApplication.getInstance().getSynced();
+        //Update UI to show sync status
+        org.smartregister.reveal.util.Utils.updateSyncStatusDisplay(synced, this);
     }
 
     @Override

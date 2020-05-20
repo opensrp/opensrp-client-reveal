@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -179,24 +178,11 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
                 return false;
             }
         });
-
-        syncLabel = headerView.findViewById(R.id.sync_label);
-        syncBadge = getContext().findViewById(R.id.sync_badge);
+        //Check sync status
         interactor.checkSynced();
         boolean synced = RevealApplication.getInstance().getSynced();
-        if(synced)
-        {
-            syncLabel.setText("Device data synced");
-            syncLabel.setTextColor(ContextCompat.getColor(getContext(), R.color.alert_complete_green));
-            syncLabel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.background_alert_green));
-        }
-        else
-        {
-            syncBadge.setVisibility(headerView.VISIBLE);
-            syncLabel.setText("Device data not synced");
-            syncLabel.setTextColor(ContextCompat.getColor(getContext(), R.color.alert_urgent_red));
-            syncLabel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.background_alert_red));
-        }
+        //Update UI to show sync status
+        org.smartregister.reveal.util.Utils.updateSyncStatusDisplay(synced, getContext());
     }
 
     @Override

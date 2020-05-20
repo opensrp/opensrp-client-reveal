@@ -1,17 +1,21 @@
 package org.smartregister.reveal.util;
 
+import android.app.Activity;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.gson.JsonElement;
@@ -72,6 +76,8 @@ public class Utils {
     public static final String REVEAL_PROJECT = "reveal";
 
     private static Cache<Location> cache = new Cache<>();
+    private static TextView syncLabel;
+    private static TextView syncBadge;
 
     static {
         ALLOWED_LEVELS = new ArrayList<>();
@@ -399,6 +405,33 @@ public class Utils {
      */
     public static Boolean displayDistanceScale() {
         return Boolean.valueOf(getGlobalConfig(CONFIGURATION.DISPLAY_DISTANCE_SCALE, BuildConfig.DISPLAY_DISTANCE_SCALE + ""));
+    }
+
+    /**
+     * Updates the Hamburger menu of the navigation drawer to display the sync status of the application
+     * Updates also the Text view next to the sync button with the sync status of the application
+     *
+     * @param synced Sync status of the application
+     * @param activity Use the DrawerActivity
+     */
+    public static void updateSyncStatusDisplay(boolean synced, Activity activity) {
+        NavigationView navigationView = activity.findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        syncLabel = headerView.findViewById(R.id.sync_label);
+        syncBadge = activity.findViewById(R.id.sync_badge);
+        if(synced)
+        {
+            syncLabel.setText("Device data synced");
+            syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_complete_green));
+            syncLabel.setBackgroundColor(ContextCompat.getColor(activity, R.color.background_alert_green));
+        }
+        else
+        {
+            syncBadge.setVisibility(headerView.VISIBLE);
+            syncLabel.setText("Device data not synced");
+            syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_urgent_red));
+            syncLabel.setBackgroundColor(ContextCompat.getColor(activity, R.color.background_alert_red));
+        }
     }
 
 }
