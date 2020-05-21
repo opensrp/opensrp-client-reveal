@@ -56,8 +56,6 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     private TextView facilityTextView;
     private TextView operatorTextView;
     private TextView p2pSyncTextView;
-    private TextView syncLabel;
-    private TextView syncBadge;
 
     private DrawerLayout mDrawerLayout;
 
@@ -178,11 +176,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
                 return false;
             }
         });
-        //Check sync status
-        interactor.checkSynced();
-        boolean synced = RevealApplication.getInstance().getSynced();
-        //Update UI to show sync status
-        org.smartregister.reveal.util.Utils.updateSyncStatusDisplay(synced, getContext());
+        //Check sync status and Update UI to show sync status
+        checkSynced();
     }
 
     @Override
@@ -344,6 +339,11 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     public void openOfflineMapsView() {
         Intent intent = new Intent(getContext(), OfflineMapsActivity.class);
         getContext().startActivity(intent);
+    }
+
+    @Override
+    public void checkSynced() {
+        interactor.checkSynced();
     }
 
 

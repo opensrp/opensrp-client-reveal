@@ -26,14 +26,14 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
 
     private PlanDefinitionSearchRepository planDefinitionSearchRepository;
 
+    private RevealApplication application;
+
     private SQLiteDatabase database;
 
-    public BaseDrawerInteractor() {
-        database = RevealApplication.getInstance().getRepository().getReadableDatabase();
-    }
     public BaseDrawerInteractor(BaseDrawerContract.Presenter presenter) {
         this.presenter = presenter;
-        database = RevealApplication.getInstance().getRepository().getReadableDatabase();
+        application = RevealApplication.getInstance();
+        database = application.getRepository().getReadableDatabase();
         appExecutors = RevealApplication.getInstance().getAppExecutors();
         planDefinitionSearchRepository = RevealApplication.getInstance().getPlanDefinitionSearchRepository();
     }
@@ -89,29 +89,43 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
                 "UNION ALL\n" +
                 "SELECT syncStatus FROM form_submission WHERE syncStatus <> 'Synced'";
 
-        Cursor syncCursor = null;
-        try
-        {
-            syncCursor  = database.rawQuery(syncQuery, null);
-            Integer count = syncCursor.getCount();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Cursor syncCursor = null;
+                try
+                {
+                    syncCursor  = database.rawQuery(syncQuery, null);
+                    Integer count = syncCursor.getCount();
 
-            if(count == 0)
-            {
-                RevealApplication.getInstance().setSynced(true);
+                    if(count == 0)
+                    {
+                        RevealApplication.getInstance().setSynced(true);
+                    }
+                    else
+                    {
+                        RevealApplication.getInstance().setSynced(false);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Timber.e(e, "EXCEPTION %s", e.toString());
+                }
+                finally
+                {
+                    if (syncCursor != null)
+                        syncCursor.close();
+                }
+
+                appExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        boolean synced = application.getSynced();
+                        (presenter).updateSyncStatusDisplay(synced);
+                    }
+                });
             }
-            else
-            {
-                RevealApplication.getInstance().setSynced(false);
-            }
-        }
-        catch (Exception e)
-        {
-            Timber.e(e, "EXCEPTION %s", e.toString());
-        }
-        finally
-        {
-            if (syncCursor != null)
-                syncCursor.close();
-        }
+        };
+        appExecutors.diskIO().execute(runnable);
     }
 }
