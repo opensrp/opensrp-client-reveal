@@ -30,8 +30,7 @@
                 android:layout_gravity="bottom|center"
                 android:layout_weight="1"
                 android:contentDescription="logo"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_dvbd_logo" />
+                android:scaleType="centerInside" />
 
             <TextView
                 android:id="@+id/login_build_text_view"

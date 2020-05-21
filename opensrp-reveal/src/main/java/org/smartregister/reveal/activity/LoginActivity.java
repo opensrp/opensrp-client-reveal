@@ -18,6 +18,8 @@ import org.smartregister.view.contract.BaseLoginContract;
 
 public class LoginActivity extends BaseLoginActivity implements BaseLoginContract.View {
 
+    private ImageView mainLogo;
+
     @Override
     protected int getContentView() {
         return R.layout.activity_login;
@@ -54,9 +56,17 @@ public class LoginActivity extends BaseLoginActivity implements BaseLoginContrac
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mainLogo = findViewById(R.id.login_logo);
+        setUpLogos();
+    }
+
+    private void setUpLogos() {
         if (BuildConfig.BUILD_COUNTRY == Country.THAILAND || BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
-            ImageView bvbdLogo = findViewById(R.id.partner_logo);
-            bvbdLogo.setVisibility(View.VISIBLE);
+            ImageView partnerLogo = findViewById(R.id.partner_logo);
+            partnerLogo.setVisibility(View.VISIBLE);
+            mainLogo.setBackgroundResource(R.drawable.ic_dvbd_logo);
+        } else {
+            mainLogo.setBackgroundResource(R.drawable.ic_logo_login);
         }
     }
 }
