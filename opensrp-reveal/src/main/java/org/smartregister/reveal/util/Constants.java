@@ -364,6 +364,8 @@ public interface Constants {
 
         String REFAPP_CASE_CONFIRMATION_FORM = "json.form/refapp_case_confirmation.json";
 
+        String JSON_FORM_FOLDER = "json.form/";
+
 
         String OPERATIONAL_AREA_TAG = "operational_area";
 
