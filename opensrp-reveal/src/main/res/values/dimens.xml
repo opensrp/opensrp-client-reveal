@@ -13,6 +13,7 @@
     <dimen name="hamburger_margin">16dp</dimen>
 
     <dimen name="drawer_margin">32dp</dimen>
+    <dimen name="drawer_second_margin">88dp</dimen>
     <dimen name="divider_margin">27dp</dimen>
     <dimen name="drawer_margin_vertical">10dp</dimen>
     <dimen name="drawer_separator_margin">20dp</dimen>
@@ -39,6 +40,7 @@
     <dimen name="task_register_action_text">16sp</dimen>
     <dimen name="task_register_vertical_padding">4dp</dimen>
     <dimen name="task_toolbar_margin">20dp</dimen>
+    <dimen name="sync_badge_margin">35dp</dimen>
 
     <dimen name="operational_area_boundary_text_size">10sp</dimen>
     <dimen name="operational_area_boundary_width">1dp</dimen>
