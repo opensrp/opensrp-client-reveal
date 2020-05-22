@@ -10,9 +10,9 @@
     <ImageView
         android:id="@+id/reveal_icon"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/partner_logo_height"
         android:layout_marginStart="@dimen/drawer_margin"
-        android:layout_marginTop="@dimen/drawer_icon_margin"
+        android:layout_marginTop="@dimen/partner_logo_margin_top"
         android:contentDescription="@string/reveal_icon"
         android:scaleType="fitStart"
         android:src="@drawable/ic_dvbd_logo"
@@ -245,6 +245,15 @@
         android:layout_marginStart="@dimen/drawer_margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:text="@string/attribution_text"/>
+    <ImageView
+        android:id="@+id/reveal_image_logo_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/drawer_icon_margin"
+        android:layout_marginStart="@dimen/reveal_logo_margin_start"
+        android:contentDescription="@string/reveal_icon"
+        android:src="@drawable/ic_reveal_image_logo_icon"
+        app:layout_constraintStart_toEndOf="@+id/attribution"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </android.support.constraint.ConstraintLayout>
