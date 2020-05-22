@@ -30,8 +30,7 @@
                 android:layout_gravity="bottom|center"
                 android:layout_weight="1"
                 android:contentDescription="logo"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_logo_login" />
+                android:scaleType="centerInside" />
 
             <TextView
                 android:id="@+id/login_build_text_view"
@@ -51,7 +50,6 @@
             android:id="@+id/middle_section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/bottom_section"
             android:layout_centerVertical="true"
             android:orientation="vertical"
             android:paddingLeft="@dimen/login_horizontal_margin"
@@ -140,6 +138,29 @@
                 android:text="@string/login_text"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
+
         </LinearLayout>
-    </RelativeLayout>
+
+        <!-- bottom section -->
+        <LinearLayout
+            android:id="@+id/bottom_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/login_logo_top_padding">
+
+        <ImageView
+            android:id="@+id/partner_logo"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="68dp"
+            android:layout_gravity="bottom|right"
+            android:layout_weight="1"
+            android:contentDescription="logo"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_logo_login" />
+
+    </LinearLayout>
+</RelativeLayout>
 </ScrollView>
