@@ -26,6 +26,7 @@ import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
+import org.smartregister.reveal.interactor.BaseDrawerInteractor;
 import org.smartregister.reveal.presenter.BaseDrawerPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Tags;
@@ -62,9 +63,12 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     private BaseDrawerContract.DrawerActivity activity;
 
+    private BaseDrawerContract.Interactor interactor;
+
     public DrawerMenuView(BaseDrawerContract.DrawerActivity activity) {
         this.activity = activity;
         presenter = new BaseDrawerPresenter(this, activity);
+        interactor = new BaseDrawerInteractor(presenter);
     }
 
     @Override
@@ -176,6 +180,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
                 return false;
             }
         });
+        //Check sync status and Update UI to show sync status
+        checkSynced();
     }
 
     @Override
@@ -337,6 +343,11 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     public void openOfflineMapsView() {
         Intent intent = new Intent(getContext(), OfflineMapsActivity.class);
         getContext().startActivity(intent);
+    }
+
+    @Override
+    public void checkSynced() {
+        interactor.checkSynced();
     }
 
 

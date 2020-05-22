@@ -1,5 +1,8 @@
 package org.smartregister.reveal.interactor;
 
+import net.sqlcipher.Cursor;
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.smartregister.domain.Location;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.repository.PlanDefinitionSearchRepository;
@@ -9,6 +12,8 @@ import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.Set;
+
+import timber.log.Timber;
 
 /**
  * Created by samuelgithengi on 3/21/19.
@@ -21,9 +26,14 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
 
     private PlanDefinitionSearchRepository planDefinitionSearchRepository;
 
+    private RevealApplication application;
+
+    private SQLiteDatabase database;
 
     public BaseDrawerInteractor(BaseDrawerContract.Presenter presenter) {
         this.presenter = presenter;
+        application = RevealApplication.getInstance();
+        database = application.getRepository().getReadableDatabase();
         appExecutors = RevealApplication.getInstance().getAppExecutors();
         planDefinitionSearchRepository = RevealApplication.getInstance().getPlanDefinitionSearchRepository();
     }
@@ -64,5 +74,58 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
 
         appExecutors.diskIO().execute(runnable);
 
+    }
+
+    @Override
+    public void checkSynced() {
+
+        String syncQuery = "SELECT syncStatus FROM client WHERE syncStatus <> 'Synced'\n" +
+                "UNION ALL\n" +
+                "SELECT syncStatus FROM event WHERE syncStatus <> 'Synced'\n" +
+                "UNION ALL\n" +
+                "SELECT sync_Status FROM task WHERE sync_Status <> 'Synced'\n" +
+                "UNION ALL\n" +
+                "SELECT sync_Status FROM structure WHERE sync_Status <> 'Synced'\n" +
+                "UNION ALL\n" +
+                "SELECT syncStatus FROM form_submission WHERE syncStatus <> 'Synced'";
+
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Cursor syncCursor = null;
+                try
+                {
+                    syncCursor  = database.rawQuery(syncQuery, null);
+                    Integer count = syncCursor.getCount();
+
+                    if(count == 0)
+                    {
+                        RevealApplication.getInstance().setSynced(true);
+                    }
+                    else
+                    {
+                        RevealApplication.getInstance().setSynced(false);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Timber.e(e, "EXCEPTION %s", e.toString());
+                }
+                finally
+                {
+                    if (syncCursor != null)
+                        syncCursor.close();
+                }
+
+                appExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        boolean synced = application.getSynced();
+                        (presenter).updateSyncStatusDisplay(synced);
+                    }
+                });
+            }
+        };
+        appExecutors.diskIO().execute(runnable);
     }
 }

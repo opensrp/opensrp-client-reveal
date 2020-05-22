@@ -1,5 +1,10 @@
 package org.smartregister.reveal.interactor;
 
+import net.sqlcipher.Cursor;
+import net.sqlcipher.MatrixCursor;
+import net.sqlcipher.database.SQLiteDatabase;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,6 +16,7 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.repository.PlanDefinitionSearchRepository;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.Cache;
@@ -44,11 +50,23 @@ public class BaseDrawerInteractorTest extends BaseUnitTest {
     @Mock
     private PlanDefinitionSearchRepository planDefinitionSearchRepository;
 
+    @Mock
+    private SQLiteDatabase database;
+
     private BaseDrawerInteractor interactor;
 
     private String planId = UUID.randomUUID().toString();
 
     private String operationalArea = UUID.randomUUID().toString();
+    private String syncQuery = "SELECT syncStatus FROM client WHERE syncStatus <> 'Synced'\n" +
+            "UNION ALL\n" +
+            "SELECT syncStatus FROM event WHERE syncStatus <> 'Synced'\n" +
+            "UNION ALL\n" +
+            "SELECT sync_Status FROM task WHERE sync_Status <> 'Synced'\n" +
+            "UNION ALL\n" +
+            "SELECT sync_Status FROM structure WHERE sync_Status <> 'Synced'\n" +
+            "UNION ALL\n" +
+            "SELECT syncStatus FROM form_submission WHERE syncStatus <> 'Synced'";
 
     @Before
     public void setUp() {
@@ -58,6 +76,7 @@ public class BaseDrawerInteractorTest extends BaseUnitTest {
         cache.get(operationalArea, () -> location);
         Whitebox.setInternalState(Utils.class, "cache", cache);
         Whitebox.setInternalState(interactor, "planDefinitionSearchRepository", planDefinitionSearchRepository);
+        Whitebox.setInternalState(interactor, "database", database);
     }
 
     @Test
@@ -86,5 +105,40 @@ public class BaseDrawerInteractorTest extends BaseUnitTest {
         //verify(presenter, timeout(ASYNC_TIMEOUT)).onPlansFetched(expected);
         verify(planDefinitionSearchRepository, timeout(ASYNC_TIMEOUT)).findActivePlansByJurisdiction(operationalArea);
 
+    }
+
+    @Test
+    public void testCheckSyncedTrue() {
+        when(database.rawQuery(syncQuery, null)).thenReturn(emptyCursor());
+        //Cursor cursorSpy = Mockito.spy(Cursor.class);
+        interactor.checkSynced();
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(syncQuery, null);
+        //verify(cursorSpy).close();
+        Assert.assertTrue(RevealApplication.getInstance().getSynced());
+    }
+
+    @Test
+    public void testCheckSyncedFalse() {
+        when(database.rawQuery(syncQuery, null)).thenReturn(populatedCursor());
+        interactor.checkSynced();
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(syncQuery, null);
+        Assert.assertFalse(RevealApplication.getInstance().getSynced());
+    }
+
+    private Cursor populatedCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{
+                "syncStatus"
+        });
+        cursor.addRow(new Object[]{
+                "Pending"
+        });
+        return cursor;
+    }
+
+    private Cursor emptyCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{
+                "syncStatus"
+        });
+        return cursor;
     }
 }
