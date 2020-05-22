@@ -138,8 +138,6 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
     private PreferencesUtil prefsUtil;
 
-    private RevealApplication revealApplication;
-
     public BaseInteractor(BasePresenter presenterCallBack) {
         this.presenterCallBack = presenterCallBack;
         appExecutors = getInstance().getAppExecutors();
@@ -151,7 +149,6 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         taskUtils = TaskUtils.getInstance();
         database = getInstance().getRepository().getReadableDatabase();
         prefsUtil = PreferencesUtil.getInstance();
-        revealApplication = RevealApplication.getInstance();
     }
 
     @VisibleForTesting
@@ -304,7 +301,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     structure.setProperties(properties);
                     structure.setSyncStatus(BaseRepository.TYPE_Created);
                     structureRepository.addOrUpdate(structure);
-                    revealApplication.setSynced(false);
+                    getInstance().setSynced(false);
                     Context applicationContext = getInstance().getApplicationContext();
                     Task task = null;
                     if (StructureType.RESIDENTIAL.equals(structureType) && Utils.isFocusInvestigationOrMDA()) {
@@ -412,7 +409,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     taskRepository.addOrUpdate(bloodScreeningTask);
                     removedTasks.add(bloodScreeningTask);
                 }
-                revealApplication.setSynced(false);
+                getInstance().setSynced(false);
                 clientProcessor.processClient(Collections.singletonList(new EventClient(event, client)), true);
                 appExecutors.mainThread().execute(() -> {
                     ((StructureTasksContract.Presenter) presenterCallBack).onIndexConfirmationFormSaved(taskID, Task.TaskStatus.COMPLETED, businessStatus, removedTasks);
