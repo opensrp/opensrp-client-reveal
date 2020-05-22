@@ -61,35 +61,51 @@
         "options": [
           {
             "key": "vomitting",
-            "text": "Vomitting"
+            "text": "Vomitting",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "vomitting"
           },
           {
             "key": "rash",
-            "text": "Rash"
+            "text": "Rash",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "rash"
           },
           {
             "key": "headache",
-            "text": "Headache"
+            "text": "Headache",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "headache"
           },
           {
             "key": "diarrhea",
-            "text": "Diarrhea"
+            "text": "Diarrhea",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "diarrhea"
           },
           {
             "key": "convulsions",
-            "text": "Convulsions"
+            "text": "Convulsions",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "convulsions"
           },
           {
             "key": "visual_impairment",
-            "text": "Visual impairment"
+            "text": "Visual impairment",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "visual_impairment"
           },
           {
             "key": "Shock",
-            "text": "Shock"
+            "text": "Shock",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "Shock"
           },
           {
             "key": "other",
-            "text": "Other (specify)"
+            "text": "Other (specify)",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "other"
           }
         ],
         "v_required": {
@@ -100,8 +116,8 @@
       {
         "key": "other_mmaAdrType",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "other_mmaAdrType",
         "type": "edit_text",
         "hint": "Specify other type",
         "text_size": "8sp",
@@ -120,22 +136,28 @@
       {
         "key": "mmaAdrGrade",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "mmaAdrGrade",
         "type": "native_radio",
         "label": "ADR grade",
         "options": [
           {
             "key": "mild",
-            "text": "Mild"
+            "text": "Mild",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "mild"
           },
           {
             "key": "moderate",
-            "text": "Moderate"
+            "text": "Moderate",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "moderate"
           },
           {
             "key": "severe",
-            "text": "Severe"
+            "text": "Severe",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "severe"
           }
         ],
         "v_required": {
@@ -153,19 +175,27 @@
         "options": [
           {
             "key": "resolved",
-            "text": "Resolved"
+            "text": "Resolved",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "resolved"
           },
           {
             "key": "requiredOutpatientTreatment",
-            "text": "Required outpatient treatment"
+            "text": "Required outpatient treatment",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "requiredOutpatientTreatment"
           },
           {
             "key": "admission",
-            "text": "Admission"
+            "text": "Admission",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "admission"
           },
           {
             "key": "died",
-            "text": "Died"
+            "text": "Died",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "died"
           }
         ],
         "v_required": {
