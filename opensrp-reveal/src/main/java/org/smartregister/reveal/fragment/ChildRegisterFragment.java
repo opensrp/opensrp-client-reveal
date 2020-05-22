@@ -53,7 +53,6 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     private TextView tvTitle;
     @Nullable
     private HashMap<String, List<String>> filterAndSearch;
-    private String locationName = "";
     private TextView searchTextView;
 
     @Override
@@ -169,7 +168,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     @Override
     public void onDrawerClosed() {
         // to do -> re render the details
-        locationName = drawerView.getOperationalArea();
+        String locationName = drawerView.getOperationalArea();
         tvTitle.setText(locationName);
         searchPresenter("");
     }
