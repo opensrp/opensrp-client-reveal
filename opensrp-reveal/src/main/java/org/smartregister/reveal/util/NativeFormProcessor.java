@@ -1,5 +1,7 @@
 package org.smartregister.reveal.util;
 
+import android.support.v4.util.Consumer;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
@@ -202,13 +204,18 @@ public class NativeFormProcessor {
     }
 
     /**
-     * for new clients
+     * Save clients
      *
+     * @param consumer
      * @return
      * @throws JSONException
      */
-    public NativeFormProcessor saveClient() throws JSONException {
-        JSONObject clientJson = new JSONObject(gson.toJson(createClient()));
+    public NativeFormProcessor saveClient(Consumer<Client> consumer) throws JSONException {
+        Client client = createClient();
+        if (consumer != null)
+            consumer.accept(client);
+
+        JSONObject clientJson = new JSONObject(gson.toJson(client));
         getSyncHelper().addClient(createClient().getBaseEntityId(), clientJson);
         return this;
     }

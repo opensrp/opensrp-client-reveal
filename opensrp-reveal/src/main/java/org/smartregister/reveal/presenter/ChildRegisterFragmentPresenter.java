@@ -144,7 +144,7 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
 
                     // create and save client
                     .hasClient(true)
-                    .saveClient()
+                    .saveClient(client -> client.addAttribute(Constants.ChildRegister.DEFAULT_RESIDENCE, operationalArea.getId()))
 
                     // create and save event to db
                     .saveEvent()
@@ -223,7 +223,7 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
                     .tagTaskDetails(task)
                     .tagEventMetadata()
 
-                    // save and client
+                    // save and clientM
                     .saveEvent()
                     .clientProcessForm();
 

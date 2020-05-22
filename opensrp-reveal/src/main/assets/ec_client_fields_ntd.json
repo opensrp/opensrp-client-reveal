@@ -173,14 +173,6 @@
           "json_mapping": {
             "field": "attributes.school_name"
           }
-        },
-        {
-          "column_name": "drug_administered",
-          "type": "Event",
-          "json_mapping": {
-            "field": "obs.fieldCode",
-            "concept": "mmaDrugAdmin"
-          }
         }
       ]
     },

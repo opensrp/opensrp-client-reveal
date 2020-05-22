@@ -509,6 +509,7 @@ public interface Constants {
         String MMA_TARGET_REMAINING = "sac_remain";
         String MMA_NOT_VISITED = "not_visited";
         String MMA_VISITED_NOT_ADMINISTERED = "visited_no_mma";
+        String DEFAULT_RESIDENCE = "default_residence";
     }
 
     interface DatabaseKeys {

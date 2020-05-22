@@ -26,6 +26,7 @@
         android:id="@+id/rlContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/llReports"
         android:layout_below="@+id/llHeader"
         android:background="@drawable/listview_background_rounded">
 
@@ -48,25 +49,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="@color/black"
             android:padding="32dp"
             android:text="@string/no_record"
+            android:textColor="@color/black"
             android:visibility="gone" />
 
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/llReports"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
 
         <include
-            android:layout_marginBottom="5dp"
             android:id="@+id/indicators_card_view"
             layout="@layout/child_indicators_card_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:visibility="gone" />
 
         <include

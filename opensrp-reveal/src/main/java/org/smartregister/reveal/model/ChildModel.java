@@ -66,11 +66,14 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
 
         int registeredChildren = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 ");
 
-        int administeredDrugs = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and drug_administered = 'Yes' ");
+        int administeredDrugs = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 " +
+                "and ec_child.base_entity_id in (select t.for from task  t where t.code = 'MDA Dispense' and t.business_status = 'Visited, Drug Administered') ");
 
-        int childrenNotVisited = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and ifnull(drug_administered,'') = '' ");
+        int childrenNotVisited = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 " +
+                "and ec_child.base_entity_id not in (select baseEntityId from event where eventType in 'mda_dispense') ");
 
-        int visitedNotAdministered = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and drug_administered = 'No' ");
+        int visitedNotAdministered = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 " +
+                "and ec_child.base_entity_id in (select t.for from task  t where t.code = 'MDA Dispense' and t.business_status = 'Visited, Drug Not Administered') ");
 
         result.put(Constants.ChildRegister.MMA_COVERAGE, registeredChildren == 0 ? 0 : (administeredDrugs / registeredChildren));
         result.put(Constants.ChildRegister.MMA_TARGET_REMAINING, (int) ((registeredChildren * 0.9) - administeredDrugs));
