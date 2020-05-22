@@ -71,7 +71,7 @@
       "columns": [
         {
           "column_name": "base_entity_id",
-          "type": "Event",
+          "type": "Client",
           "json_mapping": {
             "field": "baseEntityId"
           }
@@ -172,6 +172,14 @@
           "type": "Client",
           "json_mapping": {
             "field": "attributes.school_name"
+          }
+        },
+        {
+          "column_name": "drug_administered",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "mmaDrugAdmin"
           }
         }
       ]

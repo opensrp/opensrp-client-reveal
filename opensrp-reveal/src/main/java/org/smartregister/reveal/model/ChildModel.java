@@ -57,18 +57,33 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
 
     @Override
     public String getCurrentLocationID() {
-        return JsonClientProcessingUtils.getCurrentLocationID(CoreLibrary.getInstance().context().allSharedPreferences());
+        return JsonClientProcessingUtils.getCurrentLocationID();
     }
 
     @Override
     public Map<String, Integer> getReportCounts() {
         Map<String, Integer> result = new HashMap<>();
-        result.put(Constants.ChildRegister.MMA_COVERAGE,90);
-        result.put(Constants.ChildRegister.MMA_NOT_VISITED,9);
-        result.put(Constants.ChildRegister.MMA_TARGET_REMAINING,5);
-        result.put(Constants.ChildRegister.MMA_VISITED_NOT_ADMINISTERED,1);
+
+        int registeredChildren = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 ");
+
+        int administeredDrugs = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and drug_administered = 'Yes' ");
+
+        int childrenNotVisited = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and ifnull(drug_administered,'') = '' ");
+
+        int visitedNotAdministered = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and drug_administered = 'No' ");
+
+        result.put(Constants.ChildRegister.MMA_COVERAGE, registeredChildren == 0 ? 0 : (administeredDrugs / registeredChildren));
+        result.put(Constants.ChildRegister.MMA_TARGET_REMAINING, (int) ((registeredChildren * 0.9) - administeredDrugs));
+        result.put(Constants.ChildRegister.MMA_NOT_VISITED, childrenNotVisited);
+        result.put(Constants.ChildRegister.MMA_VISITED_NOT_ADMINISTERED, visitedNotAdministered);
 
         return result;
+    }
+
+    private int getTotal(String sql) {
+        DataMap<Integer> countMap = cursor -> getCursorIntValue(cursor, "cnt");
+        Integer registeredChildren = AbstractDao.readSingleValue(sql, countMap);
+        return registeredChildren == null ? 0 : registeredChildren;
     }
 
     @Override
@@ -135,12 +150,12 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
         int size = results.size();
         while (size > 0) {
 
-            if(textQualifier)
+            if (textQualifier)
                 builder.append("'");
 
             builder.append(results.get(size - 1));
 
-            if(textQualifier)
+            if (textQualifier)
                 builder.append("'");
 
             if (size > 1)
