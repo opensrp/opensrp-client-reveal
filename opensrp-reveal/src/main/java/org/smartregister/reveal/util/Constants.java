@@ -505,7 +505,10 @@ public interface Constants {
     }
 
     interface ChildRegister {
-        String VIEW_IDENTIFIER = "child_register";
+        String MMA_COVERAGE = "mma_coverage";
+        String MMA_TARGET_REMAINING = "sac_remain";
+        String MMA_NOT_VISITED = "not_visited";
+        String MMA_VISITED_NOT_ADMINISTERED = "visited_no_mma";
     }
 
     interface DatabaseKeys {

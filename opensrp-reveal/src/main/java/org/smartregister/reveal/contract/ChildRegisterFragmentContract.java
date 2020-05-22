@@ -14,6 +14,7 @@ import org.smartregister.view.ListContract;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface ChildRegisterFragmentContract {
 
@@ -27,6 +28,10 @@ public interface ChildRegisterFragmentContract {
         void startJsonForm(JSONObject form, String formTitle);
 
         void reloadFromSource();
+
+        void onReportCountReloaded(Map<String, Integer> reportCounts);
+
+        void toggleDetailedReport();
     }
 
     interface Presenter extends ListContract.Presenter<Child> {
@@ -43,6 +48,8 @@ public interface ChildRegisterFragmentContract {
         void saveChild(String jsonString, Context context);
 
         void saveMDAForm(String jsonString, Context context);
+
+        void fetchReportStats();
     }
 
     interface Model extends ListContract.Model<Child> {
@@ -59,6 +66,8 @@ public interface ChildRegisterFragmentContract {
         Task getCurrentTask(Context context, String baseEntityID);
 
         String getCurrentLocationID();
+
+        Map<String, Integer> getReportCounts();
     }
 
 }

@@ -32,6 +32,7 @@ import org.smartregister.view.presenter.ListPresenter;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
@@ -251,6 +252,38 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
                 view.setLoadingState(false);
             }
         });
+    }
+
+    @Override
+    public void fetchReportStats() {
+        CallableInteractor myInteractor = getCallableInteractor();
+        ChildModel model = getModel();
+        if (model != null) {
+            Callable<Map<String,Integer>> callable = model::getReportCounts;
+            myInteractor.execute(callable, new CallableInteractorCallBack<Map<String,Integer>>() {
+                @Override
+                public void onResult(Map<String,Integer> results) {
+                    ChildRegisterFragmentContract.View view = getView();
+                    if (view != null) {
+                        if (results != null) {
+                            view.onReportCountReloaded(results);
+                        } else {
+                            view.onFetchError(new IllegalStateException("An error occurred while fetching results"));
+                        }
+                        view.setLoadingState(false);
+                    }
+                }
+
+                @Override
+                public void onError(Exception ex) {
+                    ListContract.View<Child> view = getView();
+                    if (view != null) {
+                        view.onFetchError(ex);
+                        view.setLoadingState(false);
+                    }
+                }
+            });
+        }
     }
 
     @Override

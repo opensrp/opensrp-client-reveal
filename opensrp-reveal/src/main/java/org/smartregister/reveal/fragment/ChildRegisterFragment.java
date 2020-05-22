@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.ResponseErrorStatus;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
+import org.smartregister.reporting.view.ProgressIndicatorView;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.ChildRegisterAdapter;
 import org.smartregister.reveal.adapter.GroupedListableAdapter;
@@ -39,6 +40,7 @@ import org.smartregister.view.fragment.BaseListFragment;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import timber.log.Timber;
@@ -54,6 +56,8 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     @Nullable
     private HashMap<String, List<String>> filterAndSearch;
     private TextView searchTextView;
+    private View progressIndicatorsGroupView;
+    private View detailedReportCardView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,6 +86,12 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
         TextView mapText = view.findViewById(R.id.txt_map_label);
         mapText.setText(R.string.label_add);
         mapText.setOnClickListener(v -> startChildRegistrationForm());
+
+        progressIndicatorsGroupView = view.findViewById(R.id.progressIndicatorsGroupView);
+        detailedReportCardView = view.findViewById(R.id.indicators_card_view);
+
+        progressIndicatorsGroupView.setOnClickListener(v -> toggleDetailedReport());
+        detailedReportCardView.findViewById(R.id.btn_collapse_indicators_card_view).setOnClickListener(v -> toggleDetailedReport());
 
         searchTextView = view.findViewById(R.id.edt_search);
         searchTextView.setHint(R.string.search_students);
@@ -204,6 +214,37 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     @Override
     public void reloadFromSource() {
         searchPresenter(searchTextView.getText().toString());
+        loadPresenter().fetchReportStats();
+    }
+
+    @Override
+    public void onReportCountReloaded(Map<String, Integer> reportCounts) {
+        ProgressIndicatorView progressIndicatorView = progressIndicatorsGroupView.findViewById(R.id.progressIndicatorViewTitle);
+
+        Integer coverage = reportCounts.get(Constants.ChildRegister.MMA_COVERAGE);
+        coverage = coverage == null ? 0 : coverage;
+
+        progressIndicatorView.setProgress(coverage);
+        progressIndicatorView.setTitle(getString(R.string.n_percent, coverage));
+
+        TextView tvChildrenRemainingToTarget = detailedReportCardView.findViewById(R.id.tvChildrenRemainingToTarget);
+        tvChildrenRemainingToTarget.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_TARGET_REMAINING));
+
+        TextView tvRegisteredChildrenNotMMA = detailedReportCardView.findViewById(R.id.tvRegisteredChildrenNotMMA);
+        tvRegisteredChildrenNotMMA.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_NOT_VISITED));
+
+        TextView tvVisitedChildrenNotMMA = detailedReportCardView.findViewById(R.id.tvVisitedChildrenNotMMA);
+        tvVisitedChildrenNotMMA.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_VISITED_NOT_ADMINISTERED));
+    }
+
+    private String getMapValue(Map<String, Integer> reportCounts, String key) {
+        Integer value = reportCounts.get(key);
+        return value == null ? "0" : Integer.toString(value);
+    }
+
+    @Override
+    public void toggleDetailedReport() {
+        detailedReportCardView.setVisibility(detailedReportCardView.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
     }
 
     @Override

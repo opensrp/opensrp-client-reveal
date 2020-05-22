@@ -55,14 +55,16 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_alignParentBottom="true">
 
         <include
+            android:layout_marginBottom="5dp"
             android:id="@+id/indicators_card_view"
-            layout="@layout/indicators_card_view"
+            layout="@layout/child_indicators_card_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone" />
@@ -71,5 +73,5 @@
             android:id="@+id/progressIndicatorsGroupView"
             layout="@layout/child_progress_indicators_view" />
 
-    </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

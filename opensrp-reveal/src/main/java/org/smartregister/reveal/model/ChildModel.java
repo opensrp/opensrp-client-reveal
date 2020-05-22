@@ -22,6 +22,7 @@ import org.smartregister.util.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -57,6 +58,17 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
     @Override
     public String getCurrentLocationID() {
         return JsonClientProcessingUtils.getCurrentLocationID(CoreLibrary.getInstance().context().allSharedPreferences());
+    }
+
+    @Override
+    public Map<String, Integer> getReportCounts() {
+        Map<String, Integer> result = new HashMap<>();
+        result.put(Constants.ChildRegister.MMA_COVERAGE,90);
+        result.put(Constants.ChildRegister.MMA_NOT_VISITED,9);
+        result.put(Constants.ChildRegister.MMA_TARGET_REMAINING,5);
+        result.put(Constants.ChildRegister.MMA_VISITED_NOT_ADMINISTERED,1);
+
+        return result;
     }
 
     @Override
@@ -107,22 +119,30 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
             List<String> paramsGrade = sortAndFilter.get(Constants.ChildFilter.FILTER_GRADE);
             if (paramsGrade != null && paramsGrade.size() > 0) {
                 composer.withWhereClause(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.GRADE + " in ( " +
-                        toCSV(paramsGrade) + ")");
+                        toCSV(paramsGrade, true) + ")");
             }
 
             List<String> paramsAge = sortAndFilter.get(Constants.ChildFilter.FILTER_AGE);
             if (paramsAge != null && paramsAge.size() > 0) {
                 composer.withWhereClause(" cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', " + Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.DOB + ") as int) in ( " +
-                        toCSV(paramsAge) + ")");
+                        toCSV(paramsAge, false) + ")");
             }
         }
     }
 
-    private String toCSV(List<String> results) {
+    private String toCSV(List<String> results, boolean textQualifier) {
         StringBuilder builder = new StringBuilder();
         int size = results.size();
         while (size > 0) {
+
+            if(textQualifier)
+                builder.append("'");
+
             builder.append(results.get(size - 1));
+
+            if(textQualifier)
+                builder.append("'");
+
             if (size > 1)
                 builder.append(" , ");
             size--;
