@@ -188,17 +188,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'appcompat-v7'
     }
 
-/*    implementation('org.smartregister:opensrp-client-native-form:1.6.40-SNAPSHOT@aar') {
-        transitive = true
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-        exclude group: 'com.android.support', module: 'cardview-v7'
-        exclude group: 'com.android.support', module: 'support-media-compat'
-        exclude group: 'com.android.support', module: 'support-v4'
-        exclude group: 'com.android.support', module: 'design'
-        exclude group: 'io.ona.rdt-capture', module: 'lib'
-    }*/
-
-    implementation('org.smartregister:opensrp-client-family:1.2.32-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-family:1.2.33-PREVIEW-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'org.smartregister', module: 'opensrp-client-core'
         exclude group: 'org.smartregister', module: 'opensrp-client-native-form'
