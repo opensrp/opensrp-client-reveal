@@ -20,26 +20,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/application_version"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/drawer_margin"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/text_gray"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/reveal_icon" />
-
-    <TextView
-        android:id="@+id/application_updated"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/drawer_margin"
-        android:textColor="@color/text_gray"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/application_version" />
-
-
-    <TextView
         android:id="@+id/sync_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,7 +29,7 @@
         android:textColor="@color/button_blue"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/application_updated" />
+        app:layout_constraintTop_toBottomOf="@id/reveal_icon" />
 
     <TextView
         android:id="@+id/btn_navMenu_p2pSyncBtn"
