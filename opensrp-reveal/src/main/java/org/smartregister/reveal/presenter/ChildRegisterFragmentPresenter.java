@@ -6,11 +6,14 @@ import android.support.annotation.Nullable;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
+import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.Task;
+import org.smartregister.repository.PlanDefinitionSearchRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
@@ -33,6 +36,7 @@ import org.smartregister.view.presenter.ListPresenter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
@@ -155,6 +159,14 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
                     // close form id
                     .closeRegistrationID(Constants.DatabaseKeys.UNIQUE_ID);
 
+            PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
+            if (StringUtils.isBlank(prefsUtil.getCurrentPlanId())) {
+                PlanDefinitionSearchRepository planDefinitionSearchRepository = RevealApplication.getInstance().getPlanDefinitionSearchRepository();
+                Set<PlanDefinition> planDefinitionSet = planDefinitionSearchRepository.findActivePlansByJurisdiction(operationalArea.getId());
+                PlanDefinition planDefinition = planDefinitionSet.iterator().next();
+                if (planDefinition != null)
+                    prefsUtil.setCurrentPlanId(planDefinition.getIdentifier());
+            }
 
             TaskUtils.getInstance().generateDrugAdministrationTask(context, entityId);
 
@@ -259,10 +271,10 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
         CallableInteractor myInteractor = getCallableInteractor();
         ChildModel model = getModel();
         if (model != null) {
-            Callable<Map<String,Integer>> callable = model::getReportCounts;
-            myInteractor.execute(callable, new CallableInteractorCallBack<Map<String,Integer>>() {
+            Callable<Map<String, Integer>> callable = model::getReportCounts;
+            myInteractor.execute(callable, new CallableInteractorCallBack<Map<String, Integer>>() {
                 @Override
-                public void onResult(Map<String,Integer> results) {
+                public void onResult(Map<String, Integer> results) {
                     ChildRegisterFragmentContract.View view = getView();
                     if (view != null) {
                         if (results != null) {
