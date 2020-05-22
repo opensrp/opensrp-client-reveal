@@ -79,15 +79,15 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
     @Override
     public void checkSynced() {
 
-        String syncQuery = "SELECT syncStatus FROM client WHERE syncStatus <> 'Synced'\n" +
+        String syncQuery = "SELECT syncStatus FROM client WHERE syncStatus <> 'Synced' AND syncStatus <> 'task_unprocessed' \n" +
                 "UNION ALL\n" +
-                "SELECT syncStatus FROM event WHERE syncStatus <> 'Synced'\n" +
+                "SELECT syncStatus FROM event WHERE syncStatus <> 'Synced' AND syncStatus <> 'task_unprocessed' \n" +
                 "UNION ALL\n" +
-                "SELECT sync_Status FROM task WHERE sync_Status <> 'Synced'\n" +
+                "SELECT sync_Status FROM task WHERE sync_Status <> 'Synced' AND sync_Status <> 'task_unprocessed' \n" +
                 "UNION ALL\n" +
-                "SELECT sync_Status FROM structure WHERE sync_Status <> 'Synced'\n" +
+                "SELECT sync_Status FROM structure WHERE sync_Status <> 'Synced' AND sync_Status <> 'task_unprocessed' \n" +
                 "UNION ALL\n" +
-                "SELECT syncStatus FROM form_submission WHERE syncStatus <> 'Synced'";
+                "SELECT syncStatus FROM form_submission WHERE syncStatus <> 'Synced' AND syncStatus <> 'task_unprocessed' ";
 
         Runnable runnable = new Runnable() {
             @Override
