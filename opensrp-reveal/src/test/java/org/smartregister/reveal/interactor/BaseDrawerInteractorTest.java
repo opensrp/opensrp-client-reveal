@@ -58,7 +58,7 @@ public class BaseDrawerInteractorTest extends BaseUnitTest {
     private String planId = UUID.randomUUID().toString();
 
     private String operationalArea = UUID.randomUUID().toString();
-    String syncQuery = "SELECT syncStatus FROM client WHERE syncStatus <> 'Synced'\n" +
+    private String syncQuery = "SELECT syncStatus FROM client WHERE syncStatus <> 'Synced'\n" +
             "UNION ALL\n" +
             "SELECT syncStatus FROM event WHERE syncStatus <> 'Synced' AND syncStatus <> 'task_unprocessed' \n" +
             "UNION ALL\n" +
