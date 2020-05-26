@@ -65,12 +65,15 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     private boolean viewInitialized = false;
 
+    private RevealApplication revealApplication;
+
     public BaseDrawerPresenter(BaseDrawerContract.View view, BaseDrawerContract.DrawerActivity drawerActivity) {
         this.view = view;
         this.drawerActivity = drawerActivity;
         this.prefsUtil = PreferencesUtil.getInstance();
         this.locationHelper = LocationHelper.getInstance();
         interactor = new BaseDrawerInteractor(this);
+        revealApplication = RevealApplication.getInstance();
     }
 
 
@@ -154,14 +157,14 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     public void onShowOperationalAreaSelector() {
         Pair<String, ArrayList<String>> locationHierarchy = extractLocationHierarchy();
         if (locationHierarchy == null) {//try to evict location hierachy in cache
-            RevealApplication.getInstance().getContext().anmLocationController().evict();
+            revealApplication.getContext().anmLocationController().evict();
             locationHierarchy = extractLocationHierarchy();
         }
         if (locationHierarchy != null) {
             view.showOperationalAreaSelector(extractLocationHierarchy());
         } else {
             view.displayNotification(R.string.error_fetching_location_hierarchy_title, R.string.error_fetching_location_hierarchy);
-            RevealApplication.getInstance().getContext().userService().forceRemoteLogin();
+            revealApplication.getContext().userService().forceRemoteLogin();
         }
 
     }
@@ -327,6 +330,8 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             initializeDrawerLayout();
             viewInitialized = true;
         }
+        boolean synced = revealApplication.getSynced();
+        updateSyncStatusDisplay(synced);
     }
 
 

@@ -15,6 +15,13 @@ import java.util.Set;
 
 import timber.log.Timber;
 
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.SYNC_STATUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.SYNC___STATUS;
+import static org.smartregister.reveal.util.Constants.Tables.CLIENT_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.EVENT_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.STRUCTURE_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.TASK_TABLE;
+
 /**
  * Created by samuelgithengi on 3/21/19.
  */
@@ -26,14 +33,18 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
 
     private PlanDefinitionSearchRepository planDefinitionSearchRepository;
 
-    private RevealApplication application;
+    private RevealApplication revealApplication;
 
     private SQLiteDatabase database;
 
+    private String SYNCED = "Synced";
+
+    private String TASK_UNPROCESSED = "task_unprocessed";
+
     public BaseDrawerInteractor(BaseDrawerContract.Presenter presenter) {
         this.presenter = presenter;
-        application = RevealApplication.getInstance();
-        database = application.getRepository().getReadableDatabase();
+        revealApplication = RevealApplication.getInstance();
+        database = revealApplication.getRepository().getReadableDatabase();
         appExecutors = RevealApplication.getInstance().getAppExecutors();
         planDefinitionSearchRepository = RevealApplication.getInstance().getPlanDefinitionSearchRepository();
     }
@@ -79,13 +90,13 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
     @Override
     public void checkSynced() {
 
-        String syncQuery = "SELECT syncStatus FROM client WHERE syncStatus <> 'Synced'\n" +
+        String syncQuery = String.format("SELECT %s FROM %s WHERE %s <> ?\n", SYNC_STATUS, CLIENT_TABLE, SYNC_STATUS) +
                 "UNION ALL\n" +
-                "SELECT syncStatus FROM event WHERE syncStatus <> 'Synced' AND syncStatus <> 'task_unprocessed' \n" +
+                String.format("SELECT %s FROM %s WHERE %s <> ? AND %s <> ?\n", SYNC_STATUS, EVENT_TABLE, SYNC_STATUS, SYNC_STATUS) +
                 "UNION ALL\n" +
-                "SELECT sync_Status FROM task WHERE sync_Status <> 'Synced'\n" +
+                String.format("SELECT %s FROM %s WHERE %s <> ?\n", SYNC___STATUS, TASK_TABLE, SYNC___STATUS) +
                 "UNION ALL\n" +
-                "SELECT sync_Status FROM structure WHERE sync_Status <> 'Synced'\n";
+                String.format("SELECT %s FROM %s WHERE %s <> ?\n", SYNC___STATUS, STRUCTURE_TABLE, SYNC___STATUS);
 
         Runnable runnable = new Runnable() {
             @Override
@@ -93,16 +104,16 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
                 Cursor syncCursor = null;
                 try
                 {
-                    syncCursor  = database.rawQuery(syncQuery, null);
+                    syncCursor  = database.rawQuery(syncQuery, new String[]{SYNCED, SYNCED, TASK_UNPROCESSED, SYNCED, SYNCED});
                     Integer count = syncCursor.getCount();
 
                     if(count == 0)
                     {
-                        RevealApplication.getInstance().setSynced(true);
+                        revealApplication.setSynced(true);
                     }
                     else
                     {
-                        RevealApplication.getInstance().setSynced(false);
+                        revealApplication.setSynced(false);
                     }
                 }
                 catch (Exception e)
@@ -118,7 +129,7 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-                        boolean synced = application.getSynced();
+                        boolean synced = revealApplication.getSynced();
                         (presenter).updateSyncStatusDisplay(synced);
                     }
                 });

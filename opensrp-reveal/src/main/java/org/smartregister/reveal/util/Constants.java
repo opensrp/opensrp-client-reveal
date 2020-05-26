@@ -224,6 +224,10 @@ public interface Constants {
         String LARVAL_DIPPINGS_TABLE = "larval_dippings";
         String PAOT_TABLE = "potential_area_of_transmission";
         String IRS_VERIFICATION_TABLE = "irs_verification";
+        String CLIENT_TABLE = "client";
+        String EVENT_TABLE = "event";
+        String TASK_TABLE = "task";
+        String STRUCTURE_TABLE = "structure";
     }
 
     interface BusinessStatus {
@@ -595,6 +599,8 @@ public interface Constants {
         String EVENT_TABLE = "event";
 
         String PERSON_TESTED = "person_tested";
+
+        String SYNC___STATUS = "sync_Status";
 
     }
 
