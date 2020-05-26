@@ -73,6 +73,8 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBL
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
@@ -799,6 +801,56 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         assertEquals(COMPLETE, actualCardDetails.getStatus());
         assertEquals("nifi-user", actualCardDetails.getOwner());
         assertEquals("19 Jan 1970", actualCardDetails.getDateCreated());
+    }
+
+    @Test
+    public void testOnChangeInterventionStatusForIRS() throws JSONException {
+        Feature mapboxFeature = initTestFeature("id1");
+
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mapboxFeature);
+        listTaskPresenter.onChangeInterventionStatus(IRS);
+        verify(listTaskView).showProgressDialog(R.string.fetching_structure_title, R.string.fetching_structure_message);
+        verify(listTaskInteractor).fetchInterventionDetails(IRS, "id1", true);
+    }
+
+    @Test
+    public void testOnChangeInterventionStatusForMosquitoCollection() throws JSONException {
+
+        Feature mapboxFeature = initTestFeature("id1");
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mapboxFeature);
+        listTaskPresenter.onChangeInterventionStatus(MOSQUITO_COLLECTION);
+        verify(listTaskView).showProgressDialog(R.string.fetching_mosquito_collection_points_title, R.string.fetching_mosquito_collection_points_message);
+        verify(listTaskInteractor).fetchInterventionDetails(MOSQUITO_COLLECTION, "id1", true);
+    }
+
+    @Test
+    public void testOnChangeInterventionStatusForLarvalDipping() throws JSONException {
+
+        Feature mapboxFeature = initTestFeature("id1");
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mapboxFeature);
+        listTaskPresenter.onChangeInterventionStatus(LARVAL_DIPPING);
+        verify(listTaskView).showProgressDialog(R.string.fetching_larval_dipping_points_title, R.string.fetching_larval_dipping_points_message);
+        verify(listTaskInteractor).fetchInterventionDetails(LARVAL_DIPPING, "id1", true);
+    }
+
+    @Test
+    public void testOnChangeInterventionStatusForPAOT() throws JSONException {
+
+        Feature mapboxFeature = initTestFeature("id1");
+        Whitebox.setInternalState(listTaskPresenter, "selectedFeature", mapboxFeature);
+        listTaskPresenter.onChangeInterventionStatus(PAOT);
+        verify(listTaskView).showProgressDialog(R.string.fetching_paot_title, R.string.fetching_paot_message);
+        verify(listTaskInteractor).fetchInterventionDetails(PAOT, "id1", true);
+    }
+
+
+    private Feature initTestFeature(String identifier) throws JSONException {
+        String structureId = identifier;
+        com.cocoahero.android.geojson.Feature feature1 = new com.cocoahero.android.geojson.Feature();
+        feature1.setIdentifier(structureId);
+        feature1.setProperties(new JSONObject());
+
+        return Feature.fromJson(feature1.toJSON().toString());
     }
 
 }
