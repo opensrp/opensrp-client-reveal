@@ -166,7 +166,7 @@ public class RevealJsonFormUtils {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Timber.e(e);
         }
         return formString;
     }
