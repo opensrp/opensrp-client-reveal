@@ -13,6 +13,7 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.Task;
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.PlanDefinitionSearchRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -225,6 +226,7 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
             );
 
             task.setStatus(Task.TaskStatus.COMPLETED);
+            task.setSyncStatus(BaseRepository.TYPE_Unsynced);
             task.setLastModified(new DateTime());
             RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
 

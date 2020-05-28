@@ -67,13 +67,13 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
         int registeredChildren = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 ");
 
         int administeredDrugs = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 " +
-                "and ec_child.base_entity_id in (select t.for from task  t where t.code = 'MDA Dispense' and t.business_status = 'Visited, Drug Administered') ");
+                "and ec_child.base_entity_id in (select t.for from task  t where t.code = '" + Constants.Intervention.MDA_DISPENSE + "' and t.business_status like '%" + Constants.BusinessStatus.VISITED_DRUG_ADMINISTERED + "%') ");
 
         int childrenNotVisited = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 " +
                 "and ec_child.base_entity_id not in (select baseEntityId from event where eventType in 'mda_dispense') ");
 
         int visitedNotAdministered = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 " +
-                "and ec_child.base_entity_id in (select t.for from task  t where t.code = 'MDA Dispense' and t.business_status = 'Visited, Drug Not Administered') ");
+                "and ec_child.base_entity_id in (select t.for from task  t where t.code = '" + Constants.Intervention.MDA_DISPENSE + "' and t.business_status like '%" + Constants.BusinessStatus.VISITED_DRUG_NOT_ADMINISTERED + "%') ");
 
         result.put(Constants.ChildRegister.MMA_COVERAGE, registeredChildren == 0 ? 0 : (administeredDrugs / registeredChildren));
         result.put(Constants.ChildRegister.MMA_TARGET_REMAINING, (int) ((registeredChildren * 0.9) - administeredDrugs));
