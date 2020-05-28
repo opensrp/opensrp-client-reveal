@@ -330,8 +330,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             initializeDrawerLayout();
             viewInitialized = true;
         }
-        boolean synced = revealApplication.getSynced();
-        updateSyncStatusDisplay(synced);
+        updateSyncStatusDisplay(revealApplication.getSynced());
     }
 
 
@@ -377,19 +376,21 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         View headerView = navigationView.getHeaderView(0);
         syncLabel = headerView.findViewById(R.id.sync_label);
         syncBadge = activity.findViewById(R.id.sync_badge);
-        if(synced)
-        {
-            syncBadge.setBackground(ContextCompat.getDrawable(activity, R.drawable.badge_green_oval));
-            syncLabel.setText("Device data synced");
-            syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_complete_green));
-            syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_green));
-        }
-        else
-        {
-            syncBadge.setBackground(ContextCompat.getDrawable(activity, R.drawable.badge_oval));
-            syncLabel.setText("Device data not synced");
-            syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_urgent_red));
-            syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_red));
+        if ( syncBadge != null && syncLabel != null) {
+            if(synced)
+            {
+                syncBadge.setBackground(ContextCompat.getDrawable(activity, R.drawable.badge_green_oval));
+                syncLabel.setText("Device data synced");
+                syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_complete_green));
+                syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_green));
+            }
+            else
+            {
+                syncBadge.setBackground(ContextCompat.getDrawable(activity, R.drawable.badge_oval));
+                syncLabel.setText("Device data not synced");
+                syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_urgent_red));
+                syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_red));
+            }
         }
     }
 
