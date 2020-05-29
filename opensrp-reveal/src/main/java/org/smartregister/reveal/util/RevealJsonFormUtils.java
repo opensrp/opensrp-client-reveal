@@ -151,7 +151,7 @@ public class RevealJsonFormUtils {
         try {
             FormUtils formUtils = FormUtils.getInstance(context);
             String formattedFormName = formName.replace(JSON_FORM_FOLDER, "").replace(JSON_FILE_EXTENSION, "");
-            JSONObject formStringObj = formUtils.getFormJsonFromRepositoryOrAssets(formattedFormName);//AssetHandler.readFileFromAssetsFolder(formName, context);
+            JSONObject formStringObj = formUtils.getFormJsonFromRepositoryOrAssets(formattedFormName);
             if (formStringObj == null) {
                 return  null;
             }

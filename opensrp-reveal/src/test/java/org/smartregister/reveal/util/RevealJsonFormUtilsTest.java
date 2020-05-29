@@ -2,6 +2,8 @@ package org.smartregister.reveal.util;
 
 import android.content.Context;
 
+import com.mapbox.geojson.Feature;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -26,6 +28,7 @@ import java.util.UUID;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
@@ -33,6 +36,7 @@ import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.Constants.TASK_RESET_EVENT;
+import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
 /**
  * Created by Vincent Karuri on 25/04/2019
@@ -140,6 +144,16 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
 
         JSONObject jsonObject = revealJsonFormUtils.getFormJSON(context, JsonForm.BLOOD_SCREENING_FORM, task, structure);
         assertEquals(jsonObject.getJSONObject("details").getString(Constants.Properties.FORM_VERSION), "0.0.1");
+    }
+
+    @Test
+    public void testGetFormJsonFromFeature() throws JSONException {
+        Feature structure = TestingUtils.getStructure();
+        String expectedTaskIdentifier = getPropertyValue(structure, Constants.Properties.TASK_IDENTIFIER);
+        JSONObject jsonObject = revealJsonFormUtils.getFormJSON(context, JsonForm.SPRAY_FORM, structure, Constants.BusinessStatus.SPRAYED, "John");
+        assertNotNull(jsonObject);
+        assertEquals(structure.id(), jsonObject.getJSONObject("details").getString(Constants.Properties.LOCATION_ID));
+        assertEquals(expectedTaskIdentifier, jsonObject.getJSONObject("details").getString(Constants.Properties.TASK_IDENTIFIER));
     }
 
     @Test
