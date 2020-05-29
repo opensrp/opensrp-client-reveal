@@ -26,11 +26,15 @@ import java.util.UUID;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static org.junit.Assert.assertEquals;
+import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
+import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.Constants.TASK_RESET_EVENT;
 
@@ -158,5 +162,19 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         assertEquals(eventType, actualEvent.getEventType());
         assertEquals(entityType, actualEvent.getEntityType());
         assertEquals(baseEntityId, actualEvent.getBaseEntityId());
+    }
+
+    @Test
+    public void testGetThailandBednetDistributionForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        String actualFormName = revealJsonFormUtils.getFormName(BEDNET_DISTRIBUTION_EVENT, BEDNET_DISTRIBUTION);
+        assertEquals(JsonForm.THAILAND_BEDNET_DISTRIBUTION_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetRefAppBednetDistributionForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
+        String actualFormName = revealJsonFormUtils.getFormName(BEDNET_DISTRIBUTION_EVENT, BEDNET_DISTRIBUTION);
+        assertEquals(JsonForm.REFAPP_BEDNET_DISTRIBUTION_FORM, actualFormName);
     }
 }
