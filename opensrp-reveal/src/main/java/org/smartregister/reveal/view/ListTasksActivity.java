@@ -764,8 +764,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void onSyncComplete(FetchStatus fetchStatus) {
+    public void onSyncComplete(FetchStatus fetchStatus)
+    {
         onSyncInProgress(fetchStatus);
+        //Check sync status and Update UI to show sync status
+        drawerView.checkSynced();
     }
 
     @Override

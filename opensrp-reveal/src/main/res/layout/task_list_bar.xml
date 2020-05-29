@@ -23,6 +23,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/sync_badge"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="end|right|top"
+        android:layout_marginStart="@dimen/sync_badge_margin"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@id/menu_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/menu_label"

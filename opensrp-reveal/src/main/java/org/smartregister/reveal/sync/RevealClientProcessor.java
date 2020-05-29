@@ -62,11 +62,14 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
     private StructureRepository structureRepository;
 
+    private RevealApplication revealApplication;
+
     public RevealClientProcessor(Context context) {
         super(context);
-        eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
-        taskRepository = RevealApplication.getInstance().getTaskRepository();
-        structureRepository = RevealApplication.getInstance().getStructureRepository();
+        revealApplication = RevealApplication.getInstance();
+        eventClientRepository = revealApplication.getContext().getEventClientRepository();
+        taskRepository = revealApplication.getTaskRepository();
+        structureRepository = revealApplication.getStructureRepository();
     }
 
 
@@ -182,6 +185,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                         structure.setSyncStatus(BaseRepository.TYPE_Created);
                         structureRepository.addOrUpdate(structure);
                     }
+                    revealApplication.setSynced(false);
                 }
             }
             processEvent(event, client, clientClassification);
@@ -249,6 +253,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             // ignore if task status is created so that it will be created on server
             if (localEvents && BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
                 task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                revealApplication.setSynced(false);
             } else if (!localEvents && event.getServerVersion() != 0) {
                 // for events synced from server and task exists mark events as being fully synced
                 eventClientRepository.markEventAsSynced(event.getFormSubmissionId());
