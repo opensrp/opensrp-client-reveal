@@ -65,12 +65,15 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     private boolean viewInitialized = false;
 
+    private RevealApplication revealApplication;
+
     public BaseDrawerPresenter(BaseDrawerContract.View view, BaseDrawerContract.DrawerActivity drawerActivity) {
         this.view = view;
         this.drawerActivity = drawerActivity;
         this.prefsUtil = PreferencesUtil.getInstance();
         this.locationHelper = LocationHelper.getInstance();
         interactor = new BaseDrawerInteractor(this);
+        revealApplication = RevealApplication.getInstance();
     }
 
 
@@ -154,14 +157,14 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     public void onShowOperationalAreaSelector() {
         Pair<String, ArrayList<String>> locationHierarchy = extractLocationHierarchy();
         if (locationHierarchy == null) {//try to evict location hierachy in cache
-            RevealApplication.getInstance().getContext().anmLocationController().evict();
+            revealApplication.getContext().anmLocationController().evict();
             locationHierarchy = extractLocationHierarchy();
         }
         if (locationHierarchy != null) {
             view.showOperationalAreaSelector(extractLocationHierarchy());
         } else {
             view.displayNotification(R.string.error_fetching_location_hierarchy_title, R.string.error_fetching_location_hierarchy);
-            RevealApplication.getInstance().getContext().userService().forceRemoteLogin();
+            revealApplication.getContext().userService().forceRemoteLogin();
         }
 
     }
@@ -327,6 +330,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             initializeDrawerLayout();
             viewInitialized = true;
         }
+        updateSyncStatusDisplay(revealApplication.getSynced());
     }
 
 
@@ -372,18 +376,21 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         View headerView = navigationView.getHeaderView(0);
         syncLabel = headerView.findViewById(R.id.sync_label);
         syncBadge = activity.findViewById(R.id.sync_badge);
-        if(synced)
-        {
-            syncLabel.setText("Device data synced");
-            syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_complete_green));
-            syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_green));
-        }
-        else
-        {
-            syncBadge.setVisibility(headerView.VISIBLE);
-            syncLabel.setText("Device data not synced");
-            syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_urgent_red));
-            syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_red));
+        if ( syncBadge != null && syncLabel != null) {
+            if(synced)
+            {
+                syncBadge.setBackground(ContextCompat.getDrawable(activity, R.drawable.badge_green_oval));
+                syncLabel.setText("Device data synced");
+                syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_complete_green));
+                syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_green));
+            }
+            else
+            {
+                syncBadge.setBackground(ContextCompat.getDrawable(activity, R.drawable.badge_oval));
+                syncLabel.setText("Device data not synced");
+                syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_urgent_red));
+                syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_red));
+            }
         }
     }
 

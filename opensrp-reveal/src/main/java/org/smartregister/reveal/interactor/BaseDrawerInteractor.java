@@ -15,6 +15,16 @@ import java.util.Set;
 
 import timber.log.Timber;
 
+import static org.smartregister.repository.BaseRepository.TYPE_Synced;
+import static org.smartregister.repository.BaseRepository.TYPE_Task_Unprocessed;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_SYNC_STATUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.SYNC_STATUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_SYNC_STATUS;
+import static org.smartregister.reveal.util.Constants.Tables.CLIENT_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.EVENT_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.STRUCTURE_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.TASK_TABLE;
+
 /**
  * Created by samuelgithengi on 3/21/19.
  */
@@ -26,14 +36,14 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
 
     private PlanDefinitionSearchRepository planDefinitionSearchRepository;
 
-    private RevealApplication application;
+    private RevealApplication revealApplication;
 
     private SQLiteDatabase database;
 
     public BaseDrawerInteractor(BaseDrawerContract.Presenter presenter) {
         this.presenter = presenter;
-        application = RevealApplication.getInstance();
-        database = application.getRepository().getReadableDatabase();
+        revealApplication = RevealApplication.getInstance();
+        database = revealApplication.getRepository().getReadableDatabase();
         appExecutors = RevealApplication.getInstance().getAppExecutors();
         planDefinitionSearchRepository = RevealApplication.getInstance().getPlanDefinitionSearchRepository();
     }
@@ -79,15 +89,13 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
     @Override
     public void checkSynced() {
 
-        String syncQuery = "SELECT syncStatus FROM client WHERE syncStatus <> 'Synced'\n" +
+        String syncQuery = String.format("SELECT %s FROM %s WHERE %s <> ?\n", SYNC_STATUS, CLIENT_TABLE, SYNC_STATUS) +
                 "UNION ALL\n" +
-                "SELECT syncStatus FROM event WHERE syncStatus <> 'Synced'\n" +
+                String.format("SELECT %s FROM %s WHERE %s <> ? AND %s <> ?\n", SYNC_STATUS, EVENT_TABLE, SYNC_STATUS, SYNC_STATUS) +
                 "UNION ALL\n" +
-                "SELECT sync_Status FROM task WHERE sync_Status <> 'Synced'\n" +
+                String.format("SELECT %s FROM %s WHERE %s <> ?\n", TASK_SYNC_STATUS, TASK_TABLE, TASK_SYNC_STATUS) +
                 "UNION ALL\n" +
-                "SELECT sync_Status FROM structure WHERE sync_Status <> 'Synced'\n" +
-                "UNION ALL\n" +
-                "SELECT syncStatus FROM form_submission WHERE syncStatus <> 'Synced'";
+                String.format("SELECT %s FROM %s WHERE %s <> ?\n", STRUCTURE_SYNC_STATUS, STRUCTURE_TABLE, STRUCTURE_SYNC_STATUS);
 
         Runnable runnable = new Runnable() {
             @Override
@@ -95,16 +103,16 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
                 Cursor syncCursor = null;
                 try
                 {
-                    syncCursor  = database.rawQuery(syncQuery, null);
+                    syncCursor  = database.rawQuery(syncQuery, new String[]{TYPE_Synced, TYPE_Synced, TYPE_Task_Unprocessed, TYPE_Synced, TYPE_Synced});
                     Integer count = syncCursor.getCount();
 
                     if(count == 0)
                     {
-                        RevealApplication.getInstance().setSynced(true);
+                        revealApplication.setSynced(true);
                     }
                     else
                     {
-                        RevealApplication.getInstance().setSynced(false);
+                        revealApplication.setSynced(false);
                     }
                 }
                 catch (Exception e)
@@ -120,7 +128,7 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
-                        boolean synced = application.getSynced();
+                        boolean synced = revealApplication.getSynced();
                         (presenter).updateSyncStatusDisplay(synced);
                     }
                 });

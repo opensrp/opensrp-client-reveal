@@ -28,6 +28,15 @@ import java.util.UUID;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.repository.BaseRepository.TYPE_Synced;
+import static org.smartregister.repository.BaseRepository.TYPE_Task_Unprocessed;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_SYNC_STATUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.SYNC_STATUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_SYNC_STATUS;
+import static org.smartregister.reveal.util.Constants.Tables.CLIENT_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.EVENT_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.STRUCTURE_TABLE;
+import static org.smartregister.reveal.util.Constants.Tables.TASK_TABLE;
 
 /**
  * Created by samuelgithengi on 2/4/20.
@@ -58,15 +67,14 @@ public class BaseDrawerInteractorTest extends BaseUnitTest {
     private String planId = UUID.randomUUID().toString();
 
     private String operationalArea = UUID.randomUUID().toString();
-    private String syncQuery = "SELECT syncStatus FROM client WHERE syncStatus <> 'Synced'\n" +
+
+    private String syncQuery = String.format("SELECT %s FROM %s WHERE %s <> ?\n", SYNC_STATUS, CLIENT_TABLE, SYNC_STATUS) +
             "UNION ALL\n" +
-            "SELECT syncStatus FROM event WHERE syncStatus <> 'Synced'\n" +
+            String.format("SELECT %s FROM %s WHERE %s <> ? AND %s <> ?\n", SYNC_STATUS, EVENT_TABLE, SYNC_STATUS, SYNC_STATUS) +
             "UNION ALL\n" +
-            "SELECT sync_Status FROM task WHERE sync_Status <> 'Synced'\n" +
+            String.format("SELECT %s FROM %s WHERE %s <> ?\n", TASK_SYNC_STATUS, TASK_TABLE, TASK_SYNC_STATUS) +
             "UNION ALL\n" +
-            "SELECT sync_Status FROM structure WHERE sync_Status <> 'Synced'\n" +
-            "UNION ALL\n" +
-            "SELECT syncStatus FROM form_submission WHERE syncStatus <> 'Synced'";
+            String.format("SELECT %s FROM %s WHERE %s <> ?\n", STRUCTURE_SYNC_STATUS, STRUCTURE_TABLE, STRUCTURE_SYNC_STATUS);
 
     @Before
     public void setUp() {
@@ -109,19 +117,19 @@ public class BaseDrawerInteractorTest extends BaseUnitTest {
 
     @Test
     public void testCheckSyncedTrue() {
-        when(database.rawQuery(syncQuery, null)).thenReturn(emptyCursor());
+        when(database.rawQuery(syncQuery, new String[]{TYPE_Synced, TYPE_Synced, TYPE_Task_Unprocessed, TYPE_Synced, TYPE_Synced})).thenReturn(emptyCursor());
         //Cursor cursorSpy = Mockito.spy(Cursor.class);
         interactor.checkSynced();
-        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(syncQuery, null);
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(syncQuery,  new String[]{TYPE_Synced, TYPE_Synced, TYPE_Task_Unprocessed, TYPE_Synced, TYPE_Synced});
         //verify(cursorSpy).close();
         Assert.assertTrue(RevealApplication.getInstance().getSynced());
     }
 
     @Test
     public void testCheckSyncedFalse() {
-        when(database.rawQuery(syncQuery, null)).thenReturn(populatedCursor());
+        when(database.rawQuery(syncQuery, new String[]{TYPE_Synced, TYPE_Synced, TYPE_Task_Unprocessed, TYPE_Synced, TYPE_Synced})).thenReturn(populatedCursor());
         interactor.checkSynced();
-        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(syncQuery, null);
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(syncQuery, new String[]{TYPE_Synced, TYPE_Synced, TYPE_Task_Unprocessed, TYPE_Synced, TYPE_Synced});
         Assert.assertFalse(RevealApplication.getInstance().getSynced());
     }
 
