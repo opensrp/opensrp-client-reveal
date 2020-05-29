@@ -15,8 +15,11 @@ import java.util.Set;
 
 import timber.log.Timber;
 
+import static org.smartregister.repository.BaseRepository.TYPE_Synced;
+import static org.smartregister.repository.BaseRepository.TYPE_Task_Unprocessed;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_SYNC_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SYNC_STATUS;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.SYNC___STATUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_SYNC_STATUS;
 import static org.smartregister.reveal.util.Constants.Tables.CLIENT_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.EVENT_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.STRUCTURE_TABLE;
@@ -36,10 +39,6 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
     private RevealApplication revealApplication;
 
     private SQLiteDatabase database;
-
-    private String SYNCED = "Synced";
-
-    private String TASK_UNPROCESSED = "task_unprocessed";
 
     public BaseDrawerInteractor(BaseDrawerContract.Presenter presenter) {
         this.presenter = presenter;
@@ -94,9 +93,9 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
                 "UNION ALL\n" +
                 String.format("SELECT %s FROM %s WHERE %s <> ? AND %s <> ?\n", SYNC_STATUS, EVENT_TABLE, SYNC_STATUS, SYNC_STATUS) +
                 "UNION ALL\n" +
-                String.format("SELECT %s FROM %s WHERE %s <> ?\n", SYNC___STATUS, TASK_TABLE, SYNC___STATUS) +
+                String.format("SELECT %s FROM %s WHERE %s <> ?\n", TASK_SYNC_STATUS, TASK_TABLE, TASK_SYNC_STATUS) +
                 "UNION ALL\n" +
-                String.format("SELECT %s FROM %s WHERE %s <> ?\n", SYNC___STATUS, STRUCTURE_TABLE, SYNC___STATUS);
+                String.format("SELECT %s FROM %s WHERE %s <> ?\n", STRUCTURE_SYNC_STATUS, STRUCTURE_TABLE, STRUCTURE_SYNC_STATUS);
 
         Runnable runnable = new Runnable() {
             @Override
@@ -104,7 +103,7 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
                 Cursor syncCursor = null;
                 try
                 {
-                    syncCursor  = database.rawQuery(syncQuery, new String[]{SYNCED, SYNCED, TASK_UNPROCESSED, SYNCED, SYNCED});
+                    syncCursor  = database.rawQuery(syncQuery, new String[]{TYPE_Synced, TYPE_Synced, TYPE_Task_Unprocessed, TYPE_Synced, TYPE_Synced});
                     Integer count = syncCursor.getCount();
 
                     if(count == 0)

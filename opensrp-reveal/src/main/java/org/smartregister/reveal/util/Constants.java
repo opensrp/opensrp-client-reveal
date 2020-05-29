@@ -580,6 +580,10 @@ public interface Constants {
 
         String SYNC_STATUS = "syncStatus";
 
+        String TASK_SYNC_STATUS = "sync_Status";
+
+        String STRUCTURE_SYNC_STATUS = "sync_Status";
+
         String VALIDATION_STATUS = "validationStatus";
 
         String AUTHORED_ON = "authored_on";
@@ -599,8 +603,6 @@ public interface Constants {
         String EVENT_TABLE = "event";
 
         String PERSON_TESTED = "person_tested";
-
-        String SYNC___STATUS = "sync_Status";
 
     }
 
