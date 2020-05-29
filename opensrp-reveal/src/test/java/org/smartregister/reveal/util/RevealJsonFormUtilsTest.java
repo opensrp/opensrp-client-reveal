@@ -29,11 +29,13 @@ import java.util.UUID;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
+import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.Constants.TASK_RESET_EVENT;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
@@ -173,4 +175,41 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         assertEquals(entityType, actualEvent.getEntityType());
         assertEquals(baseEntityId, actualEvent.getBaseEntityId());
     }
+
+    @Test
+    public void testGetNamibiaSprayForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.NAMIBIA);
+        String actualFormName = revealJsonFormUtils.getFormName(SPRAY_EVENT, IRS);
+        assertEquals(JsonForm.SPRAY_FORM_NAMIBIA, actualFormName);
+    }
+
+    @Test
+    public void testGetBotswanaSprayForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.BOTSWANA);
+        String actualFormName = revealJsonFormUtils.getFormName(SPRAY_EVENT, IRS);
+        assertEquals(JsonForm.SPRAY_FORM_BOTSWANA, actualFormName);
+    }
+
+    @Test
+    public void testGetZambiaSprayForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        String actualFormName = revealJsonFormUtils.getFormName(SPRAY_EVENT, IRS);
+        assertEquals(JsonForm.SPRAY_FORM_ZAMBIA, actualFormName);
+    }
+
+    @Test
+    public void testGetThailandSprayForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        String actualFormName = revealJsonFormUtils.getFormName(SPRAY_EVENT, IRS);
+        assertEquals(JsonForm.THAILAND_SPRAY_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetRefAppSprayForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
+        String actualFormName = revealJsonFormUtils.getFormName(SPRAY_EVENT, IRS);
+        assertEquals(JsonForm.SPRAY_FORM_REFAPP, actualFormName);
+    }
+
 }
+

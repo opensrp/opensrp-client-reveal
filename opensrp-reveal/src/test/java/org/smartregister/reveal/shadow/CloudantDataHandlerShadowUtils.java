@@ -12,7 +12,7 @@ import org.smartregister.sync.CloudantDataHandler;
  */
 
 @Implements(CloudantDataHandler.class)
-public class CloudantDataHandlerShadow {
+public class CloudantDataHandlerShadowUtils {
 
     @Implementation
     public static CloudantDataHandler getInstance(Context context) {

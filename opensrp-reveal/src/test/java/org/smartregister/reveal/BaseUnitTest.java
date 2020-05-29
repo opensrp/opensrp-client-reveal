@@ -12,7 +12,7 @@ import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-import org.smartregister.reveal.shadow.CloudantDataHandlerShadow;
+import org.smartregister.reveal.shadow.CloudantDataHandlerShadowUtils;
 import org.smartregister.reveal.shadow.CustomFontTextViewShadow;
 import org.smartregister.reveal.shadow.AsyncTaskShadow;
 import org.smartregister.reveal.shadow.OfflineManagerShadow;
@@ -33,7 +33,7 @@ import org.smartregister.util.DateTimeTypeConverter;
         MapViewShadow.class, KujakuMapViewShadow.class, RevealMapViewShadow.class,
         LayerShadow.class, SymbolLayerShadow.class, LineLayerShadow.class,
         GeoJsonSourceShadow.class, SourceShadow.class, OfflineManagerShadow.class,
-        AsyncTaskShadow.class, CloudantDataHandlerShadow.class}, sdk = Build.VERSION_CODES.P)
+        AsyncTaskShadow.class, CloudantDataHandlerShadowUtils.class}, sdk = Build.VERSION_CODES.P)
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
 public abstract class BaseUnitTest {
 
