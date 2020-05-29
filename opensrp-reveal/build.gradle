@@ -174,10 +174,8 @@ dependencies {
 
     implementation('org.smartregister:opensrp-client-core:1.11.4-SNAPSHOT@aar') {
         transitive = true
-        /*exclude group: 'com.github.bmelnychuk', module: 'atv'*/
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.android.support', module: 'appcompat-v7'
-        exclude group: 'com.google.android.gms', module: 'play-services-vision'
         exclude group: 'com.github.ybq', module: 'Android-SpinKit'
         exclude group: 'org.apache.httpcomponents', module: 'httpmime'
         exclude group: 'com.github.ybq', module: 'Android-SpinKit'
