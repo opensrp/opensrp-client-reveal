@@ -34,6 +34,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -87,6 +88,9 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
 
     @Captor
     private ArgumentCaptor<Pair<String, ArrayList<String>>> pairArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Boolean> synced;
 
     @Before
     public void setUp() {
@@ -248,6 +252,8 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
     public void testOnViewResumedWithViewNotInitialized() {
 
         when(preferencesUtil.getCurrentPlan()).thenReturn("IRS Lusaka");
+        presenter = spy(presenter);
+        doNothing().doNothing().when(presenter).updateSyncStatusDisplay(synced.capture());
         Whitebox.setInternalState(presenter, "locationHelper", locationHelper);
         List<String> defaultLocations = new ArrayList<>();
         defaultLocations.add("Lusaka");
@@ -276,6 +282,7 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
         assertFalse(Whitebox.getInternalState(presenter, "changedCurrentSelection"));
 
         presenter = spy(presenter);
+        doNothing().doNothing().when(presenter).updateSyncStatusDisplay(synced.capture());
         presenter.onViewResumed();
 
         assertTrue(Whitebox.getInternalState(presenter, "changedCurrentSelection"));

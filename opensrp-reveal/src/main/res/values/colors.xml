@@ -48,6 +48,8 @@
     <color name="task_filter_gray">#8B8B8B</color>
 
     <color name="distance_scale_text">@color/white</color>
+    <color name="background_alert_red">#FFBDBD</color>
+    <color name="background_alert_green">#B3EDC3</color>
 
 
 </resources>
