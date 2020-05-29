@@ -2,6 +2,8 @@ package org.smartregister.reveal.util;
 
 import android.content.Context;
 
+import com.mapbox.geojson.Feature;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -26,6 +28,8 @@ import java.util.UUID;
 
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -33,8 +37,10 @@ import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLL
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
+import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.Constants.TASK_RESET_EVENT;
+import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
 /**
  * Created by Vincent Karuri on 25/04/2019
@@ -145,6 +151,16 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
+    public void testGetFormJsonFromFeature() throws JSONException {
+        Feature structure = TestingUtils.getStructure();
+        String expectedTaskIdentifier = getPropertyValue(structure, Constants.Properties.TASK_IDENTIFIER);
+        JSONObject jsonObject = revealJsonFormUtils.getFormJSON(context, JsonForm.SPRAY_FORM, structure, Constants.BusinessStatus.SPRAYED, "John");
+        assertNotNull(jsonObject);
+        assertEquals(structure.id(), jsonObject.getJSONObject("details").getString(Constants.Properties.LOCATION_ID));
+        assertEquals(expectedTaskIdentifier, jsonObject.getJSONObject("details").getString(Constants.Properties.TASK_IDENTIFIER));
+    }
+
+    @Test
     public void testCreateEvent() {
 
         String baseEntityId = UUID.randomUUID().toString();
@@ -163,6 +179,41 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
+    public void testGetNamibiaSprayForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.NAMIBIA);
+        String actualFormName = revealJsonFormUtils.getFormName(SPRAY_EVENT, IRS);
+        assertEquals(JsonForm.SPRAY_FORM_NAMIBIA, actualFormName);
+    }
+
+    @Test
+    public void testGetBotswanaSprayForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.BOTSWANA);
+        String actualFormName = revealJsonFormUtils.getFormName(SPRAY_EVENT, IRS);
+        assertEquals(JsonForm.SPRAY_FORM_BOTSWANA, actualFormName);
+    }
+
+    @Test
+    public void testGetZambiaSprayForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        String actualFormName = revealJsonFormUtils.getFormName(SPRAY_EVENT, IRS);
+        assertEquals(JsonForm.SPRAY_FORM_ZAMBIA, actualFormName);
+    }
+
+    @Test
+    public void testGetThailandSprayForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        String actualFormName = revealJsonFormUtils.getFormName(SPRAY_EVENT, IRS);
+        assertEquals(JsonForm.THAILAND_SPRAY_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetRefAppSprayForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
+        String actualFormName = revealJsonFormUtils.getFormName(SPRAY_EVENT, IRS);
+        assertEquals(JsonForm.SPRAY_FORM_REFAPP, actualFormName);
+    }
+
+    @Test
     public void testGetThailandBednetDistributionForm() {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
         String actualFormName = revealJsonFormUtils.getFormName(BEDNET_DISTRIBUTION_EVENT, BEDNET_DISTRIBUTION);
@@ -175,4 +226,6 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         String actualFormName = revealJsonFormUtils.getFormName(BEDNET_DISTRIBUTION_EVENT, BEDNET_DISTRIBUTION);
         assertEquals(JsonForm.REFAPP_BEDNET_DISTRIBUTION_FORM, actualFormName);
     }
+
 }
+
