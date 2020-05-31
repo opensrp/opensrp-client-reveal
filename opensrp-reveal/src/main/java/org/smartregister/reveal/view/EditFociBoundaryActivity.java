@@ -61,6 +61,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
     private Button deleteBtn ;
     private Button drawingBtn;
     private Button saveBtn;
+    private Button cancelBtn;
 
     private RevealApplication revealApplication = RevealApplication.getInstance();
     boolean locationComponentActive = false;
@@ -85,7 +86,6 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
                     .setBoundaryColor(Color.WHITE)
                     .setBoundaryWidth(getResources().getDimension(R.dimen.operational_area_boundary_width));
             boundaryLayer = boundaryBuilder.build();
-            kujakuMapView.addLayer(boundaryLayer);
         }
 
 
@@ -104,15 +104,11 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
         this.drawingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // start Drawing from scratch
                 if (drawingManager != null) {
                     if (!drawingManager.isDrawingEnabled()) {
-                        if (drawingManager.startDrawing( boundaryLayer)) {
-                            drawingBtn.setText(R.string.drawing_boundaries_stop_draw);
-                        }
                     } else {
+                        kujakuMapView.addLayer(boundaryLayer);
                         drawingManager.stopDrawingAndDisplayLayer();
-                        drawingBtn.setText(R.string.drawing_boundaries_start_draw);
                     }
                 } else {
                     Log.e(TAG, "Drawing manager instance is null");
@@ -136,9 +132,17 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
                     Timber.e(e);
                 }
                 Location operationalAreaLocation = LocationServiceHelper.locationGson.fromJson(revealApplication.getOperationalArea().toJson(), Location.class);
-                JsonArray ga = LocationServiceHelper.locationGson.fromJson(updatedCoords.toString(), JsonArray.class);
-                operationalAreaLocation.getGeometry().setCoordinates(ga);
+                JsonArray updatedCoordsJsonArray = LocationServiceHelper.locationGson.fromJson(updatedCoords.toString(), JsonArray.class);
+                operationalAreaLocation.getGeometry().setCoordinates(updatedCoordsJsonArray);
                 RevealApplication.getInstance().getLocationRepository().addOrUpdate(operationalAreaLocation);
+                finish();
+            }
+        });
+
+        cancelBtn = findViewById(R.id.btn_drawingBoundaries_cancel);
+        this.cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 finish();
             }
         });
@@ -189,11 +193,15 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
                         drawingManager.addOnKujakuLayerLongClickListener(new OnKujakuLayerLongClickListener() {
                             @Override
                             public void onKujakuLayerLongClick(@NonNull KujakuLayer kujakuLayer) {
+
                                 if (drawingManager.isDrawingEnabled()) {
-                                    drawingBtn.setText(R.string.drawing_boundaries_stop_draw);
+                                    drawingBtn.setText(R.string.done);
                                 }
                             }
                         });
+
+                        //jump straight into edit mode
+                        enabledrawingMode(mapboxMap);
                     }
                 }); //end of set style
 
@@ -212,8 +220,26 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
                 } else {
                     kujakuMapView.focusOnUserLocation(true, bufferRadius, RenderMode.COMPASS);
                 }
+
             }
         });
+    }
+
+    private void enabledrawingMode(MapboxMap mapboxMap) {
+        boundaryLayer.disableLayerOnMap(mapboxMap);
+        if (drawingManager != null) {
+            if (!drawingManager.isDrawingEnabled()) {
+                if (drawingManager.startDrawing( boundaryLayer)) {
+                    drawingBtn.setText(R.string.done);
+                }
+            } else {
+                drawingManager.stopDrawingAndDisplayLayer();
+            }
+        } else {
+            Log.e(TAG, "Drawing manager instance is null");
+        }
+
+        deleteBtn.setEnabled(false);
     }
 
     @Override

@@ -33,24 +33,26 @@
                 app:mapbox_uiRotateGestures="false" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
                 <Button
+                    android:id="@+id/btn_drawingBoundaries_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:enabled="true"
+                    android:text="@string/cancel"/>
+
+                <Button
                     android:id="@+id/btn_drawingBoundaries_drawing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:enabled="true"
-                    android:text="@string/drawing_boundaries_start_draw"/>
+                    android:text="@string/done"/>
 
                 <Button
                     android:id="@+id/btn_drawingBoundaries_delete"
