@@ -31,6 +31,7 @@ import org.smartregister.domain.Location;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.EditBoundaryState;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.sync.helper.LocationServiceHelper;
 
@@ -109,6 +110,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
                     } else {
                         kujakuMapView.addLayer(boundaryLayer);
                         drawingManager.stopDrawingAndDisplayLayer();
+                        toggleButtons(EditBoundaryState.FINISHED);
                     }
                 } else {
                     Log.e(TAG, "Drawing manager instance is null");
@@ -147,6 +149,8 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
             }
         });
 
+        toggleButtons(EditBoundaryState.START);
+
         String featureCollection = revealApplication.getFeatureCollection().toJson();
         String finalFeatureCollection = featureCollection;
         com.mapbox.geojson.Feature finalOperationalAreaFeature = revealApplication.getOperationalArea();
@@ -180,6 +184,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
                                 Toast.makeText(EditFociBoundaryActivity.this,
                                         getString(R.string.drawing_boundaries_circle_clicked), Toast.LENGTH_SHORT).show();
                                 deleteBtn.setEnabled(drawingManager.getCurrentKujakuCircle() != null);
+                                toggleButtons(EditBoundaryState.EDITTING);
                             }
 
                             @Override
@@ -240,6 +245,25 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
         }
 
         deleteBtn.setEnabled(false);
+    }
+
+    private void toggleButtons(EditBoundaryState state) {
+        switch (state) {
+            case EDITTING:
+                cancelBtn.setVisibility(View.GONE);
+                saveBtn.setVisibility(View.GONE);
+                deleteBtn.setVisibility(View.VISIBLE);
+                drawingBtn.setVisibility(View.VISIBLE);
+                break;
+            case START:
+            case FINISHED:
+            default:
+                cancelBtn.setVisibility(View.VISIBLE);
+                saveBtn.setVisibility(View.VISIBLE);
+                deleteBtn.setVisibility(View.GONE);
+                drawingBtn.setVisibility(View.GONE);
+                break;
+        }
     }
 
     @Override
