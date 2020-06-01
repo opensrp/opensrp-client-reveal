@@ -99,6 +99,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     private Feature operationalArea;
 
+    private boolean synced;
+
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
     }
@@ -405,5 +407,13 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     public void setOperationalArea(Feature operationalArea) {
         this.operationalArea = operationalArea;
+    }
+
+    public boolean getSynced() {
+        return synced;
+    }
+
+    public void setSynced(boolean synced) {
+        this.synced = synced;
     }
 }

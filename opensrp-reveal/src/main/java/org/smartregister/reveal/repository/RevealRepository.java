@@ -10,8 +10,10 @@ import org.smartregister.configurableviews.repository.ConfigurableViewsRepositor
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.CampaignRepository;
+import org.smartregister.repository.ClientFormRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
+import org.smartregister.repository.ManifestRepository;
 import org.smartregister.repository.PlanDefinitionRepository;
 import org.smartregister.repository.PlanDefinitionSearchRepository;
 import org.smartregister.repository.Repository;
@@ -105,6 +107,9 @@ public class RevealRepository extends Repository {
                 case 5:
                     upgradeToVersion5(db);
                     break;
+                case 6:
+                    upgradeToVersion6(db);
+                    break;
                 default:
                     break;
             }
@@ -192,6 +197,11 @@ public class RevealRepository extends Repository {
         if ((BuildConfig.BUILD_COUNTRY == Country.THAILAND || BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) && !isColumnExists(db, EVENT_TASK_TABLE, DatabaseKeys.PERSON_TESTED)) {
             db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s VARCHAR ", EVENT_TASK_TABLE, DatabaseKeys.PERSON_TESTED));
         }
+    }
+
+    private void upgradeToVersion6(SQLiteDatabase db) {
+        ClientFormRepository.createTable(db);
+        ManifestRepository.createTable(db);
     }
 
     @Override
