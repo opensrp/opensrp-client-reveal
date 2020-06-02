@@ -230,6 +230,21 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
+    public void testGetThailandCaseConfirmationForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        String actualFormName = revealJsonFormUtils.getFormName(CASE_CONFIRMATION_EVENT, CASE_CONFIRMATION);
+        assertEquals(JsonForm.THAILAND_CASE_CONFIRMATION_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetRefAppCaseConfirmationForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
+        String actualFormName = revealJsonFormUtils.getFormName(CASE_CONFIRMATION_EVENT, CASE_CONFIRMATION);
+        assertEquals(JsonForm.REFAPP_CASE_CONFIRMATION_FORM, actualFormName);
+    }
+
+
+    @Test
     public void testGetBednetDistributionForm() {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.BOTSWANA);
         String actualFormName = revealJsonFormUtils.getFormName(BEDNET_DISTRIBUTION_EVENT, BEDNET_DISTRIBUTION);
