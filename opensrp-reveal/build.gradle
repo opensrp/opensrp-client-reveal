@@ -64,6 +64,7 @@ android {
         if (project.rootProject.file("local.properties").exists()) {
             Properties properties = new Properties()
             properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
             if (properties != null &&
                     properties.containsKey("mapbox.sdk.token")) {
                 buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", properties["mapbox.sdk.token"]
@@ -79,10 +80,31 @@ android {
                 println("Digital Globe config variables is not set in your local.properties")
                 buildConfigField "String", "DG_CONNECT_ID", "\"sample_key\""
             }
+
+            if (properties != null && properties.containsKey("oauth.client.id")) {
+
+                buildConfigField "String", "OAUTH_CLIENT_ID", properties["oauth.client.id"]
+
+            } else {
+                project.logger.error("oauth.client.id variable is not set in your local.properties")
+            }
+
+
+            if (properties != null && properties.containsKey("oauth.client.secret")) {
+
+                buildConfigField "String", "OAUTH_CLIENT_SECRET", properties["oauth.client.secret"]
+
+            } else {
+                project.logger.error("oauth.client.secret variable is not set in your local.properties")
+            }
+
+
         } else {
             println("local.properties does not exist")
             buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
             buildConfigField "String", "DG_CONNECT_ID", "\"sample_key\""
+            buildConfigField "String", "OAUTH_CLIENT_ID", "\"sample_client_id\""
+            buildConfigField "String", "OAUTH_CLIENT_SECRET", "\"sample_client_secret\""
         }
     }
     dexOptions {
@@ -131,8 +153,6 @@ android {
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '60'
             buildConfigField "boolean", "DISPLAY_OUTSIDE_OPERATIONAL_AREA_MASK", 'false'
             buildConfigField "boolean", "DISPLAY_DISTANCE_SCALE", 'true'
-            buildConfigField "String", "OAUTH_CLIENT_ID", '"xxxxxxxxxx"'
-            buildConfigField "String", "OAUTH_CLIENT_SECRET", '"xxxxxxxxxxx"'
 
             testCoverageEnabled true
         }
