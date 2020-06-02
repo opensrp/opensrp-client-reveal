@@ -239,7 +239,7 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     @Test
     public void testGetRefAppCaseConfirmationForm() {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
-        String actualFormName = revealJsonFormUtils.getFormName(Constants.EventType.CASE_CONFIRMATION_EVENT, CASE_CONFIRMATION);
+        String actualFormName = revealJsonFormUtils.getFormName(CASE_CONFIRMATION_EVENT, CASE_CONFIRMATION);
         assertEquals(JsonForm.REFAPP_CASE_CONFIRMATION_FORM, actualFormName);
     }
 
