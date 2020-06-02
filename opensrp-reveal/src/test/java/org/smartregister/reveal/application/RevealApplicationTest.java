@@ -5,13 +5,18 @@ import android.content.Context;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.util.ReflectionHelpers;
+import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.service.UserService;
 
 import io.ona.kujaku.data.realm.RealmDatabase;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -52,4 +57,17 @@ public class RevealApplicationTest extends BaseUnitTest {
         RealmDatabase realmDatabase = revealApplication.getRealmDatabase(context);
         assertNotNull(realmDatabase);
     }
+
+    @Test
+    public void testGetFamilyMetaDataForThailand() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        FamilyMetadata actualMetaData = revealApplication.getMetadata();
+        assertNotNull(actualMetaData);
+        assertEquals("opensrp_id", actualMetaData.uniqueIdentifierKey);
+        assertEquals("ec_family", actualMetaData.familyRegister.tableName);
+        assertEquals("Family Registration", actualMetaData.familyRegister.registerEventType);
+        assertEquals("family_register", actualMetaData.familyRegister.config);
+        assertEquals("family_head", actualMetaData.familyRegister.familyHeadRelationKey);
+    }
+
 }
