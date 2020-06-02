@@ -29,6 +29,7 @@ import java.util.UUID;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
@@ -240,6 +241,18 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
         String actualFormName = revealJsonFormUtils.getFormName(Constants.EventType.CASE_CONFIRMATION_EVENT, CASE_CONFIRMATION);
         assertEquals(JsonForm.REFAPP_CASE_CONFIRMATION_FORM, actualFormName);
+
+    public void testGetBednetDistributionForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.BOTSWANA);
+        String actualFormName = revealJsonFormUtils.getFormName(BEDNET_DISTRIBUTION_EVENT, BEDNET_DISTRIBUTION);
+        assertEquals(JsonForm.BEDNET_DISTRIBUTION_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetCaseConfirmationDistributionForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.BOTSWANA);
+        String actualFormName = revealJsonFormUtils.getFormName(CASE_CONFIRMATION_EVENT, CASE_CONFIRMATION);
+        assertEquals(JsonForm.CASE_CONFIRMATION_FORM, actualFormName);
     }
 
 }
