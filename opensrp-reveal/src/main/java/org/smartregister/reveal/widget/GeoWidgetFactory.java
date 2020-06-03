@@ -57,7 +57,6 @@ import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -352,8 +351,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 formFragmentView.writeValue(stepName, key, markerPosition.toJSON().toString(), openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
                 formFragmentView.writeValue(stepName, ZOOM_LEVEL, zoomLevel + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
                 formFragmentView.writeValue(stepName, LOCATION_COMPONENT_ACTIVE, finalLocationComponentActive + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
-            }
-            else{
+            } else {
                 Timber.w("cannot write values JsonApi is null");
             }
         } catch (JSONException e) {
