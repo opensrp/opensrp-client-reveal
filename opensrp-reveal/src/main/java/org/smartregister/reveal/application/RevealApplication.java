@@ -96,6 +96,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     private RealmDatabase realmDatabase;
 
+    private boolean synced;
+
     public static synchronized RevealApplication getInstance() {
         return (RevealApplication) mInstance;
     }
@@ -396,5 +398,13 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     public void setFeatureCollection(FeatureCollection featureCollection) {
         this.featureCollection = featureCollection;
+    }
+
+    public boolean getSynced() {
+        return synced;
+    }
+
+    public void setSynced(boolean synced) {
+        this.synced = synced;
     }
 }

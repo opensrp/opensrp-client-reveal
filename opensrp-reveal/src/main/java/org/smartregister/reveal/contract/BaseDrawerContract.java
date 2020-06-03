@@ -60,6 +60,8 @@ public interface BaseDrawerContract {
         void onResume();
 
         void openOfflineMapsView();
+
+        void checkSynced();
     }
 
     interface Presenter {
@@ -93,6 +95,8 @@ public interface BaseDrawerContract {
         boolean isPlanAndOperationalAreaSelected();
 
         void onPlanValidated(boolean isValid);
+
+        void updateSyncStatusDisplay(boolean synced);
     }
 
     interface Interactor {
@@ -100,5 +104,7 @@ public interface BaseDrawerContract {
         void fetchPlans(String jurisdictionName);
 
         void validateCurrentPlan(String selectedOperationalArea, String currentPlanId);
+
+        void checkSynced();
     }
 }
