@@ -121,7 +121,6 @@ public class Utils {
         PullUniqueIdsServiceJob.scheduleJobImmediately(PullUniqueIdsServiceJob.TAG);
     }
 
-
     public static Location getOperationalAreaLocation(String operationalArea) {
         return cache.get(operationalArea, new CacheableData<Location>() {
             @Override
@@ -129,6 +128,10 @@ public class Utils {
                 return RevealApplication.getInstance().getLocationRepository().getLocationByName(operationalArea);
             }
         });
+    }
+
+    public static Location getStructureByName(String operationalArea) {
+        return cache.get(operationalArea, () -> RevealApplication.getInstance().getStructureRepository().getLocationByName(operationalArea));
     }
 
     public static String formatDate(String date, String dateFormat) throws Exception {

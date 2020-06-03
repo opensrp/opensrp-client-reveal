@@ -119,6 +119,7 @@ public interface Constants {
         String FACILITY_LEVEL = "FACILITY_LEVEL";
         String CURRENT_OPERATIONAL_AREA = "CURRENT_OPERATIONAL_AREA";
         String CURRENT_OPERATIONAL_AREA_ID = "CURRENT_OPERATIONAL_AREA_ID";
+        String CURRENT_STRUCTURE = "CURRENT_STRUCTURE";
     }
 
     interface Tags {
@@ -131,6 +132,7 @@ public interface Constants {
         String CANTON = "Canton";
         String VILLAGE = "Village";
         String OPERATIONAL_AREA = "Operational Area";
+        String SCHOOL = "School";
     }
 
     interface Properties {

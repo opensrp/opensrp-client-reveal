@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.FetchStatus;
+import org.smartregister.domain.Location;
 import org.smartregister.domain.ResponseErrorStatus;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reporting.view.ProgressIndicatorView;
@@ -30,6 +31,7 @@ import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.model.ChildModel;
 import org.smartregister.reveal.presenter.ChildRegisterFragmentPresenter;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.view.ChildProfileActivity;
 import org.smartregister.reveal.view.ChildRegisterActivity;
 import org.smartregister.reveal.view.DrawerMenuView;
@@ -85,7 +87,14 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
         TextView mapText = view.findViewById(R.id.txt_map_label);
         mapText.setText(R.string.label_add);
-        mapText.setOnClickListener(v -> startChildRegistrationForm());
+        mapText.setOnClickListener(v -> {
+            Location selectedSchool = org.smartregister.reveal.util.Utils.getStructureByName(PreferencesUtil.getInstance().getCurrentStructure());
+            if (selectedSchool == null) {
+                drawerView.openDrawerLayout();
+            } else {
+                startChildRegistrationForm();
+            }
+        });
 
         progressIndicatorsGroupView = view.findViewById(R.id.progressIndicatorsGroupView);
         detailedReportCardView = view.findViewById(R.id.indicators_card_view);
@@ -145,6 +154,12 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
     @Override
     public void onListItemClicked(Child child, int layoutID) {
+        Location selectedSchool = org.smartregister.reveal.util.Utils.getStructureByName(PreferencesUtil.getInstance().getCurrentStructure());
+        if (selectedSchool == null) {
+            drawerView.openDrawerLayout();
+            return;
+        }
+
         if (layoutID == R.id.linearLayoutAction || layoutID == R.id.btnDue) {
             startRecordMDAForm(child.getBaseEntityID());
         } else {

@@ -137,6 +137,7 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
         Callable<Boolean> callable = () -> {
 
             Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+            Location selectedSchool = Utils.getStructureByName(PreferencesUtil.getInstance().getCurrentStructure());
             String entityId = UUID.randomUUID().toString();
             new NativeFormProcessor(jsonString)
 
@@ -149,7 +150,7 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
 
                     // create and save client
                     .hasClient(true)
-                    .saveClient(client -> client.addAttribute(Constants.ChildRegister.DEFAULT_RESIDENCE, operationalArea.getId()))
+                    .saveClient(client -> client.addAttribute(Constants.ChildRegister.DEFAULT_RESIDENCE, selectedSchool.getId()))
 
                     // create and save event to db
                     .saveEvent()
@@ -226,7 +227,9 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
             );
 
             task.setStatus(Task.TaskStatus.COMPLETED);
-            task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+            if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+            }
             task.setLastModified(new DateTime());
             RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
 
