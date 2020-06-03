@@ -52,6 +52,16 @@
         app:layout_constraintTop_toBottomOf="@id/application_updated" />
 
     <TextView
+        android:id="@+id/sync_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/drawer_second_margin"
+        android:layout_marginTop="@dimen/drawer_margin_vertical"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/application_updated" />
+
+    <TextView
         android:id="@+id/btn_navMenu_p2pSyncBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -166,7 +166,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
     @NonNull
     @Override
     public Set<String> getCustomTranslatableWidgetFields() {
-        return new HashSet<>();
+        return null;
     }
 
     @Override

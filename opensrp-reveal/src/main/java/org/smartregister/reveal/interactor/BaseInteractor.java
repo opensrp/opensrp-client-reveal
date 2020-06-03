@@ -26,7 +26,6 @@ import org.smartregister.domain.Task;
 import org.smartregister.domain.db.Client;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.db.Obs;
-import org.smartregister.domain.tag.FormTag;
 import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
@@ -70,7 +69,6 @@ import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
 import static org.smartregister.family.util.DBConstants.KEY.BASE_ENTITY_ID;
 import static org.smartregister.family.util.DBConstants.KEY.DATE_REMOVED;
 import static org.smartregister.family.util.Utils.metadata;
-import static org.smartregister.reveal.application.RevealApplication.getInstance;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
@@ -115,6 +113,8 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
             .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
 
+    private RevealApplication revealApplication;
+
     protected TaskRepository taskRepository;
 
     protected StructureRepository structureRepository;
@@ -140,15 +140,16 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
     private PreferencesUtil prefsUtil;
 
     public BaseInteractor(BasePresenter presenterCallBack) {
+        revealApplication = RevealApplication.getInstance();
         this.presenterCallBack = presenterCallBack;
-        appExecutors = getInstance().getAppExecutors();
-        taskRepository = getInstance().getTaskRepository();
-        structureRepository = getInstance().getStructureRepository();
-        eventClientRepository = getInstance().getContext().getEventClientRepository();
-        clientProcessor = RevealClientProcessor.getInstance(getInstance().getApplicationContext());
-        sharedPreferences = getInstance().getContext().allSharedPreferences();
+        appExecutors = revealApplication.getAppExecutors();
+        taskRepository = revealApplication.getTaskRepository();
+        structureRepository = revealApplication.getStructureRepository();
+        eventClientRepository = revealApplication.getContext().getEventClientRepository();
+        clientProcessor = RevealClientProcessor.getInstance(revealApplication.getApplicationContext());
+        sharedPreferences = revealApplication.getContext().allSharedPreferences();
         taskUtils = TaskUtils.getInstance();
-        database = getInstance().getRepository().getReadableDatabase();
+        database = revealApplication.getRepository().getReadableDatabase();
         prefsUtil = PreferencesUtil.getInstance();
     }
 
@@ -187,7 +188,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     }
                     break;
             }
-            getInstance().setRefreshMapOnEventSaved(refreshMapOnEventSaved);
+            revealApplication.setRefreshMapOnEventSaved(refreshMapOnEventSaved);
         } catch (Exception e) {
             Timber.e(e, "Error saving Json Form data");
         }
@@ -302,7 +303,8 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     structure.setProperties(properties);
                     structure.setSyncStatus(BaseRepository.TYPE_Created);
                     structureRepository.addOrUpdate(structure);
-                    Context applicationContext = getInstance().getApplicationContext();
+                    revealApplication.setSynced(false);
+                    Context applicationContext = revealApplication.getApplicationContext();
                     Task task = null;
                     if (StructureType.RESIDENTIAL.equals(structureType) && Utils.isFocusInvestigationOrMDA()) {
                         task = taskUtils.generateRegisterFamilyTask(applicationContext, structure.getId());
@@ -343,7 +345,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                             Obs myLocationActiveObs = event.findObs(null, false, LOCATION_COMPONENT_ACTIVE);
 
                             boolean myLocationActive = myLocationActiveObs != null && Boolean.valueOf(myLocationActiveObs.getValue().toString());
-                            getInstance().setMyLocationComponentEnabled(myLocationActive);
+                            revealApplication.setMyLocationComponentEnabled(myLocationActive);
 
 
                             Obs zoomObs = event.findObs(null, false, GeoWidgetFactory.ZOOM_LEVEL);
@@ -409,6 +411,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     taskRepository.addOrUpdate(bloodScreeningTask);
                     removedTasks.add(bloodScreeningTask);
                 }
+                revealApplication.setSynced(false);
                 clientProcessor.processClient(Collections.singletonList(new EventClient(event, client)), true);
                 appExecutors.mainThread().execute(() -> {
                     ((StructureTasksContract.Presenter) presenterCallBack).onIndexConfirmationFormSaved(taskID, Task.TaskStatus.COMPLETED, businessStatus, removedTasks);
@@ -464,7 +467,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
     public void setCommonRepository() {
         if (commonRepository == null) {
-            commonRepository = getInstance().getContext().commonrepository(metadata().familyRegister.tableName);
+            commonRepository = revealApplication.getContext().commonrepository(metadata().familyRegister.tableName);
 
         }
     }

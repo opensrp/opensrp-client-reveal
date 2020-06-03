@@ -17,6 +17,7 @@ import org.smartregister.domain.db.EventClient;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.TaskRepository;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
@@ -109,7 +110,7 @@ public class InteractorUtils {
             clientJsonObject.put(EventClientRepository.client_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
             clientJsonObject.getJSONObject("attributes").put("dateRemoved", now);
             eventClientRepository.addorUpdateClient(baseEntityId, clientJsonObject);
-
+            RevealApplication.getInstance().setSynced(false);
             Event archiveEvent = FamilyJsonFormUtils.createFamilyEvent(baseEntityId, Utils.getCurrentLocationId(),
                     null, isFamily ? EventType.ARCHIVE_FAMILY : EventType.ARCHIVE_FAMILY_MEMBER);
             archiveEvent.addObs(new Obs().withValue(now).withFieldCode("dateArchived").withFieldType("formsubmissionField"));

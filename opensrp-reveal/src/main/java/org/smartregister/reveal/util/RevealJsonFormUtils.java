@@ -25,7 +25,7 @@ import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
-import org.smartregister.util.AssetHandler;
+import org.smartregister.util.FormUtils;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.Arrays;
@@ -44,6 +44,7 @@ import static com.vijay.jsonwizard.constants.JsonFormConstants.KEYS;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TYPE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUES;
+import static org.smartregister.AllConstants.JSON_FILE_EXTENSION;
 import static org.smartregister.AllConstants.OPTIONS;
 import static org.smartregister.AllConstants.TEXT;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
@@ -54,6 +55,7 @@ import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
+import static org.smartregister.reveal.util.Constants.JsonForm.JSON_FORM_FOLDER;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
@@ -145,14 +147,26 @@ public class RevealJsonFormUtils {
     }
 
     public String getFormString(Context context, String formName, String structureType) {
-        String formString = AssetHandler.readFileFromAssetsFolder(formName, context);
-        if ((JsonForm.SPRAY_FORM.equals(formName) || JsonForm.SPRAY_FORM_BOTSWANA.equals(formName)
-                || JsonForm.SPRAY_FORM_NAMIBIA.equals(formName))) {
-            String structType = structureType;
-            if (StringUtils.isBlank(structureType)) {
-                structType = Constants.StructureType.NON_RESIDENTIAL;
+        String formString = null;
+        try {
+            FormUtils formUtils = FormUtils.getInstance(context);
+            String formattedFormName = formName.replace(JSON_FORM_FOLDER, "").replace(JSON_FILE_EXTENSION, "");
+            JSONObject formStringObj = formUtils.getFormJsonFromRepositoryOrAssets(formattedFormName);
+            if (formStringObj == null) {
+                return  null;
             }
-            formString = formString.replace(JsonForm.STRUCTURE_PROPERTIES_TYPE, structType);
+            formString = formStringObj.toString();
+            if ((JsonForm.SPRAY_FORM.equals(formName) || JsonForm.SPRAY_FORM_BOTSWANA.equals(formName)
+                    || JsonForm.SPRAY_FORM_NAMIBIA.equals(formName))) {
+                String structType = structureType;
+                if (StringUtils.isBlank(structureType)) {
+                    structType = Constants.StructureType.NON_RESIDENTIAL;
+                }
+                formString = formString.replace(JsonForm.STRUCTURE_PROPERTIES_TYPE, structType);
+            }
+
+        } catch (Exception e) {
+            Timber.e(e);
         }
         return formString;
     }
