@@ -129,10 +129,10 @@ public class UtilsTest {
     @Test
     public void testGetStructureByName() throws Exception {
         RevealApplication revealApplication = initRevealApplicationMock();
-        StructureRepository structureRepository = Mockito.mock(StructureRepository.class);
+        StructureRepository structureRepository = mock(StructureRepository.class);
         when(revealApplication.getStructureRepository()).thenReturn(structureRepository);
 
-        Location location = Mockito.mock(Location.class);
+        Location location = mock(Location.class);
         when(structureRepository.getLocationByName("sample_location")).thenReturn(location);
         assertEquals(location, getStructureByName("sample_location"));
     }

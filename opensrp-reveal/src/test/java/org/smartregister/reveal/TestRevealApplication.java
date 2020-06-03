@@ -11,7 +11,6 @@ import org.smartregister.repository.Repository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.AppExecutors;
 
-import java.util.Timer;
 import java.util.concurrent.Executors;
 
 import io.ona.kujaku.data.realm.RealmDatabase;
@@ -62,7 +61,7 @@ public class TestRevealApplication extends RevealApplication {
     public void onTerminate() {
         try {
             super.onTerminate();
-        }catch (Exception e){
+        } catch (Exception e) {
             Timber.e(e);
         }
     }

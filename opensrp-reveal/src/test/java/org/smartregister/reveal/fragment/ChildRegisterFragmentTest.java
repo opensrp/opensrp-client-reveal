@@ -36,7 +36,7 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.presenter.ChildRegisterFragmentPresenter;
 import org.smartregister.reveal.shadow.DrawerMenuViewShadow;
-import org.smartregister.reveal.shadow.SyncStatusBroadcastReceiverShadow;
+import org.smartregister.reveal.shadow.SyncStatusBroadcastReceiverShadowHelper;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.view.ChildProfileActivity;
 import org.smartregister.reveal.view.ChildRegisterActivity;
@@ -54,7 +54,7 @@ import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
 /**
  * @author ronald
  */
-@Config(shadows = {DrawerMenuViewShadow.class, SyncStatusBroadcastReceiverShadow.class})
+@Config(shadows = {DrawerMenuViewShadow.class, SyncStatusBroadcastReceiverShadowHelper.class})
 public class ChildRegisterFragmentTest extends BaseUnitTest {
 
     @Rule
@@ -269,7 +269,7 @@ public class ChildRegisterFragmentTest extends BaseUnitTest {
 
     @Test
     public void testOnPause() {
-        SyncStatusBroadcastReceiver receiverShadow = SyncStatusBroadcastReceiverShadow.getInstance();
+        SyncStatusBroadcastReceiver receiverShadow = SyncStatusBroadcastReceiverShadowHelper.getInstance();
         fragment.onPause();
         Mockito.verify(receiverShadow).removeSyncStatusListener(Mockito.any());
     }

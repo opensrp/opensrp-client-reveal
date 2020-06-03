@@ -5,14 +5,10 @@ import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Implements(SyncStatusBroadcastReceiver.class)
-public class SyncStatusBroadcastReceiverShadow {
+public class SyncStatusBroadcastReceiverShadowHelper {
 
     private static SyncStatusBroadcastReceiver receiver = Mockito.mock(SyncStatusBroadcastReceiver.class);
-    private static List<SyncStatusBroadcastReceiver.SyncStatusListener> listeners = new ArrayList<>();
 
     @Implementation
     public static SyncStatusBroadcastReceiver getInstance() {

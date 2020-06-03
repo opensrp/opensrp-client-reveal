@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
@@ -128,6 +129,12 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
             callableInteractor = new GenericInteractor();
 
         return callableInteractor;
+    }
+
+    @Override
+    public ChildRegisterFragmentContract.Presenter withInteractor(@NonNull CallableInteractor callable) {
+        this.callableInteractor = callable;
+        return this;
     }
 
     @Override

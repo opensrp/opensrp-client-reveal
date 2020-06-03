@@ -49,6 +49,8 @@ public interface ChildRegisterFragmentContract {
         @NonNull
         CallableInteractor getCallableInteractor();
 
+        Presenter withInteractor(@NonNull CallableInteractor callable);
+
         void saveChild(String jsonString, Context context);
 
         void saveMDAForm(String jsonString, Context context);
