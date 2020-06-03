@@ -201,7 +201,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     @Override
     public String getOperationalArea() {
-        return operationalAreaTextView.getText().toString();
+        return operationalAreaTextView != null ? operationalAreaTextView.getText().toString() : null;
     }
 
     @Override

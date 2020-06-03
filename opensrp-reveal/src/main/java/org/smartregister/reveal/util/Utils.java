@@ -132,8 +132,8 @@ public class Utils {
         });
     }
 
-    public static Location getStructureByName(String operationalArea) {
-        return cache.get(operationalArea, () -> RevealApplication.getInstance().getStructureRepository().getLocationByName(operationalArea));
+    public static Location getStructureByName(String structureName) {
+        return cache.get(structureName, () -> RevealApplication.getInstance().getStructureRepository().getLocationByName(structureName));
     }
 
     public static String formatDate(String date, String dateFormat) throws Exception {

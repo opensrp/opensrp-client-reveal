@@ -3,6 +3,7 @@ package org.smartregister.reveal.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -89,8 +90,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
         TextView mapText = view.findViewById(R.id.txt_map_label);
         mapText.setText(R.string.label_add);
         mapText.setOnClickListener(v -> {
-            Location selectedSchool = org.smartregister.reveal.util.Utils.getStructureByName(PreferencesUtil.getInstance().getCurrentStructure());
-            if (selectedSchool == null) {
+            if (getCurrentStructure() == null) {
                 drawerView.openDrawerLayout();
             } else {
                 startChildRegistrationForm();
@@ -155,8 +155,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
     @Override
     public void onListItemClicked(Child child, int layoutID) {
-        Location selectedSchool = org.smartregister.reveal.util.Utils.getStructureByName(PreferencesUtil.getInstance().getCurrentStructure());
-        if (selectedSchool == null) {
+        if (getCurrentStructure() == null) {
             drawerView.openDrawerLayout();
             return;
         }
@@ -264,6 +263,11 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
     }
 
     @Override
+    public Location getCurrentStructure() {
+        return org.smartregister.reveal.util.Utils.getStructureByName(PreferencesUtil.getInstance().getCurrentStructure());
+    }
+
+    @Override
     public void onResume() {
         if (!(getActivity() instanceof FormProcessor.Host))
             throw new IllegalStateException("Host activity must implement org.smartregister.reveal.contract.FormProcessor.Host");
@@ -301,7 +305,8 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
         refreshSyncStatusViews(fetchStatus);
     }
 
-    private void refreshSyncStatusViews(FetchStatus fetchStatus) {
+    @VisibleForTesting
+    public void refreshSyncStatusViews(FetchStatus fetchStatus) {
         if (SyncStatusBroadcastReceiver.getInstance().isSyncing()) {
             Utils.showShortToast(getActivity(), getString(org.smartregister.R.string.syncing));
             Timber.i(getString(org.smartregister.R.string.syncing));
@@ -341,6 +346,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
         }
     }
+
 
     @Override
     public void onFormProcessingResult(String jsonForm) {

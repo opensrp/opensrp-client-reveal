@@ -11,9 +11,11 @@ import org.smartregister.repository.Repository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.AppExecutors;
 
+import java.util.Timer;
 import java.util.concurrent.Executors;
 
 import io.ona.kujaku.data.realm.RealmDatabase;
+import timber.log.Timber;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -54,5 +56,14 @@ public class TestRevealApplication extends RevealApplication {
     public RealmDatabase getRealmDatabase(android.content.Context context) {
 
         return mock(RealmDatabase.class);
+    }
+
+    @Override
+    public void onTerminate() {
+        try {
+            super.onTerminate();
+        }catch (Exception e){
+            Timber.e(e);
+        }
     }
 }

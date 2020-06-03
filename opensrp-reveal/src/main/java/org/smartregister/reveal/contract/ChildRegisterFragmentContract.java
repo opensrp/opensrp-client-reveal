@@ -7,6 +7,7 @@ import android.support.annotation.WorkerThread;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.util.CallableInteractor;
@@ -32,6 +33,9 @@ public interface ChildRegisterFragmentContract {
         void onReportCountReloaded(Map<String, Integer> reportCounts);
 
         void toggleDetailedReport();
+
+        Location getCurrentStructure();
+
     }
 
     interface Presenter extends ListContract.Presenter<Child> {

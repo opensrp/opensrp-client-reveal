@@ -6,9 +6,12 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.smartregister.domain.Location;
+import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -42,6 +45,7 @@ import static org.smartregister.reveal.util.Utils.getAdminPasswordNotNearStructu
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
 import static org.smartregister.reveal.util.Utils.getInterventionLabel;
 import static org.smartregister.reveal.util.Utils.getResolveLocationTimeoutInSeconds;
+import static org.smartregister.reveal.util.Utils.getStructureByName;
 import static org.smartregister.reveal.util.Utils.isResidentialStructure;
 import static org.smartregister.reveal.util.Utils.validateFarStructures;
 
@@ -120,6 +124,17 @@ public class UtilsTest {
         assertFalse(isResidentialStructure(LARVAL_DIPPING));
         assertFalse(isResidentialStructure(null));
         assertFalse(isResidentialStructure(""));
+    }
+
+    @Test
+    public void testGetStructureByName() throws Exception {
+        RevealApplication revealApplication = initRevealApplicationMock();
+        StructureRepository structureRepository = Mockito.mock(StructureRepository.class);
+        when(revealApplication.getStructureRepository()).thenReturn(structureRepository);
+
+        Location location = Mockito.mock(Location.class);
+        when(structureRepository.getLocationByName("sample_location")).thenReturn(location);
+        assertEquals(location, getStructureByName("sample_location"));
     }
 
     private RevealApplication initRevealApplicationMock() throws Exception {
