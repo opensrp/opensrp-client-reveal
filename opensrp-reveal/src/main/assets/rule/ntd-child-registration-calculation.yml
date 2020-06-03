@@ -18,4 +18,4 @@ description: sactaAgeCat status
 priority: 1
 condition: "step1_sactaDob != null && step1_sactaDob != '' "
 actions:
-  - "calculation = step1_sactaAge = (Integer.parseInt(helper.getDuration(step1_sactaDob).replace('y','')) < 11) ? '6-10' : ((Integer.parseInt(helper.getDuration(step1_sactaDob).replace('y','')) < 16) ? '11-15' : ((Integer.parseInt(helper.getDuration(step1_sactaDob).replace('y','')) < 19) ? '16-18' : 'Adult' )) "
+  - "calculation = step1_sactaAge = (Integer.parseInt(helper.getDuration(step1_sactaDob).split(' ')[0].replace('y','')) < 11) ? '6-10' : ((Integer.parseInt(helper.getDuration(step1_sactaDob).split(' ')[0].replace('y','')) < 16) ? '11-15' : ((Integer.parseInt(helper.getDuration(step1_sactaDob).split(' ')[0].replace('y','')) < 19) ? '16-18' : 'Adult' )) "

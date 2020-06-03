@@ -367,5 +367,9 @@
     <string name="record_adr">Record ADR</string>
     <string name="dose_given">Dose Given</string>
     <string name="not_given">Not Given</string>
+    <string name="adult">Adult</string>
+    <string name="range_6_10">6-10</string>
+    <string name="range_11_15">11-15</string>
+    <string name="range_16_18">16-18</string>
 
 </resources>

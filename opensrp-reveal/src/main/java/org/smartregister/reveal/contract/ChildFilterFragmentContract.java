@@ -1,5 +1,6 @@
 package org.smartregister.reveal.contract;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
@@ -26,8 +27,6 @@ public interface ChildFilterFragmentContract {
 
         void onGradesFetched(List<String> grades);
 
-        void onAgesFetched(List<String> ages);
-
         void onError(Exception e);
 
         void setLoadingState(boolean loadingState);
@@ -38,8 +37,6 @@ public interface ChildFilterFragmentContract {
     interface Presenter {
 
         void fetchUniqueGrades(String schoolID);
-
-        void fetchUniqueAges(String schoolID);
 
         Presenter usingView(ChildFilterFragmentContract.View view);
 
@@ -55,15 +52,14 @@ public interface ChildFilterFragmentContract {
         CallableInteractor getInteractor();
 
         Presenter usingInteractor(CallableInteractor interactor);
+
+        List<String> getSelectedAges(List<String> selectedRanges, Context context);
     }
 
     interface Model {
 
         @WorkerThread
         List<String> fetchUniqueGrades(String schoolID);
-
-        @WorkerThread
-        List<String> fetchUniqueAges(String schoolID);
 
     }
 }

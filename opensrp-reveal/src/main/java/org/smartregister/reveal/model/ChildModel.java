@@ -10,11 +10,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.CoreLibrary;
 import org.smartregister.dao.AbstractDao;
+import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.JsonClientProcessingUtils;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.util.QueryComposer;
 import org.smartregister.util.Utils;
@@ -57,7 +58,8 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
 
     @Override
     public String getCurrentLocationID() {
-        return JsonClientProcessingUtils.getCurrentLocationID();
+        Location location = org.smartregister.reveal.util.Utils.getStructureByName(PreferencesUtil.getInstance().getCurrentStructure());
+        return location == null ? "" : location.getId();
     }
 
     @Override
@@ -75,7 +77,7 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
         int visitedNotAdministered = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 " +
                 "and ec_child.base_entity_id in (select t.for from task  t where t.code = '" + Constants.Intervention.MDA_DISPENSE + "' and t.business_status like '%" + Constants.BusinessStatus.VISITED_DRUG_NOT_ADMINISTERED + "%') ");
 
-        result.put(Constants.ChildRegister.MMA_COVERAGE, registeredChildren == 0 ? 0 : (administeredDrugs / registeredChildren));
+        result.put(Constants.ChildRegister.MMA_COVERAGE, registeredChildren == 0 ? 0 : ((administeredDrugs * 100) / registeredChildren));
         result.put(Constants.ChildRegister.MMA_TARGET_REMAINING, (int) ((registeredChildren * 0.9) - administeredDrugs));
         result.put(Constants.ChildRegister.MMA_NOT_VISITED, childrenNotVisited);
         result.put(Constants.ChildRegister.MMA_VISITED_NOT_ADMINISTERED, visitedNotAdministered);
@@ -137,29 +139,37 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
             List<String> paramsGrade = sortAndFilter.get(Constants.ChildFilter.FILTER_GRADE);
             if (paramsGrade != null && paramsGrade.size() > 0) {
                 composer.withWhereClause(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.GRADE + " in ( " +
-                        toCSV(paramsGrade, true) + ")");
+                        toCSV(paramsGrade) + ")");
             }
 
             List<String> paramsAge = sortAndFilter.get(Constants.ChildFilter.FILTER_AGE);
             if (paramsAge != null && paramsAge.size() > 0) {
-                composer.withWhereClause(" cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', " + Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.DOB + ") as int) in ( " +
-                        toCSV(paramsAge, false) + ")");
+
+                String agePhrase = " cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', " + Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.DOB + ") as int) ";
+
+                QueryComposer.Disjoint disjoint = new QueryComposer.Disjoint();
+
+                for (String param : paramsAge) {
+                    if (param.contains(":")) {
+                        String[] bounds = param.split(":");
+                        disjoint.addDisjointClause(agePhrase + " between " + bounds[0] + " and " + bounds[1]);
+
+                    } else if (param.equalsIgnoreCase("Adult")) {
+                        disjoint.addDisjointClause(agePhrase + " > 18 ");
+                    }
+                }
+
+                composer.withWhereClause(disjoint);
             }
         }
     }
 
-    private String toCSV(List<String> results, boolean textQualifier) {
+    private String toCSV(List<String> results) {
         StringBuilder builder = new StringBuilder();
         int size = results.size();
         while (size > 0) {
 
-            if (textQualifier)
-                builder.append("'");
-
-            builder.append(results.get(size - 1));
-
-            if (textQualifier)
-                builder.append("'");
+            builder.append("'").append(results.get(size - 1)).append("'");
 
             if (size > 1)
                 builder.append(" , ");

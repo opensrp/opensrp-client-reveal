@@ -78,9 +78,9 @@
         },
         {
           "column_name": "location",
-          "type": "Event",
+          "type": "Client",
           "json_mapping": {
-            "field": "locationId"
+            "field": "attributes.default_residence"
           }
         },
         {

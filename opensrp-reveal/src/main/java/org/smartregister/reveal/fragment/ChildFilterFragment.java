@@ -86,7 +86,6 @@ public class ChildFilterFragment extends Fragment implements ChildFilterFragment
         linearLayoutGrades.removeAllViews();
 
         linearLayoutAges = view.findViewById(R.id.linearLayoutAges);
-        linearLayoutAges.removeAllViews();
     }
 
     @Override
@@ -102,7 +101,6 @@ public class ChildFilterFragment extends Fragment implements ChildFilterFragment
 
     @Override
     public void reloadParameters() {
-        presenter.fetchUniqueAges(schoolID);
         presenter.fetchUniqueGrades(schoolID);
     }
 
@@ -127,7 +125,7 @@ public class ChildFilterFragment extends Fragment implements ChildFilterFragment
         result.put(Constants.ChildFilter.SORT, sort);
 
         result.put(Constants.ChildFilter.FILTER_GRADE, getSelectedCheckBoxValues(linearLayoutGrades));
-        result.put(Constants.ChildFilter.FILTER_AGE, getSelectedCheckBoxValues(linearLayoutAges));
+        result.put(Constants.ChildFilter.FILTER_AGE, presenter.getSelectedAges(getSelectedCheckBoxValues(linearLayoutAges), linearLayoutAges.getContext()));
 
         return result;
     }
@@ -173,16 +171,6 @@ public class ChildFilterFragment extends Fragment implements ChildFilterFragment
             CheckBox checkBox = new CheckBox(getContext());
             checkBox.setText(StringUtils.isBlank(grade) ? "Unknown" : grade);
             linearLayoutGrades.addView(checkBox);
-        }
-    }
-
-    @Override
-    public void onAgesFetched(List<String> ages) {
-        linearLayoutAges.removeAllViews();
-        for (String age : ages) {
-            CheckBox checkBox = new CheckBox(getContext());
-            checkBox.setText(StringUtils.isBlank(age) ? "Unknown" : age);
-            linearLayoutAges.addView(checkBox);
         }
     }
 
