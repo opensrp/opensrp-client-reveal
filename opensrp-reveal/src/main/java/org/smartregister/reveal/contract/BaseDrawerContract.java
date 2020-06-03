@@ -47,6 +47,8 @@ public interface BaseDrawerContract {
 
         void showOperationalAreaSelector(Pair<String, ArrayList<String>> locationHierarchy);
 
+        void showStructureSelector(Pair<String, ArrayList<String>> locationHierarchy);
+
         void showPlanSelector(List<String> campaigns, String entireTreeString);
 
         void displayNotification(int title, @StringRes int message, Object... formatArgs);
@@ -67,6 +69,10 @@ public interface BaseDrawerContract {
         void onShowOperationalAreaSelector();
 
         void onOperationalAreaSelectorClicked(ArrayList<String> name);
+
+        void onShowStructureSelector();
+
+        void onStructureSelectorClicked(ArrayList<String> name);
 
         void onShowPlanSelector();
 

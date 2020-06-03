@@ -1,5 +1,6 @@
 package org.smartregister.reveal.presenter;
 
+import android.support.v4.util.Consumer;
 import android.support.v4.util.Pair;
 import android.text.TextUtils;
 
@@ -8,12 +9,17 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.form.FormLocation;
+import org.smartregister.domain.jsonmapping.Location;
+import org.smartregister.domain.jsonmapping.util.TreeNode;
 import org.smartregister.location.helper.LocationHelper;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
+import org.smartregister.reveal.dao.StructureDao;
 import org.smartregister.reveal.interactor.BaseDrawerInteractor;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.util.LocationHierarchyUtil;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
@@ -21,6 +27,7 @@ import org.smartregister.util.Utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import timber.log.Timber;
@@ -34,6 +41,7 @@ import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.PROVINCE;
 import static org.smartregister.reveal.util.Constants.Tags.REGION;
+import static org.smartregister.reveal.util.Constants.Tags.SCHOOL;
 import static org.smartregister.reveal.util.Constants.Tags.SUB_DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.VILLAGE;
 import static org.smartregister.reveal.util.Constants.UseContextCode.INTERVENTION_TYPE;
@@ -139,23 +147,31 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     private void populateLocationsFromPreferences() {
         view.setDistrict(prefsUtil.getCurrentDistrict());
         view.setFacility(prefsUtil.getCurrentFacility(), prefsUtil.getCurrentFacilityLevel());
-        view.setOperationalArea(prefsUtil.getCurrentOperationalArea());
+
+        if (BuildConfig.BUILD_COUNTRY != Country.NTD_SCHOOL) {
+            view.setOperationalArea(prefsUtil.getCurrentOperationalArea());
+        } else {
+            view.setOperationalArea(prefsUtil.getCurrentStructure());
+        }
     }
 
     @Override
     public void onShowOperationalAreaSelector() {
+        onExtractedLocations(locationHierarchy -> view.showOperationalAreaSelector(locationHierarchy));
+    }
+
+    private void onExtractedLocations(Consumer<Pair<String, ArrayList<String>>> consumer) {
         Pair<String, ArrayList<String>> locationHierarchy = extractLocationHierarchy();
         if (locationHierarchy == null) {//try to evict location hierachy in cache
             RevealApplication.getInstance().getContext().anmLocationController().evict();
             locationHierarchy = extractLocationHierarchy();
         }
         if (locationHierarchy != null) {
-            view.showOperationalAreaSelector(extractLocationHierarchy());
+            consumer.accept(locationHierarchy);
         } else {
             view.displayNotification(R.string.error_fetching_location_hierarchy_title, R.string.error_fetching_location_hierarchy);
             RevealApplication.getInstance().getContext().userService().forceRemoteLogin();
         }
-
     }
 
     private Pair<String, ArrayList<String>> extractLocationHierarchy() {
@@ -167,13 +183,25 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         operationalAreaLevels.add(DISTRICT);
         operationalAreaLevels.add(SUB_DISTRICT);
         operationalAreaLevels.add(OPERATIONAL_AREA);
+        operationalAreaLevels.add(SCHOOL);
 
         List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels);
 
         if (defaultLocation != null) {
-            List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
-            List<String> authorizedOperationalAreas = Arrays.asList(StringUtils.split(prefsUtil.getPreferenceValue(OPERATIONAL_AREAS), ','));
-            removeUnauthorizedOperationalAreas(authorizedOperationalAreas, entireTree);
+            Map<String, TreeNode<String, Location>> map = locationHelper.map();
+
+            // inject structures
+            if (BuildConfig.BUILD_COUNTRY == Country.NTD_SCHOOL) {
+                Map<String, List<org.smartregister.domain.Location>> listMap = StructureDao.getCachedStructures();
+                LocationHierarchyUtil.growTree(map, listMap);
+            }
+
+            List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels, map);
+
+            if (BuildConfig.BUILD_COUNTRY != Country.NTD_SCHOOL) {
+                List<String> authorizedOperationalAreas = Arrays.asList(StringUtils.split(prefsUtil.getPreferenceValue(OPERATIONAL_AREAS), ','));
+                removeUnauthorizedOperationalAreas(authorizedOperationalAreas, entireTree);
+            }
 
             String entireTreeString = AssetHandler.javaToJsonString(entireTree,
                     new TypeToken<List<FormLocation>>() {
@@ -184,7 +212,6 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             return null;
         }
     }
-
 
     public void onOperationalAreaSelectorClicked(ArrayList<String> name) {
 
@@ -216,7 +243,25 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         changedCurrentSelection = true;
         populateLocationsFromPreferences();
         unlockDrawerLayout();
+    }
 
+    @Override
+    public void onShowStructureSelector() {
+        onExtractedLocations(locationHierarchy -> view.showStructureSelector(locationHierarchy));
+    }
+
+    @Override
+    public void onStructureSelectorClicked(ArrayList<String> name) {
+        Timber.d("Selected Structure Location Hierarchy: " + TextUtils.join(",", name));
+        if (name.size() <= 2)//no operational area was selected, dialog was dismissed
+            return;
+
+        // remove the last element
+        ArrayList<String> result = new ArrayList<>(name.size() - 1);
+        result.addAll(name.subList(0, name.size() - 2));
+
+        prefsUtil.setCurrentStructure(name.get(name.size() - 1));
+        onOperationalAreaSelectorClicked(result);
     }
 
 

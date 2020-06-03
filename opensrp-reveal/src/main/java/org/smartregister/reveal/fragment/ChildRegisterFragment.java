@@ -27,6 +27,7 @@ import org.smartregister.reveal.adapter.GroupedListableAdapter;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.contract.FormProcessor;
+import org.smartregister.reveal.dao.StructureDao;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.model.ChildModel;
 import org.smartregister.reveal.presenter.ChildRegisterFragmentPresenter;
@@ -321,6 +322,8 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
                 } else if (fetchStatus.equals(FetchStatus.fetched)
                         || fetchStatus.equals(FetchStatus.nothingFetched)) {
+
+                    StructureDao.resetLocationCache();
 
                     searchPresenter(searchTextView.getText().toString());
 

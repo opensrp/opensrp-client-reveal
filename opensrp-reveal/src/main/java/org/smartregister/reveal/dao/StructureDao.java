@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.smartregister.dao.AbstractDao;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
+import org.smartregister.util.Cache;
 import org.smartregister.util.PropertiesConverter;
 
 import java.util.ArrayList;
@@ -16,6 +17,9 @@ import java.util.Map;
 
 
 public class StructureDao extends AbstractDao {
+
+    private static Cache<Map<String, List<Location>>> cache = new Cache<>();
+    private static String CACHED_STRUCTURES = "CACHED_STRUCTURES";
 
     public static Map<String, List<Location>> getStructuresByParent() {
         Map<String, List<Location>> result = new HashMap<>();
@@ -45,5 +49,14 @@ public class StructureDao extends AbstractDao {
         readData(sql, dataMap);
 
         return result;
+    }
+
+    public static Map<String, List<Location>> getCachedStructures() {
+        return cache.get(CACHED_STRUCTURES, StructureDao::getStructuresByParent);
+    }
+
+    public static void resetLocationCache() {
+        if (cache != null)
+            cache.evict(CACHED_STRUCTURES);
     }
 }

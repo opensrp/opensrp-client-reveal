@@ -135,7 +135,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
         TextView summaryFormsTextView = headerView.findViewById(R.id.btn_navMenu_summaryForms);
 
-        operationalAreaTextView.setOnClickListener(this);
+        if (operationalAreaTextView != null)
+            operationalAreaTextView.setOnClickListener(this);
 
         if (planTextView != null)
             planTextView.setOnClickListener(this);
@@ -148,8 +149,10 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             summaryFormsTextView.setOnClickListener(this);
         }
 
-        offlineMapTextView.setVisibility(View.VISIBLE);
-        offlineMapTextView.setOnClickListener(this);
+        if (BuildConfig.BUILD_COUNTRY != Country.NTD_SCHOOL) {
+            offlineMapTextView.setVisibility(View.VISIBLE);
+            offlineMapTextView.setOnClickListener(this);
+        }
 
         headerView.findViewById(R.id.logout_button).setOnClickListener(this);
         headerView.findViewById(R.id.sync_button).setOnClickListener(this);
@@ -248,6 +251,26 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     }
 
+    @Override
+    public void showStructureSelector(Pair<String, ArrayList<String>> locationHierarchy) {
+        try {
+            TreeViewDialog treeViewDialog = new TreeViewDialog(getContext(),
+                    R.style.AppTheme_WideDialog,
+                    new JSONArray(locationHierarchy.first), locationHierarchy.second, locationHierarchy.second);
+            treeViewDialog.setCancelable(true);
+            treeViewDialog.setCanceledOnTouchOutside(true);
+            treeViewDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    presenter.onStructureSelectorClicked(treeViewDialog.getName());
+                }
+            });
+            treeViewDialog.show();
+        } catch (JSONException e) {
+            Timber.e(e);
+        }
+    }
+
 
     @Override
     public void showPlanSelector(List<String> campaigns, String entireTreeString) {
@@ -300,7 +323,11 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.operational_area_selector)
-            presenter.onShowOperationalAreaSelector();
+            if (BuildConfig.BUILD_COUNTRY != Country.NTD_SCHOOL) {
+                presenter.onShowOperationalAreaSelector();
+            } else {
+                presenter.onShowStructureSelector();
+            }
         else if (v.getId() == R.id.plan_selector)
             presenter.onShowPlanSelector();
         else if (v.getId() == R.id.logout_button)
