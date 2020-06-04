@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.smartregister.repository.Repository;
+import org.smartregister.util.QueryComposer;
 
 public class ChildFilterFragmentModelTest extends ChildFilterFragmentModel {
 
@@ -30,7 +31,7 @@ public class ChildFilterFragmentModelTest extends ChildFilterFragmentModel {
     }
 
     @Test
-    public void testFetchUniqueGradesExecutesCorrectQuery() {
+    public void testFetchUniqueGradesExecutesCorrectQuery() throws QueryComposer.InvalidQueryException {
         ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
 
         model.fetchUniqueGrades("12345");
@@ -41,7 +42,7 @@ public class ChildFilterFragmentModelTest extends ChildFilterFragmentModel {
     }
 
     @Test
-    public void testFetchUniqueGradesExecutesCorrectQueryWithoutParam() {
+    public void testFetchUniqueGradesExecutesCorrectQueryWithoutParam() throws QueryComposer.InvalidQueryException {
         ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
 
         model.fetchUniqueGrades(null);

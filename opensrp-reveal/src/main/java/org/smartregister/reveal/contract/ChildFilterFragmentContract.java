@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
 import org.smartregister.util.CallableInteractor;
+import org.smartregister.util.QueryComposer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +62,7 @@ public interface ChildFilterFragmentContract {
     interface Model {
 
         @WorkerThread
-        List<String> fetchUniqueGrades(String schoolID);
+        List<String> fetchUniqueGrades(String schoolID) throws QueryComposer.InvalidQueryException;
 
     }
 }
