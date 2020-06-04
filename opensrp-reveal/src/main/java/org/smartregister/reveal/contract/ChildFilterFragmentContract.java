@@ -32,6 +32,8 @@ public interface ChildFilterFragmentContract {
         void setLoadingState(boolean loadingState);
 
         void executeFilter();
+
+        String getCurrentLocation();
     }
 
     interface Presenter {

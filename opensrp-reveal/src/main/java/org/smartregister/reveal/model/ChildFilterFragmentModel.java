@@ -1,5 +1,6 @@
 package org.smartregister.reveal.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.dao.AbstractDao;
 import org.smartregister.reveal.contract.ChildFilterFragmentContract;
 import org.smartregister.reveal.util.Constants;
@@ -19,6 +20,9 @@ public class ChildFilterFragmentModel extends AbstractDao implements ChildFilter
                 .withMainTable(Constants.DatabaseKeys.CHILD_TABLE)
                 .withSortColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.GRADE)
                 .withWhereClause(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.GRADE + " is not null");
+
+        if (StringUtils.isNotBlank(schoolID))
+            composer.withWhereClause(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.LOCATION + " = '" + schoolID + "'");
 
         DataMap<String> dataMap = cursor -> getCursorValue(cursor, Constants.DatabaseKeys.GRADE);
 

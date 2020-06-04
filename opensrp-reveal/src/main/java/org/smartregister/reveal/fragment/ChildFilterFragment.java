@@ -16,11 +16,14 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
+import org.smartregister.domain.Location;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.ChildFilterFragmentContract;
 import org.smartregister.reveal.model.ChildFilterFragmentModel;
 import org.smartregister.reveal.presenter.ChildFilterFragmentPresenter;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.ChildRegisterActivity;
 import org.smartregister.util.GenericInteractor;
 
@@ -35,7 +38,6 @@ import timber.log.Timber;
 public class ChildFilterFragment extends Fragment implements ChildFilterFragmentContract.View {
     public static final String TAG = "ChildFilterFragment";
     private ChildFilterFragmentContract.Presenter presenter;
-    private String schoolID = null; // set this value later
     protected ProgressBar progressBar;
     protected AtomicInteger incompleteRequests = new AtomicInteger(0);
     private View view;
@@ -101,7 +103,7 @@ public class ChildFilterFragment extends Fragment implements ChildFilterFragment
 
     @Override
     public void reloadParameters() {
-        presenter.fetchUniqueGrades(schoolID);
+        presenter.fetchUniqueGrades(getCurrentLocation());
     }
 
     @Override
@@ -192,5 +194,11 @@ public class ChildFilterFragment extends Fragment implements ChildFilterFragment
         bundle.putSerializable(Constants.ChildFilter.FILTER_PAYLOAD, getFilterValues());
         ChildRegisterActivity.startFragment(getActivity(), ChildRegisterFragment.TAG, bundle, true);
         getActivity().finish();
+    }
+
+    @Override
+    public String getCurrentLocation() {
+        Location location = Utils.getStructureByName(PreferencesUtil.getInstance().getCurrentStructure());
+        return location == null ? null : location.getId();
     }
 }
