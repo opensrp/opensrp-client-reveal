@@ -18,8 +18,8 @@ import java.util.Map;
 
 public class StructureDao extends AbstractDao {
 
-    private static Cache<Map<String, List<Location>>> cache = new Cache<>();
-    private static String CACHED_STRUCTURES = "CACHED_STRUCTURES";
+    protected static Cache<Map<String, List<Location>>> cache = new Cache<>();
+    protected static String CACHED_STRUCTURES = "CACHED_STRUCTURES";
 
     public static Map<String, List<Location>> getStructuresByParent() {
         Map<String, List<Location>> result = new HashMap<>();
