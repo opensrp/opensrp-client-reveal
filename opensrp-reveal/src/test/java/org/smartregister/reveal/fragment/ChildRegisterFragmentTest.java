@@ -33,6 +33,7 @@ import org.smartregister.reporting.view.ProgressIndicatorView;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseDrawerContract;
+import org.smartregister.reveal.contract.FormProcessor;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.presenter.ChildRegisterFragmentPresenter;
 import org.smartregister.reveal.shadow.DrawerMenuViewShadow;
@@ -196,6 +197,16 @@ public class ChildRegisterFragmentTest extends BaseUnitTest {
 
         fragment.startRecordMDAForm("12345");
         Mockito.verify(presenter).startMDAForm(Mockito.any(), Mockito.eq("12345"));
+    }
+
+    @Test
+    public void testStartJsonFormForwardsToHost() {
+        fragment = Mockito.spy(fragment);
+        FormProcessor.Host host = Mockito.mock(FormProcessor.Host.class);
+        Mockito.doReturn(host).when(fragment).getHostFormProcessor();
+
+        fragment.startJsonForm(new JSONObject(), "title");
+        Mockito.verify(host).startForm(Mockito.any(), Mockito.any(), Mockito.any());
     }
 
     @Test
