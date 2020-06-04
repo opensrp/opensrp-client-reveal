@@ -113,7 +113,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchPresenter(s.toString());
+                reloadFromSource();
             }
 
             @Override
@@ -125,10 +125,6 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
         view.findViewById(R.id.filter_text_view).setOnClickListener(v -> openFilterFragment());
         if (StringUtils.isBlank(drawerView.getOperationalArea()))
             drawerView.openDrawerLayout();
-    }
-
-    private void searchPresenter(String searchText) {
-        loadPresenter().search(filterAndSearch, searchText);
     }
 
     @NonNull
@@ -195,7 +191,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
         // to do -> re render the details
         String locationName = drawerView.getOperationalArea();
         tvTitle.setText(locationName);
-        searchPresenter("");
+        reloadFromSource();
     }
 
     @Override
@@ -228,7 +224,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
     @Override
     public void reloadFromSource() {
-        searchPresenter(searchTextView.getText().toString());
+        loadPresenter().search(filterAndSearch, searchTextView.getText().toString());
         loadPresenter().fetchReportStats();
     }
 
@@ -330,7 +326,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
                     StructureDao.resetLocationCache();
 
-                    searchPresenter(searchTextView.getText().toString());
+                    reloadFromSource();
 
                     Utils.showShortToast(getActivity(), getString(org.smartregister.R.string.sync_complete));
                     Timber.i(getString(org.smartregister.R.string.sync_complete));

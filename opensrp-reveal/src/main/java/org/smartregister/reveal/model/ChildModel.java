@@ -66,15 +66,15 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
     public Map<String, Integer> getReportCounts() {
         Map<String, Integer> result = new HashMap<>();
 
-        int registeredChildren = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 ");
+        int registeredChildren = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and location = '" + getCurrentLocationID() + "'");
 
-        int administeredDrugs = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 " +
+        int administeredDrugs = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and location = '"  + getCurrentLocationID() + "' " +
                 "and ec_child.base_entity_id in (select t.for from task  t where t.code = '" + Constants.Intervention.MDA_DISPENSE + "' and t.business_status like '%" + Constants.BusinessStatus.VISITED_DRUG_ADMINISTERED + "%') ");
 
-        int childrenNotVisited = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 " +
-                "and ec_child.base_entity_id not in (select baseEntityId from event where eventType in 'mda_dispense') ");
+        int childrenNotVisited = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and location = '" +  getCurrentLocationID() + "' " +
+                "and ec_child.base_entity_id in (select t.for from task  t where t.code = '" + Constants.Intervention.MDA_DISPENSE + "' and t.business_status like '%" + Constants.BusinessStatus.NOT_VISITED + "%') ");
 
-        int visitedNotAdministered = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 " +
+        int visitedNotAdministered = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and location = '" +  getCurrentLocationID() + "' " +
                 "and ec_child.base_entity_id in (select t.for from task  t where t.code = '" + Constants.Intervention.MDA_DISPENSE + "' and t.business_status like '%" + Constants.BusinessStatus.VISITED_DRUG_NOT_ADMINISTERED + "%') ");
 
         result.put(Constants.ChildRegister.MMA_COVERAGE, registeredChildren == 0 ? 0 : ((administeredDrugs * 100) / registeredChildren));
