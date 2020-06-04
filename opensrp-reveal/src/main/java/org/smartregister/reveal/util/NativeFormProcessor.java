@@ -254,7 +254,7 @@ public class NativeFormProcessor {
         return StringUtils.isBlank(value) ? "" : value;
     }
 
-    private ECSyncHelper getSyncHelper() {
+    public ECSyncHelper getSyncHelper() {
         return ECSyncHelper.getInstance(getInstance().getContext().applicationContext());
     }
 

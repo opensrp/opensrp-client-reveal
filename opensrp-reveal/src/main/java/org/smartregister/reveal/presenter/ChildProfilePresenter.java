@@ -12,8 +12,6 @@ import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.model.ChildProfileModel;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.NativeFormProcessor;
-import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.CallableInteractor;
 import org.smartregister.util.CallableInteractorCallBack;
 
@@ -40,9 +38,10 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
         CallableInteractor myInteractor = getInteractor();
         ChildProfileContract.Model myModel = getModel();
 
-        if (getView() != null) {
+        ChildProfileContract.View view = getView();
+        if (view != null) {
             Callable<Child> callable = () -> myModel.getChild(baseEntityID);
-            getView().setLoadingState(true);
+            view.setLoadingState(true);
 
             myInteractor.execute(callable, new CallableInteractorCallBack<Child>() {
                 @Override
@@ -167,14 +166,14 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
     public void updateChild(JSONObject jsonObject, Context context) {
         CallableInteractor myInteractor = getInteractor();
 
-        Callable<Boolean> callable = () -> {
+        Callable<Void> callable = () -> {
 
-            Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+            NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonObject);
+            Location operationalArea = processor.getCurrentOperationalArea();
             String entityId = jsonObject.getString(Constants.Properties.BASE_ENTITY_ID);
-            NativeFormProcessor.createInstance(jsonObject)
 
-                    // update metadata
-                    .withBindType(CHILD_TABLE)
+            // update metadata
+            processor.withBindType(CHILD_TABLE)
                     .withEncounterType(UPDATE_CHILD_REGISTRATION)
                     .withEntityId(entityId)
                     .tagLocationData(operationalArea)
@@ -190,19 +189,15 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
                     // execute client processing
                     .clientProcessForm();
 
-            return true;
+            return null;
         };
 
-        myInteractor.execute(callable, new CallableInteractorCallBack<Boolean>() {
+        myInteractor.execute(callable, new CallableInteractorCallBack<Void>() {
             @Override
-            public void onResult(Boolean aBoolean) {
+            public void onResult(Void aVoid) {
                 ChildProfileContract.View view = getView();
                 if (view != null) {
-                    if (aBoolean) {
-                        view.reloadFromSource();
-                    } else {
-                        view.onError(new Exception("An error while saving"));
-                    }
+                    view.reloadFromSource();
                     view.setLoadingState(false);
                 }
             }
@@ -221,15 +216,16 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
     public void saveADRForm(JSONObject jsonObject, Context context) {
         CallableInteractor myInteractor = getInteractor();
 
-        Callable<Boolean> callable = () -> {
+        Callable<Void> callable = () -> {
 
             String entityId = jsonObject.getString(Constants.Properties.BASE_ENTITY_ID);
 
             // save event details
-            Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+            NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonObject);
+            Location operationalArea = processor.getCurrentOperationalArea();
 
             // update metadata
-            NativeFormProcessor.createInstance(jsonObject)
+            processor
                     .withBindType(Constants.EventType.MDA_ADVERSE_DRUG_REACTION)
                     .withEncounterType(Constants.EventType.MDA_ADVERSE_DRUG_REACTION)
                     .withEntityId(entityId)
@@ -240,19 +236,15 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
                     .saveEvent()
                     .clientProcessForm();
 
-            return true;
+            return null;
         };
 
-        myInteractor.execute(callable, new CallableInteractorCallBack<Boolean>() {
+        myInteractor.execute(callable, new CallableInteractorCallBack<Void>() {
             @Override
-            public void onResult(Boolean aBoolean) {
+            public void onResult(Void aVoid) {
                 ChildProfileContract.View view = getView();
                 if (view != null) {
-                    if (aBoolean) {
-                        view.reloadFromSource();
-                    } else {
-                        view.onError(new Exception("An error while saving"));
-                    }
+                    view.reloadFromSource();
                     view.setLoadingState(false);
                 }
             }

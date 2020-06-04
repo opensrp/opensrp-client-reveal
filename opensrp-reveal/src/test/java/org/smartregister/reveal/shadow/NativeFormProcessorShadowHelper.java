@@ -7,6 +7,7 @@ import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
 import org.smartregister.domain.Location;
 import org.smartregister.reveal.util.NativeFormProcessor;
+import org.smartregister.sync.helper.ECSyncHelper;
 
 import java.util.Date;
 
@@ -14,6 +15,7 @@ import java.util.Date;
 public class NativeFormProcessorShadowHelper {
 
     private static NativeFormProcessor processorSpy;
+    private static ECSyncHelper syncHelper = Mockito.mock(ECSyncHelper.class);
 
     @Implementation
     public static NativeFormProcessor createInstance(String jsonString) throws JSONException {
@@ -49,5 +51,11 @@ public class NativeFormProcessorShadowHelper {
     @Implementation
     public NativeFormProcessor closeRegistrationID(String uniqueIDKey) {// Do Nothing
         return null;
+    }
+
+    @Implementation
+    public NativeFormProcessor mergeAndSaveClient() {
+        // do nothing else
+        return processorSpy;
     }
 }
