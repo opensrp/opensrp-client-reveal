@@ -6,7 +6,6 @@ import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -30,6 +29,7 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.ADMIN_PASSWO
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_GEO_JSON_CIRCLE_SIDES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.DISPLAY_ADD_STRUCTURE_OUT_OF_BOUNDARY_WARNING_DIALOG;
+import static org.smartregister.reveal.util.Constants.CONFIGURATION.DISPLAY_DISTANCE_SCALE;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.RESOLVE_LOCATION_TIMEOUT_IN_SECONDS;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.VALIDATE_FAR_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
@@ -37,7 +37,6 @@ import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENI
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
-import static org.smartregister.reveal.util.Constants.CONFIGURATION.DISPLAY_DISTANCE_SCALE;
 import static org.smartregister.reveal.util.Utils.createCircleFeature;
 import static org.smartregister.reveal.util.Utils.displayAddStructureOutOfBoundaryWarningDialog;
 import static org.smartregister.reveal.util.Utils.displayDistanceScale;
@@ -95,7 +94,7 @@ public class UtilsTest {
         settings.put("draw_operational_area_boundary_and_label", "true");
 
         when(revealApplication.getServerConfigs()).thenReturn(settings);
-        assert(getDrawOperationalAreaBoundaryAndLabel());
+        assert (getDrawOperationalAreaBoundaryAndLabel());
     }
 
     @Test
@@ -104,7 +103,7 @@ public class UtilsTest {
         Feature expectedFeature = Feature.fromJson(circleFeatureJSonString);
         assertNotNull(expectedFeature);
         LatLng center = new LatLng(15.0913957, 101.18959799999999);
-        Feature actualFeature = createCircleFeature(center, DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES, DEFAULT_GEO_JSON_CIRCLE_SIDES );
+        Feature actualFeature = createCircleFeature(center, DEFAULT_INDEX_CASE_CIRCLE_RADIUS_IN_METRES, DEFAULT_GEO_JSON_CIRCLE_SIDES);
 
         assertNotNull(actualFeature);
         assertEquals(expectedFeature.type(), actualFeature.type());

@@ -89,7 +89,7 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
         values.put("sactaClass", getFormValue(clientJson.getJSONObject("attributes"), "grade_class"));
 
 
-        new NativeFormProcessor(jsonObject)
+        NativeFormProcessor.createInstance(jsonObject)
                 .populateValues(values);
 
         String noID = getFormValue(clientJson.getJSONObject("attributes"), "has_no_id").toString();

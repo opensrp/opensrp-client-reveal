@@ -16,6 +16,7 @@ import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.PlanDefinitionSearchRepository;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
@@ -25,7 +26,6 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.NativeFormProcessor;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TaskUtils;
-import org.smartregister.reveal.util.Utils;
 import org.smartregister.util.AppExecutors;
 import org.smartregister.util.CallableInteractor;
 import org.smartregister.util.CallableInteractorCallBack;
@@ -52,6 +52,9 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
             .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
 
     private CallableInteractor callableInteractor;
+    private PlanDefinitionSearchRepository planDefinitionSearchRepository = RevealApplication.getInstance().getPlanDefinitionSearchRepository();
+    private TaskUtils taskUtils = TaskUtils.getInstance();
+    private TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
 
     @Override
     public void search(@Nullable HashMap<String, List<String>> sortAndFilter, @Nullable String searchText) {
@@ -141,12 +144,16 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
     public void saveChild(String jsonString, Context context) {
         CallableInteractor myInteractor = getCallableInteractor();
 
-        Callable<Boolean> callable = () -> {
+        Callable<Void> callable = () -> {
 
-            Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
-            Location selectedSchool = Utils.getStructureByName(PreferencesUtil.getInstance().getCurrentStructure());
+
+            NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonString);
+
+            Location operationalArea = processor.getCurrentOperationalArea();
+            Location selectedSchool = processor.getCurrentSelectedStructure();
             String entityId = UUID.randomUUID().toString();
-            new NativeFormProcessor(jsonString)
+
+            processor
 
                     // update metadata
                     .withBindType(CHILD_TABLE)
@@ -170,28 +177,22 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
 
             PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
             if (StringUtils.isBlank(prefsUtil.getCurrentPlanId())) {
-                PlanDefinitionSearchRepository planDefinitionSearchRepository = RevealApplication.getInstance().getPlanDefinitionSearchRepository();
                 Set<PlanDefinition> planDefinitionSet = planDefinitionSearchRepository.findActivePlansByJurisdiction(operationalArea.getId());
                 PlanDefinition planDefinition = planDefinitionSet.iterator().next();
                 if (planDefinition != null)
                     prefsUtil.setCurrentPlanId(planDefinition.getIdentifier());
             }
 
-            TaskUtils.getInstance().generateDrugAdministrationTask(context, entityId);
-
-            return true;
+            taskUtils.generateDrugAdministrationTask(context, entityId);
+            return null;
         };
 
-        myInteractor.execute(callable, new CallableInteractorCallBack<Boolean>() {
+        myInteractor.execute(callable, new CallableInteractorCallBack<Void>() {
             @Override
-            public void onResult(Boolean aBoolean) {
+            public void onResult(Void aVoid) {
                 ChildRegisterFragmentContract.View view = getView();
                 if (view != null) {
-                    if (aBoolean) {
-                        view.reloadFromSource();
-                    } else {
-                        view.onFetchError(new Exception("An error while saving"));
-                    }
+                    view.reloadFromSource();
                     view.setLoadingState(false);
                 }
             }
@@ -211,13 +212,13 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
     public void saveMDAForm(String jsonString, Context context) {
         CallableInteractor myInteractor = getCallableInteractor();
 
-        Callable<Boolean> callable = () -> {
+        Callable<Void> callable = () -> {
 
             ChildModel model = getModel();
             String entityId = new JSONObject(jsonString).getString(Constants.Properties.BASE_ENTITY_ID);
 
             // update metadata
-            NativeFormProcessor processor = new NativeFormProcessor(jsonString)
+            NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonString)
                     .withBindType(Constants.EventType.MDA_DISPENSE)
                     .withEncounterType(Constants.EventType.MDA_DISPENSE)
                     .withEntityId(entityId);
@@ -238,10 +239,10 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
                 task.setSyncStatus(BaseRepository.TYPE_Unsynced);
             }
             task.setLastModified(new DateTime());
-            RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
+            taskRepository.addOrUpdate(task);
 
             // save event details
-            Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+            Location operationalArea = processor.getCurrentOperationalArea();
             processor
                     .tagLocationData(operationalArea)
                     .tagTaskDetails(task)
@@ -251,19 +252,15 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
                     .saveEvent()
                     .clientProcessForm();
 
-            return true;
+            return null;
         };
 
-        myInteractor.execute(callable, new CallableInteractorCallBack<Boolean>() {
+        myInteractor.execute(callable, new CallableInteractorCallBack<Void>() {
             @Override
-            public void onResult(Boolean aBoolean) {
+            public void onResult(Void aVoid) {
                 ChildRegisterFragmentContract.View view = getView();
                 if (view != null) {
-                    if (aBoolean) {
-                        view.reloadFromSource();
-                    } else {
-                        view.onFetchError(new Exception("An error while saving"));
-                    }
+                    view.reloadFromSource();
                     view.setLoadingState(false);
                 }
             }

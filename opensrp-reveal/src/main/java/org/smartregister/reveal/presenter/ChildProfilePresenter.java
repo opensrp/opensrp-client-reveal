@@ -171,7 +171,7 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
 
             Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
             String entityId = jsonObject.getString(Constants.Properties.BASE_ENTITY_ID);
-            new NativeFormProcessor(jsonObject)
+            NativeFormProcessor.createInstance(jsonObject)
 
                     // update metadata
                     .withBindType(CHILD_TABLE)
@@ -229,7 +229,7 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
             Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
 
             // update metadata
-            new NativeFormProcessor(jsonObject)
+            NativeFormProcessor.createInstance(jsonObject)
                     .withBindType(Constants.EventType.MDA_ADVERSE_DRUG_REACTION)
                     .withEncounterType(Constants.EventType.MDA_ADVERSE_DRUG_REACTION)
                     .withEntityId(entityId)

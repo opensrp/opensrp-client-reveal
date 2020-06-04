@@ -1,5 +1,6 @@
 package org.smartregister.reveal.util;
 
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.util.Consumer;
 
 import com.google.gson.Gson;
@@ -51,13 +52,15 @@ public class NativeFormProcessor {
     private org.smartregister.domain.db.Event domainEvent;
     private boolean hasClient = false;
 
-    public NativeFormProcessor(String jsonString) throws JSONException {
-        this.jsonForm = new JSONObject(jsonString);
-        allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
-        gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-                .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter()).create();
+    public static NativeFormProcessor createInstance(String jsonString) throws JSONException {
+        return new NativeFormProcessor(new JSONObject(jsonString));
     }
 
+    public static NativeFormProcessor createInstance(JSONObject jsonObject) {
+        return new NativeFormProcessor(jsonObject);
+    }
+
+    @VisibleForTesting
     public NativeFormProcessor(JSONObject jsonObject) {
         this.jsonForm = jsonObject;
         allSharedPreferences = CoreLibrary.getInstance().context().allSharedPreferences();
@@ -107,6 +110,8 @@ public class NativeFormProcessor {
     }
 
     public NativeFormProcessor tagLocationData(Location location) throws JSONException {
+        if (location == null) return this;
+
         JSONObject formData = getOrCreateDetailsNode();
         formData.put(Constants.Properties.LOCATION_ID, location.getId());
         formData.put(Constants.Properties.LOCATION_UUID, location.getId());
@@ -271,5 +276,13 @@ public class NativeFormProcessor {
             step++;
         }
         return this;
+    }
+
+    public Location getCurrentOperationalArea() {
+        return Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+    }
+
+    public Location getCurrentSelectedStructure() {
+        return Utils.getStructureByName(PreferencesUtil.getInstance().getCurrentStructure());
     }
 }
