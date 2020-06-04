@@ -29,6 +29,8 @@ import java.util.UUID;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT;
+import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
@@ -225,6 +227,35 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
         String actualFormName = revealJsonFormUtils.getFormName(BEDNET_DISTRIBUTION_EVENT, BEDNET_DISTRIBUTION);
         assertEquals(JsonForm.REFAPP_BEDNET_DISTRIBUTION_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetThailandCaseConfirmationForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        String actualFormName = revealJsonFormUtils.getFormName(CASE_CONFIRMATION_EVENT, CASE_CONFIRMATION);
+        assertEquals(JsonForm.THAILAND_CASE_CONFIRMATION_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetRefAppCaseConfirmationForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
+        String actualFormName = revealJsonFormUtils.getFormName(CASE_CONFIRMATION_EVENT, CASE_CONFIRMATION);
+        assertEquals(JsonForm.REFAPP_CASE_CONFIRMATION_FORM, actualFormName);
+    }
+
+
+    @Test
+    public void testGetBednetDistributionForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.BOTSWANA);
+        String actualFormName = revealJsonFormUtils.getFormName(BEDNET_DISTRIBUTION_EVENT, BEDNET_DISTRIBUTION);
+        assertEquals(JsonForm.BEDNET_DISTRIBUTION_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetCaseConfirmationDistributionForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.BOTSWANA);
+        String actualFormName = revealJsonFormUtils.getFormName(CASE_CONFIRMATION_EVENT, CASE_CONFIRMATION);
+        assertEquals(JsonForm.CASE_CONFIRMATION_FORM, actualFormName);
     }
 
 }
