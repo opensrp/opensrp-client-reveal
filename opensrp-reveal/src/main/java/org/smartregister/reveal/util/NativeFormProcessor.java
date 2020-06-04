@@ -19,6 +19,7 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.sync.helper.ECSyncHelper;
@@ -239,9 +240,13 @@ public class NativeFormProcessor {
         JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(jsonForm), uniqueIDKey);
         if (field != null) {
             String uniqueID = field.getString(JsonFormConstants.VALUE);
-            CoreLibrary.getInstance().context().getUniqueIdRepository().close(uniqueID);
+            getUniqueIdRepository().close(uniqueID);
         }
         return this;
+    }
+
+    public UniqueIdRepository getUniqueIdRepository(){
+        return CoreLibrary.getInstance().context().getUniqueIdRepository();
     }
 
     public String getFieldValue(String fieldKey) throws JSONException {
