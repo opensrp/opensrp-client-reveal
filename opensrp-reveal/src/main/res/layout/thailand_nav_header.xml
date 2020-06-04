@@ -224,7 +224,7 @@
         android:textColor="@color/text_gray"
         android:layout_marginStart="@dimen/drawer_margin"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/application_version"
         android:text="@string/thailand_attribution_text"/>
     <ImageView
         android:id="@+id/reveal_image_logo_icon"
@@ -235,5 +235,14 @@
         android:contentDescription="@string/reveal_icon"
         android:src="@drawable/ic_reveal_image_logo_icon"
         app:layout_constraintStart_toEndOf="@+id/attribution"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toTopOf="@+id/application_version"/>
+    <TextView
+        android:id="@+id/application_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/text_gray"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="@dimen/drawer_margin"/>
 </android.support.constraint.ConstraintLayout>

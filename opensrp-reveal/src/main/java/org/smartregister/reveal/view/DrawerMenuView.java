@@ -118,14 +118,13 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             }
         });
 
-        if (BuildConfig.BUILD_COUNTRY != Country.THAILAND && BuildConfig.BUILD_COUNTRY != Country.THAILAND_EN) {
-            try {
-                ((TextView) headerView.findViewById(R.id.application_version))
-                        .setText(getContext().getString(R.string.app_version, Utils.getVersion(getContext())));
-            } catch (PackageManager.NameNotFoundException e) {
-                Timber.e(e);
-            }
+        try {
+            ((TextView) headerView.findViewById(R.id.application_version))
+                    .setText(getContext().getString(R.string.app_version, Utils.getVersion(getContext())));
+        } catch (PackageManager.NameNotFoundException e) {
+            Timber.e(e);
         }
+
 
         if (BuildConfig.BUILD_COUNTRY != Country.THAILAND && BuildConfig.BUILD_COUNTRY != Country.THAILAND_EN) {
             String buildDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
