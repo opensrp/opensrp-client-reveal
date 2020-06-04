@@ -37,7 +37,6 @@ import org.smartregister.reveal.contract.ChildProfileContract;
 import org.smartregister.reveal.model.Child;
 import org.smartregister.reveal.view.ChildProfileActivity;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import static org.robolectric.Shadows.shadowOf;
@@ -62,7 +61,6 @@ public class ChildProfileActivityTest {
 
     @Before
     public void setUp() {
-        org.smartregister.Context.bindtypes = new ArrayList<>();
         controller = Robolectric.buildActivity(ChildProfileActivity.class).create().start();
         activity = controller.get();
 
@@ -191,13 +189,13 @@ public class ChildProfileActivityTest {
 
         data.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonObject.toString());
         activity.onActivityResult(JsonFormUtils.REQUEST_CODE_GET_JSON, Activity.RESULT_OK, data);
-        Mockito.verify(presenter).updateChild(Mockito.any(),Mockito.any());
+        Mockito.verify(presenter).updateChild(Mockito.any(), Mockito.any());
 
 
         jsonObject = new JSONObject("{\"encounter_type\": \"mma_adr\"}");
 
         data.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonObject.toString());
         activity.onActivityResult(JsonFormUtils.REQUEST_CODE_GET_JSON, Activity.RESULT_OK, data);
-        Mockito.verify(presenter).saveADRForm(Mockito.any(),Mockito.any());
+        Mockito.verify(presenter).saveADRForm(Mockito.any(), Mockito.any());
     }
 }
