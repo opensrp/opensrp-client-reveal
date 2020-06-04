@@ -140,10 +140,10 @@ public class ChildProfilePresenterTest extends BaseUnitTest {
     }
 
     @Test
-    public void testStartADRFormNoFormWithError() throws Exception {
+    public void testStartADRFormWithError() throws Exception {
         String baseEntityID = "baseEntityID";
 
-        Mockito.doThrow(new JSONException("Invalid Form")).when(model).getRegistrationEditForm(RuntimeEnvironment.application, baseEntityID);
+        Mockito.doThrow(new JSONException("Invalid Form")).when(model).getADRForm(RuntimeEnvironment.application, baseEntityID);
 
         presenter.startADRForm(RuntimeEnvironment.application, baseEntityID);
         Mockito.verify(view).onError(Mockito.any());
