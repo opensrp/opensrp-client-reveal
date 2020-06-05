@@ -8,11 +8,9 @@ import com.vijay.jsonwizard.constants.JsonFormConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.CoreLibrary;
 import org.smartregister.dao.AbstractDao;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
-import org.smartregister.domain.UniqueId;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.application.RevealApplication;
@@ -37,11 +35,22 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
     @Override
     public List<Child> searchAndFilter(@Nullable HashMap<String, List<String>> sortAndFilter, @Nullable String searchText) {
         QueryComposer composer = getDefaultComposer();
-        if (StringUtils.isNotBlank(searchText))
-            composer.withWhereClause(Constants.DatabaseKeys.FIRST_NAME + " like '%" + searchText + "%' or " +
-                    Constants.DatabaseKeys.LAST_NAME + " like '%" + searchText + "%' or " +
-                    Constants.DatabaseKeys.UNIQUE_ID + " like '%" + searchText + "%' "
-            );
+        if (StringUtils.isNotBlank(searchText)) {
+            String[] searchTexts = searchText.split(" ");
+            for (String search : searchTexts) {
+                String text = search.trim();
+
+                String searchPhrase = " LIKE '%" + text + "%'";
+
+                QueryComposer.Disjoint disjoint = new QueryComposer.Disjoint();
+                disjoint.addDisjointClause(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.FIRST_NAME + searchPhrase);
+                disjoint.addDisjointClause(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.LAST_NAME + searchPhrase);
+                disjoint.addDisjointClause(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.UNIQUE_ID + searchPhrase);
+                disjoint.addDisjointClause(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.MIDDLE_NAME + searchPhrase);
+
+                composer.withWhereClause(disjoint);
+            }
+        }
 
         String currentArea = getCurrentLocationID();
         if (StringUtils.isNotBlank(currentArea))

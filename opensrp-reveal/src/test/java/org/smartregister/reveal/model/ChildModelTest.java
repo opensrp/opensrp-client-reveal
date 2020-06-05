@@ -60,7 +60,7 @@ public class ChildModelTest extends ChildModel {
 
         model = Mockito.spy(model);
         Mockito.doReturn("12345").when(model).getCurrentLocationID();
-        List<Child> children = model.searchAndFilter(sortAndFilter, "Maria");
+        List<Child> children = model.searchAndFilter(sortAndFilter, "Maria Lorenzo");
 
         Assert.assertEquals(children.size(), 2);
 
@@ -76,12 +76,7 @@ public class ChildModelTest extends ChildModel {
         ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
         Mockito.verify(database).rawQuery(stringArgumentCaptor.capture(), Mockito.any());
 
-        String expected = "SELECT ec_child.base_entity_id , ec_child.first_name , ec_child.last_name , ec_child.dob , " +
-                "ec_child.middle_name , ec_child.gender , ec_child.grade , ec_child.unique_id , " +
-                "(select business_status from task where for = ec_child.base_entity_id and code = 'MDA Dispense' order by authored_on desc limit 1) as status " +
-                "FROM ec_child WHERE ( first_name like '%Maria%' or last_name like '%Maria%' or unique_id like '%Maria%'  ) AND ( location = '12345' ) " +
-                "AND ( ec_child.grade in ( 'Grade 2' , 'Grade 1') ) AND ( (  cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', ec_child.dob) as int)  between 6 and 10 ) " +
-                "OR (  cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', ec_child.dob) as int)  > 18  ) ) ORDER BY ec_child.firstname, ec_child.middle_name";
+        String expected = "SELECT ec_child.base_entity_id , ec_child.first_name , ec_child.last_name , ec_child.dob , ec_child.middle_name , ec_child.gender , ec_child.grade , ec_child.unique_id , (select business_status from task where for = ec_child.base_entity_id and code = 'MDA Dispense' order by authored_on desc limit 1) as status FROM ec_child WHERE ( ( ec_child.first_name LIKE '%Maria%' ) OR ( ec_child.last_name LIKE '%Maria%' ) OR ( ec_child.unique_id LIKE '%Maria%' ) OR ( ec_child.middle_name LIKE '%Maria%' ) ) AND ( ( ec_child.first_name LIKE '%Lorenzo%' ) OR ( ec_child.last_name LIKE '%Lorenzo%' ) OR ( ec_child.unique_id LIKE '%Lorenzo%' ) OR ( ec_child.middle_name LIKE '%Lorenzo%' ) ) AND ( location = '12345' ) AND ( ec_child.grade in ( 'Grade 2' , 'Grade 1') ) AND ( (  cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', ec_child.dob) as int)  between 6 and 10 ) OR (  cast(strftime('%Y.%m%d', 'now') - strftime('%Y.%m%d', ec_child.dob) as int)  > 18  ) ) ORDER BY ec_child.firstname, ec_child.middle_name";
         Assert.assertEquals(expected, stringArgumentCaptor.getValue());
     }
 

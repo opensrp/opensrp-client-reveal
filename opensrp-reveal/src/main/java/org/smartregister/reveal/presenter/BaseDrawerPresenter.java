@@ -1,9 +1,9 @@
 package org.smartregister.reveal.presenter;
 
-import android.support.v4.util.Consumer;
 import android.app.Activity;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Consumer;
 import android.support.v4.util.Pair;
 import android.text.TextUtils;
 import android.view.View;
@@ -268,8 +268,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             return;
 
         // remove the last element
-        ArrayList<String> result = new ArrayList<>(name.size() - 1);
-        result.addAll(name.subList(0, name.size() - 2));
+        ArrayList<String> result = new ArrayList<>(name.subList(0, name.size() - 1));
 
         prefsUtil.setCurrentStructure(name.get(name.size() - 1));
         onOperationalAreaSelectorClicked(result);
@@ -422,16 +421,13 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         View headerView = navigationView.getHeaderView(0);
         syncLabel = headerView.findViewById(R.id.sync_label);
         syncBadge = activity.findViewById(R.id.sync_badge);
-        if ( syncBadge != null && syncLabel != null) {
-            if(synced)
-            {
+        if (syncBadge != null && syncLabel != null) {
+            if (synced) {
                 syncBadge.setBackground(ContextCompat.getDrawable(activity, R.drawable.badge_green_oval));
                 syncLabel.setText("Device data synced");
                 syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_complete_green));
                 syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_green));
-            }
-            else
-            {
+            } else {
                 syncBadge.setBackground(ContextCompat.getDrawable(activity, R.drawable.badge_oval));
                 syncLabel.setText("Device data not synced");
                 syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_urgent_red));
