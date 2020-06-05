@@ -12,6 +12,9 @@ import org.smartregister.CoreLibrary;
 import org.smartregister.dao.AbstractDao;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.domain.UniqueId;
+import org.smartregister.repository.TaskRepository;
+import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.util.Constants;
@@ -68,13 +71,13 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
 
         int registeredChildren = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and location = '" + getCurrentLocationID() + "'");
 
-        int administeredDrugs = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and location = '"  + getCurrentLocationID() + "' " +
+        int administeredDrugs = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and location = '" + getCurrentLocationID() + "' " +
                 "and ec_child.base_entity_id in (select t.for from task  t where t.code = '" + Constants.Intervention.MDA_DISPENSE + "' and t.business_status like '%" + Constants.BusinessStatus.VISITED_DRUG_ADMINISTERED + "%') ");
 
-        int childrenNotVisited = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and location = '" +  getCurrentLocationID() + "' " +
+        int childrenNotVisited = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and location = '" + getCurrentLocationID() + "' " +
                 "and ec_child.base_entity_id in (select t.for from task  t where t.code = '" + Constants.Intervention.MDA_DISPENSE + "' and t.business_status like '%" + Constants.BusinessStatus.NOT_VISITED + "%') ");
 
-        int visitedNotAdministered = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and location = '" +  getCurrentLocationID() + "' " +
+        int visitedNotAdministered = getTotal("select count(*) cnt from ec_child where DATE(dob) > DATE('now','-15 years') and is_closed = 0 and location = '" + getCurrentLocationID() + "' " +
                 "and ec_child.base_entity_id in (select t.for from task  t where t.code = '" + Constants.Intervention.MDA_DISPENSE + "' and t.business_status like '%" + Constants.BusinessStatus.VISITED_DRUG_NOT_ADMINISTERED + "%') ");
 
         result.put(Constants.ChildRegister.MMA_COVERAGE, registeredChildren == 0 ? 0 : ((administeredDrugs * 100) / registeredChildren));
@@ -94,7 +97,7 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
     @Override
     public JSONObject getMDAForm(Context context, String baseEntityID) throws JSONException {
         // read form and inject base id
-        String jsonForm = Utils.readAssetContents(context, Constants.JsonForm.NTD_MASS_DRUG_ADMINISTRATION);
+        String jsonForm = readAssetContents(context, Constants.JsonForm.NTD_MASS_DRUG_ADMINISTRATION);
         JSONObject jsonObject = new JSONObject(jsonForm);
         jsonObject.put(Constants.Properties.BASE_ENTITY_ID, baseEntityID);
         return jsonObject;
@@ -102,16 +105,24 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
 
     @Override
     public JSONObject getRegistrationForm(Context context) throws JSONException {
-        String jsonForm = Utils.readAssetContents(context, Constants.JsonForm.NTD_CHILD_REGISTRATION);
+        String jsonForm = readAssetContents(context, Constants.JsonForm.NTD_CHILD_REGISTRATION);
         JSONObject jsonObject = new JSONObject(jsonForm);
 
         // inject unique id
-        String uniqueID = CoreLibrary.getInstance().context().getUniqueIdRepository().getNextUniqueId().getOpenmrsId();
+        String uniqueID = getUniqueIdRepository().getNextUniqueId().getOpenmrsId();
         if (StringUtils.isBlank(uniqueID))
             throw new IllegalStateException("No local unique ID");
 
         revealJsonFormUtils.populateField(jsonObject, Constants.DatabaseKeys.UNIQUE_ID, uniqueID, JsonFormConstants.VALUE);
         return jsonObject;
+    }
+
+    public UniqueIdRepository getUniqueIdRepository() {
+        return RevealApplication.getInstance().getContext().getUniqueIdRepository();
+    }
+
+    public String readAssetContents(Context context, String path) {
+        return Utils.readAssetContents(context, path);
     }
 
     @Override
@@ -120,7 +131,11 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
         DataMap<String> dataMap = cursor -> getCursorValue(cursor, "_id");
 
         String taskId = AbstractDao.readSingleValue(taskSQL, dataMap);
-        return RevealApplication.getInstance().getContext().getTaskRepository().getTaskByIdentifier(taskId);
+        return getTaskRepository().getTaskByIdentifier(taskId);
+    }
+
+    public TaskRepository getTaskRepository() {
+        return RevealApplication.getInstance().getContext().getTaskRepository();
     }
 
     private void extractSort(QueryComposer composer, @Nullable HashMap<String, List<String>> sortAndFilter) {
