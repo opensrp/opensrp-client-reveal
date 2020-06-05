@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,11 +47,14 @@ import com.mapbox.pluginscalebar.ScaleBarPlugin;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.AllConstants;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.FetchStatus;
+import org.smartregister.domain.SyncProgress;
 import org.smartregister.domain.Task;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
+import org.smartregister.receiver.SyncProgressBroadcastReceiver;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -107,7 +111,7 @@ import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
  * Created by samuelgithengi on 11/20/18.
  */
 public class ListTasksActivity extends BaseMapActivity implements ListTaskContract.ListTaskView,
-        View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener, UserLocationView, OnLocationComponentInitializedCallback {
+        View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener, UserLocationView, OnLocationComponentInitializedCallback, SyncProgressBroadcastReceiver.SyncProgressListener {
 
     private ListTaskPresenter listTaskPresenter;
 
@@ -132,6 +136,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private CardView irsVerificationCardView;
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
+
+    private SyncProgressBroadcastReceiver syncProgressBroadcastReceiver;
 
     private boolean hasRequestedLocation;
 
@@ -158,6 +164,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private EditText searchView;
 
     private CardDetailsUtil cardDetailsUtil = new CardDetailsUtil();
+
+    private ProgressBar syncProgressBar;
+
+    private TextView syncProgressBarLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -750,6 +760,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         if (SyncStatusBroadcastReceiver.getInstance().isSyncing()) {
             syncProgressSnackbar.show();
         }
+        drawerView.toggleProgressBarView(true);
     }
 
     @Override
@@ -774,6 +785,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         onSyncInProgress(fetchStatus);
         //Check sync status and Update UI to show sync status
         drawerView.checkSynced();
+        // revert to sync status view
+        drawerView.toggleProgressBarView(false);
     }
 
     @Override
@@ -782,6 +795,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
         IntentFilter filter = new IntentFilter(Action.STRUCTURE_TASK_SYNCED);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(refreshGeowidgetReceiver, filter);
+        if (syncProgressBroadcastReceiver == null){
+            syncProgressBroadcastReceiver = new SyncProgressBroadcastReceiver(this);
+        }
+        IntentFilter syncProgressFilter = new IntentFilter(AllConstants.SYNC_PROGRESS.ACTION_SYNC_PROGRESS);
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(syncProgressBroadcastReceiver, syncProgressFilter);
         drawerView.onResume();
         listTaskPresenter.onResume();
     }
@@ -790,6 +808,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void onPause() {
         SyncStatusBroadcastReceiver.getInstance().removeSyncStatusListener(this);
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(refreshGeowidgetReceiver);
+        if (syncProgressBroadcastReceiver != null){
+            LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(syncProgressBroadcastReceiver);
+        }
         RevealApplication.getInstance().setMyLocationComponentEnabled(revealMapHelper.isMyLocationComponentActive(this, myLocationButton));
         super.onPause();
     }
@@ -848,6 +869,17 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void setSearchPhrase(String searchPhrase) {
         searchView.setText(searchPhrase);
+    }
+
+    @Override
+    public void onSyncProgress(SyncProgress syncProgress) {
+        int progress = syncProgress.getPercentageSynced();
+        String entity = syncProgress.getSyncEntity().toString();
+        syncProgressBar = findViewById(R.id.sync_progress_bar);
+        syncProgressBarLabel = findViewById(R.id.sync_progress_bar_label);
+        String labelText = String.format("Syncing %s : %d complete...", entity, progress);
+        syncProgressBar.setProgress(progress);
+        syncProgressBarLabel.setText(labelText);
     }
 
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {

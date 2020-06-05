@@ -60,6 +60,8 @@ public interface BaseDrawerContract {
         void openOfflineMapsView();
 
         void checkSynced();
+
+        void toggleProgressBarView(boolean syncing);
     }
 
     interface Presenter {
