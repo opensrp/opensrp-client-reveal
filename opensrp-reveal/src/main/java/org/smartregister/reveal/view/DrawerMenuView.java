@@ -125,9 +125,12 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             Timber.e(e);
         }
 
-        String buildDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                .format(new Date(BuildConfig.BUILD_TIMESTAMP));
-        ((TextView) headerView.findViewById(R.id.application_updated)).setText(getContext().getString(R.string.app_updated, buildDate));
+
+        if (BuildConfig.BUILD_COUNTRY != Country.THAILAND && BuildConfig.BUILD_COUNTRY != Country.THAILAND_EN) {
+            String buildDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                    .format(new Date(BuildConfig.BUILD_TIMESTAMP));
+            ((TextView) headerView.findViewById(R.id.application_updated)).setText(getContext().getString(R.string.app_updated, buildDate));
+        }
 
         planTextView = headerView.findViewById(R.id.plan_selector);
         operationalAreaTextView = headerView.findViewById(R.id.operational_area_selector);
