@@ -35,6 +35,7 @@ import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.reveal.TestRevealApplication;
 import org.smartregister.reveal.contract.ChildProfileContract;
 import org.smartregister.reveal.model.Child;
+import org.smartregister.reveal.shadow.ContextShadowHelper;
 import org.smartregister.reveal.view.ChildProfileActivity;
 
 import java.util.Date;
@@ -46,7 +47,7 @@ import static org.robolectric.Shadows.shadowOf;
  */
 
 @RunWith(RobolectricTestRunner.class)
-@Config(application = TestRevealApplication.class, sdk = 22)
+@Config(application = TestRevealApplication.class, sdk = 22, shadows = {ContextShadowHelper.class})
 public class ChildProfileActivityTest {
 
     @Rule
