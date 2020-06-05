@@ -58,11 +58,6 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     private TextView operatorTextView;
     private TextView p2pSyncTextView;
 
-    private ProgressBar progressBar;
-    private TextView progressLabel;
-    private TextView syncButton;
-    private TextView syncBadge;
-
     private DrawerLayout mDrawerLayout;
 
     private BaseDrawerContract.Presenter presenter;
@@ -328,7 +323,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         else if (v.getId() == R.id.sync_button) {
             toggleProgressBarView(true);
             org.smartregister.reveal.util.Utils.startImmediateSync();
-            //closeDrawerLayout();
+            closeDrawerLayout();
         }
     }
 
@@ -358,10 +353,10 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     @Override
     public void toggleProgressBarView(boolean syncing) {
-        progressBar = this.activity.getActivity().findViewById(R.id.sync_progress_bar);
-        progressLabel = this.activity.getActivity().findViewById(R.id.sync_progress_bar_label);
-        syncButton = this.activity.getActivity().findViewById(R.id.sync_button);
-        syncBadge = this.activity.getActivity().findViewById(R.id.sync_label);
+        ProgressBar progressBar = this.activity.getActivity().findViewById(R.id.sync_progress_bar);
+        TextView progressLabel = this.activity.getActivity().findViewById(R.id.sync_progress_bar_label);
+        TextView syncButton = this.activity.getActivity().findViewById(R.id.sync_button);
+        TextView syncBadge = this.activity.getActivity().findViewById(R.id.sync_label);
 
         if (syncing) {
             progressBar.setVisibility(View.VISIBLE);

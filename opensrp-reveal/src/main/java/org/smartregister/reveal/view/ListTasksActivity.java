@@ -165,10 +165,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private CardDetailsUtil cardDetailsUtil = new CardDetailsUtil();
 
-    private ProgressBar syncProgressBar;
-
-    private TextView syncProgressBarLabel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -875,8 +871,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void onSyncProgress(SyncProgress syncProgress) {
         int progress = syncProgress.getPercentageSynced();
         String entity = syncProgress.getSyncEntity().toString();
-        syncProgressBar = findViewById(R.id.sync_progress_bar);
-        syncProgressBarLabel = findViewById(R.id.sync_progress_bar_label);
+        ProgressBar syncProgressBar = findViewById(R.id.sync_progress_bar);
+        TextView syncProgressBarLabel = findViewById(R.id.sync_progress_bar_label);
         String labelText = String.format("Syncing %s : %d complete...", entity, progress);
         syncProgressBar.setProgress(progress);
         syncProgressBarLabel.setText(labelText);
