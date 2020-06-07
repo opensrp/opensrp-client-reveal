@@ -28,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants;
@@ -60,8 +61,8 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
     private DrawingManager drawingManager;
 
     private Button deleteBtn ;
-    private Button drawingBtn;
-    private Button saveBtn;
+    private Button savePointBtn;
+    private Button saveBoundaryBtn;
     private Button cancelBtn;
 
     private RevealApplication revealApplication = RevealApplication.getInstance();
@@ -101,8 +102,8 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
             }
         });
 
-        this.drawingBtn = findViewById(R.id.btn_drawingBoundaries_drawing);
-        this.drawingBtn.setOnClickListener(new View.OnClickListener() {
+        this.savePointBtn = findViewById(R.id.btn_drawingBoundaries_save_point);
+        this.savePointBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (drawingManager != null) {
@@ -120,8 +121,8 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
             }
         });
 
-        this.saveBtn = findViewById(R.id.btn_drawingBoundaries_save);
-        this.saveBtn.setOnClickListener(new View.OnClickListener() {
+        this.saveBoundaryBtn = findViewById(R.id.btn_drawingBoundaries_save);
+        this.saveBoundaryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MultiPolygon updatedOA = MultiPolygon.fromPolygons(Collections.singletonList((Polygon) boundaryLayer.getFeatureCollection().features().get(0).geometry()));
@@ -136,6 +137,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
                 Location operationalAreaLocation = LocationServiceHelper.locationGson.fromJson(revealApplication.getOperationalArea().toJson(), Location.class);
                 JsonArray updatedCoordsJsonArray = LocationServiceHelper.locationGson.fromJson(updatedCoords.toString(), JsonArray.class);
                 operationalAreaLocation.getGeometry().setCoordinates(updatedCoordsJsonArray);
+                operationalAreaLocation.setSyncStatus(BaseRepository.TYPE_Unsynced);
                 RevealApplication.getInstance().getLocationRepository().addOrUpdate(operationalAreaLocation);
                 finish();
             }
@@ -182,7 +184,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
                             @Override
                             public void onCircleClick(@NonNull Circle circle) {
                                 Toast.makeText(EditFociBoundaryActivity.this,
-                                        getString(R.string.drawing_boundaries_circle_clicked), Toast.LENGTH_SHORT).show();
+                                        getString(R.string.circle_clicked), Toast.LENGTH_SHORT).show();
                                 deleteBtn.setEnabled(drawingManager.getCurrentKujakuCircle() != null);
                                 toggleButtons(EditBoundaryState.EDITTING);
                             }
@@ -190,7 +192,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
                             @Override
                             public void onCircleNotClick(@NonNull LatLng latLng) {
                                 Toast.makeText(EditFociBoundaryActivity.this,
-                                        getString(R.string.drawing_boundaries_circle_not_clicked), Toast.LENGTH_SHORT).show();
+                                        getString(R.string.circle_not_clicked), Toast.LENGTH_SHORT).show();
                                 deleteBtn.setEnabled(false);
                             }
                         });
@@ -200,7 +202,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
                             public void onKujakuLayerLongClick(@NonNull KujakuLayer kujakuLayer) {
 
                                 if (drawingManager.isDrawingEnabled()) {
-                                    drawingBtn.setText(R.string.done);
+                                    savePointBtn.setText(R.string.done);
                                 }
                             }
                         });
@@ -235,7 +237,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
         if (drawingManager != null) {
             if (!drawingManager.isDrawingEnabled()) {
                 if (drawingManager.startDrawing( boundaryLayer)) {
-                    drawingBtn.setText(R.string.done);
+                    savePointBtn.setText(R.string.done);
                 }
             } else {
                 drawingManager.stopDrawingAndDisplayLayer();
@@ -251,17 +253,17 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements OnLocat
         switch (state) {
             case EDITTING:
                 cancelBtn.setVisibility(View.GONE);
-                saveBtn.setVisibility(View.GONE);
+                saveBoundaryBtn.setVisibility(View.GONE);
                 deleteBtn.setVisibility(View.VISIBLE);
-                drawingBtn.setVisibility(View.VISIBLE);
+                savePointBtn.setVisibility(View.VISIBLE);
                 break;
             case START:
             case FINISHED:
             default:
                 cancelBtn.setVisibility(View.VISIBLE);
-                saveBtn.setVisibility(View.VISIBLE);
+                saveBoundaryBtn.setVisibility(View.VISIBLE);
                 deleteBtn.setVisibility(View.GONE);
-                drawingBtn.setVisibility(View.GONE);
+                savePointBtn.setVisibility(View.GONE);
                 break;
         }
     }

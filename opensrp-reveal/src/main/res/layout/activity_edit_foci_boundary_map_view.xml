@@ -48,12 +48,12 @@
                     android:text="@string/cancel"/>
 
                 <Button
-                    android:id="@+id/btn_drawingBoundaries_drawing"
+                    android:id="@+id/btn_drawingBoundaries_save_point"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:enabled="true"
                     android:visibility="gone"
-                    android:text="@string/done"/>
+                    android:text="@string/save_point"/>
 
                 <Button
                     android:id="@+id/btn_drawingBoundaries_delete"
@@ -61,14 +61,14 @@
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:visibility="gone"
-                    android:text="@string/drawing_boundaries_delete"/>
+                    android:text="@string/delete"/>
 
                 <Button
                     android:id="@+id/btn_drawingBoundaries_save"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:enabled="true"
-                    android:text="@string/save"/>
+                    android:text="@string/save_boundary"/>
 
             </LinearLayout>
 

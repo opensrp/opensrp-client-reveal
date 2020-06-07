@@ -351,10 +351,11 @@
     <string name="not_tested">Not Tested</string>
     <string name="yes">Yes</string>
 
-    <string name="drawing_boundaries_delete">Delete</string>
-    <string name="drawing_boundaries_start_draw">Start Drawing</string>
-    <string name="drawing_boundaries_stop_draw">Stop Drawing</string>
-    <string name="drawing_boundaries_circle_clicked">Circle clicked</string>
-    <string name="drawing_boundaries_circle_not_clicked">Circle not clicked</string>
+    <string name="save_point">Save Point</string>
+    <string name="save_boundary">Save Boundary</string>
+    <string name="stop_drawing">Stop Drawing</string>
+    <string name="circle_clicked">Circle clicked</string>
+    <string name="circle_not_clicked">Circle not clicked</string>
+    <string name="start_drawing">Start Drawing</string>
     <string name="edit_foci_boundary">Edit Foci Boundary</string>
 </resources>
