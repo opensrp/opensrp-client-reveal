@@ -147,7 +147,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
         this.cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                exitEditBoundaryActivity();
+                presenter.onCancelEditBoundaryChanges();
             }
         });
 

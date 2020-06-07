@@ -38,7 +38,7 @@ public class EditFociBoundaryPresenter implements EditFociboundaryContract.Prese
 
     @Override
     public void onCancelEditBoundaryChanges() {
-
+        displayDiscardChangesDialog();
     }
 
     @Override
@@ -58,7 +58,7 @@ public class EditFociBoundaryPresenter implements EditFociboundaryContract.Prese
 
     @Override
     public void displayDeletePointDialog(View view) {
-        AlertDialogUtils.displayNotificationWithCallback(view.getContext(), R.string.delete_point_title,
+        AlertDialogUtils.displayNotificationWithCallback(editFociBoundaryview.getContext(), R.string.delete_point_title,
                 R.string.delete_point_msg, R.string.delete, R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -72,6 +72,15 @@ public class EditFociBoundaryPresenter implements EditFociboundaryContract.Prese
 
     @Override
     public void displayDiscardChangesDialog() {
-
+        AlertDialogUtils.displayNotificationWithCallback(editFociBoundaryview.getContext(), R.string.discard_changes_title,
+                R.string.discard_changes_msg, R.string.discard, R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == BUTTON_POSITIVE) {
+                            editFociBoundaryview.exitEditBoundaryActivity();
+                        }
+                        dialog.dismiss();
+                    }
+                });
     }
 }
