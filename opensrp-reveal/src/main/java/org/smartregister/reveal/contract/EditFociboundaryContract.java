@@ -20,6 +20,8 @@ public interface EditFociboundaryContract {
 
         void deletePoint(android.view.View view);
 
+        void displaySnackBar(int message);
+
     }
 
     interface Presenter {

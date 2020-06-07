@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -157,6 +158,9 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
         String finalFeatureCollection = featureCollection;
         com.mapbox.geojson.Feature finalOperationalAreaFeature = revealApplication.getOperationalArea();
         boolean finalLocationComponentActive = locationComponentActive;
+
+        displaySnackBar(R.string.tap_point_msg);
+
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
@@ -187,6 +191,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
                                         getString(R.string.circle_clicked), Toast.LENGTH_SHORT).show();
                                 deleteBtn.setEnabled(drawingManager.getCurrentKujakuCircle() != null);
                                 toggleButtons(EditBoundaryState.EDITTING);
+                                displaySnackBar(R.string.drag_selected_point_msg);
                             }
 
                             @Override
@@ -290,6 +295,11 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
             drawingManager.deleteDrawingCurrentCircle();
             view.setEnabled(false);
         }
+    }
+
+    @Override
+    public void displaySnackBar(int message) {
+        Snackbar.make(this.getWindow().getDecorView(), message, Snackbar.LENGTH_LONG);
     }
 
     @Override

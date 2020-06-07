@@ -363,4 +363,6 @@
     <string name="delete_point_msg">This will remove the point from the boundary</string>
     <string name="discard_changes_title">Discard Changes?</string>
     <string name="discard_changes_msg">This will undo any unsaved edits you have made on the boundary</string>
+    <string name="tap_point_msg">Tap black point to move or delete</string>
+    <string name="drag_selected_point_msg">Drag selected point to change boundary</string>
 </resources>
