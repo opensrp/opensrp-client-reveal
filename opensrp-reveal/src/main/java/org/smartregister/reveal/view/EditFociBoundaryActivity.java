@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -63,6 +64,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
     protected RevealMapView kujakuMapView;
     private DrawingManager drawingManager;
 
+    private Toolbar toolbar;
     private Button deleteBtn ;
     private Button savePointBtn;
     private Button saveBoundaryBtn;
@@ -85,6 +87,8 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
 
         kujakuMapView.setDisableMyLocationOnMapMove(true);
         kujakuMapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
+
+        setUpToolbar();
 
         if (revealApplication.getOperationalArea() != null) {
             FillBoundaryLayer.Builder boundaryBuilder = new FillBoundaryLayer.Builder(FeatureCollection.fromFeature(revealApplication.getOperationalArea()))
@@ -235,6 +239,13 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
 
             }
         });
+    }
+
+    protected void setUpToolbar() {
+        toolbar = this.findViewById(R.id.edit_boundary_toolbar);
+        toolbar.setTitle(R.string.edit_boundary);
+        this.setSupportActionBar(toolbar);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
     }
 
     private void enabledrawingMode(MapboxMap mapboxMap) {

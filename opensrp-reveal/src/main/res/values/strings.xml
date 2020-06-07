@@ -357,7 +357,7 @@
     <string name="circle_clicked">Circle clicked</string>
     <string name="circle_not_clicked">Circle not clicked</string>
     <string name="start_drawing">Start Drawing</string>
-    <string name="edit_foci_boundary">Edit Foci Boundary</string>
+    <string name="edit_boundary">Edit Boundary</string>
     <string name="discard">Discard</string>
     <string name="delete_point_title">Delete Point?</string>
     <string name="delete_point_msg">This will remove the point from the boundary</string>

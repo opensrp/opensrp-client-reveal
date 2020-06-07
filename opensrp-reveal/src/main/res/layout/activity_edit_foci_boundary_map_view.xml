@@ -15,7 +15,35 @@
         android:orientation="vertical"
         tools:context="view.BaseNavigationDrawerActivity">
 
-        <!--<include layout="@layout/app_bar"/>-->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/edit_boundary_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/customAppThemeBlue"
+            android:contentInsetStart="0dp"
+            android:contentInsetLeft="0dp"
+            android:contentInsetEnd="0dp"
+            android:contentInsetRight="0dp"
+            android:theme="@style/FamilyTheme.AppBarOverlay"
+            app:contentInsetEnd="0dp"
+            app:contentInsetLeft="0dp"
+            app:contentInsetRight="0dp"
+            app:contentInsetStart="0dp"
+            app:contentInsetStartWithNavigation="0dp">
+
+        <org.smartregister.view.customcontrols.CustomFontTextView
+            android:id="@+id/toolbar_title"
+            style="@style/CustomFontTextViewStyle.ClientList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:text="@string/edit_boundary"
+            android:textSize="@dimen/register_member_title_size" />
+
+        </android.support.v7.widget.Toolbar>
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
