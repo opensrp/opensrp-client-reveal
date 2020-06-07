@@ -299,7 +299,8 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
 
     @Override
     public void displaySnackBar(int message) {
-        Snackbar.make(this.getWindow().getDecorView(), message, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.drawingBoundaries_map_section), message, Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
     @Override
