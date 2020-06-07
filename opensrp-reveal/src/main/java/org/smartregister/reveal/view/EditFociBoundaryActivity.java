@@ -1,5 +1,6 @@
 package org.smartregister.reveal.view;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -99,10 +100,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
         this.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (drawingManager != null) {
-                    drawingManager.deleteDrawingCurrentCircle();
-                    view.setEnabled(false);
-                }
+                presenter.onDeletePoint(view);
             }
         });
 
@@ -279,6 +277,19 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
             }
         }
         finish();
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public void deletePoint(View view) {
+        if (drawingManager != null) {
+            drawingManager.deleteDrawingCurrentCircle();
+            view.setEnabled(false);
+        }
     }
 
     @Override
