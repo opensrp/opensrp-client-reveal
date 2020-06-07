@@ -352,6 +352,7 @@
     <string name="yes">Yes</string>
 
     <string name="save_point">Save Point</string>
+    <string name="change_point">Change Point</string>
     <string name="save_boundary">Save Boundary</string>
     <string name="stop_drawing">Stop Drawing</string>
     <string name="circle_clicked">Circle clicked</string>

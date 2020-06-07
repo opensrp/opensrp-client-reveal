@@ -22,11 +22,11 @@ public interface EditFociboundaryContract {
 
         void displaySnackBar(int message);
 
+        void setToolbarTitle(int title);
+
     }
 
     interface Presenter {
-
-        void onEditFociBoundaryStateChange(EditBoundaryState state);
 
         void onDeletePoint(android.view.View view);
 
@@ -37,6 +37,8 @@ public interface EditFociboundaryContract {
         void onEditedBoundarySaved();
 
         void onSavePoint();
+
+        void onEditPoint();
 
         void displayDeletePointDialog(android.view.View view);
 

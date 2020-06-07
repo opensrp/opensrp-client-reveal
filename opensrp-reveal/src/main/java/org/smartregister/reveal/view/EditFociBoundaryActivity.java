@@ -194,8 +194,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
                                 Toast.makeText(EditFociBoundaryActivity.this,
                                         getString(R.string.circle_clicked), Toast.LENGTH_SHORT).show();
                                 deleteBtn.setEnabled(drawingManager.getCurrentKujakuCircle() != null);
-                                toggleButtons(EditBoundaryState.EDITTING);
-                                displaySnackBar(R.string.drag_selected_point_msg);
+                                presenter.onEditPoint();
                             }
 
                             @Override
@@ -312,6 +311,11 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
     public void displaySnackBar(int message) {
         Snackbar snackbar = Snackbar.make(findViewById(R.id.drawingBoundaries_map_section), message, Snackbar.LENGTH_LONG);
         snackbar.show();
+    }
+
+    @Override
+    public void setToolbarTitle(int title) {
+        toolbar.setTitle(title);
     }
 
     @Override

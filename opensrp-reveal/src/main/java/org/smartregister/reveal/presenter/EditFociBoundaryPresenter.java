@@ -27,11 +27,6 @@ public class EditFociBoundaryPresenter implements EditFociboundaryContract.Prese
     }
 
     @Override
-    public void onEditFociBoundaryStateChange(EditBoundaryState state) {
-
-    }
-
-    @Override
     public void onDeletePoint(View view) {
         displayDeletePointDialog(view);
     }
@@ -54,6 +49,14 @@ public class EditFociBoundaryPresenter implements EditFociboundaryContract.Prese
     @Override
     public void onSavePoint() {
         editFociBoundaryview.toggleButtons(EditBoundaryState.FINISHED);
+        editFociBoundaryview.setToolbarTitle(R.string.edit_boundary);
+    }
+
+    @Override
+    public void onEditPoint() {
+        editFociBoundaryview.toggleButtons(EditBoundaryState.EDITTING);
+        editFociBoundaryview.displaySnackBar(R.string.drag_selected_point_msg);
+        editFociBoundaryview.setToolbarTitle(R.string.change_point);
     }
 
     @Override
