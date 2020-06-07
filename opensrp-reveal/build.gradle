@@ -45,8 +45,8 @@ android {
         applicationId "org.smartregister.reveal"
         minSdkVersion 18
         targetSdkVersion 28
-        versionCode 21
-        versionName "4.0.1"
+        versionCode 22
+        versionName "4.1.0"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -99,7 +99,7 @@ android {
             minifyEnabled false
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            resValue "string", 'opensrp_base_url', '"https://reveal-th.smartregister.org/opensrp/"'
+            resValue "string", 'opensrp_base_url', '"https://reveal-stage.smartregister.org/opensrp/"'
             buildConfigField "int", "DATABASE_VERSION", '6'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
