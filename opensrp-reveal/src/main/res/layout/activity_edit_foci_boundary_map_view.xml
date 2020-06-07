@@ -22,6 +22,16 @@
             android:layout_height="match_parent"
             tools:context=".activities.DrawingBoundariesActivity">
 
+            <LinearLayout
+                android:id="@+id/drawingBoundaries_map_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/drawingBoundaries_btn_section"
+                >
             <org.smartregister.reveal.view.RevealMapView
                 android:id="@+id/kmv_drawingBoundaries_mapView"
                 android:layout_width="match_parent"
@@ -30,9 +40,12 @@
                 app:mapbox_uiLogoGravity="center_horizontal|bottom"
                 app:mapbox_uiLogoMarginRight="30dp"
                 app:locationClient="android_gps_client"
-                app:mapbox_uiRotateGestures="false" />
+                app:mapbox_uiRotateGestures="false"
+                />
+            </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/drawingBoundaries_btn_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -44,6 +57,7 @@
                     android:id="@+id/btn_drawingBoundaries_cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:enabled="true"
                     android:text="@string/cancel"/>
 
@@ -51,6 +65,7 @@
                     android:id="@+id/btn_drawingBoundaries_save_point"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:enabled="true"
                     android:visibility="gone"
                     android:text="@string/save_point"/>
@@ -59,6 +74,7 @@
                     android:id="@+id/btn_drawingBoundaries_delete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:enabled="false"
                     android:visibility="gone"
                     android:text="@string/delete"/>
@@ -67,6 +83,7 @@
                     android:id="@+id/btn_drawingBoundaries_save"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:enabled="true"
                     android:text="@string/save_boundary"/>
 
