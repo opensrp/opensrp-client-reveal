@@ -31,17 +31,16 @@
             app:contentInsetStart="0dp"
             app:contentInsetStartWithNavigation="0dp">
 
-        <org.smartregister.view.customcontrols.CustomFontTextView
-            android:id="@+id/toolbar_title"
-            style="@style/CustomFontTextViewStyle.ClientList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="0dp"
-            android:paddingEnd="0dp"
-            android:textColor="@color/white"
-            android:textAlignment="center"
-            android:text="@string/edit_boundary"
-            android:textSize="@dimen/register_member_title_size" />
+            <org.smartregister.view.customcontrols.CustomFontTextView
+                android:id="@+id/toolbar_title"
+                style="@style/CustomFontTextViewStyle.ClientList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:textSize="@dimen/register_member_title_size" />
 
         </android.support.v7.widget.Toolbar>
 
