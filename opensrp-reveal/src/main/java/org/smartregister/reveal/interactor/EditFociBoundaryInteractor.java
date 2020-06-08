@@ -28,6 +28,7 @@ public class EditFociBoundaryInteractor implements EditFociboundaryContract.Inte
     @Override
     public void saveLocation(Location editedFociBoundary) {
         appExecutors.diskIO().execute(() -> {
+            editedFociBoundary.getProperties().setUsername(RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM());
             editedFociBoundary.setSyncStatus(BaseRepository.TYPE_Unsynced);
             locationRepository.addOrUpdate(editedFociBoundary);
 

@@ -38,7 +38,7 @@ public class EditFociBoundaryPresenter implements EditFociboundaryContract.Prese
 
     @Override
     public void onSaveEditedBoundary(Location editedFociBoundary) {
-
+        interactor.saveLocation(editedFociBoundary);
     }
 
     @Override
