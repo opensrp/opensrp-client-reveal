@@ -79,8 +79,11 @@ import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
 
+import java.util.List;
+
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
+import io.ona.kujaku.listeners.OnFeatureLongClickListener;
 import io.ona.kujaku.utils.Constants;
 import timber.log.Timber;
 
@@ -590,6 +593,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     if (boundaryLayer == null) {
                         boundaryLayer = createBoundaryLayer(operationalArea);
                         kujakuMapView.addLayer(boundaryLayer);
+
+                        kujakuMapView.setOnFeatureLongClickListener(new OnFeatureLongClickListener() {
+                            @Override
+                            public void onFeatureLongClick(List<Feature> features) {
+                                listTaskPresenter.onFociBoundaryLongClicked();
+                            }
+                        }, boundaryLayer.getLayerIds());
+
                     } else {
                         boundaryLayer.updateFeatures(FeatureCollection.fromFeature(operationalArea));
                     }
