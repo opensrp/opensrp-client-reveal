@@ -291,6 +291,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
                 drawingManager.stopDrawingAndDisplayLayer();
             }
         }
+        RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
         finish();
     }
 
