@@ -104,6 +104,7 @@
                     android:layout_weight="1"
                     android:enabled="false"
                     android:visibility="gone"
+                    android:textColor="@color/alert_urgent_red"
                     android:text="@string/delete"/>
 
                 <Button
