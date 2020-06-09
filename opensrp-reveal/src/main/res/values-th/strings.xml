@@ -203,4 +203,20 @@
 
     <string name="tested">Tested</string>
     <string name="not_tested">Not Tested</string>
+
+    <string name="save_point">Save Point</string>
+    <string name="change_point">Change Point</string>
+    <string name="save_boundary">Save Boundary</string>
+    <string name="stop_drawing">Stop Drawing</string>
+    <string name="circle_clicked">Circle clicked</string>
+    <string name="circle_not_clicked">Circle not clicked</string>
+    <string name="start_drawing">Start Drawing</string>
+    <string name="edit_boundary">Edit Boundary</string>
+    <string name="discard">Discard</string>
+    <string name="delete_point_title">Delete Point?</string>
+    <string name="delete_point_msg">This will remove the point from the boundary</string>
+    <string name="discard_changes_title">Discard Changes?</string>
+    <string name="discard_changes_msg">This will undo any unsaved edits you have made on the boundary</string>
+    <string name="tap_point_msg">Tap black point to move or delete</string>
+    <string name="drag_selected_point_msg">Drag selected point to change boundary</string>
 </resources>
