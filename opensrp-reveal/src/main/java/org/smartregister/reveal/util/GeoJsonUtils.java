@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import timber.log.Timber;
+
 import static org.smartregister.reveal.interactor.ListTaskInteractor.gson;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.ADHERENCE_VISIT_DONE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.BEDNET_DISTRIBUTED;
@@ -135,6 +137,10 @@ public class GeoJsonUtils {
 
     private static void populateMDAStatus(Task task, Map<String, Integer> mdaStatusMap) {
         mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT) + 1);
+        if(task.getBusinessStatus()==null){
+            Timber.w("Task %s has null business status", task.getIdentifier());
+            return;
+        }
         switch (task.getBusinessStatus()) {
             case FULLY_RECEIVED:
                 mdaStatusMap.put(FULLY_RECEIVED, mdaStatusMap.get(FULLY_RECEIVED) + 1);
