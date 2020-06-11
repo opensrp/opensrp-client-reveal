@@ -69,6 +69,7 @@
         android:layout_marginStart="@dimen/drawer_margin"
         android:textColor="@color/text_gray"
         android:visibility="invisible"
+        android:textSize="10sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/sync_progress_bar" />
 

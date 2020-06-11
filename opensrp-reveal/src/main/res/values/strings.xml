@@ -351,6 +351,7 @@
     <string name="tested">Tested</string>
     <string name="not_tested">Not Tested</string>
     <string name="yes">Yes</string>
+    <string name="progressBarLabel">Syncing %s : %d%% complete...</string>
 
     <string name="save_point">Save Point</string>
     <string name="change_point">Change Point</string>
