@@ -165,7 +165,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_tasks);
+
+        if (BuildConfig.BUILD_COUNTRY == Country.THAILAND || BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
+            setContentView(R.layout.thailand_activity_list_tasks);
+        } else {
+            setContentView(R.layout.activity_list_tasks);
+        }
 
         jsonFormUtils = new RevealJsonFormUtils();
         drawerView = new DrawerMenuView(this);

@@ -58,6 +58,9 @@
     <dimen name="filter_toggle_padding">32dp</dimen>
 
     <dimen name="distance_scale_text_size">14dp</dimen>
+    <dimen name="reveal_logo_margin_start">5dp</dimen>
+    <dimen name="partner_logo_height">80dp</dimen>
+    <dimen name="partner_logo_margin_top">20dp</dimen>
 
 </resources>
 

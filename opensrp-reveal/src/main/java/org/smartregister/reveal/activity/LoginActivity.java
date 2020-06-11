@@ -1,16 +1,24 @@
 package org.smartregister.reveal.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.ImageView;
 
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.presenter.LoginPresenter;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.task.SaveTeamLocationsTask;
 import org.smartregister.view.activity.BaseLoginActivity;
 import org.smartregister.view.contract.BaseLoginContract;
 
 public class LoginActivity extends BaseLoginActivity implements BaseLoginContract.View {
+
+    private ImageView mainLogo;
 
     @Override
     protected int getContentView() {
@@ -45,4 +53,20 @@ public class LoginActivity extends BaseLoginActivity implements BaseLoginContrac
         }
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mainLogo = findViewById(R.id.login_logo);
+        setUpLogos();
+    }
+
+    private void setUpLogos() {
+        if (BuildConfig.BUILD_COUNTRY == Country.THAILAND || BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
+            ImageView partnerLogo = findViewById(R.id.partner_logo);
+            partnerLogo.setVisibility(View.VISIBLE);
+            mainLogo.setBackgroundResource(R.drawable.ic_dvbd_logo);
+        } else {
+            mainLogo.setBackgroundResource(R.drawable.ic_logo_login);
+        }
+    }
 }
