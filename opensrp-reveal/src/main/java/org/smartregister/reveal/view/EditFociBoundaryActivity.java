@@ -185,34 +185,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
 
                         RevealMapHelper.addBaseLayers(kujakuMapView, style, EditFociBoundaryActivity.this);
 
-                        drawingManager = new DrawingManager(kujakuMapView, mapboxMap, style);
-
-                        drawingManager.addOnDrawingCircleClickListener(new OnDrawingCircleClickListener() {
-                            @Override
-                            public void onCircleClick(@NonNull Circle circle) {
-                                Toast.makeText(EditFociBoundaryActivity.this,
-                                        getString(R.string.circle_clicked), Toast.LENGTH_SHORT).show();
-                                deleteBtn.setEnabled(drawingManager.getCurrentKujakuCircle() != null);
-                                presenter.onEditPoint();
-                            }
-
-                            @Override
-                            public void onCircleNotClick(@NonNull LatLng latLng) {
-                                Toast.makeText(EditFociBoundaryActivity.this,
-                                        getString(R.string.circle_not_clicked), Toast.LENGTH_SHORT).show();
-                                deleteBtn.setEnabled(false);
-                            }
-                        });
-
-                        drawingManager.addOnKujakuLayerLongClickListener(new OnKujakuLayerLongClickListener() {
-                            @Override
-                            public void onKujakuLayerLongClick(@NonNull KujakuLayer kujakuLayer) {
-
-                                if (drawingManager.isDrawingEnabled()) {
-                                    savePointBtn.setText(R.string.save_point);
-                                }
-                            }
-                        });
+                        initializeDrawingManager(mapboxMap, style);
 
                         //jump straight into edit mode
                         enabledrawingMode(mapboxMap);
@@ -235,6 +208,37 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
                     kujakuMapView.focusOnUserLocation(true, bufferRadius, RenderMode.COMPASS);
                 }
 
+            }
+        });
+    }
+
+    private void initializeDrawingManager(@NonNull MapboxMap mapboxMap, @NonNull Style style) {
+        drawingManager = new DrawingManager(kujakuMapView, mapboxMap, style);
+
+        drawingManager.addOnDrawingCircleClickListener(new OnDrawingCircleClickListener() {
+            @Override
+            public void onCircleClick(@NonNull Circle circle) {
+                Toast.makeText(EditFociBoundaryActivity.this,
+                        getString(R.string.circle_clicked), Toast.LENGTH_SHORT).show();
+                deleteBtn.setEnabled(drawingManager.getCurrentKujakuCircle() != null);
+                presenter.onEditPoint();
+            }
+
+            @Override
+            public void onCircleNotClick(@NonNull LatLng latLng) {
+                Toast.makeText(EditFociBoundaryActivity.this,
+                        getString(R.string.circle_not_clicked), Toast.LENGTH_SHORT).show();
+                deleteBtn.setEnabled(false);
+            }
+        });
+
+        drawingManager.addOnKujakuLayerLongClickListener(new OnKujakuLayerLongClickListener() {
+            @Override
+            public void onKujakuLayerLongClick(@NonNull KujakuLayer kujakuLayer) {
+
+                if (drawingManager.isDrawingEnabled()) {
+                    savePointBtn.setText(R.string.save_point);
+                }
             }
         });
     }
