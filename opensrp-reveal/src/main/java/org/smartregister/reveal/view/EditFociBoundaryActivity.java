@@ -174,7 +174,6 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
-                kujakuMapView.focusOnUserLocation(true);
                 Style.Builder builder = new Style.Builder().fromUri(getString(R.string.reveal_satellite_style));
                 mapboxMap.setStyle(builder,  new Style.OnStyleLoaded() {
                     @Override
