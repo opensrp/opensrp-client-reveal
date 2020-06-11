@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.google.gson.JsonArray;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.Geometry;
 import com.mapbox.geojson.MultiPolygon;
 import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -61,7 +62,6 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
 
     private static final String TAG = EditFociBoundaryActivity.class.getName();
 
-    protected RevealMapView kujakuMapView;
     private DrawingManager drawingManager;
 
     private Toolbar toolbar;
@@ -132,7 +132,13 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
         this.saveBoundaryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MultiPolygon updatedOA = MultiPolygon.fromPolygons(Collections.singletonList((Polygon) boundaryLayer.getFeatureCollection().features().get(0).geometry()));
+                Geometry geometry = boundaryLayer.getFeatureCollection().features().get(0).geometry();
+                if ( geometry instanceof  MultiPolygon) {
+                    // boundary has not been edited
+                    exitEditBoundaryActivity();
+                    return;
+                }
+                MultiPolygon updatedOA = MultiPolygon.fromPolygons(Collections.singletonList((Polygon) geometry));
                 JSONObject updatedOAJson = null;
                 JSONArray updatedCoords = null;
                 try {
@@ -168,7 +174,6 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
         kujakuMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
-                kujakuMapView.focusOnUserLocation(true);
                 Style.Builder builder = new Style.Builder().fromUri(getString(R.string.reveal_satellite_style));
                 mapboxMap.setStyle(builder,  new Style.OnStyleLoaded() {
                     @Override
@@ -186,34 +191,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
 
                         RevealMapHelper.addBaseLayers(kujakuMapView, style, EditFociBoundaryActivity.this);
 
-                        drawingManager = new DrawingManager(kujakuMapView, mapboxMap, style);
-
-                        drawingManager.addOnDrawingCircleClickListener(new OnDrawingCircleClickListener() {
-                            @Override
-                            public void onCircleClick(@NonNull Circle circle) {
-                                Toast.makeText(EditFociBoundaryActivity.this,
-                                        getString(R.string.circle_clicked), Toast.LENGTH_SHORT).show();
-                                deleteBtn.setEnabled(drawingManager.getCurrentKujakuCircle() != null);
-                                presenter.onEditPoint();
-                            }
-
-                            @Override
-                            public void onCircleNotClick(@NonNull LatLng latLng) {
-                                Toast.makeText(EditFociBoundaryActivity.this,
-                                        getString(R.string.circle_not_clicked), Toast.LENGTH_SHORT).show();
-                                deleteBtn.setEnabled(false);
-                            }
-                        });
-
-                        drawingManager.addOnKujakuLayerLongClickListener(new OnKujakuLayerLongClickListener() {
-                            @Override
-                            public void onKujakuLayerLongClick(@NonNull KujakuLayer kujakuLayer) {
-
-                                if (drawingManager.isDrawingEnabled()) {
-                                    savePointBtn.setText(R.string.save_point);
-                                }
-                            }
-                        });
+                        initializeDrawingManager(mapboxMap, style);
 
                         //jump straight into edit mode
                         enabledrawingMode(mapboxMap);
@@ -236,6 +214,37 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
                     kujakuMapView.focusOnUserLocation(true, bufferRadius, RenderMode.COMPASS);
                 }
 
+            }
+        });
+    }
+
+    private void initializeDrawingManager(@NonNull MapboxMap mapboxMap, @NonNull Style style) {
+        drawingManager = new DrawingManager(kujakuMapView, mapboxMap, style);
+
+        drawingManager.addOnDrawingCircleClickListener(new OnDrawingCircleClickListener() {
+            @Override
+            public void onCircleClick(@NonNull Circle circle) {
+                Toast.makeText(EditFociBoundaryActivity.this,
+                        getString(R.string.circle_clicked), Toast.LENGTH_SHORT).show();
+                deleteBtn.setEnabled(drawingManager.getCurrentKujakuCircle() != null);
+                presenter.onEditPoint();
+            }
+
+            @Override
+            public void onCircleNotClick(@NonNull LatLng latLng) {
+                Toast.makeText(EditFociBoundaryActivity.this,
+                        getString(R.string.circle_not_clicked), Toast.LENGTH_SHORT).show();
+                deleteBtn.setEnabled(false);
+            }
+        });
+
+        drawingManager.addOnKujakuLayerLongClickListener(new OnKujakuLayerLongClickListener() {
+            @Override
+            public void onKujakuLayerLongClick(@NonNull KujakuLayer kujakuLayer) {
+
+                if (drawingManager.isDrawingEnabled()) {
+                    savePointBtn.setText(R.string.save_point);
+                }
             }
         });
     }
