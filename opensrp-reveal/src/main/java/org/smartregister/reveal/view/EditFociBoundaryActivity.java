@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.google.gson.JsonArray;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.Geometry;
 import com.mapbox.geojson.MultiPolygon;
 import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -131,7 +132,13 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
         this.saveBoundaryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MultiPolygon updatedOA = MultiPolygon.fromPolygons(Collections.singletonList((Polygon) boundaryLayer.getFeatureCollection().features().get(0).geometry()));
+                Geometry geometry = boundaryLayer.getFeatureCollection().features().get(0).geometry();
+                if ( geometry instanceof  MultiPolygon) {
+                    // boundary has not been edited
+                    exitEditBoundaryActivity();
+                    return;
+                }
+                MultiPolygon updatedOA = MultiPolygon.fromPolygons(Collections.singletonList((Polygon) geometry));
                 JSONObject updatedOAJson = null;
                 JSONArray updatedCoords = null;
                 try {
