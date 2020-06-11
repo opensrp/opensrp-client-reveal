@@ -83,6 +83,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -676,6 +677,8 @@ public class ListTasksActivityTest extends BaseUnitTest {
     public void testOnSyncStart() {
         init(context);
         Whitebox.setInternalState(getInstance(), "isSyncing", true);
+        listTasksActivity = spy(listTasksActivity);
+        doNothing().when(listTasksActivity).toggleProgressBarView(true);
         listTasksActivity.onSyncStart();
         Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
         assertTrue(snackbar.isShown());
@@ -720,6 +723,8 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testOnSyncCompleteSnackBarIsDismissed() {
         init(context);
+        listTasksActivity = spy(listTasksActivity);
+        doNothing().when(listTasksActivity).toggleProgressBarView(false);
         listTasksActivity.onSyncComplete(FetchStatus.nothingFetched);
         Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
         assertFalse(snackbar.isShown());

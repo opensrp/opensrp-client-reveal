@@ -756,7 +756,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         if (SyncStatusBroadcastReceiver.getInstance().isSyncing()) {
             syncProgressSnackbar.show();
         }
-        drawerView.toggleProgressBarView(true);
+        toggleProgressBarView(true);
     }
 
     @Override
@@ -782,7 +782,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         //Check sync status and Update UI to show sync status
         drawerView.checkSynced();
         // revert to sync status view
-        drawerView.toggleProgressBarView(false);
+        toggleProgressBarView(false);
     }
 
     @Override
@@ -868,12 +868,17 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
+    public void toggleProgressBarView(boolean syncing) {
+        drawerView.toggleProgressBarView(syncing);
+    }
+
+    @Override
     public void onSyncProgress(SyncProgress syncProgress) {
         int progress = syncProgress.getPercentageSynced();
         String entity = syncProgress.getSyncEntity().toString();
         ProgressBar syncProgressBar = findViewById(R.id.sync_progress_bar);
         TextView syncProgressBarLabel = findViewById(R.id.sync_progress_bar_label);
-        String labelText = String.format("Syncing %s : %d complete...", entity, progress);
+        String labelText = String.format("Syncing %s : %d%% complete...", entity, progress);
         syncProgressBar.setProgress(progress);
         syncProgressBarLabel.setText(labelText);
     }
