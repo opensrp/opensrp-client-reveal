@@ -61,7 +61,6 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
 
     private static final String TAG = EditFociBoundaryActivity.class.getName();
 
-    protected RevealMapView kujakuMapView;
     private DrawingManager drawingManager;
 
     private Toolbar toolbar;
