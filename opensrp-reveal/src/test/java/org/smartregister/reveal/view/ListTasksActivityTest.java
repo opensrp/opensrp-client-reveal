@@ -872,8 +872,8 @@ public class ListTasksActivityTest extends BaseUnitTest {
         doReturn(progressLabel).when(spyListTasksActivity).findViewById(eq(R.id.sync_progress_bar_label));
 
         spyListTasksActivity.onSyncProgress(mockSyncProgress);
-        
-        assertEquals(progressLabel.getText(), String.format("Syncing %s : %d%% complete...", "Tasks", 50));
+
+        assertEquals(progressLabel.getText(), String.format(context.getString(R.string.progressBarLabel), "Tasks", 50));
     }
 
 
