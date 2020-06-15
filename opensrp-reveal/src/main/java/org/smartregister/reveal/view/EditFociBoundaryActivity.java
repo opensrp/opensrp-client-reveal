@@ -16,7 +16,6 @@ import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.geojson.MultiPolygon;
-import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
@@ -29,8 +28,6 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -41,16 +38,14 @@ import org.smartregister.reveal.util.EditBoundaryState;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.sync.helper.LocationServiceHelper;
 
-import java.util.Collections;
-
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.FillBoundaryLayer;
 import io.ona.kujaku.layers.KujakuLayer;
 import io.ona.kujaku.listeners.OnDrawingCircleClickListener;
 import io.ona.kujaku.listeners.OnKujakuLayerLongClickListener;
 import io.ona.kujaku.manager.DrawingManager;
-import timber.log.Timber;
 
+import static org.smartregister.reveal.util.Utils.getCoordsFromGeometry;
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
 import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
 
@@ -71,7 +66,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
     private Button cancelBtn;
 
     private RevealApplication revealApplication = RevealApplication.getInstance();
-    boolean locationComponentActive = false;
+    private boolean locationComponentActive = false;
     private FillBoundaryLayer boundaryLayer;
     private EditFociBoundaryPresenter presenter;
 
@@ -138,15 +133,9 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
                     exitEditBoundaryActivity();
                     return;
                 }
-                MultiPolygon updatedOA = MultiPolygon.fromPolygons(Collections.singletonList((Polygon) geometry));
-                JSONObject updatedOAJson = null;
-                JSONArray updatedCoords = null;
-                try {
-                    updatedOAJson = new JSONObject(updatedOA.toJson());
-                    updatedCoords = (JSONArray) updatedOAJson.get("coordinates");
-                } catch (JSONException e) {
-                    Timber.e(e);
-                }
+
+                JSONArray updatedCoords = getCoordsFromGeometry(geometry);
+
                 Location operationalAreaLocation = LocationServiceHelper.locationGson.fromJson(revealApplication.getOperationalArea().toJson(), Location.class);
                 JsonArray updatedCoordsJsonArray = LocationServiceHelper.locationGson.fromJson(updatedCoords.toString(), JsonArray.class);
                 operationalAreaLocation.getGeometry().setCoordinates(updatedCoordsJsonArray);
@@ -225,7 +214,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
             @Override
             public void onCircleClick(@NonNull Circle circle) {
                 Toast.makeText(EditFociBoundaryActivity.this,
-                        getString(R.string.circle_clicked), Toast.LENGTH_SHORT).show();
+                        getString(R.string.circle_clicked), Toast.LENGTH_LONG).show();
                 deleteBtn.setEnabled(drawingManager.getCurrentKujakuCircle() != null);
                 presenter.onEditPoint();
             }
@@ -233,7 +222,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
             @Override
             public void onCircleNotClick(@NonNull LatLng latLng) {
                 Toast.makeText(EditFociBoundaryActivity.this,
-                        getString(R.string.circle_not_clicked), Toast.LENGTH_SHORT).show();
+                        getString(R.string.circle_not_clicked), Toast.LENGTH_LONG).show();
                 deleteBtn.setEnabled(false);
             }
         });

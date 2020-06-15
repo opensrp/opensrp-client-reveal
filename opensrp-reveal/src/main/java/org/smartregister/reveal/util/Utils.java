@@ -16,6 +16,9 @@ import android.widget.TextView;
 
 import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.Geometry;
+import com.mapbox.geojson.MultiPolygon;
+import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
 import net.sqlcipher.database.SQLiteDatabase;
@@ -46,6 +49,7 @@ import org.smartregister.util.RecreateECUtil;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -402,6 +406,24 @@ public class Utils {
      */
     public static Boolean displayDistanceScale() {
         return Boolean.valueOf(getGlobalConfig(CONFIGURATION.DISPLAY_DISTANCE_SCALE, BuildConfig.DISPLAY_DISTANCE_SCALE + ""));
+    }
+
+    /**
+     * This method takes in a geometry object and returns a JSONArray representation of the coordinates
+     * @param geometry
+     * @return
+     */
+    public static JSONArray getCoordsFromGeometry(Geometry geometry) {
+        MultiPolygon multiPolygon = MultiPolygon.fromPolygons(Collections.singletonList((Polygon) geometry));
+        JSONObject multiPolygonJson;
+        JSONArray multiPolygonCoords = null;
+        try {
+            multiPolygonJson = new JSONObject(multiPolygon.toJson());
+            multiPolygonCoords = (JSONArray) multiPolygonJson.get("coordinates");
+        } catch (JSONException e) {
+            Timber.e(e);
+        }
+        return multiPolygonCoords;
     }
 
 }
