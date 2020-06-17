@@ -94,15 +94,4 @@ public class RevealJsonFormActivity extends FormConfigurationJsonFormActivity im
         requestedLocation = true;
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        formFragment.getPresenter().getLocationUtils().stopLocationClient();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        formFragment.getPresenter().getLocationUtils().destroy();
-    }
 }
