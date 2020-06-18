@@ -58,6 +58,7 @@ import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
@@ -159,6 +160,12 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
     @Override
     public List<View> getViewsFromJson(String stepName, Context context, JsonFormFragment formFragment, JSONObject jsonObject, CommonListener listener) throws Exception {
         return getViewsFromJson(stepName, context, formFragment, jsonObject, listener, false);
+    }
+
+    @NonNull
+    @Override
+    public Set<String> getCustomTranslatableWidgetFields() {
+        return null;
     }
 
     @Override

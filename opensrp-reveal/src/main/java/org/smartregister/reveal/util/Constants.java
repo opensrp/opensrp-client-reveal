@@ -224,6 +224,10 @@ public interface Constants {
         String LARVAL_DIPPINGS_TABLE = "larval_dippings";
         String PAOT_TABLE = "potential_area_of_transmission";
         String IRS_VERIFICATION_TABLE = "irs_verification";
+        String CLIENT_TABLE = "client";
+        String EVENT_TABLE = "event";
+        String TASK_TABLE = "task";
+        String STRUCTURE_TABLE = "structure";
     }
 
     interface BusinessStatus {
@@ -363,6 +367,8 @@ public interface Constants {
         String REFAPP_BLOOD_SCREENING_FORM = "json.form/refapp_blood_screening.json";
 
         String REFAPP_CASE_CONFIRMATION_FORM = "json.form/refapp_case_confirmation.json";
+
+        String JSON_FORM_FOLDER = "json.form/";
 
 
         String OPERATIONAL_AREA_TAG = "operational_area";
@@ -575,6 +581,10 @@ public interface Constants {
         String CARD_SPRAY = "card_spray";
 
         String SYNC_STATUS = "syncStatus";
+
+        String TASK_SYNC_STATUS = "sync_Status";
+
+        String STRUCTURE_SYNC_STATUS = "sync_Status";
 
         String VALIDATION_STATUS = "validationStatus";
 

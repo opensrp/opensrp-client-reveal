@@ -48,6 +48,8 @@ public class TaskUtils {
 
     private static TaskUtils instance;
 
+    private RevealApplication revealApplication;
+
     public static TaskUtils getInstance() {
         if (instance == null) {
             instance = new TaskUtils();
@@ -60,6 +62,7 @@ public class TaskUtils {
         sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
         prefsUtil = PreferencesUtil.getInstance();
         planRepository = RevealApplication.getInstance().getPlanDefinitionRepository();
+        revealApplication = RevealApplication.getInstance();
     }
 
     public void generateBloodScreeningTask(Context context, String entityId, String structureId) {
@@ -101,6 +104,7 @@ public class TaskUtils {
         task.setOwner(sharedPreferences.fetchRegisteredANM());
         task.setSyncStatus(BaseRepository.TYPE_Created);
         taskRepository.addOrUpdate(task);
+        revealApplication.setSynced(false);
         return task;
     }
 
@@ -162,8 +166,9 @@ public class TaskUtils {
             task.setLastModified(new DateTime());
             task.setSyncStatus(BaseRepository.TYPE_Unsynced);
             taskRepository.addOrUpdate(task);
+            revealApplication.setSynced(false);
 
-            RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
+            revealApplication.setRefreshMapOnEventSaved(true);
 
             taskResetSuccessful = true;
         } catch (Exception e) {

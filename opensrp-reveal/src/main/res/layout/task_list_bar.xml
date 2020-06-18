@@ -23,6 +23,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/sync_badge"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_gravity="end|right|top"
+        android:layout_marginStart="@dimen/sync_badge_margin"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@id/menu_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/menu_label"
@@ -43,8 +53,8 @@
     <TextView
         android:id="@+id/intervention_type"
         style="@style/CustomFontTextViewStyle.NavBar.Black"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/task_register_launcher_horizontal_padding"
         android:background="@android:color/transparent"
         android:gravity="center"
@@ -52,6 +62,7 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/menu_label"
+        app:layout_constraintEnd_toStartOf="@+id/txt_map_label"
         app:layout_constraintTop_toTopOf="parent" />
 
 
