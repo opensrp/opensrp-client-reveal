@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/nav_container"
+    android:id="@+id/thailand_nav_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -10,34 +10,14 @@
     <ImageView
         android:id="@+id/reveal_icon"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/partner_logo_height"
         android:layout_marginStart="@dimen/drawer_margin"
-        android:layout_marginTop="@dimen/drawer_icon_margin"
+        android:layout_marginTop="@dimen/partner_logo_margin_top"
         android:contentDescription="@string/reveal_icon"
         android:scaleType="fitStart"
-        android:src="@drawable/ic_reveal_logo"
+        android:src="@drawable/ic_dvbd_logo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/application_version"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/drawer_margin"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/text_gray"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/reveal_icon" />
-
-    <TextView
-        android:id="@+id/application_updated"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/drawer_margin"
-        android:textColor="@color/text_gray"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/application_version" />
-
 
     <TextView
         android:id="@+id/sync_button"
@@ -49,17 +29,7 @@
         android:textColor="@color/button_blue"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/application_updated" />
-
-    <TextView
-        android:id="@+id/sync_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/drawer_second_margin"
-        android:layout_marginTop="@dimen/drawer_margin_vertical"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/application_updated" />
+        app:layout_constraintTop_toBottomOf="@id/reveal_icon" />
 
     <TextView
         android:id="@+id/btn_navMenu_p2pSyncBtn"
@@ -254,7 +224,25 @@
         android:textColor="@color/text_gray"
         android:layout_marginStart="@dimen/drawer_margin"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/application_version"
+        android:text="@string/thailand_attribution_text"/>
+    <ImageView
+        android:id="@+id/reveal_image_logo_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/drawer_icon_margin"
+        android:layout_marginStart="@dimen/reveal_logo_margin_start"
+        android:contentDescription="@string/reveal_icon"
+        android:src="@drawable/ic_reveal_image_logo_icon"
+        app:layout_constraintStart_toEndOf="@+id/attribution"
+        app:layout_constraintBottom_toTopOf="@+id/application_version"/>
+    <TextView
+        android:id="@+id/application_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/text_gray"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/attribution_text"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginStart="@dimen/drawer_margin"/>
+</android.support.constraint.ConstraintLayout>

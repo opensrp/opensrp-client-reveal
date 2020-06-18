@@ -105,6 +105,7 @@ public class ListTaskInteractor extends BaseInteractor {
     private InteractorUtils interactorUtils;
     private StructureRepository structureRepository;
     private TaskRepository taskRepository;
+    private RevealApplication revealApplication;
 
     public ListTaskInteractor(ListTaskContract.Presenter presenter) {
         super(presenter);
@@ -112,6 +113,7 @@ public class ListTaskInteractor extends BaseInteractor {
         structureRepository = RevealApplication.getInstance().getContext().getStructureRepository();
         taskRepository = RevealApplication.getInstance().getTaskRepository();
         interactorUtils = new InteractorUtils(taskRepository, eventClientRepository, clientProcessor);
+        revealApplication = RevealApplication.getInstance();
     }
 
     public void fetchInterventionDetails(String interventionType, String featureId, boolean isForForm) {
@@ -378,7 +380,10 @@ public class ListTaskInteractor extends BaseInteractor {
             structure.getProperties().setStatus(INACTIVE);
             structureRepository.addOrUpdate(structure);
 
+
             taskRepository.cancelTasksForEntity(feature.id());
+
+            revealApplication.setSynced(false);
         } catch (Exception e) {
             Timber.e(e);
         }
@@ -410,7 +415,7 @@ public class ListTaskInteractor extends BaseInteractor {
             task.setStatus(Task.TaskStatus.COMPLETED);
             task.setLastModified(new DateTime());
             taskRepository.addOrUpdate(task);
-
+            revealApplication.setSynced(false);
             Event event = FamilyJsonFormUtils.createFamilyEvent(task.getForEntity(), feature.id(), details, FamilyConstants.EventType.FAMILY_REGISTRATION_INELIGIBLE);
             event.addObs(new Obs().withValue(reasonUnligible).withFieldCode("eligible").withFieldType("formsubmissionField"));
             event.addObs(new Obs().withValue(task.getBusinessStatus()).withFieldCode("whyNotEligible").withFieldType("formsubmissionField"));

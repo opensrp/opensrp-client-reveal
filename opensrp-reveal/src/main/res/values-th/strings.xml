@@ -57,6 +57,7 @@
     <string name="reveal_icon">ไอคอน Reveal</string>
 
     <string name="attribution_text">ดำเนินการโดย OpenSRP\nBuilt on mSpray and DiSARM</string>
+    <string name="thailand_attribution_text">ดำเนินการโดย Reveal</string>
 
     <string name="request_password_title">คุณยังไม่อยู่ใกล้สิ่งปลูกสร้างเป้าหมาย</string>
     <string name="enter_admin_password">กรุณาป้อนรหัสแอดมินฯผู้ดูแลระบบ</string>
