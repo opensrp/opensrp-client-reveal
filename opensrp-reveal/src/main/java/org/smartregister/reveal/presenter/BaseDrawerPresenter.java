@@ -1,9 +1,9 @@
 package org.smartregister.reveal.presenter;
 
-import android.app.Activity;
-
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
+import android.app.Activity;
+
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
