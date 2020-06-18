@@ -2,9 +2,10 @@ package org.smartregister.reveal.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.annotation.Nullable;
 
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
