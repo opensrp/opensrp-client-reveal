@@ -63,7 +63,7 @@
                 android:paddingTop="10dp"
                 android:paddingEnd="0dp"
                 android:singleLine="true"
-                android:text="Total children remaining"
+                android:text="Children not seen (no dose recorded)"
                 android:textColor="@color/text_black"
                 android:textSize="17sp" />
 
@@ -89,7 +89,7 @@
                 android:paddingTop="10dp"
                 android:paddingEnd="0dp"
                 android:singleLine="true"
-                android:text="Children not administered medicine"
+                android:text="Children seen + not administered drugs"
                 android:textColor="@color/text_black"
                 android:textSize="17sp" />
 

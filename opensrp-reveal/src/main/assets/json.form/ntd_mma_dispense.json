@@ -92,6 +92,10 @@
           "value": true,
           "err": "Required field"
         },
+        "v_max": {
+          "value": "200",
+          "err": "Child height field to maximum 200cm"
+        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
