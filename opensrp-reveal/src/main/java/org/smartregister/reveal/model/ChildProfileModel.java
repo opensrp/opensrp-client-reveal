@@ -39,6 +39,11 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
                 .withColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.GENDER)
                 .withColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.GRADE)
                 .withColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.UNIQUE_ID)
+                .withColumn(
+                        "(select business_status from " + Constants.DatabaseKeys.TASK_TABLE + " where for = " +
+                                Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.BASE_ENTITY_ID + " and code = '" +
+                                Constants.Intervention.MDA_DISPENSE + "' order by authored_on desc limit 1) as " + Constants.DatabaseKeys.STATUS
+                )
 
                 .withMainTable(Constants.DatabaseKeys.CHILD_TABLE);
 
@@ -54,6 +59,7 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
             child.setGender(getCursorValue(cursor, Constants.DatabaseKeys.GENDER));
             child.setGrade(getCursorValue(cursor, Constants.DatabaseKeys.GRADE));
             child.setUniqueID(getCursorValue(cursor, Constants.DatabaseKeys.UNIQUE_ID));
+            child.setTaskStatus(getCursorValue(cursor, Constants.DatabaseKeys.STATUS));
             return child;
         };
 

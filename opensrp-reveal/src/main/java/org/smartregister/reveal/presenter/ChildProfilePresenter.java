@@ -50,6 +50,7 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
                     if (view != null) {
                         if (result != null) {
                             view.onFetchResult(result);
+                            view.enableEditMDAForm(result.getTaskStatus());
                         } else {
                             view.onError(new IllegalStateException("Child not found"));
                         }
@@ -130,6 +131,11 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
                 }
             }
         });
+    }
+
+    @Override
+    public void startEditMDAForm(Context context, String baseEntityID) {
+        // TODO
     }
 
     @Override

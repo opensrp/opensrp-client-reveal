@@ -11,4 +11,10 @@
         android:enabled="true"
         android:title="@string/record_adr"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/edit_mda_form"
+        android:enabled="true"
+        android:visible="false"
+        android:title="Edit MDA"
+        app:showAsAction="never" />
 </menu>

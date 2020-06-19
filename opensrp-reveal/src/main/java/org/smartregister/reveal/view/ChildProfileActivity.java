@@ -34,6 +34,8 @@ import org.smartregister.view.activity.BaseProfileActivity;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.annotation.Nullable;
+
 import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
@@ -47,6 +49,8 @@ public class ChildProfileActivity extends BaseProfileActivity implements ChildPr
     private TextView tvNumber;
     private TextView tvGender;
     private TextView tvAge;
+    private Menu menu;
+    private Child child;
 
     public static void startMe(Activity activity, String childBaseEntityID) {
         Intent intent = new Intent(activity, ChildProfileActivity.class);
@@ -109,6 +113,9 @@ public class ChildProfileActivity extends BaseProfileActivity implements ChildPr
         } else if (i == R.id.record_adverse_drugs) {
             startADRForm();
             return true;
+        } else if (i == R.id.edit_mda_form) {
+            startEditMDAForm();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -117,6 +124,9 @@ public class ChildProfileActivity extends BaseProfileActivity implements ChildPr
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.child_profile_menu, menu);
+        this.menu = menu;
+        if (child != null)
+            enableEditMDAForm(child.getTaskStatus());
         return true;
     }
 
@@ -133,6 +143,7 @@ public class ChildProfileActivity extends BaseProfileActivity implements ChildPr
 
     @Override
     public void onFetchResult(Child child) {
+        this.child = child;
         String names = StringUtils.isBlank(child.getGrade()) ? child.getFullName() : child.getFullName() + ", " + child.getGrade();
         tvNames.setText(names);
         tvNumber.setText(child.getUniqueID());
@@ -169,6 +180,11 @@ public class ChildProfileActivity extends BaseProfileActivity implements ChildPr
     }
 
     @Override
+    public void startEditMDAForm() {
+        getPresenter().startEditMDAForm(getBaseContext(), childBaseEntityID);
+    }
+
+    @Override
     public void startJsonForm(JSONObject jsonObject, String formTitle) {
         Form form = new Form();
         form.setName(formTitle);
@@ -187,6 +203,17 @@ public class ChildProfileActivity extends BaseProfileActivity implements ChildPr
     @Override
     public void reloadFromSource() {
         fetchProfileData();
+    }
+
+    @Override
+    public void enableEditMDAForm(@Nullable String status) {
+        if (menu != null && status != null) {
+
+            boolean enableStatus = status.equals(Constants.BusinessStatus.VISITED_DRUG_ADMINISTERED) ||
+                    status.equals(Constants.BusinessStatus.VISITED_DRUG_NOT_ADMINISTERED);
+
+            menu.findItem(R.id.edit_mda_form).setVisible(enableStatus);
+        }
     }
 
     @Override

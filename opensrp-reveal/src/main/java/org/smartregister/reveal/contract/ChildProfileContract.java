@@ -28,9 +28,13 @@ public interface ChildProfileContract {
 
         void startADRForm();
 
+        void startEditMDAForm();
+
         void startJsonForm(JSONObject jsonObject, String formTitle);
 
         void reloadFromSource();
+
+        void enableEditMDAForm(String status);
     }
 
     interface Presenter extends BaseProfileContract.Presenter {
@@ -49,6 +53,8 @@ public interface ChildProfileContract {
         Model getModel();
 
         void startChildRegistrationForm(Context context, String baseEntityID);
+
+        void startEditMDAForm(Context context, String baseEntityID);
 
         void startADRForm(Context context, String baseEntityID);
 
