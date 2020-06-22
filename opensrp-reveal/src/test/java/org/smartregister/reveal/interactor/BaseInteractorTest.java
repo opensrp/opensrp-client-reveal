@@ -198,7 +198,6 @@ public class BaseInteractorTest extends BaseUnitTest {
         String locationId = UUID.randomUUID().toString();
         formObject.put("entity_id", locationId);
         JSONObject details = new JSONObject();
-        String taskId = UUID.randomUUID().toString();
         details.put(LOCATION_PARENT, locationId);
         formObject.put(DETAILS, details);
         Whitebox.setInternalState(interactor, "operationalAreaId", locationId);
@@ -214,7 +213,7 @@ public class BaseInteractorTest extends BaseUnitTest {
         interactor.saveJsonForm(formObject.toString());
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addEvent(anyString(), eventCaptor.capture());
         verify(clientProcessor, timeout(ASYNC_TIMEOUT)).processClient(eventClientCaptor.capture(), eq(true));
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructureAdded(featureArgumentCaptor.capture(), featureCoordinatesCaptor.capture(), doubleArgumentCaptor.capture());;
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructureAdded(featureArgumentCaptor.capture(), featureCoordinatesCaptor.capture(), doubleArgumentCaptor.capture());
         assertEquals(REGISTER_STRUCTURE_EVENT, eventCaptor.getValue().getString("eventType"));
         JSONArray obs = eventCaptor.getValue().getJSONArray("obs");
         assertEquals(4, obs.length());
