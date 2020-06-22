@@ -300,8 +300,14 @@ public class NativeFormProcessor {
             while (position < array.length()) {
                 JSONObject object = array.getJSONObject(position);
                 String key = object.getString(JsonFormConstants.KEY);
-                if (dictionary.containsKey(key))
-                    object.put(JsonFormConstants.VALUE, dictionary.get(key));
+                String type = object.getString(JsonFormConstants.TYPE);
+
+                if (dictionary.containsKey(key)) {
+                    Object val = type.equals(JsonFormConstants.CHECK_BOX) ? getCheckBoxValues(key, dictionary, object) :
+                            dictionary.get(key);
+
+                    object.put(JsonFormConstants.VALUE, val);
+                }
 
                 position++;
             }
@@ -309,6 +315,46 @@ public class NativeFormProcessor {
             step++;
         }
         return this;
+    }
+
+    private <T> JSONArray getCheckBoxValues(String key, Map<String, T> dictionary, JSONObject object) throws JSONException {
+        Map<String, String> options = getCheckBoxOptions(object);
+
+        Object val = dictionary.get(key);
+        JSONArray allOptions = val instanceof JSONArray ? (JSONArray) val : new JSONArray();
+        if (val instanceof String)
+            allOptions.put(val);
+
+        int x = 0;
+        int size = allOptions.length();
+
+        JSONArray jsonArray = new JSONArray();
+        while (x < size) {
+            String content = allOptions.getString(x);
+            jsonArray.put(options.get(content));
+            x++;
+        }
+
+        return jsonArray;
+    }
+
+    private Map<String, String> getCheckBoxOptions(JSONObject object) throws JSONException {
+        Map<String, String> options = new HashMap<>();
+        JSONArray jsonArray = object.getJSONArray(JsonFormConstants.OPTIONS_FIELD_NAME);
+
+        int pos = 0;
+        int size = jsonArray.length();
+        while (pos < size) {
+            JSONObject opt = jsonArray.getJSONObject(pos);
+
+            String text = opt.getString(JsonFormConstants.TEXT);
+            String key = opt.getString(JsonFormConstants.KEY);
+
+            options.put(text, key);
+            pos++;
+        }
+
+        return options;
     }
 
     public Location getCurrentOperationalArea() {

@@ -177,6 +177,15 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
         String jsonForm = Utils.readAssetContents(context, Constants.JsonForm.NTD_DRUG_ADVERSE_REACTION);
         JSONObject jsonObject = new JSONObject(jsonForm);
         jsonObject.put(Constants.Properties.BASE_ENTITY_ID, baseEntityID);
+
+        NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonObject);
+        JSONObject processedForm = getEventDao().getLastEvent(baseEntityID, Constants.EventType.MDA_ADVERSE_DRUG_REACTION);
+
+        if (processedForm != null) {
+            Map<String, Object> values = processor.getFormResults(processedForm);
+            processor.populateValues(values);
+        }
+
         return jsonObject;
     }
 }
