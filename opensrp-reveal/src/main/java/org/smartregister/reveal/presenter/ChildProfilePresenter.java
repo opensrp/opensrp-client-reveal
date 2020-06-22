@@ -4,11 +4,18 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.Task;
+import org.smartregister.repository.BaseRepository;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.ChildProfileContract;
+import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.model.Child;
+import org.smartregister.reveal.model.ChildModel;
 import org.smartregister.reveal.model.ChildProfileModel;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.NativeFormProcessor;
@@ -28,6 +35,8 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
     private CallableInteractor callableInteractor;
     private WeakReference<ChildProfileContract.View> viewWeakReference;
     private ChildProfileContract.Model model;
+
+    private TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
 
     public ChildProfilePresenter(ChildProfileContract.View view) {
         this.viewWeakReference = new WeakReference<>(view);
@@ -218,6 +227,73 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
                     .saveEvent()
 
                     // execute client processing
+                    .clientProcessForm();
+
+            return null;
+        };
+
+        myInteractor.execute(callable, new CallableInteractorCallBack<Void>() {
+            @Override
+            public void onResult(Void aVoid) {
+                ChildProfileContract.View view = getView();
+                if (view != null) {
+                    view.reloadFromSource();
+                    view.setLoadingState(false);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ChildProfileContract.View view = getView();
+                if (view == null) return;
+                view.onError(ex);
+                view.setLoadingState(false);
+            }
+        });
+    }
+
+    @Override
+    public void saveMDAForm(String jsonString, Context context) {
+        CallableInteractor myInteractor = getInteractor();
+
+        Callable<Void> callable = () -> {
+
+            ChildProfileContract.Model model = getModel();
+            String entityId = new JSONObject(jsonString).getString(Constants.Properties.BASE_ENTITY_ID);
+
+            // update metadata
+            NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonString)
+                    .withBindType(Constants.EventType.MDA_DISPENSE)
+                    .withEncounterType(Constants.EventType.MDA_DISPENSE)
+                    .withEntityId(entityId);
+
+            // get task
+            Task task = model.getCurrentTask(context, entityId);
+
+            // update the task
+            boolean completed = processor.getFieldValue("mmaDrugAdmin").equalsIgnoreCase("Yes");
+
+            task.setBusinessStatus(completed ?
+                    Constants.BusinessStatus.VISITED_DRUG_ADMINISTERED :
+                    Constants.BusinessStatus.VISITED_DRUG_NOT_ADMINISTERED
+            );
+
+            task.setStatus(Task.TaskStatus.COMPLETED);
+            if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+            }
+            task.setLastModified(new DateTime());
+            taskRepository.addOrUpdate(task);
+
+            // save event details
+            Location operationalArea = processor.getCurrentOperationalArea();
+            processor
+                    .tagLocationData(operationalArea)
+                    .tagTaskDetails(task)
+                    .tagEventMetadata()
+
+                    // save and clientM
+                    .saveEvent()
                     .clientProcessForm();
 
             return null;

@@ -8,7 +8,10 @@ import com.vijay.jsonwizard.constants.JsonFormConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.CoreLibrary;
 import org.smartregister.dao.AbstractDao;
+import org.smartregister.domain.Task;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.contract.ChildProfileContract;
 import org.smartregister.reveal.dao.EventDao;
 import org.smartregister.reveal.util.Constants;
@@ -67,6 +70,19 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
         };
 
         return AbstractDao.readSingleValue(composer.generateQuery(), dataMap);
+    }
+
+    @Override
+    public Task getCurrentTask(Context context, String baseEntityID) {
+        String taskSQL = "select _id from task where for = '" + baseEntityID + "' and code = '" + Constants.Intervention.MDA_DISPENSE + "' order by  authored_on desc limit 1";
+        DataMap<String> dataMap = cursor -> getCursorValue(cursor, "_id");
+
+        String taskId = AbstractDao.readSingleValue(taskSQL, dataMap);
+        return getTaskRepository().getTaskByIdentifier(taskId);
+    }
+
+    public TaskRepository getTaskRepository() {
+        return CoreLibrary.getInstance().context().getTaskRepository();
     }
 
     @Override

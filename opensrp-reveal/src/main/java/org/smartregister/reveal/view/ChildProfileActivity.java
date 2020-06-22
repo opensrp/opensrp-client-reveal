@@ -228,6 +228,8 @@ public class ChildProfileActivity extends BaseProfileActivity implements ChildPr
                     getPresenter().updateChild(jsonObject, getApplicationContext());
                 } else if (title.equals(Constants.EventType.MDA_ADVERSE_DRUG_REACTION)) {
                     getPresenter().saveADRForm(jsonObject, getApplicationContext());
+                } else if (title.equals(Constants.EventType.MDA_DISPENSE)) {
+                    getPresenter().saveMDAForm(jsonObject.toString(), getApplicationContext());
                 }
 
             } catch (JSONException e) {
