@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.dao.AbstractDao;
 import org.smartregister.reveal.contract.ChildProfileContract;
+import org.smartregister.reveal.dao.EventDao;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.NativeFormProcessor;
 import org.smartregister.util.JsonFormUtils;
@@ -26,6 +27,8 @@ import java.util.Map;
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
 
 public class ChildProfileModel extends AbstractDao implements ChildProfileContract.Model {
+
+    private EventDao eventDao;
 
     @Nullable
     @Override
@@ -68,7 +71,7 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
 
     @Override
     public JSONObject getRegistrationEditForm(Context context, String baseEntityID) throws Exception {
-        String jsonForm = Utils.readAssetContents(context, Constants.JsonForm.NTD_CHILD_REGISTRATION);
+        String jsonForm = readAssetContents(context, Constants.JsonForm.NTD_CHILD_REGISTRATION);
         JSONObject jsonObject = new JSONObject(jsonForm);
         jsonObject.put(Constants.Properties.BASE_ENTITY_ID, baseEntityID);
         jsonObject.put(ENCOUNTER_TYPE, Constants.EventType.UPDATE_CHILD_REGISTRATION);
@@ -106,6 +109,34 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
 
         // sort out the check boxes
         return jsonObject;
+    }
+
+    public String readAssetContents(Context context, String path) {
+        return Utils.readAssetContents(context, path);
+    }
+
+    @Override
+    public JSONObject getEditMDAForm(Context context, String baseEntityID) throws Exception {
+        String jsonForm = readAssetContents(context, Constants.JsonForm.NTD_MASS_DRUG_ADMINISTRATION);
+        JSONObject jsonObject = new JSONObject(jsonForm);
+        jsonObject.put(Constants.Properties.BASE_ENTITY_ID, baseEntityID);
+
+        NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonObject);
+        JSONObject processedForm = getEventDao().getLastEvent(baseEntityID, Constants.EventType.MDA_DISPENSE);
+
+        if (processedForm != null) {
+            Map<String, Object> values = processor.getFormResults(processedForm);
+            processor.populateValues(values);
+        }
+
+        return jsonObject;
+    }
+
+    private EventDao getEventDao() {
+        if (eventDao == null)
+            eventDao = EventDao.getInstance();
+
+        return eventDao;
     }
 
     private String convertToFormsDate(Object _value) throws ParseException {

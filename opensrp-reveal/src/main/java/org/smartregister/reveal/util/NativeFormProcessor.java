@@ -28,6 +28,7 @@ import org.smartregister.util.JsonFormUtils;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.smartregister.family.util.JsonFormUtils.RELATIONSHIPS;
@@ -245,7 +246,7 @@ public class NativeFormProcessor {
         return this;
     }
 
-    public UniqueIdRepository getUniqueIdRepository(){
+    public UniqueIdRepository getUniqueIdRepository() {
         return CoreLibrary.getInstance().context().getUniqueIdRepository();
     }
 
@@ -263,7 +264,34 @@ public class NativeFormProcessor {
         return ECSyncHelper.getInstance(getInstance().getContext().applicationContext());
     }
 
-    public NativeFormProcessor populateValues(Map<String, Object> dictionary) throws JSONException {
+    public Map<String, Object> getFormResults(JSONObject processedForm) throws JSONException {
+        Map<String, Object> result = new HashMap<>();
+
+        JSONArray obs = processedForm.getJSONArray("obs");
+        int pos = 0;
+        int total = obs.length();
+
+        while (pos < total) {
+            JSONObject jsonObject = obs.getJSONObject(pos);
+            String key = jsonObject.getString("fieldCode");
+
+            JSONArray humanReadableValues = jsonObject.getJSONArray("humanReadableValues");
+            JSONArray values = jsonObject.getJSONArray("values");
+
+            JSONArray value = humanReadableValues.length() == values.length() ? humanReadableValues : values;
+
+            if (value.length() == 1) {
+                result.put(key, value.getString(0));
+            } else if (value.length() > 1) {
+                result.put(key, value);
+            }
+            pos++;
+        }
+
+        return result;
+    }
+
+    public <T> NativeFormProcessor populateValues(Map<String, T> dictionary) throws JSONException {
         int step = 1;
         while (jsonForm.has("step" + step)) {
             JSONObject jsonStepObject = jsonForm.getJSONObject("step" + step);

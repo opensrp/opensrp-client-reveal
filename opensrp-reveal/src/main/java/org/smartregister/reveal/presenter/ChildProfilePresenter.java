@@ -135,7 +135,32 @@ public class ChildProfilePresenter implements ChildProfileContract.Presenter {
 
     @Override
     public void startEditMDAForm(Context context, String baseEntityID) {
-        // TODO
+        CallableInteractor myInteractor = getInteractor();
+        ChildProfileContract.Model model = getModel();
+        Callable<JSONObject> callable = () -> model.getEditMDAForm(context, baseEntityID);
+        myInteractor.execute(callable, new CallableInteractorCallBack<JSONObject>() {
+            @Override
+            public void onResult(JSONObject jsonObject) {
+                ChildProfileContract.View view = getView();
+                if (view != null) {
+                    if (jsonObject != null) {
+                        view.startJsonForm(jsonObject, context.getString(R.string.edit_student));
+                    } else {
+                        view.onError(new IllegalArgumentException("Form not found"));
+                    }
+                    view.setLoadingState(false);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ChildProfileContract.View view = getView();
+                if (view != null) {
+                    view.onError(ex);
+                    view.setLoadingState(false);
+                }
+            }
+        });
     }
 
     @Override

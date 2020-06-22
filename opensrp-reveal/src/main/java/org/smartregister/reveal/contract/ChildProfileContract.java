@@ -73,6 +73,9 @@ public interface ChildProfileContract {
         JSONObject getRegistrationEditForm(Context context, String baseEntityID) throws Exception;
 
         @WorkerThread
+        JSONObject getEditMDAForm(Context context, String baseEntityID) throws Exception;
+
+        @WorkerThread
         JSONObject getADRForm(Context context, String baseEntityID) throws JSONException;
 
     }
