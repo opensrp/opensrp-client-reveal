@@ -140,7 +140,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private RefreshGeowidgetReceiver refreshGeowidgetReceiver = new RefreshGeowidgetReceiver();
 
-    private SyncProgressBroadcastReceiver syncProgressBroadcastReceiver;
+    private SyncProgressBroadcastReceiver syncProgressBroadcastReceiver = new SyncProgressBroadcastReceiver(this);
 
     private boolean hasRequestedLocation;
 
@@ -802,9 +802,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
         IntentFilter filter = new IntentFilter(Action.STRUCTURE_TASK_SYNCED);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(refreshGeowidgetReceiver, filter);
-        if (syncProgressBroadcastReceiver == null){
-            syncProgressBroadcastReceiver = new SyncProgressBroadcastReceiver(this);
-        }
         IntentFilter syncProgressFilter = new IntentFilter(AllConstants.SYNC_PROGRESS.ACTION_SYNC_PROGRESS);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(syncProgressBroadcastReceiver, syncProgressFilter);
         drawerView.onResume();
@@ -815,9 +812,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void onPause() {
         SyncStatusBroadcastReceiver.getInstance().removeSyncStatusListener(this);
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(refreshGeowidgetReceiver);
-        if (syncProgressBroadcastReceiver != null){
-            LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(syncProgressBroadcastReceiver);
-        }
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(syncProgressBroadcastReceiver);
         RevealApplication.getInstance().setMyLocationComponentEnabled(revealMapHelper.isMyLocationComponentActive(this, myLocationButton));
         super.onPause();
     }
