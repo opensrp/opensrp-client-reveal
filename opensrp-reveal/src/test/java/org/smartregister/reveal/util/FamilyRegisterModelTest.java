@@ -18,6 +18,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
+import static org.smartregister.reveal.util.Constants.Properties.PLAN_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
@@ -50,6 +51,8 @@ public class FamilyRegisterModelTest extends BaseUnitTest {
 
     @Test
     public void testProcessRegistration() {
+        String expectedPlanId = "a8b3010c-1ba5-556d-8b16-71266397b8b9";
+        PreferencesUtil.getInstance().setCurrentPlanId(expectedPlanId);
         List<FamilyEventClient> actualEventClientList = familyRegisterModel.processRegistration(TestingUtils.familyRegJSON);
 
         assertEquals(2, actualEventClientList.size());
@@ -60,6 +63,7 @@ public class FamilyRegisterModelTest extends BaseUnitTest {
         assertEquals(COMPLETE, actualEvent.getDetails().get(TASK_BUSINESS_STATUS));
         assertEquals("struct1", actualEvent.getDetails().get(LOCATION_UUID));
         assertEquals(Task.TaskStatus.READY.name(), actualEvent.getDetails().get(TASK_STATUS));
+        assertEquals(expectedPlanId, actualEvent.getDetails().get(PLAN_IDENTIFIER));
 
     }
 }
