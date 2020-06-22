@@ -17,6 +17,8 @@ public interface ChildFilterFragmentContract {
 
         void bindLayout();
 
+        void updateParameters();
+
         @NonNull
         Presenter loadPresenter();
 

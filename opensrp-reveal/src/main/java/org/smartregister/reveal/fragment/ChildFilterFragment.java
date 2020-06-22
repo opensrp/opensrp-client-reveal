@@ -1,6 +1,8 @@
 package org.smartregister.reveal.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Consumer;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,7 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.smartregister.domain.Location;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.ChildFilterFragmentContract;
@@ -27,6 +30,7 @@ import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.ChildRegisterActivity;
 import org.smartregister.util.GenericInteractor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,14 +50,24 @@ public class ChildFilterFragment extends Fragment implements ChildFilterFragment
     private RadioButton radioGradeName;
     private RadioButton radioGradeAge;
     private RadioButton radioAge;
+    @Nullable
+    private HashMap<String, List<String>> filterAndSearch;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            Serializable serializable = bundle.getSerializable(Constants.ChildFilter.FILTER_PAYLOAD);
+            if (serializable != null)
+                filterAndSearch = (HashMap<String, List<String>>) serializable;
+        }
+
         view = inflater.inflate(R.layout.child_register_filter_fragment, container, false);
         bindLayout();
         loadPresenter();
         reloadParameters();
+        updateParameters();
 
         return view;
     }
@@ -88,6 +102,60 @@ public class ChildFilterFragment extends Fragment implements ChildFilterFragment
         linearLayoutGrades.removeAllViews();
 
         linearLayoutAges = view.findViewById(R.id.linearLayoutAges);
+    }
+
+    @Override
+    public void updateParameters() {
+        if (filterAndSearch != null) {
+
+            List<String> sort = filterAndSearch.get(Constants.ChildFilter.SORT);
+            if (radioGradeName != null && sort != null) {
+
+                boolean hasGrade = sort.contains(Constants.DatabaseKeys.GRADE);
+                boolean hasName = sort.contains(Constants.DatabaseKeys.LAST_NAME);
+                boolean hasAge = sort.contains(Constants.DatabaseKeys.DOB + " DESC ");
+
+                if (hasGrade && hasName) {
+                    radioGradeName.setChecked(true);
+                } else if (hasGrade && hasAge) {
+                    radioGradeAge.setChecked(true);
+                } else if (hasAge) {
+                    radioAge.setChecked(true);
+                }
+
+            }
+
+            redrawLayout(filterAndSearch.get(Constants.ChildFilter.FILTER_GRADE), linearLayoutGrades);
+            redrawLayout(filterAndSearch.get(Constants.ChildFilter.FILTER_AGE), linearLayoutAges);
+        }
+    }
+
+    private void redrawLayout(List<String> values, LinearLayout linearLayout) {
+        if (linearLayout == null || values == null) return;
+
+        int pos = 0;
+        int size = linearLayout.getChildCount();
+        while (pos < size) {
+            CheckBox checkBox = (CheckBox) linearLayout.getChildAt(pos);
+            String text = getText(linearLayout.getContext(), checkBox.getText().toString());
+            if (values.contains(text))
+                checkBox.setChecked(true);
+            pos++;
+        }
+    }
+
+    private String getText(Context context, String text) {
+        if (text.equalsIgnoreCase(context.getString(R.string.range_6_10))) {
+            return "6:10";
+        } else if (text.equalsIgnoreCase(context.getString(R.string.range_11_15))) {
+            return "11:15";
+        } else if (text.equalsIgnoreCase(context.getString(R.string.range_16_18))) {
+            return "16:18";
+        } else if (text.equalsIgnoreCase(context.getString(R.string.adult))) {
+            return "Adult";
+        } else {
+            return text;
+        }
     }
 
     @Override
@@ -174,6 +242,7 @@ public class ChildFilterFragment extends Fragment implements ChildFilterFragment
             checkBox.setText(StringUtils.isBlank(grade) ? "Unknown" : grade);
             linearLayoutGrades.addView(checkBox);
         }
+        updateParameters();
     }
 
     @Override
