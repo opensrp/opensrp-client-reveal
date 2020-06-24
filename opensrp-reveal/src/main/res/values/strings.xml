@@ -351,5 +351,5 @@
     <string name="tested">Tested</string>
     <string name="not_tested">Not Tested</string>
     <string name="yes">Yes</string>
-    <string name="progressBarLabel">Syncing %s : %d%% complete...</string>
+    <string name="progressBarLabel">Syncing %s : %d%% </string>
 </resources>
