@@ -164,6 +164,8 @@ android {
 
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
+    forkEvery = 40
+    maxHeapSize = "2g"
 }
 
 dependencies {
