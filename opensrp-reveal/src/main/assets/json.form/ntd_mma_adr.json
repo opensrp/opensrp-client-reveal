@@ -197,11 +197,7 @@
             "openmrs_entity": "concept",
             "openmrs_entity_id": "died"
           }
-        ],
-        "v_required": {
-          "value": true,
-          "err": "This field is required"
-        }
+        ]
       }
     ]
   }
