@@ -66,6 +66,7 @@ android {
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = [eventBusIndex: 'org.smartregister.reveal.RevelEventBusIndex']
+                includeCompileClasspath = true
             }
         }
 
