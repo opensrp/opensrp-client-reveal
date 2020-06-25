@@ -13,14 +13,14 @@ import com.vijay.jsonwizard.constants.JsonFormConstants;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.fragment.RevealJsonFormFragment;
-import org.smartregister.view.activity.DynamicJsonFormActivity;
+import org.smartregister.view.activity.FormConfigurationJsonFormActivity;
 
 import io.ona.kujaku.utils.Constants;
 
 /**
  * Created by samuelgithengi on 12/13/18.
  */
-public class RevealJsonFormActivity extends DynamicJsonFormActivity implements UserLocationView {
+public class RevealJsonFormActivity extends FormConfigurationJsonFormActivity implements UserLocationView {
 
     private RevealJsonFormFragment formFragment;
 
