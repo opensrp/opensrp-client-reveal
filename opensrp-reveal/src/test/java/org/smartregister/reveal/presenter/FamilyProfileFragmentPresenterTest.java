@@ -2,7 +2,7 @@ package org.smartregister.reveal.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.widget.TextView;
 
 import net.sqlcipher.Cursor;

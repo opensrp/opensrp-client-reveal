@@ -1,9 +1,9 @@
 package org.smartregister.reveal.view;
 
 import android.content.Intent;
-import android.support.annotation.VisibleForTesting;
-import android.support.v4.app.Fragment;
-import android.util.Log;
+import androidx.annotation.VisibleForTesting;
+import androidx.fragment.app.Fragment;
+
 import android.view.View;
 
 import org.json.JSONObject;

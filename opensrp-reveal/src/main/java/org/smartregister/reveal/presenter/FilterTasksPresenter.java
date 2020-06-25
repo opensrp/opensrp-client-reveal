@@ -1,7 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Intent;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 import android.view.ViewGroup;
 import android.widget.ToggleButton;
 

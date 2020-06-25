@@ -1,6 +1,6 @@
 package org.smartregister.reveal.presenter;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.mapbox.geojson.Feature;
 

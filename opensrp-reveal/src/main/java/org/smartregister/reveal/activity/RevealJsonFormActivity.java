@@ -4,7 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
+
+import androidx.fragment.app.Fragment;
 
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 
@@ -55,7 +57,7 @@ public class RevealJsonFormActivity extends DynamicJsonFormActivity implements U
     }
 
     @Override
-    public void onAttachFragment(android.support.v4.app.Fragment fragment) {
+    public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
         if (fragment instanceof RevealJsonFormFragment) {
             formFragment = (RevealJsonFormFragment) fragment;
