@@ -155,6 +155,9 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
                     composer.withSortColumn(s);
                 }
             }
+        } else {
+            composer.withSortColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.GRADE + " ASC");
+            composer.withSortColumn(Constants.DatabaseKeys.CHILD_TABLE + "." + Constants.DatabaseKeys.LAST_NAME + " DESC");
         }
     }
 
