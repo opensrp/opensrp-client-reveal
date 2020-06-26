@@ -3,7 +3,7 @@ package org.smartregister.reveal.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import com.mapbox.geojson.Feature;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
@@ -187,6 +187,8 @@ public class RevealJsonFormUtils {
         formData.put(Properties.LOCATION_VERSION, structureVersion);
         formData.put(Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
         formData.put(Properties.FORM_VERSION, formJson.optString("form_version"));
+        String planIdentifier = PreferencesUtil.getInstance().getCurrentPlanId();
+        formData.put(Properties.PLAN_IDENTIFIER, planIdentifier);
         formJson.put(DETAILS, formData);
         return formJson;
     }

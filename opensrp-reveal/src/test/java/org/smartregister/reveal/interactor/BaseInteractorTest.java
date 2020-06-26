@@ -2,6 +2,8 @@ package org.smartregister.reveal.interactor;
 
 import android.content.Context;
 
+import com.mapbox.geojson.Feature;
+
 import net.sqlcipher.Cursor;
 import net.sqlcipher.MatrixCursor;
 import net.sqlcipher.database.SQLiteDatabase;
@@ -30,10 +32,15 @@ import org.smartregister.family.util.Constants;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
+import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.reveal.widget.GeoWidgetFactory;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Cache;
 import org.smartregister.util.JsonFormUtils;
@@ -52,8 +59,12 @@ import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.JsonForm.PAOT_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.APP_VERSION_NAME;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
+import static org.smartregister.reveal.util.Constants.Properties.PLAN_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
+import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.util.JsonFormUtils.VALUE;
 import static org.smartregister.util.JsonFormUtils.VALUES;
 
@@ -83,6 +94,9 @@ public class BaseInteractorTest extends BaseUnitTest {
     @Mock
     private EventClientRepository eventClientRepository;
 
+    @Mock
+    private TaskUtils taskUtils;
+
     @Captor
     private ArgumentCaptor<CommonPersonObjectClient> clientArgumentCaptor;
 
@@ -91,6 +105,15 @@ public class BaseInteractorTest extends BaseUnitTest {
 
     @Captor
     private ArgumentCaptor<List<EventClient>> eventClientCaptor;
+
+    @Captor
+    private ArgumentCaptor<JSONArray> featureCoordinatesCaptor;
+
+    @Captor
+    private ArgumentCaptor<Feature> featureArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<Double> doubleArgumentCaptor;
 
     private BaseInteractor interactor;
 
@@ -103,6 +126,7 @@ public class BaseInteractorTest extends BaseUnitTest {
         Whitebox.setInternalState(interactor, "database", database);
         Whitebox.setInternalState(interactor, "clientProcessor", clientProcessor);
         Whitebox.setInternalState(interactor, "eventClientRepository", eventClientRepository);
+        Whitebox.setInternalState(interactor, "taskUtils", taskUtils);
     }
 
 
@@ -163,6 +187,55 @@ public class BaseInteractorTest extends BaseUnitTest {
         assertEquals(2, event.getDetails().size());
         assertEquals(taskId, event.getDetails().get(TASK_IDENTIFIER));
         assertEquals(structureId, event.getBaseEntityId());
+    }
+
+    @Test
+    public void testSaveRegisterStructureForm() throws JSONException {
+        String form = AssetHandler.readFileFromAssetsFolder(org.smartregister.reveal.util.Constants.JsonForm.ADD_STRUCTURE_FORM, context);
+        String planIdentifier = UUID.randomUUID().toString();
+        PreferencesUtil.getInstance().setCurrentPlanId(planIdentifier);
+        JSONObject formObject = new JSONObject(form);
+        String locationId = UUID.randomUUID().toString();
+        formObject.put("entity_id", locationId);
+        JSONObject details = new JSONObject();
+        details.put(LOCATION_PARENT, locationId);
+        formObject.put(DETAILS, details);
+        Whitebox.setInternalState(interactor, "operationalAreaId", locationId);
+        String structureOb = "{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[28.35228319086664,-15.421616685545176,0]},\"properties\":null}";
+        JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formObject), "structure").put(VALUE, structureOb);
+        double zoomLevel = 18.2d;
+        JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formObject), GeoWidgetFactory.ZOOM_LEVEL).put(VALUE, zoomLevel);
+        Task task = taskUtils.generateTask(context, locationId, locationId,
+                org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED, org.smartregister.reveal.util.Constants.Intervention.IRS, R.string.irs_task_description);
+        when(taskUtils.generateTask(context, locationId, locationId,
+                org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED, org.smartregister.reveal.util.Constants.Intervention.IRS, R.string.irs_task_description))
+                .thenReturn(task);
+        interactor.saveJsonForm(formObject.toString());
+        verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addEvent(anyString(), eventCaptor.capture());
+        verify(clientProcessor, timeout(ASYNC_TIMEOUT)).processClient(eventClientCaptor.capture(), eq(true));
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onStructureAdded(featureArgumentCaptor.capture(), featureCoordinatesCaptor.capture(), doubleArgumentCaptor.capture());
+        assertEquals(REGISTER_STRUCTURE_EVENT, eventCaptor.getValue().getString("eventType"));
+        JSONArray obs = eventCaptor.getValue().getJSONArray("obs");
+        assertEquals(4, obs.length());
+        assertEquals(structureOb, obs.getJSONObject(0).getJSONArray(VALUES).get(0));
+        assertEquals("Residential Structure", obs.getJSONObject(1).getJSONArray(VALUES).get(0));
+        assertEquals("Home", obs.getJSONObject(2).getJSONArray(VALUES).get(0));
+        assertEquals("18.2", obs.getJSONObject(3).getJSONArray(VALUES).get(0));
+        assertEquals(BuildConfig.VERSION_NAME, eventCaptor.getValue().getJSONObject(DETAILS).get(APP_VERSION_NAME));
+        assertEquals(planIdentifier, eventCaptor.getValue().getJSONObject(DETAILS).get(PLAN_IDENTIFIER));
+        assertEquals(locationId, eventCaptor.getValue().getJSONObject(DETAILS).get(LOCATION_PARENT));
+
+        assertEquals(1, eventClientCaptor.getValue().size());
+
+        Event event = eventClientCaptor.getValue().get(0).getEvent();
+        assertEquals(4, event.getObs().size());
+        assertEquals(structureOb, event.getObs().get(0).getValue());
+        assertEquals("Residential Structure", event.getObs().get(1).getValue());
+        assertEquals("Home",  event.getObs().get(2).getValue());
+        assertEquals("18.2", event.getObs().get(3).getValue());
+        assertEquals(BuildConfig.VERSION_NAME, event.getDetails().get(APP_VERSION_NAME));
+        assertEquals(planIdentifier, event.getDetails().get(PLAN_IDENTIFIER));
+        assertEquals(locationId, event.getDetails().get(LOCATION_PARENT));
     }
 
 

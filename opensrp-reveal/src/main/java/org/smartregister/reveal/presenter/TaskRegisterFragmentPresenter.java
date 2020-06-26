@@ -1,7 +1,7 @@
 package org.smartregister.reveal.presenter;
 
-import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
+import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
 import android.text.TextUtils;
 
 import com.google.common.annotations.VisibleForTesting;

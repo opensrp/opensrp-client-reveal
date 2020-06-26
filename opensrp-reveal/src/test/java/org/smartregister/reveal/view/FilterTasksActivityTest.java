@@ -1,7 +1,7 @@
 package org.smartregister.reveal.view;
 
 import android.content.Intent;
-import android.support.v7.widget.AppCompatSpinner;
+import androidx.appcompat.widget.AppCompatSpinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 

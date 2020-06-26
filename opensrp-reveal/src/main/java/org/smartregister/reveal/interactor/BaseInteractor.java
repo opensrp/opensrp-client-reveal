@@ -1,7 +1,7 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -268,6 +268,8 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     JSONObject eventDetails = new JSONObject();
                     eventDetails.put(Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
                     eventDetails.put(Properties.LOCATION_PARENT, operationalAreaId);
+                    String planIdentifier = PreferencesUtil.getInstance().getCurrentPlanId();
+                    eventDetails.put(Properties.PLAN_IDENTIFIER, planIdentifier);
                     jsonForm.put(DETAILS, eventDetails);
                     org.smartregister.domain.db.Event event = saveEvent(jsonForm, REGISTER_STRUCTURE_EVENT, STRUCTURE);
                     com.cocoahero.android.geojson.Feature feature = new com.cocoahero.android.geojson.Feature(new JSONObject(event.findObs(null, false, "structure").getValue().toString()));

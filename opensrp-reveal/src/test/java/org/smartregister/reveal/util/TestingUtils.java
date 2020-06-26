@@ -1,7 +1,7 @@
 package org.smartregister.reveal.util;
 
 import android.location.Location;
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

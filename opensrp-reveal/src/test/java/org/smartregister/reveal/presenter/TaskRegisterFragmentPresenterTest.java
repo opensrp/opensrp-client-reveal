@@ -1,7 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.location.Location;
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import org.json.JSONObject;
 import org.junit.Before;

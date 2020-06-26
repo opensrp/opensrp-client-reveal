@@ -2,9 +2,9 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Intent;
 import android.location.Location;
-import android.support.annotation.VisibleForTesting;
-import android.support.v4.util.Pair;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.VisibleForTesting;
+import androidx.core.util.Pair;
+import androidx.appcompat.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;

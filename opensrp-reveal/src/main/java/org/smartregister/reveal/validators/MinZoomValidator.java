@@ -1,6 +1,6 @@
 package org.smartregister.reveal.validators;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.vijay.jsonwizard.validators.edittext.MinNumericValidator;
 
