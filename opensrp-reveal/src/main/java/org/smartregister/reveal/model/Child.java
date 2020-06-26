@@ -1,6 +1,6 @@
 package org.smartregister.reveal.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;

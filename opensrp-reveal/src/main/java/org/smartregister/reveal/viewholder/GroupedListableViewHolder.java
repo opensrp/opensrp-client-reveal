@@ -1,7 +1,8 @@
 package org.smartregister.reveal.viewholder;
 
-import android.support.annotation.NonNull;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 import org.smartregister.reveal.contract.GroupListContract;
 import org.smartregister.view.ListContract;

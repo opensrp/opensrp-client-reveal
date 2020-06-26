@@ -1,7 +1,7 @@
 package org.smartregister.reveal.adapter;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.smartregister.reveal.viewholder.GroupedListableViewHolder;
 import org.smartregister.view.ListContract;

@@ -1,7 +1,7 @@
 package org.smartregister.reveal.util;
 
-import android.support.annotation.VisibleForTesting;
-import android.support.v4.util.Consumer;
+import androidx.annotation.VisibleForTesting;
+import androidx.core.util.Consumer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -3,9 +3,10 @@ package org.smartregister.reveal.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.Menu;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
@@ -106,7 +107,7 @@ public class ChildRegisterActivity extends SecuredActivity implements FormProces
                 requester.onFormProcessingResult(jsonString);
                 requester = null;
             }
-        }else{
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }

@@ -1,8 +1,8 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 
+import org.jetbrains.annotations.Nullable;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.ChildFilterFragmentContract;
 import org.smartregister.util.CallableInteractor;

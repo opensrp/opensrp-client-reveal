@@ -1,16 +1,13 @@
 package org.smartregister.reveal.presenter;
 
-import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
 import android.app.Activity;
-import android.support.design.widget.NavigationView;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Consumer;
-import android.support.v4.util.Pair;
-
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Consumer;
+import androidx.core.util.Pair;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.reflect.TypeToken;

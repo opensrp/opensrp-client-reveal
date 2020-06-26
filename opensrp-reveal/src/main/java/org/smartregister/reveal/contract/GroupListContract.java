@@ -1,6 +1,6 @@
 package org.smartregister.reveal.contract;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import org.smartregister.view.ListContract;
 
