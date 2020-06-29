@@ -97,6 +97,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         processClient(eventClientList, false);
     }
 
+    @Override
     public void processClient(List<EventClient> eventClients, boolean localEvents) {
         ClientClassification clientClassification = assetJsonToJava("ec_client_classification.json", ClientClassification.class);
         if (clientClassification == null) {
@@ -152,6 +153,10 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 if (!hasSyncedEventsInTarget && operationalAreaLocationId != null &&
                         operationalAreaLocationId.equals(operationalAreaId)) {
                     hasSyncedEventsInTarget = true;
+                }
+
+                if (localEvents) {
+                    processPlanEvaluation(eventClient);
                 }
             }
         }
