@@ -28,6 +28,7 @@ import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Obs;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.EventClient;
+
 import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
@@ -202,6 +203,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
     public void handleLasteventFound(org.smartregister.domain.Event event) {
         // handle in child class
     }
+
 
     private org.smartregister.domain.Event saveEvent(JSONObject jsonForm, String encounterType, String bindType) throws JSONException {
         String entityId = getString(jsonForm, ENTITY_ID);
