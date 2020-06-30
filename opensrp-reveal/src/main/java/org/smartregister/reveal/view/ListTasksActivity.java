@@ -10,13 +10,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -29,6 +22,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -46,6 +47,7 @@ import com.mapbox.pluginscalebar.ScaleBarPlugin;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.AllConstants.INTENT_KEY;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.Task;
@@ -68,7 +70,6 @@ import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
-import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.Country;
@@ -82,6 +83,7 @@ import timber.log.Timber;
 
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
+import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
@@ -364,7 +366,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     protected void initializeScaleBarPlugin(MapboxMap mapboxMap) {
-        if(displayDistanceScale()) {
+        if (displayDistanceScale()) {
             ScaleBarPlugin scaleBarPlugin = new ScaleBarPlugin(kujakuMapView, mapboxMap);
             // Create a ScaleBarOptions object to use custom styling
             ScaleBarOptions scaleBarOptions = new ScaleBarOptions(getContext());
@@ -769,8 +771,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void onSyncComplete(FetchStatus fetchStatus)
-    {
+    public void onSyncComplete(FetchStatus fetchStatus) {
         onSyncInProgress(fetchStatus);
         //Check sync status and Update UI to show sync status
         drawerView.checkSynced();
@@ -780,7 +781,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void onResume() {
         super.onResume();
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
-        IntentFilter filter = new IntentFilter(Action.STRUCTURE_TASK_SYNCED);
+        IntentFilter filter = new IntentFilter(STRUCTURE_TASK_SYNCED);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(refreshGeowidgetReceiver, filter);
         drawerView.onResume();
         listTaskPresenter.onResume();
@@ -855,12 +856,17 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         public void onReceive(Context context, Intent intent) {
             Bundle extras = intent.getExtras();
             boolean localSyncDone;
-            if (extras != null && extras.getBoolean(UPDATE_LOCATION_BUFFER_RADIUS)) {
+            if (STRUCTURE_TASK_SYNCED.equals(intent.getAction()) && extras != null && extras.getBoolean(UPDATE_LOCATION_BUFFER_RADIUS)) {
                 float bufferRadius = getLocationBuffer() / getPixelsPerDPI(getResources());
                 kujakuMapView.setLocationBufferRadius(bufferRadius);
-            } else {
+            } else if (STRUCTURE_TASK_SYNCED.equals(intent.getAction())) {
                 localSyncDone = extras != null && extras.getBoolean(LOCAL_SYNC_DONE);
                 listTaskPresenter.refreshStructures(localSyncDone);
+            } else if (INTENT_KEY.TASK_GENERATED_EVENT.equals(intent.getAction())) {
+                Task task = extras != null ? (Task) extras.getSerializable(INTENT_KEY.TASK_GENERATED) : null;
+                if (task != null) {
+                    listTaskPresenter.resetFeatureTasks(task.getStructureId(), task);
+                }
             }
         }
     }
