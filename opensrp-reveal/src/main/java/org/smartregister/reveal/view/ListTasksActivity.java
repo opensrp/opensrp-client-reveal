@@ -795,6 +795,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(syncProgressBroadcastReceiver, syncProgressFilter);
         drawerView.onResume();
         listTaskPresenter.onResume();
+
+        if (SyncStatusBroadcastReceiver.getInstance().isSyncing()) {
+            syncProgressSnackbar.show();
+            toggleProgressBarView(true);
+        }
     }
 
     @Override
