@@ -372,5 +372,6 @@
     <string name="range_6_10">6-10</string>
     <string name="range_11_15">11-15</string>
     <string name="range_16_18">16-18</string>
+    <string name="filter_or_sort">Filter / Sort</string>
 
 </resources>

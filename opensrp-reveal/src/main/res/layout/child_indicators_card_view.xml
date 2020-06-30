@@ -37,12 +37,12 @@
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp"
                 android:singleLine="true"
-                android:text="Children remaining until target"
+                android:text="Children registered"
                 android:textColor="@color/text_black"
                 android:textSize="17sp" />
 
             <org.smartregister.view.customcontrols.CustomFontTextView
-                android:id="@+id/tvChildrenRemainingToTarget"
+                android:id="@+id/tvChildrenRegistered"
                 style="@style/CustomFontTextViewStyle.ClientList.Light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,12 +63,12 @@
                 android:paddingTop="10dp"
                 android:paddingEnd="0dp"
                 android:singleLine="true"
-                android:text="Children not seen (no dose recorded)"
+                android:text="Children seen &amp; administered drugs"
                 android:textColor="@color/text_black"
                 android:textSize="17sp" />
 
             <org.smartregister.view.customcontrols.CustomFontTextView
-                android:id="@+id/tvRegisteredChildrenNotMMA"
+                android:id="@+id/tvChildrenSeenAndDrugAdministered"
                 style="@style/CustomFontTextViewStyle.ClientList.Light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -89,12 +89,38 @@
                 android:paddingTop="10dp"
                 android:paddingEnd="0dp"
                 android:singleLine="true"
-                android:text="Children seen + not administered drugs"
+                android:text="Children seen &amp; not administered drugs"
                 android:textColor="@color/text_black"
                 android:textSize="17sp" />
 
             <org.smartregister.view.customcontrols.CustomFontTextView
-                android:id="@+id/tvVisitedChildrenNotMMA"
+                android:id="@+id/tvChildrenSeenAndDrugNotAdministered"
+                style="@style/CustomFontTextViewStyle.ClientList.Light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="0dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="0dp"
+                android:text="10"
+                android:textColor="@color/light_grey_text"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <org.smartregister.view.customcontrols.CustomFontTextView
+                style="@style/CustomFontTextViewStyle.ClientList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:paddingStart="0dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="0dp"
+                android:singleLine="true"
+                android:text="Children not seen"
+                android:textColor="@color/text_black"
+                android:textSize="17sp" />
+
+            <org.smartregister.view.customcontrols.CustomFontTextView
+                android:id="@+id/tvChildrenNotSeen"
                 style="@style/CustomFontTextViewStyle.ClientList.Light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

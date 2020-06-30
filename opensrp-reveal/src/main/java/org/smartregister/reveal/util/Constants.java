@@ -515,9 +515,11 @@ public interface Constants {
 
     interface ChildRegister {
         String MMA_COVERAGE = "mma_coverage";
+        String MMA_CHILDREN_REGISTERED = "children_registered";
         String MMA_TARGET_REMAINING = "sac_remain";
         String MMA_NOT_VISITED = "not_visited";
         String MMA_VISITED_NOT_ADMINISTERED = "visited_no_mma";
+        String MMA_VISITED_AND_ADMINISTERED = "visited_and_mma";
         String DEFAULT_RESIDENCE = "default_residence";
     }
 

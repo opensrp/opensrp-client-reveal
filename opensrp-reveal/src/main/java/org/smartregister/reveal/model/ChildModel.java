@@ -92,6 +92,8 @@ public class ChildModel extends AbstractDao implements ChildRegisterFragmentCont
 
         result.put(Constants.ChildRegister.MMA_COVERAGE, registeredChildren == 0 ? 0 : ((administeredDrugs * 100) / registeredChildren));
         result.put(Constants.ChildRegister.MMA_TARGET_REMAINING, (int) ((registeredChildren * 0.9) - administeredDrugs));
+        result.put(Constants.ChildRegister.MMA_CHILDREN_REGISTERED, registeredChildren);
+        result.put(Constants.ChildRegister.MMA_VISITED_AND_ADMINISTERED, administeredDrugs);
         result.put(Constants.ChildRegister.MMA_NOT_VISITED, childrenNotVisited);
         result.put(Constants.ChildRegister.MMA_VISITED_NOT_ADMINISTERED, visitedNotAdministered);
 

@@ -241,14 +241,17 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
         progressIndicatorView.setProgress(coverage);
         progressIndicatorView.setTitle(getString(R.string.n_percent, coverage));
 
-        TextView tvChildrenRemainingToTarget = detailedReportCardView.findViewById(R.id.tvChildrenRemainingToTarget);
-        tvChildrenRemainingToTarget.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_TARGET_REMAINING));
+        TextView tvChildrenRegistered = detailedReportCardView.findViewById(R.id.tvChildrenRegistered);
+        tvChildrenRegistered.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_CHILDREN_REGISTERED));
 
-        TextView tvRegisteredChildrenNotMMA = detailedReportCardView.findViewById(R.id.tvRegisteredChildrenNotMMA);
-        tvRegisteredChildrenNotMMA.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_NOT_VISITED));
+        TextView tvChildrenSeenAndDrugAdministered = detailedReportCardView.findViewById(R.id.tvChildrenSeenAndDrugAdministered);
+        tvChildrenSeenAndDrugAdministered.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_VISITED_AND_ADMINISTERED));
 
-        TextView tvVisitedChildrenNotMMA = detailedReportCardView.findViewById(R.id.tvVisitedChildrenNotMMA);
-        tvVisitedChildrenNotMMA.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_VISITED_NOT_ADMINISTERED));
+        TextView tvChildrenSeenAndDrugNotAdministered = detailedReportCardView.findViewById(R.id.tvChildrenSeenAndDrugNotAdministered);
+        tvChildrenSeenAndDrugNotAdministered.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_VISITED_NOT_ADMINISTERED));
+
+        TextView tvChildrenNotSeen = detailedReportCardView.findViewById(R.id.tvChildrenNotSeen);
+        tvChildrenNotSeen.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_NOT_VISITED));
     }
 
     private String getMapValue(Map<String, Integer> reportCounts, String key) {

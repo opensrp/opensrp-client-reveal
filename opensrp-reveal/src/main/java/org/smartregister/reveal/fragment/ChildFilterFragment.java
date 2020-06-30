@@ -81,7 +81,7 @@ public class ChildFilterFragment extends Fragment implements ChildFilterFragment
     public void bindLayout() {
         // toolbar
         Toolbar toolbar = view.findViewById(R.id.filter_tasks_toolbar);
-        toolbar.setTitle(R.string.filter);
+        toolbar.setTitle(R.string.filter_or_sort);
         getAppCompatActivity().setSupportActionBar(toolbar);
         getAppCompatActivity().getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getAppCompatActivity().getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_close);
