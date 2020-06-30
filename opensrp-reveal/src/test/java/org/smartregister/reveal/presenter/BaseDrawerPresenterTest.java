@@ -1,5 +1,5 @@
 package org.smartregister.reveal.presenter;
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import org.junit.Before;
 import org.junit.Rule;

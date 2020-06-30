@@ -2,7 +2,7 @@ package org.smartregister.reveal.view;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.view.ViewPager;
+import androidx.viewpager.widget.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;

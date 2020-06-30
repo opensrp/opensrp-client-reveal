@@ -1,9 +1,9 @@
 package org.smartregister.reveal.view;
 
 import android.content.Context;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;

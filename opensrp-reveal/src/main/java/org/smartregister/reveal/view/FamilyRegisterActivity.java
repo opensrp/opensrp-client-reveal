@@ -2,8 +2,8 @@ package org.smartregister.reveal.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.NavUtils;
+import androidx.fragment.app.Fragment;
+import androidx.core.app.NavUtils;
 import android.view.MenuItem;
 
 import org.json.JSONObject;

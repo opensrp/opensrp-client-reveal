@@ -1,7 +1,7 @@
 package org.smartregister.reveal.contract;
 
 import android.content.Intent;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 import com.google.android.flexbox.FlexboxLayout;
 

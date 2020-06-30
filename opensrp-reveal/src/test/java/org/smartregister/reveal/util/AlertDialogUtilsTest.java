@@ -1,7 +1,7 @@
 package org.smartregister.reveal.util;
 
 import android.content.Context;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.widget.TextView;
 
 import org.junit.Test;

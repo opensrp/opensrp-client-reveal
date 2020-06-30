@@ -1,8 +1,8 @@
 package org.smartregister.reveal.contract;
 
 import android.app.Activity;
-import android.support.annotation.StringRes;
-import android.support.v4.util.Pair;
+import androidx.annotation.StringRes;
+import androidx.core.util.Pair;
 
 import org.smartregister.domain.PlanDefinition;
 

@@ -2,7 +2,7 @@ package org.smartregister.reveal.sync;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.smartregister.AllConstants;
 import org.smartregister.reveal.application.RevealApplication;
