@@ -83,10 +83,10 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     @Override
     public void generateTasks(Context applicationContext, String baseEntityId, String structureId) {
         appExecutors.diskIO().execute(() -> {
-            if (Utils.isFocusInvestigation())
+          /*  if (Utils.isFocusInvestigation())
                 taskUtils.generateBloodScreeningTask(applicationContext, baseEntityId, structureId);
             else if (Utils.isMDA())
-                taskUtils.generateMDADispenseTask(applicationContext, baseEntityId, structureId);
+                taskUtils.generateMDADispenseTask(applicationContext, baseEntityId, structureId);*/
             appExecutors.mainThread().execute(() -> {
                 presenter.onTasksGenerated();
             });

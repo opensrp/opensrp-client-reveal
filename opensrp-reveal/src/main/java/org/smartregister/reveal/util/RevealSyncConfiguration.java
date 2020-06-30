@@ -142,8 +142,13 @@ public class RevealSyncConfiguration extends SyncConfiguration {
         return LoginActivity.class;
     }
 
+
     @Override
     public boolean firebasePerformanceMonitoringEnabled() {
+        return true;
+    }
+
+    public boolean runPlanEvaluationOnClientProcessing() {
         return true;
     }
 }

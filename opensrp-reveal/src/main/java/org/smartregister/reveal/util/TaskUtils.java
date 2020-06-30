@@ -1,6 +1,7 @@
 package org.smartregister.reveal.util;
 
 import android.content.Context;
+
 import androidx.annotation.StringRes;
 
 import net.sqlcipher.Cursor;
@@ -24,6 +25,7 @@ import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import timber.log.Timber;
@@ -128,8 +130,12 @@ public class TaskUtils {
     }
 
     public void generateMDAAdherenceTask(Context context, String entityId, String structureId) {
-        generateTask(context, entityId, structureId, BusinessStatus.NOT_VISITED, Intervention.MDA_ADHERENCE,
-                R.string.mda_adherence_desciption);
+
+        Set<Task> tasks = taskRepository.getTasksByEntityAndCode(prefsUtil.getCurrentPlanId(), Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(), entityId, Intervention.MDA_ADHERENCE);
+        if (tasks == null || tasks.isEmpty()) {
+            generateTask(context, entityId, structureId, BusinessStatus.NOT_VISITED, Intervention.MDA_ADHERENCE,
+                    R.string.mda_adherence_desciption);
+        }
     }
 
     public void tagEventTaskDetails(List<Event> events, SQLiteDatabase sqLiteDatabase) {

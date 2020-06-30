@@ -321,7 +321,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     revealApplication.setSynced(false);
                     Context applicationContext = revealApplication.getApplicationContext();
                     Task task = null;
-                    if (StructureType.RESIDENTIAL.equals(structureType) && Utils.isFocusInvestigationOrMDA()) {
+                   /* if (StructureType.RESIDENTIAL.equals(structureType) && Utils.isFocusInvestigationOrMDA()) {
                         task = taskUtils.generateRegisterFamilyTask(applicationContext, structure.getId());
                     } else {
                         if (StructureType.RESIDENTIAL.equals(structureType)) {
@@ -337,7 +337,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                             task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
                                     BusinessStatus.NOT_VISITED, PAOT, R.string.poat_task_description);
                         }
-                    }
+                    }*/
                     clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
                     Task finalTask = task;
                     appExecutors.mainThread().execute(new Runnable() {

@@ -51,14 +51,14 @@ public class RevealFamilyRegisterInteractor extends org.smartregister.family.int
                 String entityId = eventClient.getClient().getBaseEntityId();
                 if (!generatedIds.contains(entityId)) {
                     generatedIds.add(entityId);
-                    if (Utils.isFocusInvestigation())
+                  /*  if (Utils.isFocusInvestigation())
                         taskUtils.generateBloodScreeningTask(context, entityId, structureId);
                     else if (Utils.isMDA())
-                        taskUtils.generateMDADispenseTask(context, entityId, structureId);
+                        taskUtils.generateMDADispenseTask(context, entityId, structureId);*/
                 }
             }
-            if (Utils.isFocusInvestigation())
-                taskUtils.generateBedNetDistributionTask(context, structureId);
+          /*  if (Utils.isFocusInvestigation())
+                taskUtils.generateBedNetDistributionTask(context, structureId);*/
             appExecutors.mainThread().execute(() -> presenter.onTasksGenerated(eventClientList));
         });
     }
