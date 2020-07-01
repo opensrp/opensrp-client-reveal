@@ -1,6 +1,7 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import net.sqlcipher.database.SQLiteDatabase;
@@ -77,10 +78,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     @Override
     public void generateTasks(Context applicationContext, String baseEntityId, String structureId) {
         appExecutors.diskIO().execute(() -> {
-          /*  if (Utils.isFocusInvestigation())
-                taskUtils.generateBloodScreeningTask(applicationContext, baseEntityId, structureId);
-            else if (Utils.isMDA())
-                taskUtils.generateMDADispenseTask(applicationContext, baseEntityId, structureId);*/
+            //TODO add hook when task is generated
             appExecutors.mainThread().execute(() -> {
                 presenter.onTasksGenerated();
             });
