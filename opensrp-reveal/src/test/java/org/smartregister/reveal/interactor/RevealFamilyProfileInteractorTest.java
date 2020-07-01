@@ -51,6 +51,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -222,7 +223,7 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
 
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).archiveTasksForEntity(structureId);
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).cancelTasksForEntity(structureId);
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onArchiveFamilyCompleted(true, task);
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onArchiveFamilyCompleted(true, nullable(Task.class));
 
     }
 
