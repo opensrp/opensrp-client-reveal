@@ -71,6 +71,7 @@ public class TaskUtils {
                     event.addDetails(Constants.Properties.TASK_STATUS, task.getStatus().name());
                     event.addDetails(Constants.Properties.LOCATION_ID, task.getForEntity());
                     event.addDetails(Constants.Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
+                    event.addDetails(Constants.Properties.PLAN_IDENTIFIER, task.getPlanIdentifier());
                     event.setLocationId(task.getGroupIdentifier());
                 }
 
