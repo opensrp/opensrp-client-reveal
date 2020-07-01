@@ -26,7 +26,7 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
-import org.smartregister.domain.db.Event;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.family.util.Constants;
 import org.smartregister.repository.EventClientRepository;
@@ -205,11 +205,6 @@ public class BaseInteractorTest extends BaseUnitTest {
         JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formObject), "structure").put(VALUE, structureOb);
         double zoomLevel = 18.2d;
         JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formObject), GeoWidgetFactory.ZOOM_LEVEL).put(VALUE, zoomLevel);
-        Task task = taskUtils.generateTask(context, locationId, locationId,
-                org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED, org.smartregister.reveal.util.Constants.Intervention.IRS, R.string.irs_task_description);
-        when(taskUtils.generateTask(context, locationId, locationId,
-                org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED, org.smartregister.reveal.util.Constants.Intervention.IRS, R.string.irs_task_description))
-                .thenReturn(task);
         interactor.saveJsonForm(formObject.toString());
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addEvent(anyString(), eventCaptor.capture());
         verify(clientProcessor, timeout(ASYNC_TIMEOUT)).processClient(eventClientCaptor.capture(), eq(true));

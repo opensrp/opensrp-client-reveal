@@ -85,14 +85,12 @@ public class RevealFamilyRegisterInteractorTest extends BaseUnitTest {
 
         String structureId = UUID.randomUUID().toString();
         interactor.generateTasks(eventClientList, structureId, context);
-        verify(taskUtils, timeout(ASYNC_TIMEOUT)).generateBloodScreeningTask(context, baseEntityId, structureId);
-        verify(taskUtils, timeout(ASYNC_TIMEOUT)).generateBedNetDistributionTask(context, structureId);
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksGenerated(eventClientList);
     }
 
     @Test
     public void testProcessClient() {
-        List<EventClient> eventClientList = Collections.singletonList(new EventClient(new org.smartregister.domain.db.Event()));
+        List<EventClient> eventClientList = Collections.singletonList(new EventClient(new org.smartregister.domain.Event()));
         interactor.processClient(eventClientList);
         verify(clientProcessor).processClient(eventClientList, true);
     }
