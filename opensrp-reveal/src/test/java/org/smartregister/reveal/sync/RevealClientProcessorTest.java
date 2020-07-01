@@ -15,11 +15,11 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Task;
-import org.smartregister.domain.db.Address;
-import org.smartregister.domain.db.Client;
-import org.smartregister.domain.db.Event;
+import org.smartregister.domain.Address;
+import org.smartregister.domain.Client;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.db.EventClient;
-import org.smartregister.domain.db.Obs;
+import org.smartregister.domain.Obs;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
@@ -196,7 +196,7 @@ public class RevealClientProcessorTest extends BaseUnitTest {
 
     @Test
     public void testProcessEventClientShouldNotMarkAsSynchedEventsWithoutServerVersion() {
-        sprayedEvent.setServerVersion(0);
+        sprayedEvent.setServerVersion(0l);
         when(taskRepository.getTaskByIdentifier(sprayedEvent.getDetails().get(Properties.TASK_IDENTIFIER))).thenReturn(task);
         clientProcessor.processClient(Collections.singletonList(new EventClient(sprayedEvent, null)));
 
