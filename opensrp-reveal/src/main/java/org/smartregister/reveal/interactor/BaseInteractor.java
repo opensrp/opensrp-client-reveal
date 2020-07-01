@@ -314,24 +314,8 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     revealApplication.setSynced(false);
                     Context applicationContext = revealApplication.getApplicationContext();
                     Task task = null;
-                   /* if (StructureType.RESIDENTIAL.equals(structureType) && Utils.isFocusInvestigationOrMDA()) {
-                        task = taskUtils.generateRegisterFamilyTask(applicationContext, structure.getId());
-                    } else {
-                        if (StructureType.RESIDENTIAL.equals(structureType)) {
-                            task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
-                                    BusinessStatus.NOT_VISITED, Intervention.IRS, R.string.irs_task_description);
-                        } else if (StructureType.MOSQUITO_COLLECTION_POINT.equals(structureType)) {
-                            task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
-                                    BusinessStatus.NOT_VISITED, Intervention.MOSQUITO_COLLECTION, R.string.mosquito_collection_task_description);
-                        } else if (StructureType.LARVAL_BREEDING_SITE.equals(structureType)) {
-                            task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
-                                    BusinessStatus.NOT_VISITED, Intervention.LARVAL_DIPPING, R.string.larval_dipping_task_description);
-                        } else if (StructureType.POTENTIAL_AREA_OF_TRANSMISSION.equals(structureType)) {
-                            task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
-                                    BusinessStatus.NOT_VISITED, PAOT, R.string.poat_task_description);
-                        }
-                    }*/
                     clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
+                    //TODO add a way of fetching generated task
                     Task finalTask = task;
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override

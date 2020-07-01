@@ -44,21 +44,7 @@ public class RevealFamilyRegisterInteractor extends org.smartregister.family.int
     @Override
     public void generateTasks(List<FamilyEventClient> eventClientList, String structureId, Context context) {
         appExecutors.diskIO().execute(() -> {
-            Set<String> generatedIds = new HashSet<>();
-            for (FamilyEventClient eventClient : eventClientList) {
-                if (eventClient.getClient().getLastName().equals("Family"))
-                    continue;
-                String entityId = eventClient.getClient().getBaseEntityId();
-                if (!generatedIds.contains(entityId)) {
-                    generatedIds.add(entityId);
-                  /*  if (Utils.isFocusInvestigation())
-                        taskUtils.generateBloodScreeningTask(context, entityId, structureId);
-                    else if (Utils.isMDA())
-                        taskUtils.generateMDADispenseTask(context, entityId, structureId);*/
-                }
-            }
-          /*  if (Utils.isFocusInvestigation())
-                taskUtils.generateBedNetDistributionTask(context, structureId);*/
+            //TODO add hook when task is generated
             appExecutors.mainThread().execute(() -> presenter.onTasksGenerated(eventClientList));
         });
     }
