@@ -37,12 +37,12 @@
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp"
                 android:singleLine="true"
-                android:text="Children registered"
+                android:text="SAC visited and MMA"
                 android:textColor="@color/text_black"
                 android:textSize="17sp" />
 
             <org.smartregister.view.customcontrols.CustomFontTextView
-                android:id="@+id/tvChildrenRegistered"
+                android:id="@+id/tvDoseRecordedAndDrugsGiven"
                 style="@style/CustomFontTextViewStyle.ClientList.Light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,12 +63,12 @@
                 android:paddingTop="10dp"
                 android:paddingEnd="0dp"
                 android:singleLine="true"
-                android:text="Children seen &amp; administered drugs"
+                android:text="SAC visited but no MMA"
                 android:textColor="@color/text_black"
                 android:textSize="17sp" />
 
             <org.smartregister.view.customcontrols.CustomFontTextView
-                android:id="@+id/tvChildrenSeenAndDrugAdministered"
+                android:id="@+id/tvChildrenNotAdministeredMedicine"
                 style="@style/CustomFontTextViewStyle.ClientList.Light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -89,12 +89,12 @@
                 android:paddingTop="10dp"
                 android:paddingEnd="0dp"
                 android:singleLine="true"
-                android:text="Children seen &amp; not administered drugs"
+                android:text="SAC not visited yet"
                 android:textColor="@color/text_black"
                 android:textSize="17sp" />
 
             <org.smartregister.view.customcontrols.CustomFontTextView
-                android:id="@+id/tvChildrenSeenAndDrugNotAdministered"
+                android:id="@+id/tvTotalChildrenRemaining"
                 style="@style/CustomFontTextViewStyle.ClientList.Light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -115,12 +115,12 @@
                 android:paddingTop="10dp"
                 android:paddingEnd="0dp"
                 android:singleLine="true"
-                android:text="Children not seen"
+                android:text="SAC remaining to reach target of 90%"
                 android:textColor="@color/text_black"
                 android:textSize="17sp" />
 
             <org.smartregister.view.customcontrols.CustomFontTextView
-                android:id="@+id/tvChildrenNotSeen"
+                android:id="@+id/tvChildrenRemainingUntilTarget"
                 style="@style/CustomFontTextViewStyle.ClientList.Light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

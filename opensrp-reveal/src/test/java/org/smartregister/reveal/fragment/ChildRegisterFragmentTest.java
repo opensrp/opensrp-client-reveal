@@ -238,13 +238,13 @@ public class ChildRegisterFragmentTest extends BaseUnitTest {
         Whitebox.setInternalState(fragment, "detailedReportCardView", detailedReportCardView);
 
         TextView tvChildrenRemainingToTarget = Mockito.mock(TextView.class);
-        Mockito.doReturn(tvChildrenRemainingToTarget).when(detailedReportCardView).findViewById(R.id.tvChildrenRegistered);
+        Mockito.doReturn(tvChildrenRemainingToTarget).when(detailedReportCardView).findViewById(R.id.tvDoseRecordedAndDrugsGiven);
 
         TextView tvRegisteredChildrenNotMMA = Mockito.mock(TextView.class);
-        Mockito.doReturn(tvRegisteredChildrenNotMMA).when(detailedReportCardView).findViewById(R.id.tvChildrenSeenAndDrugAdministered);
+        Mockito.doReturn(tvRegisteredChildrenNotMMA).when(detailedReportCardView).findViewById(R.id.tvChildrenNotAdministeredMedicine);
 
         TextView tvVisitedChildrenNotMMA = Mockito.mock(TextView.class);
-        Mockito.doReturn(tvVisitedChildrenNotMMA).when(detailedReportCardView).findViewById(R.id.tvChildrenSeenAndDrugNotAdministered);
+        Mockito.doReturn(tvVisitedChildrenNotMMA).when(detailedReportCardView).findViewById(R.id.tvTotalChildrenRemaining);
 
 
         fragment.onReportCountReloaded(reportCounts);

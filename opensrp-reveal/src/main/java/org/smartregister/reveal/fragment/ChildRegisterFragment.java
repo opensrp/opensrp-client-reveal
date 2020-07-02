@@ -241,17 +241,17 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
         progressIndicatorView.setProgress(coverage);
         progressIndicatorView.setTitle(getString(R.string.n_percent, coverage));
 
-        TextView tvChildrenRegistered = detailedReportCardView.findViewById(R.id.tvChildrenRegistered);
-        tvChildrenRegistered.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_CHILDREN_REGISTERED));
+        TextView tvDoseRecordedAndDrugsGiven = detailedReportCardView.findViewById(R.id.tvDoseRecordedAndDrugsGiven);
+        tvDoseRecordedAndDrugsGiven.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_VISITED_AND_ADMINISTERED));
 
-        TextView tvChildrenSeenAndDrugAdministered = detailedReportCardView.findViewById(R.id.tvChildrenSeenAndDrugAdministered);
-        tvChildrenSeenAndDrugAdministered.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_VISITED_AND_ADMINISTERED));
+        TextView tvChildrenNotAdministeredMedicine = detailedReportCardView.findViewById(R.id.tvChildrenNotAdministeredMedicine);
+        tvChildrenNotAdministeredMedicine.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_VISITED_NOT_ADMINISTERED));
 
-        TextView tvChildrenSeenAndDrugNotAdministered = detailedReportCardView.findViewById(R.id.tvChildrenSeenAndDrugNotAdministered);
-        tvChildrenSeenAndDrugNotAdministered.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_VISITED_NOT_ADMINISTERED));
+        TextView tvTotalChildrenRemaining = detailedReportCardView.findViewById(R.id.tvTotalChildrenRemaining);
+        tvTotalChildrenRemaining.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_NOT_VISITED));
 
-        TextView tvChildrenNotSeen = detailedReportCardView.findViewById(R.id.tvChildrenNotSeen);
-        tvChildrenNotSeen.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_NOT_VISITED));
+        TextView tvChildrenRemainingUntilTarget = detailedReportCardView.findViewById(R.id.tvChildrenRemainingUntilTarget);
+        tvChildrenRemainingUntilTarget.setText(getMapValue(reportCounts, Constants.ChildRegister.MMA_TARGET_REMAINING));
     }
 
     private String getMapValue(Map<String, Integer> reportCounts, String key) {
