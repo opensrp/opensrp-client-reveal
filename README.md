@@ -43,7 +43,7 @@ For more details check out <https://semver.org/>
 
 ## Authors/Team 
 -   The OpenSRP team
--  See the list of contributors who participated in this project from the [Contributors](../../graphs/contributors) link
+-   See the list of contributors who participated in this project from the [Contributors](../../graphs/contributors) link
 
 ## Contributing
 [Contribution guidelines](https://smartregister.atlassian.net/wiki/spaces/Documentation/pages/6619193/OpenSRP+Developer+s+Guide)
