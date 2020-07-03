@@ -14,7 +14,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Development setup
 
-### Steps to set up:
+### Steps to set up
 [OpenSRP android client app build](https://smartregister.atlassian.net/wiki/spaces/Documentation/pages/6619236/OpenSRP+App+Build)
 
 ### Running the tests
@@ -25,37 +25,35 @@ These instructions will get you a copy of the project up and running on your loc
 [Production releases](https://smartregister.atlassian.net/wiki/spaces/Documentation/pages/1141866503/How+to+create+a+release+APK)
 
 ## Features
-- Supports tasking functionality
-- Family profile for managing families and fmily members
-- Task register for displaying Available tasks for a given location in a given plan.
-- Map for displaying operational areas and structures within it
-- Support for FI (focus investigation), MDA (Mass drug adminstartion) and IRS (Indoor Residue Spray) plans
-- Task based color coding for both map view and task register
-- Downloading of offline maps
-- P2P sync
-- Base map layer switcher (switching between Mapbox and Digital globe maps)
-- Dynamic form configuration
-- Supports Editing focus area boundaries
+-  Supports tasking functionality
+-  Family profile for managing families and fmily members
+-  Task register for displaying Available tasks for a given location in a given plan.
+-  Map for displaying operational areas and structures within it
+-  Support for FI (focus investigation), MDA (Mass drug adminstartion) and IRS (Indoor Residue Spray) plans
+-  Task based color coding for both map view and task register
+-  Downloading of offline maps
+-  P2P sync
+-  Base map layer switcher (switching between Mapbox and Digital globe maps)
+-  Dynamic form configuration
+-  Supports Editing focus area boundaries
 
 ## Versioning
 We use SemVer for versioning. For the versions available, see the tags on this repository.
 For more details check out https://semver.org/
 
 ## Authors/Team 
-* The OpenSRP team
-* See the list of contributors who participated in this project from the [Contributors](../../graphs/contributors) link
-
+-  The OpenSRP team
+-  See the list of contributors who participated in this project from the [Contributors](../../graphs/contributors) link
 
 ## Contributing
 [Contribution guidelines](https://smartregister.atlassian.net/wiki/spaces/Documentation/pages/6619193/OpenSRP+Developer+s+Guide)
 
 ## Documentation
-Wiki https://smartregister.atlassian.net/wiki/spaces/Documentation
+Wiki [OpenSRP Documentation](https://smartregister.atlassian.net/wiki/spaces/Documentation)
 
 ## Support
-Email: support@ona.io
-Slack workspace: opensrp.slack.com
+Email: <support@ona.io>
+Slack workspace: <opensrp.slack.com>
 
 ## License
 This project is licensed under the Apache 2.0 License - see the LICENSE.md file for details
-
