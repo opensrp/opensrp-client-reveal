@@ -26,7 +26,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Features
 -  Supports tasking functionality
--  Family profile for managing families and fmily members
+-    Family profile for managing families and fmily members
 -  Task register for displaying Available tasks for a given location in a given plan.
 -  Map for displaying operational areas and structures within it
 -  Support for FI (focus investigation), MDA (Mass drug adminstartion) and IRS (Indoor Residue Spray) plans
@@ -34,12 +34,12 @@ These instructions will get you a copy of the project up and running on your loc
 -  Downloading of offline maps
 -  P2P sync
 -  Base map layer switcher (switching between Mapbox and Digital globe maps)
--  Dynamic form configuration
+ -  Dynamic form configuration
 -  Supports Editing focus area boundaries
 
 ## Versioning
 We use SemVer for versioning. For the versions available, see the tags on this repository.
-For more details check out https://semver.org/
+For more details check out <https://semver.org/>
 
 ## Authors/Team 
 -  The OpenSRP team
@@ -52,7 +52,7 @@ For more details check out https://semver.org/
 Wiki [OpenSRP Documentation](https://smartregister.atlassian.net/wiki/spaces/Documentation)
 
 ## Support
-Email: <support@ona.io>
+Email: <mailto:support@ona.io>
 Slack workspace: <opensrp.slack.com>
 
 ## License
