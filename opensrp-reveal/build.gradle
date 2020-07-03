@@ -46,7 +46,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 28
         versionCode 22
-        versionName "5.0.0-ALPHA-1"
+        versionName "5.0.0-RC1"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -128,7 +128,7 @@ android {
             buildConfigField "long", "PULL_UNIQUE_IDS_MINUTES", '15'
             buildConfigField "String", "ADMIN_PASSWORD_NOT_NEAR_STRUCTURES", '"AdminPass1"'
             buildConfigField "float", "MY_LOCATION_BUFFER", '25'
-            buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
+            buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'false'
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '60'
             buildConfigField "boolean", "DISPLAY_OUTSIDE_OPERATIONAL_AREA_MASK", 'false'
             buildConfigField "boolean", "DISPLAY_DISTANCE_SCALE", 'true'
