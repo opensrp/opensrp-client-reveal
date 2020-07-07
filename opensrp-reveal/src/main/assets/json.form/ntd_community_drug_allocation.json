@@ -1,0 +1,200 @@
+{
+  "count": "1",
+  "encounter_type": "Drug allocation to CDD team",
+  "entity_id": "",
+  "relational_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": "",
+    "look_up": {
+      "entity_id": "",
+      "value": ""
+    }
+  },
+  "step1": {
+    "title": "Drug allocation to CDD team",
+    "fields": [
+      {
+        "key": "nPZQreceivedtins",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "nPZQreceivedtins",
+        "type": "edit_text",
+        "hint": "Number of PZQ tins provided to CDD team",
+        "text_size": "8sp",
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "nPZQreceivedtinsize",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "nPZQreceivedtinsize",
+        "type": "native_radio",
+        "label": "Number of tablets per tin",
+        "options": [
+          {
+            "key": "500",
+            "text": "500"
+          },
+          {
+            "key": "1000",
+            "text": "1000"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "nPZQreceivedtinsizeother",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "nPZQreceivedtinsizeother",
+        "type": "edit_text",
+        "hint": "If other, enter number of tablets per tin",
+        "text_size": "8sp",
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Required field"
+        },
+        "v_max": {
+          "value": "2000",
+          "err": "Max number of pieces are 2000"
+        }
+      },
+      {
+        "key": "nPZQreceivedloose",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "nPZQreceivedloose",
+        "type": "edit_text",
+        "hint": "Enter number of loose tablets received",
+        "text_size": "8sp",
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "nPZQreceived",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "nPZQreceived",
+        "type": "hidden",
+        "hint": "Number of tablets received in this allocation",
+        "text_size": "8sp",
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "personNamereceiving",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "personNamereceiving",
+        "type": "edit_text",
+        "hint": "The person accepting the drugs should type in their name to confirm responsibility.",
+        "text_size": "8sp",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "personPhonenumberreceiving",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "personNamereceiving",
+        "type": "edit_text",
+        "hint": "Phone number of person accepting drugs",
+        "text_size": "8sp",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Please enter a number"
+        }
+      },
+      {
+        "key": "personNamewitness",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "personNamewitness",
+        "type": "edit_text",
+        "hint": "The witness should type in their name to confirm responsibility.",
+        "text_size": "8sp",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      }
+    ]
+  }
+}

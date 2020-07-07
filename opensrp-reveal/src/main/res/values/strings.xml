@@ -373,5 +373,10 @@
     <string name="range_11_15">11-15</string>
     <string name="range_16_18">16-18</string>
     <string name="filter_or_sort">Filter / Sort</string>
+    
+    <string name="registration_type">Registration Type</string>
+    <string name="registration_type_message">What type of registration do you want to perform</string>
+    <string name="registration_type_structure">New Structure</string>
+    <string name="registration_type_family">Floating Family</string>
 
 </resources>

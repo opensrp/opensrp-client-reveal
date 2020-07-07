@@ -10,13 +10,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -29,6 +22,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -80,6 +81,7 @@ import io.ona.kujaku.layers.BoundaryLayer;
 import io.ona.kujaku.utils.Constants;
 import timber.log.Timber;
 
+import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
@@ -122,6 +124,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     private MapboxMap mMapboxMap;
 
     private CardView sprayCardView;
+
+    private CardView eligibilityCardView;
 
     private TextView tvReason;
 
@@ -205,6 +209,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             }
         });
 
+        eligibilityCardView = findViewById(R.id.mark_eligibility_status);
+
+        findViewById(R.id.tv_eligible).setOnClickListener(this);
+
+        findViewById(R.id.tv_not_eligible).setOnClickListener(this);
+
+        findViewById(R.id.btn_collapse_eligibility_card_view).setOnClickListener(this);
+
         mosquitoCollectionCardView = findViewById(R.id.mosquito_collection_card_view);
 
         larvalBreedingCardView = findViewById(R.id.larval_breeding_card_view);
@@ -270,6 +282,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             setViewVisibility(indicatorsCardView, false);
         } else if (id == R.id.btn_collapse_irs_verification_card_view) {
             setViewVisibility(irsVerificationCardView, false);
+        } else if (id == R.id.btn_collapse_eligibility_card_view) {
+            setViewVisibility(eligibilityCardView, false);
         }
     }
 
@@ -281,6 +295,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         setViewVisibility(potentialAreaOfTransmissionCardView, false);
         setViewVisibility(indicatorsCardView, false);
         setViewVisibility(irsVerificationCardView, false);
+        setViewVisibility(eligibilityCardView, false);
     }
 
     private void setViewVisibility(View view, boolean isVisible) {
@@ -364,7 +379,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     protected void initializeScaleBarPlugin(MapboxMap mapboxMap) {
-        if(displayDistanceScale()) {
+        if (displayDistanceScale()) {
             ScaleBarPlugin scaleBarPlugin = new ScaleBarPlugin(kujakuMapView, mapboxMap);
             // Create a ScaleBarOptions object to use custom styling
             ScaleBarOptions scaleBarOptions = new ScaleBarOptions(getContext());
@@ -443,10 +458,29 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         filterCountLayout.setOnClickListener(this);
     }
 
+    private void onAddItemClicked() {
+        if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
+            AlertDialogUtils.displayNotificationWithCallback(getContext(), R.string.registration_type,
+                    R.string.registration_type_message, R.string.registration_type_structure, R.string.registration_type_family, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which == BUTTON_POSITIVE) {
+                                listTaskPresenter.onAddStructureClicked(revealMapHelper.isMyLocationComponentActive(getContext(), myLocationButton));
+                            } else if (which == BUTTON_NEGATIVE) {
+                                registerFamily();
+                            }
+                            dialog.dismiss();
+                        }
+                    });
+        } else {
+            listTaskPresenter.onAddStructureClicked(revealMapHelper.isMyLocationComponentActive(this, myLocationButton));
+        }
+    }
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_add_structure) {
-            listTaskPresenter.onAddStructureClicked(revealMapHelper.isMyLocationComponentActive(this, myLocationButton));
+            onAddItemClicked();
         } else if (v.getId() == R.id.change_spray_status) {
             listTaskPresenter.onChangeInterventionStatus(IRS);
         } else if (v.getId() == R.id.btn_undo_spray) {
@@ -473,7 +507,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 || v.getId() == R.id.btn_collapse_larval_breeding_card_view
                 || v.getId() == R.id.btn_collapse_paot_card_view
                 || v.getId() == R.id.btn_collapse_indicators_card_view
-                || v.getId() == R.id.btn_collapse_irs_verification_card_view) {
+                || v.getId() == R.id.btn_collapse_irs_verification_card_view
+                || v.getId() == R.id.btn_collapse_eligibility_card_view) {
             closeCardView(v.getId());
         } else if (v.getId() == R.id.task_register) {
             listTaskPresenter.onOpenTaskRegisterClicked();
@@ -483,6 +518,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             openIndicatorsCardView();
         } else if (v.getId() == R.id.filter_tasks_fab || v.getId() == R.id.filter_tasks_count_layout) {
             listTaskPresenter.onFilterTasksClicked();
+        } else if (v.getId() == R.id.tv_eligible) {
+            registerFamily();
+            closeCardView(R.id.btn_collapse_eligibility_card_view);
+        } else if (v.getId() == R.id.tv_not_eligible) {
+            closeCardView(R.id.btn_collapse_eligibility_card_view);
         }
     }
 
@@ -537,16 +577,23 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void registerFamily() {
         clearSelectedFeature();
-        Intent intent = new Intent(this, FamilyRegisterActivity.class);
-        intent.putExtra(START_REGISTRATION, true);
-        Feature feature = listTaskPresenter.getSelectedFeature();
-        intent.putExtra(Properties.LOCATION_UUID, feature.id());
-        intent.putExtra(Properties.TASK_IDENTIFIER, feature.getStringProperty(Properties.TASK_IDENTIFIER));
-        intent.putExtra(Properties.TASK_BUSINESS_STATUS, feature.getStringProperty(Properties.TASK_BUSINESS_STATUS));
-        intent.putExtra(Properties.TASK_STATUS, feature.getStringProperty(Properties.TASK_STATUS));
-        if (feature.hasProperty(Properties.STRUCTURE_NAME))
-            intent.putExtra(Properties.STRUCTURE_NAME, feature.getStringProperty(Properties.STRUCTURE_NAME));
-        startActivity(intent);
+
+        if (Country.NTD_COMMUNITY == BuildConfig.BUILD_COUNTRY) {
+            Intent intent = new Intent(this, FamilyRegisterActivity.class);
+            intent.putExtra(START_REGISTRATION, true);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(this, FamilyRegisterActivity.class);
+            intent.putExtra(START_REGISTRATION, true);
+            Feature feature = listTaskPresenter.getSelectedFeature();
+            intent.putExtra(Properties.LOCATION_UUID, feature.id());
+            intent.putExtra(Properties.TASK_IDENTIFIER, feature.getStringProperty(Properties.TASK_IDENTIFIER));
+            intent.putExtra(Properties.TASK_BUSINESS_STATUS, feature.getStringProperty(Properties.TASK_BUSINESS_STATUS));
+            intent.putExtra(Properties.TASK_STATUS, feature.getStringProperty(Properties.TASK_STATUS));
+            if (feature.hasProperty(Properties.STRUCTURE_NAME))
+                intent.putExtra(Properties.STRUCTURE_NAME, feature.getStringProperty(Properties.STRUCTURE_NAME));
+            startActivity(intent);
+        }
 
     }
 
@@ -619,6 +666,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void openCardView(CardDetails cardDetails) {
+        if (Country.NTD_COMMUNITY == BuildConfig.BUILD_COUNTRY) {
+            eligibilityCardView.setVisibility(View.VISIBLE);
+            return;
+        }
         if (cardDetails instanceof SprayCardDetails) {
             cardDetailsUtil.populateSprayCardTextViews((SprayCardDetails) cardDetails, this);
             sprayCardView.setVisibility(View.VISIBLE);
@@ -769,8 +820,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void onSyncComplete(FetchStatus fetchStatus)
-    {
+    public void onSyncComplete(FetchStatus fetchStatus) {
         onSyncInProgress(fetchStatus);
         //Check sync status and Update UI to show sync status
         drawerView.checkSynced();

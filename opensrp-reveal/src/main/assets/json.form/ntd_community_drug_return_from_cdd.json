@@ -1,0 +1,216 @@
+{
+  "count": "1",
+  "encounter_type": "Drug Return from CDD Team",
+  "entity_id": "",
+  "relational_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": "",
+    "look_up": {
+      "entity_id": "",
+      "value": ""
+    }
+  },
+  "step1": {
+    "title": "Drug Return from CDD Team",
+    "fields": [
+      {
+        "key": "nPZQreturnedtins",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "nPZQreturnedtins",
+        "type": "edit_text",
+        "hint": "Number of PZQ tins provided to CDD team",
+        "text_size": "8sp",
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "nPZQreturnedtinsquantity",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "nPZQreturnedtinsquantity",
+        "type": "native_radio",
+        "label": "Quantity of PZQ in each tin",
+        "options": [
+          {
+            "key": "500",
+            "text": "500"
+          },
+          {
+            "key": "1000",
+            "text": "1000"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "nPZQreturnedtinsquantityother",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "nPZQreturnedtinsquantityother",
+        "type": "edit_text",
+        "hint": "If \"other\", how many PZQ tablets are in each tin being returned?",
+        "text_size": "8sp",
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Required field"
+        },
+        "v_max": {
+          "value": "2000",
+          "err": "Max number of pieces are 2000"
+        }
+      },
+      {
+        "key": "nPZQreturnedloose",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "nPZQreturnedloose",
+        "type": "edit_text",
+        "hint": "Number of loose PZQ tablets returned",
+        "text_size": "8sp",
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "nPZQreturned",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "nPZQreturned",
+        "type": "hidden",
+        "hint": "Number of PZQ returned",
+        "text_size": "8sp",
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "personNamereturningdrugs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "personNamereturningdrugs",
+        "type": "edit_text",
+        "hint": "Name of person returning drugs",
+        "text_size": "8sp",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "personNamereceivingeturneddrugs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "personNamereceivingeturneddrugs",
+        "type": "edit_text",
+        "hint": "Name of person accepting returned drugs",
+        "text_size": "8sp",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "personPhonenumberreceivignreturneddrugs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "personPhonenumberreceivignreturneddrugs",
+        "type": "edit_text",
+        "hint": "Phone number of person receiving returned drugs",
+        "text_size": "8sp",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Please enter a number"
+        }
+      },
+      {
+        "key": "personOrgheirarchyreceivingeturneddrugs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "concept",
+        "openmrs_entity_id": "personOrgheirarchyreceivingeturneddrugs",
+        "type": "edit_text",
+        "hint": "Please select the organizational unit affiliation of person receiving returned drugs",
+        "values": [
+          "Male",
+          "Female"
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the organizational unit"
+        }
+      }
+    ]
+  }
+}
