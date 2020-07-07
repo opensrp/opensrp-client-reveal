@@ -8,6 +8,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.0.0'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.3'
         classpath 'io.fabric.tools:gradle:1.31.2'
+        classpath 'org.smartregister:opensrp-gradle-jarjar:1.0.0-SNAPSHOT'
     }
 }
 
@@ -25,6 +26,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'io.fabric'
+apply plugin: 'ru.tinkoff.gradle.jarjar'
 
 jacoco {
     toolVersion = "0.8.0"
@@ -177,7 +179,8 @@ dependencies {
     }
 
 
-    compileOnly 'com.ibm.fhir:fhir-model:4.2.3'
+    //implementation 'com.ibm.fhir:fhir-model:4.2.3'
+    jarJar 'com.ibm.fhir:fhir-model:4.2.3'
 
     implementation('org.smartregister:opensrp-client-configurable-views:1.1.5-SNAPSHOT@aar') {
         transitive = true
@@ -223,6 +226,11 @@ dependencies {
     }
     implementation 'com.github.ybq:Android-SpinKit:1.2.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-scalebar-v8:0.3.0'
+
+    // Repackaged jars will be placed here, adding them to classpath
+    //implementation fileTree(dir: "$project.buildDir/build/libs", include: ['*.jar'])
+    implementation fileTree(dir: "./build/libs", include: ['*.jar'])
+
     testImplementation 'junit:junit:4.13'
     testImplementation 'org.apache.maven:maven-ant-tasks:2.1.3'
     testImplementation('com.squareup:fest-android:1.0.8') { exclude module: 'support-v4' }
@@ -275,4 +283,11 @@ task javadoc(type: Javadoc) {
     source = files([mainSrc])
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     classpath += configurations.compile
+}
+
+
+jarJar {
+
+    // Dependencies and related JarJar rules
+    rules = ['fhir-model-4.2.3.jar': 'com.ibm.fhir.model.visitor.CopyingVisitor*']
 }
