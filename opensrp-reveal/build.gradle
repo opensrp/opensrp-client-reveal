@@ -38,7 +38,6 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
-        coreLibraryDesugaringEnabled true
     }
 
     defaultConfig {
@@ -159,8 +158,6 @@ tasks.withType(Test) {
 }
 
 dependencies {
-
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
 
     implementation('io.ona.kujaku:library:0.8.3') {
         exclude group: 'com.android.volley'
