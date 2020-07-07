@@ -3,18 +3,20 @@ package org.smartregister.reveal.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.core.util.Pair;
 
 import com.mapbox.geojson.Feature;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
+import com.vijay.jsonwizard.utils.FormUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
-import org.smartregister.domain.Location;
 import org.smartregister.domain.Event;
+import org.smartregister.domain.Location;
 import org.smartregister.domain.Obs;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
@@ -25,7 +27,6 @@ import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
-import org.smartregister.util.FormUtils;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.Arrays;
@@ -149,11 +150,11 @@ public class RevealJsonFormUtils {
     public String getFormString(Context context, String formName, String structureType) {
         String formString = null;
         try {
-            FormUtils formUtils = FormUtils.getInstance(context);
+            FormUtils formUtils = new FormUtils();
             String formattedFormName = formName.replace(JSON_FORM_FOLDER, "").replace(JSON_FILE_EXTENSION, "");
-            JSONObject formStringObj = formUtils.getFormJsonFromRepositoryOrAssets(formattedFormName);
+            JSONObject formStringObj = formUtils.getFormJsonFromRepositoryOrAssets(context, formattedFormName);
             if (formStringObj == null) {
-                return  null;
+                return null;
             }
             formString = formStringObj.toString();
             if ((JsonForm.SPRAY_FORM.equals(formName) || JsonForm.SPRAY_FORM_BOTSWANA.equals(formName)
@@ -173,8 +174,8 @@ public class RevealJsonFormUtils {
 
 
     public JSONObject populateFormDetails(String formString, String entityId, String structureId, String taskIdentifier,
-                                           String taskBusinessStatus, String taskStatus, String structureUUID,
-                                           Integer structureVersion) throws JSONException {
+                                          String taskBusinessStatus, String taskStatus, String structureUUID,
+                                          Integer structureVersion) throws JSONException {
 
         JSONObject formJson = new JSONObject(formString);
         formJson.put(ENTITY_ID, entityId);
@@ -443,8 +444,8 @@ public class RevealJsonFormUtils {
         return null;
     }
 
-    public static org.smartregister.clientandeventmodel.Event createTaskEvent(String baseEntityId, String locationId, Map<String, String> details, String  eventType, String entityType) {
-        org.smartregister.clientandeventmodel.Event taskEvent = (org.smartregister.clientandeventmodel.Event) new org.smartregister.clientandeventmodel.Event().withBaseEntityId(baseEntityId).withEventDate(new Date()). withEventType(eventType)
+    public static org.smartregister.clientandeventmodel.Event createTaskEvent(String baseEntityId, String locationId, Map<String, String> details, String eventType, String entityType) {
+        org.smartregister.clientandeventmodel.Event taskEvent = (org.smartregister.clientandeventmodel.Event) new org.smartregister.clientandeventmodel.Event().withBaseEntityId(baseEntityId).withEventDate(new Date()).withEventType(eventType)
                 .withLocationId(locationId).withEntityType(entityType).withFormSubmissionId(UUID.randomUUID().toString()).withDateCreated(new Date());
         return taskEvent;
     }
