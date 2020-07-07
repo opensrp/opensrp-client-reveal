@@ -173,7 +173,11 @@ dependencies {
         exclude group: 'com.github.ybq', module: 'Android-SpinKit'
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.android.gms', module: 'play-services-vision'
+        exclude group: 'com.ibm.fhir', module:'fhir-model'
     }
+
+
+    compileOnly 'com.ibm.fhir:fhir-model:4.2.3'
 
     implementation('org.smartregister:opensrp-client-configurable-views:1.1.5-SNAPSHOT@aar') {
         transitive = true
