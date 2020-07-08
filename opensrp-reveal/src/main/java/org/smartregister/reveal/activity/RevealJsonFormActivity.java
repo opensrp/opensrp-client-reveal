@@ -4,16 +4,16 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import androidx.annotation.StringRes;
 
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
+import com.vijay.jsonwizard.activities.FormConfigurationJsonFormActivity;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.fragment.RevealJsonFormFragment;
-import org.smartregister.view.activity.FormConfigurationJsonFormActivity;
 
 import io.ona.kujaku.utils.Constants;
 
