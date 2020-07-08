@@ -1,6 +1,8 @@
 package org.smartregister.reveal;
 
 
+import com.vijay.jsonwizard.NativeFormLibrary;
+
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.Context;
@@ -33,6 +35,8 @@ public class TestRevealApplication extends RevealApplication {
         FamilyLibrary.init(context, getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
 
         setTheme(R.style.Theme_AppCompat); //or just R.style.Theme_AppCompat
+
+        NativeFormLibrary.getInstance().setClientFormDao(CoreLibrary.getInstance().context().getClientFormRepository());
     }
 
     @Override

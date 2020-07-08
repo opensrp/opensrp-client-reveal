@@ -123,6 +123,7 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
         String baseEntityId = UUID.randomUUID().toString();
         String structureId = UUID.randomUUID().toString();
         interactor.generateTasks(context, baseEntityId, structureId);
+        verify(taskUtils, timeout(ASYNC_TIMEOUT)).generateBloodScreeningTask(context, baseEntityId, structureId);
         verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksGenerated();
     }
 
@@ -208,6 +209,7 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
         when(commonRepository.findSearchIds(anyString())).thenReturn(familyMembers);
 
         Task task = TestingUtils.getTask(structureId);
+        when(taskUtils.generateRegisterFamilyTask(any(), any())).thenReturn(task);
         interactor.archiveFamily(familyId, structureId);
 
         for (String familyMember : new ArrayList<>(familyMembers))
@@ -216,6 +218,7 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
 
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).archiveTasksForEntity(structureId);
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).cancelTasksForEntity(structureId);
+        verify(taskUtils, timeout(ASYNC_TIMEOUT)).generateRegisterFamilyTask(any(), eq(structureId));
         verify(presenter, timeout(ASYNC_TIMEOUT)).onArchiveFamilyCompleted(true, task);
 
     }

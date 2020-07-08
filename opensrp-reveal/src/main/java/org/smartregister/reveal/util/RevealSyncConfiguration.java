@@ -136,9 +136,4 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     public boolean clearDataOnNewTeamLogin() {
         return true;
     }
-
-    @Override
-    public boolean runPlanEvaluationOnClientProcessing() {
-        return true;
-    }
 }
