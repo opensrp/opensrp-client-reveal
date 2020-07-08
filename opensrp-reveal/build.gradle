@@ -179,7 +179,7 @@ dependencies {
         exclude group: 'com.ibm.fhir', module:'fhir-model'
     }
 
-    //compileOnly 'com.ibm.fhir:fhir-model:4.2.3'
+    testImplementation 'com.ibm.fhir:fhir-model:4.2.3'
 
     implementation('org.smartregister:opensrp-client-configurable-views:1.1.5-SNAPSHOT@aar') {
         transitive = true
@@ -231,6 +231,7 @@ dependencies {
     implementation fileTree(dir: "./build/libs", include: ['*.jar'])
 
     testImplementation 'junit:junit:4.12'
+    testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: '2.2'
     testImplementation 'org.apache.maven:maven-ant-tasks:2.1.3'
     testImplementation('com.squareup:fest-android:1.0.8') { exclude module: 'support-v4' }
     implementation 'com.mapbox.mapboxsdk:mapbox-sdk-turf:5.1.0'
