@@ -22,6 +22,7 @@ import org.smartregister.view.fragment.BaseRegisterFragment;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -55,6 +56,11 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
     @Override
     protected Fragment[] getOtherFragments() {
         return new Fragment[]{caseClassificationFragment};
+    }
+
+    @Override
+    public void startFormActivity(String s, String s1, Map<String, String> map) {
+
     }
 
     @Override
