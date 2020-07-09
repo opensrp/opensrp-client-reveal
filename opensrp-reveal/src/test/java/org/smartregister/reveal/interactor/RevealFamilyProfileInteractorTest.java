@@ -223,7 +223,7 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
 
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).archiveTasksForEntity(structureId);
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).cancelTasksForEntity(structureId);
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onArchiveFamilyCompleted(true, nullable(Task.class));
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onArchiveFamilyCompleted(eq(true), nullable(Task.class));
 
     }
 

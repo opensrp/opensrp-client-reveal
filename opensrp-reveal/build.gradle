@@ -139,7 +139,7 @@ android {
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
             buildConfigField "long", "SYNC_INTERVAL_IN_MINUTES", '15'
-            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.REFAPP"
+            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.THAILAND_EN"
             buildConfigField "long", "PULL_UNIQUE_IDS_MINUTES", '15'
             buildConfigField "String", "ADMIN_PASSWORD_NOT_NEAR_STRUCTURES", '"AdminPass1"'
             buildConfigField "float", "MY_LOCATION_BUFFER", '25'
@@ -162,7 +162,7 @@ android {
             buildConfigField "long", "PULL_UNIQUE_IDS_MINUTES", '15'
             buildConfigField "String", "ADMIN_PASSWORD_NOT_NEAR_STRUCTURES", '"AdminPass1"'
             buildConfigField "float", "MY_LOCATION_BUFFER", '25'
-            buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'false'
+            buildConfigField "boolean", "VALIDATE_FAR_STRUCTURES", 'true'
             buildConfigField "int", "RESOLVE_LOCATION_TIMEOUT_IN_SECONDS", '60'
             buildConfigField "boolean", "DISPLAY_OUTSIDE_OPERATIONAL_AREA_MASK", 'false'
             buildConfigField "boolean", "DISPLAY_DISTANCE_SCALE", 'true'
@@ -220,7 +220,7 @@ dependencies {
         exclude group: 'com.github.ybq', module: 'Android-SpinKit'
         exclude group: 'com.github.bmelnychuk', module: 'atv'
         exclude group: 'com.google.android.gms', module: 'play-services-vision'
-        exclude group: 'com.ibm.fhir', module:'fhir-model'
+        exclude group: 'com.ibm.fhir', module: 'fhir-model'
     }
 
     jarJar 'com.ibm.fhir:fhir-model:4.2.3'
@@ -274,7 +274,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
     // Repackaged jars will be placed here, adding them to classpath
-    //implementation fileTree(dir: "$project.buildDir/build/libs", include: ['*.jar'])
     implementation fileTree(dir: "./build/libs", include: ['*.jar'])
     
 
