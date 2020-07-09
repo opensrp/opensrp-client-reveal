@@ -1,5 +1,6 @@
 package org.smartregister.reveal.view;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 
@@ -21,17 +22,20 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.fragment.RevealJsonFormFragment;
 import org.smartregister.reveal.presenter.RevealJsonFormFragmentPresenter;
+import org.smartregister.reveal.presenter.ValidateUserLocationPresenter;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.TestingUtils;
 
 import java.util.ArrayList;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
+import io.ona.kujaku.utils.Constants;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -56,6 +60,9 @@ public class RevealJsonFormActivityTest extends BaseUnitTest {
 
     @Mock
     private BaseLocationListener locationListener;
+
+    @Mock
+    private ValidateUserLocationPresenter locationPresenter;
 
     private RevealJsonFormActivity revealJsonFormActivity;
 
@@ -111,6 +118,31 @@ public class RevealJsonFormActivityTest extends BaseUnitTest {
 
         verify(locationUtils).checkLocationSettingsAndStartLocationServices(revealJsonFormActivity, locationListener);
     }
+
+    @Test
+    public void testOnActivityResultForLocationSettings() throws Exception {
+        Whitebox.setInternalState(revealJsonFormActivity, "formFragment",formFragment);
+        Whitebox.setInternalState(revealJsonFormActivity, "requestedLocation", true);
+        when(formFragment.getPresenter()).thenReturn(presenter);
+        when(presenter.getLocationPresenter()).thenReturn(locationPresenter);
+        when(presenter.getLocationUtils()).thenReturn(locationUtils);
+        Whitebox.invokeMethod(revealJsonFormActivity, "onActivityResult",Constants.RequestCode.LOCATION_SETTINGS, Activity.RESULT_OK, null);
+        verify(locationUtils).requestLocationUpdates(any());
+        verify(locationPresenter).waitForUserLocation();
+        assertFalse(Whitebox.getInternalState(revealJsonFormActivity, "requestedLocation"));
+    }
+    @Test
+    public void testOnActivityResultForCancelledLocationSettings() throws Exception {
+        Whitebox.setInternalState(revealJsonFormActivity, "formFragment",formFragment);
+        Whitebox.setInternalState(revealJsonFormActivity, "requestedLocation", true);
+        when(formFragment.getPresenter()).thenReturn(presenter);
+        when(presenter.getLocationPresenter()).thenReturn(locationPresenter);
+        when(presenter.getLocationUtils()).thenReturn(locationUtils);
+        Whitebox.invokeMethod(revealJsonFormActivity, "onActivityResult",Constants.RequestCode.LOCATION_SETTINGS, Activity.RESULT_CANCELED, null);
+        verify(locationPresenter).onGetUserLocationFailed();
+        assertFalse(Whitebox.getInternalState(revealJsonFormActivity, "requestedLocation"));
+    }
+
 
     private void initializeMocks() {
         Whitebox.setInternalState(revealJsonFormActivity, "formFragment", formFragment);
