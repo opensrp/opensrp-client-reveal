@@ -23,7 +23,6 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     public RevealSyncConfiguration() {
     }
 
-
     public RevealSyncConfiguration(LocationRepository locationRepository, AllSharedPreferences sharedPreferences) {
         this.locationRepository = locationRepository;
         this.sharedPreferences = sharedPreferences;
