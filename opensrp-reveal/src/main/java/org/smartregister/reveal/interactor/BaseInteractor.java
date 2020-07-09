@@ -23,9 +23,9 @@ import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Task;
-import org.smartregister.domain.db.Client;
+import org.smartregister.domain.Client;
 import org.smartregister.domain.db.EventClient;
-import org.smartregister.domain.db.Obs;
+import org.smartregister.domain.Obs;
 import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
@@ -194,7 +194,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         }
     }
 
-    private org.smartregister.domain.db.Event saveEvent(JSONObject jsonForm, String encounterType, String bindType) throws JSONException {
+    private org.smartregister.domain.Event saveEvent(JSONObject jsonForm, String encounterType, String bindType) throws JSONException {
         String entityId = getString(jsonForm, ENTITY_ID);
         JSONArray fields = JsonFormUtils.fields(jsonForm);
         JSONObject metadata = getJSONObject(jsonForm, METADATA);
@@ -202,7 +202,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         JSONObject eventJson = new JSONObject(gson.toJson(event));
         eventJson.put(DETAILS, getJSONObject(jsonForm, DETAILS));
         eventClientRepository.addEvent(entityId, eventJson);
-        return gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class);
+        return gson.fromJson(eventJson.toString(), org.smartregister.domain.Event.class);
     }
 
     private void saveLocationInterventionForm(JSONObject jsonForm) {
@@ -239,7 +239,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             @Override
             public void run() {
                 try {
-                    org.smartregister.domain.db.Event event = saveEvent(jsonForm, finalEncounterType, STRUCTURE);
+                    org.smartregister.domain.Event event = saveEvent(jsonForm, finalEncounterType, STRUCTURE);
                     clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
                     appExecutors.mainThread().execute(new Runnable() {
                         @Override
@@ -271,7 +271,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     String planIdentifier = PreferencesUtil.getInstance().getCurrentPlanId();
                     eventDetails.put(Properties.PLAN_IDENTIFIER, planIdentifier);
                     jsonForm.put(DETAILS, eventDetails);
-                    org.smartregister.domain.db.Event event = saveEvent(jsonForm, REGISTER_STRUCTURE_EVENT, STRUCTURE);
+                    org.smartregister.domain.Event event = saveEvent(jsonForm, REGISTER_STRUCTURE_EVENT, STRUCTURE);
                     com.cocoahero.android.geojson.Feature feature = new com.cocoahero.android.geojson.Feature(new JSONObject(event.findObs(null, false, "structure").getValue().toString()));
                     Date now = new Date();
                     Location structure = new Location();
@@ -371,7 +371,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             @Override
             public void run() {
                 try {
-                    org.smartregister.domain.db.Event event = saveEvent(jsonForm, eventType, FAMILY_MEMBER);
+                    org.smartregister.domain.Event event = saveEvent(jsonForm, eventType, FAMILY_MEMBER);
                     Client client = eventClientRepository.fetchClientByBaseEntityId(event.getBaseEntityId());
                     clientProcessor.processClient(Collections.singletonList(new EventClient(event, client)), true);
                     appExecutors.mainThread().execute(new Runnable() {
@@ -395,7 +395,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             try {
                 String baseEntityId = JsonFormUtils.getFieldValue(JsonFormUtils.fields(jsonForm), JsonForm.FAMILY_MEMBER);
                 jsonForm.put(ENTITY_ID, baseEntityId);
-                org.smartregister.domain.db.Event event = saveEvent(jsonForm, eventType, CASE_CONFIRMATION);
+                org.smartregister.domain.Event event = saveEvent(jsonForm, eventType, CASE_CONFIRMATION);
                 Client client = eventClientRepository.fetchClientByBaseEntityId(event.getBaseEntityId());
                 String taskID = event.getDetails().get(Properties.TASK_IDENTIFIER);
                 String businessStatus = clientProcessor.calculateBusinessStatus(event);

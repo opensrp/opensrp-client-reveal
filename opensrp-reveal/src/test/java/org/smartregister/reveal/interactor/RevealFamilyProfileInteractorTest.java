@@ -193,7 +193,7 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
 
     @Test
     public void testProcessClient() {
-        List<EventClient> eventClientList = Collections.singletonList(new EventClient(new org.smartregister.domain.db.Event()));
+        List<EventClient> eventClientList = Collections.singletonList(new EventClient(new org.smartregister.domain.Event()));
         interactor.processClient(eventClientList);
         verify(clientProcessor).processClient(eventClientList, true);
     }

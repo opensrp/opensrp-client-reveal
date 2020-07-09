@@ -12,7 +12,7 @@ import net.sqlcipher.database.SQLiteStatement;
 import org.apache.commons.lang3.ArrayUtils;
 import org.smartregister.clientandeventmodel.DateUtil;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
-import org.smartregister.domain.db.Event;
+import org.smartregister.domain.Event;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.repository.EventClientRepository;
