@@ -45,6 +45,7 @@ public class RevealJsonFormActivity extends FormConfigurationJsonFormActivity im
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (requestCode == Constants.RequestCode.LOCATION_SETTINGS && requestedLocation) {
             if (resultCode == RESULT_OK) {
                 formFragment.getPresenter().getLocationUtils().requestLocationUpdates(formFragment.getPresenter().getLocationListener());
@@ -53,6 +54,8 @@ public class RevealJsonFormActivity extends FormConfigurationJsonFormActivity im
                 formFragment.getPresenter().getLocationPresenter().onGetUserLocationFailed();
             }
             requestedLocation = false;
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
