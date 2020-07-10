@@ -4,10 +4,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import androidx.annotation.StringRes;
 
+import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 
+import com.vijay.jsonwizard.activities.FormConfigurationJsonFormActivity;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.smartregister.reveal.R;
