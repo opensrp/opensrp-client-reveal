@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.domain.PlanDefinition;
+import org.smartregister.domain.PlanDefinition.PlanStatus;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.domain.jsonmapping.Location;
 import org.smartregister.domain.jsonmapping.util.TreeNode;
@@ -39,7 +40,6 @@ import java.util.Set;
 import timber.log.Timber;
 
 import static org.smartregister.AllConstants.OPERATIONAL_AREAS;
-import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.ACTIVE;
 import static org.smartregister.reveal.util.Constants.Tags.CANTON;
 import static org.smartregister.reveal.util.Constants.Tags.COUNTRY;
 import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
@@ -126,7 +126,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         List<String> ids = new ArrayList<>();
         List<FormLocation> formLocations = new ArrayList<>();
         for (PlanDefinition planDefinition : planDefinitions) {
-            if (!planDefinition.getStatus().equals(ACTIVE)) {
+            if (!planDefinition.getStatus().equals(PlanStatus.ACTIVE)) {
                 continue;
             }
             ids.add(planDefinition.getIdentifier());

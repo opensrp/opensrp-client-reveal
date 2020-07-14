@@ -652,13 +652,6 @@ public interface Constants {
         String DOB = "dob";
     }
 
-    interface PlanDefinitionStatus {
-        String DRAFT = "draft";
-        String ACTIVE = "active";
-        String COMPLETE = "complete";
-        String RETIRED = "retired";
-    }
-
     interface UseContextCode {
         String INTERVENTION_TYPE = "interventionType";
     }
