@@ -54,7 +54,7 @@ public class CardDetailsUtil {
                 break;
             case BusinessStatus.SPRAYED:
             case BusinessStatus.COMPLETE:
-			cardDetails.setStatusColor(R.color.partially_sprayed);
+                cardDetails.setStatusColor(R.color.partially_sprayed);
                 cardDetails.setStatusMessage(R.string.partially_sprayed);
                 break;
             case BusinessStatus.FULLY_RECEIVED:
