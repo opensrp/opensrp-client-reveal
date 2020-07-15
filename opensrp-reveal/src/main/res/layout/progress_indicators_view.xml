@@ -13,12 +13,12 @@
     tools:visibility="visible">
 
     <org.smartregister.reporting.view.ProgressIndicatorView
-        android:id="@+id/progressIndicatorView3"
+        android:id="@+id/progressIndicatorView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
         android:layout_weight="3"
-        app:progress="0"
-        app:subTitle="@string/spray_success_rate" />
+        app:subTitle="@string/spray_coverage" />
 
     <org.smartregister.reporting.view.ProgressIndicatorView
         android:id="@+id/progressIndicatorView2"
@@ -32,13 +32,14 @@
         app:subTitle="@string/found_coverage" />
 
     <org.smartregister.reporting.view.ProgressIndicatorView
-        android:id="@+id/progressIndicatorView"
-        android:layout_width="0dp"
+        android:id="@+id/progressIndicatorView3"
+        android:layout_width="4dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
         android:layout_weight="1"
+        app:progress="0"
         app:progressBarBackgroundColor="@color/text_black"
         app:progressBarForegroundColor="@color/colorPastelGreen"
-        app:subTitle="@string/spray_coverage" />
+        app:subTitle="@string/spray_success_rate" />
+
 
 </LinearLayout>
