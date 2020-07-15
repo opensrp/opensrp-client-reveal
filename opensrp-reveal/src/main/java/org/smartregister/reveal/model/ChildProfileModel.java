@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
+import static org.smartregister.reveal.util.FamilyJsonFormUtils.getFormValue;
 
 public class ChildProfileModel extends AbstractDao implements ChildProfileContract.Model {
 
@@ -164,13 +165,6 @@ public class ChildProfileModel extends AbstractDao implements ChildProfileContra
 
         Date original = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH).parse(value);
         return new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH).format(original);
-    }
-
-    private Object getFormValue(JSONObject jsonObject, String key) throws JSONException {
-        if (jsonObject.has(key))
-            return jsonObject.getString(key);
-
-        return "";
     }
 
     @Override

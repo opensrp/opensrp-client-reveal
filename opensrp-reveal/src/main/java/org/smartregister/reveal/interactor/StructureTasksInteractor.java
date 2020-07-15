@@ -20,6 +20,7 @@ import org.smartregister.repository.EventClientRepository.event_column;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.StructureTasksContract;
+import org.smartregister.reveal.dao.TaskDetailsDao;
 import org.smartregister.reveal.model.EventTask;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.AppExecutors;
@@ -123,6 +124,14 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
             appExecutors.mainThread().execute(() -> {
                 presenter.onTasksFound(taskDetailsList, finalIndexCase);
             });
+        });
+    }
+
+    @Override
+    public void findTasks(String familyBaseEntityId) {
+        appExecutors.diskIO().execute(() -> {
+            List<StructureTaskDetails> taskDetailsList = TaskDetailsDao.getInstance().getFamilyStructureTasks(familyBaseEntityId);
+            appExecutors.mainThread().execute(() -> presenter.onTasksFound(taskDetailsList, null));
         });
     }
 

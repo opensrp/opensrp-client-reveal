@@ -6,12 +6,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +25,16 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.adapter.AbstractStructureTaskAdapter;
+import org.smartregister.reveal.adapter.FamilyStructureTaskAdapter;
 import org.smartregister.reveal.adapter.StructureTaskAdapter;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.presenter.StructureTasksPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
@@ -50,7 +58,7 @@ import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_G
 public class StructureTasksFragment extends Fragment implements StructureTasksContract.View {
 
     private RecyclerView taskRecyclerView;
-    private StructureTaskAdapter adapter;
+    private AbstractStructureTaskAdapter adapter;
 
     private StructureTasksContract.Presenter presenter;
     private ProgressDialog progressDialog;
@@ -109,7 +117,12 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     }
 
     private void initializeAdapter() {
-        adapter = new StructureTaskAdapter(onClickListener);
+        if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
+            adapter = new FamilyStructureTaskAdapter(onClickListener);
+        } else {
+            adapter = new StructureTaskAdapter(onClickListener);
+        }
+
         taskRecyclerView.setAdapter(adapter);
         if (taskDetailsList != null) {
             setTaskDetailsList(taskDetailsList);
@@ -118,7 +131,11 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
 
     private void setUpViews(View view) {
         TextView interventionType = view.findViewById(R.id.intervention_type);
-        interventionType.setText(getString(Utils.getInterventionLabel()));
+        if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
+            interventionType.setText("NTD");
+        } else {
+            interventionType.setText(getString(Utils.getInterventionLabel()));
+        }
         taskRecyclerView = view.findViewById(R.id.task_recyclerView);
 
         progressDialog = new ProgressDialog(getContext());
@@ -142,8 +159,8 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     };
 
     @Override
-    public void setStructure(String structureId) {
-        presenter.findTasks(structureId);
+    public void setStructure(String structureId, String familyBaseEntityId) {
+        presenter.findTasks(structureId, familyBaseEntityId);
     }
 
     @Override
@@ -258,12 +275,16 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
         } else if (requestCode == REQUEST_CODE_GET_JSON_FRAGMENT && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
             String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
             Timber.d(json);
-            presenter.saveJsonForm(json);
+            if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)){
+                ((StructureTasksPresenter)presenter).saveMDAForm(json);
+            }else{
+                presenter.saveJsonForm(json);
+            }
         }
     }
 
-    public void refreshTasks(String structureId) {
-        presenter.findTasks(structureId);
+    public void refreshTasks(String structureId, String familyBaseEntityId) {
+        presenter.findTasks(structureId, familyBaseEntityId);
     }
 
     public void setPresenter(StructureTasksContract.Presenter presenter) {

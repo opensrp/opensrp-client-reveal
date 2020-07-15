@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Task;
+import org.smartregister.util.CallableInteractor;
 
 /**
  * Created by samuelgithengi on 4/12/19.
@@ -24,6 +25,12 @@ public interface FamilyProfileContract extends org.smartregister.family.contract
         Activity getContext();
 
         void returnToMapView(String structureId, Task task);
+
+        void setLoadingState(boolean state);
+
+        void onError(Exception e);
+
+        void refreshViews(String structureId);
     }
 
     interface Interactor extends org.smartregister.family.contract.FamilyProfileContract.Interactor {

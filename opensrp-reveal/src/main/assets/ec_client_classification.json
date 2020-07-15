@@ -128,6 +128,20 @@
             "creates_case": [
               "ec_child"
             ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "Structure Eligibility",
+            "creates_case": [
+              "structure_eligibility"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "Structure QR",
+            "creates_case": [
+              "structure_eligibility"
+            ]
           }
         ]
       }

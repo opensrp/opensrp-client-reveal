@@ -1,0 +1,56 @@
+---
+name: step1_noConsent
+description: noConsent relevance
+priority: 1
+condition: "step1_consentRelationship.contains('not_eligible')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_consentRelationshipOther
+description: consentRelationshipOther relevance
+priority: 1
+condition: "step1_consentRelationship.contains('other')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_firstName
+description: firstName relevance
+priority: 1
+condition: "!step1_consentRelationship.contains('not_eligible')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_surname
+description: surname relevance
+priority: 1
+condition: "!step1_same_as_fam_name.contains('same_as_fam_name') && !step1_consentRelationship.contains('not_eligible')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_same_as_fam_name
+description: same_as_fam_name relevance
+priority: 1
+condition: "!step1_consentRelationship.contains('not_eligible')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_gender
+description: gender relevance
+priority: 1
+condition: "!step1_consentRelationship.contains('not_eligible')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_age
+description: age relevance
+priority: 1
+condition: "!step1_consentRelationship.contains('not_eligible')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_personEnrollment
+description: personEnrollment relevance
+priority: 1
+condition: "!step1_consentRelationship.contains('not_eligible')"
+actions:
+  - "isRelevant = true"

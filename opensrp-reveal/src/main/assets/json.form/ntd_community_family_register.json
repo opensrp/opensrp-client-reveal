@@ -1,6 +1,6 @@
 {
   "count": "2",
-  "encounter_type": "Floating Family Registration",
+  "encounter_type": "Family Registration",
   "entity_id": "",
   "relational_id": "",
   "metadata": {
@@ -133,6 +133,13 @@
         "v_required": {
           "value": "true",
           "err": "Please enter the surname"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-family-register-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -145,7 +152,7 @@
         "options": [
           {
             "key": "same_as_fam_name",
-            "text": "First name same as household name",
+            "text": "Surname name same as household name",
             "text_size": "18px",
             "value": "false"
           }
@@ -196,22 +203,6 @@
           "value": true,
           "err": "Please enter the age"
         }
-      },
-      {
-        "key": "dob_calculated",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "birthdateApprox",
-        "type": "check_box",
-        "label": "",
-        "options": [
-          {
-            "key": "dob_unknown",
-            "text": "DOB unknown?",
-            "text_size": "18px",
-            "value": "false"
-          }
-        ]
       },
       {
         "key": "personPhonenumber",

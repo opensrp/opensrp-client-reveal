@@ -188,6 +188,10 @@ public interface Constants {
 
         String MDA_ADHERENCE = "MDA Adherence";
 
+        String NTD_MDA_DISPENSE = "NTD MDA Dispense";
+
+        String NTD_COMMUNITY = "ntd_community";
+
         String MDA = "MDA";
 
         String IRS_VERIFICATION = "IRS Verification";
@@ -228,6 +232,10 @@ public interface Constants {
         String CHILD_REGISTRATION = "Child Registration";
 
         String UPDATE_CHILD_REGISTRATION = "Update Child Registration";
+
+        String STRUCTURE_ELIGIBILITY = "Structure Eligibility";
+
+        String STRUCTURE_QR = "Structure QR";
     }
 
     interface Tables {
@@ -239,6 +247,7 @@ public interface Constants {
         String EVENT_TABLE = "event";
         String TASK_TABLE = "task";
         String STRUCTURE_TABLE = "structure";
+        String STRUCTURE_ELIGIBILITY_TABLE = "structure_eligibility";
     }
 
     interface BusinessStatus {
@@ -252,6 +261,7 @@ public interface Constants {
         String INCOMPLETE = "Incomplete";
         String NOT_ELIGIBLE = "Not Eligible";
         String IN_PROGRESS = "In Progress";
+        String NO_TASK = "No Task";
 
 
         //MDA status
@@ -275,6 +285,13 @@ public interface Constants {
 
         List<String> MDA_BUSINESS_STATUS = Arrays.asList(NOT_VISITED, FULLY_RECEIVED, NONE_RECEIVED,
                 ADHERENCE_VISIT_DONE, PARTIALLY_RECEIVED, COMPLETE, NOT_ELIGIBLE);
+    }
+
+    interface ActionStatus {
+        String EXIT = "EXIT";
+        String ISSUE_CODE = "ISSUE_CODE";
+        String ISSUE_CODE_REGISTRATION= "ISSUE_CODE_REGISTRATION";
+        String REGISTER = "REGISTER";
     }
 
     interface BusinessStatusWrapper {
@@ -386,6 +403,16 @@ public interface Constants {
         String NTD_DRUG_ADVERSE_REACTION = "json.form/ntd_mma_adr.json";
 
         String NTD_MASS_DRUG_ADMINISTRATION = "json.form/ntd_mma_dispense.json";
+
+        String NTD_COMMUNITY_ELIGIBILITY = "json.form/ntd_community_structure_eligibility.json";
+
+        String NTD_COMMUNITY_STRUCTURE_QR = "json.form/ntd_community_structure_qr.json";
+
+        String NTD_COMMUNITY_FAMILY_MEMBER_REGISTER = "json.form/ntd_community_family_member_registration.json";
+
+        String NTD_COMMUNITY_FAMILY_REGISTER = "json.form/ntd_community_family_register.json";
+
+        String NTD_COMMUNITY_MASS_DRUG_ADMINISTRATION = "json.form/ntd_community_drug_distribution_child.json";
       
         String JSON_FORM_FOLDER = "json.form/";
 
@@ -488,7 +515,8 @@ public interface Constants {
         String BOTSWANA_EC_CLIENT_FIELDS = "ec_client_fields_botswana.json";
         String ZAMBIA_EC_CLIENT_FIELDS = "ec_client_fields_zambia.json";
         String REFAPP_EC_CLIENT_FIELDS = "ec_client_fields_refapp.json";
-        String NTD_EC_CLIENT_FIELDS = "ec_client_fields_ntd.json";
+        String NTD_SCHOOL_EC_CLIENT_FIELDS = "ec_client_fields_ntd_school.json";
+        String NTD_COMMUNITY_EC_CLIENT_FIELDS = "ec_client_fields_ntd_community.json";
     }
 
 
@@ -693,6 +721,8 @@ public interface Constants {
         int REQUEST_CODE_FILTER_TASKS = 3596;
 
         int REQUEST_CODE_TASK_LISTS = 3617;
+
+        int REQUEST_CODE_ISSUE_QR = 3480;
     }
 
 

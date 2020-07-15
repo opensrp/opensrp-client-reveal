@@ -7,6 +7,7 @@ import androidx.annotation.StringRes;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.vijay.jsonwizard.domain.Form;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,6 +18,7 @@ import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
+import org.smartregister.util.CallableInteractor;
 
 import java.util.List;
 
@@ -74,6 +76,22 @@ public interface ListTaskContract {
         void setNumberOfFilters(int numberOfFilters);
 
         void setSearchPhrase(String searchPhrase);
+
+        void startEligibilityForm();
+
+        /**
+         * Strart structure issue wizard
+         * @param structureId
+         */
+        void issueStructureQRCode(String structureId, String pendingTask);
+
+        void setLoadingState(boolean state);
+
+        void onError(Exception e);
+
+        void onEligibilityStatusConfirmed(String status);
+
+        void startJSONForm(JSONObject jsonObject, Form form);
     }
 
     interface Presenter extends BaseContract.BasePresenter {
@@ -114,5 +132,20 @@ public interface ListTaskContract {
         void onOpenTaskRegisterClicked();
 
         void setTaskFilterParams(TaskFilterParams filterParams);
+
+        void startFamilyProfileByQR(String qrCode);
+
+        void saveEligibilityForm(JSONObject jsonObject, Feature feature);
+
+        void assignQRCodeToStructure(Context context, String structureId, String qrcode, Runnable runnable);
+
+        ListTaskView getView();
+
+        @NonNull
+        CallableInteractor getInteractor();
+
+        void startFamilyRegistrationForm(Context context);
+
+        void saveFamilyRegistration(JSONObject jsonObject, Context context);
     }
 }

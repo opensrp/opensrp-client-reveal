@@ -1,8 +1,9 @@
 package org.smartregister.reveal.presenter;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
-import android.text.TextUtils;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.mapbox.geojson.Feature;
@@ -12,21 +13,31 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
 import org.smartregister.configurableviews.model.View;
 import org.smartregister.configurableviews.model.ViewConfiguration;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
+import org.smartregister.reveal.dao.StructureDao;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.util.CallableInteractor;
+import org.smartregister.util.CallableInteractorCallBack;
+import org.smartregister.util.GenericInteractor;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -34,11 +45,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
 
 import timber.log.Timber;
 
 import static org.smartregister.domain.Task.INACTIVE_TASK_STATUS;
+import static org.smartregister.family.util.Utils.metadata;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
@@ -213,13 +226,16 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     public void onDrawerClosed() {
         getView().showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
         interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter(), getView().getContext().getString(R.string.house));
-        getView().setInventionType(getInterventionLabel());
+        if (!BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY))
+            getView().setInventionType(getInterventionLabel());
     }
 
     @Override
     public void onTaskSelected(TaskDetails details, boolean isActionClicked) {
         this.isActionClicked = isActionClicked;
-        if (details != null) {
+        if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
+            interactor.fetchFamilyDetails(details.getStructureId());
+        } else if (details != null) {
             setTaskDetails(details);
             if (CASE_CONFIRMATION.equals(details.getTaskCode())) {
                 interactor.getIndexCaseDetails(details.getStructureId(),
@@ -264,6 +280,51 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                 getView().displayIndexCaseDetails(indexCase);
             }
         }
+    }
+
+    @Override
+    public void searchViaQRCode(String searchText) {
+        CallableInteractor myInteractor = new GenericInteractor();
+
+        Callable<CommonPersonObjectClient> callable = () -> {
+
+            StructureDao structureDao = StructureDao.getInstance();
+
+            // check if qr has a structure
+            String familyEntityId = structureDao.getFamilyBaseIDFromQRCode(searchText);
+            if (StringUtils.isBlank(familyEntityId))
+                throw new IllegalStateException("Family not found");
+
+            CommonRepository commonRepository = RevealApplication.getInstance().getContext().commonrepository(metadata().familyRegister.tableName);
+            CommonPersonObject personObject = commonRepository.findByBaseEntityId(familyEntityId);
+            CommonPersonObjectClient family = new CommonPersonObjectClient(personObject.getCaseId(),
+                    personObject.getDetails(), "");
+            family.setColumnmaps(personObject.getColumnmaps());
+
+            return family;
+        };
+
+
+        getView().setLoadingState(true);
+        myInteractor.execute(callable, new CallableInteractorCallBack<CommonPersonObjectClient>() {
+            @Override
+            public void onResult(CommonPersonObjectClient result) {
+                TaskRegisterFragmentContract.View view = getView();
+                if (view != null) {
+                    view.setLoadingState(false);
+                    view.openFamilyProfile(result, null);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                TaskRegisterFragmentContract.View view = getView();
+                if (view == null) return;
+
+                Timber.e(ex.toString(), searchText);
+                view.setLoadingState(false);
+            }
+        });
     }
 
     @Override

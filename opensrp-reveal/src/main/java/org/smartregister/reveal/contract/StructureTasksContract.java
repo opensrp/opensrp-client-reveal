@@ -2,6 +2,7 @@ package org.smartregister.reveal.contract;
 
 import android.content.Context;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.Event;
 import org.smartregister.reveal.model.StructureTaskDetails;
@@ -16,7 +17,7 @@ public interface StructureTasksContract {
 
     interface Presenter extends BaseContract.BasePresenter, BaseFormFragmentContract.Presenter {
 
-        void findTasks(String structureId);
+        void findTasks(String structureId, String familyBaseEntityId);
 
         void refreshTasks();
 
@@ -41,6 +42,8 @@ public interface StructureTasksContract {
 
         void findTasks(String structureId, String currentPlanId, String operationalAreaId);
 
+        void findTasks(String familyBaseEntityId);
+
         void getStructure(StructureTaskDetails details);
 
         void findLastEvent(StructureTaskDetails taskDetails);
@@ -50,7 +53,7 @@ public interface StructureTasksContract {
 
     interface View extends UserLocationContract.UserLocationView, BaseFormFragmentContract.View {
 
-        void setStructure(String structureId);
+        void setStructure(String structureId, String familyBaseEntityId);
 
         void showProgressDialog(int title, int message);
 

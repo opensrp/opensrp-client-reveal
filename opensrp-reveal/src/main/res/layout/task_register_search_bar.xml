@@ -31,15 +31,32 @@
             android:textColorHint="@color/light_grey"
             android:textSize="@dimen/default_font_size_search_bar" />
 
-        <ImageButton
-            android:id="@+id/btn_search_cancel"
-            android:layout_width="@dimen/ec_main_header_search_cancel_button_width"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:orientation="horizontal"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/search_view_cancel_image_margin_right"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_cross"
-            android:visibility="gone" />
+            android:gravity="end"
+            android:layout_marginEnd="@dimen/search_view_cancel_image_margin_right">
+
+            <ImageButton
+                android:id="@+id/btn_search_cancel"
+                android:layout_width="@dimen/ec_main_header_search_cancel_button_width"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/search_view_cancel_image_margin_right"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_cross"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/btn_qr_code"
+                android:layout_width="@dimen/ec_main_header_search_cancel_button_width"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/search_view_cancel_image_margin_right"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_qr_code"
+                android:visibility="visible" />
+        </LinearLayout>
 
     </RelativeLayout>
 

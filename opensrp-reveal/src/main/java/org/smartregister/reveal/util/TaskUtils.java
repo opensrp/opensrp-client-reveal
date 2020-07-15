@@ -1,11 +1,13 @@
 package org.smartregister.reveal.util;
 
 import android.content.Context;
+
 import androidx.annotation.StringRes;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Action;

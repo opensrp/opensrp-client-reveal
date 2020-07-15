@@ -1,5 +1,6 @@
 package org.smartregister.reveal.view;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,11 +25,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
@@ -43,13 +47,17 @@ import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.pluginscalebar.ScaleBarOptions;
 import com.mapbox.pluginscalebar.ScaleBarPlugin;
+import com.vijay.jsonwizard.constants.JsonFormConstants;
+import com.vijay.jsonwizard.domain.Form;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.AllConstants;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.Task;
+import org.smartregister.family.activity.FamilyWizardFormActivity;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
@@ -63,6 +71,7 @@ import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
+import org.smartregister.reveal.model.QRCodeDetailsCard;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
@@ -73,8 +82,11 @@ import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
+import org.smartregister.util.PermissionUtils;
+import org.smartregister.view.activity.BarcodeScanActivity;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
@@ -94,9 +106,11 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
+import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FAMILY_PROFILE;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_ISSUE_QR;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_TASK_LISTS;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
@@ -163,12 +177,18 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private CardDetailsUtil cardDetailsUtil = new CardDetailsUtil();
 
+    private String structureID;
+
+    private String nextAction;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (BuildConfig.BUILD_COUNTRY == Country.THAILAND || BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
             setContentView(R.layout.thailand_activity_list_tasks);
+        }else if (BuildConfig.BUILD_COUNTRY == Country.NTD_COMMUNITY) {
+            setContentView(R.layout.ntd_community_activity_list);
         } else {
             setContentView(R.layout.activity_list_tasks);
         }
@@ -192,11 +212,27 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         findViewById(R.id.btn_add_structure).setOnClickListener(this);
         findViewById(R.id.drawerMenu).setOnClickListener(this);
 
+        boolean hasQRSearch = BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY);
+        findViewById(R.id.btn_qr_code).setVisibility(hasQRSearch ? View.VISIBLE : View.GONE);
+        if (hasQRSearch)
+            findViewById(R.id.btn_qr_code).setOnClickListener(v -> scanQRCode());
+
         initializeCardViews();
 
         initializeToolbar();
 
         syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
+    }
+
+    private void scanQRCode() {
+        if (PermissionUtils.isPermissionGranted(this, Manifest.permission.CAMERA, PermissionUtils.CAMERA_PERMISSION_REQUEST_CODE)) {
+            try {
+                Intent intent = new Intent(this, BarcodeScanActivity.class);
+                startActivityForResult(intent, AllConstants.BARCODE.BARCODE_REQUEST_CODE);
+            } catch (SecurityException e) {
+                Utils.showToast(this, getString(R.string.allow_camera_management));
+            }
+        }
     }
 
     private void initializeCardViews() {
@@ -460,18 +496,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private void onAddItemClicked() {
         if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
-            AlertDialogUtils.displayNotificationWithCallback(getContext(), R.string.registration_type,
-                    R.string.registration_type_message, R.string.registration_type_structure, R.string.registration_type_family, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (which == BUTTON_POSITIVE) {
-                                listTaskPresenter.onAddStructureClicked(revealMapHelper.isMyLocationComponentActive(getContext(), myLocationButton));
-                            } else if (which == BUTTON_NEGATIVE) {
-                                registerFamily();
-                            }
-                            dialog.dismiss();
-                        }
-                    });
+            registerFamily();
         } else {
             listTaskPresenter.onAddStructureClicked(revealMapHelper.isMyLocationComponentActive(this, myLocationButton));
         }
@@ -519,7 +544,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (v.getId() == R.id.filter_tasks_fab || v.getId() == R.id.filter_tasks_count_layout) {
             listTaskPresenter.onFilterTasksClicked();
         } else if (v.getId() == R.id.tv_eligible) {
-            registerFamily();
+            startEligibilityForm();
             closeCardView(R.id.btn_collapse_eligibility_card_view);
         } else if (v.getId() == R.id.tv_not_eligible) {
             closeCardView(R.id.btn_collapse_eligibility_card_view);
@@ -564,11 +589,12 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_NAME, Utils.getValue(family.getColumnmaps(), DBConstants.KEY.FIRST_NAME, false));
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.GO_TO_DUE_PAGE, false);
 
-
-        intent.putExtra(Properties.LOCATION_UUID, listTaskPresenter.getSelectedFeature().id());
-        intent.putExtra(Properties.TASK_IDENTIFIER, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_IDENTIFIER));
-        intent.putExtra(Properties.TASK_BUSINESS_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_BUSINESS_STATUS));
-        intent.putExtra(Properties.TASK_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_STATUS));
+        if(listTaskPresenter.getSelectedFeature() != null) {
+            intent.putExtra(Properties.LOCATION_UUID, listTaskPresenter.getSelectedFeature().id());
+            intent.putExtra(Properties.TASK_IDENTIFIER, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_IDENTIFIER));
+            intent.putExtra(Properties.TASK_BUSINESS_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_BUSINESS_STATUS));
+            intent.putExtra(Properties.TASK_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_STATUS));
+        }
 
         startActivityForResult(intent, REQUEST_CODE_FAMILY_PROFILE);
     }
@@ -579,9 +605,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         clearSelectedFeature();
 
         if (Country.NTD_COMMUNITY == BuildConfig.BUILD_COUNTRY) {
-            Intent intent = new Intent(this, FamilyRegisterActivity.class);
-            intent.putExtra(START_REGISTRATION, true);
-            startActivity(intent);
+            listTaskPresenter.startFamilyRegistrationForm(getContext());
         } else {
             Intent intent = new Intent(this, FamilyRegisterActivity.class);
             intent.putExtra(START_REGISTRATION, true);
@@ -667,7 +691,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void openCardView(CardDetails cardDetails) {
         if (Country.NTD_COMMUNITY == BuildConfig.BUILD_COUNTRY) {
-            eligibilityCardView.setVisibility(View.VISIBLE);
+            if (cardDetails instanceof QRCodeDetailsCard){
+                eligibilityCardView.setVisibility(View.VISIBLE);
+            }else{
+                eligibilityCardView.setVisibility(View.VISIBLE);
+            }
             return;
         }
         if (cardDetails instanceof SprayCardDetails) {
@@ -725,12 +753,35 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         Toast.makeText(this, resourceId, Toast.LENGTH_SHORT).show();
     }
 
+    public void onQRCodeSucessfullyScanned(String qrCode) {
+        Timber.i("QR code: %s", qrCode);
+        if (StringUtils.isNotBlank(qrCode)) {
+            listTaskPresenter.startFamilyProfileByQR(qrCode);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_GET_JSON && resultCode == RESULT_OK && data.hasExtra(JSON_FORM_PARAM_JSON)) {
+
+
             String json = data.getStringExtra(JSON_FORM_PARAM_JSON);
             Timber.d(json);
-            listTaskPresenter.saveJsonForm(json);
+
+            try {
+                JSONObject jsonForm = new JSONObject(json);
+                String encounterType = jsonForm.getString(ENCOUNTER_TYPE);
+                if (encounterType.equalsIgnoreCase(org.smartregister.reveal.util.Constants.EventType.STRUCTURE_ELIGIBILITY)) {
+                    listTaskPresenter.saveEligibilityForm(jsonForm, listTaskPresenter.getSelectedFeature());
+                }else if (encounterType.equalsIgnoreCase(FamilyConstants.EventType.FAMILY_REGISTRATION)) {
+                    listTaskPresenter.saveFamilyRegistration(jsonForm, getContext());
+                } else {
+                    listTaskPresenter.saveJsonForm(json);
+                }
+            } catch (JSONException e) {
+                Timber.e(e);
+            }
+
         } else if (requestCode == Constants.RequestCode.LOCATION_SETTINGS && hasRequestedLocation) {
             if (resultCode == RESULT_OK) {
                 listTaskPresenter.getLocationPresenter().waitForUserLocation();
@@ -748,6 +799,33 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (requestCode == REQUEST_CODE_TASK_LISTS && resultCode == RESULT_OK && data.hasExtra(FILTER_SORT_PARAMS)) {
             TaskFilterParams filterParams = (TaskFilterParams) data.getSerializableExtra(FILTER_SORT_PARAMS);
             listTaskPresenter.setTaskFilterParams(filterParams);
+        } else if (requestCode == AllConstants.BARCODE.BARCODE_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data != null) {
+                Barcode barcode = data.getParcelableExtra(AllConstants.BARCODE.BARCODE_KEY);
+                Timber.d("Scanned QR Code %s", barcode.displayValue);
+                onQRCodeSucessfullyScanned(barcode.displayValue);
+            } else
+                Timber.i("NO RESULT FOR QR CODE");
+        } else if (requestCode == REQUEST_CODE_ISSUE_QR && resultCode == RESULT_OK) {
+            if (data != null) {
+                Barcode barcode = data.getParcelableExtra(AllConstants.BARCODE.BARCODE_KEY);
+                Timber.d("Scanned QR Code %s", barcode.displayValue);
+
+                if (nextAction.equalsIgnoreCase(org.smartregister.reveal.util.Constants.ActionStatus.ISSUE_CODE_REGISTRATION)) {
+                    listTaskPresenter.assignQRCodeToStructure(getContext(), structureID, barcode.displayValue, new Runnable() {
+                        @Override
+                        public void run() {
+                            registerFamily();
+                        }
+                    });
+                } else {
+                    listTaskPresenter.assignQRCodeToStructure(getContext(), structureID, barcode.displayValue, null);
+                }
+                // either start registration or assign structure and die
+
+
+            } else
+                Timber.i("NO RESULT FOR QR CODE");
         }
     }
 
@@ -898,6 +976,93 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void setSearchPhrase(String searchPhrase) {
         searchView.setText(searchPhrase);
+    }
+
+    @Override
+    public void startEligibilityForm() {
+        try {
+            Form form = new Form();
+            form.setActionBarBackground(org.smartregister.family.R.color.family_actionbar);
+            form.setNavigationBackground(org.smartregister.family.R.color.family_navigation);
+            form.setHomeAsUpIndicator(org.smartregister.family.R.mipmap.ic_cross_white);
+            form.setPreviousLabel(getResources().getString(org.smartregister.family.R.string.back));
+            form.setWizard(false);
+
+            String jsonForm = readAssetContents(getContext(), org.smartregister.reveal.util.Constants.JsonForm.NTD_COMMUNITY_ELIGIBILITY);
+            JSONObject jsonObject = new JSONObject(jsonForm);
+
+            startJSONForm(jsonObject, form);
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+    }
+
+    @Override
+    public void issueStructureQRCode(String structureId, String pendingTask) {
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                .setTitle("Scan QR Code")
+                .setMessage("You are required to issue a QR code, scan a new QR code patch")
+                .setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == BUTTON_POSITIVE) {
+                            // open a scan qr code activity
+                            nextAction = pendingTask;
+                            structureID = structureId;
+
+                            Intent intent = new Intent(getActivity(), BarcodeScanActivity.class);
+                            startActivityForResult(intent, REQUEST_CODE_ISSUE_QR);
+                        }
+
+                        dialog.dismiss();
+                    }
+                }).show();
+        alertDialog.setCancelable(false);
+    }
+
+    @Override
+    public void setLoadingState(boolean state) {
+        if (state) {
+            showProgressDialog(R.string.please_wait, R.string.loading);
+        } else {
+            hideProgressDialog();
+        }
+    }
+
+    @Override
+    public void onError(Exception e) {
+        Toast.makeText(getBaseContext(), R.string.an_error_occured, Toast.LENGTH_SHORT).show();
+        Timber.e(e);
+    }
+
+    @Override
+    public void onEligibilityStatusConfirmed(String status) {
+        switch (status) {
+            case org.smartregister.reveal.util.Constants.ActionStatus
+                    .ISSUE_CODE:
+            case org.smartregister.reveal.util.Constants.ActionStatus
+                    .ISSUE_CODE_REGISTRATION:
+                issueStructureQRCode(listTaskPresenter.getSelectedFeature().id(), status);
+                break;
+            case org.smartregister.reveal.util.Constants.ActionStatus
+                    .REGISTER:
+                registerFamily();
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void startJSONForm(JSONObject jsonObject, Form form) {
+        Intent intent = new Intent(this, FamilyWizardFormActivity.class);
+        intent.putExtra(org.smartregister.family.util.Constants.JSON_FORM_EXTRA.JSON, jsonObject.toString());
+        intent.putExtra(JsonFormConstants.JSON_FORM_KEY.FORM, form);
+        startActivityForResult(intent, REQUEST_CODE_GET_JSON);
+    }
+
+    public String readAssetContents(Context context, String path) {
+        return org.smartregister.util.Utils.readAssetContents(context, path);
     }
 
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {

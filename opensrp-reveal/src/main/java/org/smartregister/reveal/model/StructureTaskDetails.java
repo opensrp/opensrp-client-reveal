@@ -19,6 +19,8 @@ public class StructureTaskDetails extends BaseTaskDetails {
 
     private String personTested;
 
+    private String personBaseEntityId;
+
     public StructureTaskDetails(@NonNull String taskId) {
         super(taskId);
     }
@@ -61,5 +63,13 @@ public class StructureTaskDetails extends BaseTaskDetails {
 
     public void setPersonTested(String personTested) {
         this.personTested = personTested;
+    }
+
+    public String getPersonBaseEntityId() {
+        return personBaseEntityId;
+    }
+
+    public void setPersonBaseEntityId(String personBaseEntityId) {
+        this.personBaseEntityId = personBaseEntityId;
     }
 }

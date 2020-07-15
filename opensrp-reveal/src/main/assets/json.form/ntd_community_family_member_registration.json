@@ -55,13 +55,14 @@
     "title": "Add Family Member",
     "fields": [
       {
-        "key": "opensrp_id",
+        "key": "unique_id",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_identifier",
         "openmrs_entity_id": "opensrp_id",
-        "type": "hidden",
+        "type": "edit_text",
         "hint": "ID",
-        "read_only": true,
+        "read_only": "True",
+        "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Please enter the ID"
@@ -89,7 +90,7 @@
           },
           {
             "key": "not_eligible",
-            "text": "not eligible to grant consent"
+            "text": "Not eligible to grant consent"
           }
         ],
         "v_required": {
@@ -100,34 +101,25 @@
       {
         "key": "noConsent",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "toaster_notes",
-        "text": "No consent",
-        "toaster_info_text": "This child did not receive appropriate consent and cannot be registered. Please exit out of this form.",
-        "toaster_type": "warning"
-      },
-      {
-        "key": "consentRelationship",
-        "openmrs_entity_parent": "",
         "openmrs_entity": "person_attribute",
-        "openmrs_entity_id": "has_no_id",
-        "type": "check_box",
-        "label": "",
-        "options": [
-          {
-            "key": "noNationalID",
-            "text": "Child does not have a national ID",
-            "text_size": "18px",
-            "value": "false"
+        "openmrs_entity_id": "no_consent",
+        "type": "toaster_notes",
+        "text": "This child did not receive appropriate consent and cannot be registered. Please exit out of this form",
+        "toaster_info_text": "This child did not receive appropriate consent and cannot be registered. Please exit out of this form.",
+        "toaster_type": "warning",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-family-register-member-relevance.yml"
+            }
           }
-        ]
+        }
       },
       {
         "key": "consentRelationshipOther",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "first_name",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "consent_relationship_other",
         "type": "edit_text",
         "hint": "If \"other\" relationship eligible to give consent, please specifiy the relationship",
         "edit_type": "name",
@@ -135,13 +127,20 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-family-register-member-relevance.yml"
+            }
+          }
         }
       },
       {
         "key": "firstName",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "first_name",
         "type": "edit_text",
         "hint": "SAC given (first) name",
         "edit_type": "name",
@@ -152,7 +151,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "family-register-relevance.yml"
+              "rules-file": "ntd-community-family-register-member-relevance.yml"
             }
           }
         }
@@ -168,6 +167,13 @@
         "v_required": {
           "value": "true",
           "err": "Please enter the surname"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-family-register-member-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -176,15 +182,21 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "check_box",
-        "label": "If the surname is the same as the household head's surname, check the box instead of entering the name.",
         "options": [
           {
             "key": "same_as_fam_name",
-            "text": "First name same as household name",
+            "text": "Surname name same as household name",
             "text_size": "18px",
             "value": "false"
           }
-        ]
+        ],
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-family-register-member-relevance.yml"
+            }
+          }
+        }
       },
       {
         "key": "gender",
@@ -206,6 +218,13 @@
         "v_required": {
           "value": "true",
           "err": "Please enter the sex"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-family-register-member-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -230,23 +249,14 @@
         "v_required": {
           "value": true,
           "err": "Please enter the age"
-        }
-      },
-      {
-        "key": "dob_calculated",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
-        "openmrs_entity_id": "birthdateApprox",
-        "type": "check_box",
-        "label": "",
-        "options": [
-          {
-            "key": "dob_unknown",
-            "text": "DOB unknown?",
-            "text_size": "18px",
-            "value": "false"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-family-register-member-relevance.yml"
+            }
           }
-        ]
+        }
       },
       {
         "key": "personEnrollment",
@@ -268,6 +278,13 @@
         "v_required": {
           "value": "true",
           "err": "Please enter if the child is enrolled"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-family-register-member-relevance.yml"
+            }
+          }
         }
       }
     ]

@@ -1,0 +1,21 @@
+---
+name: step1_nPzqDistribute
+description: nPzqDistribute relevance
+priority: 1
+condition: "step1_availableForTreatment.contains('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_nPzqDistributedQuantity
+description: nPzqDistributedQuantity relevance
+priority: 1
+condition: "step1_nPzqDistribute.contains('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_nPzqNondistributeReason
+description: nPzqNondistributeReason relevance
+priority: 1
+condition: "step1_nPzqDistribute.contains('No')"
+actions:
+  - "isRelevant = true"

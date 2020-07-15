@@ -42,6 +42,9 @@ public interface FamilyConstants {
         String REFAPP_FAMILY_REGISTER = "refapp_family_register";
         String REFAPP_FAMILY_UPDATE = "refapp_family_update";
         String REFAPP_FAMILY_MEMBER_REGISTER = "refapp_family_member_register";
+
+        String NTD_COMMUNITY_FAMILY_MEMBER_REGISTER = "ntd_community_family_member_registration";
+        String NTD_COMMUNITY_FAMILY_REGISTER = "ntd_community_family_register";
     }
 
     interface RELATIONSHIP {

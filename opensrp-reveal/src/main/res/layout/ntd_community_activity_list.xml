@@ -96,6 +96,7 @@
                     android:layout_height="wrap_content"
                     android:visibility="gone" />
 
+
                 <include
                     android:id="@+id/mosquito_collection_card_view"
                     layout="@layout/mosquito_collection_card_view"
@@ -150,5 +151,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header" />
+        app:headerLayout="@layout/nav_header_ntd_community" />
+
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -1,5 +1,5 @@
 {
-  "count": "2",
+  "count": "1",
   "encounter_type": "Structure Eligibility",
   "entity_id": "",
   "relational_id": "",
@@ -53,7 +53,6 @@
   },
   "step1": {
     "title": "Structure details",
-    "next": "step2",
     "fields": [
       {
         "key": "statusResidential",

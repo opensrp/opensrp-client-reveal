@@ -1,15 +1,21 @@
 package org.smartregister.reveal.util;
 
 import android.content.Context;
+
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.dao.AbstractDao;
 import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.family.util.Constants.JSON_FORM_KEY;
 import org.smartregister.family.util.JsonFormUtils;
@@ -21,6 +27,9 @@ import org.smartregister.reveal.util.FamilyConstants.FormKeys;
 import org.smartregister.util.FormUtils;
 import org.smartregister.view.LocationPickerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -289,5 +298,27 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         return updateMemberNameEvent;
     }
 
+    public static Object getFormValue(JSONObject jsonObject, String key) throws JSONException {
+        if (jsonObject.has(key))
+            return jsonObject.getString(key);
+
+        return "";
+    }
+
+    public static Integer getAge(@Nullable String strBirthDate){
+        if(StringUtils.isNotBlank(strBirthDate)){
+
+            try {
+                LocalDate birthdate = new LocalDate (strBirthDate.substring(0,10));
+                LocalDate now = new LocalDate();
+
+                Period period = new Period(birthdate, now, PeriodType.yearMonthDay());
+                return period.getYears();
+            } catch (Exception e) {
+                Timber.e(e);
+            }
+        }
+        return null;
+    }
 
 }

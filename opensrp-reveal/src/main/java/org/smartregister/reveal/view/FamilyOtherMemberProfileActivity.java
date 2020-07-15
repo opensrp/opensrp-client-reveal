@@ -19,10 +19,12 @@ import org.smartregister.family.model.BaseFamilyOtherMemberProfileActivityModel;
 import org.smartregister.family.util.Constants;
 import org.smartregister.family.util.JsonFormUtils;
 import org.smartregister.family.util.Utils;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.fragment.FamilyOtherMemberProfileFragment;
 import org.smartregister.reveal.presenter.FamilyOtherMemberPresenter;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
@@ -72,7 +74,7 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
         }
 
         getMenuInflater().inflate(R.menu.other_member_menu, menu);
-        if (isFamilyHead) {
+        if (isFamilyHead || BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
             menu.findItem(R.id.action_archive).setVisible(false);
         }
 

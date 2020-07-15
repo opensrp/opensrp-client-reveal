@@ -2,8 +2,9 @@ package org.smartregister.reveal.interactor;
 
 import android.content.Context;
 import android.location.Location;
-import androidx.core.util.Pair;
 import android.text.TextUtils;
+
+import androidx.core.util.Pair;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -16,12 +17,15 @@ import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.repository.EventClientRepository.event_column;
 import org.smartregister.repository.LocationRepository;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
+import org.smartregister.reveal.dao.TaskDetailsDao;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Properties;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.Utils;
 
@@ -194,34 +198,39 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
         // Fetch grouped tasks
         List<TaskDetails> tasks = new ArrayList<>();
         appExecutors.diskIO().execute(() -> {
-            structuresWithinBuffer = 0;
-            if (Utils.isFocusInvestigationOrMDA()) { // perform task grouping
+            if (!BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
+                structuresWithinBuffer = 0;
+                if (Utils.isFocusInvestigationOrMDA()) { // perform task grouping
 
-                tasks.addAll(queryTaskDetails(groupedRegisteredStructureTasksSelect(mainCondition.first),
-                        mainCondition.second, lastLocation, operationalAreaCenter, houseLabel, true));
+                    tasks.addAll(queryTaskDetails(groupedRegisteredStructureTasksSelect(mainCondition.first),
+                            mainCondition.second, lastLocation, operationalAreaCenter, houseLabel, true));
 
 
-                tasks.addAll(queryTaskDetails(nonRegisteredStructureTasksSelect(mainCondition.first),
-                        mainCondition.second, lastLocation, operationalAreaCenter, houseLabel, false));
+                    tasks.addAll(queryTaskDetails(nonRegisteredStructureTasksSelect(mainCondition.first),
+                            mainCondition.second, lastLocation, operationalAreaCenter, houseLabel, false));
 
+                } else {
+
+                    tasks.addAll(queryTaskDetails(mainSelect(mainCondition.first), mainCondition.second,
+                            lastLocation, operationalAreaCenter, houseLabel, false));
+
+                }
+
+                // Query BCC task
+                tasks.addAll(queryTaskDetails(bccSelect(), mainCondition.second, lastLocation,
+                        operationalAreaCenter, houseLabel, false));
+
+
+                // Query Case Confirmation task
+                String[] params = ArrayUtils.add(mainCondition.second, CASE_CONFIRMATION);
+                tasks.addAll(queryTaskDetails(indexCaseSelect(), params, lastLocation,
+                        operationalAreaCenter, houseLabel, false));
+
+                Collections.sort(tasks);
             } else {
-
-                tasks.addAll(queryTaskDetails(mainSelect(mainCondition.first), mainCondition.second,
-                        lastLocation, operationalAreaCenter, houseLabel, false));
-
+                TaskDetailsDao taskDetailsDao = TaskDetailsDao.getInstance();
+                tasks.addAll(taskDetailsDao.getTasks(mainCondition.second[0], lastLocation, operationalAreaCenter));
             }
-
-            // Query BCC task
-            tasks.addAll(queryTaskDetails(bccSelect(), mainCondition.second, lastLocation,
-                    operationalAreaCenter, houseLabel, false));
-
-
-            // Query Case Confirmation task
-            String[] params = ArrayUtils.add(mainCondition.second, CASE_CONFIRMATION);
-            tasks.addAll(queryTaskDetails(indexCaseSelect(), params, lastLocation,
-                    operationalAreaCenter, houseLabel, false));
-
-            Collections.sort(tasks);
             appExecutors.mainThread().execute(() -> {
                 getPresenter().onTasksFound(tasks, structuresWithinBuffer);
             });

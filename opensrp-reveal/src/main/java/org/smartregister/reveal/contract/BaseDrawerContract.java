@@ -97,9 +97,13 @@ public interface BaseDrawerContract {
         void onPlanValidated(boolean isValid);
 
         void updateSyncStatusDisplay(boolean synced);
+
+        void onPlanAutoSelected(Set<PlanDefinition> planDefinitions);
     }
 
     interface Interactor {
+
+        void autoSelectPlan(String jurisdictionName);
 
         void fetchPlans(String jurisdictionName);
 

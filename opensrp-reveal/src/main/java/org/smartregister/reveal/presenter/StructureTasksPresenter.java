@@ -1,31 +1,50 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
 import com.mapbox.geojson.Feature;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.domain.db.Event;
+import org.smartregister.repository.BaseRepository;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
+import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.contract.StructureTasksContract;
+import org.smartregister.reveal.dao.TaskDetailsDao;
 import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.interactor.StructureTasksInteractor;
+import org.smartregister.reveal.model.Child;
+import org.smartregister.reveal.model.ChildModel;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.util.NativeFormProcessor;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.util.CallableInteractor;
+import org.smartregister.util.CallableInteractorCallBack;
+import org.smartregister.util.GenericInteractor;
+import org.smartregister.view.ListContract;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
+
+import timber.log.Timber;
 
 import static org.smartregister.reveal.contract.StructureTasksContract.Interactor;
 import static org.smartregister.reveal.contract.StructureTasksContract.Presenter;
@@ -46,6 +65,8 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
     private String structureId;
 
+    private String familyBaseEntityId;
+
     private BaseFormFragmentContract.Interactor formInteractor;
 
 
@@ -64,16 +85,24 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     }
 
     @Override
-    public void findTasks(String structureId) {
+    public void findTasks(String structureId, String familyBaseEntityId) {
         this.structureId = structureId;
-        interactor.findTasks(structureId, prefsUtil.getCurrentPlanId(),
-                Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId());
+        this.familyBaseEntityId = familyBaseEntityId;
+        if (StringUtils.isNotBlank(structureId)) {
+            interactor.findTasks(structureId, prefsUtil.getCurrentPlanId(),
+                    Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId());
+        } else if (StringUtils.isNotBlank(familyBaseEntityId)) {
+            interactor.findTasks(familyBaseEntityId);
+        }
     }
 
     @Override
     public void refreshTasks() {
         if (structureId != null)
-            findTasks(structureId);
+            findTasks(structureId, null);
+
+        if (familyBaseEntityId != null)
+            findTasks(null, familyBaseEntityId);
     }
 
 
@@ -89,12 +118,18 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     @Override
     public void onTaskSelected(StructureTaskDetails details, boolean isEdit, boolean isUndo) {
         if (details != null) {
+
+            if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
+                startMDAForm(details.getPersonBaseEntityId());
+                return;
+            }
+
             if (TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
                 if (isEdit) {
                     details.setEdit(true);
                     getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
                     interactor.getStructure(details);
-                } else if(isUndo) {
+                } else if (isUndo) {
                     getView().displayResetTaskInfoDialog(details);
                 } else {
                     getView().displayToast("Task Completed");
@@ -106,6 +141,97 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
         }
     }
 
+    public void startMDAForm(String baseEntityID) {
+        Context context = RevealApplication.getInstance().getContext().applicationContext();
+
+        CallableInteractor myInteractor = new GenericInteractor();
+
+        Callable<JSONObject> callable = () -> {
+
+            String jsonForm = org.smartregister.util.Utils.readAssetContents(context, Constants.JsonForm.NTD_COMMUNITY_MASS_DRUG_ADMINISTRATION);
+            JSONObject jsonObject = new JSONObject(jsonForm);
+            jsonObject.put(Constants.Properties.BASE_ENTITY_ID, baseEntityID);
+
+            return jsonObject;
+        };
+
+        getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
+        myInteractor.execute(callable, new CallableInteractorCallBack<JSONObject>() {
+            @Override
+            public void onResult(JSONObject jsonObject) {
+                getView().startForm(jsonObject);
+                getView().hideProgressDialog();
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                Timber.e(ex);
+                getView().hideProgressDialog();
+            }
+        });
+    }
+
+    public void saveMDAForm(String jsonString) {
+        CallableInteractor myInteractor = new GenericInteractor();
+
+        Callable<List<StructureTaskDetails>> callable = () -> {
+
+            String entityId = new JSONObject(jsonString).getString(Constants.Properties.BASE_ENTITY_ID);
+
+            // update metadata
+            NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonString)
+                    .withBindType(Constants.EventType.MDA_DISPENSE)
+                    .withEncounterType(Constants.EventType.MDA_DISPENSE)
+                    .withEntityId(entityId);
+
+            // get task
+            Task task = TaskDetailsDao.getInstance().getCurrentTask(entityId, Constants.Intervention.NTD_MDA_DISPENSE);
+
+            // update the task
+            boolean completed = processor.getFieldValue("nPzqDistribute").equalsIgnoreCase("Yes");
+
+            task.setBusinessStatus(completed ?
+                    Constants.BusinessStatus.VISITED_DRUG_ADMINISTERED :
+                    Constants.BusinessStatus.VISITED_DRUG_NOT_ADMINISTERED
+            );
+
+            task.setStatus(Task.TaskStatus.COMPLETED);
+            if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+            }
+            task.setLastModified(new DateTime());
+            RevealApplication.getInstance().getTaskRepository().addOrUpdate(task);
+
+            // save event details
+            Location operationalArea = processor.getCurrentOperationalArea();
+            processor
+                    .tagLocationData(operationalArea)
+                    .tagTaskDetails(task)
+                    .tagEventMetadata()
+
+                    // save and clientM
+                    .saveEvent()
+                    .clientProcessForm();
+
+            return TaskDetailsDao.getInstance().getFamilyStructureTasks(familyBaseEntityId);
+        };
+
+
+        getView().showProgressDialog(R.string.saving_title, R.string.saving_message);
+        myInteractor.execute(callable, new CallableInteractorCallBack<List<StructureTaskDetails>>() {
+            @Override
+            public void onResult(List<StructureTaskDetails> result) {
+                getView().setTaskDetailsList(result);
+                getView().hideProgressDialog();
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                Timber.e(ex);
+                getView().hideProgressDialog();
+            }
+        });
+    }
 
     @Override
     public void onLocationValidated() {
@@ -171,7 +297,7 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
     @Override
     public void onTaskInfoReset(String structureId) {
-        findTasks(structureId);
+        findTasks(structureId, null);
     }
 
     @Override

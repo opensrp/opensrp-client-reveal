@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
@@ -13,15 +14,19 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.vijay.jsonwizard.domain.Form;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
+import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -29,11 +34,14 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
+import org.smartregister.reveal.dao.StructureDao;
+import org.smartregister.reveal.dao.TaskDetailsDao;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
+import org.smartregister.reveal.model.QRCodeDetailsCard;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
@@ -41,20 +49,31 @@ import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.util.FamilyConstants;
+import org.smartregister.reveal.util.NativeFormProcessor;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
+import org.smartregister.util.CallableInteractor;
+import org.smartregister.util.CallableInteractorCallBack;
+import org.smartregister.util.GenericInteractor;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
 
 import timber.log.Timber;
@@ -63,7 +82,12 @@ import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
+import static org.smartregister.family.util.Utils.metadata;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
+import static org.smartregister.reveal.util.Constants.ActionStatus.EXIT;
+import static org.smartregister.reveal.util.Constants.ActionStatus.ISSUE_CODE;
+import static org.smartregister.reveal.util.Constants.ActionStatus.ISSUE_CODE_REGISTRATION;
+import static org.smartregister.reveal.util.Constants.ActionStatus.REGISTER;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
@@ -156,6 +180,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private String searchPhrase;
 
     private TaskFilterParams filterParams;
+
+    private CallableInteractor interactor;
 
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
@@ -282,6 +308,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         listTaskView.closeAllCardViews();
         listTaskView.displaySelectedFeature(feature, clickedPoint);
+
+        if (Country.NTD_COMMUNITY == BuildConfig.BUILD_COUNTRY) {
+            onNTDFeatureSelected(selectedFeature);
+            return;
+        }
+
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
         } else if (isLongclick) {
@@ -291,6 +323,55 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else {
             onFeatureSelectedByNormalClick(feature);
         }
+    }
+
+    private void onNTDFeatureSelected(Feature feature){
+        CallableInteractor myInteractor = getInteractor();
+
+        String START_REGISTER = "START_REGISTER";
+        String HAS_QR = "HAS_QR";
+        String SHOW_FAMILY = "SHOW_FAMILY";
+
+        Callable<String> callable = () -> {
+            StructureDao structureDao = StructureDao.getInstance();
+
+           if(StringUtils.isNotBlank(structureDao.getFamilyIDFromStructureID(feature.id())))
+               return SHOW_FAMILY;
+
+            if(structureDao.structureHasQr(feature.id()))
+                return HAS_QR;
+
+            return START_REGISTER;
+        };
+
+        getView().setLoadingState(true);
+        myInteractor.execute(callable, new CallableInteractorCallBack<String>() {
+            @Override
+            public void onResult(String result) {
+                ListTaskView view = getView();
+                if (view != null) {
+                    view.setLoadingState(false);
+
+                    if(START_REGISTER.equalsIgnoreCase(result)){
+                        onCardDetailsFetched(null);
+                    }else if(SHOW_FAMILY.equalsIgnoreCase(result)){
+                        listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
+                    }else if(HAS_QR.equalsIgnoreCase(result)){
+                        onCardDetailsFetched(new QRCodeDetailsCard(""));
+                    }
+
+                    view.onEligibilityStatusConfirmed(result);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ListTaskView view = getView();
+                if (view == null) return;
+                view.onError(ex);
+                view.setLoadingState(false);
+            }
+        });
     }
 
     private void onFeatureSelectedByNormalClick(Feature feature) {
@@ -365,6 +446,371 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
+    public void startFamilyProfileByQR(String qrCode) {
+        CallableInteractor myInteractor = getInteractor();
+
+        Callable<CommonPersonObjectClient> callable = () -> {
+
+            StructureDao structureDao = StructureDao.getInstance();
+
+            // check if qr has a structure
+            String familyEntityId = structureDao.getFamilyBaseIDFromQRCode(qrCode);
+            if (StringUtils.isBlank(familyEntityId))
+                throw new IllegalStateException("Family not found");
+
+            CommonRepository commonRepository = revealApplication.getContext().commonrepository(metadata().familyRegister.tableName);
+            CommonPersonObject personObject = commonRepository.findByBaseEntityId(familyEntityId);
+            CommonPersonObjectClient family = new CommonPersonObjectClient(personObject.getCaseId(),
+                    personObject.getDetails(), "");
+            family.setColumnmaps(personObject.getColumnmaps());
+
+            return family;
+        };
+
+
+        getView().setLoadingState(true);
+        myInteractor.execute(callable, new CallableInteractorCallBack<CommonPersonObjectClient>() {
+            @Override
+            public void onResult(CommonPersonObjectClient result) {
+                ListTaskView view = getView();
+                if (view != null) {
+                    view.setLoadingState(false);
+                    view.openStructureProfile(result);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ListTaskView view = getView();
+                if (view == null) return;
+                view.onError(ex);
+                view.setLoadingState(false);
+            }
+        });
+    }
+
+    @Override
+    public void saveEligibilityForm(JSONObject jsonObject, Feature feature) {
+        CallableInteractor myInteractor = getInteractor();
+
+        Callable<String> callable = () -> {
+
+            // save event details
+            NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonObject);
+            org.smartregister.domain.Location operationalArea = processor.getCurrentOperationalArea();
+
+            // update metadata
+            processor
+                    .withBindType(Constants.Tables.STRUCTURE_ELIGIBILITY_TABLE)
+                    .withEncounterType(Constants.EventType.STRUCTURE_ELIGIBILITY)
+                    .withEntityId(feature.id())
+                    .tagLocationData(operationalArea)
+                    .tagEventMetadata()
+
+                    // save
+                    .saveEvent();
+
+            String statusResidential = processor.getFieldValue("statusResidential");
+            String statusHouseholdaccessible = processor.getFieldValue("statusHouseholdaccessible");
+            String statusHouseholdAllPresent = processor.getFieldValue("statusHouseholdAllPresent");
+            String statusHohstructure = processor.getFieldValue("statusHohstructure");
+
+
+            if (statusResidential.equalsIgnoreCase("No")) {
+                return EXIT;
+            } else if (statusHohstructure.equalsIgnoreCase("No")) {
+                return EXIT;
+            } else if (statusHouseholdaccessible.equalsIgnoreCase("No")) {
+                return ISSUE_CODE;
+            } else if (statusHouseholdAllPresent.equalsIgnoreCase("No")) {
+                return ISSUE_CODE_REGISTRATION;
+            }
+
+            return REGISTER;
+        };
+
+        getView().setLoadingState(true);
+        myInteractor.execute(callable, new CallableInteractorCallBack<String>() {
+            @Override
+            public void onResult(String result) {
+                ListTaskView view = getView();
+                if (view != null) {
+                    view.setLoadingState(false);
+                    view.onEligibilityStatusConfirmed(result);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ListTaskView view = getView();
+                if (view == null) return;
+                view.onError(ex);
+                view.setLoadingState(false);
+            }
+        });
+
+    }
+
+    @Override
+    public void assignQRCodeToStructure(Context context, String structureId, String qrcode, Runnable runnable) {
+        CallableInteractor myInteractor = getInteractor();
+
+        Callable<Void> callable = () -> {
+            StructureDao structureDao = StructureDao.getInstance();
+
+            // check if structure has a qr
+            if (structureDao.structureHasQr(structureId))
+                throw new IllegalStateException("Structure has assigned QR");
+
+            // check if qr has a structure
+            if (StringUtils.isNotBlank(structureDao.getStructureQRCode(qrcode)))
+                throw new IllegalStateException("QR Code is already assigned");
+
+
+            // read json
+            String jsonForm = readAssetContents(context, org.smartregister.reveal.util.Constants.JsonForm.NTD_COMMUNITY_STRUCTURE_QR);
+            JSONObject jsonObject = new JSONObject(jsonForm);
+
+            Map<String, Object> values = new HashMap<>();
+            values.put("structure_id", structureId);
+            values.put("qr_code", qrcode);
+
+            NativeFormProcessor.createInstance(jsonObject)
+                    .populateValues(values);
+
+            // save event details
+            NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonObject);
+            org.smartregister.domain.Location operationalArea = processor.getCurrentOperationalArea();
+
+            // update metadata
+            processor
+                    .withBindType(Constants.Tables.STRUCTURE_ELIGIBILITY_TABLE)
+                    .withEncounterType(Constants.EventType.STRUCTURE_QR)
+                    .withEntityId(structureId)
+                    .tagLocationData(operationalArea)
+                    .tagEventMetadata()
+
+                    // save
+                    .saveEvent();
+
+            structureDao.addDetails(structureId,qrcode);
+
+            return null;
+        };
+
+        getView().setLoadingState(true);
+        myInteractor.execute(callable, new CallableInteractorCallBack<Void>() {
+            @Override
+            public void onResult(Void aVoid) {
+                ListTaskView view = getView();
+                if (view != null) {
+                    view.setLoadingState(false);
+                    if (runnable != null)
+                        runnable.run();
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ListTaskView view = getView();
+                if (view == null) return;
+                view.onError(ex);
+                view.setLoadingState(false);
+            }
+        });
+    }
+
+    public String readAssetContents(Context context, String path) {
+        return org.smartregister.util.Utils.readAssetContents(context, path);
+    }
+
+
+    @Override
+    public ListTaskView getView() {
+        return listTaskView;
+    }
+
+    @NonNull
+    @Override
+    public CallableInteractor getInteractor() {
+        if (interactor == null)
+            interactor = new GenericInteractor();
+
+        return interactor;
+    }
+
+    public UniqueIdRepository getUniqueIdRepository() {
+        return RevealApplication.getInstance().getContext().getUniqueIdRepository();
+    }
+
+    @Override
+    public void startFamilyRegistrationForm(Context context) {
+
+        CallableInteractor myInteractor = getInteractor();
+
+        Callable<JSONObject> callable = () -> {
+
+            String jsonForm = readAssetContents(context, org.smartregister.reveal.util.Constants.JsonForm.NTD_COMMUNITY_FAMILY_REGISTER);
+            JSONObject jsonObject = new JSONObject(jsonForm);
+
+            // inject unique id
+            Map<String, Object> values = new HashMap<>();
+            String uniqueID = getUniqueIdRepository().getNextUniqueId().getOpenmrsId();
+            values.put(Constants.DatabaseKeys.UNIQUE_ID, uniqueID);
+
+            NativeFormProcessor.createInstance(jsonObject)
+                    .populateValues(values);
+
+            return jsonObject;
+        };
+
+        getView().setLoadingState(true);
+        myInteractor.execute(callable, new CallableInteractorCallBack<JSONObject>() {
+            @Override
+            public void onResult(JSONObject jsonObject) {
+                ListTaskView view = getView();
+                if (view != null) {
+                    view.setLoadingState(false);
+
+                    Form form = new Form();
+                    form.setActionBarBackground(org.smartregister.family.R.color.family_actionbar);
+                    form.setNavigationBackground(org.smartregister.family.R.color.family_navigation);
+                    form.setHomeAsUpIndicator(org.smartregister.family.R.mipmap.ic_cross_white);
+                    form.setPreviousLabel(context.getString(org.smartregister.family.R.string.back));
+                    form.setWizard(true);
+
+                    view.startJSONForm(jsonObject, form);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ListTaskView view = getView();
+                if (view == null) return;
+                view.onError(ex);
+                view.setLoadingState(false);
+            }
+        });
+    }
+
+    @Override
+    public void saveFamilyRegistration(JSONObject jsonObject, Context context) {
+        CallableInteractor myInteractor = getInteractor();
+
+        Callable<CommonPersonObjectClient> callable = () -> {
+
+            JSONObject jsonObjectFamilyMember = new JSONObject(jsonObject.toString());
+
+            // save event details
+            NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonObject);
+            String age = processor.getFieldValue("age");
+            String unique_id = processor.getFieldValue("unique_id");
+            String fam_name = processor.getFieldValue("fam_name");
+            String same_as_fam_name = processor.getFieldValue("same_as_fam_name");
+
+            org.smartregister.domain.Location operationalArea = processor.getCurrentOperationalArea();
+            String familyEntityId = UUID.randomUUID().toString();
+            String familyHeadyEntityId = UUID.randomUUID().toString();
+
+            jsonObject.remove("step2");
+            processor = NativeFormProcessor.createInstance(jsonObject.toString());
+
+            // save family details
+            processor
+                    .withBindType(FamilyConstants.TABLE_NAME.FAMILY)
+                    .withEncounterType(FamilyConstants.EventType.FAMILY_REGISTRATION)
+                    .withEntityId(familyEntityId)
+                    .tagLocationData(operationalArea)
+                    .tagEventMetadata()
+
+                    // create and save client
+                    .hasClient(true)
+                    .saveClient(client -> {
+                        client.addRelationship("family_head", familyHeadyEntityId);
+                        client.addRelationship("primary_caregiver", familyHeadyEntityId);
+                        client.addIdentifier("opensrp_id", unique_id + "_family");
+                        client.setLastName("Family");
+                        client.setGender("Male");
+                        client.setBirthdateApprox(true);
+                        Feature feature = getSelectedFeature();
+                        if (feature != null)
+                            client.addAttribute("residence", feature.id());
+                    })
+                    .saveEvent()
+                    .clientProcessForm();
+
+            // create a family member details
+            // remove step1
+            jsonObjectFamilyMember.put("step1", jsonObjectFamilyMember.get("step2"));
+            jsonObjectFamilyMember.remove("step2");
+
+            NativeFormProcessor familyProcessor = NativeFormProcessor.createInstance(jsonObjectFamilyMember);
+            familyProcessor
+                    .withBindType(FamilyConstants.TABLE_NAME.FAMILY_MEMBER)
+                    .withEncounterType(FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION)
+                    .withEntityId(familyHeadyEntityId)
+                    .tagLocationData(operationalArea)
+                    .tagEventMetadata()
+
+                    // create and save client
+                    .hasClient(true)
+                    .saveClient(client -> {
+                        client.addRelationship("family", familyEntityId);
+                        client.setBirthdateApprox(true);
+                        if (StringUtils.isNotBlank(age)) {
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.add(Calendar.YEAR, -1 * Integer.parseInt(age));
+                            client.setBirthdate(calendar.getTime());
+                        }
+
+                        if(same_as_fam_name.contains("same_as_fam_name"))
+                            client.setLastName(fam_name);
+
+                        Feature feature = getSelectedFeature();
+                        if (feature != null)
+                            client.addAttribute("residence", feature.id());
+                    })
+                    .saveEvent()
+                    .clientProcessForm()
+                    .closeRegistrationID(Constants.DatabaseKeys.UNIQUE_ID);
+
+
+            CommonRepository commonRepository = revealApplication.getContext().commonrepository(metadata().familyRegister.tableName);
+            CommonPersonObject personObject = commonRepository.findByBaseEntityId(familyEntityId);
+            CommonPersonObjectClient family = new CommonPersonObjectClient(personObject.getCaseId(),
+                    personObject.getDetails(), "");
+            family.setColumnmaps(personObject.getColumnmaps());
+
+            return family;
+        };
+
+
+        getView().setLoadingState(true);
+        myInteractor.execute(callable, new CallableInteractorCallBack<CommonPersonObjectClient>() {
+            @Override
+            public void onResult(CommonPersonObjectClient result) {
+                ListTaskView view = getView();
+                if (view != null) {
+                    view.setLoadingState(false);
+                    if(result == null){
+                        view.onError(new IllegalStateException("Invalid family"));
+                    }else{
+                        view.openStructureProfile(result);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ListTaskView view = getView();
+                if (view == null) return;
+                view.onError(ex);
+                view.setLoadingState(false);
+            }
+        });
+    }
+
+    @Override
     public void onInterventionFormDetailsFetched(CardDetails cardDetails) {
         this.cardDetails = cardDetails;
         this.changeInterventionStatus = true;
@@ -402,6 +848,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.openCardView(cardDetails);
         } else if (cardDetails instanceof FamilyCardDetails) {
             formatFamilyCardDetails((FamilyCardDetails) cardDetails);
+            listTaskView.openCardView(cardDetails);
+        } else {
             listTaskView.openCardView(cardDetails);
         }
     }
@@ -648,7 +1096,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public void onFamilyFound(CommonPersonObjectClient finalFamily) {
         if (finalFamily == null)
-            listTaskView.displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
+            if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
+                onCardDetailsFetched(null);
+            } else {
+                listTaskView.displayNotification(R.string.fetch_family_failed, R.string.failed_to_find_family);
+            }
         else
             listTaskView.openStructureProfile(finalFamily);
     }

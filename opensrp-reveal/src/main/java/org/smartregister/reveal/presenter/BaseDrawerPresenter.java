@@ -254,6 +254,10 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         }
         changedCurrentSelection = true;
         populateLocationsFromPreferences();
+
+        if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY))
+            interactor.autoSelectPlan(prefsUtil.getCurrentOperationalArea());
+
         unlockDrawerLayout();
     }
 
@@ -434,6 +438,19 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
                 syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_urgent_red));
                 syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_red));
             }
+        }
+    }
+
+    @Override
+    public void onPlanAutoSelected(Set<PlanDefinition> planDefinitions) {
+        if(planDefinitions.size() > 0) {
+            PlanDefinition definition = planDefinitions.iterator().next();
+
+            prefsUtil.setCurrentPlan(definition.getName());
+            prefsUtil.setCurrentPlanId(definition.getIdentifier());
+            unlockDrawerLayout();
+        }else{
+            view.showPlanSelector(null, null);
         }
     }
 

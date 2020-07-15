@@ -74,7 +74,8 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
-        }
+        },
+        "value": "Yes"
       },
       {
         "key": "nPzqDistribute",
@@ -96,6 +97,14 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "value": "Yes",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_community_family_member_registration.yml"
+            }
+          }
         }
       },
       {
@@ -130,6 +139,13 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_community_family_member_registration.yml"
+            }
+          }
         }
       },
       {
@@ -164,6 +180,13 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_community_family_member_registration.yml"
+            }
+          }
         }
       }
     ]

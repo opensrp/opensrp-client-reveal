@@ -82,9 +82,22 @@
         android:src="@drawable/ic_cross"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/edt_search"
+        app:layout_constraintEnd_toStartOf="@id/btn_qr_code"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+    <ImageButton
+        android:id="@+id/btn_qr_code"
+        android:layout_width="@dimen/ec_main_header_search_cancel_button_width"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/search_view_cancel_image_margin_right"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_qr_code"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/edt_search"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/task_register"

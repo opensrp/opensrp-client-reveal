@@ -36,6 +36,8 @@ public interface TaskRegisterFragmentContract {
 
         void onIndexCaseFound(JSONObject indexCase, boolean isLinkedToJurisdiction);
 
+        void searchViaQRCode(String searchText);
+
         void searchTasks(String searchText);
 
         void filterTasks(TaskFilterParams filterParams);
@@ -54,6 +56,8 @@ public interface TaskRegisterFragmentContract {
     interface View extends BaseRegisterFragmentContract.View, BaseFormFragmentContract.View {
 
         Location getLastLocation();
+
+        void setLoadingState(boolean state);
 
         void initializeAdapter(Set<org.smartregister.configurableviews.model.View> visibleColumns);
 

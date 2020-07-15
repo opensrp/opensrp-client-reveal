@@ -109,12 +109,24 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         super.setupViews(view);
         interventionTypeTv = view.findViewById(R.id.intervention_type);
         if (getActivity() != null) {
-            interventionTypeTv.setText(
-                    getActivity().getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
+            if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)){
+                interventionTypeTv.setText("NTD Community");
+            }else{
+                interventionTypeTv.setText(
+                        getActivity().getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
+            }
         }
         view.findViewById(R.id.txt_map_label).setOnClickListener(v -> getPresenter().onOpenMapClicked());
         drawerView.initializeDrawerLayout();
         view.findViewById(R.id.drawerMenu).setOnClickListener(v -> drawerView.openDrawerLayout());
+
+        boolean hasQRSearch = BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY);
+
+        view.findViewById(R.id.btn_qr_code).setVisibility(hasQRSearch ? View.VISIBLE : View.GONE);
+        if(hasQRSearch)
+            view.findViewById(R.id.btn_qr_code).setOnClickListener(v -> scanQRCode());
+
+
         drawerView.onResume();
 
         initializeProgressIndicatorViews(view);
@@ -127,6 +139,27 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         TaskFilterParams filterParams = (TaskFilterParams) getActivity().getIntent().getSerializableExtra(FILTER_SORT_PARAMS);
         if (filterParams != null) {
             getPresenter().setTaskFilterParams(filterParams);
+        }
+    }
+
+    private void scanQRCode(){
+        BaseRegisterActivity baseRegisterActivity = (BaseRegisterActivity) getActivity();
+        if (baseRegisterActivity != null) {
+            baseRegisterActivity.startQrCodeScanner();
+        }
+    }
+
+    @Override
+    public void onQRCodeSucessfullyScanned(String qrCode) {
+        ((TaskRegisterFragmentPresenter) presenter).searchViaQRCode(qrCode);
+    }
+
+    @Override
+    public void setLoadingState(boolean state) {
+        if (state) {
+            showProgressDialog(R.string.please_wait, R.string.loading);
+        } else {
+            hideProgressDialog();
         }
     }
 
@@ -197,7 +230,9 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     protected void onViewClicked(View view) {
         TaskDetails details = (TaskDetails) view.getTag(R.id.task_details);
 
-        if (TASK_RESET_INTERVENTIONS.contains(details.getTaskCode())
+        if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)){
+            getPresenter().onTaskSelected(details, view.getId() == R.id.task_action);
+        }else if (TASK_RESET_INTERVENTIONS.contains(details.getTaskCode())
                 && Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
             displayTaskActionDialog(details, view);
         } else {
@@ -363,10 +398,12 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.GO_TO_DUE_PAGE, false);
 
 
-        intent.putExtra(Properties.LOCATION_UUID, taskDetails.getStructureId());
-        intent.putExtra(Properties.TASK_IDENTIFIER, taskDetails.getTaskId());
-        intent.putExtra(Properties.TASK_BUSINESS_STATUS, taskDetails.getBusinessStatus());
-        intent.putExtra(Properties.TASK_STATUS, taskDetails.getTaskStatus());
+        if(taskDetails != null) {
+            intent.putExtra(Properties.LOCATION_UUID, taskDetails.getStructureId());
+            intent.putExtra(Properties.TASK_IDENTIFIER, taskDetails.getTaskId());
+            intent.putExtra(Properties.TASK_BUSINESS_STATUS, taskDetails.getBusinessStatus());
+            intent.putExtra(Properties.TASK_STATUS, taskDetails.getTaskStatus());
+        }
 
         startActivity(intent);
 
