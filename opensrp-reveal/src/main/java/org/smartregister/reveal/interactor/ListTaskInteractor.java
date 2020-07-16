@@ -3,6 +3,7 @@ package org.smartregister.reveal.interactor;
 import com.mapbox.geojson.Feature;
 
 import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
 
 import org.joda.time.DateTime;
 import org.json.JSONArray;
@@ -15,6 +16,7 @@ import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
@@ -50,6 +52,7 @@ import timber.log.Timber;
 import static org.smartregister.domain.LocationProperty.PropertyStatus.INACTIVE;
 import static org.smartregister.family.util.DBConstants.KEY.DATE_REMOVED;
 import static org.smartregister.family.util.DBConstants.KEY.RELATIONAL_ID;
+import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.AUTHORED_ON;
@@ -87,6 +90,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
+import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.Tables.IRS_VERIFICATION_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.LARVAL_DIPPINGS_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.MOSQUITO_COLLECTIONS_TABLE;
@@ -146,6 +150,7 @@ public class ListTaskInteractor extends BaseInteractor {
                 try {
                     if (cursor.moveToFirst()) {
                         cardDetails = createCardDetails(cursor, interventionType);
+                        cardDetails.setInterventionType(interventionType);
                     }
                 } catch (Exception e) {
                     Timber.e(e);
@@ -497,6 +502,30 @@ public class ListTaskInteractor extends BaseInteractor {
         task.setTaskStatus(cursor.getString(cursor.getColumnIndex(STATUS)));
         task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
         return task;
+    }
+
+    public void findLastEvent(String structureId, String eventType) {
+
+        appExecutors.diskIO().execute(() -> {
+            String events = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
+                    EventClientRepository.event_column.json, EventClientRepository.Table.event.name(), EventClientRepository.event_column.baseEntityId, EventClientRepository.event_column.eventType, EventClientRepository.event_column.updatedAt);
+            Cursor cursor = null;
+            try {
+                cursor = getDatabase().rawQuery(events, new String[]{structureId, eventType});
+                if (cursor.moveToFirst()) {
+                    String eventJSON = cursor.getString(0);
+                    getPresenter().onEventFound(eventClientRepository.convert(eventJSON, org.smartregister.domain.Event.class));
+
+                }
+            } catch (SQLException e) {
+                Timber.e(e);
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        });
+
     }
 
 }
