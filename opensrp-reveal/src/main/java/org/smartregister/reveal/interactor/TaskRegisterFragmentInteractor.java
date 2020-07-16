@@ -8,12 +8,14 @@ import android.text.TextUtils;
 import com.google.common.annotations.VisibleForTesting;
 
 import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.family.util.DBConstants;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.EventClientRepository.event_column;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.application.RevealApplication;
@@ -415,5 +417,32 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
         appExecutors.mainThread().execute(() -> {
             getPresenter().onTaskInfoReset();
         });
+    }
+
+    @Override
+    public void findLastEvent(String eventBaseEntityId, String eventType) {
+
+        appExecutors.diskIO().execute(() -> {
+            String events = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
+                    EventClientRepository.event_column.json, EventClientRepository.Table.event.name(), EventClientRepository.event_column.baseEntityId, EventClientRepository.event_column.eventType, EventClientRepository.event_column.updatedAt);
+            Cursor cursor = null;
+            try {
+                cursor = getDatabase().rawQuery(events, new String[]{eventBaseEntityId, eventType});
+                if (cursor.moveToFirst()) {
+                    String eventJSON = cursor.getString(0);
+                    getPresenter().onEventFound(eventClientRepository.convert(eventJSON, org.smartregister.domain.Event.class));
+
+                } else {
+                    getPresenter().onEventFound(null);
+                }
+            } catch (SQLException e) {
+                Timber.e(e);
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        });
+
     }
 }
