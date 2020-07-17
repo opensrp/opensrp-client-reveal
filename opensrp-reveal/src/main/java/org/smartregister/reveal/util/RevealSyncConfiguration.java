@@ -35,12 +35,7 @@ public class RevealSyncConfiguration extends SyncConfiguration {
 
     @Override
     public SyncFilter getSyncFilterParam() {
-        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
-            return SyncFilter.TEAM_ID;
-        } else {
             return SyncFilter.LOCATION;
-        }
-
     }
 
     @Override
