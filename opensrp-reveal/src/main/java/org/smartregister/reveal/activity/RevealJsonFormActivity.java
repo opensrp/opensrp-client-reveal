@@ -14,6 +14,7 @@ import com.vijay.jsonwizard.constants.JsonFormConstants;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.fragment.RevealJsonFormFragment;
+import org.smartregister.view.activity.FormConfigurationJsonFormActivity;
 
 import io.ona.kujaku.utils.Constants;
 

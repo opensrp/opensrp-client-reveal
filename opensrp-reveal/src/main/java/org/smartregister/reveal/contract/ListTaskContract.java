@@ -121,5 +121,7 @@ public interface ListTaskContract {
         void onEventFound(Event event);
 
         void findLastEvent(String featureId, String eventType);
+
+        void onFociBoundaryLongClicked();
     }
 }
