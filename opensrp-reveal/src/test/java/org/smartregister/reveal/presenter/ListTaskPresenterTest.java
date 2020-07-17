@@ -2,7 +2,7 @@ package org.smartregister.reveal.presenter;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.widget.TextView;
 
 import com.google.gson.JsonPrimitive;

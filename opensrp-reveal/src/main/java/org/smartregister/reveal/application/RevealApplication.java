@@ -1,7 +1,7 @@
 package org.smartregister.reveal.application;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -9,6 +9,7 @@ import com.evernote.android.job.JobManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.vijay.jsonwizard.NativeFormLibrary;
 import com.vijay.jsonwizard.activities.JsonWizardFormActivity;
 
 import org.apache.commons.lang3.StringUtils;
@@ -151,6 +152,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         } else {
             LangUtils.saveLanguage(getApplicationContext(), "en");
         }
+        NativeFormLibrary.getInstance().setClientFormDao(CoreLibrary.getInstance().context().getClientFormRepository());
 
     }
 

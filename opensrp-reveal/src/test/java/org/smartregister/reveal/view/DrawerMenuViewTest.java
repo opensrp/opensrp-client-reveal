@@ -1,9 +1,11 @@
 package org.smartregister.reveal.view;
 
 import android.content.Context;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.junit.Before;
@@ -22,6 +24,9 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -56,6 +61,11 @@ public class DrawerMenuViewTest extends BaseUnitTest {
     private  DrawerMenuView drawerMenuView;
 
     private Context context = RuntimeEnvironment.application;
+    private AppCompatActivity mockActivity = mock(AppCompatActivity.class);
+    private ProgressBar progress = new ProgressBar(context);
+    private TextView  progressLabel = new TextView(context);
+    private TextView  syncButton = new TextView(context);
+    private TextView  syncLabel = new TextView(context);
 
     @Before
     public void setUp() {
@@ -190,6 +200,38 @@ public class DrawerMenuViewTest extends BaseUnitTest {
 
         drawerMenuView.onResume();
         verify(presenter).onViewResumed();
+    }
+
+    @Test
+    public void testToggleProgressBarViewTrue() {
+        doReturn(mockActivity).when(activity).getActivity();
+        doReturn(progress).when(mockActivity).findViewById(eq(R.id.sync_progress_bar));
+        doReturn(progressLabel).when(mockActivity).findViewById(eq(R.id.sync_progress_bar_label));
+        doReturn(syncButton).when(mockActivity).findViewById(eq(R.id.sync_button));
+        doReturn(syncLabel).when(mockActivity).findViewById(eq(R.id.sync_label));
+
+        drawerMenuView.toggleProgressBarView(true);
+
+        assertEquals(progress.getVisibility(), View.VISIBLE);
+        assertEquals(progressLabel.getVisibility(), View.VISIBLE);
+        assertEquals(syncButton.getVisibility(), View.INVISIBLE);
+        assertEquals(syncLabel.getVisibility(), View.INVISIBLE);
+    }
+
+    @Test
+    public void testToggleProgressBarViewFalse() {
+        doReturn(mockActivity).when(activity).getActivity();
+        doReturn(progress).when(mockActivity).findViewById(eq(R.id.sync_progress_bar));
+        doReturn(progressLabel).when(mockActivity).findViewById(eq(R.id.sync_progress_bar_label));
+        doReturn(syncButton).when(mockActivity).findViewById(eq(R.id.sync_button));
+        doReturn(syncLabel).when(mockActivity).findViewById(eq(R.id.sync_label));
+
+        drawerMenuView.toggleProgressBarView(false);
+
+        assertEquals(progress.getVisibility(), View.INVISIBLE);
+        assertEquals(progressLabel.getVisibility(), View.INVISIBLE);
+        assertEquals(syncButton.getVisibility(), View.VISIBLE);
+        assertEquals(syncLabel.getVisibility(), View.VISIBLE);
     }
 
 }

@@ -1,6 +1,6 @@
 package org.smartregister.reveal.activity;
 
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import com.mapbox.mapboxsdk.offline.OfflineManager;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;

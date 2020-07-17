@@ -1,7 +1,7 @@
 package org.smartregister.reveal.contract;
 
 import android.location.Location;
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 

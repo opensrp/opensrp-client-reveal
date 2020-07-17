@@ -21,7 +21,7 @@ subprojects {
     ext.androidToolsBuildGradle = '27.0.3'
     ext.androidBuildToolsVersion = '27.0.3'
     ext.androidMinSdkVersion = 16
-    ext.androidCompileSdkVersion = 27
+    ext.androidCompileSdkVersion = 28
     ext.androidTargetSdkVersion = 27
 
     ext.androidAnnotationsVersion = '3.0.1';
@@ -35,6 +35,7 @@ subprojects {
         maven { url "https://repo.maven.apache.org/maven2" }
         maven { url "https://cloudant.github.io/cloudant-sync-eap/repository" }
         maven { url "https://s3.amazonaws.com/repo.commonsware.com" }
+        maven { url 'https://dl.bintray.com/ibm-watson-health/ibm-fhir-server-releases'}
         mavenLocal()
     }
 

@@ -1,5 +1,5 @@
 package org.smartregister.reveal.presenter;
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -42,8 +42,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
-import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.ACTIVE;
-import static org.smartregister.reveal.util.Constants.PlanDefinitionStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.Tags.COUNTRY;
 import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
@@ -103,7 +101,7 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
     @Test
     public void testOnPlansFetchedReturnsActivePlans() {
         PlanDefinition planDefinition = new PlanDefinition();
-        planDefinition.setStatus(ACTIVE);
+        planDefinition.setStatus(PlanDefinition.PlanStatus.ACTIVE);
         planDefinition.setIdentifier("tlv_1");
         planDefinition.setTitle("Intervention Plan");
         PlanDefinition.UseContext useContext = mock(PlanDefinition.UseContext.class);
@@ -130,7 +128,7 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
     @Test
     public void testOnPlansFetchedDoesNotReturnPlansThatAreNotActive() {
         PlanDefinition planDefinition = new PlanDefinition();
-        planDefinition.setStatus(COMPLETE);
+        planDefinition.setStatus(PlanDefinition.PlanStatus.COMPLETED);
         planDefinition.setIdentifier("tlv_1");
         planDefinition.setTitle("Intervention Plan");
         PlanDefinition.UseContext useContext = mock(PlanDefinition.UseContext.class);

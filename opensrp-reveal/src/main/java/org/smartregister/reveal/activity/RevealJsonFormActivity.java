@@ -4,8 +4,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
 
+import androidx.annotation.StringRes;
+import androidx.fragment.app.Fragment;
+
+import com.vijay.jsonwizard.activities.FormConfigurationJsonFormActivity;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.smartregister.reveal.R;
@@ -43,6 +46,7 @@ public class RevealJsonFormActivity extends FormConfigurationJsonFormActivity im
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (requestCode == Constants.RequestCode.LOCATION_SETTINGS && requestedLocation) {
             if (resultCode == RESULT_OK) {
                 formFragment.getPresenter().getLocationUtils().requestLocationUpdates(formFragment.getPresenter().getLocationListener());
@@ -51,11 +55,13 @@ public class RevealJsonFormActivity extends FormConfigurationJsonFormActivity im
                 formFragment.getPresenter().getLocationPresenter().onGetUserLocationFailed();
             }
             requestedLocation = false;
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
     @Override
-    public void onAttachFragment(android.support.v4.app.Fragment fragment) {
+    public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
         if (fragment instanceof RevealJsonFormFragment) {
             formFragment = (RevealJsonFormFragment) fragment;

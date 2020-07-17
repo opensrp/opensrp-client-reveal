@@ -2,18 +2,18 @@ package org.smartregister.reveal.sync;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty.PropertyStatus;
 import org.smartregister.domain.Task;
-import org.smartregister.domain.db.Client;
-import org.smartregister.domain.db.Event;
+import org.smartregister.domain.Client;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.db.EventClient;
-import org.smartregister.domain.db.Obs;
+import org.smartregister.domain.Obs;
 import org.smartregister.domain.jsonmapping.ClientClassification;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;

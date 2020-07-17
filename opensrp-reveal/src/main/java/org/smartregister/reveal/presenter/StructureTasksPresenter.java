@@ -1,8 +1,8 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 import com.mapbox.geojson.Feature;
 
@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
-import org.smartregister.domain.db.Event;
+import org.smartregister.domain.Event;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.contract.StructureTasksContract;
