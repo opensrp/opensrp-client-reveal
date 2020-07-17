@@ -59,7 +59,6 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     private TextView facilityTextView;
     private TextView operatorTextView;
     private TextView p2pSyncTextView;
-    private TextView formsVersionTextView;
 
     private DrawerLayout mDrawerLayout;
 
@@ -123,8 +122,11 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         });
 
         try {
+            String formsVersion = getFormsVersion();
+            String appVersion = getContext().getString(R.string.app_version, Utils.getVersion(getContext()));
+            String appVersionText = appVersion + (formsVersion == null ? "" : getContext().getString(R.string.forms_version_parenthesis_placeholder, formsVersion));
             ((TextView) headerView.findViewById(R.id.application_version))
-                    .setText(getContext().getString(R.string.app_version, Utils.getVersion(getContext())));
+                    .setText(appVersionText);
         } catch (PackageManager.NameNotFoundException e) {
             Timber.e(e);
         }
@@ -142,7 +144,6 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         facilityTextView = headerView.findViewById(R.id.facility_label);
         operatorTextView = headerView.findViewById(R.id.operator_label);
         p2pSyncTextView = headerView.findViewById(R.id.btn_navMenu_p2pSyncBtn);
-        formsVersionTextView = headerView.findViewById(R.id.forms_version);
 
         TextView offlineMapTextView = headerView.findViewById(R.id.btn_navMenu_offline_maps);
 
@@ -384,13 +385,6 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     private void startStatsActivity() {
         getContext().startActivity(new Intent(getContext(), StatsActivity.class));
-    }
-
-    @Override
-    public void updateFormsVersion(@NonNull String formsVersion) {
-        if (formsVersionTextView != null) {
-            formsVersionTextView.setText(String.format(getContext().getString(R.string.forms_version_placeholder), formsVersion));
-        }
     }
 
     @Nullable

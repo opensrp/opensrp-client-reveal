@@ -332,12 +332,6 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             viewInitialized = true;
         }
         updateSyncStatusDisplay(revealApplication.getSynced());
-
-
-        String formsVersion = view.getFormsVersion();
-        if (formsVersion != null) {
-            view.updateFormsVersion(formsVersion);
-        }
     }
 
 

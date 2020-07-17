@@ -368,5 +368,5 @@
     <string name="tap_point_msg">Tap black point to move or delete</string>
     <string name="drag_selected_point_msg">Drag selected point to change boundary</string>
     <string name="progressBarLabel">Syncing %s : %d%% </string>
-    <string name="forms_version_placeholder">Forms v%s</string>
+    <string name="forms_version_parenthesis_placeholder">(%1$s)</string>
 </resources>

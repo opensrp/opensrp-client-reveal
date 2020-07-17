@@ -65,8 +65,6 @@ public interface BaseDrawerContract {
 
         void toggleProgressBarView(boolean syncing);
 
-        void updateFormsVersion(@NonNull String formsVersion);
-
         String getFormsVersion();
     }
 
