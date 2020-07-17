@@ -1,6 +1,8 @@
 package org.smartregister.reveal.contract;
 
 import android.app.Activity;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.core.util.Pair;
 
@@ -62,6 +64,10 @@ public interface BaseDrawerContract {
         void checkSynced();
 
         void toggleProgressBarView(boolean syncing);
+
+        void updateFormsVersion(@NonNull String formsVersion);
+
+        String getFormsVersion();
     }
 
     interface Presenter {

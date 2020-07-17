@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.util.Pair;
@@ -22,6 +23,7 @@ import com.vijay.jsonwizard.customviews.TreeViewDialog;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.smartregister.CoreLibrary;
 import org.smartregister.p2p.activity.P2pModeSelectActivity;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -57,6 +59,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     private TextView facilityTextView;
     private TextView operatorTextView;
     private TextView p2pSyncTextView;
+    private TextView formsVersionTextView;
 
     private DrawerLayout mDrawerLayout;
 
@@ -139,6 +142,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         facilityTextView = headerView.findViewById(R.id.facility_label);
         operatorTextView = headerView.findViewById(R.id.operator_label);
         p2pSyncTextView = headerView.findViewById(R.id.btn_navMenu_p2pSyncBtn);
+        formsVersionTextView = headerView.findViewById(R.id.forms_version);
+
         TextView offlineMapTextView = headerView.findViewById(R.id.btn_navMenu_offline_maps);
 
         TextView summaryFormsTextView = headerView.findViewById(R.id.btn_navMenu_summaryForms);
@@ -379,5 +384,18 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     private void startStatsActivity() {
         getContext().startActivity(new Intent(getContext(), StatsActivity.class));
+    }
+
+    @Override
+    public void updateFormsVersion(@NonNull String formsVersion) {
+        if (formsVersionTextView != null) {
+            formsVersionTextView.setText(String.format(getContext().getString(R.string.forms_version_placeholder), formsVersion));
+        }
+    }
+
+    @Nullable
+    @Override
+    public String getFormsVersion() {
+        return CoreLibrary.getInstance().context().allSharedPreferences().fetchFormsVersion();
     }
 }
