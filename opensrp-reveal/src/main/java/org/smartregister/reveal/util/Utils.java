@@ -129,13 +129,16 @@ public class Utils {
 
 
     public static Location getOperationalAreaLocation(String operationalArea) {
-/*        return cache.get(operationalArea, new CacheableData<Location>() {
+       return cache.get(operationalArea, new CacheableData<Location>() {
             @Override
             public Location fetch() {
                 return RevealApplication.getInstance().getLocationRepository().getLocationByName(operationalArea);
             }
-        });*/
-        return RevealApplication.getInstance().getLocationRepository().getLocationByName(operationalArea);
+        });
+    }
+
+    public static void evictCache(String key) {
+        cache.evict(key);
     }
 
     public static String formatDate(String date, String dateFormat) throws Exception {

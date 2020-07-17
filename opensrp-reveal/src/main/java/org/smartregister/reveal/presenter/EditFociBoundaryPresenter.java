@@ -9,6 +9,8 @@ import org.smartregister.reveal.contract.EditFociboundaryContract;
 import org.smartregister.reveal.interactor.EditFociBoundaryInteractor;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.EditBoundaryState;
+import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.util.Utils;
 
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 
@@ -44,6 +46,7 @@ public class EditFociBoundaryPresenter implements EditFociboundaryContract.Prese
     @Override
     public void onEditedBoundarySaved() {
         editFociBoundaryview.exitEditBoundaryActivity();
+        Utils.evictCache(PreferencesUtil.getInstance().getCurrentOperationalArea());
     }
 
     @Override
