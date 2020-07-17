@@ -3,14 +3,15 @@ package org.smartregister.reveal.view;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.JsonArray;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.FeatureCollection;
