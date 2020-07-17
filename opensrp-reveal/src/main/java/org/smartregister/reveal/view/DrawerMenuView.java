@@ -13,6 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -320,6 +321,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         else if (v.getId() == R.id.btn_navMenu_offline_maps)
             presenter.onShowOfflineMaps();
         else if (v.getId() == R.id.sync_button) {
+            toggleProgressBarView(true);
             org.smartregister.reveal.util.Utils.startImmediateSync();
             closeDrawerLayout();
         }
@@ -347,6 +349,27 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     @Override
     public void checkSynced() {
         interactor.checkSynced();
+    }
+
+    @Override
+    public void toggleProgressBarView(boolean syncing) {
+        ProgressBar progressBar = this.activity.getActivity().findViewById(R.id.sync_progress_bar);
+        TextView progressLabel = this.activity.getActivity().findViewById(R.id.sync_progress_bar_label);
+        TextView syncButton = this.activity.getActivity().findViewById(R.id.sync_button);
+        TextView syncBadge = this.activity.getActivity().findViewById(R.id.sync_label);
+
+        if (syncing) {
+            progressBar.setVisibility(View.VISIBLE);
+            progressLabel.setVisibility(View.VISIBLE);
+            syncButton.setVisibility(View.INVISIBLE);
+            syncBadge.setVisibility(View.INVISIBLE);
+        }
+        else {
+            progressBar.setVisibility(View.INVISIBLE);
+            progressLabel.setVisibility(View.INVISIBLE);
+            syncButton.setVisibility(View.VISIBLE);
+            syncBadge.setVisibility(View.VISIBLE);
+        }
     }
 
 

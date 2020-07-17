@@ -29,7 +29,9 @@ import java.util.UUID;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT;
+import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
@@ -256,6 +258,13 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.BOTSWANA);
         String actualFormName = revealJsonFormUtils.getFormName(CASE_CONFIRMATION_EVENT, CASE_CONFIRMATION);
         assertEquals(JsonForm.CASE_CONFIRMATION_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetThailandBloodScreeningForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        String actualFormName = revealJsonFormUtils.getFormName(BLOOD_SCREENING_EVENT, BLOOD_SCREENING);
+        assertEquals(JsonForm.THAILAND_BLOOD_SCREENING_FORM, actualFormName);
     }
 
 }
