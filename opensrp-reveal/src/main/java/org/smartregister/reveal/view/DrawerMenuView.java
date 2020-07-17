@@ -122,9 +122,9 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         });
 
         try {
-            String formsVersion = getFormsVersion();
+            String manifestVersion = getManifestVersion();
             String appVersion = getContext().getString(R.string.app_version, Utils.getVersion(getContext()));
-            String appVersionText = appVersion + (formsVersion == null ? "" : getContext().getString(R.string.forms_version_parenthesis_placeholder, formsVersion));
+            String appVersionText = appVersion + (manifestVersion == null ? "" : getContext().getString(R.string.manifest_version_parenthesis_placeholder, manifestVersion));
             ((TextView) headerView.findViewById(R.id.application_version))
                     .setText(appVersionText);
         } catch (PackageManager.NameNotFoundException e) {
@@ -389,7 +389,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     @Nullable
     @Override
-    public String getFormsVersion() {
-        return CoreLibrary.getInstance().context().allSharedPreferences().fetchFormsVersion();
+    public String getManifestVersion() {
+        return CoreLibrary.getInstance().context().allSharedPreferences().fetchManifestVersion();
     }
 }

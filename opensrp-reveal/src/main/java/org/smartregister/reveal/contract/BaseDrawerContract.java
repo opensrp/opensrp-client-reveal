@@ -65,7 +65,7 @@ public interface BaseDrawerContract {
 
         void toggleProgressBarView(boolean syncing);
 
-        String getFormsVersion();
+        String getManifestVersion();
     }
 
     interface Presenter {
