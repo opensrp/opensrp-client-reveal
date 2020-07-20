@@ -110,8 +110,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
             @Override
             public void onClick(View view) {
                 if (drawingManager != null) {
-                    if (!drawingManager.isDrawingEnabled()) {
-                    } else {
+                    if (drawingManager.isDrawingEnabled()) {
                         kujakuMapView.addLayer(boundaryLayer);
                         drawingManager.stopDrawingAndDisplayLayer();
                         toggleButtons(EditBoundaryState.FINISHED);
