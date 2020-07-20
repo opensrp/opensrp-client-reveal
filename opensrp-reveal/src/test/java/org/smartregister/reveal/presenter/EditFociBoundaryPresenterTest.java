@@ -43,7 +43,7 @@ public class EditFociBoundaryPresenterTest extends BaseUnitTest {
     private EditFociboundaryContract.View editFociBoundaryView;
 
     @Mock
-    View view;
+    private View view;
 
     private EditFociBoundaryPresenter presenter;
 
