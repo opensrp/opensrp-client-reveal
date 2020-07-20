@@ -21,10 +21,10 @@ import static android.content.DialogInterface.BUTTON_POSITIVE;
 public class EditFociBoundaryPresenter implements EditFociboundaryContract.Presenter {
 
     private EditFociboundaryContract.Interactor interactor;
-    private EditFociboundaryContract.View editFociBoundaryview;
+    private EditFociboundaryContract.View editFociBoundaryView;
 
     public EditFociBoundaryPresenter(EditFociboundaryContract.View view) {
-        this.editFociBoundaryview = view;
+        this.editFociBoundaryView = view;
         this.interactor = new EditFociBoundaryInteractor(this);
     }
 
@@ -45,31 +45,31 @@ public class EditFociBoundaryPresenter implements EditFociboundaryContract.Prese
 
     @Override
     public void onEditedBoundarySaved() {
-        editFociBoundaryview.exitEditBoundaryActivity();
+        editFociBoundaryView.exitEditBoundaryActivity();
         Utils.evictCache(PreferencesUtil.getInstance().getCurrentOperationalArea());
     }
 
     @Override
     public void onSavePoint() {
-        editFociBoundaryview.toggleButtons(EditBoundaryState.FINISHED);
-        editFociBoundaryview.setToolbarTitle(R.string.edit_boundary);
+        editFociBoundaryView.toggleButtons(EditBoundaryState.FINISHED);
+        editFociBoundaryView.setToolbarTitle(R.string.edit_boundary);
     }
 
     @Override
     public void onEditPoint() {
-        editFociBoundaryview.toggleButtons(EditBoundaryState.EDITTING);
-        editFociBoundaryview.displaySnackBar(R.string.drag_selected_point_msg);
-        editFociBoundaryview.setToolbarTitle(R.string.change_point);
+        editFociBoundaryView.toggleButtons(EditBoundaryState.EDITTING);
+        editFociBoundaryView.displaySnackBar(R.string.drag_selected_point_msg);
+        editFociBoundaryView.setToolbarTitle(R.string.change_point);
     }
 
     @Override
     public void displayDeletePointDialog(View view) {
-        AlertDialogUtils.displayNotificationWithCallback(editFociBoundaryview.getContext(), R.string.delete_point_title,
+        AlertDialogUtils.displayNotificationWithCallback(editFociBoundaryView.getContext(), R.string.delete_point_title,
                 R.string.delete_point_msg, R.string.delete, R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == BUTTON_POSITIVE) {
-                            editFociBoundaryview.deletePoint(view);
+                            editFociBoundaryView.deletePoint(view);
                         }
                         dialog.dismiss();
                     }
@@ -78,12 +78,12 @@ public class EditFociBoundaryPresenter implements EditFociboundaryContract.Prese
 
     @Override
     public void displayDiscardChangesDialog() {
-        AlertDialogUtils.displayNotificationWithCallback(editFociBoundaryview.getContext(), R.string.discard_changes_title,
+        AlertDialogUtils.displayNotificationWithCallback(editFociBoundaryView.getContext(), R.string.discard_changes_title,
                 R.string.discard_changes_msg, R.string.discard, R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == BUTTON_POSITIVE) {
-                            editFociBoundaryview.exitEditBoundaryActivity();
+                            editFociBoundaryView.exitEditBoundaryActivity();
                         }
                         dialog.dismiss();
                     }
