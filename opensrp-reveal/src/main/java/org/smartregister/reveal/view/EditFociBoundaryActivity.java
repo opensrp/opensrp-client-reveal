@@ -284,10 +284,8 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
 
     @Override
     public void exitEditBoundaryActivity() {
-        if (drawingManager != null) {
-            if (drawingManager.isDrawingEnabled()) {
-                drawingManager.stopDrawingAndDisplayLayer();
-            }
+        if (drawingManager != null && drawingManager.isDrawingEnabled()) {
+            drawingManager.stopDrawingAndDisplayLayer();
         }
         RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
         finish();
