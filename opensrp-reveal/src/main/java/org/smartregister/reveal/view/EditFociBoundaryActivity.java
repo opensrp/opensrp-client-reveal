@@ -86,15 +86,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
 
         setUpToolbar();
 
-        if (revealApplication.getOperationalArea() != null) {
-            FillBoundaryLayer.Builder boundaryBuilder = new FillBoundaryLayer.Builder(FeatureCollection.fromFeature(revealApplication.getOperationalArea()))
-                    .setLabelProperty(Constants.Map.NAME_PROPERTY)
-                    .setLabelTextSize(getResources().getDimension(R.dimen.operational_area_boundary_text_size))
-                    .setLabelColorInt(Color.WHITE)
-                    .setBoundaryColor(Color.WHITE)
-                    .setBoundaryWidth(getResources().getDimension(R.dimen.operational_area_boundary_width));
-            boundaryLayer = boundaryBuilder.build();
-        }
+        buildBoundaryLayer();
 
 
         this.deleteBtn = findViewById(R.id.btn_drawingBoundaries_delete);
@@ -243,6 +235,18 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
         toolbar.setTitle(R.string.edit_boundary);
         this.setSupportActionBar(toolbar);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    }
+
+    private void buildBoundaryLayer() {
+        if (revealApplication.getOperationalArea() != null) {
+            FillBoundaryLayer.Builder boundaryBuilder = new FillBoundaryLayer.Builder(FeatureCollection.fromFeature(revealApplication.getOperationalArea()))
+                    .setLabelProperty(Constants.Map.NAME_PROPERTY)
+                    .setLabelTextSize(getResources().getDimension(R.dimen.operational_area_boundary_text_size))
+                    .setLabelColorInt(Color.WHITE)
+                    .setBoundaryColor(Color.WHITE)
+                    .setBoundaryWidth(getResources().getDimension(R.dimen.operational_area_boundary_width));
+            boundaryLayer = boundaryBuilder.build();
+        }
     }
 
     private void enabledrawingMode(MapboxMap mapboxMap) {
