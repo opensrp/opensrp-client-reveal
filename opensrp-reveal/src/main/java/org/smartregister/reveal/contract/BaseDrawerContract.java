@@ -2,7 +2,7 @@ package org.smartregister.reveal.contract;
 
 import android.app.Activity;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.util.Pair;
 
@@ -65,6 +65,7 @@ public interface BaseDrawerContract {
 
         void toggleProgressBarView(boolean syncing);
 
+        @Nullable
         String getManifestVersion();
     }
 
