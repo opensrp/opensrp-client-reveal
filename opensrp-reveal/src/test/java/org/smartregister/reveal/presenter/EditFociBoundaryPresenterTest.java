@@ -22,6 +22,7 @@ import org.smartregister.reveal.contract.EditFociboundaryContract;
 import org.smartregister.reveal.util.EditBoundaryState;
 import org.smartregister.reveal.util.TestingUtils;
 
+import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.spy;
@@ -105,6 +106,8 @@ public class EditFociBoundaryPresenterTest extends BaseUnitTest {
         assertTrue(alertDialog.isShowing());
         TextView msgTv = alertDialog.findViewById(android.R.id.message);
         assertEquals(getString(R.string.delete_point_msg), msgTv.getText());
+        alertDialog.getButton(BUTTON_POSITIVE).callOnClick();
+        verify(editFociBoundaryView).deletePoint(view);
     }
 
     @Test
@@ -114,6 +117,8 @@ public class EditFociBoundaryPresenterTest extends BaseUnitTest {
         assertTrue(alertDialog.isShowing());
         TextView msgTv = alertDialog.findViewById(android.R.id.message);
         assertEquals(getString(R.string.discard_changes_msg), msgTv.getText());
+        alertDialog.getButton(BUTTON_POSITIVE).callOnClick();
+        verify(editFociBoundaryView).exitEditBoundaryActivity();
     }
 
 }
