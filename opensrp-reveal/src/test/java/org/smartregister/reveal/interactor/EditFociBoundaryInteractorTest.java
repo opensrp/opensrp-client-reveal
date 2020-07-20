@@ -50,18 +50,19 @@ public class EditFociBoundaryInteractorTest extends BaseUnitTest {
 
     @Test
     public void testSaveLocation() {
-        RevealApplication.getInstance().getContext().allSharedPreferences().updateANMUserName("onatest");
+        RevealApplication.getInstance().getContext().allSharedPreferences().updateANMUserName("user1132");
         Location expectedLocation = TestingUtils.gson.fromJson(TestingUtils.operationalAreaGeoJSON, Location.class);
         assertNull(expectedLocation.getProperties().getUsername());
         assertEquals(BaseRepository.TYPE_Synced,expectedLocation.getSyncStatus());
 
         editFociBoundaryInteractor.saveLocation(expectedLocation);
-        verify(locationRepository).addOrUpdate(locationArgumentCaptor.capture());
+        verify(locationRepository, timeout(ASYNC_TIMEOUT)).addOrUpdate(locationArgumentCaptor.capture());
         Location actualLocation = locationArgumentCaptor.getValue();
         assertEquals(BaseRepository.TYPE_Unsynced,actualLocation.getSyncStatus());
         assertEquals(expectedLocation.getId(), actualLocation.getId());
         assertEquals(expectedLocation.getGeometry(), actualLocation.getGeometry());
         assertEquals(expectedLocation.getType(), actualLocation.getType());
+        assertEquals("user1132", actualLocation.getProperties().getUsername());
         verify(presenter, timeout(ASYNC_TIMEOUT)).onEditedBoundarySaved();
     }
 
