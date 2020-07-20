@@ -1,6 +1,7 @@
 package org.smartregister.reveal.application;
 
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
@@ -77,7 +78,6 @@ import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 public class RevealApplication extends DrishtiApplication implements TimeChangedBroadcastReceiver.OnTimeChangedListener {
 
     private JsonSpecHelper jsonSpecHelper;
-    private char[] password;
 
     private PlanDefinitionSearchRepository planDefinitionSearchRepository;
 
@@ -176,14 +176,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
         }
         return repository;
-    }
-
-    public char[] getPassword() {
-        if (password == null) {
-            String username = getContext().allSharedPreferences().fetchRegisteredANM();
-            password = getContext().userService().getGroupId(username);
-        }
-        return password;
     }
 
     @Override

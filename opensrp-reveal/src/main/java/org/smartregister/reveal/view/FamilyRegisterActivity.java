@@ -2,9 +2,10 @@ package org.smartregister.reveal.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.core.app.NavUtils;
 import android.view.MenuItem;
+
+import androidx.core.app.NavUtils;
+import androidx.fragment.app.Fragment;
 
 import org.json.JSONObject;
 import org.smartregister.family.activity.BaseFamilyRegisterActivity;
@@ -57,8 +58,7 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity implement
     }
 
     @Override
-    public void startFormActivity(String s, String s1, Map<String, String> map) {
-
+    public void startFormActivity(String s, String s1, Map<String, String> map) {//not used
     }
 
     @Override
