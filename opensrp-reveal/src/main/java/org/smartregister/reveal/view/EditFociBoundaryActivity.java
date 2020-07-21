@@ -122,7 +122,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
                         initializeDrawingManager(mapboxMap, style);
 
                         //jump straight into edit mode
-                        enabledrawingMode(mapboxMap);
+                        enableDrawingMode(mapboxMap);
                     }
                 }); //end of set style
 
@@ -252,7 +252,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
         }
     }
 
-    private void enabledrawingMode(MapboxMap mapboxMap) {
+    protected void enableDrawingMode(MapboxMap mapboxMap) {
         boundaryLayer.disableLayerOnMap(mapboxMap);
         if (drawingManager != null) {
             if (!drawingManager.isDrawingEnabled()) {
