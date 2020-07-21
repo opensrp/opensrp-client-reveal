@@ -23,6 +23,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.util.EditBoundaryState;
 import org.smartregister.reveal.util.TestingUtils;
 
 import java.util.ArrayList;
@@ -60,6 +61,12 @@ public class EditFociBoundaryActivityTest extends BaseUnitTest {
 
     private Context context = RuntimeEnvironment.application;
 
+    private Button cancelBtn;
+    private Button saveBoundaryBtn;
+    private Button deleteBtn;
+    private Button savePointBtn;
+
+
     private EditFociBoundaryActivity editFociBoundaryActivity;
 
     @Before
@@ -71,6 +78,11 @@ public class EditFociBoundaryActivityTest extends BaseUnitTest {
         editFociBoundaryActivity = Robolectric.buildActivity(EditFociBoundaryActivity.class).create().resume().get();
         Whitebox.setInternalState(editFociBoundaryActivity, "drawingManager", drawingManager);
         Whitebox.setInternalState(editFociBoundaryActivity, "boundaryLayer", boundaryLayer);
+        cancelBtn = Whitebox.getInternalState(editFociBoundaryActivity, "cancelBtn");
+        saveBoundaryBtn = Whitebox.getInternalState(editFociBoundaryActivity, "saveBoundaryBtn");
+        deleteBtn = Whitebox.getInternalState(editFociBoundaryActivity, "deleteBtn");
+        savePointBtn = Whitebox.getInternalState(editFociBoundaryActivity, "savePointBtn");
+
     }
 
     @Test
@@ -135,6 +147,34 @@ public class EditFociBoundaryActivityTest extends BaseUnitTest {
         editFociBoundaryActivity.enableDrawingMode(mapboxMap);
         verify(boundaryLayer).disableLayerOnMap(mapboxMap);
         verify(drawingManager).stopDrawingAndDisplayLayer();
+    }
+
+    @Test
+    public void testToggleButtonsInEditState() {
+        editFociBoundaryActivity.toggleButtons(EditBoundaryState.EDITTING);
+        assertEquals(View.GONE, cancelBtn.getVisibility());
+        assertEquals(View.GONE, saveBoundaryBtn.getVisibility());
+        assertEquals(View.VISIBLE, deleteBtn.getVisibility());
+        assertEquals(View.VISIBLE, savePointBtn.getVisibility());
+    }
+
+    @Test
+    public void testToggleButtonsInStartState() {
+        editFociBoundaryActivity.toggleButtons(EditBoundaryState.START);
+        verifyButtonsInDefaultState();
+    }
+
+    @Test
+    public void testToggleButtonsInFinishedState() {
+        editFociBoundaryActivity.toggleButtons(EditBoundaryState.FINISHED);
+        verifyButtonsInDefaultState();
+    }
+
+    private void verifyButtonsInDefaultState() {
+        assertEquals(View.VISIBLE, cancelBtn.getVisibility());
+        assertEquals(View.VISIBLE, saveBoundaryBtn.getVisibility());
+        assertEquals(View.GONE, deleteBtn.getVisibility());
+        assertEquals(View.GONE, savePointBtn.getVisibility());
     }
 
 }
