@@ -23,7 +23,6 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.presenter.EditFociBoundaryPresenter;
 import org.smartregister.reveal.util.TestingUtils;
 
 import java.util.ArrayList;
