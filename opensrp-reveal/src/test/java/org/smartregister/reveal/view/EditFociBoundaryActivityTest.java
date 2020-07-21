@@ -54,6 +54,9 @@ public class EditFociBoundaryActivityTest extends BaseUnitTest {
     private DrawingManager drawingManager;
 
     @Mock
+    protected RevealMapView kujakuMapView;
+
+    @Mock
     private MapboxMap mapboxMap;
 
     @Mock
@@ -78,6 +81,7 @@ public class EditFociBoundaryActivityTest extends BaseUnitTest {
         editFociBoundaryActivity = Robolectric.buildActivity(EditFociBoundaryActivity.class).create().resume().get();
         Whitebox.setInternalState(editFociBoundaryActivity, "drawingManager", drawingManager);
         Whitebox.setInternalState(editFociBoundaryActivity, "boundaryLayer", boundaryLayer);
+        Whitebox.setInternalState(editFociBoundaryActivity, "kujakuMapView", kujakuMapView);
         cancelBtn = Whitebox.getInternalState(editFociBoundaryActivity, "cancelBtn");
         saveBoundaryBtn = Whitebox.getInternalState(editFociBoundaryActivity, "saveBoundaryBtn");
         deleteBtn = Whitebox.getInternalState(editFociBoundaryActivity, "deleteBtn");
@@ -175,6 +179,17 @@ public class EditFociBoundaryActivityTest extends BaseUnitTest {
         assertEquals(View.VISIBLE, saveBoundaryBtn.getVisibility());
         assertEquals(View.GONE, deleteBtn.getVisibility());
         assertEquals(View.GONE, savePointBtn.getVisibility());
+    }
+
+    @Test
+    public void testSavePoint() {
+        when(drawingManager.isDrawingEnabled()).thenReturn(true);
+        editFociBoundaryActivity = spy(editFociBoundaryActivity);
+
+        editFociBoundaryActivity.savePoint();
+        verify(drawingManager).stopDrawingAndDisplayLayer();
+        verify(editFociBoundaryActivity).toggleButtons(EditBoundaryState.FINISHED);
+        verify(kujakuMapView).addLayer(boundaryLayer);
     }
 
 }
