@@ -1,10 +1,10 @@
 package org.smartregister.reveal.view;
 
 import android.content.Intent;
+import android.view.View;
+
 import androidx.annotation.VisibleForTesting;
 import androidx.fragment.app.Fragment;
-
-import android.view.View;
 
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
@@ -59,12 +59,7 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
     }
 
     @Override
-    public void startFormActivity(String s, String s1, Map<String, String> map) {
-
-    }
-
-    @Override
-    public void startFormActivity(String formName, String entityId, String metaData) {//not used
+    public void startFormActivity(String s, String s1, Map<String, String> map) {//not used
     }
 
     @Override
