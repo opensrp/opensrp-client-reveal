@@ -54,7 +54,7 @@ import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
  * Created by Richard Kareko on 5/13/20.
  */
 
-public class EditFociBoundaryActivity extends BaseMapActivity implements EditFociboundaryContract.View, OnLocationComponentInitializedCallback {
+public class EditFociBoundaryActivity extends BaseMapActivity implements EditFociboundaryContract.View, OnLocationComponentInitializedCallback, View.OnClickListener {
 
     private static final String TAG = EditFociBoundaryActivity.class.getName();
 
@@ -186,58 +186,16 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
 
     protected void setUpViews() {
         this.deleteBtn = findViewById(R.id.btn_drawingBoundaries_delete);
-        this.deleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.onDeletePoint(view);
-            }
-        });
+        this.deleteBtn.setOnClickListener(this);
 
         this.savePointBtn = findViewById(R.id.btn_drawingBoundaries_save_point);
-        this.savePointBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (drawingManager != null) {
-                    if (drawingManager.isDrawingEnabled()) {
-                        kujakuMapView.addLayer(boundaryLayer);
-                        drawingManager.stopDrawingAndDisplayLayer();
-                        toggleButtons(EditBoundaryState.FINISHED);
-                    }
-                } else {
-                    Log.e(TAG, "Drawing manager instance is null");
-                }
-
-                deleteBtn.setEnabled(false);
-            }
-        });
+        this.savePointBtn.setOnClickListener(this);
 
         this.saveBoundaryBtn = findViewById(R.id.btn_drawingBoundaries_save);
-        this.saveBoundaryBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Geometry geometry = boundaryLayer.getFeatureCollection().features().get(0).geometry();
-                if ( geometry instanceof  MultiPolygon) {
-                    // boundary has not been edited
-                    exitEditBoundaryActivity();
-                    return;
-                }
-
-                JSONArray updatedCoords = getCoordsFromGeometry(geometry);
-
-                Location operationalAreaLocation = LocationServiceHelper.locationGson.fromJson(revealApplication.getOperationalArea().toJson(), Location.class);
-                JsonArray updatedCoordsJsonArray = LocationServiceHelper.locationGson.fromJson(updatedCoords.toString(), JsonArray.class);
-                operationalAreaLocation.getGeometry().setCoordinates(updatedCoordsJsonArray);
-                presenter.onSaveEditedBoundary(operationalAreaLocation);
-            }
-        });
+        this.saveBoundaryBtn.setOnClickListener(this);
 
         cancelBtn = findViewById(R.id.btn_drawingBoundaries_cancel);
-        this.cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.onCancelEditBoundaryChanges();
-            }
-        });
+        this.cancelBtn.setOnClickListener(this);
     }
 
     private void buildBoundaryLayer() {
@@ -329,5 +287,56 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
                     .getLocationComponent();
             locationComponent.applyStyle(getApplicationContext(), R.style.LocationComponentStyling);
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.btn_drawingBoundaries_delete:
+                presenter.onDeletePoint(view);
+                break;
+            case R.id.btn_drawingBoundaries_save_point:
+                savePoint();
+                break;
+            case R.id.btn_drawingBoundaries_save:
+                saveBoundary();
+                break;
+            case R.id.btn_drawingBoundaries_cancel:
+                presenter.onCancelEditBoundaryChanges();
+                break;
+            default:
+                break;
+
+        }
+    }
+
+    protected void savePoint() {
+        if (drawingManager != null) {
+            if (drawingManager.isDrawingEnabled()) {
+                kujakuMapView.addLayer(boundaryLayer);
+                drawingManager.stopDrawingAndDisplayLayer();
+                toggleButtons(EditBoundaryState.FINISHED);
+            }
+        } else {
+            Log.e(TAG, "Drawing manager instance is null");
+        }
+
+        deleteBtn.setEnabled(false);
+    }
+
+    protected void saveBoundary() {
+        Geometry geometry = boundaryLayer.getFeatureCollection().features().get(0).geometry();
+        if ( geometry instanceof  MultiPolygon) {
+            // boundary has not been edited
+            exitEditBoundaryActivity();
+            return;
+        }
+
+        JSONArray updatedCoords = getCoordsFromGeometry(geometry);
+
+        Location operationalAreaLocation = LocationServiceHelper.locationGson.fromJson(revealApplication.getOperationalArea().toJson(), Location.class);
+        JsonArray updatedCoordsJsonArray = LocationServiceHelper.locationGson.fromJson(updatedCoords.toString(), JsonArray.class);
+        operationalAreaLocation.getGeometry().setCoordinates(updatedCoordsJsonArray);
+        presenter.onSaveEditedBoundary(operationalAreaLocation);
     }
 }
