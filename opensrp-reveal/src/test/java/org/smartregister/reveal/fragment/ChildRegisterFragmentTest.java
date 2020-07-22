@@ -223,10 +223,11 @@ public class ChildRegisterFragmentTest extends BaseUnitTest {
     @Test
     public void testOnReportCountReloaded() {
         Map<String, Integer> reportCounts = new HashMap<>();
+        reportCounts.put(Constants.ChildRegister.MMA_VISITED_AND_ADMINISTERED, 20);
+        reportCounts.put(Constants.ChildRegister.MMA_VISITED_NOT_ADMINISTERED, 8);
+        reportCounts.put(Constants.ChildRegister.MMA_NOT_VISITED, 5);
+        reportCounts.put(Constants.ChildRegister.MMA_TARGET_REMAINING, 10);
         reportCounts.put(Constants.ChildRegister.MMA_COVERAGE, 10);
-        reportCounts.put(Constants.ChildRegister.MMA_TARGET_REMAINING, 20);
-        reportCounts.put(Constants.ChildRegister.MMA_NOT_VISITED, 8);
-        reportCounts.put(Constants.ChildRegister.MMA_VISITED_NOT_ADMINISTERED, 5);
 
         View progressIndicatorsGroupView = Mockito.mock(View.class);
         Whitebox.setInternalState(fragment, "progressIndicatorsGroupView", progressIndicatorsGroupView);
@@ -237,23 +238,26 @@ public class ChildRegisterFragmentTest extends BaseUnitTest {
         View detailedReportCardView = Mockito.mock(View.class);
         Whitebox.setInternalState(fragment, "detailedReportCardView", detailedReportCardView);
 
-        TextView tvChildrenRemainingToTarget = Mockito.mock(TextView.class);
-        Mockito.doReturn(tvChildrenRemainingToTarget).when(detailedReportCardView).findViewById(R.id.tvDoseRecordedAndDrugsGiven);
+        TextView tvDoseRecordedAndDrugsGiven = Mockito.mock(TextView.class);
+        Mockito.doReturn(tvDoseRecordedAndDrugsGiven).when(detailedReportCardView).findViewById(R.id.tvDoseRecordedAndDrugsGiven);
 
-        TextView tvRegisteredChildrenNotMMA = Mockito.mock(TextView.class);
-        Mockito.doReturn(tvRegisteredChildrenNotMMA).when(detailedReportCardView).findViewById(R.id.tvChildrenNotAdministeredMedicine);
+        TextView tvChildrenNotAdministeredMedicine = Mockito.mock(TextView.class);
+        Mockito.doReturn(tvChildrenNotAdministeredMedicine).when(detailedReportCardView).findViewById(R.id.tvChildrenNotAdministeredMedicine);
 
-        TextView tvVisitedChildrenNotMMA = Mockito.mock(TextView.class);
-        Mockito.doReturn(tvVisitedChildrenNotMMA).when(detailedReportCardView).findViewById(R.id.tvTotalChildrenRemaining);
+        TextView tvTotalChildrenRemaining = Mockito.mock(TextView.class);
+        Mockito.doReturn(tvTotalChildrenRemaining).when(detailedReportCardView).findViewById(R.id.tvTotalChildrenRemaining);
 
+        TextView tvChildrenRemainingUntilTarget = Mockito.mock(TextView.class);
+        Mockito.doReturn(tvChildrenRemainingUntilTarget).when(detailedReportCardView).findViewById(R.id.tvChildrenRemainingUntilTarget);
 
         fragment.onReportCountReloaded(reportCounts);
         Mockito.verify(progressIndicatorView).setTitle(Mockito.anyString());
         Mockito.verify(progressIndicatorView).setProgress(10);
 
-        Mockito.verify(tvChildrenRemainingToTarget).setText("20");
-        Mockito.verify(tvRegisteredChildrenNotMMA).setText("8");
-        Mockito.verify(tvVisitedChildrenNotMMA).setText("5");
+        Mockito.verify(tvDoseRecordedAndDrugsGiven).setText("20");
+        Mockito.verify(tvChildrenNotAdministeredMedicine).setText("8");
+        Mockito.verify(tvTotalChildrenRemaining).setText("5");
+        Mockito.verify(tvChildrenRemainingUntilTarget).setText("10");
     }
 
     @Test
