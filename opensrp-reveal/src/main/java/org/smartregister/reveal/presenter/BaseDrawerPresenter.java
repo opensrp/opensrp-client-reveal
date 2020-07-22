@@ -182,7 +182,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             consumer.accept(locationHierarchy);
         } else {
             view.displayNotification(R.string.error_fetching_location_hierarchy_title, R.string.error_fetching_location_hierarchy);
-            revealApplication.getContext().userService().forceRemoteLogin();
+            revealApplication.getContext().userService().forceRemoteLogin(revealApplication.getContext().allSharedPreferences().fetchRegisteredANM());
         }
     }
 

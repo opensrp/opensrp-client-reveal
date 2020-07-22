@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mapbox.geojson.Feature;
@@ -45,6 +46,8 @@ import org.robolectric.shadows.ShadowToast;
 import org.smartregister.Context;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.FetchStatus;
+import org.smartregister.domain.SyncEntity;
+import org.smartregister.domain.SyncProgress;
 import org.smartregister.domain.Task;
 import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.reveal.BaseUnitTest;
@@ -83,6 +86,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -676,6 +681,8 @@ public class ListTasksActivityTest extends BaseUnitTest {
     public void testOnSyncStart() {
         init(context);
         Whitebox.setInternalState(getInstance(), "isSyncing", true);
+        listTasksActivity = spy(listTasksActivity);
+        doNothing().when(listTasksActivity).toggleProgressBarView(true);
         listTasksActivity.onSyncStart();
         Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
         assertTrue(snackbar.isShown());
@@ -720,6 +727,8 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testOnSyncCompleteSnackBarIsDismissed() {
         init(context);
+        listTasksActivity = spy(listTasksActivity);
+        doNothing().when(listTasksActivity).toggleProgressBarView(false);
         listTasksActivity.onSyncComplete(FetchStatus.nothingFetched);
         Snackbar snackbar = Whitebox.getInternalState(listTasksActivity, "syncProgressSnackbar");
         assertFalse(snackbar.isShown());
@@ -847,6 +856,24 @@ public class ListTasksActivityTest extends BaseUnitTest {
         assertTrue(alertDialog.isShowing());
         TextView tv = alertDialog.findViewById(android.R.id.message);
         assertEquals("Confirm Household Archival", tv.getText());
+    }
+
+    @Test
+    public void testOnSyncProgress() {
+        ProgressBar progress = new ProgressBar(context);
+        TextView  progressLabel = new TextView(context);
+        SyncProgress mockSyncProgress = mock(SyncProgress.class);
+        SyncEntity mockSyncEntity = mock(SyncEntity.class);
+        ListTasksActivity spyListTasksActivity = spy(listTasksActivity);
+        doReturn(50 ).when(mockSyncProgress).getPercentageSynced();
+        doReturn(mockSyncEntity).when(mockSyncProgress).getSyncEntity();
+        doReturn("Tasks").when(mockSyncEntity).toString();
+        doReturn(progress).when(spyListTasksActivity).findViewById(eq(R.id.sync_progress_bar));
+        doReturn(progressLabel).when(spyListTasksActivity).findViewById(eq(R.id.sync_progress_bar_label));
+
+        spyListTasksActivity.onSyncProgress(mockSyncProgress);
+
+        assertEquals(progressLabel.getText(), String.format(context.getString(R.string.progressBarLabel), "Tasks", 50));
     }
 
 

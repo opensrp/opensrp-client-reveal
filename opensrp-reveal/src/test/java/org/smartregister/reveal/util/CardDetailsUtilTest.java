@@ -100,8 +100,8 @@ public class CardDetailsUtilTest extends BaseUnitTest {
     public void testFormatCardDetailsPartiallySprayedShouldSetCorrectStatusAndColor() {
         CardDetails cardDetails = new CardDetails(PARTIALLY_SPRAYED);
         formatCardDetails(cardDetails);
-        assertEquals(cardDetails.getStatusColor().intValue(), R.color.partially_sprayed);
-        assertEquals(cardDetails.getStatusMessage(), R.string.partially_sprayed);
+        assertEquals(cardDetails.getStatusColor().intValue(), R.color.sprayed);
+        assertEquals(cardDetails.getStatusMessage(), R.string.details_sprayed);
     }
 
     @Test

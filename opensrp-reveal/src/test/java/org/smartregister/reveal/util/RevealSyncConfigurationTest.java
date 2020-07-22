@@ -58,7 +58,7 @@ public class RevealSyncConfigurationTest extends BaseUnitTest {
     public void getTeamSyncFilterParam() {
         Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
-        assertEquals(SyncFilter.TEAM_ID, syncConfiguration.getSyncFilterParam());
+        assertEquals(SyncFilter.LOCATION, syncConfiguration.getSyncFilterParam());
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 

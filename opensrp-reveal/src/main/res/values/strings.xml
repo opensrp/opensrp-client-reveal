@@ -351,6 +351,7 @@
     <string name="tested">Tested</string>
     <string name="not_tested">Not Tested</string>
     <string name="yes">Yes</string>
+
     <string name="grade_and_last_name">Grade and last name</string>
     <string name="grade_and_age">Grade and age</string>
     <string name="age">Age</string>
@@ -373,5 +374,7 @@
     <string name="range_11_15">11-15</string>
     <string name="range_16_18">16-18</string>
     <string name="filter_or_sort">Filter / Sort</string>
+
+    <string name="progressBarLabel">Syncing %s : %d%% </string>
 
 </resources>

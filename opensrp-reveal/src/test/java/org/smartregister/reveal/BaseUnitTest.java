@@ -38,7 +38,7 @@ import org.smartregister.util.DateTimeTypeConverter;
 public abstract class BaseUnitTest {
 
     protected static final String DUMMY_USERNAME = "myusername";
-    protected static final String DUMMY_PASSWORD = "mypassword";
+    protected static final char[] DUMMY_PASSWORD = "mypassword".toCharArray();
 
     protected final int ASYNC_TIMEOUT = 2000;
 

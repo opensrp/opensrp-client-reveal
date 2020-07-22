@@ -55,6 +55,7 @@ public class CardDetailsUtil {
             case BusinessStatus.SPRAYED:
             case BusinessStatus.COMPLETE:
             case BusinessStatus.FULLY_RECEIVED:
+            case PARTIALLY_SPRAYED:
                 cardDetails.setStatusColor(R.color.sprayed);
                 cardDetails.setStatusMessage(R.string.details_sprayed);
                 cardDetails.setReason(null);
@@ -64,10 +65,6 @@ public class CardDetailsUtil {
                 cardDetails.setStatusColor(R.color.unsprayable);
                 cardDetails.setStatusMessage(R.string.details_not_sprayable);
                 cardDetails.setReason(null);
-                break;
-            case PARTIALLY_SPRAYED:
-                cardDetails.setStatusColor(R.color.partially_sprayed);
-                cardDetails.setStatusMessage(R.string.partially_sprayed);
                 break;
             default:
                 Timber.w("business status not defined :" + cardDetails.getStatus());
@@ -229,6 +226,7 @@ public class CardDetailsUtil {
             case NOT_SPRAYED:
                 return context.getString(R.string.not_sprayed);
             case SPRAYED:
+            case PARTIALLY_SPRAYED:
                 return context.getString(R.string.sprayed);
             case NOT_SPRAYABLE:
                 return context.getString(R.string.not_sprayable);
@@ -240,8 +238,6 @@ public class CardDetailsUtil {
                 return context.getString(R.string.not_eligible);
             case IN_PROGRESS:
                 return context.getString(R.string.in_progress);
-            case PARTIALLY_SPRAYED:
-                return context.getString(R.string.partially_sprayed);
             default:
                 return businessStatus;
         }
