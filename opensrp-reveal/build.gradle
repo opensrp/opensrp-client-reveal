@@ -162,7 +162,7 @@ dependencies {
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
 
-    implementation('io.ona.kujaku:library:0.8.8-ALPHA1') {
+    implementation('io.ona.kujaku:library:0.8.8') {
         exclude group: 'com.android.volley'
         exclude group: 'stax', module: 'stax-api'
     }
