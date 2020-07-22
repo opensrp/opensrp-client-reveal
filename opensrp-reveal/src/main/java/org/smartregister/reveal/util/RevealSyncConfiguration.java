@@ -7,7 +7,9 @@ import org.smartregister.SyncFilter;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.view.activity.BaseLoginActivity;
 
 import java.util.List;
 
@@ -130,5 +132,20 @@ public class RevealSyncConfiguration extends SyncConfiguration {
     @Override
     public boolean clearDataOnNewTeamLogin() {
         return true;
+    }
+
+    @Override
+    public String getOauthClientId() {
+        return BuildConfig.OAUTH_CLIENT_ID;
+    }
+
+    @Override
+    public String getOauthClientSecret() {
+        return BuildConfig.OAUTH_CLIENT_SECRET;
+    }
+
+    @Override
+    public Class<? extends BaseLoginActivity> getAuthenticationActivity() {
+        return LoginActivity.class;
     }
 }
