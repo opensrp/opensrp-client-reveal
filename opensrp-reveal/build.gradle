@@ -79,10 +79,31 @@ android {
                 println("Digital Globe config variables is not set in your local.properties")
                 buildConfigField "String", "DG_CONNECT_ID", "\"sample_key\""
             }
+
+            if (properties != null && properties.containsKey("oauth.client.id")) {
+
+                buildConfigField "String", "OAUTH_CLIENT_ID", properties["oauth.client.id"]
+
+            } else {
+                project.logger.error("oauth.client.id variable is not set in your local.properties")
+            }
+
+
+            if (properties != null && properties.containsKey("oauth.client.secret")) {
+
+                buildConfigField "String", "OAUTH_CLIENT_SECRET", properties["oauth.client.secret"]
+
+            } else {
+                project.logger.error("oauth.client.secret variable is not set in your local.properties")
+            }
+
+
         } else {
             println("local.properties does not exist")
             buildConfigField "String", "MAPBOX_SDK_ACCESS_TOKEN", "\"sample_key\""
             buildConfigField "String", "DG_CONNECT_ID", "\"sample_key\""
+            buildConfigField "String", "OAUTH_CLIENT_ID", "\"sample_client_id\""
+            buildConfigField "String", "OAUTH_CLIENT_SECRET", "\"sample_client_secret\""
         }
     }
     dexOptions {
@@ -167,8 +188,7 @@ dependencies {
         exclude group: 'stax', module: 'stax-api'
     }
 
-
-    implementation('org.smartregister:opensrp-client-core:1.13.4-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:2.0.0-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.android.support', module: 'appcompat-v7'

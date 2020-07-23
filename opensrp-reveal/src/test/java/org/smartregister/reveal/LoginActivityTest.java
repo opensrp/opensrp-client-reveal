@@ -145,7 +145,7 @@ public class LoginActivityTest extends BaseActivityUnitTest {
         userNameEditText.setText(DUMMY_USERNAME);
 
         EditText passwordEditText = Mockito.spy(new EditText(RuntimeEnvironment.application));
-        passwordEditText.setText(DUMMY_PASSWORD);
+        passwordEditText.setText(String.valueOf(DUMMY_PASSWORD));
 
         Whitebox.setInternalState(spyActivity, "userNameEditText", userNameEditText);
         Whitebox.setInternalState(spyActivity, "passwordEditText", passwordEditText);
@@ -162,7 +162,7 @@ public class LoginActivityTest extends BaseActivityUnitTest {
         EditText editTextUsername = spyActivity.findViewById(R.id.login_user_name_edit_text);
         editTextUsername.setText(DUMMY_USERNAME);
         EditText editTextPassword = spyActivity.findViewById(R.id.login_password_edit_text);
-        editTextPassword.setText(DUMMY_PASSWORD);
+        editTextPassword.setText(String.valueOf(DUMMY_PASSWORD));
 
         Button loginButton = spyActivity.findViewById(R.id.login_login_btn);
         spyActivity.onClick(loginButton);
