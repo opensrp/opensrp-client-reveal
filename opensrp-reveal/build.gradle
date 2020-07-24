@@ -121,7 +121,7 @@ android {
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", 'opensrp_base_url', '"https://reveal-th.smartregister.org/opensrp/"'
-            buildConfigField "int", "DATABASE_VERSION", '6'
+            buildConfigField "int", "DATABASE_VERSION", '7'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
@@ -139,7 +139,7 @@ android {
 
         debug {
             resValue "string", 'opensrp_base_url', '"https://reveal-stage.smartregister.org/opensrp/"'
-            buildConfigField "int", "DATABASE_VERSION", '6'
+            buildConfigField "int", "DATABASE_VERSION", '7'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
@@ -183,7 +183,7 @@ dependencies {
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
 
-    implementation('io.ona.kujaku:library:0.8.3') {
+    implementation('io.ona.kujaku:library:0.8.8') {
         exclude group: 'com.android.volley'
         exclude group: 'stax', module: 'stax-api'
     }
