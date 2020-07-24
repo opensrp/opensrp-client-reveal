@@ -180,6 +180,8 @@ public interface Constants {
 
         String REGISTER_FAMILY = "RACD Register Family";
 
+        String FLOATING_FAMILY_REGISTRATION = "Floating Family Registration";
+
         String FI = "FI";
 
         String PAOT = "PAOT";
@@ -275,6 +277,13 @@ public interface Constants {
         String BEDNET_DISTRIBUTED = "Bednet Distributed";
         String BLOOD_SCREENING_COMPLETE = "Blood Screening Complete";
         String PARTIALLY_SPRAYED = "Partially Sprayed";
+
+        // Zambia NTD Status
+        String VISITED_NOT_TREATED = "Visited, SACs not treated";
+        String VISITED_PARTIALLY_TREATED = "Visited, Partially treated";
+        String INELIGIBLE = "Ineligible";
+        String INCLUDED_IN_ANOTHER_HOUSEHOLD = "Included in another household";
+
 
 
         List<String> IRS_BUSINESS_STATUS = Arrays.asList(NOT_VISITED, NOT_SPRAYED,

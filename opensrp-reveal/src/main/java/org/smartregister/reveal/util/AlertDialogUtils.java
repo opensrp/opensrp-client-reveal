@@ -24,6 +24,11 @@ public class AlertDialogUtils {
         return new AlertDialog.Builder(context).setMessage(message).setTitle(R.string.fetch_structures_title).setPositiveButton(R.string.ok, null).show();
     }
 
+
+    public static AlertDialog displayNotification(Context context, String title, String message) {
+        return new AlertDialog.Builder(context).setMessage(message).setTitle(title).setPositiveButton(R.string.ok, null).show();
+    }
+
     public static AlertDialog displayNotificationWithCallback(Context context, int title, int message, int positiveBtnTitle, int negativeBtnTitle, DialogInterface.OnClickListener onClickListener, Object... formatArgs) {
         AlertDialog alert;
 

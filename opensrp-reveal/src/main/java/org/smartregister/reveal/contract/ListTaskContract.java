@@ -53,6 +53,8 @@ public interface ListTaskContract {
 
         void displayNotification(String message);
 
+        void displayNotification(String title, String message);
+
         void openCardView(CardDetails cardDetails);
 
         void startJsonForm(JSONObject form);
@@ -153,5 +155,8 @@ public interface ListTaskContract {
 
         void onFociBoundaryLongClicked();
 
+        void onMarkStructureInEligible(Feature feature);
+
+        void clearSelectedFeature();
     }
 }

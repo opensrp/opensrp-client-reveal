@@ -9,6 +9,7 @@ import android.location.Location;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.util.Pair;
 
 import com.google.gson.JsonElement;
 import com.mapbox.geojson.Feature;
@@ -19,6 +20,7 @@ import com.vijay.jsonwizard.domain.Form;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +29,8 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
+import org.smartregister.repository.BaseRepository;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -36,7 +40,6 @@ import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.dao.StructureDao;
-import org.smartregister.reveal.dao.TaskDetailsDao;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.FamilyCardDetails;
@@ -60,13 +63,11 @@ import org.smartregister.reveal.util.NativeFormProcessor;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
-
+import org.smartregister.reveal.util.TaskUtils;
+import org.smartregister.reveal.view.EditFociBoundaryActivity;
 import org.smartregister.util.CallableInteractor;
 import org.smartregister.util.CallableInteractorCallBack;
 import org.smartregister.util.GenericInteractor;
-
-import org.smartregister.reveal.view.EditFociBoundaryActivity;
-
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
@@ -314,23 +315,26 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         listTaskView.closeAllCardViews();
         listTaskView.displaySelectedFeature(feature, clickedPoint);
 
-        if (Country.NTD_COMMUNITY == BuildConfig.BUILD_COUNTRY) {
-            onNTDFeatureSelected(selectedFeature);
-            return;
-        }
-
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
         } else if (isLongclick) {
             if (BuildConfig.BUILD_COUNTRY != Country.THAILAND && BuildConfig.BUILD_COUNTRY != Country.THAILAND_EN) {
-            onFeatureSelectedByLongClick(feature);
+                onFeatureSelectedByLongClick(feature);
             }
         } else {
             onFeatureSelectedByNormalClick(feature);
         }
     }
 
-    private void onNTDFeatureSelected(Feature feature){
+    private void onNTDFeatureSelected(Feature feature, String businessStatus, String code) {
+
+
+        if (Constants.BusinessStatus.INELIGIBLE.equals(businessStatus) || Constants.BusinessStatus.NOT_ELIGIBLE.equals(businessStatus)) {
+            listTaskView.displayNotification("Info", "Structure is Ineligible");
+            return;
+        }
+
+
         CallableInteractor myInteractor = getInteractor();
 
         String START_REGISTER = "START_REGISTER";
@@ -340,10 +344,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         Callable<String> callable = () -> {
             StructureDao structureDao = StructureDao.getInstance();
 
-           if(StringUtils.isNotBlank(structureDao.getFamilyIDFromStructureID(feature.id())))
-               return SHOW_FAMILY;
+            if (StringUtils.isNotBlank(structureDao.getFamilyIDFromStructureID(feature.id())))
+                return SHOW_FAMILY;
 
-            if(structureDao.structureHasQr(feature.id()))
+            if (structureDao.structureHasQr(feature.id()))
                 return HAS_QR;
 
             return START_REGISTER;
@@ -357,11 +361,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 if (view != null) {
                     view.setLoadingState(false);
 
-                    if(START_REGISTER.equalsIgnoreCase(result)){
+                    if (START_REGISTER.equalsIgnoreCase(result)) {
                         onCardDetailsFetched(null);
-                    }else if(SHOW_FAMILY.equalsIgnoreCase(result)){
+                    } else if (SHOW_FAMILY.equalsIgnoreCase(result)) {
                         listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
-                    }else if(HAS_QR.equalsIgnoreCase(result)){
+                    } else if (HAS_QR.equalsIgnoreCase(result)) {
                         onCardDetailsFetched(new QRCodeDetailsCard(""));
                     }
 
@@ -383,6 +387,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         String businessStatus = getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
         String code = getPropertyValue(feature, TASK_CODE);
         selectedFeatureInterventionType = code;
+
+
+        if (Country.NTD_COMMUNITY == BuildConfig.BUILD_COUNTRY) {
+            onNTDFeatureSelected(selectedFeature, businessStatus, code);
+            return;
+        }
+
         if ((IRS.equals(code) || MOSQUITO_COLLECTION.equals(code) || LARVAL_DIPPING.equals(code) || PAOT.equals(code) || IRS_VERIFICATION.equals(code) || REGISTER_FAMILY.equals(code))
                 && (NOT_VISITED.equals(businessStatus) || businessStatus == null)) {
             if (validateFarStructures()) {
@@ -495,10 +506,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
-    public void saveEligibilityForm(JSONObject jsonObject, Feature feature) {
+    public void saveEligibilityForm(JSONObject jsonObject, @NonNull Feature feature) {
         CallableInteractor myInteractor = getInteractor();
 
-        Callable<String> callable = () -> {
+        Callable<Pair<Task, String>> callable = () -> {
 
             // save event details
             NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonObject);
@@ -520,28 +531,65 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             String statusHouseholdAllPresent = processor.getFieldValue("statusHouseholdAllPresent");
             String statusHohstructure = processor.getFieldValue("statusHohstructure");
 
+            String taskID = getPropertyValue(feature, TASK_IDENTIFIER);
+
+            TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
+            Task task = taskRepository.getTaskByIdentifier(taskID);
 
             if (statusResidential.equalsIgnoreCase("No")) {
-                return EXIT;
+                task.setBusinessStatus(Constants.BusinessStatus.INELIGIBLE);
+                task.setStatus(Task.TaskStatus.COMPLETED);
             } else if (statusHohstructure.equalsIgnoreCase("No")) {
-                return EXIT;
-            } else if (statusHouseholdaccessible.equalsIgnoreCase("No")) {
-                return ISSUE_CODE;
-            } else if (statusHouseholdAllPresent.equalsIgnoreCase("No")) {
-                return ISSUE_CODE_REGISTRATION;
+                task.setBusinessStatus(Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD);
+                task.setStatus(Task.TaskStatus.COMPLETED);
+            } else {
+                task.setBusinessStatus(Constants.BusinessStatus.IN_PROGRESS);
+                task.setStatus(Task.TaskStatus.IN_PROGRESS);
             }
 
-            return REGISTER;
+            if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+            }
+            task.setLastModified(new DateTime());
+            taskRepository.addOrUpdate(task);
+
+
+            if (statusResidential.equalsIgnoreCase("No")) {
+                return Pair.create(task, EXIT);
+            } else if (statusHohstructure.equalsIgnoreCase("No")) {
+                return Pair.create(task, EXIT);
+            } else if (statusHouseholdaccessible.equalsIgnoreCase("No")) {
+                return Pair.create(task, ISSUE_CODE);
+            } else if (statusHouseholdAllPresent.equalsIgnoreCase("No")) {
+                return Pair.create(task, ISSUE_CODE_REGISTRATION);
+            }
+
+            return Pair.create(task, REGISTER);
         };
 
         getView().setLoadingState(true);
-        myInteractor.execute(callable, new CallableInteractorCallBack<String>() {
+        myInteractor.execute(callable, new CallableInteractorCallBack<Pair<Task, String>>() {
             @Override
-            public void onResult(String result) {
+            public void onResult(Pair<Task, String> result) {
                 ListTaskView view = getView();
                 if (view != null) {
+
+                    // update the task status on this feature
+                    Task task = result.first;
+
+                    setChangeMapPosition(false);
+                    for (Feature feature : getFeatureCollection().features()) {
+                        if (task.getStructureId().equals(feature.id())) {
+                            feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                            feature.addStringProperty(TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                            feature.addStringProperty(TASK_STATUS, task.getStatus().name());
+                            break;
+                        }
+                    }
+                    listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
+
                     view.setLoadingState(false);
-                    view.onEligibilityStatusConfirmed(result);
+                    view.onEligibilityStatusConfirmed(result.second);
                 }
             }
 
@@ -598,7 +646,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     // save
                     .saveEvent();
 
-            structureDao.addDetails(structureId,qrcode);
+            structureDao.addDetails(structureId, qrcode);
 
             return null;
         };
@@ -702,7 +750,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void saveFamilyRegistration(JSONObject jsonObject, Context context) {
         CallableInteractor myInteractor = getInteractor();
 
-        Callable<CommonPersonObjectClient> callable = () -> {
+        Callable<Pair<CommonPersonObjectClient,Task>> callable = () -> {
 
             JSONObject jsonObjectFamilyMember = new JSONObject(jsonObject.toString());
 
@@ -717,6 +765,32 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             String familyEntityId = UUID.randomUUID().toString();
             String familyHeadyEntityId = UUID.randomUUID().toString();
 
+            TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
+            Feature feature = getSelectedFeature();
+            Task task = null;
+            if (feature != null) {
+                if (feature.hasProperty(TASK_IDENTIFIER)) {
+                    String taskID = getPropertyValue(feature, TASK_IDENTIFIER);
+                    task = taskRepository.getTaskByIdentifier(taskID);
+
+                    task.setBusinessStatus(Constants.BusinessStatus.FAMILY_REGISTERED);
+                    task.setStatus(TaskStatus.COMPLETED);
+
+                    if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
+                        task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                    }
+                    task.setLastModified(new DateTime());
+                    taskRepository.addOrUpdate(task);
+                }
+            }
+
+            if (task == null) {
+                org.smartregister.domain.Location operationalAreaLocation = org.smartregister.reveal.util.Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
+                String structureId = (feature != null ? feature.id() : operationalAreaLocation.getId());
+                task = TaskUtils.getInstance().generateTask(context, structureId, structureId, Constants.BusinessStatus.FAMILY_REGISTERED, TaskStatus.COMPLETED, Constants.Intervention.FLOATING_FAMILY_REGISTRATION,
+                        R.string.register_family);
+            }
+
             jsonObject.remove("step2");
             processor = NativeFormProcessor.createInstance(jsonObject.toString());
 
@@ -726,6 +800,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     .withEncounterType(FamilyConstants.EventType.FAMILY_REGISTRATION)
                     .withEntityId(familyEntityId)
                     .tagLocationData(operationalArea)
+                    .tagTaskDetails(task)
                     .tagEventMetadata()
 
                     // create and save client
@@ -737,7 +812,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                         client.setLastName("Family");
                         client.setGender("Male");
                         client.setBirthdateApprox(true);
-                        Feature feature = getSelectedFeature();
                         if (feature != null)
                             client.addAttribute("residence", feature.id());
                     })
@@ -755,6 +829,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     .withEncounterType(FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION)
                     .withEntityId(familyHeadyEntityId)
                     .tagLocationData(operationalArea)
+                    .tagTaskDetails(task)
                     .tagEventMetadata()
 
                     // create and save client
@@ -771,7 +846,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                         if (same_as_fam_name.contains("same_as_fam_name"))
                             client.setLastName(fam_name);
 
-                        Feature feature = getSelectedFeature();
                         if (feature != null)
                             client.addAttribute("residence", feature.id());
                     })
@@ -786,21 +860,35 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     personObject.getDetails(), "");
             family.setColumnmaps(personObject.getColumnmaps());
 
-            return family;
+
+            return Pair.create(family,task);
         };
 
 
         getView().setLoadingState(true);
-        myInteractor.execute(callable, new CallableInteractorCallBack<CommonPersonObjectClient>() {
+        myInteractor.execute(callable, new CallableInteractorCallBack<Pair<CommonPersonObjectClient,Task>>() {
             @Override
-            public void onResult(CommonPersonObjectClient result) {
+            public void onResult(Pair<CommonPersonObjectClient,Task> result) {
                 ListTaskView view = getView();
                 if (view != null) {
                     view.setLoadingState(false);
                     if (result == null) {
                         view.onError(new IllegalStateException("Invalid family"));
                     } else {
-                        view.openStructureProfile(result);
+                        view.openStructureProfile(result.first);
+                    }
+
+                    Task task = result.second;
+                    if(task != null && getSelectedFeature() != null){
+                        setChangeMapPosition(false);
+                        for (Feature feature : getFeatureCollection().features()) {
+                            if (task.getStructureId().equals(feature.id())) {
+                                feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                                feature.addStringProperty(TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                                feature.addStringProperty(TASK_STATUS, task.getStatus().name());
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -821,6 +909,66 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         Intent intent = new Intent(listTaskView.getContext(), EditFociBoundaryActivity.class);
         listTaskView.getActivity().startActivity(intent);
+    }
+
+    @Override
+    public void onMarkStructureInEligible(Feature feature) {
+        CallableInteractor myInteractor = getInteractor();
+
+        Callable<Task> callable = () -> {
+
+            String taskID = getPropertyValue(feature, TASK_IDENTIFIER);
+
+            TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
+            Task task = taskRepository.getTaskByIdentifier(taskID);
+
+            task.setBusinessStatus(Constants.BusinessStatus.INELIGIBLE);
+            task.setStatus(Task.TaskStatus.COMPLETED);
+
+            if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+            }
+            task.setLastModified(new DateTime());
+            taskRepository.addOrUpdate(task);
+
+            return task;
+        };
+
+        getView().setLoadingState(true);
+        myInteractor.execute(callable, new CallableInteractorCallBack<Task>() {
+            @Override
+            public void onResult(Task task) {
+                ListTaskView view = getView();
+                if (view != null) {
+
+                    setChangeMapPosition(false);
+                    for (Feature feature : getFeatureCollection().features()) {
+                        if (task.getStructureId().equals(feature.id())) {
+                            feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                            feature.addStringProperty(TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                            feature.addStringProperty(TASK_STATUS, task.getStatus().name());
+                            break;
+                        }
+                    }
+                    listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
+
+                    view.setLoadingState(false);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ListTaskView view = getView();
+                if (view == null) return;
+                view.onError(ex);
+                view.setLoadingState(false);
+            }
+        });
+    }
+
+    @Override
+    public void clearSelectedFeature() {
+        selectedFeature = null;
     }
 
     @Override

@@ -511,6 +511,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                             if (which == BUTTON_POSITIVE) {
                                 listTaskPresenter.onAddStructureClicked(revealMapHelper.isMyLocationComponentActive(getContext(), myLocationButton));
                             } else if (which == BUTTON_NEGATIVE) {
+                                listTaskPresenter.clearSelectedFeature();
                                 registerFamily();
                             }
                             dialog.dismiss();
@@ -567,6 +568,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             closeCardView(R.id.btn_collapse_eligibility_card_view);
         } else if (v.getId() == R.id.tv_not_eligible) {
             closeCardView(R.id.btn_collapse_eligibility_card_view);
+            listTaskPresenter.onMarkStructureInEligible(listTaskPresenter.getSelectedFeature());
         }
     }
 
@@ -713,6 +715,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void displayNotification(String message) {
         AlertDialogUtils.displayNotification(this, message);
+    }
+
+    @Override
+    public void displayNotification(String title, String message) {
+        AlertDialogUtils.displayNotification(this, title, message);
     }
 
     @Override

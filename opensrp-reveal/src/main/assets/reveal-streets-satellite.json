@@ -80,7 +80,8 @@
           "hsl(89, 52%, 48%)",
           [
             "Not Sprayable",
-            "Not Eligible"
+            "Not Eligible",
+            "Ineligible"
           ],
           "hsl(0, 0%, 9%)",
           [
@@ -181,7 +182,8 @@
           "hsl(89, 52%, 48%)",
           [
             "Not Sprayable",
-            "Not Eligible"
+            "Not Eligible",
+            "Ineligible"
           ],
           "hsl(0, 0%, 9%)",
           [

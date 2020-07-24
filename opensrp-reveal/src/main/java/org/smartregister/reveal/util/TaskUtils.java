@@ -83,13 +83,14 @@ public class TaskUtils {
                 R.string.mass_drug_administration);
     }
 
-    public Task generateTask(Context context, String entityId, String structureId, String businessStatus, String intervention, @StringRes int description) {
+
+    public Task generateTask(Context context, String entityId, String structureId, String businessStatus, Task.TaskStatus status, String intervention, @StringRes int description) {
         Task task = new Task();
         DateTime now = new DateTime();
         task.setIdentifier(UUID.randomUUID().toString());
         task.setPlanIdentifier(prefsUtil.getCurrentPlanId());
         task.setGroupIdentifier(Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId());
-        task.setStatus(READY);
+        task.setStatus(status);
         task.setBusinessStatus(businessStatus);
         task.setPriority(3);
         task.setCode(intervention);
@@ -113,6 +114,10 @@ public class TaskUtils {
         taskRepository.addOrUpdate(task);
         revealApplication.setSynced(false);
         return task;
+    }
+
+    public Task generateTask(Context context, String entityId, String structureId, String businessStatus, String intervention, @StringRes int description) {
+        return generateTask(context,entityId,structureId, businessStatus, READY, intervention, description);
     }
 
 
