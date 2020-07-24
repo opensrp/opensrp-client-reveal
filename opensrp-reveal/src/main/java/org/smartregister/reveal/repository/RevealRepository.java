@@ -9,6 +9,7 @@ import org.smartregister.AllConstants;
 import org.smartregister.configurableviews.repository.ConfigurableViewsRepository;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.job.PullUniqueIdsServiceJob;
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.ClientFormRepository;
 import org.smartregister.repository.EventClientRepository;
@@ -44,6 +45,7 @@ import static org.smartregister.repository.EventClientRepository.event_column.ba
 import static org.smartregister.repository.EventClientRepository.event_column.eventType;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BASE_ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TASK_TABLE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.LOCATION_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PROPERTY_TYPE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAY_STATUS;
@@ -109,6 +111,9 @@ public class RevealRepository extends Repository {
                     break;
                 case 6:
                     upgradeToVersion6(db);
+                    break;
+                case 7:
+                    upgradeToVersion7(db);
                     break;
                 default:
                     break;
@@ -202,6 +207,12 @@ public class RevealRepository extends Repository {
     private void upgradeToVersion6(SQLiteDatabase db) {
         ClientFormRepository.createTable(db);
         ManifestRepository.createTable(db);
+    }
+
+    private void upgradeToVersion7(SQLiteDatabase db) {
+        if (!isColumnExists(db, LOCATION_TABLE, DatabaseKeys.LOCATION_SYNC_STATUS)) {
+            db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s VARCHAR DEFAULT %s ", LOCATION_TABLE, DatabaseKeys.LOCATION_SYNC_STATUS, BaseRepository.TYPE_Synced));
+        }
     }
 
     @Override
