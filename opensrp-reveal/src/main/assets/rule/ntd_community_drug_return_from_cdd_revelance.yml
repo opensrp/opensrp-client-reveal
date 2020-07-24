@@ -1,0 +1,7 @@
+---
+name: step1_nPZQreturnedtinsquantityother
+description: step1_nPZQreturnedtinsquantityother
+priority: 1
+condition: "step1_nPZQreturnedtinsquantity.contains('Other')"
+actions:
+  - "isRelevant = true"

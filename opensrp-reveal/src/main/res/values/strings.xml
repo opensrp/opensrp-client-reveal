@@ -399,4 +399,6 @@
     <string name="drag_selected_point_msg">Drag selected point to change boundary</string>
     <string name="progressBarLabel">Syncing %s : %d%% </string>
 
+    <string name="drug_allocation_to_cdd_team">Drug Allocation to CDD team</string>
+    <string name="drug_return_from_cdd_team">Drug Return from CDD Team</string>
 </resources>

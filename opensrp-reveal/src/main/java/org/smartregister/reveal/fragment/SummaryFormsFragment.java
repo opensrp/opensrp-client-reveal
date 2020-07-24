@@ -14,15 +14,18 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONObject;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.OtherFormsfragmentContract;
 import org.smartregister.reveal.presenter.OtherFormsFragmentPresenter;
+import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.SummaryFormsActivity;
 
 public class SummaryFormsFragment extends Fragment implements OtherFormsfragmentContract.View, View.OnClickListener {
-    
+
     private OtherFormsFragmentPresenter presenter;
 
     private RevealJsonFormUtils jsonFormUtils;
@@ -44,6 +47,10 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
     private Button btnIrsFieldOfficer;
 
     private Button btnVerificationForm;
+
+    private Button btnCDDDrugAllocation;
+
+    private Button btnCDDDrugReturn;
 
     public static SummaryFormsFragment newInstance(Bundle bundle) {
 
@@ -81,19 +88,31 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
         btnMobilization = view.findViewById(R.id.summary_mobilization_form);
         btnIrsFieldOfficer = view.findViewById(R.id.summary_irs_field_officer);
         btnVerificationForm = view.findViewById(R.id.summary_verification_form);
+        btnCDDDrugAllocation = view.findViewById(R.id.drug_allocation_to_cdd);
+        btnCDDDrugReturn = view.findViewById(R.id.drug_return_from_cdd);
+
+        boolean isNTDCommunity = BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY);
+        view.findViewById(R.id.summary_forms_group).setVisibility(isNTDCommunity ? View.GONE : View.VISIBLE);
+        view.findViewById(R.id.drug_allocation_forms_group).setVisibility(isNTDCommunity ? View.VISIBLE : View.GONE);
 
         setClickListeners();
     }
 
     private void setClickListeners() {
-        btnDailySummary.setOnClickListener(this);
-        btnTeamLeaderDos.setOnClickListener(this);
-        btnCbSprayArea.setOnClickListener(this);
-        btnIrsSaDecision.setOnClickListener(this);
-        btnMobilization.setOnClickListener(this);
-        btnIrsFieldOfficer.setOnClickListener(this);
-        btnVerificationForm.setOnClickListener(this);
+        setOnClickListener(btnDailySummary);
+        setOnClickListener(btnTeamLeaderDos);
+        setOnClickListener(btnCbSprayArea);
+        setOnClickListener(btnIrsSaDecision);
+        setOnClickListener(btnMobilization);
+        setOnClickListener(btnIrsFieldOfficer);
+        setOnClickListener(btnVerificationForm);
+        setOnClickListener(btnCDDDrugAllocation);
+        setOnClickListener(btnCDDDrugReturn);
 
+    }
+
+    private void setOnClickListener(@Nullable View view){
+        if(view != null) view.setOnClickListener(this);
     }
 
     @Override
@@ -169,6 +188,12 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
                 break;
             case R.id.summary_verification_form:
                 presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.VERIFICATION_FORM_ZAMBIA);
+                break;
+            case R.id.drug_allocation_to_cdd:
+                presenter.showBasicForm(Constants.JsonForm.NTD_DRUG_ALLOCATION);
+                break;
+            case R.id.drug_return_from_cdd:
+                presenter.showBasicForm(Constants.JsonForm.NTD_DRUG_RETURN);
                 break;
             default:
                 break;

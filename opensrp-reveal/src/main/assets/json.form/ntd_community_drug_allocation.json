@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "Drug allocation to CDD team",
+  "encounter_type": "Drug_allocation_to_CDD_team",
   "entity_id": "",
   "relational_id": "",
   "metadata": {
@@ -116,6 +116,13 @@
         "v_max": {
           "value": "2000",
           "err": "Max number of pieces are 2000"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_community_drug_allocation_relevance.yml"
+            }
+          }
         }
       },
       {
@@ -143,13 +150,12 @@
         "type": "hidden",
         "hint": "Number of tablets received in this allocation",
         "text_size": "8sp",
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Please enter a number"
-        },
-        "v_required": {
-          "value": true,
-          "err": "Required field"
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd_community_drug_allocation_calculation.yml"
+            }
+          }
         }
       },
       {

@@ -504,7 +504,18 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private void onAddItemClicked() {
         if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
-            registerFamily();
+            AlertDialogUtils.displayNotificationWithCallback(getContext(), R.string.registration_type,
+                    R.string.registration_type_message, R.string.registration_type_structure, R.string.registration_type_family, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which == BUTTON_POSITIVE) {
+                                listTaskPresenter.onAddStructureClicked(revealMapHelper.isMyLocationComponentActive(getContext(), myLocationButton));
+                            } else if (which == BUTTON_NEGATIVE) {
+                                registerFamily();
+                            }
+                            dialog.dismiss();
+                        }
+                    });
         } else {
             listTaskPresenter.onAddStructureClicked(revealMapHelper.isMyLocationComponentActive(this, myLocationButton));
         }
@@ -892,7 +903,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void onSyncStart() {
-        if (SyncStatusBroadcastReceiver.getInstance().isSyncing()) {
+        if (SyncStatusBroadcastReceiver.getInstance().isSyncing() && org.smartregister.reveal.util.Utils.isNetworkAvailable(getContext())) {
             syncProgressSnackbar.show();
         }
         toggleProgressBarView(true);

@@ -1,0 +1,7 @@
+---
+name: step1_nPZQreceivedtinsizeother
+description: step1_nPZQreceivedtinsizeother
+priority: 1
+condition: "step1_nPZQreceivedtinsize.contains('Other')"
+actions:
+  - "isRelevant = true"

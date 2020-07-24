@@ -145,4 +145,51 @@
             android:textSize="20sp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/drug_allocation_forms_group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <View
+            android:id="@+id/separator8"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/light_grey" />
+
+        <Button
+            android:id="@+id/drug_allocation_to_cdd"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="@string/drug_allocation_to_cdd_team"
+            android:textAllCaps="false"
+            android:textColor="@color/text_black"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/separator9"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/light_grey" />
+
+        <Button
+            android:id="@+id/drug_return_from_cdd"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="@string/drug_return_from_cdd_team"
+            android:textAllCaps="false"
+            android:textColor="@color/text_black"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

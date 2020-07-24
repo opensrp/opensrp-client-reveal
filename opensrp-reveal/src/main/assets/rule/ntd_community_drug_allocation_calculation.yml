@@ -1,0 +1,7 @@
+---
+name: step1_nPZQreceived
+description: nPZQreceived status
+priority: 1
+condition: "step1_nPZQreceivedtins != null && step1_nPZQreceivedtins != '' && step1_nPZQreceivedtinsize != null && step1_nPZQreceivedtinsize != '' && step1_nPZQreceivedloose != null && step1_nPZQreceivedloose != '' "
+actions:
+  - "calculation = step1_nPZQreceived = ((step1_nPZQreceivedtins * (step1_nPZQreceivedtinsize.contains('Other') ? step1_nPZQreceivedtinsizeother : step1_nPZQreceivedtinsize)) + step1_nPZQreceivedloose) "

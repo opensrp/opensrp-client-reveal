@@ -90,13 +90,6 @@
                     android:visibility="gone" />
 
                 <include
-                    android:id="@+id/mark_eligibility_status"
-                    layout="@layout/eligibility_card_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" />
-
-                <include
                     android:id="@+id/mosquito_collection_card_view"
                     layout="@layout/mosquito_collection_card_view"
                     android:layout_width="match_parent"

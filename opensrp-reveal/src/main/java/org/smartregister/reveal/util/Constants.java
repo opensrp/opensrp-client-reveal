@@ -494,6 +494,9 @@ public interface Constants {
 
         String CATCHMENT_AREA = "catchment_area";
 
+        String NTD_DRUG_ALLOCATION = "json.form/ntd_community_drug_allocation.json";
+
+        String NTD_DRUG_RETURN= "json.form/ntd_community_drug_return_from_cdd.json";
 
     }
 
