@@ -50,8 +50,8 @@ public class NativeFormProcessor {
     private Event _event;
     private String encounterType;
     private String bindType;
-    private org.smartregister.domain.db.Client domainClient;
-    private org.smartregister.domain.db.Event domainEvent;
+    private org.smartregister.domain.Client domainClient;
+    private org.smartregister.domain.Event domainEvent;
     private boolean hasClient = false;
 
     public static NativeFormProcessor createInstance(String jsonString) throws JSONException {
@@ -158,19 +158,19 @@ public class NativeFormProcessor {
         return this;
     }
 
-    private org.smartregister.domain.db.Client getDomainClient() throws JSONException {
+    private org.smartregister.domain.Client getDomainClient() throws JSONException {
         if (hasClient && domainClient == null) {
             JSONObject clientJson = new JSONObject(gson.toJson(createClient()));
-            domainClient = gson.fromJson(clientJson.toString(), org.smartregister.domain.db.Client.class);
+            domainClient = gson.fromJson(clientJson.toString(), org.smartregister.domain.Client.class);
         }
 
         return domainClient;
     }
 
-    private org.smartregister.domain.db.Event getDomainEvent() throws JSONException {
+    private org.smartregister.domain.Event getDomainEvent() throws JSONException {
         if (domainEvent == null) {
             JSONObject eventJson = new JSONObject(gson.toJson(createEvent()));
-            domainEvent = gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class);
+            domainEvent = gson.fromJson(eventJson.toString(), org.smartregister.domain.Event.class);
         }
 
         return domainEvent;

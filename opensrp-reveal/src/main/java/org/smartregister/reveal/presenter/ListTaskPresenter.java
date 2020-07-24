@@ -2,6 +2,7 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
@@ -59,9 +60,13 @@ import org.smartregister.reveal.util.NativeFormProcessor;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
+
 import org.smartregister.util.CallableInteractor;
 import org.smartregister.util.CallableInteractorCallBack;
 import org.smartregister.util.GenericInteractor;
+
+import org.smartregister.reveal.view.EditFociBoundaryActivity;
+
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
@@ -763,7 +768,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                             client.setBirthdate(calendar.getTime());
                         }
 
-                        if(same_as_fam_name.contains("same_as_fam_name"))
+                        if (same_as_fam_name.contains("same_as_fam_name"))
                             client.setLastName(fam_name);
 
                         Feature feature = getSelectedFeature();
@@ -792,9 +797,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 ListTaskView view = getView();
                 if (view != null) {
                     view.setLoadingState(false);
-                    if(result == null){
+                    if (result == null) {
                         view.onError(new IllegalStateException("Invalid family"));
-                    }else{
+                    } else {
                         view.openStructureProfile(result);
                     }
                 }
@@ -808,6 +813,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 view.setLoadingState(false);
             }
         });
+    }
+
+    public void onFociBoundaryLongClicked() {
+        revealApplication.setFeatureCollection(featureCollection);
+        revealApplication.setOperationalArea(operationalArea);
+
+        Intent intent = new Intent(listTaskView.getContext(), EditFociBoundaryActivity.class);
+        listTaskView.getActivity().startActivity(intent);
     }
 
     @Override

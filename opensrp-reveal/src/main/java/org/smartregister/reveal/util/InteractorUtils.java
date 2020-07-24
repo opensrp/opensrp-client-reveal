@@ -12,7 +12,7 @@ import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
-import org.smartregister.domain.db.Client;
+import org.smartregister.domain.Client;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
@@ -120,7 +120,7 @@ public class InteractorUtils {
             eventClientRepository.addEvent(baseEntityId, eventJson);
 
             clientProcessor.processClient(Collections.singletonList(new EventClient(
-                    gson.fromJson(eventJson.toString(), org.smartregister.domain.db.Event.class),
+                    gson.fromJson(eventJson.toString(), org.smartregister.domain.Event.class),
                     gson.fromJson(clientJsonObject.toString(), Client.class))), true);
             saved = true;
 

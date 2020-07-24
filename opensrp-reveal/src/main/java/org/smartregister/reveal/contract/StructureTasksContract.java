@@ -4,7 +4,7 @@ import android.content.Context;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.domain.Task;
-import org.smartregister.domain.db.Event;
+import org.smartregister.domain.Event;
 import org.smartregister.reveal.model.StructureTaskDetails;
 
 import java.util.List;

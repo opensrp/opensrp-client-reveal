@@ -92,6 +92,9 @@ public interface ListTaskContract {
         void onEligibilityStatusConfirmed(String status);
 
         void startJSONForm(JSONObject jsonObject, Form form);
+
+        void toggleProgressBarView(boolean syncing);
+
     }
 
     interface Presenter extends BaseContract.BasePresenter {
@@ -147,5 +150,8 @@ public interface ListTaskContract {
         void startFamilyRegistrationForm(Context context);
 
         void saveFamilyRegistration(JSONObject jsonObject, Context context);
+
+        void onFociBoundaryLongClicked();
+
     }
 }

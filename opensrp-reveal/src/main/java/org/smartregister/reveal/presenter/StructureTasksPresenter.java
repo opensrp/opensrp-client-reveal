@@ -15,9 +15,13 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
-import org.smartregister.domain.db.Event;
+
+import org.smartregister.domain.Event;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.reveal.BuildConfig;
+
+import org.smartregister.domain.Event;
+
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;

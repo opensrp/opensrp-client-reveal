@@ -678,13 +678,11 @@ public interface Constants {
         String PERSON_TESTED = "person_tested";
 
         String DOB = "dob";
-    }
 
-    interface PlanDefinitionStatus {
-        String DRAFT = "draft";
-        String ACTIVE = "active";
-        String COMPLETE = "complete";
-        String RETIRED = "retired";
+        String LOCATION_TABLE = "location";
+
+        String LOCATION_SYNC_STATUS = "sync_status";
+
     }
 
     interface UseContextCode {
