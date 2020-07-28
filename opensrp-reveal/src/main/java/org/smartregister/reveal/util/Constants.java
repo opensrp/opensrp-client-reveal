@@ -650,6 +650,11 @@ public interface Constants {
         String PERSON_TESTED = "person_tested";
 
         String DOB = "dob";
+      
+        String LOCATION_TABLE = "location";
+
+        String LOCATION_SYNC_STATUS = "sync_status";
+
     }
 
     interface UseContextCode {
