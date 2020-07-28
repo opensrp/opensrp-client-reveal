@@ -14,16 +14,16 @@ public interface FamilyConstants {
     }
 
     interface EventType {
-        String FAMILY_REGISTRATION = "Family Registration";
-        String FAMILY_REGISTRATION_INELIGIBLE = "Family Registration Ineligible";
-        String FAMILY_MEMBER_REGISTRATION = "Family Member Registration";
+        String FAMILY_REGISTRATION = "Family_Registration";
+        String FAMILY_REGISTRATION_INELIGIBLE = "Family_Registration Ineligible";
+        String FAMILY_MEMBER_REGISTRATION = "Family_Member_Registration";
 
-        String UPDATE_FAMILY_REGISTRATION = "Update Family Registration";
-        String UPDATE_FAMILY_MEMBER_REGISTRATION = "Update Family Member Registration";
+        String UPDATE_FAMILY_REGISTRATION = "Update_Family_Registration";
+        String UPDATE_FAMILY_MEMBER_REGISTRATION = "Update_Family_Member_Registration";
 
-        String ARCHIVE_FAMILY = "Archive Family";
+        String ARCHIVE_FAMILY = "Archive_Family";
 
-        String ARCHIVE_FAMILY_MEMBER = "Archive Family Member";
+        String ARCHIVE_FAMILY_MEMBER = "Archive_Family_Member";
     }
 
     interface JSON_FORM {
