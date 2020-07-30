@@ -11,7 +11,7 @@
             "creates_case": [
               "sprayed_structures",
               "event_task",
-              "completed_forms"
+              "ec_events"
             ]
           },
           {
@@ -120,7 +120,7 @@
             "field": "eventType",
             "field_value": "daily_summary",
             "creates_case": [
-              "completed_forms"
+              "ec_events"
             ]
           }
         ]

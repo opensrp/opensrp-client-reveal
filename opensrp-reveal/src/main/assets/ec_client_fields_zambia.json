@@ -597,13 +597,20 @@
       ]
     },
     {
-      "name": "completed_forms",
+      "name": "ec_events",
       "columns": [
         {
           "column_name": "event_date",
           "type": "Event",
           "json_mapping": {
             "field": "eventDate"
+          }
+        },
+        {
+          "column_name": "event_type",
+          "type": "Event",
+          "json_mapping": {
+            "field": "eventType"
           }
         },
         {
@@ -623,7 +630,7 @@
           }
         },
         {
-          "column_name": "village",
+          "column_name": "entity",
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
