@@ -497,6 +497,21 @@
             "ex": "equalTo(., \"other\")"
           }
         }
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "value": "found",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia_daily_summary_calculation.yml"
+            }
+          }
+        }
       }
     ]
   }
