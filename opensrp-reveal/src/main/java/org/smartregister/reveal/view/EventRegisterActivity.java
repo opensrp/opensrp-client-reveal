@@ -1,6 +1,7 @@
 package org.smartregister.reveal.view;
 
 import android.content.Intent;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -10,6 +11,7 @@ import org.json.JSONArray;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
 import org.smartregister.family.presenter.BaseFamilyRegisterPresenter;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.fragment.EventRegisterFragment;
 import org.smartregister.reveal.presenter.BaseRegisterPresenter;
 import org.smartregister.reveal.presenter.TaskRegisterPresenter;
@@ -46,6 +48,8 @@ public class EventRegisterActivity extends BaseRevealRegisterActivity {
     }
 
     @Override
-    protected void registerBottomNavigation() {//not used
+    protected void registerBottomNavigation() {
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.GONE);
     }
 }

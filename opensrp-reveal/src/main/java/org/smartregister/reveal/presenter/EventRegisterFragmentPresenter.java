@@ -66,6 +66,7 @@ public class EventRegisterFragmentPresenter implements BaseRegisterFragmentContr
 
     protected String[] mainColumns(String tableName) {
         String[] columns = new String[]{
+                tableName + ".relationalid",
                 tableName + "." + Constants.DatabaseKeys.EVENT_DATE,
                 tableName + "." + Constants.DatabaseKeys.EVENT_TYPE,
                 tableName + "." + Constants.DatabaseKeys.SOP,

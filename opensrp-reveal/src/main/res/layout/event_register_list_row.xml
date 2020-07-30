@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/patient_column"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/register_list_item_margin"
+    android:layout_marginEnd="@dimen/register_list_item_end_margin"
+    android:background="@color/white"
+    android:paddingTop="@dimen/register_list_max_padding"
+    android:paddingBottom="@dimen/register_list_max_padding">
+
+    <org.smartregister.view.customcontrols.CustomFontTextView
+        android:id="@+id/event_date"
+        style="@style/CustomFontTextViewStyle.ClientList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingStart="0dp"
+        android:singleLine="true"
+        android:text="Event Date"
+        android:textColor="@color/text_black"
+        android:textSize="@dimen/register_list_title_size" />
+
+    <org.smartregister.view.customcontrols.CustomFontTextView
+        android:id="@+id/event_type"
+        style="@style/CustomFontTextViewStyle.ClientList.Light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="0dp"
+        android:paddingTop="@dimen/register_list_top_bottom_padding"
+        android:text="Event Date"
+        android:textColor="@color/light_grey_text"
+        android:textSize="@dimen/register_list_desc_size" />
+
+
+    <org.smartregister.view.customcontrols.CustomFontTextView
+        android:id="@+id/sop"
+        style="@style/CustomFontTextViewStyle.ClientList.Light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="0dp"
+        android:paddingTop="@dimen/register_list_top_bottom_padding"
+        android:text="SOP"
+        android:textColor="@color/light_grey_text"
+        android:textSize="@dimen/register_list_desc_size" />
+
+
+    <org.smartregister.view.customcontrols.CustomFontTextView
+        android:id="@+id/entity"
+        style="@style/CustomFontTextViewStyle.ClientList.Light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="0dp"
+        android:paddingTop="@dimen/register_list_top_bottom_padding"
+        android:text="HH/ VillageName"
+        android:textColor="@color/light_grey_text"
+        android:textSize="@dimen/register_list_desc_size" />
+
+
+    <org.smartregister.view.customcontrols.CustomFontTextView
+        android:id="@+id/status"
+        style="@style/CustomFontTextViewStyle.ClientList.Light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="0dp"
+        android:paddingTop="@dimen/register_list_top_bottom_padding"
+        android:text="status"
+        android:textColor="@color/light_grey_text"
+        android:textSize="@dimen/register_list_desc_size" />
+
+
+</LinearLayout>
+
