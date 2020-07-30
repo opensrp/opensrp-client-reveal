@@ -4,12 +4,16 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.google.android.material.navigation.NavigationView;
+
 import androidx.core.util.Pair;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
@@ -153,6 +157,10 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
             summaryFormsTextView.setVisibility(View.VISIBLE);
             summaryFormsTextView.setOnClickListener(this);
+
+            TextView filledForms = headerView.findViewById(R.id.btn_navMenu_filled_forms);
+            filledForms.setVisibility(View.VISIBLE);
+            filledForms.setOnClickListener(this);
 
         }
 
@@ -320,6 +328,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             startOtherFormsActivity();
         else if (v.getId() == R.id.btn_navMenu_offline_maps)
             presenter.onShowOfflineMaps();
+        else if (v.getId() == R.id.btn_navMenu_filled_forms)
+            presenter.onShowFilledForms();
         else if (v.getId() == R.id.sync_button) {
             toggleProgressBarView(true);
             org.smartregister.reveal.util.Utils.startImmediateSync();
@@ -340,6 +350,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     private void startP2PActivity() {
         getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
     }
+
     @Override
     public void openOfflineMapsView() {
         Intent intent = new Intent(getContext(), OfflineMapsActivity.class);
@@ -363,8 +374,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             progressLabel.setVisibility(View.VISIBLE);
             syncButton.setVisibility(View.INVISIBLE);
             syncBadge.setVisibility(View.INVISIBLE);
-        }
-        else {
+        } else {
             progressBar.setVisibility(View.INVISIBLE);
             progressLabel.setVisibility(View.INVISIBLE);
             syncButton.setVisibility(View.VISIBLE);
