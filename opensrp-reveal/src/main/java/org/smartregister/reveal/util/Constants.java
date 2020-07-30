@@ -19,6 +19,18 @@ public interface Constants {
 
     String SPRAY_EVENT = "Spray";
 
+    String  DAILY_SUMMARY_EVENT = "daily_summary";
+
+    String  IRS_FIELD_OFFICER_EVENT = "irs_field_officer";
+
+    String  IRS_SA_DECISION_EVENT = "irs_sa_decision";
+
+    String  MOBILIZATION_EVENT = "mobilization";
+
+    String  TEAM_LEADER_DOS_EVENT = "team_leader_dos";
+
+    String  VERIFICATION_EVENT = "verification";
+
     String REGISTER_STRUCTURE_EVENT = "Register_Structure";
 
     String MOSQUITO_COLLECTION_EVENT = "mosquito_collection";
