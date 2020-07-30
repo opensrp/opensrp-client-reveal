@@ -595,6 +595,42 @@
           }
         }
       ]
+    },
+    {
+      "name": "completed_forms",
+      "columns": [
+        {
+          "column_name": "event_date",
+          "type": "Event",
+          "json_mapping": {
+            "field": "eventDate"
+          }
+        },
+        {
+          "column_name": "status",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "business_status"
+          }
+        },
+        {
+          "column_name": "sop",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "sprayop_code"
+          }
+        },
+        {
+          "column_name": "village",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "zone"
+          }
+        }
+      ]
     }
 
   ]

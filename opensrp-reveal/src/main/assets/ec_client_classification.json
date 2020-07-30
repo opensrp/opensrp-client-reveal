@@ -10,7 +10,8 @@
             "field_value": "Spray",
             "creates_case": [
               "sprayed_structures",
-              "event_task"
+              "event_task",
+              "completed_forms"
             ]
           },
           {
@@ -113,6 +114,13 @@
             ],
             "creates_case": [
               "ec_family"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "daily_summary",
+            "creates_case": [
+              "completed_forms"
             ]
           }
         ]
