@@ -5,11 +5,16 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.joda.time.DateTime;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.cursoradapter.RecyclerViewProvider;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.util.Constants;
+import org.smartregister.util.Utils;
 import org.smartregister.view.contract.SmartRegisterClient;
 import org.smartregister.view.contract.SmartRegisterClients;
 import org.smartregister.view.dialog.FilterOption;
@@ -18,6 +23,9 @@ import org.smartregister.view.dialog.SortOption;
 import org.smartregister.view.viewholder.OnClickFormLauncher;
 
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Locale;
 
 /**
  * Created by samuelgithengi on 7/30/20.
@@ -25,6 +33,7 @@ import java.text.MessageFormat;
 public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.RegisterViewHolder> {
 
 
+    private static String dateFormat = "dd-M-YYYY";
     private final Context context;
     private final View.OnClickListener registerClickListener;
     private final View.OnClickListener paginationClickListener;
@@ -37,6 +46,13 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
 
     @Override
     public void getView(Cursor cursor, SmartRegisterClient smartRegisterClient, RegisterViewHolder registerViewHolder) {
+        CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
+        DateTime eventDate = DateTime.parse(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.EVENT_DATE, false));
+        registerViewHolder.eventDateTextView.setText(eventDate.toString(dateFormat));
+        registerViewHolder.eventTypeTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.EVENT_TYPE, false));
+        registerViewHolder.sopTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.SOP, false));
+        registerViewHolder.householdTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.ENTITY, false));
+        registerViewHolder.statusTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.STATUS, false));
     }
 
     @Override
@@ -91,8 +107,19 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
 
     public class RegisterViewHolder extends RecyclerView.ViewHolder {
 
+        private TextView eventDateTextView;
+        private TextView eventTypeTextView;
+        private TextView sopTextView;
+        private TextView householdTextView;
+        private TextView statusTextView;
+
         public RegisterViewHolder(View itemView) {
             super(itemView);
+            eventDateTextView = itemView.findViewById(R.id.event_date);
+            eventTypeTextView = itemView.findViewById(R.id.event_type);
+            sopTextView = itemView.findViewById(R.id.sop);
+            householdTextView = itemView.findViewById(R.id.entity);
+            statusTextView = itemView.findViewById(R.id.status);
         }
     }
 }
