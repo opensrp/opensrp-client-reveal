@@ -34,7 +34,7 @@ import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTR
 /**
  * Created by samuelgithengi on 3/11/19.
  */
-public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRegisterContract.View {
+public class TaskRegisterActivity extends BaseRevealRegisterActivity implements BaseRegisterContract.View {
 
     private RevealJsonFormUtils jsonFormUtils;
 
@@ -59,10 +59,6 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
     }
 
     @Override
-    public void startFormActivity(String s, String s1, Map<String, String> map) {//not used
-    }
-
-    @Override
     public void startFormActivity(JSONObject jsonObject) {
         jsonFormUtils.startJsonForm(jsonObject, this);
     }
@@ -82,10 +78,6 @@ public class TaskRegisterActivity extends BaseRegisterActivity implements BaseRe
     @Override
     public List<String> getViewIdentifiers() {
         return Collections.singletonList(TaskRegister.VIEW_IDENTIFIER);
-    }
-
-    @Override
-    public void startRegistration() {//not used on reveal/ adding points done on map
     }
 
     @Override
