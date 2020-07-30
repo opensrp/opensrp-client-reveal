@@ -595,6 +595,56 @@
           }
         }
       ]
+    },
+    {
+      "name": "ec_events",
+      "columns": [
+        {
+          "column_name": "base_entity_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "baseEntityId"
+          }
+        },
+        {
+          "column_name": "event_date",
+          "type": "Event",
+          "json_mapping": {
+            "field": "eventDate"
+          }
+        },
+        {
+          "column_name": "event_type",
+          "type": "Event",
+          "json_mapping": {
+            "field": "eventType"
+          }
+        },
+        {
+          "column_name": "status",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "business_status"
+          }
+        },
+        {
+          "column_name": "sop",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "sprayop_code"
+          }
+        },
+        {
+          "column_name": "entity",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "zone"
+          }
+        }
+      ]
     }
 
   ]
