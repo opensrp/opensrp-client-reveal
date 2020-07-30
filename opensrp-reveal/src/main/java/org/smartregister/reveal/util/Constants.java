@@ -629,9 +629,11 @@ public interface Constants {
 
         String LOCATION_SYNC_STATUS = "sync_status";
 
-        String SOP = "spray_operator";
+        String SOP = "sop";
 
-        String HOUSEHOLD = "household";
+        String ENTITY = "entity";
+
+        String EVENT_TYPE = "event_type";
     }
 
     interface UseContextCode {
