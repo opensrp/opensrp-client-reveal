@@ -7,7 +7,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.EventRegisterContract;
 import org.smartregister.reveal.presenter.EventRegisterFragmentPresenter;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.viewholder.FamilyMemberViewHolder;
+import org.smartregister.reveal.viewholder.EventViewHolder;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
 
     @Override
     protected int getLayout() {
-        return R.layout.fragment_task_register;
+        return R.layout.fragment_event_register;
     }
 
 
@@ -31,8 +31,8 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
 
     @Override
     public void initializeAdapter(Set<org.smartregister.configurableviews.model.View> visibleColumns) {
-        FamilyMemberViewHolder familyMemberRegisterProvider = new FamilyMemberViewHolder(getActivity(), registerActionHandler, paginationViewHandler);
-        clientAdapter = new RecyclerViewPaginatedAdapter(null, familyMemberRegisterProvider, context().commonrepository(this.tablename));
+        EventViewHolder eventViewHolder = new EventViewHolder(getContext(), registerActionHandler, paginationViewHandler);
+        clientAdapter = new RecyclerViewPaginatedAdapter(null, eventViewHolder, context().commonrepository(this.tablename));
         clientAdapter.setCurrentlimit(20);
         clientsView.setAdapter(clientAdapter);
     }
