@@ -2,18 +2,19 @@ package org.smartregister.reveal.sync;
 
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.smartregister.domain.Location;
-import org.smartregister.domain.LocationProperty.PropertyStatus;
-import org.smartregister.domain.Task;
 import org.smartregister.domain.Client;
 import org.smartregister.domain.Event;
-import org.smartregister.domain.db.EventClient;
+import org.smartregister.domain.Location;
+import org.smartregister.domain.LocationProperty.PropertyStatus;
 import org.smartregister.domain.Obs;
+import org.smartregister.domain.Task;
+import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.jsonmapping.ClientClassification;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
@@ -120,6 +121,8 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     operationalAreaId = processEvent(event, clientClassification, localEvents, JsonForm.PAOT_STATUS);
                 } else if (eventType.equals(TASK_RESET_EVENT)) {
                     continue;
+                } else if (eventType.equals(Constants.EventType.DAILY_SUMMARY_EVENT)) {
+                    processSummaryFormEvent(event, clientClassification);
                 } else {
                     Client client = eventClient.getClient();
 
@@ -239,6 +242,14 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             }
         }
         return operationalAreaId;
+    }
+
+    private void processSummaryFormEvent(Event event, ClientClassification clientClassification) {
+        try {
+            processEvent(event, new Client(event.getBaseEntityId()), clientClassification);
+        } catch (Exception e) {
+            Timber.e(e, "Error processing register structure event");
+        }
     }
 
     private String updateTask(Event event, boolean localEvents) {
