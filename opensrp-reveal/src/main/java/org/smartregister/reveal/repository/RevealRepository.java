@@ -115,6 +115,9 @@ public class RevealRepository extends Repository {
                 case 7:
                     upgradeToVersion7(db);
                     break;
+                case 8:
+                    upgradeToVersion8(db);
+                    break;
                 default:
                     break;
             }
@@ -212,6 +215,12 @@ public class RevealRepository extends Repository {
     private void upgradeToVersion7(SQLiteDatabase db) {
         if (!isColumnExists(db, LOCATION_TABLE, DatabaseKeys.LOCATION_SYNC_STATUS)) {
             db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s VARCHAR DEFAULT %s ", LOCATION_TABLE, DatabaseKeys.LOCATION_SYNC_STATUS, BaseRepository.TYPE_Synced));
+        }
+    }
+
+    private void upgradeToVersion8(SQLiteDatabase db) {
+        if (!ManifestRepository.isVersionColumnExist(db)) {
+            ManifestRepository.addVersionColumn(db);
         }
     }
 
