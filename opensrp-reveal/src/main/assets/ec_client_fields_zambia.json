@@ -603,7 +603,7 @@
           "column_name": "base_entity_id",
           "type": "Event",
           "json_mapping": {
-            "field": "baseEntityId"
+            "field": "formSubmissionId"
           }
         },
         {
@@ -634,6 +634,14 @@
           "json_mapping": {
             "field": "obs.fieldCode",
             "concept": "sprayop_code"
+          }
+        },
+        {
+          "column_name": "entity",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nameHoH"
           }
         },
         {
