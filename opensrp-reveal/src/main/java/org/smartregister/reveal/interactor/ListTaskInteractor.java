@@ -3,7 +3,6 @@ package org.smartregister.reveal.interactor;
 import com.mapbox.geojson.Feature;
 
 import net.sqlcipher.Cursor;
-import net.sqlcipher.SQLException;
 
 import org.joda.time.DateTime;
 import org.json.JSONArray;
@@ -16,7 +15,6 @@ import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
-import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;

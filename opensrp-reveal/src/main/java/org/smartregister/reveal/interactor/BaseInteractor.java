@@ -197,7 +197,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
     @Override
     public  void handleLasteventFound(org.smartregister.domain.Event event) {
-        // handle is child class
+        // handle in child class
     }
 
     private org.smartregister.domain.Event saveEvent(JSONObject jsonForm, String encounterType, String bindType) throws JSONException {
