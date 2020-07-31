@@ -24,6 +24,9 @@ import org.smartregister.view.dialog.SortOption;
 import org.smartregister.view.viewholder.OnClickFormLauncher;
 
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Locale;
 
 /**
  * Created by samuelgithengi on 7/30/20.
@@ -49,9 +52,10 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
         DateTime eventDate = DateTime.parse(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.EVENT_DATE, false));
         registerViewHolder.eventDateTextView.setText(eventDate.toString(dateFormat));
         setClickHandler(registerClickListener, eventRegisterDetails, registerViewHolder.eventDateTextView);
-        registerViewHolder.eventTypeTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.EVENT_TYPE, false));
+        registerViewHolder.eventTypeTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.EVENT_TYPE, true));
         setClickHandler(registerClickListener, eventRegisterDetails, registerViewHolder.eventTypeTextView);
-        registerViewHolder.sopTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.SOP, false));
+        String sop = Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.SOP, false);
+        registerViewHolder.sopTextView.setText(sop.contains("-") ? sop.substring(sop.lastIndexOf("-") + 1, sop.lastIndexOf(":")) : sop);
         setClickHandler(registerClickListener, eventRegisterDetails, registerViewHolder.sopTextView);
         registerViewHolder.householdTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.ENTITY, false));
         setClickHandler(registerClickListener, eventRegisterDetails, registerViewHolder.householdTextView);
@@ -106,10 +110,10 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
 
     @Override
     public boolean isFooterViewHolder(RecyclerView.ViewHolder viewHolder) {
-        return FooterViewHolder.class.isInstance(viewHolder);
+        return viewHolder instanceof FooterViewHolder;
     }
 
-    public class RegisterViewHolder extends RecyclerView.ViewHolder {
+    public static class RegisterViewHolder extends RecyclerView.ViewHolder {
 
         private TextView eventDateTextView;
         private TextView eventTypeTextView;

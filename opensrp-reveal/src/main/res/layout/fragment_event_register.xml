@@ -30,10 +30,7 @@
         android:background="@drawable/listview_background_rounded"
         android:orientation="vertical">
 
-        <include
-            layout="@layout/event_register_list_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        <include layout="@layout/event_register_list_header" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view"
@@ -60,15 +57,5 @@
             android:visibility="gone" />
     </LinearLayout>
 
-    <include
-        android:id="@+id/indicators_card_view"
-        layout="@layout/indicators_card_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone" />
-
-    <include
-        android:id="@+id/progressIndicatorsGroupView"
-        layout="@layout/progress_indicators_view" />
 
 </LinearLayout>
