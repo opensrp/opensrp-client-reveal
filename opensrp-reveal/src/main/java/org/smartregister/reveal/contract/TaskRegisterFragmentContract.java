@@ -7,6 +7,7 @@ import androidx.annotation.StringRes;
 
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Event;
 import org.smartregister.reveal.adapter.TaskRegisterAdapter;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
@@ -49,6 +50,8 @@ public interface TaskRegisterFragmentContract {
         void resetTaskInfo(TaskDetails taskDetails);
 
         void onTaskInfoReset();
+
+        void onEventFound(Event event);
     }
 
     interface View extends BaseRegisterFragmentContract.View, BaseFormFragmentContract.View {
@@ -92,6 +95,8 @@ public interface TaskRegisterFragmentContract {
 
     interface Interactor {
         void resetTaskInfo(Context context, TaskDetails taskDetails);
+
+        void findLastEvent(String eventBaseEntityId, String eventType);
     }
 
 
