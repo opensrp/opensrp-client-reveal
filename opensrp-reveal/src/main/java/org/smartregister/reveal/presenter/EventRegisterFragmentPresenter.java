@@ -6,17 +6,17 @@ import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
 import org.smartregister.configurableviews.model.View;
 import org.smartregister.configurableviews.model.ViewConfiguration;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
+import org.smartregister.domain.Event;
 import org.smartregister.reveal.contract.EventRegisterContract;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Utils;
-import org.smartregister.view.contract.BaseRegisterFragmentContract;
 
 import java.util.Set;
 
 /**
  * Created by samuelgithengi on 7/30/20.
  */
-public class EventRegisterFragmentPresenter implements BaseRegisterFragmentContract.Presenter {
+public class EventRegisterFragmentPresenter implements EventRegisterContract.Presenter {
 
     private String viewConfigurationIdentifier;
 
@@ -93,4 +93,8 @@ public class EventRegisterFragmentPresenter implements BaseRegisterFragmentContr
     }
 
 
+    @Override
+    public void onEventFound(Event event) {
+        //TODO handle this
+    }
 }

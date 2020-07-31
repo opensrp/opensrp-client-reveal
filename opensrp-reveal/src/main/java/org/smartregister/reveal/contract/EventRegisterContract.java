@@ -1,6 +1,7 @@
 package org.smartregister.reveal.contract;
 
-import org.smartregister.configurableviews.model.View;
+import org.smartregister.domain.Event;
+import org.smartregister.view.contract.BaseRegisterFragmentContract;
 
 import java.util.Set;
 
@@ -17,5 +18,13 @@ public interface EventRegisterContract {
         void countExecute();
 
         void filterandSortInInitializeQueries();
+    }
+
+    interface Presenter extends  BaseRegisterFragmentContract.Presenter {
+        void onEventFound(Event event);
+    }
+
+    interface Interactor {
+        void findEvent(String formSubmissionId);
     }
 }
