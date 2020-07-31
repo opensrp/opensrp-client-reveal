@@ -374,4 +374,5 @@
     <string name="form_name">Form Name</string>
     <string name="sop">SOP</string>
     <string name="hh_village_name">HH/ village Name</string>
+    <string name="daily_summary_status">%1$dF/%2$dS/%3$dNS</string>
 </resources>

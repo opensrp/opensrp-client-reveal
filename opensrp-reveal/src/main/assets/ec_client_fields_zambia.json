@@ -653,7 +653,7 @@
           }
         },
         {
-          "column_name": "entity",
+          "column_name": "found",
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
@@ -661,7 +661,7 @@
           }
         },
         {
-          "column_name": "entity",
+          "column_name": "sprayed",
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
@@ -670,6 +670,5 @@
         }
       ]
     }
-
   ]
 }

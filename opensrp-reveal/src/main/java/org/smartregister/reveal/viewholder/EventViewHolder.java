@@ -15,6 +15,7 @@ import org.smartregister.cursoradapter.RecyclerViewProvider;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.EventRegisterDetails;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.util.Utils;
 import org.smartregister.view.contract.SmartRegisterClient;
 import org.smartregister.view.contract.SmartRegisterClients;
@@ -24,6 +25,7 @@ import org.smartregister.view.dialog.SortOption;
 import org.smartregister.view.viewholder.OnClickFormLauncher;
 
 import java.text.MessageFormat;
+import java.util.Map;
 
 /**
  * Created by samuelgithengi on 7/30/20.
@@ -44,15 +46,26 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
     public void getView(Cursor cursor, SmartRegisterClient smartRegisterClient, RegisterViewHolder registerViewHolder) {
         CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
         EventRegisterDetails eventRegisterDetails = populateEventRegisterDetails(pc);
-        DateTime eventDate = DateTime.parse(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.EVENT_DATE, false));
-        String dateFormat = "dd-M-YYYY";
-        registerViewHolder.eventDateTextView.setText(eventDate.toString(dateFormat));
-        registerViewHolder.eventTypeTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.EVENT_TYPE, true));
-        String sop = Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.SOP, false);
+        DateTime eventDate = DateTime.parse(Utils.getValue(pc.getColumnmaps(), DatabaseKeys.EVENT_DATE, false));
+        registerViewHolder.eventDateTextView.setText(eventDate.toString("dd-M-YYYY"));
+        registerViewHolder.eventTypeTextView.setText(Utils.getValue(pc.getColumnmaps(), DatabaseKeys.EVENT_TYPE, true));
+        String sop = Utils.getValue(pc.getColumnmaps(), DatabaseKeys.SOP, false);
         registerViewHolder.sopTextView.setText(sop.contains("-") ? sop.substring(sop.lastIndexOf("-") + 1, sop.lastIndexOf(":")) : sop);
-        registerViewHolder.householdTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.ENTITY, false));
-        registerViewHolder.statusTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.STATUS, false));
+        registerViewHolder.householdTextView.setText(Utils.getValue(pc.getColumnmaps(), DatabaseKeys.ENTITY, false));
+        registerViewHolder.statusTextView.setText(getStatus(Utils.getValue(pc.getColumnmaps(), DatabaseKeys.EVENT_TYPE, false)
+                , Utils.getValue(pc.getColumnmaps(), DatabaseKeys.STATUS, false), pc.getColumnmaps()));
         setClickHandler(registerClickListener, eventRegisterDetails, registerViewHolder.itemView);
+    }
+
+    private String getStatus(String eventType, String status, Map<String, String> columnMaps) {
+        switch (eventType) {
+            case Constants.EventType.DAILY_SUMMARY_EVENT:
+                int found = Integer.parseInt(columnMaps.getOrDefault(DatabaseKeys.FOUND, "0"));
+                int sprayed = Integer.parseInt(columnMaps.getOrDefault(DatabaseKeys.SPRAYED, "0"));
+                return context.getString(R.string.daily_summary_status, found, sprayed, found - sprayed);
+            default:
+                return status;
+        }
     }
 
     @Override
@@ -130,8 +143,8 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
 
     private EventRegisterDetails populateEventRegisterDetails(CommonPersonObjectClient pc) {
         EventRegisterDetails eventRegisterDetails = new EventRegisterDetails();
-        eventRegisterDetails.setFormSubmissionId(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.BASE_ENTITY_ID, false));
-        eventRegisterDetails.setEventType(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.EVENT_TYPE, false));
+        eventRegisterDetails.setFormSubmissionId(Utils.getValue(pc.getColumnmaps(), DatabaseKeys.BASE_ENTITY_ID, false));
+        eventRegisterDetails.setEventType(Utils.getValue(pc.getColumnmaps(), DatabaseKeys.EVENT_TYPE, false));
         return eventRegisterDetails;
     }
 }

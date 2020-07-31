@@ -81,7 +81,9 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
                 tableName + "." + Constants.DatabaseKeys.SOP,
                 tableName + "." + Constants.DatabaseKeys.ENTITY,
                 tableName + "." + Constants.DatabaseKeys.STATUS,
-                tableName + "." + Constants.DatabaseKeys.BASE_ENTITY_ID
+                tableName + "." + Constants.DatabaseKeys.BASE_ENTITY_ID,
+                tableName + "." + Constants.DatabaseKeys.SPRAYED,
+                tableName + "." + Constants.DatabaseKeys.FOUND
         };
         return columns;
     }
