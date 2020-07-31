@@ -97,4 +97,9 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
     public void onEventFound(Event event) {
         //TODO handle this
     }
+
+    @Override
+    public void onOpenMapClicked() {
+        view.startMapActivity();
+    }
 }

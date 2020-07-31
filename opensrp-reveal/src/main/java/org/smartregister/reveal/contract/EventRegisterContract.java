@@ -18,10 +18,14 @@ public interface EventRegisterContract {
         void countExecute();
 
         void filterandSortInInitializeQueries();
+
+        void startMapActivity();
     }
 
-    interface Presenter extends  BaseRegisterFragmentContract.Presenter {
+    interface Presenter extends BaseRegisterFragmentContract.Presenter {
         void onEventFound(Event event);
+
+        void onOpenMapClicked();
     }
 
     interface Interactor {
