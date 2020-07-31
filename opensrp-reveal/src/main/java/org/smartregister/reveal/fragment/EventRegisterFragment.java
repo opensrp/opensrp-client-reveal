@@ -56,7 +56,7 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
 
     @Override
     protected String getDefaultSortQuery() {
-        return "";
+        return Constants.DatabaseKeys.EVENT_DATE + " desc";
     }
 
     @Override
