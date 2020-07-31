@@ -621,11 +621,11 @@
           }
         },
         {
-          "column_name": "status",
+          "column_name": "sop",
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "business_status"
+            "concept": "sprayop_code"
           }
         },
         {
@@ -633,7 +633,15 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "sprayop_code"
+            "concept": "supervisor"
+          }
+        },
+        {
+          "column_name": "sop",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "fieldOfficer"
           }
         },
         {
@@ -650,6 +658,54 @@
           "json_mapping": {
             "field": "obs.fieldCode",
             "concept": "zone"
+          }
+        },
+        {
+          "column_name": "entity",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "village"
+          }
+        },
+        {
+          "column_name": "entity",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "Villagename"
+          }
+        },
+        {
+          "column_name": "entity",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "health_facility"
+          }
+        },
+        {
+          "column_name": "status",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "business_status"
+          }
+        },
+        {
+          "column_name": "status",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "mobilized"
+          }
+        },
+        {
+          "column_name": "status",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "spray_status"
           }
         },
         {

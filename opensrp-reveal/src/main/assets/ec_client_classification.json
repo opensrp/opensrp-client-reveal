@@ -122,6 +122,34 @@
             "creates_case": [
               "ec_events"
             ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "team_leader_dos",
+            "creates_case": [
+              "ec_events"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "irs_sa_decision",
+            "creates_case": [
+              "ec_events"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "mobilization",
+            "creates_case": [
+              "ec_events"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "irs_field_officer",
+            "creates_case": [
+              "ec_events"
+            ]
           }
         ]
       }
