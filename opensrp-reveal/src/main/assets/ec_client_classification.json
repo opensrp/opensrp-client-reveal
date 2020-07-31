@@ -150,6 +150,13 @@
             "creates_case": [
               "ec_events"
             ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "verification",
+            "creates_case": [
+              "ec_events"
+            ]
           }
         ]
       }
