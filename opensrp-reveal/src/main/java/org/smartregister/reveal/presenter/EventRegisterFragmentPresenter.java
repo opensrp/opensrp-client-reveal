@@ -1,13 +1,16 @@
 package org.smartregister.reveal.presenter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
 import org.smartregister.configurableviews.model.View;
 import org.smartregister.configurableviews.model.ViewConfiguration;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Event;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.EventRegisterContract;
+import org.smartregister.reveal.model.EventRegisterDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Utils;
 
@@ -96,5 +99,17 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
     @Override
     public void onEventFound(Event event) {
         //TODO handle this
+    }
+
+    @Override
+    public void onEventSelected(EventRegisterDetails details) {
+
+        String formName = view.getJsonFormUtils().getFormName(details.getEventType(), null);
+        if (StringUtils.isBlank(formName)) {
+            view.displayError(R.string.opening_form_title, R.string.form_not_found);
+        } else {
+            JSONObject formJSON = view.getJsonFormUtils().getFormJSON(view.getContext(), formName, null, null);
+            view.startForm(formJSON);
+        }
     }
 }

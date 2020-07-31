@@ -13,6 +13,7 @@ import org.joda.time.DateTime;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.cursoradapter.RecyclerViewProvider;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.model.EventRegisterDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.util.Utils;
 import org.smartregister.view.contract.SmartRegisterClient;
@@ -23,9 +24,6 @@ import org.smartregister.view.dialog.SortOption;
 import org.smartregister.view.viewholder.OnClickFormLauncher;
 
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Locale;
 
 /**
  * Created by samuelgithengi on 7/30/20.
@@ -47,12 +45,18 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
     @Override
     public void getView(Cursor cursor, SmartRegisterClient smartRegisterClient, RegisterViewHolder registerViewHolder) {
         CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
+        EventRegisterDetails eventRegisterDetails = populateEventRegisterDetails(pc);
         DateTime eventDate = DateTime.parse(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.EVENT_DATE, false));
         registerViewHolder.eventDateTextView.setText(eventDate.toString(dateFormat));
+        setClickHandler(registerClickListener, eventRegisterDetails, registerViewHolder.eventDateTextView);
         registerViewHolder.eventTypeTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.EVENT_TYPE, false));
+        setClickHandler(registerClickListener, eventRegisterDetails, registerViewHolder.eventTypeTextView);
         registerViewHolder.sopTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.SOP, false));
+        setClickHandler(registerClickListener, eventRegisterDetails, registerViewHolder.sopTextView);
         registerViewHolder.householdTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.ENTITY, false));
+        setClickHandler(registerClickListener, eventRegisterDetails, registerViewHolder.householdTextView);
         registerViewHolder.statusTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.STATUS, false));
+        setClickHandler(registerClickListener, eventRegisterDetails, registerViewHolder.statusTextView);
     }
 
     @Override
@@ -121,5 +125,17 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
             householdTextView = itemView.findViewById(R.id.entity);
             statusTextView = itemView.findViewById(R.id.status);
         }
+    }
+
+    private void setClickHandler(View.OnClickListener onClickListener, EventRegisterDetails registerDetails, View view) {
+        view.setOnClickListener(onClickListener);
+        view.setTag(R.id.patient_column, registerDetails);
+    }
+
+    private EventRegisterDetails populateEventRegisterDetails(CommonPersonObjectClient pc) {
+        EventRegisterDetails eventRegisterDetails = new EventRegisterDetails();
+        eventRegisterDetails.setFormSubmissionId(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.BASE_ENTITY_ID, false));
+        eventRegisterDetails.setEventType(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.EVENT_TYPE, false));
+        return eventRegisterDetails;
     }
 }
