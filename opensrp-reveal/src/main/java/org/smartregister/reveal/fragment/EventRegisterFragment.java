@@ -39,14 +39,12 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
 
 
     @Override
-    public void setUniqueID(String s) {
-
+    public void setUniqueID(String s) {//not used
     }
 
 
     @Override
-    public void setAdvancedSearchFormData(HashMap<String, String> hashMap) {
-
+    public void setAdvancedSearchFormData(HashMap<String, String> hashMap) {//not used
     }
 
     @Override
@@ -56,7 +54,7 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
 
     @Override
     protected String getDefaultSortQuery() {
-        return Constants.DatabaseKeys.EVENT_DATE + " desc";
+        return Constants.DatabaseKeys.EVENT_DATE + " DESC";
     }
 
     @Override
@@ -65,7 +63,6 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
 
     @Override
     protected void onViewClicked(View view) {
-
     }
 
     @Override
