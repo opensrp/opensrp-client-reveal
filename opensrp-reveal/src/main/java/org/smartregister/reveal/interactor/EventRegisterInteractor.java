@@ -38,9 +38,9 @@ public class EventRegisterInteractor implements EventRegisterContract.Interactor
         appExecutors.diskIO().execute(() -> {
             String eventSql = String.format("select %s from %s where %s = ? ",
                     EventClientRepository.event_column.json, EventClientRepository.Table.event.name(), EventClientRepository.event_column.formSubmissionId);
-            Cursor cursor = null;
-            try {
-                cursor = database.rawQuery(eventSql, new String[]{formSubmissionId});
+
+            try (Cursor cursor = database.rawQuery(eventSql, new String[]{formSubmissionId})) {
+
                 if (cursor.moveToFirst()) {
                     String eventJSON = cursor.getString(0);
                     presenter.onEventFound(eventClientRepository.convert(eventJSON, org.smartregister.domain.Event.class));
@@ -48,10 +48,6 @@ public class EventRegisterInteractor implements EventRegisterContract.Interactor
                 }
             } catch (SQLException e) {
                 Timber.e(e);
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
             }
         });
 

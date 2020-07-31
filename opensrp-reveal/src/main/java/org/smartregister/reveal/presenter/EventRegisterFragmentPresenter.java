@@ -10,6 +10,7 @@ import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Event;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.EventRegisterContract;
+import org.smartregister.reveal.interactor.EventRegisterInteractor;
 import org.smartregister.reveal.model.EventRegisterDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Utils;
@@ -29,10 +30,15 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
 
     private EventRegisterContract.View view;
 
+    private EventRegisterInteractor interactor;
+
+    private EventRegisterDetails eventRegisterDetails;
+
     public EventRegisterFragmentPresenter(EventRegisterContract.View view, String viewConfigurationIdentifier) {
         this.view = view;
+        this.interactor = new EventRegisterInteractor(this);
         this.viewConfigurationIdentifier = viewConfigurationIdentifier;
-        viewsHelper = ConfigurableViewsLibrary.getInstance().getConfigurableViewsHelper();
+        this.viewsHelper = ConfigurableViewsLibrary.getInstance().getConfigurableViewsHelper();
     }
 
     @Override
@@ -95,21 +101,22 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
     public void searchGlobally(String s) {
     }
 
-
     @Override
     public void onEventFound(Event event) {
-        //TODO handle this
-    }
-
-    @Override
-    public void onEventSelected(EventRegisterDetails details) {
-
-        String formName = view.getJsonFormUtils().getFormName(details.getEventType(), null);
+        String formName = view.getJsonFormUtils().getFormName(this.eventRegisterDetails.getEventType(), null);
         if (StringUtils.isBlank(formName)) {
             view.displayError(R.string.opening_form_title, R.string.form_not_found);
         } else {
             JSONObject formJSON = view.getJsonFormUtils().getFormJSON(view.getContext(), formName, null, null);
+            view.getJsonFormUtils().populateForm(event, formJSON);
             view.startForm(formJSON);
         }
     }
+
+    @Override
+    public void onEventSelected(EventRegisterDetails details) {
+        this.eventRegisterDetails = details;
+        interactor.findEvent(details.getFormSubmissionId());
+    }
+
 }
