@@ -502,28 +502,9 @@ public class ListTaskInteractor extends BaseInteractor {
         return task;
     }
 
-    public void findLastEvent(String eventBaseEntityId, String eventType) {
-
-        appExecutors.diskIO().execute(() -> {
-            String events = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
-                    EventClientRepository.event_column.json, EventClientRepository.Table.event.name(), EventClientRepository.event_column.baseEntityId, EventClientRepository.event_column.eventType, EventClientRepository.event_column.updatedAt);
-            Cursor cursor = null;
-            try {
-                cursor = getDatabase().rawQuery(events, new String[]{eventBaseEntityId, eventType});
-                if (cursor.moveToFirst()) {
-                    String eventJSON = cursor.getString(0);
-                    getPresenter().onEventFound(eventClientRepository.convert(eventJSON, org.smartregister.domain.Event.class));
-
-                }
-            } catch (SQLException e) {
-                Timber.e(e);
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
-            }
-        });
-
+    @Override
+    public void handleLasteventFound(org.smartregister.domain.Event event) {
+        getPresenter().onEventFound(event);
     }
 
 }

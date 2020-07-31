@@ -9,6 +9,7 @@ import com.google.gson.JsonArray;
 import com.mapbox.geojson.Feature;
 
 import net.sqlcipher.Cursor;
+import net.sqlcipher.SQLException;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.joda.time.DateTime;
@@ -192,6 +193,11 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         } catch (Exception e) {
             Timber.e(e, "Error saving Json Form data");
         }
+    }
+
+    @Override
+    public  void handleLasteventFound(org.smartregister.domain.Event event) {
+        // handle is child class
     }
 
     private org.smartregister.domain.Event saveEvent(JSONObject jsonForm, String encounterType, String bindType) throws JSONException {
@@ -472,5 +478,28 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             commonRepository = revealApplication.getContext().commonrepository(metadata().familyRegister.tableName);
 
         }
+    }
+
+    @Override
+    public void findLastEvent(String eventBaseEntityId, String eventType) {
+
+        appExecutors.diskIO().execute(() -> {
+            String events = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
+                    EventClientRepository.event_column.json, EventClientRepository.Table.event.name(), EventClientRepository.event_column.baseEntityId, EventClientRepository.event_column.eventType, EventClientRepository.event_column.updatedAt);
+
+            try(Cursor cursor = getDatabase().rawQuery(events, new String[]{eventBaseEntityId, eventType});) {
+
+                if (cursor.moveToFirst()) {
+                    String eventJSON = cursor.getString(0);
+                    handleLasteventFound(eventClientRepository.convert(eventJSON, org.smartregister.domain.Event.class));
+
+                } else {
+                    handleLasteventFound(null);
+                }
+            } catch (SQLException e) {
+                Timber.e(e);
+            }
+        });
+
     }
 }
