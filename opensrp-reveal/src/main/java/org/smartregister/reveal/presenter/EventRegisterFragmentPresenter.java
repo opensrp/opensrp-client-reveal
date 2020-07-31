@@ -10,7 +10,7 @@ import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Event;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.EventRegisterContract;
-import org.smartregister.reveal.interactor.EventRegisterInteractor;
+import org.smartregister.reveal.interactor.EventRegisterFragmentInteractor;
 import org.smartregister.reveal.model.EventRegisterDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Utils;
@@ -30,13 +30,13 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
 
     private EventRegisterContract.View view;
 
-    private EventRegisterInteractor interactor;
+    private EventRegisterFragmentInteractor interactor;
 
     private EventRegisterDetails eventRegisterDetails;
 
     public EventRegisterFragmentPresenter(EventRegisterContract.View view, String viewConfigurationIdentifier) {
         this.view = view;
-        this.interactor = new EventRegisterInteractor(this);
+        this.interactor = new EventRegisterFragmentInteractor(this);
         this.viewConfigurationIdentifier = viewConfigurationIdentifier;
         this.viewsHelper = ConfigurableViewsLibrary.getInstance().getConfigurableViewsHelper();
     }

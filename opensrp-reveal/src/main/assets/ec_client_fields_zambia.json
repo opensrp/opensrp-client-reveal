@@ -651,6 +651,22 @@
             "field": "obs.fieldCode",
             "concept": "zone"
           }
+        },
+        {
+          "column_name": "entity",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "found"
+          }
+        },
+        {
+          "column_name": "entity",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "sprayed"
+          }
         }
       ]
     }
