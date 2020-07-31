@@ -230,6 +230,9 @@ public interface Constants {
         String TEAM_LEADER_DOS_EVENT = "team_leader_dos";
 
         String VERIFICATION_EVENT = "verification";
+
+        List<String> SUMMARY_EVENT_TYPES = Arrays.asList(DAILY_SUMMARY_EVENT, IRS_FIELD_OFFICER_EVENT,
+                IRS_SA_DECISION_EVENT, MOBILIZATION_EVENT, TEAM_LEADER_DOS_EVENT, VERIFICATION_EVENT);
     }
 
     interface Tables {
