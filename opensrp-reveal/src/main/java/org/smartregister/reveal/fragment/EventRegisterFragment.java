@@ -1,15 +1,18 @@
 package org.smartregister.reveal.fragment;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.cursoradapter.RecyclerViewPaginatedAdapter;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.EventRegisterContract;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.EventRegisterFragmentPresenter;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.view.DrawerMenuView;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.reveal.viewholder.EventViewHolder;
 import org.smartregister.view.fragment.BaseRegisterFragment;
@@ -23,7 +26,16 @@ import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
 /**
  * Created by samuelgithengi on 7/30/20.
  */
-public class EventRegisterFragment extends BaseRegisterFragment implements EventRegisterContract.View {
+public class EventRegisterFragment extends BaseRegisterFragment implements EventRegisterContract.View, BaseDrawerContract.DrawerActivity {
+
+    private BaseDrawerContract.View drawerView;
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        drawerView = new DrawerMenuView(this);
+    }
 
     @Override
     protected int getLayout() {
@@ -56,6 +68,10 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
     public void setupViews(View view) {
         super.setupViews(view);
         view.findViewById(R.id.txt_map_label).setOnClickListener(v -> getPresenter().onOpenMapClicked());
+
+        drawerView.initializeDrawerLayout();
+        view.findViewById(R.id.drawerMenu).setOnClickListener(v -> drawerView.openDrawerLayout());
+        drawerView.onResume();
     }
 
     @Override
@@ -93,4 +109,7 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
         return (EventRegisterContract.Presenter) presenter;
     }
 
+    @Override
+    public void onDrawerClosed() {//Do nothing
+    }
 }
