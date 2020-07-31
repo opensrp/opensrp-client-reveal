@@ -20,6 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.25"
+            android:drawableStart="@drawable/ic_arrow_downward"
             android:ellipsize="end"
             android:paddingStart="0dp"
             android:singleLine="true"
