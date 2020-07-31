@@ -18,6 +18,7 @@ import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.PlanDefinition.PlanStatus;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
@@ -215,7 +216,9 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         operationalAreaLevels.add(CANTON);
         operationalAreaLevels.add(OPERATIONAL_AREA);
         List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
-        int districtOffset = name.get(0).equalsIgnoreCase(Country.BOTSWANA.name()) || name.get(0).equalsIgnoreCase(Country.NAMIBIA.name()) ? 3 : 2;
+        int districtOffset = name.get(0).equalsIgnoreCase(Country.BOTSWANA.name())
+                || name.get(0).equalsIgnoreCase(Country.NAMIBIA.name())
+                || (name.get(0).toUpperCase().startsWith(Country.ZAMBIA.name()) && name.size() == 5) ? 3 : 2;
         try {
             prefsUtil.setCurrentProvince(name.get(1));
             prefsUtil.setCurrentDistrict(name.get(name.size() - districtOffset));
