@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.location.Location;
+
 import androidx.core.util.Pair;
 
 import org.json.JSONObject;
@@ -356,7 +357,13 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
 
     @Test
     public void testOnStructureFoundWithLocationValidationDisabledForEditableForms() {
-        // TODO implement
+        when(view.getJsonFormUtils()).thenReturn(jsonFormUtils);
+        TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        when(jsonFormUtils.getFormName(null, taskDetails.getTaskCode())).thenReturn(Constants.JsonForm.SPRAY_FORM);
+        presenter = spy(presenter);
+        doReturn(false).when(presenter).validateFarStructures();
+        presenter.onStructureFound(new org.smartregister.domain.Location(), taskDetails);
+        verify(interactor).findLastEvent(taskDetails.getTaskEntity(), Constants.SPRAY_EVENT);
     }
 
     @Test
