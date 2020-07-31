@@ -83,6 +83,8 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
         drawerView.initializeDrawerLayout();
         view.findViewById(R.id.drawerMenu).setOnClickListener(v -> drawerView.openDrawerLayout());
         drawerView.onResume();
+
+        getSearchView().setHint(R.string.search);
     }
 
     @Override
