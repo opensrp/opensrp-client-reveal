@@ -25,6 +25,7 @@ import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.sync.RevealClientProcessor;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
@@ -114,6 +115,9 @@ public class RevealRepository extends Repository {
                     break;
                 case 7:
                     upgradeToVersion7(db);
+                    break;
+                case 8:
+                    upgradeToVersion8(db);
                     break;
                 default:
                     break;
@@ -213,6 +217,16 @@ public class RevealRepository extends Repository {
         if (!isColumnExists(db, LOCATION_TABLE, DatabaseKeys.LOCATION_SYNC_STATUS)) {
             db.execSQL(String.format("ALTER TABLE %s ADD COLUMN %s VARCHAR DEFAULT %s ", LOCATION_TABLE, DatabaseKeys.LOCATION_SYNC_STATUS, BaseRepository.TYPE_Synced));
         }
+    }
+
+    private void upgradeToVersion8(SQLiteDatabase db) {
+        if (!ManifestRepository.isVersionColumnExist(db)) {
+            ManifestRepository.addVersionColumn(db);
+        }
+
+        DatabaseMigrationUtils.createAddedECTables(db,
+                new HashSet<>(Arrays.asList(Constants.EventsRegister.TABLE_NAME)),
+                RevealApplication.createCommonFtsObject());
     }
 
     @Override

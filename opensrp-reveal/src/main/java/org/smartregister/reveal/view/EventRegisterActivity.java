@@ -3,10 +3,12 @@ package org.smartregister.reveal.view;
 import android.content.Intent;
 import android.view.View;
 
+import org.json.JSONObject;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.fragment.EventRegisterFragment;
 import org.smartregister.reveal.presenter.BaseRegisterPresenter;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
 import java.util.Collections;
@@ -17,6 +19,7 @@ import java.util.List;
  */
 public class EventRegisterActivity extends BaseRevealRegisterActivity {
 
+    private RevealJsonFormUtils jsonFormUtils;
 
     @Override
     protected void initializePresenter() {
@@ -25,7 +28,10 @@ public class EventRegisterActivity extends BaseRevealRegisterActivity {
 
     @Override
     protected BaseRegisterFragment getRegisterFragment() {
-        return new EventRegisterFragment();
+        jsonFormUtils = new RevealJsonFormUtils();
+        EventRegisterFragment fragment =  new EventRegisterFragment();
+        fragment.setJsonFormUtils(jsonFormUtils);
+        return fragment;
     }
 
     @Override
@@ -41,5 +47,10 @@ public class EventRegisterActivity extends BaseRevealRegisterActivity {
     protected void registerBottomNavigation() {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void startFormActivity(JSONObject jsonObject) {
+        jsonFormUtils.startJsonForm(jsonObject, this);
     }
 }

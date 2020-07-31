@@ -1,6 +1,7 @@
 {
   "count": "1",
   "encounter_type": "daily_summary",
+  "form_version": "0.0.1",
   "entity_id": "",
   "metadata": {
     "start": {
@@ -495,21 +496,6 @@
           "step1:bottles_reason": {
             "type": "string",
             "ex": "equalTo(., \"other\")"
-          }
-        }
-      },
-      {
-        "key": "business_status",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "hidden",
-        "value": "found",
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia_daily_summary_calculation.yml"
-            }
           }
         }
       }

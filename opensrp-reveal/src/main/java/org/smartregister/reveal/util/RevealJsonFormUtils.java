@@ -324,6 +324,8 @@ public class RevealJsonFormUtils {
             }
         } else if (IRS_VERIFICATION.equals(encounterType) || Intervention.IRS_VERIFICATION.equals(taskCode)) {
             formName = JsonForm.ZAMBIA_IRS_VERIFICATION_FORM;
+        } else if (Constants.EventType.DAILY_SUMMARY_EVENT.equals(encounterType)) {
+            formName = JsonForm.ZAMBIA_DAILY_SUMMARY_FORM;
         }
         return formName;
     }
