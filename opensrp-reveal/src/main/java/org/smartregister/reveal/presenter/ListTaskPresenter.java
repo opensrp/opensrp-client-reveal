@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.BuildConfig;
@@ -367,6 +368,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
+    public void onEventFound(Event event) {
+        startForm(selectedFeature, cardDetails, selectedFeatureInterventionType, event);
+    }
+
+    @Override
+    public void findLastEvent(String featureId, String eventType) {
+        listTaskInteractor.findLastEvent(featureId, eventType);
+    }
     public void onFociBoundaryLongClicked() {
         revealApplication.setFeatureCollection(featureCollection);
         revealApplication.setOperationalArea(operationalArea);
@@ -445,18 +454,20 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         familyCardDetails.setDateCreated(formatDate(originalDate));
     }
 
-
-    public void startForm(Feature feature, CardDetails cardDetails, String interventionType) {
+    public void startForm(Feature feature, CardDetails cardDetails, String interventionType){
+        startForm(feature, cardDetails, interventionType, null);
+    }
+    public void startForm(Feature feature, CardDetails cardDetails, String interventionType, Event event) {
         String formName = jsonFormUtils.getFormName(null, interventionType);
         String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();
         String familyHead = null;
         if (cardDetails instanceof SprayCardDetails) {
             familyHead = ((SprayCardDetails) cardDetails).getFamilyHead();
         }
-        startForm(formName, feature, sprayStatus, familyHead);
+        startForm(formName, feature, sprayStatus, familyHead, event);
     }
 
-    private void startForm(String formName, Feature feature, String sprayStatus, String familyHead) {
+    private void startForm(String formName, Feature feature, String sprayStatus, String familyHead, Event event) {
         JSONObject formJson = jsonFormUtils.getFormJSON(listTaskView.getContext()
                 , formName, feature, sprayStatus, familyHead);
         if (cardDetails instanceof MosquitoHarvestCardDetails && PAOT.equals(((MosquitoHarvestCardDetails) cardDetails).getInterventionType())) {
@@ -473,6 +484,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR, prefsUtil.getCurrentDistrict());
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.HEALTH_FACILITIES, JsonForm.HFC_SEEK, prefsUtil.getCurrentDistrict());
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.HEALTH_FACILITIES, JsonForm.HFC_BELONG, prefsUtil.getCurrentDistrict());
+            jsonFormUtils.populateForm(event, formJson);
         } else if (JsonForm.SPRAY_FORM_REFAPP.equals(formName)) {
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR, prefsUtil.getCurrentDistrict());
         }
@@ -582,7 +594,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if (cardDetails == null || !changeInterventionStatus) {
             startForm(selectedFeature, null, selectedFeatureInterventionType);
         } else {
-            startForm(selectedFeature, cardDetails, selectedFeatureInterventionType);
+            if (IRS.equals(cardDetails.getInterventionType())) {
+                findLastEvent(selectedFeature.id(), SPRAY_EVENT);
+            } else {
+                startForm(selectedFeature, cardDetails, selectedFeatureInterventionType);
+            }
         }
     }
 
