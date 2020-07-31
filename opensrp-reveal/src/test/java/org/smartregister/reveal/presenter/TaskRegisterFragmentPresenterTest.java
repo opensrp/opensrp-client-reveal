@@ -345,12 +345,18 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     public void testOnStructureFoundWithLocationValidationDisabled() {
         when(view.getJsonFormUtils()).thenReturn(jsonFormUtils);
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        taskDetails.setTaskStatus(Task.TaskStatus.READY.name());
         when(jsonFormUtils.getFormName(null, taskDetails.getTaskCode())).thenReturn(Constants.JsonForm.SPRAY_FORM);
         presenter = spy(presenter);
         doReturn(false).when(presenter).validateFarStructures();
         presenter.onStructureFound(new org.smartregister.domain.Location(), taskDetails);
         verify(view, timeout(ASYNC_TIMEOUT)).startForm(any());
         verify(view).hideProgressDialog();
+    }
+
+    @Test
+    public void testOnStructureFoundWithLocationValidationDisabledForEditableForms() {
+        // TODO implement
     }
 
     @Test
