@@ -114,6 +114,10 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
     }
 
     @Override
+    public void onOpenMapClicked() {
+        view.startMapActivity();
+    }
+
     public void onEventSelected(EventRegisterDetails details) {
         this.eventRegisterDetails = details;
         interactor.findEvent(details.getFormSubmissionId());

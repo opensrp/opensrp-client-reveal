@@ -22,6 +22,8 @@ public interface EventRegisterContract {
 
         void filterandSortInInitializeQueries();
 
+        void startMapActivity();
+
         RevealJsonFormUtils getJsonFormUtils();
 
         void startForm(JSONObject formName);
@@ -30,10 +32,13 @@ public interface EventRegisterContract {
 
     }
 
-    interface Presenter extends  BaseRegisterFragmentContract.Presenter {
+    interface Presenter extends BaseRegisterFragmentContract.Presenter {
         void onEventFound(Event event);
 
+        void onOpenMapClicked();
+
         void onEventSelected(EventRegisterDetails details);
+
     }
 
     interface Interactor {
