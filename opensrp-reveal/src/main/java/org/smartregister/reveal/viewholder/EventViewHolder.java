@@ -51,7 +51,7 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
         registerViewHolder.eventDateTextView.setText(eventDate.toString(dateFormat));
         registerViewHolder.eventTypeTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.EVENT_TYPE, true));
         String sop = Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.SOP, false);
-        registerViewHolder.sopTextView.setText(sop.contains("-") ? sop.substring(sop.lastIndexOf("-") + 1) : sop);
+        registerViewHolder.sopTextView.setText(sop.contains("-") ? sop.substring(sop.lastIndexOf("-") + 1, sop.lastIndexOf(":")) : sop);
         registerViewHolder.householdTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.ENTITY, false));
         registerViewHolder.statusTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.STATUS, false));
     }
