@@ -111,6 +111,7 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
             view.getJsonFormUtils().populateForm(event, formJSON);
             view.startForm(formJSON);
         }
+        view.hideProgressDialog();
     }
 
     @Override
@@ -119,6 +120,7 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
     }
 
     public void onEventSelected(EventRegisterDetails details) {
+        view.showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
         this.eventRegisterDetails = details;
         interactor.findEvent(details.getFormSubmissionId());
     }

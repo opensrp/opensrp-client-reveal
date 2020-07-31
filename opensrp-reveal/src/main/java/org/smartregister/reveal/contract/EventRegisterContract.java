@@ -1,5 +1,7 @@
 package org.smartregister.reveal.contract;
 
+import androidx.annotation.StringRes;
+
 import org.json.JSONObject;
 import org.smartregister.domain.Event;
 import org.smartregister.reveal.model.EventRegisterDetails;
@@ -29,6 +31,10 @@ public interface EventRegisterContract {
         void startForm(JSONObject formName);
 
         void displayError(int title, int message);
+
+        void showProgressDialog(@StringRes int title, @StringRes int message);
+
+        void hideProgressDialog();
 
     }
 

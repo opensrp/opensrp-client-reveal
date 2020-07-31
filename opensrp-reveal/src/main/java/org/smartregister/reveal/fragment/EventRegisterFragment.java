@@ -2,9 +2,12 @@ package org.smartregister.reveal.fragment;
 
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.annotation.StringRes;
 
 import org.json.JSONObject;
 import org.smartregister.cursoradapter.RecyclerViewPaginatedAdapter;
@@ -33,11 +36,15 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
 
     private BaseDrawerContract.View drawerView;
 
+    private ProgressDialog progressDialog;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         drawerView = new DrawerMenuView(this);
+        progressDialog = new ProgressDialog(getContext());
+        progressDialog.setCancelable(false);
     }
 
     private RevealJsonFormUtils jsonFormUtils;
@@ -136,6 +143,22 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
     @Override
     public void displayError(int title, int message) {
         new AlertDialog.Builder(getActivity()).setTitle(title).setMessage(message).create().show();
+    }
+
+    @Override
+    public void showProgressDialog(@StringRes int title, @StringRes int message) {
+        if (progressDialog != null) {
+            progressDialog.setTitle(title);
+            progressDialog.setMessage(getString(message));
+            progressDialog.show();
+        }
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
     }
 
 }
