@@ -49,7 +49,7 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
         CommonPersonObjectClient pc = (CommonPersonObjectClient) smartRegisterClient;
         DateTime eventDate = DateTime.parse(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.EVENT_DATE, false));
         registerViewHolder.eventDateTextView.setText(eventDate.toString(dateFormat));
-        registerViewHolder.eventTypeTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.EVENT_TYPE, false));
+        registerViewHolder.eventTypeTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.EVENT_TYPE, true));
         registerViewHolder.sopTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.SOP, false));
         registerViewHolder.householdTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.ENTITY, false));
         registerViewHolder.statusTextView.setText(Utils.getValue(pc.getColumnmaps(), Constants.DatabaseKeys.STATUS, false));
@@ -102,10 +102,10 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
 
     @Override
     public boolean isFooterViewHolder(RecyclerView.ViewHolder viewHolder) {
-        return FooterViewHolder.class.isInstance(viewHolder);
+        return viewHolder instanceof FooterViewHolder;
     }
 
-    public class RegisterViewHolder extends RecyclerView.ViewHolder {
+    public static class RegisterViewHolder extends RecyclerView.ViewHolder {
 
         private TextView eventDateTextView;
         private TextView eventTypeTextView;

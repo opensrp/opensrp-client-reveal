@@ -76,8 +76,7 @@
         android:paddingTop="@dimen/register_list_top_bottom_padding"
         android:text="@string/status"
         android:textColor="@color/text_black"
-        android:textSize="@dimen/event_register_list_title_size"
-        android:visibility="gone" />
+        android:textSize="@dimen/event_register_list_title_size" />
 
 
 </LinearLayout>

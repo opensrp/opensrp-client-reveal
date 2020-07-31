@@ -369,7 +369,7 @@
     <string name="drag_selected_point_msg">Drag selected point to change boundary</string>
     <string name="progressBarLabel">Syncing %s : %d%% </string>
     <string name="filled_forms">Filled Forms</string>
-    <string name="event_date">Event Date</string>
+    <string name="event_date">Date</string>
     <string name="form_name">Form Name</string>
     <string name="sop">SOP</string>
     <string name="hh_village_name">HH/ village Name</string>
