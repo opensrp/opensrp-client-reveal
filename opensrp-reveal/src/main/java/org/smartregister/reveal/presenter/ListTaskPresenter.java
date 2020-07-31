@@ -2,6 +2,7 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
@@ -49,6 +50,7 @@ import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
+import org.smartregister.reveal.view.EditFociBoundaryActivity;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
@@ -373,6 +375,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public void findLastEvent(String featureId, String eventType) {
         listTaskInteractor.findLastEvent(featureId, eventType);
+    }
+    public void onFociBoundaryLongClicked() {
+        revealApplication.setFeatureCollection(featureCollection);
+        revealApplication.setOperationalArea(operationalArea);
+
+        Intent intent = new Intent(listTaskView.getContext(), EditFociBoundaryActivity.class);
+        listTaskView.getActivity().startActivity(intent);
     }
 
     @Override
