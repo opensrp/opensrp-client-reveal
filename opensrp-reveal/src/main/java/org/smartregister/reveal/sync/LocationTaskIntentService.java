@@ -30,6 +30,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import timber.log.Timber;
+
 import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNCED;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
 
@@ -50,7 +52,11 @@ public class LocationTaskIntentService extends IntentService {
             return;
         }
         if (!syncUtils.verifyAuthorization()) {
-            syncUtils.logoutUser();
+            try {
+                syncUtils.logoutUser();
+            } catch (Exception e) {
+                Timber.e(e);
+            }
             return;
 
         }

@@ -119,7 +119,9 @@ public interface ListTaskContract {
         void setTaskFilterParams(TaskFilterParams filterParams);
 
         void onEventFound(Event event);
-
+      
         void findLastEvent(String featureId, String eventType);
+      
+        void onFociBoundaryLongClicked();
     }
 }

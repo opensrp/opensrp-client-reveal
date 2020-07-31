@@ -165,7 +165,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             view.showOperationalAreaSelector(extractLocationHierarchy());
         } else {
             view.displayNotification(R.string.error_fetching_location_hierarchy_title, R.string.error_fetching_location_hierarchy);
-            revealApplication.getContext().userService().forceRemoteLogin();
+            revealApplication.getContext().userService().forceRemoteLogin(revealApplication.getContext().allSharedPreferences().fetchRegisteredANM());
         }
 
     }
@@ -348,6 +348,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     public void onShowOfflineMaps() {
         getView().openOfflineMapsView();
     }
+
     private void validateSelectedPlan(String operationalArea) {
         if (!prefsUtil.getCurrentPlanId().isEmpty()) {
             interactor.validateCurrentPlan(operationalArea, prefsUtil.getCurrentPlanId());
@@ -377,16 +378,13 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         View headerView = navigationView.getHeaderView(0);
         syncLabel = headerView.findViewById(R.id.sync_label);
         syncBadge = activity.findViewById(R.id.sync_badge);
-        if ( syncBadge != null && syncLabel != null) {
-            if(synced)
-            {
+        if (syncBadge != null && syncLabel != null) {
+            if (synced) {
                 syncBadge.setBackground(ContextCompat.getDrawable(activity, R.drawable.badge_green_oval));
                 syncLabel.setText("Device data synced");
                 syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_complete_green));
                 syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_green));
-            }
-            else
-            {
+            } else {
                 syncBadge.setBackground(ContextCompat.getDrawable(activity, R.drawable.badge_oval));
                 syncLabel.setText("Device data not synced");
                 syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_urgent_red));
