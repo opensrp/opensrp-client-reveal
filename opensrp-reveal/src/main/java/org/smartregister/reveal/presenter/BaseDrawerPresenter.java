@@ -223,6 +223,10 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         int districtOffset = name.get(0).equalsIgnoreCase(Country.BOTSWANA.name())
                 || name.get(0).equalsIgnoreCase(Country.NAMIBIA.name())
                 || (name.get(0).toUpperCase().startsWith(Country.ZAMBIA.name()) && name.size() == 5) ? 3 : 2;
+        // for hierarchies with zone level
+        if (name.get(0).toUpperCase().startsWith(Country.ZAMBIA.name()) && name.size() == 6) {
+            districtOffset = 4;
+        }
         try {
             prefsUtil.setCurrentProvince(name.get(1));
             prefsUtil.setCurrentDistrict(name.get(name.size() - districtOffset));
