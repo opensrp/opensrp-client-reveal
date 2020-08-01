@@ -43,7 +43,10 @@ public class EventRegisterFragmentInteractor implements EventRegisterContract.In
 
                 if (cursor.moveToFirst()) {
                     String eventJSON = cursor.getString(0);
-                    presenter.onEventFound(eventClientRepository.convert(eventJSON, org.smartregister.domain.Event.class));
+
+                    appExecutors.mainThread().execute(() -> {
+                       presenter.onEventFound(eventClientRepository.convert(eventJSON, org.smartregister.domain.Event.class));
+                    });
 
                 }
             } catch (SQLException e) {
