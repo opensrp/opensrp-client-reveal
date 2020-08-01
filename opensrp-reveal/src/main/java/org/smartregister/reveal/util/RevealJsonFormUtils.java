@@ -325,7 +325,17 @@ public class RevealJsonFormUtils {
         } else if (IRS_VERIFICATION.equals(encounterType) || Intervention.IRS_VERIFICATION.equals(taskCode)) {
             formName = JsonForm.ZAMBIA_IRS_VERIFICATION_FORM;
         } else if (Constants.EventType.DAILY_SUMMARY_EVENT.equals(encounterType)) {
-            formName = JsonForm.ZAMBIA_DAILY_SUMMARY_FORM;
+            formName = JsonForm.DAILY_SUMMARY_ZAMBIA;
+        } else if (Constants.EventType.IRS_FIELD_OFFICER_EVENT.equals(encounterType)) {
+            formName = JsonForm.IRS_FIELD_OFFICER_ZAMBIA;
+        } else if (Constants.EventType.IRS_SA_DECISION_EVENT.equals(encounterType)) {
+            formName = JsonForm.IRS_SA_DECISION_ZAMBIA;
+        } else if (Constants.EventType.MOBILIZATION_EVENT.equals(encounterType)) {
+            formName = JsonForm.MOBILIZATION_FORM_ZAMBIA;
+        } else if (Constants.EventType.TEAM_LEADER_DOS_EVENT.equals(encounterType)) {
+            formName = JsonForm.TEAM_LEADER_DOS_ZAMBIA;
+        } else if (Constants.EventType.VERIFICATION_EVENT.equals(encounterType)) {
+            formName = JsonForm.VERIFICATION_FORM_ZAMBIA;
         }
         return formName;
     }
