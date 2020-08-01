@@ -430,6 +430,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private void initializeToolbar() {
         searchView = findViewById(R.id.edt_search);
+        searchView.setSingleLine();
         searchView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { //do nothing
@@ -441,7 +442,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
             @Override
             public void afterTextChanged(Editable s) {
-                listTaskPresenter.searchTasks(s.toString());
+                listTaskPresenter.searchTasks(s.toString().trim());
             }
         });
         filterTasksFab = findViewById(R.id.filter_tasks_fab);
