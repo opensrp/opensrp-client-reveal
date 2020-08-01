@@ -129,6 +129,7 @@ public interface Constants {
         String CANTON = "Canton";
         String VILLAGE = "Village";
         String OPERATIONAL_AREA = "Operational Area";
+        String ZONE = "Zones";
     }
 
     interface Properties {
