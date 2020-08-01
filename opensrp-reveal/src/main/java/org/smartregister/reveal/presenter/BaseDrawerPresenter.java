@@ -98,6 +98,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
             if (defaultLocation != null) {
                 view.setDistrict(defaultLocation.get(0));
+                prefsUtil.setCurrentDistrict(defaultLocation.get(0));
                 ArrayList<String> levels = new ArrayList<>();
                 levels.add(CANTON);
                 String level;
