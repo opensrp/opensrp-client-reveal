@@ -111,6 +111,7 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
         } else {
             JSONObject formJSON = view.getJsonFormUtils().getFormJSON(view.getContext(), formName, null, null);
             view.getJsonFormUtils().populateForm(event, formJSON);
+            view.getJsonFormUtils().populateFormWithServerOptions(formName, formJSON);
             view.startForm(formJSON);
         }
         view.hideProgressDialog();

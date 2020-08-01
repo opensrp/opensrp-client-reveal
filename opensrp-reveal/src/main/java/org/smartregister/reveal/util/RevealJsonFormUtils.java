@@ -20,6 +20,7 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.Obs;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
@@ -460,5 +461,56 @@ public class RevealJsonFormUtils {
         org.smartregister.clientandeventmodel.Event taskEvent = (org.smartregister.clientandeventmodel.Event) new org.smartregister.clientandeventmodel.Event().withBaseEntityId(baseEntityId).withEventDate(new Date()).withEventType(eventType)
                 .withLocationId(locationId).withEntityType(entityType).withFormSubmissionId(UUID.randomUUID().toString()).withDateCreated(new Date());
         return taskEvent;
+    }
+
+    public void populateFormWithServerOptions(String formName, JSONObject formJSON) {
+        switch (formName) {
+
+            case JsonForm.IRS_SA_DECISION_ZAMBIA:
+            case JsonForm.CB_SPRAY_AREA_ZAMBIA:
+            case JsonForm.MOBILIZATION_FORM_ZAMBIA:
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.SUPERVISORS, JsonForm.SUPERVISOR,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+                break;
+
+            case JsonForm.IRS_FIELD_OFFICER_ZAMBIA:
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.FIELD_OFFICERS, JsonForm.FIELD_OFFICER,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+                break;
+
+            case JsonForm.DAILY_SUMMARY_ZAMBIA:
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.TEAM_LEADERS, JsonForm.TEAM_LEADER,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+
+            case JsonForm.TEAM_LEADER_DOS_ZAMBIA:
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.SUPERVISORS, JsonForm.SUPERVISOR,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.DISTRICT_MANAGERS, JsonForm.DISTRICT_MANAGER,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+
+                break;
+
+            case JsonForm.VERIFICATION_FORM_ZAMBIA:
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.FIELD_OFFICERS, JsonForm.FIELD_OFFICER,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        formJSON, Constants.CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR,
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+
+                break;
+            default:
+                break;
+        }
     }
 }
