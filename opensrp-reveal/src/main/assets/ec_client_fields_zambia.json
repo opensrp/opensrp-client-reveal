@@ -625,7 +625,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "sprayop_code"
+            "concept": "supervisor"
           }
         },
         {
@@ -633,7 +633,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "supervisor"
+            "concept": "sprayop_code"
           }
         },
         {
