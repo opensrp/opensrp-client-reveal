@@ -48,7 +48,11 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
         EventRegisterDetails eventRegisterDetails = populateEventRegisterDetails(pc);
         DateTime eventDate = DateTime.parse(Utils.getValue(pc.getColumnmaps(), DatabaseKeys.EVENT_DATE, false));
         registerViewHolder.eventDateTextView.setText(eventDate.toString("dd-M-YYYY"));
-        registerViewHolder.eventTypeTextView.setText(Utils.getValue(pc.getColumnmaps(), DatabaseKeys.EVENT_TYPE, true));
+        String eventType = Utils.getValue(pc.getColumnmaps(), DatabaseKeys.EVENT_TYPE, true);
+        if (eventType.equalsIgnoreCase(Constants.SPRAY_EVENT)) {
+            eventType = context.getString(R.string.hh_form);
+        }
+        registerViewHolder.eventTypeTextView.setText(eventType);
         String sop = Utils.getValue(pc.getColumnmaps(), DatabaseKeys.SOP, false);
         registerViewHolder.sopTextView.setText(sop.contains("-") ? sop.substring(sop.lastIndexOf("-") + 1, sop.lastIndexOf(":")) : sop);
         registerViewHolder.householdTextView.setText(Utils.getValue(pc.getColumnmaps(), DatabaseKeys.ENTITY, false));
