@@ -67,6 +67,8 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
                 int found = Integer.parseInt(columnMaps.getOrDefault(DatabaseKeys.FOUND, "0"));
                 int sprayed = Integer.parseInt(columnMaps.getOrDefault(DatabaseKeys.SPRAYED, "0"));
                 return context.getString(R.string.daily_summary_status, found, sprayed, found - sprayed);
+            case Constants.SPRAY_EVENT:
+                return context.getString(status.equalsIgnoreCase("Yes") ? R.string.sprayed : R.string.not_sprayed);
             default:
                 return status;
         }

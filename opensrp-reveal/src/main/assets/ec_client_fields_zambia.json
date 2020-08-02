@@ -689,7 +689,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "business_status"
+            "concept": "structure_sprayed"
           }
         },
         {
