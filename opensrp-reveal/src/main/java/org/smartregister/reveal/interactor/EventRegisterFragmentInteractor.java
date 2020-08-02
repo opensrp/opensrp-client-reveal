@@ -5,6 +5,8 @@ import android.database.SQLException;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.json.JSONObject;
+import org.smartregister.domain.Event;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.EventRegisterContract;
@@ -36,23 +38,11 @@ public class EventRegisterFragmentInteractor implements EventRegisterContract.In
     @Override
     public void findEvent(String formSubmissionId) {
         appExecutors.diskIO().execute(() -> {
-            String eventSql = String.format("select %s from %s where %s = ? ",
-                    EventClientRepository.event_column.json, EventClientRepository.Table.event.name(), EventClientRepository.event_column.formSubmissionId);
-
-            try (Cursor cursor = database.rawQuery(eventSql, new String[]{formSubmissionId})) {
-
-                if (cursor.moveToFirst()) {
-                    String eventJSON = cursor.getString(0);
-
-                    appExecutors.mainThread().execute(() -> {
-                       presenter.onEventFound(eventClientRepository.convert(eventJSON, org.smartregister.domain.Event.class));
-                    });
-
-                }
-            } catch (SQLException e) {
-                Timber.e(e);
-            }
+            JSONObject eventJSON = eventClientRepository.getEventsByFormSubmissionId(formSubmissionId);
+            Event event = eventClientRepository.convert(eventJSON.toString(), Event.class);
+            appExecutors.mainThread().execute(() -> {
+                presenter.onEventFound(event);
+            });
         });
-
     }
 }
