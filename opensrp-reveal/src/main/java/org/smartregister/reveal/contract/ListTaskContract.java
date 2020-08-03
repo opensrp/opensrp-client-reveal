@@ -11,6 +11,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
@@ -117,6 +118,10 @@ public interface ListTaskContract {
 
         void setTaskFilterParams(TaskFilterParams filterParams);
 
+        void onEventFound(Event event);
+      
+        void findLastEvent(String featureId, String eventType);
+      
         void onFociBoundaryLongClicked();
     }
 }

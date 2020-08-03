@@ -108,7 +108,7 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="@dimen/change_spray_status_btn_bottom_margin"
             android:background="@drawable/rounded_blue_outline"
-            android:text="@string/change_spray_status"
+            android:text="@string/view_details"
             android:textAllCaps="false"
             android:textColor="#1892D4"
             android:textSize="@dimen/structure_info_card_text_size" />
