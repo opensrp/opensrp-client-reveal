@@ -2,11 +2,6 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Intent;
 import android.location.Location;
-
-import androidx.annotation.VisibleForTesting;
-import androidx.core.util.Pair;
-import androidx.appcompat.app.AlertDialog;
-
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,7 +9,12 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.util.Pair;
+
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
@@ -42,6 +42,7 @@ import org.smartregister.reveal.widget.GeoWidgetFactory;
 import org.smartregister.reveal.widget.RevealToasterNotesFactory;
 import org.smartregister.util.JsonFormUtils;
 
+import java.util.List;
 import java.util.Map;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
@@ -218,12 +219,23 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                 Pair<JSONArray, JSONArray> options = jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs()
                         , configurationKey, childWidget, value.split(":")[0]);
                 if (options != null) {
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getView().getContext(), R.layout.native_form_simple_list_item_1, new Gson().fromJson(options.second.toString(), String[].class));
+                    List<String> newAdapterValues = new Gson().fromJson(options.second.toString(), new TypeToken<List<String>>() {
+                    }.getType());
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getView().getContext(), R.layout.native_form_simple_list_item_1, newAdapterValues);
                     MaterialSpinner spinner = (MaterialSpinner) jsonFormView.getFormDataView(JsonFormConstants.STEP1 + ":" + childWidget.optString(JsonFormUtils.KEY));
                     if (spinner != null) {
+                        Object selected;
+                        if (spinner.getAdapter().getCount() == spinner.getSelectedItemPosition()) {
+                            selected = spinner.getAdapter().getItem(spinner.getSelectedItemPosition() - 1);
+                        } else {
+                            selected = spinner.getSelectedItem();
+                        }
                         spinner.setAdapter(adapter);
                         spinner.setOnItemSelectedListener(formFragment.getCommonListener());
                         spinner.setTag(R.id.keys, options.first);
+                        if (selected != null && newAdapterValues.contains(selected.toString())) {
+                            spinner.setSelection(newAdapterValues.indexOf(selected.toString()));
+                        }
                     }
                 }
             }
