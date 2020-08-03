@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
@@ -57,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -289,7 +291,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
         } else if (isLongclick) {
             if (BuildConfig.BUILD_COUNTRY != Country.THAILAND && BuildConfig.BUILD_COUNTRY != Country.THAILAND_EN) {
-            onFeatureSelectedByLongClick(feature);
+                onFeatureSelectedByLongClick(feature);
             }
         } else {
             onFeatureSelectedByNormalClick(feature);
@@ -376,6 +378,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void findLastEvent(String featureId, String eventType) {
         listTaskInteractor.findLastEvent(featureId, eventType);
     }
+
     public void onFociBoundaryLongClicked() {
         revealApplication.setFeatureCollection(featureCollection);
         revealApplication.setOperationalArea(operationalArea);
@@ -454,9 +457,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         familyCardDetails.setDateCreated(formatDate(originalDate));
     }
 
-    public void startForm(Feature feature, CardDetails cardDetails, String interventionType){
+    public void startForm(Feature feature, CardDetails cardDetails, String interventionType) {
         startForm(feature, cardDetails, interventionType, null);
     }
+
     public void startForm(Feature feature, CardDetails cardDetails, String interventionType, Event event) {
         String formName = jsonFormUtils.getFormName(null, interventionType);
         String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();
@@ -481,12 +485,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             } catch (JSONException e) {
                 Timber.e(e);
             }
-            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR, prefsUtil.getCurrentDistrict());
-            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.HEALTH_FACILITIES, JsonForm.HFC_SEEK, prefsUtil.getCurrentDistrict());
-            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.HEALTH_FACILITIES, JsonForm.HFC_BELONG, prefsUtil.getCurrentDistrict());
+            Map<String, JSONObject> fields = jsonFormUtils.getFields(formJson);
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DATA_COLLECTORS, fields.get(JsonForm.DATA_COLLECTOR), prefsUtil.getCurrentDistrict());
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.HEALTH_FACILITIES, fields.get(JsonForm.HFC_SEEK), prefsUtil.getCurrentDistrict());
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.HEALTH_FACILITIES, fields.get(JsonForm.HFC_BELONG), prefsUtil.getCurrentDistrict());
             jsonFormUtils.populateForm(event, formJson);
         } else if (JsonForm.SPRAY_FORM_REFAPP.equals(formName)) {
-            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR, prefsUtil.getCurrentDistrict());
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DATA_COLLECTORS, jsonFormUtils.getFields(formJson).get(JsonForm.DATA_COLLECTOR), prefsUtil.getCurrentDistrict());
         }
         listTaskView.startJsonForm(formJson);
     }
