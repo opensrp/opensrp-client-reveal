@@ -220,9 +220,11 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
                 if (options != null) {
                     ArrayAdapter<String> adapter = new ArrayAdapter<>(getView().getContext(), R.layout.native_form_simple_list_item_1, new Gson().fromJson(options.second.toString(), String[].class));
                     MaterialSpinner spinner = (MaterialSpinner) jsonFormView.getFormDataView(JsonFormConstants.STEP1 + ":" + childWidget);
-                    spinner.setAdapter(adapter);
-                    spinner.setOnItemSelectedListener(formFragment.getCommonListener());
-                    spinner.setTag(R.id.keys, options.first);
+                    if (spinner != null) {
+                        spinner.setAdapter(adapter);
+                        spinner.setOnItemSelectedListener(formFragment.getCommonListener());
+                        spinner.setTag(R.id.keys, options.first);
+                    }
                 }
             }
         }
