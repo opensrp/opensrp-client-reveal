@@ -512,7 +512,6 @@ public class RevealJsonFormUtils {
                             CONFIGURATION.SPRAY_OPERATORS, fieldsMap.get(JsonForm.SPRAY_OPERATOR_CODE),
                             dataCollector.split(":")[0]);
                 }
-
                 break;
 
             case JsonForm.VERIFICATION_FORM_ZAMBIA:
@@ -520,6 +519,7 @@ public class RevealJsonFormUtils {
                         Constants.CONFIGURATION.FIELD_OFFICERS, fieldsMap.get(JsonForm.FIELD_OFFICER),
                         PreferencesUtil.getInstance().getCurrentDistrict());
 
+            case JsonForm.SPRAY_FORM_ZAMBIA:
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         Constants.CONFIGURATION.DATA_COLLECTORS, fieldsMap.get(JsonForm.DATA_COLLECTOR),
                         PreferencesUtil.getInstance().getCurrentDistrict());
@@ -530,7 +530,6 @@ public class RevealJsonFormUtils {
                             CONFIGURATION.SPRAY_OPERATORS, fieldsMap.get(JsonForm.SPRAY_OPERATOR_CODE),
                             dataCollector.split(":")[0]);
                 }
-
                 break;
             default:
                 break;
