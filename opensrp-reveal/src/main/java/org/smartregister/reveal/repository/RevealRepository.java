@@ -227,6 +227,13 @@ public class RevealRepository extends Repository {
         DatabaseMigrationUtils.createAddedECTables(db,
                 new HashSet<>(Arrays.asList(Constants.EventsRegister.TABLE_NAME)),
                 RevealApplication.createCommonFtsObject());
+
+        EventClientRepository.createTable(db,
+                EventClientRepository.Table.foreignEvent,
+                EventClientRepository.event_column.values());
+        EventClientRepository.createTable(db,
+                EventClientRepository.Table.foreignClient,
+                EventClientRepository.client_column.values());
     }
 
     @Override
