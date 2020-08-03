@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.util.Pair;
@@ -22,6 +23,7 @@ import com.vijay.jsonwizard.customviews.TreeViewDialog;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.smartregister.CoreLibrary;
 import org.smartregister.p2p.activity.P2pModeSelectActivity;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -120,8 +122,11 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         });
 
         try {
+            String manifestVersion = getManifestVersion();
+            String appVersion = getContext().getString(R.string.app_version, Utils.getVersion(getContext()));
+            String appVersionText = appVersion + (manifestVersion == null ? "" : getContext().getString(R.string.manifest_version_parenthesis_placeholder, manifestVersion));
             ((TextView) headerView.findViewById(R.id.application_version))
-                    .setText(getContext().getString(R.string.app_version, Utils.getVersion(getContext())));
+                    .setText(appVersionText);
         } catch (PackageManager.NameNotFoundException e) {
             Timber.e(e);
         }
@@ -139,6 +144,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         facilityTextView = headerView.findViewById(R.id.facility_label);
         operatorTextView = headerView.findViewById(R.id.operator_label);
         p2pSyncTextView = headerView.findViewById(R.id.btn_navMenu_p2pSyncBtn);
+
         TextView offlineMapTextView = headerView.findViewById(R.id.btn_navMenu_offline_maps);
 
         TextView summaryFormsTextView = headerView.findViewById(R.id.btn_navMenu_summaryForms);
@@ -379,5 +385,11 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     private void startStatsActivity() {
         getContext().startActivity(new Intent(getContext(), StatsActivity.class));
+    }
+
+    @Nullable
+    @Override
+    public String getManifestVersion() {
+        return CoreLibrary.getInstance().context().allSharedPreferences().fetchManifestVersion();
     }
 }

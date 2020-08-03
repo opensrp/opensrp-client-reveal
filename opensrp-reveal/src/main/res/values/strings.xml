@@ -370,4 +370,5 @@
     <string name="progressBarLabel">Syncing %s : %d%% </string>
     <string name="device_data_synced">Device data synced</string>
     <string name="device_data_not_synced">Device data not synced</string>
+    <string name="manifest_version_parenthesis_placeholder">(%1$s)</string>
 </resources>

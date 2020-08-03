@@ -2,8 +2,9 @@ package org.smartregister.reveal.interactor;
 
 import android.content.Context;
 import android.location.Location;
-import androidx.core.util.Pair;
 import android.text.TextUtils;
+
+import androidx.core.util.Pair;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -13,6 +14,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
+import org.smartregister.domain.Event;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.repository.EventClientRepository.event_column;
 import org.smartregister.repository.LocationRepository;
@@ -415,5 +417,10 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
         appExecutors.mainThread().execute(() -> {
             getPresenter().onTaskInfoReset();
         });
+    }
+
+    @Override
+    public void handleLasteventFound(Event event) {
+        getPresenter().onEventFound(event);
     }
 }

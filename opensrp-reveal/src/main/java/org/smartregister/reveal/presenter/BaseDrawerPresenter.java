@@ -179,6 +179,8 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         operationalAreaLevels.add(DISTRICT);
         operationalAreaLevels.add(SUB_DISTRICT);
         operationalAreaLevels.add(OPERATIONAL_AREA);
+        operationalAreaLevels.add(HEALTH_CENTER);
+        operationalAreaLevels.add(VILLAGE);
 
         List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels);
 
@@ -241,12 +243,16 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
                 for (FormLocation districtLocation : provinceLocation.nodes) {
                     if (districtLocation.nodes == null)
                         return;
-                    List<FormLocation> toRemove = new ArrayList<>();
-                    for (FormLocation operationalAreaLocation : districtLocation.nodes) {
-                        if (!operationalAreas.contains(operationalAreaLocation.name))
-                            toRemove.add(operationalAreaLocation);
+                    for (FormLocation healthFacilityLocation : districtLocation.nodes) {
+                        if (healthFacilityLocation.nodes == null)
+                            return;
+                        List<FormLocation> toRemove = new ArrayList<>();
+                        for (FormLocation operationalAreaLocation : healthFacilityLocation.nodes) {
+                            if (!operationalAreas.contains(operationalAreaLocation.name))
+                                toRemove.add(operationalAreaLocation);
+                        }
+                        healthFacilityLocation.nodes.removeAll(toRemove);
                     }
-                    districtLocation.nodes.removeAll(toRemove);
                 }
             }
         }
