@@ -519,7 +519,7 @@
       {
         "key": "datafals_type",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "concept",
+        "openmrs_entity": "",
         "openmrs_entity_id": "",
         "openmrs_data_type": "select one",
         "type": "check_box",
