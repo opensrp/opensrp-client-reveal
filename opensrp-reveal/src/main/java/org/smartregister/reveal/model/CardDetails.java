@@ -12,6 +12,7 @@ public class CardDetails {
     private int statusColor = R.color.task_not_done;
     private String reason;
     private String comments;
+    private String interventionType;
 
     public CardDetails(String status) {
         this.status = status;
@@ -55,5 +56,13 @@ public class CardDetails {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public String getInterventionType() {
+        return interventionType;
+    }
+
+    public void setInterventionType(String interventionType) {
+        this.interventionType = interventionType;
     }
 }

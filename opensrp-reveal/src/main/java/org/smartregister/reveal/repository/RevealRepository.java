@@ -222,6 +222,10 @@ public class RevealRepository extends Repository {
     private void upgradeToVersion8(SQLiteDatabase db) {
         // replace whitespaces with underscores in event type field
         db.execSQL(String.format("UPDATE %s set %s = REPLACE(%s, ' ', '_') ", EVENT_TABLE, DatabaseKeys.EVENT_TYPE_FIELD, DatabaseKeys.EVENT_TYPE_FIELD));
+
+        if (!ManifestRepository.isVersionColumnExist(db)) {
+            ManifestRepository.addVersionColumn(db);
+        }
     }
 
     @Override

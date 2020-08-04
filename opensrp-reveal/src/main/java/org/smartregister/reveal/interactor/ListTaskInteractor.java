@@ -146,6 +146,7 @@ public class ListTaskInteractor extends BaseInteractor {
                 try {
                     if (cursor.moveToFirst()) {
                         cardDetails = createCardDetails(cursor, interventionType);
+                        cardDetails.setInterventionType(interventionType);
                     }
                 } catch (Exception e) {
                     Timber.e(e);
@@ -497,6 +498,11 @@ public class ListTaskInteractor extends BaseInteractor {
         task.setTaskStatus(cursor.getString(cursor.getColumnIndex(STATUS)));
         task.setStructureId(cursor.getString(cursor.getColumnIndex(STRUCTURE_ID)));
         return task;
+    }
+
+    @Override
+    public void handleLasteventFound(org.smartregister.domain.Event event) {
+        getPresenter().onEventFound(event);
     }
 
 }
