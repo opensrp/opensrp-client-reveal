@@ -13,11 +13,12 @@ import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.BuildConfig;
 
+import java.util.Collections;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
@@ -66,18 +67,7 @@ public class RevealSyncConfigurationTest extends BaseUnitTest {
     public void getLocationSyncFilterValue() {
         Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
-        when(allSharedPreferences.fetchRegisteredANM()).thenReturn("123");
-        when(allSharedPreferences.fetchDefaultTeamId(anyString())).thenReturn("122132");
-        assertEquals("122132", syncConfiguration.getSyncFilterValue());
-        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
-    }
-
-    @Test
-    public void getTeamSyncFilterValue() {
-        Country buildCountry = BuildConfig.BUILD_COUNTRY;
-        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
-        when(allSharedPreferences.fetchRegisteredANM()).thenReturn("123");
-        when(allSharedPreferences.fetchDefaultTeamId(anyString())).thenReturn("122132");
+        when(locationRepository.getAllLocationIds()).thenReturn(Collections.singletonList("122132"));
         assertEquals("122132", syncConfiguration.getSyncFilterValue());
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
