@@ -2,6 +2,8 @@ package org.smartregister.reveal.model;
 
 import androidx.annotation.NonNull;
 
+import org.smartregister.tasking.model.BaseTaskDetails;
+
 import java.util.Date;
 
 /**

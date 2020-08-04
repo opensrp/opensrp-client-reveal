@@ -4,18 +4,19 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import com.google.android.material.navigation.NavigationView;
-import androidx.core.util.Pair;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.util.Pair;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.material.navigation.NavigationView;
 import com.vijay.jsonwizard.customviews.TreeViewDialog;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,12 +26,12 @@ import org.smartregister.p2p.activity.P2pModeSelectActivity;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.interactor.BaseDrawerInteractor;
 import org.smartregister.reveal.presenter.BaseDrawerPresenter;
-import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.tasking.contract.BaseDrawerContract;
+import org.smartregister.tasking.util.AlertDialogUtils;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;

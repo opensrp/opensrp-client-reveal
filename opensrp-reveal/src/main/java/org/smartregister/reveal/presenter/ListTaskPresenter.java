@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
@@ -25,29 +26,30 @@ import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
-import org.smartregister.reveal.contract.PasswordRequestCallback;
-import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
-import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
-import org.smartregister.reveal.model.TaskDetails;
-import org.smartregister.reveal.model.TaskFilterParams;
-import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
-import org.smartregister.reveal.util.AlertDialogUtils;
-import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Country;
-import org.smartregister.reveal.util.PasswordDialogUtils;
-import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
+import org.smartregister.tasking.contract.BaseDrawerContract;
+import org.smartregister.tasking.contract.PasswordRequestCallback;
+import org.smartregister.tasking.contract.UserLocationContract;
+import org.smartregister.tasking.model.CardDetails;
+import org.smartregister.tasking.model.TaskDetails;
+import org.smartregister.tasking.model.TaskFilterParams;
+import org.smartregister.tasking.presenter.ValidateUserLocationPresenter;
+import org.smartregister.tasking.repository.RevealMappingHelper;
+import org.smartregister.tasking.util.AlertDialogUtils;
+import org.smartregister.tasking.util.CardDetailsUtil;
+import org.smartregister.tasking.util.PasswordDialogUtils;
+import org.smartregister.tasking.util.PreferencesUtil;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
@@ -107,7 +109,7 @@ import static org.smartregister.reveal.util.Utils.validateFarStructures;
  * Created by samuelgithengi on 11/27/18.
  */
 public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRequestCallback,
-        UserLocationCallback {
+        UserLocationContract.UserLocationCallback {
 
     private ListTaskView listTaskView;
 

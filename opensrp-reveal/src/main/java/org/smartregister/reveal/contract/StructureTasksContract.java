@@ -5,6 +5,9 @@ import android.content.Context;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Event;
 import org.smartregister.reveal.model.StructureTaskDetails;
+import org.smartregister.tasking.contract.BaseContract;
+import org.smartregister.tasking.contract.BaseFormFragmentContract;
+import org.smartregister.tasking.contract.UserLocationContract;
 
 import java.util.List;
 import java.util.Set;

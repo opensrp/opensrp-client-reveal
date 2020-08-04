@@ -2,8 +2,9 @@ package org.smartregister.reveal.interactor;
 
 import android.content.Context;
 import android.location.Location;
-import androidx.core.util.Pair;
 import android.text.TextUtils;
+
+import androidx.core.util.Pair;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -17,13 +18,13 @@ import org.smartregister.family.util.DBConstants;
 import org.smartregister.repository.EventClientRepository.event_column;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
-import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Properties;
-import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.tasking.contract.TaskRegisterFragmentContract;
+import org.smartregister.tasking.model.TaskDetails;
+import org.smartregister.tasking.util.InteractorUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

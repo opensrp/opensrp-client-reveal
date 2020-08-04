@@ -3,12 +3,14 @@ package org.smartregister.reveal.view;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import android.view.View;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONObject;
 import org.smartregister.family.adapter.ViewPagerAdapter;
@@ -16,7 +18,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.OtherFormsContract;
 import org.smartregister.reveal.fragment.SummaryFormsFragment;
 import org.smartregister.reveal.presenter.OtherFormsPresenter;
-import org.smartregister.reveal.util.RevealJsonFormUtils;
+import org.smartregister.tasking.util.RevealJsonFormUtils;
 
 import timber.log.Timber;
 

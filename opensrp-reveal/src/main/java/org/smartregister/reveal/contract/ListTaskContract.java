@@ -1,6 +1,7 @@
 package org.smartregister.reveal.contract;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
@@ -12,11 +13,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
-import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
-import org.smartregister.reveal.model.CardDetails;
-import org.smartregister.reveal.model.TaskDetails;
-import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
+import org.smartregister.tasking.contract.BaseContract;
+import org.smartregister.tasking.contract.BaseDrawerContract;
+import org.smartregister.tasking.contract.UserLocationContract;
+import org.smartregister.tasking.model.CardDetails;
+import org.smartregister.tasking.model.TaskDetails;
+import org.smartregister.tasking.model.TaskFilterParams;
 
 import java.util.List;
 
@@ -25,7 +28,7 @@ import java.util.List;
  */
 public interface ListTaskContract {
 
-    interface ListTaskView extends UserLocationView, BaseDrawerContract.DrawerActivity {
+    interface ListTaskView extends UserLocationContract.UserLocationView, BaseDrawerContract.DrawerActivity {
 
         void showProgressDialog(@StringRes int title, @StringRes int message);
 

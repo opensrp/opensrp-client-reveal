@@ -1,19 +1,20 @@
 package org.smartregister.reveal.viewholder;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.StructureTaskDetails;
-import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.tasking.model.CardDetails;
+import org.smartregister.tasking.util.CardDetailsUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

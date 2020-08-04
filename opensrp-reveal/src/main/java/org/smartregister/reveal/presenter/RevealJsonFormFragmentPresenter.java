@@ -2,15 +2,16 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Intent;
 import android.location.Location;
-import androidx.annotation.VisibleForTesting;
-import androidx.core.util.Pair;
-import androidx.appcompat.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.util.Pair;
 
 import com.google.gson.Gson;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -26,16 +27,17 @@ import org.json.JSONArray;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.contract.PasswordRequestCallback;
-import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.LocationUtils;
-import org.smartregister.reveal.util.PasswordDialogUtils;
-import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
 import org.smartregister.reveal.widget.RevealToasterNotesFactory;
+import org.smartregister.tasking.contract.PasswordRequestCallback;
+import org.smartregister.tasking.contract.UserLocationContract;
+import org.smartregister.tasking.presenter.ValidateUserLocationPresenter;
+import org.smartregister.tasking.util.LocationUtils;
+import org.smartregister.tasking.util.PasswordDialogUtils;
+import org.smartregister.tasking.util.RevealJsonFormUtils;
 import org.smartregister.util.JsonFormUtils;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
@@ -43,7 +45,7 @@ import io.ona.kujaku.listeners.BaseLocationListener;
 /**
  * Created by samuelgithengi on 1/30/19.
  */
-public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter implements PasswordRequestCallback, UserLocationCallback {
+public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter implements PasswordRequestCallback, UserLocationContract.UserLocationCallback {
 
     private JsonFormFragment formFragment;
 

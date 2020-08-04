@@ -1,13 +1,15 @@
 package org.smartregister.reveal.job;
 
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 
 import com.evernote.android.job.Job;
 
 import org.smartregister.AllConstants;
 import org.smartregister.job.BaseJob;
-import org.smartregister.reveal.sync.LocationTaskIntentService;
+import org.smartregister.tasking.sync.LocationTaskIntentService;
+
 public class LocationTaskServiceJob extends BaseJob {
 
     public static final String TAG = "LocationTaskServiceJob";

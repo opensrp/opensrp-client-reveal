@@ -3,9 +3,9 @@ package org.smartregister.reveal.interactor;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.contract.BaseContract;
-import org.smartregister.reveal.contract.TaskRegisterContract;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.tasking.contract.BaseContract;
+import org.smartregister.tasking.contract.TaskRegisterContract;
 
 import java.util.List;
 

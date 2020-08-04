@@ -1,6 +1,7 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
+
 import androidx.core.util.Pair;
 
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
@@ -8,10 +9,10 @@ import com.mapbox.mapboxsdk.offline.OfflineRegion;
 import org.smartregister.domain.Location;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.contract.DownloadedOfflineMapsContract;
-import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.util.AppExecutors;
-import org.smartregister.reveal.util.OfflineMapHelper;
+import org.smartregister.tasking.contract.DownloadedOfflineMapsContract;
+import org.smartregister.tasking.model.OfflineMapModel;
+import org.smartregister.tasking.util.OfflineMapHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;

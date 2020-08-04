@@ -8,13 +8,13 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.smartregister.domain.Location;
-import org.smartregister.domain.LocationProperty.PropertyStatus;
-import org.smartregister.domain.Task;
 import org.smartregister.domain.Client;
 import org.smartregister.domain.Event;
-import org.smartregister.domain.db.EventClient;
+import org.smartregister.domain.Location;
+import org.smartregister.domain.LocationProperty.PropertyStatus;
 import org.smartregister.domain.Obs;
+import org.smartregister.domain.Task;
+import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.jsonmapping.ClientClassification;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
@@ -26,9 +26,9 @@ import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.StructureType;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
-import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.ClientProcessorForJava;
+import org.smartregister.tasking.util.PreferencesUtil;
 
 import java.util.ArrayList;
 import java.util.List;

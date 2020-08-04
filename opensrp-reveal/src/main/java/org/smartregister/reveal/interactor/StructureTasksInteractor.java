@@ -1,8 +1,9 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
-import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
+
+import androidx.annotation.VisibleForTesting;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.SQLException;
@@ -25,7 +26,7 @@ import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
-import org.smartregister.reveal.util.InteractorUtils;
+import org.smartregister.tasking.util.InteractorUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

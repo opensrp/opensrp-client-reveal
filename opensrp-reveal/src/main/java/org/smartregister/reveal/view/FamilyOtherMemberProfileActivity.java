@@ -4,10 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 import com.vijay.jsonwizard.domain.Form;
@@ -23,7 +24,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.fragment.FamilyOtherMemberProfileFragment;
 import org.smartregister.reveal.presenter.FamilyOtherMemberPresenter;
-import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.tasking.util.PreferencesUtil;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
 import timber.log.Timber;

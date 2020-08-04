@@ -35,8 +35,6 @@ import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.contract.BaseContract;
-import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
@@ -45,10 +43,11 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
-import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
+import org.smartregister.tasking.contract.BaseContract;
+import org.smartregister.tasking.util.PreferencesUtil;
 import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.PropertiesConverter;
@@ -117,7 +116,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
     protected StructureRepository structureRepository;
 
-    protected BasePresenter presenterCallBack;
+    protected BaseContract.BasePresenter presenterCallBack;
 
     protected String operationalAreaId;
 
@@ -137,7 +136,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
     private PreferencesUtil prefsUtil;
 
-    public BaseInteractor(BasePresenter presenterCallBack) {
+    public BaseInteractor(BaseContract.BasePresenter presenterCallBack) {
         revealApplication = RevealApplication.getInstance();
         this.presenterCallBack = presenterCallBack;
         appExecutors = revealApplication.getAppExecutors();
@@ -152,7 +151,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
     }
 
     @VisibleForTesting
-    public BaseInteractor(BasePresenter presenterCallBack, CommonRepository commonRepository) {
+    public BaseInteractor(BaseContract.BasePresenter presenterCallBack, CommonRepository commonRepository) {
         this(presenterCallBack);
         this.commonRepository = commonRepository;
     }

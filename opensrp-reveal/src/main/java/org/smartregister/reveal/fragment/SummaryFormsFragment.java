@@ -4,22 +4,23 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.location.Location;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import org.json.JSONObject;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.OtherFormsfragmentContract;
 import org.smartregister.reveal.presenter.OtherFormsFragmentPresenter;
-import org.smartregister.reveal.util.LocationUtils;
-import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.SummaryFormsActivity;
+import org.smartregister.tasking.util.LocationUtils;
+import org.smartregister.tasking.util.RevealJsonFormUtils;
 
 public class SummaryFormsFragment extends Fragment implements OtherFormsfragmentContract.View, View.OnClickListener {
     

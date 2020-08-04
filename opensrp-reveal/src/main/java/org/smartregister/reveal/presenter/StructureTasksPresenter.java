@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
@@ -10,18 +11,19 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
-import org.smartregister.domain.Event;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.interactor.StructureTasksInteractor;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.tasking.contract.BaseFormFragmentContract;
+import org.smartregister.tasking.presenter.BaseFormFragmentPresenter;
+import org.smartregister.tasking.util.PreferencesUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.List;

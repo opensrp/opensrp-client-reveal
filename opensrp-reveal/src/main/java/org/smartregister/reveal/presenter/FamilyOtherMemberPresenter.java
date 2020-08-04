@@ -20,8 +20,8 @@ import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.interactor.RevealFamilyOtherMemberInteractor;
 import org.smartregister.reveal.model.FamilyProfileModel;
-import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
+import org.smartregister.tasking.util.AlertDialogUtils;
 
 import timber.log.Timber;
 

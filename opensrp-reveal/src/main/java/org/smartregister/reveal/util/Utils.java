@@ -38,6 +38,7 @@ import org.smartregister.reveal.job.LocationTaskServiceJob;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.Tags;
+import org.smartregister.tasking.util.PreferencesUtil;
 import org.smartregister.util.Cache;
 import org.smartregister.util.CacheableData;
 import org.smartregister.util.DatabaseMigrationUtils;

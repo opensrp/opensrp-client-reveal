@@ -2,20 +2,21 @@ package org.smartregister.reveal.viewholder;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.core.util.Pair;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.model.CardDetails;
-import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.tasking.model.CardDetails;
+import org.smartregister.tasking.model.TaskDetails;
+import org.smartregister.tasking.util.PreferencesUtil;
 
 
 /**

@@ -9,7 +9,7 @@ import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract.Interactor;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
-import org.smartregister.reveal.util.InteractorUtils;
+import org.smartregister.tasking.util.InteractorUtils;
 
 import static org.smartregister.reveal.application.RevealApplication.getInstance;
 

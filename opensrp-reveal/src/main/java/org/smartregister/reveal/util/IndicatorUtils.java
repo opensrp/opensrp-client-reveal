@@ -5,7 +5,7 @@ import android.content.Context;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.IndicatorDetails;
-import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.tasking.model.TaskDetails;
 
 import java.util.ArrayList;
 import java.util.HashMap;

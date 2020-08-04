@@ -1,24 +1,25 @@
 package org.smartregister.reveal.view;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.core.util.Pair;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.util.Pair;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 import com.mapbox.mapboxsdk.offline.OfflineManager;
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 
 import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.contract.OfflineMapDownloadCallback;
-import org.smartregister.reveal.fragment.AvailableOfflineMapsFragment;
-import org.smartregister.reveal.fragment.DownloadedOfflineMapsFragment;
-import org.smartregister.reveal.model.OfflineMapModel;
-import org.smartregister.reveal.util.OfflineMapHelper;
+import org.smartregister.tasking.contract.OfflineMapDownloadCallback;
+import org.smartregister.tasking.fragment.AvailableOfflineMapsFragment;
+import org.smartregister.tasking.fragment.DownloadedOfflineMapsFragment;
+import org.smartregister.tasking.model.OfflineMapModel;
+import org.smartregister.tasking.util.OfflineMapHelper;
 
 import java.util.List;
 import java.util.Map;
@@ -80,7 +81,7 @@ public class OfflineMapsActivity extends AppCompatActivity implements OfflineMap
     protected ViewPager setupViewPager() {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        availableOfflineMapsFragment = AvailableOfflineMapsFragment.newInstance(this.getIntent().getExtras());
+        availableOfflineMapsFragment = AvailableOfflineMapsFragment.newInstance(this.getIntent().getExtras(), getString(R.string.reveal_offline_map_download_style));
         availableOfflineMapsFragment.setOfflineMapDownloadCallback(this);
         adapter.addFragment(availableOfflineMapsFragment, this.getString(R.string.available).toUpperCase());
 

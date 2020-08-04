@@ -1,5 +1,7 @@
 package org.smartregister.reveal.model;
 
+import org.smartregister.tasking.model.CardDetails;
+
 /**
  * @author Vincent Karuri
  */

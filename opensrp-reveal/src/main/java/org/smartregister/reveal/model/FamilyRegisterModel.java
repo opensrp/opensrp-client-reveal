@@ -6,7 +6,7 @@ import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.model.BaseFamilyRegisterModel;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.util.Constants.Properties;
-import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.tasking.util.PreferencesUtil;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.List;

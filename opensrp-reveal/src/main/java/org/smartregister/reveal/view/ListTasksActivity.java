@@ -57,24 +57,26 @@ import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
-import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
-import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
-import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
-import org.smartregister.reveal.repository.RevealMappingHelper;
-import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
+import org.smartregister.tasking.activity.FilterTasksActivity;
+import org.smartregister.tasking.activity.TaskRegisterActivity;
+import org.smartregister.tasking.contract.BaseDrawerContract;
+import org.smartregister.tasking.contract.UserLocationContract;
+import org.smartregister.tasking.model.CardDetails;
+import org.smartregister.tasking.model.TaskFilterParams;
+import org.smartregister.tasking.repository.RevealMappingHelper;
+import org.smartregister.tasking.util.AlertDialogUtils;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
@@ -109,7 +111,7 @@ import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
  * Created by samuelgithengi on 11/20/18.
  */
 public class ListTasksActivity extends BaseMapActivity implements ListTaskContract.ListTaskView,
-        View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener, UserLocationView, OnLocationComponentInitializedCallback {
+        View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener, UserLocationContract.UserLocationView, OnLocationComponentInitializedCallback {
 
     private ListTaskPresenter listTaskPresenter;
 

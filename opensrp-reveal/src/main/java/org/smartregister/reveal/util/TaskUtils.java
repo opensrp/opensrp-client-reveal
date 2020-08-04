@@ -12,9 +12,10 @@ import org.smartregister.repository.PlanDefinitionRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.tasking.model.BaseTaskDetails;
+import org.smartregister.tasking.util.PreferencesUtil;
 
 import java.util.List;
 

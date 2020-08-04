@@ -21,14 +21,14 @@ import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.interactor.RevealFamilyOtherMemberInteractor;
 import org.smartregister.reveal.interactor.RevealFamilyProfileInteractor;
 import org.smartregister.reveal.model.FamilyProfileModel;
-import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
-import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.tasking.util.AlertDialogUtils;
+import org.smartregister.tasking.util.PreferencesUtil;
 
 import timber.log.Timber;
 

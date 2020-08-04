@@ -3,9 +3,9 @@ package org.smartregister.reveal.interactor;
 import org.smartregister.domain.Location;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.contract.AvailableOfflineMapsContract;
-import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.tasking.contract.AvailableOfflineMapsContract;
+import org.smartregister.tasking.model.OfflineMapModel;
 
 import java.util.ArrayList;
 import java.util.List;

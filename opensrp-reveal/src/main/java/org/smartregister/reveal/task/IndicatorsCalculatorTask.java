@@ -8,9 +8,9 @@ import org.smartregister.reporting.view.ProgressIndicatorView;
 import org.smartregister.reporting.view.TableView;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.IndicatorDetails;
-import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.IndicatorUtils;
 import org.smartregister.reveal.view.ListTasksActivity;
+import org.smartregister.tasking.model.TaskDetails;
 
 import java.util.Arrays;
 import java.util.List;

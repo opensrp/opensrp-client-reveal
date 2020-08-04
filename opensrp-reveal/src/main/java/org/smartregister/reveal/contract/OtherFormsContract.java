@@ -1,6 +1,7 @@
 package org.smartregister.reveal.contract;
 
 import org.json.JSONObject;
+import org.smartregister.tasking.contract.BaseContract;
 
 public interface OtherFormsContract {
 

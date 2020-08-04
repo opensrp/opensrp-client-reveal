@@ -11,9 +11,9 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.util.AppExecutors;
-import org.smartregister.reveal.util.InteractorUtils;
+import org.smartregister.tasking.contract.BaseFormFragmentContract;
+import org.smartregister.tasking.util.InteractorUtils;
 
 import timber.log.Timber;
 

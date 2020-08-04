@@ -83,12 +83,12 @@
         </activity>
 
         <activity
-            android:name=".view.FilterTasksActivity"
+            android:name="org.smartregister.tasking.activity.FilterTasksActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".view.TaskRegisterActivity"
+            android:name="org.smartregister.tasking.activity.TaskRegisterActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
@@ -105,13 +105,8 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name="org.smartregister.view.activity.DynamicJsonFormActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-
-        <service android:name=".sync.LocationTaskIntentService" />
-        <service android:name=".sync.RevealSettingsSyncIntentService" />
+        <service android:name="org.smartregister.tasking.sync.LocationTaskIntentService" />
+        <service android:name="org.smartregister.tasking.sync.RevealSettingsSyncIntentService" />
         <service android:name=".sync.RevealSyncIntentService" />
         <service android:name="org.smartregister.sync.intent.PullUniqueIdsIntentService" />
         <service android:name="org.smartregister.sync.intent.ValidateIntentService" />

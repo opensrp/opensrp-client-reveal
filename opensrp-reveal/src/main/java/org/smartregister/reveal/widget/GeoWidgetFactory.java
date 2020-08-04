@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.cocoahero.android.geojson.Feature;
 import com.cocoahero.android.geojson.Point;
@@ -47,12 +48,12 @@ import org.json.JSONObject;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Map;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.reveal.validators.MinZoomValidator;
 import org.smartregister.reveal.validators.WithinOperationAreaValidator;
 import org.smartregister.reveal.view.RevealMapView;
+import org.smartregister.tasking.util.AlertDialogUtils;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 

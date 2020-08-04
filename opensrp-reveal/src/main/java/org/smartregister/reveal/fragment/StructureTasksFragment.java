@@ -6,18 +6,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONObject;
 import org.smartregister.domain.Task;
@@ -26,10 +28,10 @@ import org.smartregister.reveal.adapter.StructureTaskAdapter;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.presenter.StructureTasksPresenter;
-import org.smartregister.reveal.util.AlertDialogUtils;
-import org.smartregister.reveal.util.LocationUtils;
-import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.tasking.util.AlertDialogUtils;
+import org.smartregister.tasking.util.LocationUtils;
+import org.smartregister.tasking.util.RevealJsonFormUtils;
 
 import java.util.List;
 import java.util.Set;
