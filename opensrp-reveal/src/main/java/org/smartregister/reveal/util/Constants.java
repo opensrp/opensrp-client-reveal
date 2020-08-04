@@ -466,6 +466,8 @@ public interface Constants {
 
         String CATCHMENT_AREA = "catchment_area";
 
+        String HEALTH_FACILITY = "health_facility";
+
 
     }
 

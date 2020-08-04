@@ -64,11 +64,8 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "",
-        "openmrs_data_type": "text",
-        "type": "tree",
+        "type": "spinner",
         "hint": "Which Health Facility Catchment Area was visited today?",
-        "tree": [
-        ],
         "v_required": {
           "value": true,
           "err": "This field is required"

@@ -486,6 +486,9 @@ public class RevealJsonFormUtils {
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         Constants.CONFIGURATION.FIELD_OFFICERS, fieldsMap.get(JsonForm.FIELD_OFFICER),
                         PreferencesUtil.getInstance().getCurrentDistrict());
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        CONFIGURATION.HEALTH_FACILITIES, fieldsMap.get(JsonForm.HEALTH_FACILITY),
+                        PreferencesUtil.getInstance().getCurrentDistrict());
                 break;
 
             case JsonForm.DAILY_SUMMARY_ZAMBIA:
