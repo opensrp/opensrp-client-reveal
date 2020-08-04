@@ -62,7 +62,7 @@
       {
         "key": "health_facility",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "concept",
+        "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "spinner",
         "hint": "Which Health Facility Catchment Area was visited today?",
