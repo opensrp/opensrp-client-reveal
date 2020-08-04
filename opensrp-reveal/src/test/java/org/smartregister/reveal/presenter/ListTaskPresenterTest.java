@@ -29,6 +29,7 @@ import org.robolectric.shadows.ShadowAlertDialog;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
@@ -44,6 +45,7 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.TestingUtils;
@@ -158,6 +160,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         prefsUtil.setCurrentPlanId(planId);
         prefsUtil.setCurrentOperationalArea(operationalArea);
         when(listTaskView.getContext()).thenReturn(RuntimeEnvironment.application);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
     }
 
     @Test

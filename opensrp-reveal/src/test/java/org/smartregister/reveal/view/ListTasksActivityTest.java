@@ -5,8 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AlertDialog;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +13,9 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -256,7 +257,9 @@ public class ListTasksActivityTest extends BaseUnitTest {
     }
 
     @Test
-    public void testPositionMyLocation() {
+    public void testPositionMyLocationThailand() {
+        listTasksActivity = spy(listTasksActivity);
+        when(listTasksActivity.getBuildCountry()).thenReturn(Country.THAILAND);
         listTasksActivity.positionMyLocationAndLayerSwitcher();
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
         assertEquals(0, layoutParams.topMargin);
