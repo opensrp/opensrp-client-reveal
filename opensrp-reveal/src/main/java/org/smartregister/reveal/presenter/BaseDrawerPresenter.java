@@ -1,14 +1,13 @@
 package org.smartregister.reveal.presenter;
 
-import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
-
 import android.app.Activity;
-
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.reflect.TypeToken;
@@ -18,7 +17,6 @@ import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.PlanDefinition.PlanStatus;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
-import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;

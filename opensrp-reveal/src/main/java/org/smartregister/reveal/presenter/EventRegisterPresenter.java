@@ -16,9 +16,9 @@ import org.smartregister.reveal.interactor.EventRegisterInteractor;
 
 public class EventRegisterPresenter extends BaseRegisterPresenter implements EventRegisterActivityContract.Presenter {
 
-    EventRegisterActivityContract.Interactor interactor;
+    private EventRegisterActivityContract.Interactor interactor;
 
-    EventRegisterActivityContract.View view;
+    private EventRegisterActivityContract.View view;
 
     public EventRegisterPresenter(EventRegisterActivityContract.View view) {
         super(view);

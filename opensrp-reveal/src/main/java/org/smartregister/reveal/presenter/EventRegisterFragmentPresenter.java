@@ -101,6 +101,7 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
 
     @Override
     public void searchGlobally(String s) {
+        // do nothing
     }
 
     @Override

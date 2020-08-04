@@ -2,8 +2,8 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Context;
 
-import androidx.core.util.Pair;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.util.Pair;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -34,7 +34,6 @@ import org.smartregister.util.DateTimeTypeConverter;
 import org.smartregister.util.JsonFormUtils;
 
 import java.lang.ref.WeakReference;
-import java.util.Map;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
 import timber.log.Timber;

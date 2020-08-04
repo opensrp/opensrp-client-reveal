@@ -38,6 +38,7 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
 
     private ProgressDialog progressDialog;
 
+    private RevealJsonFormUtils jsonFormUtils;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,8 +47,6 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setCancelable(false);
     }
-
-    private RevealJsonFormUtils jsonFormUtils;
 
     @Override
     protected int getLayout() {
