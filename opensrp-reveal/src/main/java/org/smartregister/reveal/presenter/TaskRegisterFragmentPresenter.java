@@ -25,7 +25,6 @@ import org.smartregister.domain.Task;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.dao.StructureDao;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
@@ -233,9 +232,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public void onTaskSelected(TaskDetails details, boolean isActionClicked) {
         this.isActionClicked = isActionClicked;
-        if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
-            interactor.fetchFamilyDetails(details.getStructureId());
-        } else if (details != null) {
+        if (details != null) {
             setTaskDetails(details);
             if (CASE_CONFIRMATION.equals(details.getTaskCode())) {
                 interactor.getIndexCaseDetails(details.getStructureId(),
@@ -247,8 +244,16 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                             REGISTER_FAMILY.equals(details.getTaskCode())) ||
                     (details.getTaskCount() != null && details.getTaskCount() > 1)) { // structures with grouped tasks should display the family profile
                 setTaskDetails(details);
-                interactor.fetchFamilyDetails(details.getStructureId());
+
+                if (StringUtils.isBlank(details.getStructureId())) {
+                    interactor.fetchFamilyDetailsByID(details.getFamilyBaseEntityID());
+                } else {
+                    interactor.fetchFamilyDetails(details.getStructureId());
+                }
             } else {
+                if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY))
+                    return;
+
                 getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
                 interactor.getStructure(details);
             }
@@ -261,7 +266,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     }
 
     /**
-     * Called by interactor when the index event has been queried. If Event is not found an errror is displayed.
+     * Called by interactor when the index event has been queried. If Event is not found an errror is dis played.
      * If task confirmation  is not competed and event was linked to a household and button was selected, then family profile is opened,
      * otherwise the index case details are displayed
      *

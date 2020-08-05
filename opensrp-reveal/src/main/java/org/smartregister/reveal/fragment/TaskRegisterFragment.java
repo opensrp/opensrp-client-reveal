@@ -230,7 +230,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     protected void onViewClicked(View view) {
         TaskDetails details = (TaskDetails) view.getTag(R.id.task_details);
 
-        if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)){
+        if(org.smartregister.reveal.util.Constants.Intervention.NTD_COMMUNITY.equals(details.getTaskCode())){
             getPresenter().onTaskSelected(details, view.getId() == R.id.task_action);
         }else if (TASK_RESET_INTERVENTIONS.contains(details.getTaskCode())
                 && Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {

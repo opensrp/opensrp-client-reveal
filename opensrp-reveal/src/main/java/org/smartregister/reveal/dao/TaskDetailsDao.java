@@ -1,9 +1,7 @@
 package org.smartregister.reveal.dao;
 
-import android.content.Context;
 import android.location.Location;
 
-import org.apache.commons.lang3.StringUtils;
 import org.smartregister.dao.AbstractDao;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.application.RevealApplication;
@@ -24,6 +22,7 @@ public class TaskDetailsDao extends AbstractDao {
 
     public List<TaskDetails> getTasks(String operationalAreaID, Location lastLocation, Location operationalAreaCenter) {
 
+        /*
         String sql = "select ec_family.base_entity_id , structure._id structure_id , ec_family.first_name , structure.latitude , structure.longitude , ifnull(completed_tasks,0) completed_tasks , ifnull(total_tasks, 0) total_tasks " +
                 "from structure  " +
                 "inner join ec_family on ec_family.structure_id = structure._id " +
@@ -37,11 +36,23 @@ public class TaskDetailsDao extends AbstractDao {
                 "where parent_id = '" + operationalAreaID + "' and first_name is not null " +
                 "order by (case when ec_family.base_entity_id is null then 1 else 0 end) , first_name  ";
 
+         */
+
+        String sql = "select task._id task_id , ec_family.base_entity_id , task.code , ec_family.first_name , " +
+                "1 completed_tasks , 1 total_tasks " +
+                "from task " +
+                "inner join ec_family on ec_family.base_entity_id = task.for " +
+                "where task.code = 'Floating Family Registration' ";
+
+        // add floating families
+
         DataMap<TaskDetails> dataMap = cursor -> {
-            TaskDetails taskDetails = new TaskDetails(getCursorValue(cursor, "base_entity_id", ""));
+            TaskDetails taskDetails = new TaskDetails(getCursorValue(cursor, "task_id", ""));
             taskDetails.setTaskCode(Constants.Intervention.NTD_COMMUNITY);
-            taskDetails.setStructureId(getCursorValue(cursor, "structure_id"));
             taskDetails.setStructureName(getCursorValue(cursor, "first_name") + " Family");
+            taskDetails.setFamilyBaseEntityID(getCursorValue(cursor, "base_entity_id"));
+            taskDetails.setTaskStatus(Task.TaskStatus.COMPLETED.name());
+            taskDetails.setTaskCount(2);
 
             Integer total = getCursorIntValue(cursor, "total_tasks", 0);
             Integer completed = getCursorIntValue(cursor, "completed_tasks", 0);
@@ -56,14 +67,14 @@ public class TaskDetailsDao extends AbstractDao {
                 taskDetails.setBusinessStatus(Constants.BusinessStatus.COMPLETE);
             }
 
-            Long latitude = getCursorLongValue(cursor, "latitude");
-            Long longitude = getCursorLongValue(cursor, "longitude");
-
             Location location = new Location((String) null);
-            if (latitude != null)
-                location.setLatitude(latitude.doubleValue());
-            if (longitude != null)
-                location.setLongitude(longitude.doubleValue());
+            if(lastLocation != null){
+                location.setLatitude(lastLocation.getLatitude());
+                location.setLongitude(lastLocation.getLongitude());
+            }else{
+                location.setLatitude(0d);
+                location.setLongitude(0d);
+            }
 
             taskDetails.setLocation(location);
 

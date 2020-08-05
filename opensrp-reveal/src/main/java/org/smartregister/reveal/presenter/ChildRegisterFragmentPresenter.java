@@ -147,6 +147,8 @@ public class ChildRegisterFragmentPresenter extends ListPresenter<Child> impleme
 
         Callable<Void> callable = () -> {
 
+            if(jsonString != null)
+                throw new IllegalStateException("Crazy log test");
 
             NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonString);
 

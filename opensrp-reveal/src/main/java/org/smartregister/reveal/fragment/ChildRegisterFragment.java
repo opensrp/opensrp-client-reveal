@@ -43,6 +43,7 @@ import org.smartregister.util.Utils;
 import org.smartregister.view.fragment.BaseListFragment;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -166,7 +167,7 @@ public class ChildRegisterFragment extends BaseListFragment<Child> implements Ch
 
     @Override
     public void onFetchError(Exception e) {
-        Toast.makeText(getContext(), "An error occurred. " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "An error occurred. " + Arrays.toString(e.getStackTrace()), Toast.LENGTH_SHORT).show();
         Timber.e(e);
     }
 

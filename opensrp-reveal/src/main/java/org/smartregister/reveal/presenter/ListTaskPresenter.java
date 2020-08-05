@@ -787,7 +787,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             if (task == null) {
                 org.smartregister.domain.Location operationalAreaLocation = org.smartregister.reveal.util.Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
                 String structureId = (feature != null ? feature.id() : operationalAreaLocation.getId());
-                task = TaskUtils.getInstance().generateTask(context, structureId, structureId, Constants.BusinessStatus.FAMILY_REGISTERED, TaskStatus.COMPLETED, Constants.Intervention.FLOATING_FAMILY_REGISTRATION,
+                task = TaskUtils.getInstance().generateTask(context, familyEntityId, structureId, Constants.BusinessStatus.FAMILY_REGISTERED, TaskStatus.COMPLETED, Constants.Intervention.FLOATING_FAMILY_REGISTRATION,
                         R.string.register_family);
             }
 

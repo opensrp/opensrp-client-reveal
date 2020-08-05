@@ -230,6 +230,11 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
             } else {
                 TaskDetailsDao taskDetailsDao = TaskDetailsDao.getInstance();
                 tasks.addAll(taskDetailsDao.getTasks(mainCondition.second[0], lastLocation, operationalAreaCenter));
+
+                tasks.addAll(queryTaskDetails(nonRegisteredStructureTasksSelect(mainCondition.first),
+                        mainCondition.second, lastLocation, operationalAreaCenter, houseLabel, false));
+
+                Collections.sort(tasks);
             }
             appExecutors.mainThread().execute(() -> {
                 getPresenter().onTasksFound(tasks, structuresWithinBuffer);

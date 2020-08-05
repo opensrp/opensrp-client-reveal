@@ -75,6 +75,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
     private String aggregateBusinessStatus;
 
+    private String familyBaseEntityID;
+
     public TaskDetails(@NonNull String taskId) {
         super(taskId);
     }
@@ -365,5 +367,13 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
     public void setAggregateBusinessStatus(String aggregateBusinessStatus) {
         this.aggregateBusinessStatus = aggregateBusinessStatus;
+    }
+
+    public String getFamilyBaseEntityID() {
+        return familyBaseEntityID;
+    }
+
+    public void setFamilyBaseEntityID(String familyBaseEntityID) {
+        this.familyBaseEntityID = familyBaseEntityID;
     }
 }

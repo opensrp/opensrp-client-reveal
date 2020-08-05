@@ -107,12 +107,12 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                 if (cursor != null)
                     cursor.close();
             }
-            if (structureId != null) {
+            //if (structureId != null) {
                 appExecutors.mainThread().execute(() -> {
                     getModel().setStructureId(structureId);
                     getView().setStructureId(structureId);
                 });
-            }
+            //}
         });
     }
 

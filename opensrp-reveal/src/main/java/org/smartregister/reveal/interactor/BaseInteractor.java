@@ -463,6 +463,35 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         });
     }
 
+    public void fetchFamilyDetailsByID(String familyBaseEntityID) {
+        appExecutors.diskIO().execute(() -> {
+            Cursor cursor = null;
+            CommonPersonObjectClient family = null;
+            try {
+                cursor = database.rawQuery(String.format("SELECT %s FROM %S WHERE %s = ? AND %s IS NULL",
+                        INTENT_KEY.BASE_ENTITY_ID, TABLE_NAME.FAMILY, BASE_ENTITY_ID, DATE_REMOVED), new String[]{familyBaseEntityID});
+                if (cursor.moveToNext()) {
+                    String baseEntityId = cursor.getString(0);
+                    setCommonRepository();
+                    final CommonPersonObject personObject = commonRepository.findByBaseEntityId(baseEntityId);
+                    family = new CommonPersonObjectClient(personObject.getCaseId(),
+                            personObject.getDetails(), "");
+                    family.setColumnmaps(personObject.getColumnmaps());
+                }
+            } catch (Exception e) {
+                Timber.e(e);
+            } finally {
+                if (cursor != null)
+                    cursor.close();
+            }
+
+            CommonPersonObjectClient finalFamily = family;
+            appExecutors.mainThread().execute(() -> {
+                presenterCallBack.onFamilyFound(finalFamily);
+            });
+        });
+    }
+
     public SQLiteDatabase getDatabase() {
         return database;
     }
