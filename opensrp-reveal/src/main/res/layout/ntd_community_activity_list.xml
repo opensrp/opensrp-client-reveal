@@ -120,15 +120,16 @@
 
                 <include
                     android:id="@+id/indicators_card_view"
-                    layout="@layout/indicators_card_view"
+                    layout="@layout/ntd_indicators_card_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone" />
 
                 <include
                     android:id="@+id/progressIndicatorsGroupView"
-                    layout="@layout/progress_indicators_view"
+                    layout="@layout/ntd_progress_indicators_view"
                     android:layout_width="match_parent"
+                    android:visibility="visible"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|left" />
 

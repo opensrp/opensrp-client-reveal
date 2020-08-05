@@ -25,7 +25,9 @@ import org.smartregister.domain.Task;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
+import org.smartregister.reveal.dao.ReportDao;
 import org.smartregister.reveal.dao.StructureDao;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
@@ -42,7 +44,9 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
@@ -227,6 +231,9 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter(), getView().getContext().getString(R.string.house));
         if (!BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY))
             getView().setInventionType(getInterventionLabel());
+
+
+        fetchReportStats();
     }
 
     @Override
@@ -251,7 +258,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                     interactor.fetchFamilyDetails(details.getStructureId());
                 }
             } else {
-                if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY))
+                if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY))
                     return;
 
                 getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
@@ -455,6 +462,74 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         // refresh task list
         getView().showProgressView();
         interactor.findTasks(getMainCondition(), lastLocation, getOperationalAreaCenter(), getView().getContext().getString(R.string.house));
+    }
+
+    private String getCurrentLocationID() {
+        return PreferencesUtil.getInstance().getCurrentOperationalAreaId();
+    }
+
+    @Override
+    public void fetchReportStats() {
+        CallableInteractor myInteractor = new GenericInteractor();
+
+        Callable<Map<String, Integer>> callable = () -> {
+
+            String currentLocation = getCurrentLocationID();
+            if (StringUtils.isBlank(currentLocation))
+                return new HashMap<>();
+
+            ReportDao reportDao = ReportDao.getInstance();
+
+            int totalStructure = reportDao.getTotalStructures(currentLocation);
+            int totalVisited = reportDao.getTotalVisitedStructures(currentLocation);
+
+            int foundCov = ((totalVisited * 100) / totalStructure);
+
+            int unVisitedStructures = totalStructure - totalVisited;
+
+            int pzqDistributed = reportDao.getPZQDistributed(currentLocation);
+
+            int pzqReturned = reportDao.getPZQReturned(currentLocation);
+            int pzqRemaining = pzqDistributed - pzqReturned;
+
+
+            int totalChildrenReceivedDrugs = reportDao.getTotalChildrenReceivedDrugs(currentLocation);
+            int totalExpectedRegistrations = reportDao.getTotalExpectedRegistrations(currentLocation);
+            int successRate = ((totalChildrenReceivedDrugs * 100) / totalExpectedRegistrations);
+
+            Map<String, Integer> result = new HashMap<>();
+            result.put(Constants.ReportCounts.FOUND_COVERAGE, foundCov);
+            result.put(Constants.ReportCounts.UNVISITED_STRUCTURES, unVisitedStructures);
+            result.put(Constants.ReportCounts.PZQ_DISTRIBUTED, pzqDistributed);
+            result.put(Constants.ReportCounts.PZQ_REMAINING, pzqRemaining);
+            result.put(Constants.ReportCounts.SUCCESS_RATE, successRate);
+
+            return result;
+        };
+
+        myInteractor.execute(callable, new CallableInteractorCallBack<Map<String, Integer>>() {
+            @Override
+            public void onResult(Map<String, Integer> results) {
+                TaskRegisterFragmentContract.View view = getView();
+                if (view != null) {
+                    if (results != null) {
+                        view.onReportCountReloaded(results);
+                    } else {
+                        view.onError(new IllegalStateException("An error occurred while fetching results"));
+                    }
+                    view.setLoadingState(false);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                TaskRegisterFragmentContract.View view = getView();
+                if (view != null) {
+                    view.onError(ex);
+                    view.setLoadingState(false);
+                }
+            }
+        });
     }
 
     private boolean matchesTaskCodeFilterList(String value, Set<String> filterList, Pattern pattern) {

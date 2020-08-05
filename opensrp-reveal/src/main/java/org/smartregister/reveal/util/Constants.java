@@ -132,6 +132,7 @@ public interface Constants {
         String CANTON = "Canton";
         String VILLAGE = "Village";
         String OPERATIONAL_AREA = "Operational Area";
+        String ZONES = "Zones";
         String SCHOOL = "School";
     }
 
@@ -561,6 +562,14 @@ public interface Constants {
         String MMA_VISITED_NOT_ADMINISTERED = "visited_no_mma";
         String MMA_VISITED_AND_ADMINISTERED = "visited_and_mma";
         String DEFAULT_RESIDENCE = "default_residence";
+    }
+
+    interface ReportCounts {
+        String FOUND_COVERAGE = "foundCov";
+        String UNVISITED_STRUCTURES = "unvisitedstructures";
+        String PZQ_DISTRIBUTED = "PZQtabsdistributed";
+        String PZQ_REMAINING = "PZQtabsremaining";
+        String SUCCESS_RATE = "successrate";
     }
 
     interface DatabaseKeys {

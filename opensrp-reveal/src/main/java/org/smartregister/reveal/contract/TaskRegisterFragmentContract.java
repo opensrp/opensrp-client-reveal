@@ -15,6 +15,7 @@ import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.view.contract.BaseRegisterFragmentContract;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -51,6 +52,8 @@ public interface TaskRegisterFragmentContract {
         void resetTaskInfo(TaskDetails taskDetails);
 
         void onTaskInfoReset();
+
+        void fetchReportStats();
     }
 
     interface View extends BaseRegisterFragmentContract.View, BaseFormFragmentContract.View {
@@ -92,6 +95,10 @@ public interface TaskRegisterFragmentContract {
         void setSearchPhrase(String searchPhrase);
 
         void startMapActivity(TaskFilterParams taskFilterParams);
+
+        void onReportCountReloaded(Map<String, Integer> reportCounts);
+
+        void onError(Exception exception);
     }
 
     interface Interactor {

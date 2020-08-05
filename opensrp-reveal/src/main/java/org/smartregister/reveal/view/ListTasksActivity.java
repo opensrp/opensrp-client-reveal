@@ -64,6 +64,7 @@ import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.receiver.SyncProgressBroadcastReceiver;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
+import org.smartregister.reporting.view.ProgressIndicatorView;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -92,6 +93,7 @@ import org.smartregister.util.PermissionUtils;
 import org.smartregister.view.activity.BarcodeScanActivity;
 
 import java.util.List;
+import java.util.Map;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
@@ -1112,6 +1114,40 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     public void toggleProgressBarView(boolean syncing) {
         drawerView.toggleProgressBarView(syncing);
+    }
+
+    @Override
+    public void onReportCountReloaded(Map<String, Integer> reportCounts) {
+        LinearLayout progressIndicatorsGroupView = findViewById(R.id.progressIndicatorsGroupView);
+
+        ProgressIndicatorView progressIndicatorView = progressIndicatorsGroupView.findViewById(R.id.progressIndicatorViewTitle);
+
+        Integer coverage = reportCounts.get(org.smartregister.reveal.util.Constants.ReportCounts.FOUND_COVERAGE);
+        coverage = coverage == null ? 0 : coverage;
+
+        progressIndicatorView.setProgress(coverage);
+        progressIndicatorView.setTitle(getString(R.string.n_percent, coverage));
+
+
+
+        View detailedReportCardView = findViewById(R.id.indicators_card_view);
+
+        TextView tvStructuresUnvisited = detailedReportCardView.findViewById(R.id.tvStructuresUnvisited);
+        tvStructuresUnvisited.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.UNVISITED_STRUCTURES));
+
+        TextView tvPZQDistributed = detailedReportCardView.findViewById(R.id.tvPZQDistributed);
+        tvPZQDistributed.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.PZQ_DISTRIBUTED));
+
+        TextView tvPZQRemaining = detailedReportCardView.findViewById(R.id.tvPZQRemaining);
+        tvPZQRemaining.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.PZQ_REMAINING));
+
+        TextView tvSuccessRate = detailedReportCardView.findViewById(R.id.tvSuccessRate);
+        tvSuccessRate.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.SUCCESS_RATE));
+    }
+
+    private String getMapValue(Map<String, Integer> reportCounts, String key) {
+        Integer value = reportCounts.get(key);
+        return value == null ? "0" : Integer.toString(value);
     }
 
     @Override

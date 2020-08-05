@@ -21,6 +21,7 @@ import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.util.CallableInteractor;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by samuelgithengi on 11/27/18.
@@ -97,6 +98,7 @@ public interface ListTaskContract {
 
         void toggleProgressBarView(boolean syncing);
 
+        void onReportCountReloaded(Map<String, Integer> reportCounts);
     }
 
     interface Presenter extends BaseContract.BasePresenter {
@@ -158,5 +160,7 @@ public interface ListTaskContract {
         void onMarkStructureInEligible(Feature feature);
 
         void clearSelectedFeature();
+
+        void fetchReportStats();
     }
 }

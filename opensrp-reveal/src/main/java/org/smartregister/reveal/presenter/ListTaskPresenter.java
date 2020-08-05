@@ -39,6 +39,7 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
+import org.smartregister.reveal.dao.ReportDao;
 import org.smartregister.reveal.dao.StructureDao;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
@@ -207,6 +208,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         if (drawerPresenter.isChangedCurrentSelection()) {
             listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
             listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalArea());
+            fetchReportStats();
         }
     }
 
@@ -750,7 +752,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void saveFamilyRegistration(JSONObject jsonObject, Context context) {
         CallableInteractor myInteractor = getInteractor();
 
-        Callable<Pair<CommonPersonObjectClient,Task>> callable = () -> {
+        Callable<Pair<CommonPersonObjectClient, Task>> callable = () -> {
 
             JSONObject jsonObjectFamilyMember = new JSONObject(jsonObject.toString());
 
@@ -861,14 +863,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             family.setColumnmaps(personObject.getColumnmaps());
 
 
-            return Pair.create(family,task);
+            return Pair.create(family, task);
         };
 
 
         getView().setLoadingState(true);
-        myInteractor.execute(callable, new CallableInteractorCallBack<Pair<CommonPersonObjectClient,Task>>() {
+        myInteractor.execute(callable, new CallableInteractorCallBack<Pair<CommonPersonObjectClient, Task>>() {
             @Override
-            public void onResult(Pair<CommonPersonObjectClient,Task> result) {
+            public void onResult(Pair<CommonPersonObjectClient, Task> result) {
                 ListTaskView view = getView();
                 if (view != null) {
                     view.setLoadingState(false);
@@ -879,7 +881,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     }
 
                     Task task = result.second;
-                    if(task != null && getSelectedFeature() != null){
+                    if (task != null && getSelectedFeature() != null) {
                         setChangeMapPosition(false);
                         for (Feature feature : getFeatureCollection().features()) {
                             if (task.getStructureId().equals(feature.id())) {
@@ -969,6 +971,76 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public void clearSelectedFeature() {
         selectedFeature = null;
+    }
+
+
+    private String getCurrentLocationID() {
+        return PreferencesUtil.getInstance().getCurrentOperationalAreaId();
+    }
+
+    @Override
+    public void fetchReportStats() {
+        CallableInteractor myInteractor = getInteractor();
+
+        Callable<Map<String, Integer>> callable = () -> {
+
+            String currentLocation = getCurrentLocationID();
+            if (StringUtils.isBlank(currentLocation))
+                return new HashMap<>();
+
+            ReportDao reportDao = ReportDao.getInstance();
+
+            int totalStructure = reportDao.getTotalStructures(currentLocation);
+            int totalVisited = reportDao.getTotalVisitedStructures(currentLocation);
+
+            int foundCov = ((totalVisited * 100) / totalStructure);
+
+            int unVisitedStructures = totalStructure - totalVisited;
+
+            int pzqDistributed = reportDao.getPZQDistributed(currentLocation);
+
+            int pzqReturned = reportDao.getPZQReturned(currentLocation);
+            int pzqRemaining = pzqDistributed - pzqReturned;
+
+
+            int totalChildrenReceivedDrugs = reportDao.getTotalChildrenReceivedDrugs(currentLocation);
+            int totalExpectedRegistrations = reportDao.getTotalExpectedRegistrations(currentLocation);
+            int successRate = ((totalChildrenReceivedDrugs * 100) / totalExpectedRegistrations);
+
+            Map<String, Integer> result = new HashMap<>();
+            result.put(Constants.ReportCounts.FOUND_COVERAGE, foundCov);
+            result.put(Constants.ReportCounts.UNVISITED_STRUCTURES, unVisitedStructures);
+            result.put(Constants.ReportCounts.PZQ_DISTRIBUTED, pzqDistributed);
+            result.put(Constants.ReportCounts.PZQ_REMAINING, pzqRemaining);
+            result.put(Constants.ReportCounts.SUCCESS_RATE, successRate);
+
+            return result;
+        };
+
+        myInteractor.execute(callable, new CallableInteractorCallBack<Map<String, Integer>>() {
+            @Override
+            public void onResult(Map<String, Integer> results) {
+                ListTaskView view = getView();
+                if (view != null) {
+                    if (results != null) {
+                        view.onReportCountReloaded(results);
+                    } else {
+                        view.onError(new IllegalStateException("An error occurred while fetching results"));
+                    }
+                    view.setLoadingState(false);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                ListTaskView view = getView();
+                if (view != null) {
+                    view.onError(ex);
+                    view.setLoadingState(false);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -1274,6 +1346,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             revealApplication.setRefreshMapOnEventSaved(false);
         }
         updateLocationComponentState();
+        fetchReportStats();
     }
 
     private void updateLocationComponentState() {

@@ -50,6 +50,7 @@ import static org.smartregister.reveal.util.Constants.Tags.REGION;
 import static org.smartregister.reveal.util.Constants.Tags.SCHOOL;
 import static org.smartregister.reveal.util.Constants.Tags.SUB_DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.VILLAGE;
+import static org.smartregister.reveal.util.Constants.Tags.ZONES;
 import static org.smartregister.reveal.util.Constants.UseContextCode.INTERVENTION_TYPE;
 
 /**
@@ -194,6 +195,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         operationalAreaLevels.add(REGION);
         operationalAreaLevels.add(DISTRICT);
         operationalAreaLevels.add(SUB_DISTRICT);
+        operationalAreaLevels.add(ZONES);
         operationalAreaLevels.add(OPERATIONAL_AREA);
         operationalAreaLevels.add(SCHOOL);
 
@@ -210,7 +212,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
             List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels, map);
 
-            if (BuildConfig.BUILD_COUNTRY != Country.NTD_SCHOOL) {
+            if (BuildConfig.BUILD_COUNTRY != Country.NTD_SCHOOL && BuildConfig.BUILD_COUNTRY != Country.NTD_COMMUNITY) {
                 List<String> authorizedOperationalAreas = Arrays.asList(StringUtils.split(prefsUtil.getPreferenceValue(OPERATIONAL_AREAS), ','));
                 removeUnauthorizedOperationalAreas(authorizedOperationalAreas, entireTree);
             }

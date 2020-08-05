@@ -24,6 +24,7 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
 import org.smartregister.family.util.DBConstants;
+import org.smartregister.reporting.view.ProgressIndicatorView;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.TaskRegisterAdapter;
@@ -50,9 +51,11 @@ import org.smartregister.view.fragment.BaseRegisterFragment;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import io.ona.kujaku.utils.Constants;
+import timber.log.Timber;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -86,6 +89,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     private TextView filterTextView;
 
+    private View view;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +112,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     @Override
     public void setupViews(View view) {
         super.setupViews(view);
+        this.view = view;
         interventionTypeTv = view.findViewById(R.id.intervention_type);
         if (getActivity() != null) {
             if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)){
@@ -183,6 +189,45 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         }
         getActivity().setResult(RESULT_OK, intent);
         getActivity().finish();
+    }
+
+    @Override
+    public void onReportCountReloaded(Map<String, Integer> reportCounts) {
+        LinearLayout progressIndicatorsGroupView = view.findViewById(R.id.progressIndicatorsGroupView);
+
+        ProgressIndicatorView progressIndicatorView = progressIndicatorsGroupView.findViewById(R.id.progressIndicatorViewTitle);
+
+        Integer coverage = reportCounts.get(org.smartregister.reveal.util.Constants.ReportCounts.FOUND_COVERAGE);
+        coverage = coverage == null ? 0 : coverage;
+
+        progressIndicatorView.setProgress(coverage);
+        progressIndicatorView.setTitle(getString(R.string.n_percent, coverage));
+
+
+
+        View detailedReportCardView = view.findViewById(R.id.indicators_card_view);
+
+        TextView tvStructuresUnvisited = detailedReportCardView.findViewById(R.id.tvStructuresUnvisited);
+        tvStructuresUnvisited.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.UNVISITED_STRUCTURES));
+
+        TextView tvPZQDistributed = detailedReportCardView.findViewById(R.id.tvPZQDistributed);
+        tvPZQDistributed.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.PZQ_DISTRIBUTED));
+
+        TextView tvPZQRemaining = detailedReportCardView.findViewById(R.id.tvPZQRemaining);
+        tvPZQRemaining.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.PZQ_REMAINING));
+
+        TextView tvSuccessRate = detailedReportCardView.findViewById(R.id.tvSuccessRate);
+        tvSuccessRate.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.SUCCESS_RATE));
+    }
+
+    @Override
+    public void onError(Exception exception) {
+        Timber.e(exception);
+    }
+
+    private String getMapValue(Map<String, Integer> reportCounts, String key) {
+        Integer value = reportCounts.get(key);
+        return value == null ? "0" : Integer.toString(value);
     }
 
     @Override
@@ -479,6 +524,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         if (getContext() != null) {
             IntentFilter filter = new IntentFilter(Action.STRUCTURE_TASK_SYNCED);
             LocalBroadcastManager.getInstance(getContext()).registerReceiver(refreshRegisterReceiver, filter);
+            getPresenter().fetchReportStats();
         }
     }
 
