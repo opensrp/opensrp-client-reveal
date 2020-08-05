@@ -217,7 +217,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         tvPZQRemaining.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.PZQ_REMAINING));
 
         TextView tvSuccessRate = detailedReportCardView.findViewById(R.id.tvSuccessRate);
-        tvSuccessRate.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.SUCCESS_RATE));
+        tvSuccessRate.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.SUCCESS_RATE) + "%");
     }
 
     @Override

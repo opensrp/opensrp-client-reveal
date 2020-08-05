@@ -108,10 +108,10 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                     cursor.close();
             }
             //if (structureId != null) {
-                appExecutors.mainThread().execute(() -> {
-                    getModel().setStructureId(structureId);
-                    getView().setStructureId(structureId);
-                });
+            appExecutors.mainThread().execute(() -> {
+                getModel().setStructureId(structureId);
+                getView().setStructureId(structureId);
+            });
             //}
         });
     }
@@ -225,7 +225,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         }
     }
 
-    public void updateFamilyMember(JSONObject jsonObject, String familyEntityId, String familyName){
+    public void updateFamilyMember(JSONObject jsonObject, String familyEntityId, String familyName) {
         CallableInteractor myInteractor = getCallableInteractor();
 
         Callable<Void> callable = () -> {
@@ -267,6 +267,11 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
                             client.setBirthdate(calendar.getTime());
                         }
+
+                        client.addAttribute("residence", structureId);
+
+                        if (operationalArea != null)
+                            client.addAttribute("residential_area", operationalArea.getId());
                     })
                     // create and save event to db
                     .saveEvent()
@@ -298,7 +303,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         });
     }
 
-    public void  saveFamilyMember(Context context, JSONObject jsonObject, String familyEntityId, String familyName) {
+    public void saveFamilyMember(Context context, JSONObject jsonObject, String familyEntityId, String familyName) {
         CallableInteractor myInteractor = getCallableInteractor();
 
         Callable<Void> callable = () -> {
@@ -341,6 +346,11 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
                             client.setBirthdate(calendar.getTime());
                         }
+
+                        client.addAttribute("residence", structureId);
+
+                        if (operationalArea != null)
+                            client.addAttribute("residential_area", operationalArea.getId());
                     })
                     // create and save event to db
                     .saveEvent()

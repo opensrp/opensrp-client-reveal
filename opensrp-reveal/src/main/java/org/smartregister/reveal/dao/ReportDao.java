@@ -163,11 +163,18 @@ public class ReportDao extends AbstractDao {
     }
 
     public int getTotalChildrenReceivedDrugs(String operationalAreaID) {
-        return (int) (Math.random() * 10);
+        String sql = "select sum(case when business_status = 'Drug Administered' then 1 else 0 end) completed " +
+                "from task inner join ec_family_member on ec_family_member.base_entity_id = task.for " +
+                "where code= 'NTD MDA Dispense' and ec_family_member.operational_area_id = '" + operationalAreaID + "'";
+        DataMap<Integer> dataMap = cursor -> getCursorIntValue(cursor, "completed");
+        return readSingleValue(sql, dataMap, 0);
     }
 
     public int getTotalExpectedRegistrations(String operationalAreaID) {
-        return (int) (Math.random() * 10);
+        String sql = "select ifnull(sum(nsac),0) expected_total from ec_family " +
+                " where nsac is not null and trim(nsac) !=  '' and operational_area_id = '" + operationalAreaID + "'";
+        DataMap<Integer> dataMap = cursor -> getCursorIntValue(cursor, "expected_total");
+        return readSingleValue(sql, dataMap, 0);
     }
 
 }

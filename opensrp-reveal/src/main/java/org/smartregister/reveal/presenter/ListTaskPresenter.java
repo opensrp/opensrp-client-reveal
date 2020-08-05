@@ -762,6 +762,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             String unique_id = processor.getFieldValue("unique_id");
             String fam_name = processor.getFieldValue("fam_name");
             String same_as_fam_name = processor.getFieldValue("same_as_fam_name");
+            String nsac = processor.getFieldValue("nSAC");
 
             org.smartregister.domain.Location operationalArea = processor.getCurrentOperationalArea();
             String familyEntityId = UUID.randomUUID().toString();
@@ -787,8 +788,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             }
 
             if (task == null) {
-                org.smartregister.domain.Location operationalAreaLocation = org.smartregister.reveal.util.Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
-                String structureId = (feature != null ? feature.id() : operationalAreaLocation.getId());
+                String structureId = (feature != null ? feature.id() : null);
                 task = TaskUtils.getInstance().generateTask(context, familyEntityId, structureId, Constants.BusinessStatus.FAMILY_REGISTERED, TaskStatus.COMPLETED, Constants.Intervention.FLOATING_FAMILY_REGISTRATION,
                         R.string.register_family);
             }
@@ -816,6 +816,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                         client.setBirthdateApprox(true);
                         if (feature != null)
                             client.addAttribute("residence", feature.id());
+
+                        if (operationalArea != null)
+                            client.addAttribute("residential_area", operationalArea.getId());
+
+                        if(StringUtils.isNotBlank(nsac))
+                            client.addAttribute("nsac", nsac);
                     })
                     .saveEvent()
                     .clientProcessForm();
@@ -850,6 +856,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
                         if (feature != null)
                             client.addAttribute("residence", feature.id());
+
+                        if (operationalArea != null)
+                            client.addAttribute("residential_area", operationalArea.getId());
                     })
                     .saveEvent()
                     .clientProcessForm()

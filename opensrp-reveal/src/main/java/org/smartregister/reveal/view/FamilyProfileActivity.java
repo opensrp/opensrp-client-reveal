@@ -141,7 +141,7 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
 
     @Override
     public void refreshViews(String structureId) {
-        if (StringUtils.isNotBlank(structureId))
+        if (StringUtils.isNotBlank(structureId) || BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY))
             refreshTasks(structureId);
         refreshMemberList(FetchStatus.fetched);
     }

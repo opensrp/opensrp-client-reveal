@@ -1142,7 +1142,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         tvPZQRemaining.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.PZQ_REMAINING));
 
         TextView tvSuccessRate = detailedReportCardView.findViewById(R.id.tvSuccessRate);
-        tvSuccessRate.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.SUCCESS_RATE));
+        tvSuccessRate.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.SUCCESS_RATE) + "%");
     }
 
     private String getMapValue(Map<String, Integer> reportCounts, String key) {

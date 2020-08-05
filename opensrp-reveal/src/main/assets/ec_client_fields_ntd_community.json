@@ -132,6 +132,20 @@
           }
         },
         {
+          "column_name": "operational_area_id",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.residential_area"
+          }
+        },
+        {
+          "column_name": "nsac",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.nsac"
+          }
+        },
+        {
           "column_name": "unique_id",
           "type": "Client",
           "json_mapping": {
@@ -226,6 +240,20 @@
           "type": "Client",
           "json_mapping": {
             "field": "baseEntityId"
+          }
+        },
+        {
+          "column_name": "structure_id",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.residence"
+          }
+        },
+        {
+          "column_name": "operational_area_id",
+          "type": "Client",
+          "json_mapping": {
+            "field": "attributes.residential_area"
           }
         },
         {
