@@ -19,6 +19,8 @@ import org.smartregister.reveal.presenter.FamilyRegisterPresenter;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
+import java.util.Map;
+
 import timber.log.Timber;
 
 /**
@@ -52,6 +54,11 @@ public class FamilyRegisterActivity extends BaseFamilyRegisterActivity implement
     @Override
     protected Fragment[] getOtherFragments() {
         return new Fragment[0];
+    }
+
+    @Override
+    public void startFormActivity(String s, String s1, Map<String, String> map) {
+
     }
 
     @Override
