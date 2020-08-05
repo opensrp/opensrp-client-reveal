@@ -17,8 +17,6 @@ import org.smartregister.view.contract.BaseRegisterContract;
  */
 public class TaskRegisterPresenter extends BaseRegisterPresenter implements TaskRegisterContract.Presenter, BaseRegisterContract.Presenter {
 
-    private TaskRegisterInteractor taskRegisterInteractor;
-
     private BaseRegisterContract.View view;
 
     public TaskRegisterPresenter(BaseRegisterContract.View view) {

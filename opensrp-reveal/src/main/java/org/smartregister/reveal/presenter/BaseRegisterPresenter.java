@@ -11,7 +11,7 @@ import java.util.List;
 public class BaseRegisterPresenter implements BaseRegisterContract.Presenter {
     private BaseRegisterContract.View view;
 
-    private TaskRegisterInteractor taskRegisterInteractor;
+    protected TaskRegisterInteractor taskRegisterInteractor;
 
     public BaseRegisterPresenter(BaseRegisterContract.View view) {
         this.view = view;
