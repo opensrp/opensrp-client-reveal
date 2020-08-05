@@ -195,6 +195,8 @@ public interface Constants {
 
         String NTD_COMMUNITY = "ntd_community";
 
+        String FAMILY_REGISTRATION = "Family Registration";
+
         String MDA = "MDA";
 
         String IRS_VERIFICATION = "IRS Verification";

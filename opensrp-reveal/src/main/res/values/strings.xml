@@ -364,6 +364,7 @@
     <string name="add_student">Add student</string>
     <string name="edit_student">Edit student</string>
     <string name="mass_drug_administration">Visit child and dispense drugs</string>
+    <string name="register_structure_and_family">Visit structure and register family</string>
     <string name="record_dose">Record dose</string>
     <string name="record_adr">Record ADR</string>
     <string name="dose_given">Dose Given</string>

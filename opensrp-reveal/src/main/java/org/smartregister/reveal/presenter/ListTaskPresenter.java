@@ -318,7 +318,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         listTaskView.displaySelectedFeature(feature, clickedPoint);
 
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
-            listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
+            if(!BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)){
+                listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
+            }else{
+
+                onNTDFeatureSelected(selectedFeature, null, null);
+            }
         } else if (isLongclick) {
             if (BuildConfig.BUILD_COUNTRY != Country.THAILAND && BuildConfig.BUILD_COUNTRY != Country.THAILAND_EN) {
                 onFeatureSelectedByLongClick(feature);
@@ -585,6 +590,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                             feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus());
                             feature.addStringProperty(TASK_BUSINESS_STATUS, task.getBusinessStatus());
                             feature.addStringProperty(TASK_STATUS, task.getStatus().name());
+                            feature.addStringProperty(TASK_IDENTIFIER, task.getIdentifier());
                             break;
                         }
                     }
@@ -932,15 +938,23 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
             TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
             Task task = taskRepository.getTaskByIdentifier(taskID);
+            if(task != null){
+                task.setBusinessStatus(Constants.BusinessStatus.INELIGIBLE);
+                task.setStatus(Task.TaskStatus.COMPLETED);
 
-            task.setBusinessStatus(Constants.BusinessStatus.INELIGIBLE);
-            task.setStatus(Task.TaskStatus.COMPLETED);
-
-            if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
-                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
+                    task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                }
+                task.setLastModified(new DateTime());
+                taskRepository.addOrUpdate(task);
+            }else{
+                // create a new task
+                TaskUtils taskUtils = TaskUtils.getInstance();
+                task =  taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
+                        feature.id(), feature.id(), Constants.BusinessStatus.INELIGIBLE, TaskStatus.COMPLETED, Constants.Intervention.FAMILY_REGISTRATION,
+                        R.string.register_structure_and_family);
             }
-            task.setLastModified(new DateTime());
-            taskRepository.addOrUpdate(task);
+
 
             return task;
         };
@@ -958,6 +972,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                             feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus());
                             feature.addStringProperty(TASK_BUSINESS_STATUS, task.getBusinessStatus());
                             feature.addStringProperty(TASK_STATUS, task.getStatus().name());
+                            feature.addStringProperty(TASK_IDENTIFIER, task.getIdentifier());
                             break;
                         }
                     }
