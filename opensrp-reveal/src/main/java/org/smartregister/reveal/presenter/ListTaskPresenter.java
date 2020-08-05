@@ -998,9 +998,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             int unVisitedStructures = totalStructure - totalVisited;
 
             int pzqDistributed = reportDao.getPZQDistributed(currentLocation);
+            int pzqReceived = reportDao.getPZQReceived(currentLocation);
 
             int pzqReturned = reportDao.getPZQReturned(currentLocation);
-            int pzqRemaining = pzqDistributed - pzqReturned;
+            int pzqRemaining = pzqReceived - pzqReturned;
 
 
             int totalChildrenReceivedDrugs = reportDao.getTotalChildrenReceivedDrugs(currentLocation);

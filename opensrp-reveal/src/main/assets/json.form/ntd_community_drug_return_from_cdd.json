@@ -81,15 +81,24 @@
         "options": [
           {
             "key": "500",
-            "text": "500"
+            "text": "500",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "500",
+            "openmrs_entity_parent": ""
           },
           {
             "key": "1000",
-            "text": "1000"
+            "text": "1000",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "1000",
+            "openmrs_entity_parent": ""
           },
           {
             "key": "Other",
-            "text": "Other"
+            "text": "Other",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "Other",
+            "openmrs_entity_parent": ""
           }
         ],
         "v_required": {

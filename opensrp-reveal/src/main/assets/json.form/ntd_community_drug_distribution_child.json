@@ -64,11 +64,17 @@
         "options": [
           {
             "key": "Yes",
-            "text": "Yes"
+            "text": "Yes",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "Yes",
+            "openmrs_entity_parent": ""
           },
           {
             "key": "No",
-            "text": "No"
+            "text": "No",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "No",
+            "openmrs_entity_parent": ""
           }
         ],
         "v_required": {
@@ -87,11 +93,17 @@
         "options": [
           {
             "key": "Yes",
-            "text": "Yes"
+            "text": "Yes",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "Yes",
+            "openmrs_entity_parent": ""
           },
           {
             "key": "No",
-            "text": "No"
+            "text": "No",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "No",
+            "openmrs_entity_parent": ""
           }
         ],
         "v_required": {
@@ -117,23 +129,38 @@
         "options": [
           {
             "key": "1",
-            "text": "1"
+            "text": "1",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "1",
+            "openmrs_entity_parent": ""
           },
           {
             "key": "1.5",
-            "text": "1.5"
+            "text": "1.5",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "1.5",
+            "openmrs_entity_parent": ""
           },
           {
             "key": "2",
-            "text": "2"
+            "text": "2",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "2",
+            "openmrs_entity_parent": ""
           },
           {
             "key": "2.5",
-            "text": "2.5"
+            "text": "2.5",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "2.5",
+            "openmrs_entity_parent": ""
           },
           {
             "key": "3",
-            "text": "3"
+            "text": "3",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "3",
+            "openmrs_entity_parent": ""
           }
         ],
         "v_required": {
@@ -158,23 +185,38 @@
         "options": [
           {
             "key": "refusal",
-            "text": "refusal"
+            "text": "refusal",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "refusal",
+            "openmrs_entity_parent": ""
           },
           {
             "key": "symptomatic",
-            "text": "symptomatic"
+            "text": "symptomatic",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "symptomatic",
+            "openmrs_entity_parent": ""
           },
           {
             "key": "stunted",
-            "text": "stunted"
+            "text": "stunted",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "stunted",
+            "openmrs_entity_parent": ""
           },
           {
             "key": "no_food_in_belly",
-            "text": "no food in belly"
+            "text": "no food in belly",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "no_food_in_belly",
+            "openmrs_entity_parent": ""
           },
           {
             "key": "other_reason",
-            "text": "other reason"
+            "text": "other reason",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "other_reason",
+            "openmrs_entity_parent": ""
           }
         ],
         "v_required": {

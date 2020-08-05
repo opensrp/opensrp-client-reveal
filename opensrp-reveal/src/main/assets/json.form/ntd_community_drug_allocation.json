@@ -81,19 +81,28 @@
         "options": [
           {
             "key": "500",
-            "text": "500"
+            "text": "500",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "500",
+            "openmrs_entity_parent": ""
           },
           {
             "key": "1000",
-            "text": "1000"
+            "text": "1000",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "1000",
+            "openmrs_entity_parent": ""
           },
           {
             "key": "Other",
-            "text": "Other"
+            "text": "Other",
+            "openmrs_entity": "concept",
+            "openmrs_entity_id": "Other",
+            "openmrs_entity_parent": ""
           }
         ],
         "v_required": {
-          "value": "true",
+          "value": true,
           "err": "Required field"
         }
       },
@@ -134,28 +143,12 @@
         "hint": "Enter number of loose tablets received",
         "text_size": "8sp",
         "v_numeric_integer": {
-          "value": "true",
+          "value": true,
           "err": "Please enter a number"
         },
         "v_required": {
           "value": true,
           "err": "Required field"
-        }
-      },
-      {
-        "key": "nPZQreceived",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "concept",
-        "openmrs_entity_id": "nPZQreceived",
-        "type": "hidden",
-        "hint": "Number of tablets received in this allocation",
-        "text_size": "8sp",
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "ntd_community_drug_allocation_calculation.yml"
-            }
-          }
         }
       },
       {

@@ -770,4 +770,10 @@ public interface Constants {
 
         String SORT = "sort";
     }
+
+    interface Events {
+        String DRUG_ALLOCATION = "Drug_allocation_to_CDD_team";
+        String DRUG_RETURNED = "Drug_return_from_CDD_team";
+        String CHILD_DRUG_DISTRIBUTION = "Drug distribution to Child";
+    }
 }

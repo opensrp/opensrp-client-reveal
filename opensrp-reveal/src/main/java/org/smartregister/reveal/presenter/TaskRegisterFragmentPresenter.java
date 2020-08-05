@@ -25,7 +25,6 @@ import org.smartregister.domain.Task;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.dao.ReportDao;
 import org.smartregister.reveal.dao.StructureDao;
@@ -488,9 +487,10 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             int unVisitedStructures = totalStructure - totalVisited;
 
             int pzqDistributed = reportDao.getPZQDistributed(currentLocation);
+            int pzqReceived = reportDao.getPZQReceived(currentLocation);
 
             int pzqReturned = reportDao.getPZQReturned(currentLocation);
-            int pzqRemaining = pzqDistributed - pzqReturned;
+            int pzqRemaining = pzqReceived - pzqReturned;
 
 
             int totalChildrenReceivedDrugs = reportDao.getTotalChildrenReceivedDrugs(currentLocation);
