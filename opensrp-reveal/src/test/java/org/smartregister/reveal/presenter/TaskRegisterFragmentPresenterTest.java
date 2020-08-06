@@ -335,6 +335,8 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     public void testOnStructureFound() {
         when(view.getJsonFormUtils()).thenReturn(mock(RevealJsonFormUtils.class));
         TaskDetails taskDetails = TestingUtils.getTaskDetails();
+        presenter = spy(presenter);
+        when(presenter.validateFarStructures()).thenReturn(true);
         presenter.onStructureFound(null, taskDetails);
         verify(view).getContext();
         verify(view).requestUserLocation();
