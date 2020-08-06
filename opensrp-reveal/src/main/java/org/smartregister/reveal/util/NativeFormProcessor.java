@@ -121,6 +121,12 @@ public class NativeFormProcessor {
         return this;
     }
 
+    public NativeFormProcessor tagFeatureId(String featureId) throws JSONException {
+        JSONObject formData = getOrCreateDetailsNode();
+        formData.put(Constants.Properties.STRUCTURE_ID, featureId);
+        return this;
+    }
+
     private JSONArray getFields() throws JSONException {
         if (_fields == null)
             _fields = jsonForm.getJSONObject(JsonFormConstants.STEP1).getJSONArray(JsonFormConstants.FIELDS);

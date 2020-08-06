@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Location;
@@ -33,7 +34,6 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
@@ -197,7 +197,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         if (BuildConfig.BUILD_COUNTRY == Country.THAILAND || BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
             setContentView(R.layout.thailand_activity_list_tasks);
-        }else if (BuildConfig.BUILD_COUNTRY == Country.NTD_COMMUNITY) {
+        } else if (BuildConfig.BUILD_COUNTRY == Country.NTD_COMMUNITY) {
             setContentView(R.layout.ntd_community_activity_list);
         } else {
             setContentView(R.layout.activity_list_tasks);
@@ -612,7 +612,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.FAMILY_NAME, Utils.getValue(family.getColumnmaps(), DBConstants.KEY.FIRST_NAME, false));
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.GO_TO_DUE_PAGE, false);
 
-        if(listTaskPresenter.getSelectedFeature() != null) {
+        if (listTaskPresenter.getSelectedFeature() != null) {
             intent.putExtra(Properties.LOCATION_UUID, listTaskPresenter.getSelectedFeature().id());
             intent.putExtra(Properties.TASK_IDENTIFIER, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_IDENTIFIER));
             intent.putExtra(Properties.TASK_BUSINESS_STATUS, listTaskPresenter.getSelectedFeature().getStringProperty(Properties.TASK_BUSINESS_STATUS));
@@ -727,11 +727,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void openCardView(CardDetails cardDetails) {
         if (Country.NTD_COMMUNITY == BuildConfig.BUILD_COUNTRY) {
-            if (cardDetails instanceof QRCodeDetailsCard){
-                eligibilityCardView.setVisibility(View.VISIBLE);
-            }else{
-                eligibilityCardView.setVisibility(View.VISIBLE);
-            }
+            eligibilityCardView.setVisibility(View.VISIBLE);
             return;
         }
         if (cardDetails instanceof SprayCardDetails) {
@@ -809,7 +805,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 String encounterType = jsonForm.getString(ENCOUNTER_TYPE);
                 if (encounterType.equalsIgnoreCase(org.smartregister.reveal.util.Constants.EventType.STRUCTURE_ELIGIBILITY)) {
                     listTaskPresenter.saveEligibilityForm(jsonForm, listTaskPresenter.getSelectedFeature());
-                }else if (encounterType.equalsIgnoreCase(FamilyConstants.EventType.FAMILY_REGISTRATION)) {
+                } else if (encounterType.equalsIgnoreCase(FamilyConstants.EventType.FAMILY_REGISTRATION)) {
                     listTaskPresenter.saveFamilyRegistration(jsonForm, getContext());
                 } else {
                     listTaskPresenter.saveJsonForm(json);
@@ -847,13 +843,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 Barcode barcode = data.getParcelableExtra(AllConstants.BARCODE.BARCODE_KEY);
                 Timber.d("Scanned QR Code %s", barcode.displayValue);
 
-                if (nextAction.equalsIgnoreCase(org.smartregister.reveal.util.Constants.ActionStatus.ISSUE_CODE_REGISTRATION)) {
-                    listTaskPresenter.assignQRCodeToStructure(getContext(), structureID, barcode.displayValue, new Runnable() {
-                        @Override
-                        public void run() {
-                            registerFamily();
-                        }
-                    });
+                if (nextAction.equalsIgnoreCase(org.smartregister.reveal.util.Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION)) {
+                    listTaskPresenter.assignQRCodeToStructure(getContext(), structureID, barcode.displayValue, this::registerFamily);
                 } else {
                     listTaskPresenter.assignQRCodeToStructure(getContext(), structureID, barcode.displayValue, null);
                 }
@@ -1057,14 +1048,44 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                             nextAction = pendingTask;
                             structureID = structureId;
 
-                            Intent intent = new Intent(getActivity(), BarcodeScanActivity.class);
-                            startActivityForResult(intent, REQUEST_CODE_ISSUE_QR);
+                            startQrCodeScanner();
                         }
 
                         dialog.dismiss();
                     }
                 }).show();
         alertDialog.setCancelable(false);
+    }
+
+    public void startQrCodeScanner() {
+        if (PermissionUtils.isPermissionGranted(this, Manifest.permission.CAMERA, PermissionUtils.CAMERA_PERMISSION_REQUEST_CODE)) {
+            try {
+                Intent intent = new Intent(this, BarcodeScanActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_ISSUE_QR);
+            } catch (SecurityException e) {
+                org.smartregister.util.Utils.showToast(this, getString(org.smartregister.R.string.allow_camera_management));
+            }
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PermissionUtils.CAMERA_PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    try {
+                        Intent intent = new Intent(this, BarcodeScanActivity.class);
+                        startActivityForResult(intent, REQUEST_CODE_ISSUE_QR);
+                    } catch (SecurityException e) {
+                        org.smartregister.util.Utils.showToast(this, getString(org.smartregister.R.string.allow_camera_management));
+                    }
+                } else {
+                    org.smartregister.util.Utils.showToast(this, getString(org.smartregister.R.string.allow_camera_management));
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -1085,14 +1106,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void onEligibilityStatusConfirmed(String status) {
         switch (status) {
-            case org.smartregister.reveal.util.Constants.ActionStatus
-                    .ISSUE_CODE:
-            case org.smartregister.reveal.util.Constants.ActionStatus
-                    .ISSUE_CODE_REGISTRATION:
+            case org.smartregister.reveal.util.Constants.BusinessStatus.WAITING_FOR_QR_CODE:
+            case org.smartregister.reveal.util.Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION:
                 issueStructureQRCode(listTaskPresenter.getSelectedFeature().id(), status);
                 break;
-            case org.smartregister.reveal.util.Constants.ActionStatus
-                    .REGISTER:
+            case org.smartregister.reveal.util.Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION:
                 registerFamily();
                 break;
             default:
@@ -1127,7 +1145,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         progressIndicatorView.setProgress(coverage);
         progressIndicatorView.setTitle(getString(R.string.n_percent, coverage));
-
 
 
         View detailedReportCardView = findViewById(R.id.indicators_card_view);

@@ -254,6 +254,7 @@
         "openmrs_entity": "person_attribute",
         "openmrs_entity_id": "name_granting_consent",
         "type": "edit_text",
+        "edit_type": "name",
         "hint": "Name of person providing consent for drug distribution",
         "v_required": {
           "value": "true",

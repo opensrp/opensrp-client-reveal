@@ -154,6 +154,7 @@ public interface Constants {
         String TASK_CODE_LIST = "task_code_list";
         String FAMILY_MEMBER_NAMES = "family_member_names";
         String PLAN_IDENTIFIER = "planIdentifier";
+        String STRUCTURE_ID = "structure_id";
     }
 
 
@@ -284,8 +285,12 @@ public interface Constants {
         // Zambia NTD Status
         String VISITED_NOT_TREATED = "Visited, SACs not treated";
         String VISITED_PARTIALLY_TREATED = "Visited, Partially treated";
+        String COMPLETED_FAMILY_REGISTRATION = "Completed Family Registration";
         String INELIGIBLE = "Ineligible";
         String INCLUDED_IN_ANOTHER_HOUSEHOLD = "Included in another household";
+        String WAITING_FOR_QR_CODE = "Waiting For Qr Code";
+        String WAITING_FOR_QR_AND_REGISTRATION = "Waiting For Qr Code and Registration";
+        String ELIGIBLE_WAITING_REGISTRATION = "Eligible, Waiting For Registration";
 
 
 
@@ -297,13 +302,6 @@ public interface Constants {
 
         List<String> MDA_BUSINESS_STATUS = Arrays.asList(NOT_VISITED, FULLY_RECEIVED, NONE_RECEIVED,
                 ADHERENCE_VISIT_DONE, PARTIALLY_RECEIVED, COMPLETE, NOT_ELIGIBLE);
-    }
-
-    interface ActionStatus {
-        String EXIT = "EXIT";
-        String ISSUE_CODE = "ISSUE_CODE";
-        String ISSUE_CODE_REGISTRATION= "ISSUE_CODE_REGISTRATION";
-        String REGISTER = "REGISTER";
     }
 
     interface BusinessStatusWrapper {

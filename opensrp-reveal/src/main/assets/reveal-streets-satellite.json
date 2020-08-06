@@ -61,6 +61,12 @@
             "taskBusinessStatus"
           ],
           [
+            "Waiting For Qr Code",
+            "Waiting For Qr Code and Registration",
+            "Eligible, Waiting For Registration"
+          ],
+          "hsl(300, 100%, 50%)",
+          [
             "Not Visited"
           ],
           "hsl(46, 88%, 62%)",
@@ -75,7 +81,8 @@
             "Sprayed",
             "Complete",
             "Fully Received",
-            "Partially Sprayed"
+            "Partially Sprayed",
+            "Completed Family Registration"
           ],
           "hsl(89, 52%, 48%)",
           [
@@ -101,7 +108,7 @@
             "Partially Received"
           ],
           "hsl(26, 84%, 56%)",
-          "hsl(0, 0%, 78%)"
+          "hsl(61, 91%, 54%)"
         ],
         "fill-opacity": [
           "match",
@@ -109,6 +116,12 @@
             "get",
             "taskBusinessStatus"
           ],
+          [
+            "Waiting For Qr Code",
+            "Waiting For Qr Code and Registration",
+            "Eligible, Waiting For Registration"
+          ],
+          0.7,
           [
             "Not Visited"
           ],
@@ -163,6 +176,12 @@
             "taskBusinessStatus"
           ],
           [
+            "Waiting For Qr Code",
+            "Waiting For Qr Code and Registration",
+            "Eligible, Waiting For Registration"
+          ],
+          "hsl(300, 100%, 50%)",
+          [
             "Not Visited"
           ],
           "hsl(46, 88%, 62%)",
@@ -177,7 +196,8 @@
             "Sprayed",
             "Complete",
             "Fully Received",
-            "Partially Sprayed"
+            "Partially Sprayed",
+            "Completed Family Registration"
           ],
           "hsl(89, 52%, 48%)",
           [
@@ -203,7 +223,7 @@
             "Partially Received"
           ],
           "hsl(26, 84%, 56%)",
-          "hsl(0, 0%, 78%)"
+          "hsl(61, 91%, 54%)"
         ],
         "circle-stroke-width": 1,
         "circle-opacity": 0.5

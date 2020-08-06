@@ -120,6 +120,13 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     processUpdateFamilyRegistrationEvent(event, eventClient.getClient(), clientClassification, localEvents);
                 } else if (eventType.equals(Constants.EventType.PAOT_EVENT)) {
                     operationalAreaId = processEvent(event, clientClassification, localEvents, JsonForm.PAOT_STATUS);
+                } else if (eventType.equals(Constants.EventType.STRUCTURE_ELIGIBILITY) || eventType.equals("Structure QR")) {
+                    try {
+                        processEvent(event, new Client(event.getBaseEntityId()), clientClassification);
+                    } catch (Exception e) {
+                        Timber.e(e);
+                    }
+                    return;
                 } else if (eventType.equals(TASK_RESET_EVENT)) {
                     continue;
                 } else if (CHILD_REGISTRATION.equals(eventType) || UPDATE_CHILD_REGISTRATION.equals(eventType) || Constants.EventType.MDA_DISPENSE.equals(eventType)) {

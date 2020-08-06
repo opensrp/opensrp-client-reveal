@@ -270,8 +270,11 @@ public class ListTaskInteractor extends BaseInteractor {
                 try {
                     featureCollection = createFeatureCollection();
                     if (operationalAreaLocation != null) {
+                        // get all tasks in this plan and group by plan
                         Map<String, Set<Task>> tasks = taskRepository.getTasksByPlanAndGroup(plan, operationalAreaLocation.getId());
                         List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
+
+                        // get structure name
                         Map<String, StructureDetails> structureNames = getStructureName(operationalAreaLocation.getId());
                         taskDetailsList = IndicatorUtils.processTaskDetails(tasks);
                         String indexCase = null;

@@ -91,10 +91,6 @@ import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.smartregister.family.util.Utils.metadata;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
-import static org.smartregister.reveal.util.Constants.ActionStatus.EXIT;
-import static org.smartregister.reveal.util.Constants.ActionStatus.ISSUE_CODE;
-import static org.smartregister.reveal.util.Constants.ActionStatus.ISSUE_CODE_REGISTRATION;
-import static org.smartregister.reveal.util.Constants.ActionStatus.REGISTER;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
@@ -318,9 +314,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         listTaskView.displaySelectedFeature(feature, clickedPoint);
 
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
-            if(!BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)){
+            if (!BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
                 listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
-            }else{
+            } else {
 
                 onNTDFeatureSelected(selectedFeature, null, null);
             }
@@ -335,9 +331,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private void onNTDFeatureSelected(Feature feature, String businessStatus, String code) {
 
-
         if (Constants.BusinessStatus.INELIGIBLE.equals(businessStatus) || Constants.BusinessStatus.NOT_ELIGIBLE.equals(businessStatus)) {
             listTaskView.displayNotification("Info", "Structure is Ineligible");
+            return;
+        } else if (Constants.BusinessStatus.WAITING_FOR_QR_CODE.equals(businessStatus) || Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION.equals(businessStatus)) {
+            listTaskView.onEligibilityStatusConfirmed(businessStatus);
+            return;
+        } else if (Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION.equals(businessStatus)) {
+            listTaskView.registerFamily();
             return;
         }
 
@@ -516,7 +517,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void saveEligibilityForm(JSONObject jsonObject, @NonNull Feature feature) {
         CallableInteractor myInteractor = getInteractor();
 
-        Callable<Pair<Task, String>> callable = () -> {
+        Callable<Task> callable = () -> {
 
             // save event details
             NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonObject);
@@ -527,62 +528,51 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     .withBindType(Constants.Tables.STRUCTURE_ELIGIBILITY_TABLE)
                     .withEncounterType(Constants.EventType.STRUCTURE_ELIGIBILITY)
                     .withEntityId(feature.id())
+                    .tagFeatureId(feature.id())
                     .tagLocationData(operationalArea)
                     .tagEventMetadata()
 
                     // save
-                    .saveEvent();
+                    .saveEvent()
+                    .clientProcessForm();
 
             String statusResidential = processor.getFieldValue("statusResidential");
             String statusHouseholdaccessible = processor.getFieldValue("statusHouseholdaccessible");
             String statusHouseholdAllPresent = processor.getFieldValue("statusHouseholdAllPresent");
             String statusHohstructure = processor.getFieldValue("statusHohstructure");
 
-            String taskID = getPropertyValue(feature, TASK_IDENTIFIER);
-
-            TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
-            Task task = taskRepository.getTaskByIdentifier(taskID);
+            String businessStatus;
+            TaskStatus taskStatus;
 
             if (statusResidential.equalsIgnoreCase("No")) {
-                task.setBusinessStatus(Constants.BusinessStatus.INELIGIBLE);
-                task.setStatus(Task.TaskStatus.COMPLETED);
+                businessStatus = Constants.BusinessStatus.INELIGIBLE;
+                taskStatus = Task.TaskStatus.COMPLETED;
             } else if (statusHohstructure.equalsIgnoreCase("No")) {
-                task.setBusinessStatus(Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD);
-                task.setStatus(Task.TaskStatus.COMPLETED);
-            } else {
-                task.setBusinessStatus(Constants.BusinessStatus.IN_PROGRESS);
-                task.setStatus(Task.TaskStatus.IN_PROGRESS);
-            }
-
-            if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
-                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
-            }
-            task.setLastModified(new DateTime());
-            taskRepository.addOrUpdate(task);
-
-
-            if (statusResidential.equalsIgnoreCase("No")) {
-                return Pair.create(task, EXIT);
-            } else if (statusHohstructure.equalsIgnoreCase("No")) {
-                return Pair.create(task, EXIT);
+                businessStatus = Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD;
+                taskStatus = Task.TaskStatus.COMPLETED;
             } else if (statusHouseholdaccessible.equalsIgnoreCase("No")) {
-                return Pair.create(task, ISSUE_CODE);
+                businessStatus = Constants.BusinessStatus.WAITING_FOR_QR_CODE;
+                taskStatus = Task.TaskStatus.IN_PROGRESS;
             } else if (statusHouseholdAllPresent.equalsIgnoreCase("No")) {
-                return Pair.create(task, ISSUE_CODE_REGISTRATION);
+                businessStatus = Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION;
+                taskStatus = Task.TaskStatus.IN_PROGRESS;
+            } else {
+                businessStatus = Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION;
+                taskStatus = Task.TaskStatus.IN_PROGRESS;
             }
 
-            return Pair.create(task, REGISTER);
+            TaskUtils taskUtils = TaskUtils.getInstance();
+            return taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
+                    feature.id(), feature.id(), businessStatus, taskStatus, Constants.Intervention.FAMILY_REGISTRATION,
+                    R.string.register_structure_and_family);
         };
 
         getView().setLoadingState(true);
-        myInteractor.execute(callable, new CallableInteractorCallBack<Pair<Task, String>>() {
+        myInteractor.execute(callable, new CallableInteractorCallBack<Task>() {
             @Override
-            public void onResult(Pair<Task, String> result) {
+            public void onResult(Task task) {
                 ListTaskView view = getView();
                 if (view != null) {
-
-                    // update the task status on this feature
-                    Task task = result.first;
 
                     setChangeMapPosition(false);
                     for (Feature feature : getFeatureCollection().features()) {
@@ -597,7 +587,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
 
                     view.setLoadingState(false);
-                    view.onEligibilityStatusConfirmed(result.second);
+                    view.onEligibilityStatusConfirmed(task.getBusinessStatus());
                 }
             }
 
@@ -648,13 +638,15 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     .withBindType(Constants.Tables.STRUCTURE_ELIGIBILITY_TABLE)
                     .withEncounterType(Constants.EventType.STRUCTURE_QR)
                     .withEntityId(structureId)
+                    .tagFeatureId(structureId)
                     .tagLocationData(operationalArea)
                     .tagEventMetadata()
 
                     // save
-                    .saveEvent();
+                    .saveEvent()
+            .clientProcessForm();
 
-            structureDao.addDetails(structureId, qrcode);
+            //structureDao.addDetails(structureId, qrcode);
 
             return null;
         };
@@ -782,7 +774,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     String taskID = getPropertyValue(feature, TASK_IDENTIFIER);
                     task = taskRepository.getTaskByIdentifier(taskID);
 
-                    task.setBusinessStatus(Constants.BusinessStatus.FAMILY_REGISTERED);
+                    task.setBusinessStatus(Constants.BusinessStatus.COMPLETED_FAMILY_REGISTRATION);
                     task.setStatus(TaskStatus.COMPLETED);
 
                     if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
@@ -795,7 +787,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
             if (task == null) {
                 String structureId = (feature != null ? feature.id() : null);
-                task = TaskUtils.getInstance().generateTask(context, familyEntityId, structureId, Constants.BusinessStatus.FAMILY_REGISTERED, TaskStatus.COMPLETED, Constants.Intervention.FLOATING_FAMILY_REGISTRATION,
+                task = TaskUtils.getInstance().generateTask(context, familyEntityId, structureId, Constants.BusinessStatus.COMPLETED_FAMILY_REGISTRATION, TaskStatus.COMPLETED,
+                        StringUtils.isBlank(structureId) ? Constants.Intervention.FLOATING_FAMILY_REGISTRATION : Constants.Intervention.FAMILY_REGISTRATION,
                         R.string.register_family);
             }
 
@@ -826,7 +819,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                         if (operationalArea != null)
                             client.addAttribute("residential_area", operationalArea.getId());
 
-                        if(StringUtils.isNotBlank(nsac))
+                        if (StringUtils.isNotBlank(nsac))
                             client.addAttribute("nsac", nsac);
                     })
                     .saveEvent()
@@ -938,7 +931,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
             TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
             Task task = taskRepository.getTaskByIdentifier(taskID);
-            if(task != null){
+            if (task != null) {
                 task.setBusinessStatus(Constants.BusinessStatus.INELIGIBLE);
                 task.setStatus(Task.TaskStatus.COMPLETED);
 
@@ -947,10 +940,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 }
                 task.setLastModified(new DateTime());
                 taskRepository.addOrUpdate(task);
-            }else{
+            } else {
                 // create a new task
                 TaskUtils taskUtils = TaskUtils.getInstance();
-                task =  taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
+                task = taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
                         feature.id(), feature.id(), Constants.BusinessStatus.INELIGIBLE, TaskStatus.COMPLETED, Constants.Intervention.FAMILY_REGISTRATION,
                         R.string.register_structure_and_family);
             }
@@ -1030,7 +1023,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
             int totalChildrenReceivedDrugs = reportDao.getTotalChildrenReceivedDrugs(currentLocation);
             int totalExpectedRegistrations = reportDao.getTotalExpectedRegistrations(currentLocation);
-            int successRate = ((totalChildrenReceivedDrugs * 100) / totalExpectedRegistrations);
+            int successRate = totalExpectedRegistrations == 0 ? 0 : ((totalChildrenReceivedDrugs * 100) / totalExpectedRegistrations);
 
             Map<String, Integer> result = new HashMap<>();
             result.put(Constants.ReportCounts.FOUND_COVERAGE, foundCov);

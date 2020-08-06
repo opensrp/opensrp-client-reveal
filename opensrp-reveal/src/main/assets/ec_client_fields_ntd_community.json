@@ -595,14 +595,69 @@
           "column_name": "structure_id",
           "type": "Event",
           "json_mapping": {
-            "field": "structure_id"
+            "field": "details.location_id"
+          }
+        },
+        {
+          "column_name": "task_entity_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "baseEntityId"
+          }
+        },
+        {
+          "column_name": "base_entity_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "baseEntityId"
           }
         },
         {
           "column_name": "qr_code",
           "type": "Event",
           "json_mapping": {
-            "field": "qr_code"
+            "field": "obs.fieldCode",
+            "concept": "qr_code"
+          }
+        },
+        {
+          "column_name": "qr_code",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "qr_code"
+          }
+        },
+        {
+          "column_name": "residential_status",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "statusResidential"
+          }
+        },
+        {
+          "column_name": "accessibility_status",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "statusHouseholdaccessible"
+          }
+        },
+        {
+          "column_name": "all_present",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "statusHouseholdAllPresent"
+          }
+        },
+        {
+          "column_name": "hoh_structure",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "statusHohstructure"
           }
         }
       ]

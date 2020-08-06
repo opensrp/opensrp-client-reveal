@@ -30,7 +30,10 @@ public class ReportDao extends AbstractDao {
 
 
     public int getTotalVisitedStructures(String operationalAreaID) {
-        return (int) (Math.random() * 10);
+        String sql = "select count(distinct task.structure_id) cnt from structure inner join task on task.structure_id = structure._id " +
+                "where status = 'COMPLETED' and structure.parent_id = '" + operationalAreaID + "' ";
+        DataMap<Integer> dataMap = cursor -> getCursorIntValue(cursor, "cnt");
+        return readSingleValue(sql, dataMap, 0);
     }
 
     public int getPZQReturned(String operationalAreaID) {

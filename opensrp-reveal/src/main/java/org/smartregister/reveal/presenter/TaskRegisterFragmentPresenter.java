@@ -57,6 +57,7 @@ import static org.smartregister.family.util.Utils.metadata;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
+import static org.smartregister.reveal.util.Constants.Intervention.FLOATING_FAMILY_REGISTRATION;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 
 /**
@@ -240,12 +241,22 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         this.isActionClicked = isActionClicked;
         if (details != null) {
             setTaskDetails(details);
+            if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)){
+
+                if (StringUtils.isNotBlank(details.getFamilyBaseEntityID()))
+                    interactor.fetchFamilyDetailsByID(details.getFamilyBaseEntityID());
+
+                return;
+            }
+
             if (CASE_CONFIRMATION.equals(details.getTaskCode())) {
                 interactor.getIndexCaseDetails(details.getStructureId(),
                         Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(), details.getReasonReference());
             } else if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())
                     &&
-                    (BLOOD_SCREENING.equals(details.getTaskCode()) ||
+                    (
+                            FLOATING_FAMILY_REGISTRATION.equals(details.getTaskCode()) ||
+                            BLOOD_SCREENING.equals(details.getTaskCode()) ||
                             BEDNET_DISTRIBUTION.equals(details.getTaskCode()) ||
                             REGISTER_FAMILY.equals(details.getTaskCode())) ||
                     (details.getTaskCount() != null && details.getTaskCount() > 1)) { // structures with grouped tasks should display the family profile
@@ -495,7 +506,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
 
             int totalChildrenReceivedDrugs = reportDao.getTotalChildrenReceivedDrugs(currentLocation);
             int totalExpectedRegistrations = reportDao.getTotalExpectedRegistrations(currentLocation);
-            int successRate = ((totalChildrenReceivedDrugs * 100) / totalExpectedRegistrations);
+            int successRate = totalExpectedRegistrations == 0 ? 0 : ((totalChildrenReceivedDrugs * 100) / totalExpectedRegistrations);
 
             Map<String, Integer> result = new HashMap<>();
             result.put(Constants.ReportCounts.FOUND_COVERAGE, foundCov);
