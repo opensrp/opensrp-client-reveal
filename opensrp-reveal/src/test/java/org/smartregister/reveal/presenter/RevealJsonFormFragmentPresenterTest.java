@@ -2,8 +2,9 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Context;
 import android.content.Intent;
-import androidx.appcompat.app.AlertDialog;
 import android.widget.ImageButton;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -135,6 +136,7 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
     public void testValidateWithMapShouldValidateLocation() {
         setUpFormActivity(JsonForm.ADD_STRUCTURE_FORM);
         presenter = spy(presenter);
+        when(presenter.validateFarStructures()).thenReturn(true);
         when(mapView.getValidators()).thenReturn(Collections.singletonList(new MinZoomValidator("error", 20)));
         when(mapView.getMapboxMapZoom()).thenReturn(20.5);
         formFragment.getJsonApi().addFormDataView(mapView);
@@ -226,6 +228,7 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
         Whitebox.setInternalState(presenter, "viewRef", new WeakReference<>(view));
         jsonFormActivity = spy(jsonFormActivity);
         doReturn(null).when(jsonFormActivity).getUserCurrentLocation();
+        when(presenter.validateFarStructures()).thenReturn(true);
 
 
         Whitebox.setInternalState(presenter, "jsonFormView", jsonFormActivity);
