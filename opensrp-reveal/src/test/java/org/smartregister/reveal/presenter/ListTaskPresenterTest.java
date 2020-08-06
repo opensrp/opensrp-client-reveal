@@ -2,8 +2,9 @@ package org.smartregister.reveal.presenter;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
-import androidx.appcompat.app.AlertDialog;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.gson.JsonPrimitive;
 import com.mapbox.geojson.Feature;
@@ -528,6 +529,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
 
         assertFalse(Whitebox.getInternalState(listTaskPresenter, "markStructureIneligibleConfirmed"));
         assertEquals("eligible", Whitebox.getInternalState(listTaskPresenter, "reasonUnEligible"));
+        listTaskPresenter = spy(listTaskPresenter);
         listTaskPresenter.displayMarkStructureIneligibleDialog();
 
         AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
@@ -539,7 +541,9 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         alertDialog.getButton(BUTTON_NEGATIVE).performClick();
         assertFalse(alertDialog.isShowing());
 
-        assertTrue(Whitebox.getInternalState(listTaskPresenter, "markStructureIneligibleConfirmed"));
+        verify(listTaskPresenter).onMarkStructureIneligibleConfirmed();
+
+        assertFalse(Whitebox.getInternalState(listTaskPresenter, "markStructureIneligibleConfirmed"));
         assertEquals(listTaskView.getContext().getString(R.string.not_eligible_unoccupied),
                 Whitebox.getInternalState(listTaskPresenter, "reasonUnEligible"));
 
