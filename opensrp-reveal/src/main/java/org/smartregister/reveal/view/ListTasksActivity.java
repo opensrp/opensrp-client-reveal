@@ -844,9 +844,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 Timber.d("Scanned QR Code %s", barcode.displayValue);
 
                 if (nextAction.equalsIgnoreCase(org.smartregister.reveal.util.Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION)) {
-                    listTaskPresenter.assignQRCodeToStructure(getContext(), structureID, barcode.displayValue, this::registerFamily);
+                    listTaskPresenter.assignQRCodeToStructure(getContext(), listTaskPresenter.getSelectedFeature(), barcode.displayValue, this::registerFamily);
                 } else {
-                    listTaskPresenter.assignQRCodeToStructure(getContext(), structureID, barcode.displayValue, null);
+                    listTaskPresenter.assignQRCodeToStructure(getContext(), listTaskPresenter.getSelectedFeature(), barcode.displayValue, null);
                 }
                 // either start registration or assign structure and die
 

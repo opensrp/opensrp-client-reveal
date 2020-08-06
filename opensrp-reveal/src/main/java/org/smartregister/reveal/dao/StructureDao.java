@@ -103,10 +103,10 @@ public class StructureDao extends AbstractDao {
         return readSingleValue(sql, dataMap);
     }
 
-    public void addDetails(String structureID, String qrCode) {
-        String id = UUID.randomUUID().toString();
-        String sql = String.format("insert into structure_eligibility(id , is_closed , structure_id , qr_code) values ('%s' , 0 , '%s' , '%s') ", id, structureID, qrCode);
-        updateDB(sql);
+    public String getTaskByStructureID(String structureID) {
+        String sql = "select _id from task where structure_id = '" + structureID + "' order by start asc limit 1 ";
+        DataMap<String> dataMap = cursor -> getCursorValue(cursor, "_id");
+        return readSingleValue(sql, dataMap);
     }
 
 }

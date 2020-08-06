@@ -144,7 +144,7 @@ public interface ListTaskContract {
 
         void saveEligibilityForm(JSONObject jsonObject, Feature feature);
 
-        void assignQRCodeToStructure(Context context, String structureId, String qrcode, Runnable runnable);
+        void assignQRCodeToStructure(Context context, Feature feature, String qrcode, Runnable runnable);
 
         ListTaskView getView();
 

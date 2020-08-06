@@ -603,14 +603,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
-    public void assignQRCodeToStructure(Context context, String structureId, String qrcode, Runnable runnable) {
+    public void assignQRCodeToStructure(Context context, Feature feature, String qrcode, Runnable runnable) {
         CallableInteractor myInteractor = getInteractor();
 
-        Callable<Void> callable = () -> {
+        Callable<Task> callable = () -> {
             StructureDao structureDao = StructureDao.getInstance();
 
             // check if structure has a qr
-            if (structureDao.structureHasQr(structureId))
+            if (structureDao.structureHasQr(feature.id()))
                 throw new IllegalStateException("Structure has assigned QR");
 
             // check if qr has a structure
@@ -623,7 +623,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             JSONObject jsonObject = new JSONObject(jsonForm);
 
             Map<String, Object> values = new HashMap<>();
-            values.put("structure_id", structureId);
+            values.put("structure_id", feature.id());
             values.put("qr_code", qrcode);
 
             NativeFormProcessor.createInstance(jsonObject)
@@ -637,8 +637,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             processor
                     .withBindType(Constants.Tables.STRUCTURE_ELIGIBILITY_TABLE)
                     .withEncounterType(Constants.EventType.STRUCTURE_QR)
-                    .withEntityId(structureId)
-                    .tagFeatureId(structureId)
+                    .withEntityId(feature.id())
+                    .tagFeatureId(feature.id())
                     .tagLocationData(operationalArea)
                     .tagEventMetadata()
 
@@ -646,18 +646,45 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     .saveEvent()
             .clientProcessForm();
 
-            //structureDao.addDetails(structureId, qrcode);
+            String taskID = getPropertyValue(feature, TASK_IDENTIFIER);
+            if(StringUtils.isBlank(taskID))
+                taskID = StructureDao.getInstance().getTaskByStructureID(feature.id());
 
-            return null;
+            TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
+            Task task = taskRepository.getTaskByIdentifier(taskID);
+
+            task.setBusinessStatus(Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION);
+            task.setStatus(Task.TaskStatus.IN_PROGRESS);
+            if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus()))
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+
+            task.setLastModified(new DateTime());
+            taskRepository.addOrUpdate(task);
+
+            return task;
         };
 
         getView().setLoadingState(true);
-        myInteractor.execute(callable, new CallableInteractorCallBack<Void>() {
+        myInteractor.execute(callable, new CallableInteractorCallBack<Task>() {
             @Override
-            public void onResult(Void aVoid) {
+            public void onResult(Task task) {
                 ListTaskView view = getView();
                 if (view != null) {
                     view.setLoadingState(false);
+
+                    if (task != null && getSelectedFeature() != null) {
+                        setChangeMapPosition(false);
+                        for (Feature feature : getFeatureCollection().features()) {
+                            if (task.getStructureId().equals(feature.id())) {
+                                feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                                feature.addStringProperty(TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                                feature.addStringProperty(TASK_STATUS, task.getStatus().name());
+                                feature.addStringProperty(TASK_IDENTIFIER, task.getIdentifier());
+                                break;
+                            }
+                        }
+                    }
+
                     if (runnable != null)
                         runnable.run();
                 }
