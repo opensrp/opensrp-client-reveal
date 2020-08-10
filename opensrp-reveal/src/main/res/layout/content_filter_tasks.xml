@@ -142,6 +142,38 @@
 
         </LinearLayout>
 
+
+        <LinearLayout
+            android:id="@+id/form_name_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/FilterTaskStyle.Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/form_name"
+                android:textStyle="bold" />
+
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/form_name_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
+                app:alignContent="stretch"
+                app:alignItems="stretch"
+                app:flexWrap="wrap" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lighter_grey" />
+
+        </LinearLayout>
+
         <Button
             android:id="@+id/apply_filters"
             style="@style/FilterTaskStyle"

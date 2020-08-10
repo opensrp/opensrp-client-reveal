@@ -41,6 +41,8 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
 
     private FlexboxLayout interventionTypeLayout;
 
+    private FlexboxLayout formNameLayout;
+
     private TextView applyFiltersTextView;
 
     private FilterConfiguration filterConfiguration;
@@ -49,7 +51,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         filterConfiguration = (FilterConfiguration) getIntent().getSerializableExtra(FILTER_CONFIGURATION);
-        presenter = new FilterTasksPresenter(this,filterConfiguration);
+        presenter = new FilterTasksPresenter(this, filterConfiguration);
         setContentView(R.layout.activity_filter_tasks);
         Toolbar toolbar = this.findViewById(R.id.filter_tasks_toolbar);
         toolbar.setTitle(R.string.filter);
@@ -63,6 +65,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         taskCodeLayout = findViewById(R.id.task_code_layout);
         interventionTypeLayout = findViewById(R.id.intervention_type_layout);
         applyFiltersTextView = findViewById(R.id.apply_filters);
+        formNameLayout = findViewById(R.id.form_name_layout);
 
         setFilterVisibility();
         setUpToggleButtonGroups();
@@ -116,6 +119,9 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         populateToggleButtons(businessStatusLayout, presenter.getBusinessStatusOptions());
         populateToggleButtons(taskCodeLayout, presenter.getIntentionTypes());
         populateToggleButtons(interventionTypeLayout, InterventionType.FILTERABLE_INTERVENTION_TYPES);
+        if (filterConfiguration.isFormsLayoutEnabled() && filterConfiguration.getFormsList() != null) {
+            populateToggleButtons(formNameLayout, filterConfiguration.getFormsList());
+        }
     }
 
 
@@ -123,6 +129,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         setViewVisibility(findViewById(R.id.status_group), filterConfiguration.isBusinessStatusLayoutEnabled());
         setViewVisibility(findViewById(R.id.task_type_group), filterConfiguration.isTaskCodeLayoutEnabled());
         setViewVisibility(findViewById(R.id.intervention_group), filterConfiguration.isInterventionTypeLayoutEnabled());
+        setViewVisibility(findViewById(R.id.form_name_group), filterConfiguration.isFormsLayoutEnabled());
     }
 
     private void setViewVisibility(View view, boolean visible) {
