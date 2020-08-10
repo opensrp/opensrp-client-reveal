@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -62,6 +63,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         interventionTypeLayout = findViewById(R.id.intervention_type_layout);
         applyFiltersTextView = findViewById(R.id.apply_filters);
 
+        setFilterVisibility();
         setUpToggleButtonGroups();
 
         findViewById(R.id.clear_filters).setOnClickListener(view -> {
@@ -110,18 +112,22 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     }
 
     private void setUpToggleButtonGroups() {
-        if (filterConfiguration.isBusinessStatusLayoutEnabled()) {
-            populateToggleButtons(businessStatusLayout, presenter.getBusinessStatusOptions());
-        }
-        if (filterConfiguration.isTaskCodeLayoutEnabled()) {
-            populateToggleButtons(taskCodeLayout, presenter.getIntentionTypes());
-        }
-        if (filterConfiguration.isInterventionTypeLayoutEnabled()) {
-            populateToggleButtons(interventionTypeLayout, InterventionType.FILTERABLE_INTERVENTION_TYPES);
-        }
-        registerCheckedChangeListener();
-
+        populateToggleButtons(businessStatusLayout, presenter.getBusinessStatusOptions());
+        populateToggleButtons(taskCodeLayout, presenter.getIntentionTypes());
+        populateToggleButtons(interventionTypeLayout, InterventionType.FILTERABLE_INTERVENTION_TYPES);
     }
+
+
+    private void setFilterVisibility() {
+        setViewVisibility(findViewById(R.id.status_group), filterConfiguration.isBusinessStatusLayoutEnabled());
+        setViewVisibility(findViewById(R.id.task_type_group), filterConfiguration.isTaskCodeLayoutEnabled());
+        setViewVisibility(findViewById(R.id.intervention_group), filterConfiguration.isInterventionTypeLayoutEnabled());
+    }
+
+    private void setViewVisibility(View view, boolean visible) {
+        view.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
 
     private void populateToggleButtons(FlexboxLayout layout, List<String> options) {
         FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
