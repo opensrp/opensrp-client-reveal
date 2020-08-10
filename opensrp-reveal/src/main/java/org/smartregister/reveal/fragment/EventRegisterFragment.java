@@ -16,6 +16,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.EventRegisterContract;
 import org.smartregister.reveal.model.EventRegisterDetails;
+import org.smartregister.reveal.model.FilterConfiguration;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.EventRegisterFragmentPresenter;
 import org.smartregister.reveal.util.Constants;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import static android.app.Activity.RESULT_OK;
+import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATION;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
 
@@ -180,6 +182,11 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
     public void openFilterActivity(TaskFilterParams filterParams) {
         Intent intent = new Intent(getContext(), FilterTasksActivity.class);
         intent.putExtra(FILTER_SORT_PARAMS, filterParams);
+        intent.putExtra(FILTER_CONFIGURATION, FilterConfiguration.builder()
+                .businessStatusLayoutEnabled(false)
+                .interventionTypeLayoutEnabled(false)
+                .taskCodeLayoutEnabled(false)
+                .build());
         getActivity().startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
     }
 

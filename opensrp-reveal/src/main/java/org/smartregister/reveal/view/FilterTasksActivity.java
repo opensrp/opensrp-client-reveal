@@ -2,9 +2,11 @@ package org.smartregister.reveal.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -14,6 +16,7 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FilterTasksContract;
+import org.smartregister.reveal.model.FilterConfiguration;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.FilterTasksPresenter;
 import org.smartregister.reveal.util.Constants.Filter;
@@ -23,6 +26,7 @@ import org.smartregister.view.activity.MultiLanguageActivity;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATION;
 
 public class FilterTasksActivity extends MultiLanguageActivity implements FilterTasksContract.View, CompoundButton.OnCheckedChangeListener {
 
@@ -38,6 +42,8 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
 
     private TextView applyFiltersTextView;
 
+    private FilterConfiguration filterConfiguration;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +55,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_close);
 
+        filterConfiguration = (FilterConfiguration) getIntent().getSerializableExtra(FILTER_CONFIGURATION);
         sortBySpinner = findViewById(R.id.sort_by);
         businessStatusLayout = findViewById(R.id.business_status_layout);
         taskCodeLayout = findViewById(R.id.task_code_layout);
@@ -70,6 +77,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         if (filterParams != null) {
             presenter.restoreCheckedFilters(filterParams);
         }
+
     }
 
 
@@ -102,9 +110,15 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     }
 
     private void setUpToggleButtonGroups() {
-        populateToggleButtons(businessStatusLayout, presenter.getBusinessStatusOptions());
-        populateToggleButtons(taskCodeLayout, presenter.getIntentionTypes());
-        populateToggleButtons(interventionTypeLayout, InterventionType.FILTERABLE_INTERVENTION_TYPES);
+        if (filterConfiguration.isBusinessStatusLayoutEnabled()) {
+            populateToggleButtons(businessStatusLayout, presenter.getBusinessStatusOptions());
+        }
+        if (filterConfiguration.isTaskCodeLayoutEnabled()) {
+            populateToggleButtons(taskCodeLayout, presenter.getIntentionTypes());
+        }
+        if (filterConfiguration.isInterventionTypeLayoutEnabled()) {
+            populateToggleButtons(interventionTypeLayout, InterventionType.FILTERABLE_INTERVENTION_TYPES);
+        }
         registerCheckedChangeListener();
 
     }

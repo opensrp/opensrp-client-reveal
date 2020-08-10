@@ -698,5 +698,6 @@ public interface Constants {
         String STATUS = "task_status";
         String INTERVENTION_UNIT = "intervention_unit";
         String FILTER_SORT_PARAMS = "filter_sort_params";
+        String FILTER_CONFIGURATION="filter_configuration";
     }
 }

@@ -10,13 +10,17 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -64,6 +68,7 @@ import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.FamilyCardDetails;
+import org.smartregister.reveal.model.FilterConfiguration;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
@@ -93,6 +98,7 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_D
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
+import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATION;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -373,7 +379,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     protected void initializeScaleBarPlugin(MapboxMap mapboxMap) {
-        if(displayDistanceScale()) {
+        if (displayDistanceScale()) {
             ScaleBarPlugin scaleBarPlugin = new ScaleBarPlugin(kujakuMapView, mapboxMap);
             // Create a ScaleBarOptions object to use custom styling
             ScaleBarOptions scaleBarOptions = new ScaleBarOptions(getContext());
@@ -500,6 +506,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void openFilterTaskActivity(TaskFilterParams filterParams) {
         Intent intent = new Intent(getContext(), FilterTasksActivity.class);
         intent.putExtra(FILTER_SORT_PARAMS, filterParams);
+        intent.putExtra(FILTER_CONFIGURATION, FilterConfiguration.builder().build());
         startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
     }
 
@@ -788,8 +795,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void onSyncComplete(FetchStatus fetchStatus)
-    {
+    public void onSyncComplete(FetchStatus fetchStatus) {
         onSyncInProgress(fetchStatus);
         //Check sync status and Update UI to show sync status
         drawerView.checkSynced();

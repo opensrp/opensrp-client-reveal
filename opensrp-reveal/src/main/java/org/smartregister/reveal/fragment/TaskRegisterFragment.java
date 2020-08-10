@@ -10,9 +10,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
+
 import androidx.annotation.StringRes;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.cardview.widget.CardView;
+
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,6 +32,7 @@ import org.smartregister.reveal.adapter.TaskRegisterAdapter;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.BaseTaskDetails;
+import org.smartregister.reveal.model.FilterConfiguration;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
@@ -59,6 +62,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.smartregister.reveal.util.Constants.Action;
+import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATION;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
 import static org.smartregister.reveal.util.Constants.Intervention.TASK_RESET_INTERVENTIONS;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
@@ -211,7 +215,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                 R.string.choose_action, R.string.view_details, R.string.undo, new Dialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
+                        switch (which) {
                             case BUTTON_POSITIVE:
                                 getPresenter().onTaskSelected(details, view.getId() == R.id.task_action);
                                 break;
@@ -224,7 +228,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                         dialog.dismiss();
                     }
 
-         } );
+                });
     }
 
     public void displayResetTaskInfoDialog(TaskDetails details) {
@@ -400,6 +404,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     public void openFilterActivity(TaskFilterParams filterParams) {
         Intent intent = new Intent(getContext(), FilterTasksActivity.class);
         intent.putExtra(FILTER_SORT_PARAMS, filterParams);
+        intent.putExtra(FILTER_CONFIGURATION, FilterConfiguration.builder().build());
         getActivity().startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
     }
 
