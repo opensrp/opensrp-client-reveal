@@ -43,7 +43,7 @@ public class EventRegisterActivityTest extends BaseUnitTest {
     private RevealJsonFormUtils jsonFormUtils;
 
     @Mock
-    EventRegisterActivityContract.Presenter presenter;
+    private EventRegisterActivityContract.Presenter presenter;
 
     private EventRegisterActivity eventRegisterActivity;
 

@@ -9,12 +9,10 @@ import java.util.List;
  * Created by samuelgithengi on 7/30/20.
  */
 public class BaseRegisterPresenter implements BaseRegisterContract.Presenter {
-    private BaseRegisterContract.View view;
 
     protected TaskRegisterInteractor taskRegisterInteractor;
 
     public BaseRegisterPresenter(BaseRegisterContract.View view) {
-        this.view = view;
         taskRegisterInteractor = new TaskRegisterInteractor(null);
     }
 

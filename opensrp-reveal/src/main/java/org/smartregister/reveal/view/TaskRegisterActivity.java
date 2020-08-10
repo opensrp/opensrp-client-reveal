@@ -16,13 +16,11 @@ import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.presenter.TaskRegisterPresenter;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
-import org.smartregister.view.activity.BaseRegisterActivity;
 import org.smartregister.view.contract.BaseRegisterContract;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import timber.log.Timber;
 
