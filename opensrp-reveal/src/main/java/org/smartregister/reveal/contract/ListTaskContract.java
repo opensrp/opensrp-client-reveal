@@ -94,11 +94,13 @@ public interface ListTaskContract {
 
         void onEligibilityStatusConfirmed(String status);
 
+        void promptFamilyRegistration(String structureID);
+
         void startJSONForm(JSONObject jsonObject, Form form);
 
         void toggleProgressBarView(boolean syncing);
 
-        void onReportCountReloaded(Map<String, Integer> reportCounts);
+        void onReportCountReloaded(Map<String, Double> reportCounts);
     }
 
     interface Presenter extends BaseContract.BasePresenter {
@@ -140,7 +142,7 @@ public interface ListTaskContract {
 
         void setTaskFilterParams(TaskFilterParams filterParams);
 
-        void startFamilyProfileByQR(String qrCode);
+        void searchQRCode(String qrCode);
 
         void saveEligibilityForm(JSONObject jsonObject, Feature feature);
 

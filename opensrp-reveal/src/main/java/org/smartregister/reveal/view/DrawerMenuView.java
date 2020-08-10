@@ -392,7 +392,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         TextView syncButton = this.activity.getActivity().findViewById(R.id.sync_button);
         TextView syncBadge = this.activity.getActivity().findViewById(R.id.sync_label);
 
-        if (syncing) {
+        if (syncing && progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
             progressLabel.setVisibility(View.VISIBLE);
             syncButton.setVisibility(View.INVISIBLE);

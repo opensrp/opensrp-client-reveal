@@ -9,6 +9,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.util.QueryComposer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +25,9 @@ public class TaskDetailsDao extends AbstractDao {
     public List<TaskDetails> getTasks(String operationalAreaID, Location lastLocation, Location operationalAreaCenter) {
 
         String sql = "" +
-                "select ec_family.base_entity_id , summary.total_tasks , summary.completed_tasks , ec_family.first_name " +
+                "select ec_family.base_entity_id , summary.total_tasks , summary.completed_tasks , ec_family.first_name , structure_eligibility.qr_code " +
                 "from ec_family " +
+                "left join structure_eligibility on structure_eligibility.structure_id = ec_family.structure_id " +
                 "left join ( " +
                 " select sum(case when task.status = 'COMPLETED' then 1 else 0 end) completed_tasks , count(*) total_tasks , ec_family_member.relational_id " +
                 " from task " +
@@ -41,6 +43,7 @@ public class TaskDetailsDao extends AbstractDao {
             TaskDetails taskDetails = new TaskDetails(getCursorValue(cursor, "base_entity_id", ""));
             taskDetails.setStructureName(getCursorValue(cursor, "first_name") + " Family");
             taskDetails.setFamilyBaseEntityID(getCursorValue(cursor, "base_entity_id"));
+            taskDetails.setQrCode(getCursorValue(cursor, "qr_code"));
             taskDetails.setTaskCode(Constants.Intervention.NTD_COMMUNITY);
             taskDetails.setTaskStatus(Task.TaskStatus.COMPLETED.name());
 
@@ -79,14 +82,17 @@ public class TaskDetailsDao extends AbstractDao {
 
     public List<TaskDetails> getUnRegisteredStructures(String operationalAreaID, Location lastLocation, Location operationalAreaCenter) {
 
-        String sql = "SELECT _id , name , latitude , longitude from structure " +
-                "where parent_id = '" + operationalAreaID + "' " +
-                "and _id not in (select structure_id from task where structure_id is not null) ";
+        String sql = "SELECT structure._id , structure.name , structure.latitude , structure.longitude , structure_eligibility.qr_code " +
+                "from structure " +
+                "left join structure_eligibility on structure_eligibility.structure_id = structure._id " +
+                "where structure.parent_id = '" + operationalAreaID + "' " +
+                "and structure._id not in (select structure_id from ec_family where structure_id is not null) ";
 
         DataMap<TaskDetails> dataMap = cursor -> {
             TaskDetails taskDetails = new TaskDetails(getCursorValue(cursor, "_id", ""));
             taskDetails.setStructureName(getCursorValue(cursor, "name"));
             taskDetails.setStructureId(getCursorValue(cursor, "_id"));
+            taskDetails.setQrCode(getCursorValue(cursor, "qr_code"));
             taskDetails.setTaskStatus(Task.TaskStatus.READY.name());
             taskDetails.setBusinessStatus(Constants.BusinessStatus.NOT_VISITED);
 

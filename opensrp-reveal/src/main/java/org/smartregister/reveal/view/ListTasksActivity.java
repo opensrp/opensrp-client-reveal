@@ -71,11 +71,12 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
+import org.smartregister.reveal.exception.QRCodeAssignException;
+import org.smartregister.reveal.exception.QRCodeSearchException;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
-import org.smartregister.reveal.model.QRCodeDetailsCard;
 import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
@@ -187,8 +188,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private CardDetailsUtil cardDetailsUtil = new CardDetailsUtil();
 
-    private String structureID;
-
     private String nextAction;
 
     @Override
@@ -235,7 +234,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     private void scanQRCode() {
-        if (PermissionUtils.isPermissionGranted(this, Manifest.permission.CAMERA, PermissionUtils.CAMERA_PERMISSION_REQUEST_CODE)) {
+        if (PermissionUtils.isPermissionGranted(this, Manifest.permission.CAMERA, AllConstants.BARCODE.BARCODE_REQUEST_CODE)) {
             try {
                 Intent intent = new Intent(this, BarcodeScanActivity.class);
                 startActivityForResult(intent, AllConstants.BARCODE.BARCODE_REQUEST_CODE);
@@ -788,7 +787,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void onQRCodeSucessfullyScanned(String qrCode) {
         Timber.i("QR code: %s", qrCode);
         if (StringUtils.isNotBlank(qrCode)) {
-            listTaskPresenter.startFamilyProfileByQR(qrCode);
+            listTaskPresenter.searchQRCode(qrCode);
         }
     }
 
@@ -1046,7 +1045,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                         if (which == BUTTON_POSITIVE) {
                             // open a scan qr code activity
                             nextAction = pendingTask;
-                            structureID = structureId;
 
                             startQrCodeScanner();
                         }
@@ -1067,6 +1065,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             }
         }
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String permissions[], @NonNull int[] grantResults) {
@@ -1099,8 +1098,19 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void onError(Exception e) {
-        Toast.makeText(getBaseContext(), R.string.an_error_occured, Toast.LENGTH_SHORT).show();
-        Timber.e(e);
+        if (e instanceof QRCodeSearchException) {
+            QRCodeSearchException ex = (QRCodeSearchException) e;
+            AlertDialogUtils.displayNotification(this, ex.getSearchMessage(),
+                    "QR code : " + ex.getQrCode());
+        } else if (e instanceof QRCodeAssignException) {
+
+            QRCodeAssignException ex = (QRCodeAssignException) e;
+            AlertDialogUtils.displayNotification(this, ex.getAssignErrorMessage(),
+                    "QR code : " + ex.getQrCode() + " is already assigned to another structure, Kindly scan another QR code");
+        } else {
+            Toast.makeText(getBaseContext(), R.string.an_error_occured, Toast.LENGTH_SHORT).show();
+            Timber.e(e);
+        }
     }
 
     @Override
@@ -1116,6 +1126,25 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             default:
                 break;
         }
+    }
+
+    @Override
+    public void promptFamilyRegistration(String structureID) {
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                .setTitle("Complete Family Registration")
+                .setMessage("Would you like to complete family registration for this structure")
+                .setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == BUTTON_POSITIVE) {
+                            // open a scan qr code activity
+                            registerFamily();
+                        }
+
+                        dialog.dismiss();
+                    }
+                }).show();
+        alertDialog.setCancelable(false);
     }
 
     @Override
@@ -1135,22 +1164,19 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
-    public void onReportCountReloaded(Map<String, Integer> reportCounts) {
+    public void onReportCountReloaded(Map<String, Double> reportCounts) {
         LinearLayout progressIndicatorsGroupView = findViewById(R.id.progressIndicatorsGroupView);
 
         ProgressIndicatorView progressIndicatorView = progressIndicatorsGroupView.findViewById(R.id.progressIndicatorViewTitle);
 
-        Integer coverage = reportCounts.get(org.smartregister.reveal.util.Constants.ReportCounts.FOUND_COVERAGE);
-        coverage = coverage == null ? 0 : coverage;
-
-        progressIndicatorView.setProgress(coverage);
-        progressIndicatorView.setTitle(getString(R.string.n_percent, coverage));
-
+        Double coverage = reportCounts.get(org.smartregister.reveal.util.Constants.ReportCounts.FOUND_COVERAGE);
+        progressIndicatorView.setProgress(toInt(coverage));
+        progressIndicatorView.setTitle(getString(R.string.n_percent, toInt(coverage)));
 
         View detailedReportCardView = findViewById(R.id.indicators_card_view);
 
         TextView tvStructuresUnvisited = detailedReportCardView.findViewById(R.id.tvStructuresUnvisited);
-        tvStructuresUnvisited.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.UNVISITED_STRUCTURES));
+        tvStructuresUnvisited.setText(getIntMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.UNVISITED_STRUCTURES));
 
         TextView tvPZQDistributed = detailedReportCardView.findViewById(R.id.tvPZQDistributed);
         tvPZQDistributed.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.PZQ_DISTRIBUTED));
@@ -1162,9 +1188,24 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         tvSuccessRate.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.SUCCESS_RATE) + "%");
     }
 
-    private String getMapValue(Map<String, Integer> reportCounts, String key) {
-        Integer value = reportCounts.get(key);
-        return value == null ? "0" : Integer.toString(value);
+    private Integer toInt(Double value) {
+        try {
+            if (value != null)
+                return value.intValue();
+        } catch (Exception e) {
+            Timber.v(e);
+        }
+        return 0;
+    }
+
+    private String getIntMapValue(Map<String, Double> reportCounts, String key) {
+        Double value = reportCounts.get(key);
+        return value == null ? "0" : Integer.toString(value.intValue());
+    }
+
+    private String getMapValue(Map<String, Double> reportCounts, String key) {
+        Double value = reportCounts.get(key);
+        return value == null ? "0" : Double.toString(value);
     }
 
     @Override

@@ -592,17 +592,24 @@
       "name": "structure_eligibility",
       "columns": [
         {
-          "column_name": "structure_id",
+          "column_name": "location_id",
           "type": "Event",
           "json_mapping": {
             "field": "details.location_id"
           }
         },
         {
+          "column_name": "structure_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "details.structure_id"
+          }
+        },
+        {
           "column_name": "task_entity_id",
           "type": "Event",
           "json_mapping": {
-            "field": "baseEntityId"
+            "field": "details.taskIdentifier"
           }
         },
         {
@@ -610,14 +617,6 @@
           "type": "Event",
           "json_mapping": {
             "field": "baseEntityId"
-          }
-        },
-        {
-          "column_name": "qr_code",
-          "type": "Event",
-          "json_mapping": {
-            "field": "obs.fieldCode",
-            "concept": "qr_code"
           }
         },
         {
@@ -658,6 +657,108 @@
           "json_mapping": {
             "field": "obs.fieldCode",
             "concept": "statusHohstructure"
+          }
+        }
+      ]
+    },
+    {
+      "name": "cdd_drug_allocation",
+      "columns": [
+        {
+          "column_name": "location_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "locationId"
+          }
+        },
+        {
+          "column_name": "base_entity_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "locationId"
+          }
+        },
+        {
+          "column_name": "pzq_returned_tins",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nPZQreturnedtins"
+          }
+        },
+        {
+          "column_name": "pzq_returned_tins_quantity",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nPZQreturnedtinsquantity"
+          }
+        },
+        {
+          "column_name": "pzq_returned_tins_quantity_other",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nPZQreturnedtinsquantityother"
+          }
+        },
+        {
+          "column_name": "pzq_returned_loose",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nPZQreturnedloose"
+          }
+        }
+      ]
+    },
+    {
+      "name": "cdd_drug_returned",
+      "columns": [
+        {
+          "column_name": "location_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "locationId"
+          }
+        },
+        {
+          "column_name": "base_entity_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "_id"
+          }
+        },
+        {
+          "column_name": "pzq_received_tins",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nPZQreceivedtins"
+          }
+        },
+        {
+          "column_name": "pzq_received_tin_size",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nPZQreceivedtinsize"
+          }
+        },
+        {
+          "column_name": "pzq_received_tin_size_other",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nPZQreceivedtinsizeother"
+          }
+        },
+        {
+          "column_name": "pzq_received_loose",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "nPZQreceivedloose"
           }
         }
       ]

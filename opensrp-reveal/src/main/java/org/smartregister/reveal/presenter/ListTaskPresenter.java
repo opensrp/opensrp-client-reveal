@@ -30,6 +30,7 @@ import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.repository.BaseRepository;
+import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.BuildConfig;
@@ -41,6 +42,8 @@ import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.dao.ReportDao;
 import org.smartregister.reveal.dao.StructureDao;
+import org.smartregister.reveal.exception.QRCodeAssignException;
+import org.smartregister.reveal.exception.QRCodeSearchException;
 import org.smartregister.reveal.interactor.ListTaskInteractor;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.FamilyCardDetails;
@@ -470,36 +473,60 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
-    public void startFamilyProfileByQR(String qrCode) {
+    public void searchQRCode(String qrCode) {
         CallableInteractor myInteractor = getInteractor();
 
-        Callable<CommonPersonObjectClient> callable = () -> {
+        Callable<Pair<CommonPersonObjectClient, String>> callable = () -> {
+
+            if (StringUtils.isBlank(qrCode))
+                throw new QRCodeSearchException(qrCode, "Invalid QR Code");
 
             StructureDao structureDao = StructureDao.getInstance();
 
-            // check if qr has a structure
-            String familyEntityId = structureDao.getFamilyBaseIDFromQRCode(qrCode);
-            if (StringUtils.isBlank(familyEntityId))
-                throw new IllegalStateException("Family not found");
+            Pair<String, String> structureDetails = structureDao.getStructureAndFamilyIDByQrCode(qrCode);
+            if (structureDetails == null || StringUtils.isBlank(structureDetails.first))
+                throw new QRCodeSearchException(qrCode, "Structure not found");
+
+            if (StringUtils.isBlank(structureDetails.second))
+                return Pair.create(null, structureDetails.first);
 
             CommonRepository commonRepository = revealApplication.getContext().commonrepository(metadata().familyRegister.tableName);
-            CommonPersonObject personObject = commonRepository.findByBaseEntityId(familyEntityId);
+            CommonPersonObject personObject = commonRepository.findByBaseEntityId(structureDetails.second);
             CommonPersonObjectClient family = new CommonPersonObjectClient(personObject.getCaseId(),
                     personObject.getDetails(), "");
             family.setColumnmaps(personObject.getColumnmaps());
 
-            return family;
+            return Pair.create(family, null);
         };
 
 
         getView().setLoadingState(true);
-        myInteractor.execute(callable, new CallableInteractorCallBack<CommonPersonObjectClient>() {
+        myInteractor.execute(callable, new CallableInteractorCallBack<Pair<CommonPersonObjectClient, String>>() {
             @Override
-            public void onResult(CommonPersonObjectClient result) {
+            public void onResult(Pair<CommonPersonObjectClient, String> result) {
                 ListTaskView view = getView();
                 if (view != null) {
                     view.setLoadingState(false);
-                    view.openStructureProfile(result);
+                    if (result.first != null) {
+                        view.openStructureProfile(result.first);
+                    } else {
+                        String structureID = result.second;
+                        boolean found = false;
+                        setChangeMapPosition(false);
+                        for (Feature feature : getFeatureCollection().features()) {
+                            if (structureID.equals(feature.id())) {
+                                //
+                                selectedFeature = feature;
+                                found = true;
+                                break;
+                            }
+                        }
+                        listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
+                        if (!found)
+                            view.onError(new QRCodeSearchException(qrCode, "Structure not found"));
+
+                        view.promptFamilyRegistration(result.second);
+                    }
                 }
             }
 
@@ -611,11 +638,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
             // check if structure has a qr
             if (structureDao.structureHasQr(feature.id()))
-                throw new IllegalStateException("Structure has assigned QR");
+                throw new QRCodeAssignException(qrcode, "Structure has assigned QR");
 
             // check if qr has a structure
             if (StringUtils.isNotBlank(structureDao.getStructureQRCode(qrcode)))
-                throw new IllegalStateException("QR Code is already assigned");
+                throw new QRCodeAssignException(qrcode, "QR Code is already assigned");
 
 
             // read json
@@ -644,10 +671,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
                     // save
                     .saveEvent()
-            .clientProcessForm();
+                    .clientProcessForm();
 
             String taskID = getPropertyValue(feature, TASK_IDENTIFIER);
-            if(StringUtils.isBlank(taskID))
+            if (StringUtils.isBlank(taskID))
                 taskID = StructureDao.getInstance().getTaskByStructureID(feature.id());
 
             TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
@@ -660,6 +687,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
             task.setLastModified(new DateTime());
             taskRepository.addOrUpdate(task);
+
+            StructureRepository structureRepository = RevealApplication.getInstance().getStructureRepository();
+            org.smartregister.domain.Location structure = structureRepository.getLocationById(feature.id());
+            structure.getProperties().setName(qrcode);
+            structure.setSyncStatus(BaseRepository.TYPE_Unsynced);
+            structureRepository.addOrUpdate(structure);
 
             return task;
         };
@@ -783,6 +816,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
             // save event details
             NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonObject);
+            String consent = processor.getFieldValue("statusHouseholdconsent");
+
+
             String age = processor.getFieldValue("age");
             String unique_id = processor.getFieldValue("unique_id");
             String fam_name = processor.getFieldValue("fam_name");
@@ -796,27 +832,43 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
             Feature feature = getSelectedFeature();
             Task task = null;
-            if (feature != null) {
-                if (feature.hasProperty(TASK_IDENTIFIER)) {
-                    String taskID = getPropertyValue(feature, TASK_IDENTIFIER);
-                    task = taskRepository.getTaskByIdentifier(taskID);
+            String taskID = (feature != null && feature.hasProperty(TASK_IDENTIFIER)) ? getPropertyValue(feature, TASK_IDENTIFIER) : null;
+            if (feature != null && StringUtils.isBlank(taskID))
+                taskID = StructureDao.getInstance().getTaskByStructureID(feature.id());
 
-                    task.setBusinessStatus(Constants.BusinessStatus.COMPLETED_FAMILY_REGISTRATION);
-                    task.setStatus(TaskStatus.COMPLETED);
+            if (StringUtils.isNotBlank(taskID)) {
 
-                    if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
-                        task.setSyncStatus(BaseRepository.TYPE_Unsynced);
-                    }
-                    task.setLastModified(new DateTime());
-                    taskRepository.addOrUpdate(task);
-                }
+                task = taskRepository.getTaskByIdentifier(taskID);
+
+                task.setBusinessStatus(Constants.BusinessStatus.COMPLETED_FAMILY_REGISTRATION);
+                task.setStatus(TaskStatus.COMPLETED);
+
+                if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus()))
+                    task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+
+                task.setLastModified(new DateTime());
+                taskRepository.addOrUpdate(task);
             }
 
             if (task == null) {
                 String structureId = (feature != null ? feature.id() : null);
-                task = TaskUtils.getInstance().generateTask(context, familyEntityId, structureId, Constants.BusinessStatus.COMPLETED_FAMILY_REGISTRATION, TaskStatus.COMPLETED,
-                        StringUtils.isBlank(structureId) ? Constants.Intervention.FLOATING_FAMILY_REGISTRATION : Constants.Intervention.FAMILY_REGISTRATION,
+                String entityId = "Yes".equalsIgnoreCase(consent) ? familyEntityId : structureId;
+                task = TaskUtils.getInstance().generateTask(context, entityId, structureId, Constants.BusinessStatus.COMPLETED_FAMILY_REGISTRATION, TaskStatus.COMPLETED,
+                        FamilyConstants.EventType.FAMILY_REGISTRATION_INELIGIBLE,
                         R.string.register_family);
+            }
+
+            if (!"Yes".equalsIgnoreCase(consent)) {
+                // save form and exit
+                processor = NativeFormProcessor.createInstance(jsonObject.toString());
+                processor
+                        .withBindType(FamilyConstants.TABLE_NAME.FAMILY)
+                        .withEncounterType(FamilyConstants.EventType.FAMILY_REGISTRATION)
+                        .tagLocationData(operationalArea)
+                        .tagEventMetadata()
+                        .saveEvent();
+
+                return Pair.create(null, task);
             }
 
             jsonObject.remove("step2");
@@ -912,7 +964,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     if (result == null) {
                         view.onError(new IllegalStateException("Invalid family"));
                     } else {
-                        view.openStructureProfile(result.first);
+                        if (result.first != null)
+                            view.openStructureProfile(result.first);
                     }
 
                     Task task = result.second;
@@ -955,6 +1008,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         Callable<Task> callable = () -> {
 
             String taskID = getPropertyValue(feature, TASK_IDENTIFIER);
+            if (StringUtils.isBlank(taskID))
+                taskID = StructureDao.getInstance().getTaskByStructureID(feature.id());
 
             TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
             Task task = taskRepository.getTaskByIdentifier(taskID);
@@ -1026,7 +1081,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void fetchReportStats() {
         CallableInteractor myInteractor = getInteractor();
 
-        Callable<Map<String, Integer>> callable = () -> {
+        Callable<Map<String, Double>> callable = () -> {
 
             String currentLocation = getCurrentLocationID();
             if (StringUtils.isBlank(currentLocation))
@@ -1034,25 +1089,25 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
             ReportDao reportDao = ReportDao.getInstance();
 
-            int totalStructure = reportDao.getTotalStructures(currentLocation);
-            int totalVisited = reportDao.getTotalVisitedStructures(currentLocation);
+            double totalStructure = reportDao.getTotalStructures(currentLocation);
+            double totalVisited = reportDao.getTotalVisitedStructures(currentLocation);
 
-            int foundCov = ((totalVisited * 100) / totalStructure);
+            double foundCov = ((totalVisited * 100) / totalStructure);
 
-            int unVisitedStructures = totalStructure - totalVisited;
+            double unVisitedStructures = totalStructure - totalVisited;
 
-            int pzqDistributed = reportDao.getPZQDistributed(currentLocation);
-            int pzqReceived = reportDao.getPZQReceived(currentLocation);
+            double pzqDistributed = reportDao.getPZQDistributed(currentLocation);
+            double pzqReceived = reportDao.getPZQReceived(currentLocation);
 
-            int pzqReturned = reportDao.getPZQReturned(currentLocation);
-            int pzqRemaining = pzqReceived - pzqReturned;
+            double pzqReturned = reportDao.getPZQReturned(currentLocation);
+            double pzqRemaining = pzqReceived - pzqReturned - pzqDistributed;
 
 
-            int totalChildrenReceivedDrugs = reportDao.getTotalChildrenReceivedDrugs(currentLocation);
-            int totalExpectedRegistrations = reportDao.getTotalExpectedRegistrations(currentLocation);
-            int successRate = totalExpectedRegistrations == 0 ? 0 : ((totalChildrenReceivedDrugs * 100) / totalExpectedRegistrations);
+            double totalChildrenReceivedDrugs = reportDao.getTotalChildrenReceivedDrugs(currentLocation);
+            double totalExpectedRegistrations = reportDao.getTotalExpectedRegistrations(currentLocation);
+            double successRate = totalExpectedRegistrations == 0 ? 0 : ((totalChildrenReceivedDrugs * 100) / totalExpectedRegistrations);
 
-            Map<String, Integer> result = new HashMap<>();
+            Map<String, Double> result = new HashMap<>();
             result.put(Constants.ReportCounts.FOUND_COVERAGE, foundCov);
             result.put(Constants.ReportCounts.UNVISITED_STRUCTURES, unVisitedStructures);
             result.put(Constants.ReportCounts.PZQ_DISTRIBUTED, pzqDistributed);
@@ -1062,9 +1117,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             return result;
         };
 
-        myInteractor.execute(callable, new CallableInteractorCallBack<Map<String, Integer>>() {
+        myInteractor.execute(callable, new CallableInteractorCallBack<Map<String, Double>>() {
             @Override
-            public void onResult(Map<String, Integer> results) {
+            public void onResult(Map<String, Double> results) {
                 ListTaskView view = getView();
                 if (view != null) {
                     if (results != null) {

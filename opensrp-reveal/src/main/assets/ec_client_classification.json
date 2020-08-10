@@ -142,6 +142,20 @@
             "creates_case": [
               "structure_eligibility"
             ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "Drug_return_from_CDD_team",
+            "creates_case": [
+              "cdd_drug_returned"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "Drug_allocation_to_CDD_team",
+            "creates_case": [
+              "cdd_drug_allocation"
+            ]
           }
         ]
       }

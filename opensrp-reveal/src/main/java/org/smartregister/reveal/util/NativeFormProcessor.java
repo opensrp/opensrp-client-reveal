@@ -146,7 +146,7 @@ public class NativeFormProcessor {
     }
 
     private Event createEvent() throws JSONException {
-        if (_event == null)
+        if (_event == null) {
             _event = JsonFormUtils.createEvent(
                     getFields(),
                     getJSONObject(jsonForm, METADATA),
@@ -155,6 +155,14 @@ public class NativeFormProcessor {
                     encounterType,
                     bindType
             );
+
+            if (jsonForm.has(DETAILS)) {
+                Map<String, String> map = gson.fromJson(jsonForm.getJSONObject(DETAILS).toString(), Map.class);
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                    _event.addDetails(entry.getKey(), entry.getValue());
+                }
+            }
+        }
 
         return _event;
     }
@@ -184,11 +192,6 @@ public class NativeFormProcessor {
 
     public NativeFormProcessor saveEvent() throws JSONException {
         JSONObject eventJson = new JSONObject(gson.toJson(createEvent()));
-
-        // inject the details
-        if (jsonForm.has(DETAILS))
-            eventJson.put(DETAILS, jsonForm.getJSONObject(DETAILS));
-
         getSyncHelper().addEvent(createEvent().getBaseEntityId(), eventJson);
         return this;
     }

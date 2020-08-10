@@ -30,6 +30,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.TaskRegisterAdapter;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
+import org.smartregister.reveal.exception.QRCodeSearchException;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
@@ -157,7 +158,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     @Override
     public void onQRCodeSucessfullyScanned(String qrCode) {
-        ((TaskRegisterFragmentPresenter) presenter).searchViaQRCode(qrCode);
+        getPresenter().searchViaQRCode(qrCode);
     }
 
     @Override
@@ -192,23 +193,19 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     }
 
     @Override
-    public void onReportCountReloaded(Map<String, Integer> reportCounts) {
+    public void onReportCountReloaded(Map<String, Double> reportCounts) {
         LinearLayout progressIndicatorsGroupView = view.findViewById(R.id.progressIndicatorsGroupView);
 
         ProgressIndicatorView progressIndicatorView = progressIndicatorsGroupView.findViewById(R.id.progressIndicatorViewTitle);
 
-        Integer coverage = reportCounts.get(org.smartregister.reveal.util.Constants.ReportCounts.FOUND_COVERAGE);
-        coverage = coverage == null ? 0 : coverage;
-
-        progressIndicatorView.setProgress(coverage);
-        progressIndicatorView.setTitle(getString(R.string.n_percent, coverage));
-
-
+        Double coverage = reportCounts.get(org.smartregister.reveal.util.Constants.ReportCounts.FOUND_COVERAGE);
+        progressIndicatorView.setProgress(toInt(coverage));
+        progressIndicatorView.setTitle(getString(R.string.n_percent, toInt(coverage)));
 
         View detailedReportCardView = view.findViewById(R.id.indicators_card_view);
 
         TextView tvStructuresUnvisited = detailedReportCardView.findViewById(R.id.tvStructuresUnvisited);
-        tvStructuresUnvisited.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.UNVISITED_STRUCTURES));
+        tvStructuresUnvisited.setText(getIntMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.UNVISITED_STRUCTURES));
 
         TextView tvPZQDistributed = detailedReportCardView.findViewById(R.id.tvPZQDistributed);
         tvPZQDistributed.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.PZQ_DISTRIBUTED));
@@ -220,14 +217,48 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         tvSuccessRate.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.SUCCESS_RATE) + "%");
     }
 
-    @Override
-    public void onError(Exception exception) {
-        Timber.e(exception);
+    private Integer toInt(Double value){
+        try{
+            if(value != null)
+                return value.intValue();
+        }catch (Exception e){
+            Timber.v(e);
+        }
+        return 0;
     }
 
-    private String getMapValue(Map<String, Integer> reportCounts, String key) {
-        Integer value = reportCounts.get(key);
-        return value == null ? "0" : Integer.toString(value);
+    @Override
+    public void onError(Exception ex) {
+        if(ex instanceof QRCodeSearchException){
+            QRCodeSearchException e = (QRCodeSearchException) ex;
+            AlertDialogUtils.displayNotification(getContext(), e.getSearchMessage(), "QR code : " + e.getQrCode());
+        }else{
+            Timber.e(ex, ex.toString());
+        }
+    }
+
+    @Override
+    public void resumeRegistration(String structureId, String qrCode) {
+        Toast.makeText(getContext(), "Found QR code : " + qrCode, Toast.LENGTH_SHORT).show();
+        AlertDialogUtils.displayNotificationWithCallback(getContext(), R.string.resume_registration,
+                R.string.structure_with_pending_registration, R.string.confirm, R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == BUTTON_POSITIVE)
+                            // start registration
+                        dialog.dismiss();
+                    }
+                });
+    }
+
+    private String getIntMapValue(Map<String, Double> reportCounts, String key) {
+        Double value = reportCounts.get(key);
+        return value == null ? "0" : Integer.toString(value.intValue());
+    }
+
+    private String getMapValue(Map<String, Double> reportCounts, String key) {
+        Double value = reportCounts.get(key);
+        return value == null ? "0" : Double.toString(value);
     }
 
     @Override

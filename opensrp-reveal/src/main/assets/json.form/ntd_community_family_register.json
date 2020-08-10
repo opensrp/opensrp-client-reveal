@@ -100,13 +100,30 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_identifier",
         "openmrs_entity_id": "opensrp_id",
-        "type": "edit_text",
+        "type": "hidden",
         "hint": "ID",
         "read_only": "True",
         "text_size": "8sp",
         "v_required": {
           "value": "true",
           "err": "Please enter the ID"
+        }
+      },
+      {
+        "key": "denied_consent",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "Save and exit form.  \n Family denied consent",
+        "text_color": "#D56900",
+        "toaster_type": "warning",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-family-register-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -120,6 +137,13 @@
         "v_required": {
           "value": "true",
           "err": "Please enter first name of Head of Household"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-family-register-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -156,7 +180,14 @@
             "text_size": "18px",
             "value": "false"
           }
-        ]
+        ],
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-family-register-relevance.yml"
+            }
+          }
+        }
       },
       {
         "key": "gender",
@@ -178,6 +209,13 @@
         "v_required": {
           "value": "true",
           "err": "Please enter the sex"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-family-register-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -202,6 +240,13 @@
         "v_required": {
           "value": true,
           "err": "Please enter the age"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-family-register-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -222,6 +267,13 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-family-register-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -246,6 +298,13 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-family-register-relevance.yml"
+            }
+          }
         }
       },
       {
@@ -259,6 +318,13 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-family-register-relevance.yml"
+            }
+          }
         }
       }
     ]

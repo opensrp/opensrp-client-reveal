@@ -1,5 +1,7 @@
 package org.smartregister.reveal.dao;
 
+import androidx.core.util.Pair;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -14,7 +16,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 
 public class StructureDao extends AbstractDao {
@@ -88,6 +91,19 @@ public class StructureDao extends AbstractDao {
                 "inner join  ec_family on ec_family.structure_id = structure_eligibility.structure_id " +
                 "where qr_code = '" + qrCode + "'";
         DataMap<String> dataMap = cursor -> getCursorValue(cursor, "base_entity_id");
+        return readSingleValue(sql, dataMap);
+    }
+
+    public @Nullable Pair<String, String> getStructureAndFamilyIDByQrCode(String qrCode) {
+        String sql = "select structure_eligibility.structure_id , ec_family.base_entity_id " +
+                "from structure_eligibility " +
+                "left join ec_family on ec_family.structure_id = structure_eligibility.structure_id " +
+                "where structure_eligibility.qr_code = '" + qrCode + "' ";
+        DataMap<Pair<String, String>> dataMap = cursor ->
+                Pair.create(
+                        getCursorValue(cursor, "structure_id"),
+                        getCursorValue(cursor, "base_entity_id")
+                );
         return readSingleValue(sql, dataMap);
     }
 

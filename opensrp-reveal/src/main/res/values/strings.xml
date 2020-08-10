@@ -402,4 +402,7 @@
 
     <string name="drug_allocation_to_cdd_team">Drug Allocation to CDD team</string>
     <string name="drug_return_from_cdd_team">Drug Return from CDD Team</string>
+
+    <string name="resume_registration">Resume Registration</string>
+    <string name="structure_with_pending_registration">Would you like to resume registration of this structure</string>
 </resources>

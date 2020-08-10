@@ -1,7 +1,63 @@
 ---
+name: step2_denied_consent
+description: denied_consent relevance
+priority: 1
+condition: "!step1_statusHouseholdconsent.contains('Yes')"
+actions:
+  - "isRelevant = true"
+---
 name: step2_surname
 description: surname relevance
+priority: 2
+condition: "!step2_same_as_fam_name.contains('same_as_fam_name') && step1_statusHouseholdconsent.contains('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step2_firstName
+description: firstName relevance
 priority: 1
-condition: "!step2_same_as_fam_name.contains('same_as_fam_name')"
+condition: "step1_statusHouseholdconsent.contains('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step2_same_as_fam_name
+description: same_as_fam_name relevance
+priority: 1
+condition: "step1_statusHouseholdconsent.contains('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step2_gender
+description: gender relevance
+priority: 1
+condition: "step1_statusHouseholdconsent.contains('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step2_age
+description: age relevance
+priority: 1
+condition: "step1_statusHouseholdconsent.contains('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step2_personPhonenumber
+description: personPhonenumber relevance
+priority: 1
+condition: "step1_statusHouseholdconsent.contains('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step2_nSAC
+description: nSAC relevance
+priority: 1
+condition: "step1_statusHouseholdconsent.contains('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step2_nameGrantingconsent
+description: nameGrantingconsent relevance
+priority: 1
+condition: "step1_statusHouseholdconsent.contains('Yes')"
 actions:
   - "isRelevant = true"

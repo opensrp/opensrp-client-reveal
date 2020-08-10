@@ -242,6 +242,10 @@ public interface Constants {
         String STRUCTURE_ELIGIBILITY = "Structure Eligibility";
 
         String STRUCTURE_QR = "Structure QR";
+
+        String DRUG_ALLOCATION_TO_CDD_TEAM = "Drug_allocation_to_CDD_team";
+
+        String DRUG_RETURN_FROM_CDD_TEAM = "Drug_return_from_CDD_team";
     }
 
     interface Tables {
@@ -582,6 +586,8 @@ public interface Constants {
 
         String STRUCTURES_TABLE = "structure";
 
+        String STRUCTURE_ELIGIBILITY_TABLE = "structure_eligibility";
+
         String STRUCTURE_NAME = "structure_name";
 
         String STRUCTURE_ID = "structure_id";
@@ -704,6 +710,9 @@ public interface Constants {
 
         String LOCATION_SYNC_STATUS = "sync_status";
 
+        String _ID = "_id";
+
+        String QR_CODE = "qr_code";
     }
 
     interface UseContextCode {

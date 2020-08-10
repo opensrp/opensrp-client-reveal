@@ -2,18 +2,19 @@ package org.smartregister.reveal.sync;
 
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.smartregister.domain.Location;
-import org.smartregister.domain.LocationProperty.PropertyStatus;
-import org.smartregister.domain.Task;
 import org.smartregister.domain.Client;
 import org.smartregister.domain.Event;
-import org.smartregister.domain.db.EventClient;
+import org.smartregister.domain.Location;
+import org.smartregister.domain.LocationProperty.PropertyStatus;
 import org.smartregister.domain.Obs;
+import org.smartregister.domain.Task;
+import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.jsonmapping.ClientClassification;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
@@ -120,13 +121,17 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     processUpdateFamilyRegistrationEvent(event, eventClient.getClient(), clientClassification, localEvents);
                 } else if (eventType.equals(Constants.EventType.PAOT_EVENT)) {
                     operationalAreaId = processEvent(event, clientClassification, localEvents, JsonForm.PAOT_STATUS);
-                } else if (eventType.equals(Constants.EventType.STRUCTURE_ELIGIBILITY) || eventType.equals("Structure QR")) {
+                } else if (
+                        eventType.equals(Constants.EventType.STRUCTURE_ELIGIBILITY) ||
+                                eventType.equals(Constants.EventType.STRUCTURE_QR) ||
+                                eventType.equals(Constants.EventType.DRUG_ALLOCATION_TO_CDD_TEAM) ||
+                                eventType.equals(Constants.EventType.DRUG_RETURN_FROM_CDD_TEAM)
+                ) {
                     try {
                         processEvent(event, new Client(event.getBaseEntityId()), clientClassification);
                     } catch (Exception e) {
                         Timber.e(e);
                     }
-                    return;
                 } else if (eventType.equals(TASK_RESET_EVENT)) {
                     continue;
                 } else if (CHILD_REGISTRATION.equals(eventType) || UPDATE_CHILD_REGISTRATION.equals(eventType) || Constants.EventType.MDA_DISPENSE.equals(eventType)) {

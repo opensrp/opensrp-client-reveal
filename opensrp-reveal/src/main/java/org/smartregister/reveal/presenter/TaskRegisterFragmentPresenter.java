@@ -28,6 +28,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.dao.ReportDao;
 import org.smartregister.reveal.dao.StructureDao;
+import org.smartregister.reveal.exception.QRCodeSearchException;
 import org.smartregister.reveal.interactor.TaskRegisterFragmentInteractor;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
@@ -241,7 +242,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
         this.isActionClicked = isActionClicked;
         if (details != null) {
             setTaskDetails(details);
-            if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)){
+            if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
 
                 if (StringUtils.isNotBlank(details.getFamilyBaseEntityID()))
                     interactor.fetchFamilyDetailsByID(details.getFamilyBaseEntityID());
@@ -256,9 +257,9 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                     &&
                     (
                             FLOATING_FAMILY_REGISTRATION.equals(details.getTaskCode()) ||
-                            BLOOD_SCREENING.equals(details.getTaskCode()) ||
-                            BEDNET_DISTRIBUTION.equals(details.getTaskCode()) ||
-                            REGISTER_FAMILY.equals(details.getTaskCode())) ||
+                                    BLOOD_SCREENING.equals(details.getTaskCode()) ||
+                                    BEDNET_DISTRIBUTION.equals(details.getTaskCode()) ||
+                                    REGISTER_FAMILY.equals(details.getTaskCode())) ||
                     (details.getTaskCount() != null && details.getTaskCount() > 1)) { // structures with grouped tasks should display the family profile
                 setTaskDetails(details);
 
@@ -308,33 +309,40 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     public void searchViaQRCode(String searchText) {
         CallableInteractor myInteractor = new GenericInteractor();
 
-        Callable<CommonPersonObjectClient> callable = () -> {
+        Callable<Pair<CommonPersonObjectClient,String>> callable = () -> {
 
             StructureDao structureDao = StructureDao.getInstance();
 
             // check if qr has a structure
-            String familyEntityId = structureDao.getFamilyBaseIDFromQRCode(searchText);
-            if (StringUtils.isBlank(familyEntityId))
-                throw new IllegalStateException("Family not found");
+            Pair<String,String> structureDetails = structureDao.getStructureAndFamilyIDByQrCode(searchText);
+            if (structureDetails == null || StringUtils.isBlank(structureDetails.first))
+                throw new QRCodeSearchException(searchText, "Structure not found");
+
+            if(StringUtils.isBlank(structureDetails.second))
+                return Pair.create(null,structureDetails.first);
 
             CommonRepository commonRepository = RevealApplication.getInstance().getContext().commonrepository(metadata().familyRegister.tableName);
-            CommonPersonObject personObject = commonRepository.findByBaseEntityId(familyEntityId);
+            CommonPersonObject personObject = commonRepository.findByBaseEntityId(structureDetails.second);
             CommonPersonObjectClient family = new CommonPersonObjectClient(personObject.getCaseId(),
                     personObject.getDetails(), "");
             family.setColumnmaps(personObject.getColumnmaps());
 
-            return family;
+            return Pair.create(family,null);
         };
 
 
         getView().setLoadingState(true);
-        myInteractor.execute(callable, new CallableInteractorCallBack<CommonPersonObjectClient>() {
+        myInteractor.execute(callable, new CallableInteractorCallBack<Pair<CommonPersonObjectClient,String>>() {
             @Override
-            public void onResult(CommonPersonObjectClient result) {
+            public void onResult(Pair<CommonPersonObjectClient,String> result) {
                 TaskRegisterFragmentContract.View view = getView();
                 if (view != null) {
                     view.setLoadingState(false);
-                    view.openFamilyProfile(result, null);
+                    if(result.first != null){
+                        view.openFamilyProfile(result.first, null);
+                    }else{
+                        view.resumeRegistration(result.second, searchText);
+                    }
                 }
             }
 
@@ -343,8 +351,8 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                 TaskRegisterFragmentContract.View view = getView();
                 if (view == null) return;
 
-                Timber.e(ex.toString(), searchText);
                 view.setLoadingState(false);
+                view.onError(ex);
             }
         });
     }
@@ -361,6 +369,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                 if (Utils.matchesSearchPhrase(task.getFamilyName(), searchText) ||
                         Utils.matchesSearchPhrase(task.getStructureName(), searchText) ||
                         Utils.matchesSearchPhrase(task.getHouseNumber(), searchText) ||
+                        Utils.matchesSearchPhrase(task.getQrCode(), searchText) ||
                         Utils.matchesSearchPhrase(task.getFamilyMemberNames(), searchText)) {
                     filteredTasks.add(task);
                     if (task.getDistanceFromUser() > 0 && task.getDistanceFromUser() <= Utils.getLocationBuffer())
@@ -482,7 +491,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     public void fetchReportStats() {
         CallableInteractor myInteractor = new GenericInteractor();
 
-        Callable<Map<String, Integer>> callable = () -> {
+        Callable<Map<String, Double>> callable = () -> {
 
             String currentLocation = getCurrentLocationID();
             if (StringUtils.isBlank(currentLocation))
@@ -490,25 +499,25 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
 
             ReportDao reportDao = ReportDao.getInstance();
 
-            int totalStructure = reportDao.getTotalStructures(currentLocation);
-            int totalVisited = reportDao.getTotalVisitedStructures(currentLocation);
+            double totalStructure = reportDao.getTotalStructures(currentLocation);
+            double totalVisited = reportDao.getTotalVisitedStructures(currentLocation);
 
-            int foundCov = ((totalVisited * 100) / totalStructure);
+            double foundCov = ((totalVisited * 100) / totalStructure);
 
-            int unVisitedStructures = totalStructure - totalVisited;
+            double unVisitedStructures = totalStructure - totalVisited;
 
-            int pzqDistributed = reportDao.getPZQDistributed(currentLocation);
-            int pzqReceived = reportDao.getPZQReceived(currentLocation);
+            double pzqDistributed = reportDao.getPZQDistributed(currentLocation);
+            double pzqReceived = reportDao.getPZQReceived(currentLocation);
 
-            int pzqReturned = reportDao.getPZQReturned(currentLocation);
-            int pzqRemaining = pzqReceived - pzqReturned;
+            double pzqReturned = reportDao.getPZQReturned(currentLocation);
+            double pzqRemaining = pzqReceived - pzqReturned - pzqDistributed;
 
 
-            int totalChildrenReceivedDrugs = reportDao.getTotalChildrenReceivedDrugs(currentLocation);
-            int totalExpectedRegistrations = reportDao.getTotalExpectedRegistrations(currentLocation);
-            int successRate = totalExpectedRegistrations == 0 ? 0 : ((totalChildrenReceivedDrugs * 100) / totalExpectedRegistrations);
+            double totalChildrenReceivedDrugs = reportDao.getTotalChildrenReceivedDrugs(currentLocation);
+            double totalExpectedRegistrations = reportDao.getTotalExpectedRegistrations(currentLocation);
+            double successRate = totalExpectedRegistrations == 0 ? 0 : ((totalChildrenReceivedDrugs * 100) / totalExpectedRegistrations);
 
-            Map<String, Integer> result = new HashMap<>();
+            Map<String, Double> result = new HashMap<>();
             result.put(Constants.ReportCounts.FOUND_COVERAGE, foundCov);
             result.put(Constants.ReportCounts.UNVISITED_STRUCTURES, unVisitedStructures);
             result.put(Constants.ReportCounts.PZQ_DISTRIBUTED, pzqDistributed);
@@ -518,9 +527,9 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             return result;
         };
 
-        myInteractor.execute(callable, new CallableInteractorCallBack<Map<String, Integer>>() {
+        myInteractor.execute(callable, new CallableInteractorCallBack<Map<String, Double>>() {
             @Override
-            public void onResult(Map<String, Integer> results) {
+            public void onResult(Map<String, Double> results) {
                 TaskRegisterFragmentContract.View view = getView();
                 if (view != null) {
                     if (results != null) {

@@ -1,5 +1,6 @@
 package org.smartregister.reveal.dao;
 
+import com.google.common.util.concurrent.AtomicDouble;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,7 +12,6 @@ import org.smartregister.reveal.util.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import timber.log.Timber;
 
@@ -36,10 +36,10 @@ public class ReportDao extends AbstractDao {
         return readSingleValue(sql, dataMap, 0);
     }
 
-    public int getPZQReturned(String operationalAreaID) {
+    public double getPZQReturned(String operationalAreaID) {
         String sql = "select json from event where eventType = '" + Constants.Events.DRUG_RETURNED + "'";
 
-        AtomicInteger totalCount = new AtomicInteger(0);
+        AtomicDouble totalCount = new AtomicDouble(0);
         DataMap<Void> dataMap = cursor -> {
             String content = getCursorValue(cursor, "json");
 
@@ -50,13 +50,13 @@ public class ReportDao extends AbstractDao {
 
                 Map<String, String> values = readEventJsonValues(json);
 
-                Integer returnedTins = parseInt(values.get("nPZQreturnedtins"));
-                Integer returnedTinsQuantity = parseInt(values.get("nPZQreturnedtinsquantity"));
-                Integer returnedTinsQuantityOther = parseInt(values.get("nPZQreturnedtinsquantityother"));
-                Integer returnedTinsLoose = parseInt(values.get("nPZQreturnedloose"));
+                double returnedTins = parseDouble(values.get("nPZQreturnedtins"));
+                double returnedTinsQuantity = parseDouble(values.get("nPZQreturnedtinsquantity"));
+                double returnedTinsQuantityOther = parseDouble(values.get("nPZQreturnedtinsquantityother"));
+                double returnedTinsLoose = parseDouble(values.get("nPZQreturnedloose"));
 
-                int count = returnedTins * (returnedTinsQuantity != null ? returnedTinsQuantity : returnedTinsQuantityOther)
-                        + (returnedTinsLoose != null ? returnedTinsLoose : 0);
+                double count = returnedTins * (returnedTinsQuantity > 0? returnedTinsQuantity : returnedTinsQuantityOther)
+                        + returnedTinsLoose;
 
                 totalCount.set(totalCount.get() + count);
 
@@ -70,13 +70,13 @@ public class ReportDao extends AbstractDao {
         return totalCount.get();
     }
 
-    private Integer parseInt(String value) {
+    private double parseDouble(String value) {
         try {
-            if (StringUtils.isNotBlank(value)) return Integer.parseInt(value);
+            if (StringUtils.isNotBlank(value)) return Double.parseDouble(value);
         } catch (NumberFormatException e) {
             Timber.e(e);
         }
-        return null;
+        return 0d;
     }
 
     private Map<String, String> readEventJsonValues(JSONObject json) throws JSONException {
@@ -102,10 +102,10 @@ public class ReportDao extends AbstractDao {
         return values;
     }
 
-    public int getPZQReceived(String operationalAreaID) {
+    public double getPZQReceived(String operationalAreaID) {
         String sql = "select json from event where eventType = '" + Constants.Events.DRUG_ALLOCATION + "'";
 
-        AtomicInteger totalCount = new AtomicInteger(0);
+        AtomicDouble totalCount = new AtomicDouble(0);
         DataMap<Void> dataMap = cursor -> {
             String content = getCursorValue(cursor, "json");
 
@@ -116,13 +116,13 @@ public class ReportDao extends AbstractDao {
 
                 Map<String, String> values = readEventJsonValues(json);
 
-                Integer receivedTins = parseInt(values.get("nPZQreceivedtins"));
-                Integer receivedTinsSize = parseInt(values.get("nPZQreceivedtinsize"));
-                Integer receivedTinsSizeOther = parseInt(values.get("nPZQreceivedtinsizeother"));
-                Integer receivedTinsLoose = parseInt(values.get("nPZQreceivedloose"));
+                double receivedTins = parseDouble(values.get("nPZQreceivedtins"));
+                double receivedTinsSize = parseDouble(values.get("nPZQreceivedtinsize"));
+                double receivedTinsSizeOther = parseDouble(values.get("nPZQreceivedtinsizeother"));
+                double receivedTinsLoose = parseDouble(values.get("nPZQreceivedloose"));
 
-                int count = receivedTins * (receivedTinsSize != null ? receivedTinsSize : receivedTinsSizeOther)
-                        + (receivedTinsLoose != null ? receivedTinsLoose : 0);
+                double count = receivedTins * (receivedTinsSize > 0 ? receivedTinsSize : receivedTinsSizeOther)
+                        + receivedTinsLoose;
 
                 totalCount.set(totalCount.get() + count);
 
@@ -136,10 +136,10 @@ public class ReportDao extends AbstractDao {
         return totalCount.get();
     }
 
-    public int getPZQDistributed(String operationalAreaID) {
-        String sql = "select json from event where eventType = '" + Constants.Events.CHILD_DRUG_DISTRIBUTION + "'";
+    public double getPZQDistributed(String operationalAreaID) {
+        String sql = "select json from event where eventType = '" + Constants.EventType.MDA_DISPENSE + "'";
 
-        AtomicInteger totalCount = new AtomicInteger(0);
+        AtomicDouble totalCount = new AtomicDouble(0);
         DataMap<Void> dataMap = cursor -> {
             String content = getCursorValue(cursor, "json");
 
@@ -150,10 +150,9 @@ public class ReportDao extends AbstractDao {
 
                 Map<String, String> values = readEventJsonValues(json);
 
-                Integer receivedTins = parseInt(values.get("nPzqDistributedQuantity"));
-                int count = receivedTins == null ? 0 : receivedTins;
+                double receivedTins = parseDouble(values.get("nPzqDistributedQuantity"));
 
-                totalCount.set(totalCount.get() + count);
+                totalCount.set(totalCount.get() + receivedTins);
 
             } catch (Exception e) {
                 Timber.e(e);

@@ -96,9 +96,11 @@ public interface TaskRegisterFragmentContract {
 
         void startMapActivity(TaskFilterParams taskFilterParams);
 
-        void onReportCountReloaded(Map<String, Integer> reportCounts);
+        void onReportCountReloaded(Map<String, Double> reportCounts);
 
         void onError(Exception exception);
+
+        void resumeRegistration(String structureId, String qrCode);
     }
 
     interface Interactor {

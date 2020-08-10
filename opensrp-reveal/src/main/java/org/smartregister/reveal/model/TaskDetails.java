@@ -77,6 +77,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
     private String familyBaseEntityID;
 
+    private String qrCode;
+
     public TaskDetails(@NonNull String taskId) {
         super(taskId);
     }
@@ -375,5 +377,13 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
     public void setFamilyBaseEntityID(String familyBaseEntityID) {
         this.familyBaseEntityID = familyBaseEntityID;
+    }
+
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
     }
 }
