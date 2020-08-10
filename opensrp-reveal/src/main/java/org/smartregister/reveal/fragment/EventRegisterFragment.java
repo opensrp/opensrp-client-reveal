@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.StringRes;
 
@@ -15,11 +16,13 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.EventRegisterContract;
 import org.smartregister.reveal.model.EventRegisterDetails;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.EventRegisterFragmentPresenter;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.DrawerMenuView;
 import org.smartregister.reveal.view.EventRegisterActivity;
+import org.smartregister.reveal.view.FilterTasksActivity;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.reveal.viewholder.EventViewHolder;
 import org.smartregister.view.fragment.BaseRegisterFragment;
@@ -28,6 +31,8 @@ import java.util.HashMap;
 import java.util.Set;
 
 import static android.app.Activity.RESULT_OK;
+import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
+import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
 
 /**
  * Created by samuelgithengi on 7/30/20.
@@ -40,12 +45,15 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
 
     private RevealJsonFormUtils jsonFormUtils;
 
+    private TextView filterTextView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         drawerView = new DrawerMenuView(this);
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setCancelable(false);
+
     }
 
     @Override
@@ -84,6 +92,12 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
         drawerView.onResume();
 
         getSearchView().setHint(R.string.search);
+
+        filterTextView = view.findViewById(R.id.filter_text_view);
+        filterTextView.setOnClickListener(v -> {
+            getPresenter().onFilterTasksClicked();
+        });
+
     }
 
     @Override
@@ -161,5 +175,13 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
             progressDialog.dismiss();
         }
     }
+
+    @Override
+    public void openFilterActivity(TaskFilterParams filterParams) {
+        Intent intent = new Intent(getContext(), FilterTasksActivity.class);
+        intent.putExtra(FILTER_SORT_PARAMS, filterParams);
+        getActivity().startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
+    }
+
 
 }

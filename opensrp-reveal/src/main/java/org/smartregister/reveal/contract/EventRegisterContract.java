@@ -5,6 +5,7 @@ import androidx.annotation.StringRes;
 import org.json.JSONObject;
 import org.smartregister.domain.Event;
 import org.smartregister.reveal.model.EventRegisterDetails;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.view.contract.BaseRegisterFragmentContract;
 
@@ -36,6 +37,7 @@ public interface EventRegisterContract {
 
         void hideProgressDialog();
 
+        void openFilterActivity(TaskFilterParams filterParams);
     }
 
     interface Presenter extends BaseRegisterFragmentContract.Presenter {
@@ -45,6 +47,7 @@ public interface EventRegisterContract {
 
         void onEventSelected(EventRegisterDetails details);
 
+        void onFilterTasksClicked();
     }
 
     interface Interactor {

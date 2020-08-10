@@ -12,6 +12,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.EventRegisterContract;
 import org.smartregister.reveal.interactor.EventRegisterFragmentInteractor;
 import org.smartregister.reveal.model.EventRegisterDetails;
+import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Utils;
 
@@ -33,6 +34,8 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
     private EventRegisterFragmentInteractor interactor;
 
     private EventRegisterDetails eventRegisterDetails;
+
+    private TaskFilterParams filterParams;
 
     public EventRegisterFragmentPresenter(EventRegisterContract.View view, String viewConfigurationIdentifier) {
         this.view = view;
@@ -127,6 +130,11 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
         view.showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
         this.eventRegisterDetails = details;
         interactor.findEvent(details.getFormSubmissionId());
+    }
+
+    @Override
+    public void onFilterTasksClicked() {
+        view.openFilterActivity(filterParams);
     }
 
 }
