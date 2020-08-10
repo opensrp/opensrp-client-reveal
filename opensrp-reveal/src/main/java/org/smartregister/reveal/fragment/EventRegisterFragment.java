@@ -20,6 +20,8 @@ import org.smartregister.reveal.model.FilterConfiguration;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.EventRegisterFragmentPresenter;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.BusinessStatus;
+import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.DrawerMenuView;
 import org.smartregister.reveal.view.EventRegisterActivity;
@@ -28,6 +30,7 @@ import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.reveal.viewholder.EventViewHolder;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -183,9 +186,15 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
         Intent intent = new Intent(getContext(), FilterTasksActivity.class);
         intent.putExtra(FILTER_SORT_PARAMS, filterParams);
         intent.putExtra(FILTER_CONFIGURATION, FilterConfiguration.builder()
-                .businessStatusLayoutEnabled(false)
+                .businessStatusLayoutEnabled(true)
+                .businessStatusList(Arrays.asList(BusinessStatus.SPRAYED, BusinessStatus.NOT_SPRAYED, BusinessStatus.NOT_ELIGIBLE))
                 .interventionTypeLayoutEnabled(false)
                 .taskCodeLayoutEnabled(false)
+                .formsLayoutEnabled(true)
+                .formsList(Arrays.asList(JsonForm.SPRAY_FORM_ZAMBIA, JsonForm.VERIFICATION_FORM_ZAMBIA,
+                        JsonForm.DAILY_SUMMARY_ZAMBIA, JsonForm.TEAM_LEADER_DOS_ZAMBIA,
+                        JsonForm.MOBILIZATION_FORM_ZAMBIA, JsonForm.IRS_SA_DECISION_ZAMBIA,
+                        JsonForm.IRS_FIELD_OFFICER_ZAMBIA))
                 .build());
         getActivity().startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
     }

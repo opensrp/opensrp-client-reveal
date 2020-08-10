@@ -1,13 +1,16 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Intent;
+
 import androidx.annotation.StringRes;
+
 import android.view.ViewGroup;
 import android.widget.ToggleButton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FilterTasksContract;
+import org.smartregister.reveal.model.FilterConfiguration;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
@@ -35,8 +38,11 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
 
     private Map<String, Set<String>> checkedFilters = new HashMap<>();
 
-    public FilterTasksPresenter(FilterTasksContract.View view) {
+    private FilterConfiguration filterConfiguration;
+
+    public FilterTasksPresenter(FilterTasksContract.View view, FilterConfiguration filterConfiguration) {
         this.view = view;
+        this.filterConfiguration = filterConfiguration;
         populateLabels();
     }
 
@@ -114,7 +120,8 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
 
     @Override
     public List<String> getBusinessStatusOptions() {
-        return Utils.isFocusInvestigation() ? BusinessStatus.FI_BUSINESS_STATUS : Utils.isMDA() ? BusinessStatus.MDA_BUSINESS_STATUS : BusinessStatus.IRS_BUSINESS_STATUS;
+        return filterConfiguration.getBusinessStatusList() != null ? filterConfiguration.getBusinessStatusList() :
+                Utils.isFocusInvestigation() ? BusinessStatus.FI_BUSINESS_STATUS : Utils.isMDA() ? BusinessStatus.MDA_BUSINESS_STATUS : BusinessStatus.IRS_BUSINESS_STATUS;
     }
 
     @Override

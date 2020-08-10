@@ -1,6 +1,7 @@
 package org.smartregister.reveal.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import lombok.Builder;
 import lombok.Data;
@@ -21,4 +22,10 @@ public class FilterConfiguration implements Serializable {
 
     @Builder.Default
     private boolean interventionTypeLayoutEnabled = true;
+
+    private boolean formsLayoutEnabled;
+
+    private List<String> businessStatusList;
+
+    private List<String> formsList;
 }

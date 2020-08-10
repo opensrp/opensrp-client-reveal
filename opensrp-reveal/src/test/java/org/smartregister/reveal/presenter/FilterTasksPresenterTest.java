@@ -67,7 +67,7 @@ public class FilterTasksPresenterTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        filterTasksPresenter = new FilterTasksPresenter(view);
+        filterTasksPresenter = new FilterTasksPresenter(view, filterConfiguration);
         PreferencesUtil.getInstance().setCurrentPlan(planId);
     }
 

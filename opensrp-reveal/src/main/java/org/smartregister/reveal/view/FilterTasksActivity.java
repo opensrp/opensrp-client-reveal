@@ -48,7 +48,8 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new FilterTasksPresenter(this);
+        filterConfiguration = (FilterConfiguration) getIntent().getSerializableExtra(FILTER_CONFIGURATION);
+        presenter = new FilterTasksPresenter(this,filterConfiguration);
         setContentView(R.layout.activity_filter_tasks);
         Toolbar toolbar = this.findViewById(R.id.filter_tasks_toolbar);
         toolbar.setTitle(R.string.filter);
@@ -56,7 +57,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_close);
 
-        filterConfiguration = (FilterConfiguration) getIntent().getSerializableExtra(FILTER_CONFIGURATION);
+
         sortBySpinner = findViewById(R.id.sort_by);
         businessStatusLayout = findViewById(R.id.business_status_layout);
         taskCodeLayout = findViewById(R.id.task_code_layout);
