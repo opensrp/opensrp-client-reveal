@@ -23,6 +23,7 @@ import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.tasking.contract.TaskRegisterFragmentContract;
+import org.smartregister.tasking.interactor.BaseInteractor;
 import org.smartregister.tasking.model.TaskDetails;
 import org.smartregister.tasking.util.InteractorUtils;
 

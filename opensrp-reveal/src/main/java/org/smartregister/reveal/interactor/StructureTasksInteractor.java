@@ -26,6 +26,7 @@ import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.tasking.interactor.BaseInteractor;
 import org.smartregister.tasking.util.InteractorUtils;
 
 import java.util.ArrayList;

@@ -40,6 +40,7 @@ import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.LoginActivity;
+import org.smartregister.reveal.config.TaskingLibraryConfiguration;
 import org.smartregister.reveal.job.RevealJobCreator;
 import org.smartregister.reveal.repository.RevealRepository;
 import org.smartregister.reveal.sync.RevealClientProcessor;
@@ -138,7 +139,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         LocationHelper.init(Utils.ALLOWED_LEVELS, Utils.DEFAULT_LOCATION_LEVEL);
 
         SyncStatusBroadcastReceiver.init(this);
-        TaskingLibrary.init();
+        TaskingLibrary.init(new TaskingLibraryConfiguration());
 
         jsonSpecHelper = new JsonSpecHelper(this);
         serverConfigs = new HashMap<>();

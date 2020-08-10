@@ -6,6 +6,7 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.tasking.contract.BaseContract;
 import org.smartregister.tasking.contract.TaskRegisterContract;
+import org.smartregister.tasking.interactor.BaseInteractor;
 
 import java.util.List;
 
