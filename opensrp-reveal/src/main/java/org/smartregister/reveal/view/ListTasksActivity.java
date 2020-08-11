@@ -1105,8 +1105,29 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else if (e instanceof QRCodeAssignException) {
 
             QRCodeAssignException ex = (QRCodeAssignException) e;
-            AlertDialogUtils.displayNotification(this, ex.getAssignErrorMessage(),
-                    "QR code : " + ex.getQrCode() + " is already assigned to another structure, Kindly scan another QR code");
+
+            AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                    .setTitle(ex.getAssignErrorMessage())
+                    .setMessage(ex.getQrCode() + " is already assigned to another structure, Would you like to scan another another QR Code?")
+                    .setPositiveButton("Scan New QR", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which == BUTTON_POSITIVE) {
+                                // open a scan qr code activity
+                                startQrCodeScanner();
+                            }
+
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("Not Now", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).show();
+            alertDialog.setCancelable(false);
+
         } else {
             Toast.makeText(getBaseContext(), R.string.an_error_occured, Toast.LENGTH_SHORT).show();
             Timber.e(e);
