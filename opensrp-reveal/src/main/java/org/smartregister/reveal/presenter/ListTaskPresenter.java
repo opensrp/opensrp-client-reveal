@@ -849,30 +849,42 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             String familyHeadyEntityId = UUID.randomUUID().toString();
 
             TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
+            TaskUtils taskUtils = TaskUtils.getInstance();
             Feature feature = getSelectedFeature();
 
-            TaskUtils taskUtils = TaskUtils.getInstance();
+            Task task;
 
-            // update task
-            Set<Task> tasks = taskUtils.getTasksByEntityAndCode(feature.id(), Constants.Intervention.REGISTER_FAMILY);
-            Task task = tasks.iterator().next();
+            if (feature != null) {
+                // update task
+                Set<Task> tasks = taskUtils.getTasksByEntityAndCode(feature.id(), Constants.Intervention.REGISTER_FAMILY);
+                task = tasks.iterator().next();
 
-            String businessStatus = !"Yes".equalsIgnoreCase(consent) ?
-                    Constants.BusinessStatus.VISITED_DENIED_CONSENT :
-                    COMPLETE;
+                String businessStatus = !"Yes".equalsIgnoreCase(consent) ?
+                        Constants.BusinessStatus.VISITED_DENIED_CONSENT :
+                        COMPLETE;
 
-            task.setBusinessStatus(businessStatus);
-            task.setStatus(TaskStatus.COMPLETED);
-            if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus()))
-                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                task.setBusinessStatus(businessStatus);
+                task.setStatus(TaskStatus.COMPLETED);
+                if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus()))
+                    task.setSyncStatus(BaseRepository.TYPE_Unsynced);
 
-            task.setLastModified(new DateTime());
-            taskRepository.addOrUpdate(task);
+                task.setLastModified(new DateTime());
+                taskRepository.addOrUpdate(task);
+            } else {
+                // floating family
+                String businessStatus = !"Yes".equalsIgnoreCase(consent) ?
+                        Constants.BusinessStatus.VISITED_DENIED_CONSENT :
+                        Constants.BusinessStatus.COMPLETED_FAMILY_REGISTRATION;
+
+                task = TaskUtils.getInstance().generateTask(context, operationalArea.getId(), "", businessStatus, TaskStatus.COMPLETED,
+                        Constants.Intervention.FLOATING_FAMILY_REGISTRATION,
+                        R.string.register_family);
+            }
 
             if (!"Yes".equalsIgnoreCase(consent)) {
                 processor = NativeFormProcessor.createInstance(jsonObject.toString());
                 processor
-                        .withEntityId(feature.id())
+                        .withEntityId(feature != null ? feature.id() : operationalArea.getId())
                         .withBindType(FamilyConstants.TABLE_NAME.FAMILY)
                         .withEncounterType(FamilyConstants.EventType.FAMILY_REGISTRATION_DENIED_CONSENT)
                         .tagLocationData(operationalArea)

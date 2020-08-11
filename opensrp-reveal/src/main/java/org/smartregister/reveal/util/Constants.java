@@ -310,6 +310,8 @@ public interface Constants {
 
         List<String> MDA_BUSINESS_STATUS = Arrays.asList(NOT_VISITED, FULLY_RECEIVED, NONE_RECEIVED,
                 ADHERENCE_VISIT_DONE, PARTIALLY_RECEIVED, COMPLETE, NOT_ELIGIBLE);
+
+        List<String> NTD_BUSINESS_STATUS = Arrays.asList(NOT_VISITED, COMPLETE, INCOMPLETE);
     }
 
     interface BusinessStatusWrapper {
@@ -763,8 +765,11 @@ public interface Constants {
         String STRUCTURE = "structure";
         String FAMILY = "family";
         String PERSON = "person";
+        String FLOATING_FAMILY = "floating_family";
 
         List<String> FILTERABLE_INTERVENTION_TYPES = Arrays.asList(OPERATIONAL_AREA, STRUCTURE, FAMILY, PERSON);
+
+        List<String> FILTERABLE_NTD_INTERVENTION_TYPES = Arrays.asList(STRUCTURE, FLOATING_FAMILY);
 
     }
 

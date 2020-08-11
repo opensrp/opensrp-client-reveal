@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.ToggleButton;
 
 import org.apache.commons.lang3.StringUtils;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FilterTasksContract;
 import org.smartregister.reveal.model.TaskFilterParams;
@@ -14,6 +15,7 @@ import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.Arrays;
@@ -62,6 +64,7 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
         labelsMap.put(InterventionType.STRUCTURE, R.string.structure);
         labelsMap.put(InterventionType.FAMILY, R.string.family);
         labelsMap.put(InterventionType.PERSON, R.string.person);
+        labelsMap.put(InterventionType.FLOATING_FAMILY, R.string.floating_family);
 
         //Business status
         labelsMap.put(BusinessStatus.NOT_VISITED, R.string.not_visited);
@@ -73,6 +76,7 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
         labelsMap.put(BusinessStatus.INCOMPLETE, R.string.incomplete);
         labelsMap.put(BusinessStatus.NOT_ELIGIBLE, R.string.not_eligible);
         labelsMap.put(BusinessStatus.IN_PROGRESS, R.string.in_progress);
+
     }
 
 
@@ -114,6 +118,9 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
 
     @Override
     public List<String> getBusinessStatusOptions() {
+        if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY))
+            return BusinessStatus.NTD_BUSINESS_STATUS;
+
         return Utils.isFocusInvestigation() ? BusinessStatus.FI_BUSINESS_STATUS : Utils.isMDA() ? BusinessStatus.MDA_BUSINESS_STATUS : BusinessStatus.IRS_BUSINESS_STATUS;
     }
 

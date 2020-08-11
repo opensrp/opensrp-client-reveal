@@ -313,6 +313,7 @@
     <string name="structure">Structure</string>
     <string name="person">Person</string>
     <string name="family">Family</string>
+    <string name="floating_family">Floating Family</string>
     <string name="task_type">Task type</string>
     <string name="intervention_unit">Intervention Unit</string>
     <string name="apply_filters">Apply Filters</string>
@@ -335,6 +336,11 @@
         <item>Distance (nearest first)</item>
         <item>Status</item>
         <item>Type</item>
+    </string-array>
+
+    <string-array name="task_sort_ntd_options">
+        <item>Distance (nearest first)</item>
+        <item>Status</item>
     </string-array>
 
     <string name="select_task_action">Select action to perform</string>

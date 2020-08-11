@@ -6,18 +6,22 @@ import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.google.android.flexbox.FlexboxLayout;
 
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FilterTasksContract;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.FilterTasksPresenter;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.InterventionType;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.view.activity.MultiLanguageActivity;
 
 import java.util.List;
@@ -54,6 +58,15 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         taskCodeLayout = findViewById(R.id.task_code_layout);
         interventionTypeLayout = findViewById(R.id.intervention_type_layout);
         applyFiltersTextView = findViewById(R.id.apply_filters);
+
+        if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
+            findViewById(R.id.task_type_group).setVisibility(View.GONE);
+
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.task_sort_ntd_options, android.R.layout.simple_spinner_item);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sortBySpinner.setAdapter(adapter);
+        }
+
 
         setUpToggleButtonGroups();
 
@@ -104,7 +117,12 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     private void setUpToggleButtonGroups() {
         populateToggleButtons(businessStatusLayout, presenter.getBusinessStatusOptions());
         populateToggleButtons(taskCodeLayout, presenter.getIntentionTypes());
-        populateToggleButtons(interventionTypeLayout, InterventionType.FILTERABLE_INTERVENTION_TYPES);
+        if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)){
+            populateToggleButtons(interventionTypeLayout, InterventionType.FILTERABLE_NTD_INTERVENTION_TYPES);
+        }else{
+            populateToggleButtons(interventionTypeLayout, InterventionType.FILTERABLE_INTERVENTION_TYPES);
+        }
+
         registerCheckedChangeListener();
 
     }
