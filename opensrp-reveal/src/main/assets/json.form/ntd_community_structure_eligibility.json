@@ -96,6 +96,13 @@
         "v_required": {
           "value": "true",
           "err": "Please select a value"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-structure-eligibility.yml"
+            }
+          }
         }
       },
       {
@@ -118,6 +125,13 @@
         "v_required": {
           "value": "true",
           "err": "Please select a value"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-structure-eligibility.yml"
+            }
+          }
         }
       },
       {
@@ -140,6 +154,13 @@
         "v_required": {
           "value": "true",
           "err": "Please select a value"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "ntd-community-structure-eligibility.yml"
+            }
+          }
         }
       }
     ]
