@@ -55,7 +55,7 @@ public class ReportDao extends AbstractDao {
                 double returnedTinsQuantityOther = parseDouble(values.get("nPZQreturnedtinsquantityother"));
                 double returnedTinsLoose = parseDouble(values.get("nPZQreturnedloose"));
 
-                double count = returnedTins * (returnedTinsQuantity > 0? returnedTinsQuantity : returnedTinsQuantityOther)
+                double count = returnedTins * (returnedTinsQuantity > 0 ? returnedTinsQuantity : returnedTinsQuantityOther)
                         + returnedTinsLoose;
 
                 totalCount.set(totalCount.get() + count);
@@ -167,7 +167,7 @@ public class ReportDao extends AbstractDao {
     public int getTotalChildrenReceivedDrugs(String operationalAreaID) {
         String sql = "select sum(case when business_status = 'Drug Administered' then 1 else 0 end) completed " +
                 "from task inner join ec_family_member on ec_family_member.base_entity_id = task.for " +
-                "where code= 'NTD MDA Dispense' and ec_family_member.operational_area_id = '" + operationalAreaID + "'";
+                "where code= '" + Constants.Intervention.NTD_MDA_DISPENSE + "' and ec_family_member.operational_area_id = '" + operationalAreaID + "'";
         DataMap<Integer> dataMap = cursor -> getCursorIntValue(cursor, "completed");
         return readSingleValue(sql, dataMap, 0);
     }

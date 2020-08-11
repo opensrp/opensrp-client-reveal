@@ -316,18 +316,28 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
             if (consentRelationship.contains("not_eligible"))
                 throw new IllegalAccessException("Attempting to save a child with no consent");
 
-            String structureId = StructureDao.getInstance().getStructureIDFromFamilyID(familyEntityId);
-
             Location operationalArea = processor.getCurrentOperationalArea();
             String entityId = UUID.randomUUID().toString();
+
+            String areaId = StructureDao.getInstance().getStructureIDFromFamilyID(familyEntityId);
+            if (StringUtils.isBlank(areaId))
+                areaId = operationalArea.getId();
 
             String age = processor.getFieldValue("age");
             String same_as_fam_name = processor.getFieldValue("same_as_fam_name");
 
+            // generate mda task
+            Task registrationTask = taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
+                    areaId, areaId, Constants.BusinessStatus.FAMILY_MEMBER_REGISTERED, Task.TaskStatus.COMPLETED,
+                    Constants.Intervention.FAMILY_MEMBER_REGISTRATION,
+                    R.string.register_family_members);
+
             // update metadata
+            String finalAreaId = areaId;
             processor.withBindType(FamilyConstants.TABLE_NAME.FAMILY_MEMBER)
                     .withEncounterType(FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION)
                     .withEntityId(entityId)
+                    .tagTaskDetails(registrationTask)
                     .tagLocationData(operationalArea)
                     .tagEventMetadata()
 
@@ -347,7 +357,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                             client.setBirthdate(calendar.getTime());
                         }
 
-                        client.addAttribute("residence", structureId);
+                        client.addAttribute("residence", finalAreaId);
 
                         if (operationalArea != null)
                             client.addAttribute("residential_area", operationalArea.getId());
@@ -362,7 +372,8 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                     .closeRegistrationID(Constants.DatabaseKeys.UNIQUE_ID);
 
 
-            taskUtils.generateTask(context, entityId, structureId, Constants.BusinessStatus.NOT_VISITED, Constants.Intervention.NTD_MDA_DISPENSE,
+            // generate mda task
+            taskUtils.generateTask(context, entityId, areaId, Constants.BusinessStatus.NOT_VISITED, Constants.Intervention.NTD_MDA_DISPENSE,
                     R.string.mass_drug_administration);
 
             return null;

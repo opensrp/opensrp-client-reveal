@@ -109,7 +109,7 @@ public class StructureDao extends AbstractDao {
 
     public String getStructureIDFromFamilyID(String familyBaseEntityID) {
         String sql = "select ec_family.structure_id from ec_family where ec_family.base_entity_id = '" + familyBaseEntityID + "'";
-        DataMap<String> dataMap = cursor -> getCursorValue(cursor, "base_entity_id");
+        DataMap<String> dataMap = cursor -> getCursorValue(cursor, "structure_id");
         return readSingleValue(sql, dataMap);
     }
 

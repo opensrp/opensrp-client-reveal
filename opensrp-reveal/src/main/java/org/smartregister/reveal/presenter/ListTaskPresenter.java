@@ -586,7 +586,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 registrationBusinessStatus = null;
             } else if (statusHouseholdaccessible.equalsIgnoreCase("No")) {
                 eligibilityBusinessStatus = Constants.BusinessStatus.ELIGIBLE;
-                ;
                 registrationBusinessStatus = Constants.BusinessStatus.WAITING_FOR_QR_CODE;
             } else if (statusHouseholdAllPresent.equalsIgnoreCase("No")) {
                 eligibilityBusinessStatus = Constants.BusinessStatus.ELIGIBLE;

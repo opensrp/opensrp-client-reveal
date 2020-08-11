@@ -192,11 +192,13 @@ public interface Constants {
 
         String MDA_ADHERENCE = "MDA Adherence";
 
-        String NTD_MDA_DISPENSE = "NTD MDA Dispense";
+        String NTD_MDA_DISPENSE = "MDA_Dispense";
 
         String NTD_COMMUNITY = "ntd_community";
 
         String FAMILY_REGISTRATION = "Family Registration";
+
+        String FAMILY_MEMBER_REGISTRATION = "Family Member Registration";
 
         String STRUCTURE_VISITED = "Structure Visited";
 
@@ -274,6 +276,7 @@ public interface Constants {
         String NOT_ELIGIBLE = "Not Eligible";
         String IN_PROGRESS = "In Progress";
         String NO_TASK = "No Task";
+        String FAMILY_MEMBER_REGISTERED = "Registered Family Member";
 
 
         //MDA status

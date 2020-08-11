@@ -412,4 +412,5 @@
     <string name="resume_registration">Resume Registration</string>
     <string name="structure_with_pending_registration">Would you like to resume registration of this structure</string>
     <string name="confirm_structure_eligibility">Confirm structure eligibility</string>
+    <string name="register_family_members">Register family members</string>
 </resources>
