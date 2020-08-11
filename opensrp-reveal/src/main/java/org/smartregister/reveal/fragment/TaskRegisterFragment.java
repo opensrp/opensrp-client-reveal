@@ -50,6 +50,8 @@ import org.smartregister.reveal.view.TaskRegisterActivity;
 import org.smartregister.view.activity.BaseRegisterActivity;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -257,8 +259,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     }
 
     private String getMapValue(Map<String, Double> reportCounts, String key) {
+        DecimalFormat df2 = new DecimalFormat("#.##");
+        df2.setRoundingMode(RoundingMode.UP);
+
         Double value = reportCounts.get(key);
-        return value == null ? "0" : Double.toString(value);
+        return value == null ? "0" : df2.format(value);
     }
 
     @Override

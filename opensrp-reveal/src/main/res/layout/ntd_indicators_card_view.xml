@@ -37,7 +37,7 @@
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp"
                 android:singleLine="true"
-                android:text="# Structures unvisited"
+                android:text="Structures unvisited"
                 android:textColor="@color/text_black"
                 android:textSize="17sp" />
 
@@ -63,7 +63,7 @@
                 android:paddingTop="10dp"
                 android:paddingEnd="0dp"
                 android:singleLine="true"
-                android:text="# PZQ distributed"
+                android:text="PZQ distributed"
                 android:textColor="@color/text_black"
                 android:textSize="17sp" />
 
@@ -89,7 +89,7 @@
                 android:paddingTop="10dp"
                 android:paddingEnd="0dp"
                 android:singleLine="true"
-                android:text="# PZQ remaining"
+                android:text="PZQ remaining"
                 android:textColor="@color/text_black"
                 android:textSize="17sp" />
 
@@ -115,7 +115,7 @@
                 android:paddingTop="10dp"
                 android:paddingEnd="0dp"
                 android:singleLine="true"
-                android:text="# Children Treated / Children Registered"
+                android:text="Children Treated / Children Registered"
                 android:textColor="@color/text_black"
                 android:textSize="17sp" />
 
