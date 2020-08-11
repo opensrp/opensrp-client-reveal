@@ -198,6 +198,8 @@ public interface Constants {
 
         String FAMILY_REGISTRATION = "Family Registration";
 
+        String STRUCTURE_VISITED = "Structure Visited";
+
         String MDA = "MDA";
 
         String IRS_VERIFICATION = "IRS Verification";
@@ -291,6 +293,7 @@ public interface Constants {
         String VISITED_PARTIALLY_TREATED = "Visited, Partially treated";
         String COMPLETED_FAMILY_REGISTRATION = "Completed Family Registration";
         String INELIGIBLE = "Ineligible";
+        String ELIGIBLE = "Eligible";
         String INCLUDED_IN_ANOTHER_HOUSEHOLD = "Included in another household";
         String WAITING_FOR_QR_CODE = "Waiting For Qr Code";
         String WAITING_FOR_QR_AND_REGISTRATION = "Waiting For Qr Code and Registration";

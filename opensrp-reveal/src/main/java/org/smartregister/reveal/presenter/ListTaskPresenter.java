@@ -337,7 +337,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         if (Constants.BusinessStatus.INELIGIBLE.equals(businessStatus) || Constants.BusinessStatus.NOT_ELIGIBLE.equals(businessStatus)) {
             listTaskView.displayNotification("Info", "Structure is Ineligible");
             return;
-        } else if (Constants.BusinessStatus.WAITING_FOR_QR_CODE.equals(businessStatus) || Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION.equals(businessStatus)) {
+        } else if (Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD.equals(businessStatus)) {
+            listTaskView.displayNotification("Info", "Structure included in another household");
+            return;
+        }else if (Constants.BusinessStatus.WAITING_FOR_QR_CODE.equals(businessStatus) || Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION.equals(businessStatus)) {
             listTaskView.onEligibilityStatusConfirmed(businessStatus);
             return;
         } else if (Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION.equals(businessStatus)) {
@@ -568,30 +571,41 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             String statusHouseholdAllPresent = processor.getFieldValue("statusHouseholdAllPresent");
             String statusHohstructure = processor.getFieldValue("statusHohstructure");
 
-            String businessStatus;
-            TaskStatus taskStatus;
+            String eligibilityBusinessStatus;
+            String registrationBusinessStatus;
 
             if (statusResidential.equalsIgnoreCase("No")) {
-                businessStatus = Constants.BusinessStatus.INELIGIBLE;
-                taskStatus = Task.TaskStatus.COMPLETED;
+                eligibilityBusinessStatus = Constants.BusinessStatus.INELIGIBLE;
+                registrationBusinessStatus = null;
             } else if (statusHohstructure.equalsIgnoreCase("No")) {
-                businessStatus = Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD;
-                taskStatus = Task.TaskStatus.COMPLETED;
+                eligibilityBusinessStatus = Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD;
+                registrationBusinessStatus = null;
             } else if (statusHouseholdaccessible.equalsIgnoreCase("No")) {
-                businessStatus = Constants.BusinessStatus.WAITING_FOR_QR_CODE;
-                taskStatus = Task.TaskStatus.IN_PROGRESS;
+                eligibilityBusinessStatus = Constants.BusinessStatus.ELIGIBLE;
+                ;
+                registrationBusinessStatus = Constants.BusinessStatus.WAITING_FOR_QR_CODE;
             } else if (statusHouseholdAllPresent.equalsIgnoreCase("No")) {
-                businessStatus = Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION;
-                taskStatus = Task.TaskStatus.IN_PROGRESS;
+                eligibilityBusinessStatus = Constants.BusinessStatus.ELIGIBLE;
+                registrationBusinessStatus = Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION;
             } else {
-                businessStatus = Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION;
-                taskStatus = Task.TaskStatus.IN_PROGRESS;
+                eligibilityBusinessStatus = Constants.BusinessStatus.ELIGIBLE;
+                registrationBusinessStatus = Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION;
             }
 
             TaskUtils taskUtils = TaskUtils.getInstance();
-            return taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
-                    feature.id(), feature.id(), businessStatus, taskStatus, Constants.Intervention.FAMILY_REGISTRATION,
-                    R.string.register_structure_and_family);
+            // save visit event
+            Task structureEligibilityTask = taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
+                    feature.id(), feature.id(), eligibilityBusinessStatus, Task.TaskStatus.COMPLETED, Constants.Intervention.STRUCTURE_VISITED,
+                    R.string.confirm_structure_eligibility);
+
+
+            Task familyRegistrationTask = registrationBusinessStatus == null ? null :
+                    taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
+                            feature.id(), feature.id(), registrationBusinessStatus, Task.TaskStatus.IN_PROGRESS, Constants.Intervention.FAMILY_REGISTRATION,
+                            R.string.register_structure_and_family);
+
+            // generate
+            return familyRegistrationTask == null ? structureEligibilityTask : familyRegistrationTask;
         };
 
         getView().setLoadingState(true);
