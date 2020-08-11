@@ -227,7 +227,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         if (taskDetailsList != null) {
 
-            if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+            if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
                 new IndicatorsCalculatorTask(listTaskView.getActivity(), taskDetailsList).execute();
             }
         }
