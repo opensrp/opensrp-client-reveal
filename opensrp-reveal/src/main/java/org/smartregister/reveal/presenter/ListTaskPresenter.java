@@ -1342,6 +1342,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } catch (JSONException e) {
             Timber.e(e, "error extracting coordinates of added structure");
         }
+
+
+        // NTD to intercept and start eligibility form
+        if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)){
+            selectedFeature = feature;
+            listTaskView.startEligibilityForm();
+        }
     }
 
     @Override

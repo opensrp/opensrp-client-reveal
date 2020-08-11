@@ -299,6 +299,8 @@ public class RevealJsonFormUtils {
                 formName = JsonForm.THAILAND_ADD_STRUCTURE_FORM;
             } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
                 formName = JsonForm.NAMIBIA_ADD_STRUCTURE_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.NTD_COMMUNITY) {
+                formName = JsonForm.NTD_ADD_STRUCTURE_FORM;
             } else {
                 formName = JsonForm.ADD_STRUCTURE_FORM;
             }

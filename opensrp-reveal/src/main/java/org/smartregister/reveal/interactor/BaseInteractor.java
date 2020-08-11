@@ -46,6 +46,7 @@ import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.StructureType;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TaskUtils;
@@ -286,7 +287,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     geometry.setCoordinates(coordinates);
                     structure.setGeometry(geometry);
                     LocationProperty properties = new LocationProperty();
-                    String structureType = event.findObs(null, false, STRUCTURE_TYPE).getValue().toString();
+                    String structureType = BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY) ? StructureType.RESIDENTIAL : event.findObs(null, false, STRUCTURE_TYPE).getValue().toString();
                     properties.setType(structureType);
                     properties.setEffectiveStartDate(now);
                     properties.setParentId(operationalAreaId);
@@ -308,7 +309,10 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     revealApplication.setSynced(false);
                     Context applicationContext = revealApplication.getApplicationContext();
                     Task task = null;
-                    if (StructureType.RESIDENTIAL.equals(structureType) && Utils.isFocusInvestigationOrMDA()) {
+
+                    if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)){
+                        // do nothing
+                    }else if (StructureType.RESIDENTIAL.equals(structureType) && Utils.isFocusInvestigationOrMDA()) {
                         task = taskUtils.generateRegisterFamilyTask(applicationContext, structure.getId());
                     } else {
                         if (StructureType.RESIDENTIAL.equals(structureType)) {
