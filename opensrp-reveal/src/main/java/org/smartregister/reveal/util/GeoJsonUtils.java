@@ -90,7 +90,7 @@ public class GeoJsonUtils {
             }
 
             populateBusinessStatus(taskProperties, mdaStatusMap, state);
-            calculateNDAStatus(taskProperties, status);
+            calculateNTDStatus(taskProperties, status,state);
 
             taskProperties.put(TASK_CODE_LIST, interventionList.toString());
             if (structureNames.get(structure.getId()) != null) {
@@ -103,7 +103,7 @@ public class GeoJsonUtils {
         return gson.toJson(structures);
     }
 
-    private static void calculateNDAStatus(HashMap<String, String> taskProperties, Set<String> status) {
+    private static void calculateNTDStatus(HashMap<String, String> taskProperties, Set<String> status, StateWrapper state) {
         if (status.contains(Constants.BusinessStatus.VISITED_DENIED_CONSENT)) {
             taskProperties.put(TASK_BUSINESS_STATUS, Constants.BusinessStatus.VISITED_DENIED_CONSENT);
             taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, Constants.BusinessStatus.VISITED_DENIED_CONSENT);
@@ -123,6 +123,9 @@ public class GeoJsonUtils {
         } else if (status.contains(Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION)) {
             taskProperties.put(TASK_BUSINESS_STATUS, Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION);
             taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION);
+        } else if(state.familyRegistered || !state.familyRegTaskExists){
+            taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
+            taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, COMPLETE);
         }
     }
 

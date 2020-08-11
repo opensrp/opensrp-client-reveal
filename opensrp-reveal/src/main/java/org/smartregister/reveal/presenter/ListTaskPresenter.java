@@ -735,6 +735,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                             }
                         }
                     }
+                    listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
 
                     if (runnable != null)
                         runnable.run();
@@ -858,7 +859,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
             String businessStatus = !"Yes".equalsIgnoreCase(consent) ?
                     Constants.BusinessStatus.VISITED_DENIED_CONSENT :
-                    Constants.BusinessStatus.COMPLETED_FAMILY_REGISTRATION;
+                    COMPLETE;
 
             task.setBusinessStatus(businessStatus);
             task.setStatus(TaskStatus.COMPLETED);
@@ -973,10 +974,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     view.setLoadingState(false);
                     if (result == null) {
                         view.onError(new IllegalStateException("Invalid family"));
-                    } else {
-                        if (result.first != null)
-                            view.openStructureProfile(result.first);
+                        return;
                     }
+
+                    if (result.first != null)
+                        view.openStructureProfile(result.first);
 
                     Task task = result.second;
                     if (task != null && getSelectedFeature() != null) {
@@ -986,11 +988,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                                 feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus());
                                 feature.addStringProperty(TASK_BUSINESS_STATUS, task.getBusinessStatus());
                                 feature.addStringProperty(TASK_STATUS, task.getStatus().name());
+                                feature.addStringProperty(TASK_IDENTIFIER, task.getIdentifier());
                                 break;
                             }
                         }
-                        listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
                     }
+                    listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
+                    refreshStructures(true);
                 }
             }
 

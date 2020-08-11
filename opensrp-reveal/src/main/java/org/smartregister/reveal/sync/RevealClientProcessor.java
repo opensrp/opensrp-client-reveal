@@ -20,11 +20,13 @@ import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.StructureType;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
@@ -135,6 +137,13 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 } else if (eventType.equals(TASK_RESET_EVENT)) {
                     continue;
                 } else if (CHILD_REGISTRATION.equals(eventType) || UPDATE_CHILD_REGISTRATION.equals(eventType) || Constants.EventType.MDA_DISPENSE.equals(eventType)) {
+                    try {
+                        Client client = eventClient.getClient();
+                        processEvent(event, client, clientClassification);
+                    } catch (Exception e) {
+                        Timber.e(e);
+                    }
+                } else if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)){
                     try {
                         Client client = eventClient.getClient();
                         processEvent(event, client, clientClassification);
