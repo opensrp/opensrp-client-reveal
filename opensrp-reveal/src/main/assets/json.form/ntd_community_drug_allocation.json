@@ -176,6 +176,10 @@
           "value": true,
           "err": "This field is required"
         },
+        "v_regex": {
+          "value": "^$|0[0-9]{8,9}",
+          "err": "Number must be 9-10 digits and must start with 0."
+        },
         "v_numeric_integer": {
           "value": "true",
           "err": "Please enter a number"

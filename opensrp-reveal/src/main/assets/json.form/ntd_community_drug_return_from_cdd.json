@@ -206,6 +206,10 @@
           "value": true,
           "err": "This field is required"
         },
+        "v_regex": {
+          "value": "^$|0[0-9]{8,9}",
+          "err": "Number must be 9-10 digits and must start with 0."
+        },
         "v_numeric_integer": {
           "value": "true",
           "err": "Please enter a number"
@@ -216,11 +220,12 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "personOrgheirarchyreceivingeturneddrugs",
-        "type": "edit_text",
+        "openmrs_data_type": "select one",
+        "type": "spinner",
         "hint": "Please select the organizational unit affiliation of person receiving returned drugs",
         "values": [
-          "Male",
-          "Female"
+          "Sample School",
+          "Sample HF"
         ],
         "v_required": {
           "value": "true",
