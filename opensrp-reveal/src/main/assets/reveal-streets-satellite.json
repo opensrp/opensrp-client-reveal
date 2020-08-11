@@ -74,7 +74,9 @@
             "Not Sprayed",
             "Incomplete",
             "In Progress",
-            "None Received"
+            "None Received",
+            "Visited, Denied consent",
+            "Visited, SACs not treated"
           ],
           "hsl(3, 71%, 54%)",
           [
@@ -88,10 +90,13 @@
           [
             "Not Sprayable",
             "Not Eligible",
-            "Ineligible",
-            "Included in another household"
+            "Ineligible"
           ],
           "hsl(0, 0%, 9%)",
+          [
+            "Included in another household"
+          ],
+          "hsl(55, 0%, 92%)",
           [
             "Family Registered"
           ],
@@ -190,7 +195,9 @@
             "Not Sprayed",
             "Incomplete",
             "In Progress",
-            "None Received"
+            "None Received",
+            "Visited, Denied consent",
+            "Visited, SACs not treated"
           ],
           "hsl(3, 71%, 54%)",
           [
@@ -204,10 +211,13 @@
           [
             "Not Sprayable",
             "Not Eligible",
-            "Ineligible",
-            "Included in another household"
+            "Ineligible"
           ],
           "hsl(0, 0%, 9%)",
+          [
+            "Included in another household"
+          ],
+          "hsl(55, 0%, 92%)",
           [
             "Family Registered"
           ],

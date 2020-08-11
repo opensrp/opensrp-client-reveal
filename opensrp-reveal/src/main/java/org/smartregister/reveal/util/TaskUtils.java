@@ -25,6 +25,7 @@ import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import timber.log.Timber;
@@ -83,6 +84,12 @@ public class TaskUtils {
                 R.string.mass_drug_administration);
     }
 
+
+    public Set<Task> getTasksByEntityAndCode(String entityId, String code){
+        String planId = prefsUtil.getCurrentPlanId();
+        String groupId = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId();
+        return taskRepository.getTasksByEntityAndCode(planId, groupId, entityId, code);
+    }
 
     public Task generateTask(Context context, String entityId, String structureId, String businessStatus, Task.TaskStatus status, String intervention, @StringRes int description) {
         Task task = new Task();

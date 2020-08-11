@@ -17,6 +17,7 @@ public interface FamilyConstants {
         String FAMILY_REGISTRATION = "Family Registration";
         String FAMILY_REGISTRATION_INELIGIBLE = "Family Registration Ineligible";
         String FAMILY_MEMBER_REGISTRATION = "Family Member Registration";
+        String FAMILY_REGISTRATION_DENIED_CONSENT = "Family Registration Consent Denied";
 
         String UPDATE_FAMILY_REGISTRATION = "Update Family Registration";
         String UPDATE_FAMILY_MEMBER_REGISTRATION = "Update Family Member Registration";

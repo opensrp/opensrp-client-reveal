@@ -340,8 +340,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if (Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD.equals(businessStatus)) {
             listTaskView.displayNotification("Info", "Structure included in another household");
             return;
-        }else if (Constants.BusinessStatus.WAITING_FOR_QR_CODE.equals(businessStatus) || Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION.equals(businessStatus)) {
+        } else if (Constants.BusinessStatus.WAITING_FOR_QR_CODE.equals(businessStatus) || Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION.equals(businessStatus)) {
             listTaskView.onEligibilityStatusConfirmed(businessStatus);
+            return;
+        } else if (Constants.BusinessStatus.VISITED_DENIED_CONSENT.equals(businessStatus)) {
+            // if has no structure
+            listTaskView.displayNotification("Info", "Family denied consent");
             return;
         } else if (Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION.equals(businessStatus)) {
             listTaskView.registerFamily();
@@ -601,7 +605,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
             Task familyRegistrationTask = registrationBusinessStatus == null ? null :
                     taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
-                            feature.id(), feature.id(), registrationBusinessStatus, Task.TaskStatus.IN_PROGRESS, Constants.Intervention.FAMILY_REGISTRATION,
+                            feature.id(), feature.id(), registrationBusinessStatus, Task.TaskStatus.IN_PROGRESS, Constants.Intervention.REGISTER_FAMILY,
                             R.string.register_structure_and_family);
 
             // generate
@@ -845,39 +849,31 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
             TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
             Feature feature = getSelectedFeature();
-            Task task = null;
-            String taskID = (feature != null && feature.hasProperty(TASK_IDENTIFIER)) ? getPropertyValue(feature, TASK_IDENTIFIER) : null;
-            if (feature != null && StringUtils.isBlank(taskID))
-                taskID = StructureDao.getInstance().getTaskByStructureID(feature.id());
 
-            if (StringUtils.isNotBlank(taskID)) {
+            TaskUtils taskUtils = TaskUtils.getInstance();
 
-                task = taskRepository.getTaskByIdentifier(taskID);
+            // update task
+            Set<Task> tasks = taskUtils.getTasksByEntityAndCode(feature.id(), Constants.Intervention.REGISTER_FAMILY);
+            Task task = tasks.iterator().next();
 
-                task.setBusinessStatus(Constants.BusinessStatus.COMPLETED_FAMILY_REGISTRATION);
-                task.setStatus(TaskStatus.COMPLETED);
+            String businessStatus = !"Yes".equalsIgnoreCase(consent) ?
+                    Constants.BusinessStatus.VISITED_DENIED_CONSENT :
+                    Constants.BusinessStatus.COMPLETED_FAMILY_REGISTRATION;
 
-                if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus()))
-                    task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+            task.setBusinessStatus(businessStatus);
+            task.setStatus(TaskStatus.COMPLETED);
+            if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus()))
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
 
-                task.setLastModified(new DateTime());
-                taskRepository.addOrUpdate(task);
-            }
-
-            if (task == null) {
-                String structureId = (feature != null ? feature.id() : null);
-                String entityId = "Yes".equalsIgnoreCase(consent) ? familyEntityId : structureId;
-                task = TaskUtils.getInstance().generateTask(context, entityId, structureId, Constants.BusinessStatus.COMPLETED_FAMILY_REGISTRATION, TaskStatus.COMPLETED,
-                        FamilyConstants.EventType.FAMILY_REGISTRATION_INELIGIBLE,
-                        R.string.register_family);
-            }
+            task.setLastModified(new DateTime());
+            taskRepository.addOrUpdate(task);
 
             if (!"Yes".equalsIgnoreCase(consent)) {
-                // save form and exit
                 processor = NativeFormProcessor.createInstance(jsonObject.toString());
                 processor
+                        .withEntityId(feature.id())
                         .withBindType(FamilyConstants.TABLE_NAME.FAMILY)
-                        .withEncounterType(FamilyConstants.EventType.FAMILY_REGISTRATION)
+                        .withEncounterType(FamilyConstants.EventType.FAMILY_REGISTRATION_DENIED_CONSENT)
                         .tagLocationData(operationalArea)
                         .tagEventMetadata()
                         .saveEvent();
@@ -993,6 +989,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                                 break;
                             }
                         }
+                        listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
                     }
                 }
             }
@@ -1021,12 +1018,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         Callable<Task> callable = () -> {
 
-            String taskID = getPropertyValue(feature, TASK_IDENTIFIER);
-            if (StringUtils.isBlank(taskID))
-                taskID = StructureDao.getInstance().getTaskByStructureID(feature.id());
-
             TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
-            Task task = taskRepository.getTaskByIdentifier(taskID);
+            TaskUtils taskUtils = TaskUtils.getInstance();
+
+            Set<Task> tasks = taskUtils.getTasksByEntityAndCode(feature.id(), Constants.Intervention.STRUCTURE_VISITED);
+
+            Task task = tasks.size() > 0 ? tasks.iterator().next() : null;
             if (task != null) {
                 task.setBusinessStatus(Constants.BusinessStatus.INELIGIBLE);
                 task.setStatus(Task.TaskStatus.COMPLETED);
@@ -1038,10 +1035,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 taskRepository.addOrUpdate(task);
             } else {
                 // create a new task
-                TaskUtils taskUtils = TaskUtils.getInstance();
                 task = taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
-                        feature.id(), feature.id(), Constants.BusinessStatus.INELIGIBLE, TaskStatus.COMPLETED, Constants.Intervention.FAMILY_REGISTRATION,
-                        R.string.register_structure_and_family);
+                        feature.id(), feature.id(), Constants.BusinessStatus.INELIGIBLE, Task.TaskStatus.COMPLETED, Constants.Intervention.STRUCTURE_VISITED,
+                        R.string.confirm_structure_eligibility);
             }
 
 

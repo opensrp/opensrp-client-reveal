@@ -292,6 +292,7 @@ public interface Constants {
         String VISITED_NOT_TREATED = "Visited, SACs not treated";
         String VISITED_PARTIALLY_TREATED = "Visited, Partially treated";
         String COMPLETED_FAMILY_REGISTRATION = "Completed Family Registration";
+        String VISITED_DENIED_CONSENT = "Visited, Denied consent";
         String INELIGIBLE = "Ineligible";
         String ELIGIBLE = "Eligible";
         String INCLUDED_IN_ANOTHER_HOUSEHOLD = "Included in another household";

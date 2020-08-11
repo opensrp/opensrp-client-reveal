@@ -7,6 +7,7 @@ import org.smartregister.domain.Task;
 import org.smartregister.reveal.model.StructureDetails;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -60,6 +61,7 @@ public class GeoJsonUtils {
             mdaStatusMap.put(NONE_RECEIVED, 0);
             mdaStatusMap.put(NOT_ELIGIBLE, 0);
             mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, 0);
+            Set<String> status = new HashSet<>();
             StateWrapper state = new StateWrapper();
             if (taskSet == null)
                 continue;
@@ -84,10 +86,11 @@ public class GeoJsonUtils {
                 taskProperties.put(LOCATION_TYPE, structure.getProperties().getType());
                 interventionList.append(task.getCode());
                 interventionList.append("~");
-
+                status.add(task.getBusinessStatus());
             }
 
             populateBusinessStatus(taskProperties, mdaStatusMap, state);
+            calculateNDAStatus(taskProperties, status);
 
             taskProperties.put(TASK_CODE_LIST, interventionList.toString());
             if (structureNames.get(structure.getId()) != null) {
@@ -98,6 +101,29 @@ public class GeoJsonUtils {
 
         }
         return gson.toJson(structures);
+    }
+
+    private static void calculateNDAStatus(HashMap<String, String> taskProperties, Set<String> status) {
+        if (status.contains(Constants.BusinessStatus.VISITED_DENIED_CONSENT)) {
+            taskProperties.put(TASK_BUSINESS_STATUS, Constants.BusinessStatus.VISITED_DENIED_CONSENT);
+            taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, Constants.BusinessStatus.VISITED_DENIED_CONSENT);
+
+        } else if (status.contains(Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD)) {
+            taskProperties.put(TASK_BUSINESS_STATUS, Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD);
+            taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD);
+
+        } else if (status.contains(Constants.BusinessStatus.WAITING_FOR_QR_CODE)) {
+            taskProperties.put(TASK_BUSINESS_STATUS, Constants.BusinessStatus.WAITING_FOR_QR_CODE);
+            taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, Constants.BusinessStatus.WAITING_FOR_QR_CODE);
+
+        } else if (status.contains(Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION)) {
+            taskProperties.put(TASK_BUSINESS_STATUS, Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION);
+            taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION);
+
+        } else if (status.contains(Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION)) {
+            taskProperties.put(TASK_BUSINESS_STATUS, Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION);
+            taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION);
+        }
     }
 
     private static void calculateState(Task task, StateWrapper state, @NonNull Map<String, Integer> mdaStatusMap) {
