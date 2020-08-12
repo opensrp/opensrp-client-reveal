@@ -143,7 +143,7 @@ public class IndicatorUtils {
             sprayIndicator.add(String.valueOf(indicatorDetails.getFoundStructures()));
 
             sprayIndicator.add(context.getResources().getString(R.string.room_coverage));
-            sprayIndicator.add(String.valueOf(indicatorDetails.getRoomCoverage()));
+            sprayIndicator.add(context.getResources().getString(R.string.n_percent, indicatorDetails.getRoomCoverage()));
         }
 
 
