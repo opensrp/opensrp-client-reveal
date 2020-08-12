@@ -82,19 +82,32 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             Timber.w("progress indicator or indicators is null");
             return;
         }
-        progressIndicator.setProgress(indicatorDetails.getProgress());
-        progressIndicator.setTitle(this.activity.getString(R.string.n_percent, indicatorDetails.getProgress()));
+        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+            progressIndicator.setProgress(indicatorDetails.getProgress());
+            progressIndicator.setTitle(this.activity.getString(R.string.n_percent, indicatorDetails.getProgress()));
 
-        int totalFound = indicatorDetails.getSprayed() + indicatorDetails.getNotSprayed();
-        int progress2 = indicatorDetails.getTotalStructures() > 0 ? Math.round(totalFound * 100 / indicatorDetails.getTotalStructures()) : 0;
+            int totalFound = indicatorDetails.getSprayed() + indicatorDetails.getNotSprayed();
+            int progress2 = indicatorDetails.getTotalStructures() > 0 ? Math.round(totalFound * 100 / indicatorDetails.getTotalStructures()) : 0;
 
-        progressIndicator2.setProgress(progress2);
-        progressIndicator2.setTitle(this.activity.getString(R.string.n_percent, progress2));
+            progressIndicator2.setProgress(progress2);
+            progressIndicator2.setTitle(this.activity.getString(R.string.n_percent, progress2));
 
-        int progress3 = totalFound > 0 ? Math.round((indicatorDetails.getSprayed() * 100 / totalFound)) : 0;
+            int progress3 = totalFound > 0 ? Math.round((indicatorDetails.getSprayed() * 100 / totalFound)) : 0;
 
-        progressIndicator3.setProgress(progress3);
-        progressIndicator3.setTitle(this.activity.getString(R.string.n_percent, progress3));
+            progressIndicator3.setProgress(progress3);
+            progressIndicator3.setTitle(this.activity.getString(R.string.n_percent, progress3));
+        } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
+            progressIndicator.setSubTitle(activity.getString(R.string.structures_not_sprayed));
+            progressIndicator.setProgress(indicatorDetails.getNotSprayed());
+            progressIndicator.setTitle(this.activity.getString(R.string.n_percent, indicatorDetails.getNotSprayed()));
+
+            progressIndicator2.setSubTitle(activity.getString(R.string.found_coverage));
+            int coverage = (int) (indicatorDetails.getSprayed() * 1.0 / indicatorDetails.getFoundStructures());
+            progressIndicator2.setProgress(coverage);
+            progressIndicator2.setTitle(this.activity.getString(R.string.n_percent, coverage));
+
+            progressIndicator3.setVisibility(View.GONE);
+        }
 
         tableView.setTableData(Arrays.asList(new String[]{this.activity.getString(R.string.indicator), this.activity.getString(R.string.value)}), indicatorDetails.getSprayIndicatorList());
 
