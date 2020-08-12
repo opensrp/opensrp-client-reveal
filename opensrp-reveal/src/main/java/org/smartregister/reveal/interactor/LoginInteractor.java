@@ -8,7 +8,7 @@ import org.smartregister.login.interactor.BaseLoginInteractor;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.job.LocationTaskServiceJob;
-import org.smartregister.reveal.util.Utils;
+import org.smartregister.tasking.util.Utils;
 import org.smartregister.view.contract.BaseLoginContract;
 
 import java.lang.ref.WeakReference;

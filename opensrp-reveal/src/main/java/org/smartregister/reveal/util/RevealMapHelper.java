@@ -59,8 +59,8 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.INDEX_CASE_C
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.OUTSIDE_OPERATIONAL_AREA_MASK_OPACITY;
 import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
 import static org.smartregister.reveal.util.Constants.GeoJSON.TYPE;
-import static org.smartregister.reveal.util.Utils.createCircleFeature;
-import static org.smartregister.reveal.util.Utils.getGlobalConfig;
+import static org.smartregister.tasking.util.Utils.createCircleFeature;
+import static org.smartregister.tasking.util.Utils.getGlobalConfig;
 
 /**
  * Created by samuelgithengi on 2/20/19.

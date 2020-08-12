@@ -41,15 +41,14 @@ import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.job.LocationTaskServiceJob;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
-import org.smartregister.reveal.util.AppExecutors;
-import org.smartregister.reveal.util.CardDetailsUtil;
+import org.smartregister.tasking.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.TaskUtils;
-import org.smartregister.reveal.util.Utils;
+import org.smartregister.tasking.util.Utils;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.sync.ClientProcessorForJava;
 import org.smartregister.tasking.activity.FilterTasksActivity;
@@ -63,6 +62,7 @@ import org.smartregister.tasking.model.TaskFilterParams;
 import org.smartregister.tasking.util.InteractorUtils;
 import org.smartregister.tasking.util.PreferencesUtil;
 import org.smartregister.tasking.viewholder.TaskRegisterViewHolder;
+import org.smartregister.util.AppExecutors;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.view.activity.BaseRegisterActivity;
 import org.smartregister.view.activity.DrishtiApplication;
@@ -128,7 +128,7 @@ public class TaskingLibraryConfiguration extends org.smartregister.tasking.util.
         // atleast one bednet distribution or blood screening task
         boolean familyRegTaskMissingOrFamilyRegComplete = task.isFamilyRegistered() || !task.isFamilyRegTaskExists();
         Drawable actionBg = null;
-        String actionText = context.getText(org.smartregister.tasking.R.string.view_tasks).toString();
+        String actionText = context.getText(R.string.view_tasks).toString();
 
         if (Utils.isFocusInvestigation()) {
             if (familyRegTaskMissingOrFamilyRegComplete && task.isBednetDistributed() && task.isBloodScreeningDone()) {
@@ -1008,5 +1008,11 @@ public class TaskingLibraryConfiguration extends org.smartregister.tasking.util.
         } else {
             viewHolder.hideHouseNumber();
         }
+    }
+
+    @NonNull
+    @Override
+    public org.smartregister.util.AppExecutors getAppExecutors() {
+        return RevealApplication.getInstance().getAppExecutors();
     }
 }

@@ -7,9 +7,9 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.repository.PlanDefinitionSearchRepository;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.util.AppExecutors;
-import org.smartregister.reveal.util.Utils;
+import org.smartregister.tasking.util.Utils;
 import org.smartregister.tasking.contract.BaseDrawerContract;
+import org.smartregister.util.AppExecutors;
 
 import java.util.Set;
 

@@ -26,7 +26,7 @@ import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Constants.StructureType;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
-import org.smartregister.reveal.util.Utils;
+import org.smartregister.tasking.util.Utils;
 import org.smartregister.sync.ClientProcessorForJava;
 import org.smartregister.tasking.util.PreferencesUtil;
 

@@ -6,7 +6,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.StatsFragmentContract;
-import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.util.AppExecutors;
 
 import java.util.HashMap;
 import java.util.Map;

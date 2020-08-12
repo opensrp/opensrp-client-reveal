@@ -26,6 +26,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
+import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
 
 /**
  * Created by samuelgithengi on 4/14/19.
@@ -90,7 +91,7 @@ public class TaskUtils {
         boolean taskResetSuccessful = false;
         try {
             Task task = taskRepository.getTaskByIdentifier(taskDetails.getTaskId());
-            String operationalAreaId = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId();
+            String operationalAreaId = org.smartregister.tasking.util.Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId();
 
             if (Intervention.CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
                 task.setForEntity(operationalAreaId);

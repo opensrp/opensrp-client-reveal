@@ -100,9 +100,9 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
-import static org.smartregister.reveal.util.Utils.formatDate;
-import static org.smartregister.reveal.util.Utils.getPropertyValue;
-import static org.smartregister.reveal.util.Utils.validateFarStructures;
+import static org.smartregister.tasking.util.Utils.formatDate;
+import static org.smartregister.tasking.util.Utils.getPropertyValue;
+import static org.smartregister.tasking.util.Utils.validateFarStructures;
 
 
 /**
@@ -319,7 +319,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
         } else if (PAOT.equals(code)) {
             listTaskInteractor.fetchInterventionDetails(code, feature.id(), false);
-        } else if (org.smartregister.reveal.util.Utils.isFocusInvestigationOrMDA()) {
+        } else if (org.smartregister.tasking.util.Utils.isFocusInvestigationOrMDA()) {
             listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
         } else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
             listTaskInteractor.fetchInterventionDetails(IRS_VERIFICATION, feature.id(), false);
@@ -609,7 +609,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public int getInterventionLabel() {
-        return org.smartregister.reveal.util.Utils.getInterventionLabel();
+        return org.smartregister.tasking.util.Utils.getInterventionLabel();
     }
 
     @Override
@@ -718,7 +718,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         filterFeatureCollection = new ArrayList<>();
         Set<String> filterStatus = filterParams.getCheckedFilters().get(Filter.STATUS);
         Set<String> filterTaskCode = filterParams.getCheckedFilters().get(Filter.CODE);
-        Set<String> filterInterventionUnitTasks = org.smartregister.reveal.util.Utils.getInterventionUnitCodes(filterParams.getCheckedFilters().get(Filter.INTERVENTION_UNIT));
+        Set<String> filterInterventionUnitTasks = org.smartregister.tasking.util.Utils.getInterventionUnitCodes(filterParams.getCheckedFilters().get(Filter.INTERVENTION_UNIT));
         Pattern pattern = Pattern.compile("~");
         for (Feature feature : featureCollection.features()) {
             boolean matches = true;
@@ -761,8 +761,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             for (Feature feature : searchFeatureCollection != null && searchPhrase.length() > this.searchPhrase.length() ? searchFeatureCollection : Utils.isEmptyCollection(filterFeatureCollection) ? getFeatureCollection().features() : filterFeatureCollection) {
                 String structureName = feature.getStringProperty(STRUCTURE_NAME);
                 String familyMemberNames = feature.getStringProperty(FAMILY_MEMBER_NAMES);
-                if (org.smartregister.reveal.util.Utils.matchesSearchPhrase(structureName, searchPhrase) ||
-                        org.smartregister.reveal.util.Utils.matchesSearchPhrase(familyMemberNames, searchPhrase))
+                if (org.smartregister.tasking.util.Utils.matchesSearchPhrase(structureName, searchPhrase) ||
+                        org.smartregister.tasking.util.Utils.matchesSearchPhrase(familyMemberNames, searchPhrase))
                     features.add(feature);
             }
             searchFeatureCollection = features;

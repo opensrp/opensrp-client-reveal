@@ -206,18 +206,18 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
     @Override
     public void setDistrict(String district) {
-        org.smartregister.reveal.util.Utils.setTextViewText(districtTextView, R.string.district, district);
+        org.smartregister.tasking.util.Utils.setTextViewText(districtTextView, R.string.district, district);
     }
 
     @Override
     public void setFacility(String facility, String facilityLevel) {
-        org.smartregister.reveal.util.Utils.setTextViewText(facilityTextView,
+        org.smartregister.tasking.util.Utils.setTextViewText(facilityTextView,
                 Tags.CANTON.equals(facilityLevel) ? R.string.canton : R.string.facility, facility);
     }
 
     @Override
     public void setOperator() {
-        org.smartregister.reveal.util.Utils.setTextViewText(operatorTextView, R.string.operator,
+        org.smartregister.tasking.util.Utils.setTextViewText(operatorTextView, R.string.operator,
                 RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM());
     }
 
@@ -321,7 +321,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         else if (v.getId() == R.id.btn_navMenu_offline_maps)
             presenter.onShowOfflineMaps();
         else if (v.getId() == R.id.sync_button) {
-            org.smartregister.reveal.util.Utils.startImmediateSync();
+            org.smartregister.tasking.util.Utils.startImmediateSync();
             closeDrawerLayout();
         }
     }

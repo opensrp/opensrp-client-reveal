@@ -1,7 +1,6 @@
 package org.smartregister.reveal.util;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.Resources;
 import android.text.TextUtils;
 import android.view.View;
@@ -11,25 +10,13 @@ import android.widget.TextView;
 
 import org.smartregister.AllConstants;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.tasking.model.CardDetails;
 import org.smartregister.reveal.model.FamilyCardDetails;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
-import org.smartregister.reveal.util.Constants.BusinessStatus;
 
 import timber.log.Timber;
 
-import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_SPRAYED;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
@@ -37,40 +24,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 /**
  * Created by samuelgithengi on 3/22/19.
  */
-public class CardDetailsUtil {
-
-    public static void formatCardDetails(CardDetails cardDetails) {
-        if (cardDetails == null || cardDetails.getStatus() == null)
-            return;
-        // extract status color
-        String status = cardDetails.getStatus();
-        switch (status) {
-            case BusinessStatus.NOT_SPRAYED:
-            case BusinessStatus.INCOMPLETE:
-            case BusinessStatus.IN_PROGRESS:
-            case BusinessStatus.NONE_RECEIVED:
-                cardDetails.setStatusColor(R.color.unsprayed);
-                cardDetails.setStatusMessage(R.string.details_not_sprayed);
-                break;
-            case BusinessStatus.SPRAYED:
-            case BusinessStatus.COMPLETE:
-            case BusinessStatus.FULLY_RECEIVED:
-            case PARTIALLY_SPRAYED:
-                cardDetails.setStatusColor(R.color.sprayed);
-                cardDetails.setStatusMessage(R.string.details_sprayed);
-                cardDetails.setReason(null);
-                break;
-            case BusinessStatus.NOT_SPRAYABLE:
-            case BusinessStatus.NOT_ELIGIBLE:
-                cardDetails.setStatusColor(R.color.unsprayable);
-                cardDetails.setStatusMessage(R.string.details_not_sprayable);
-                cardDetails.setReason(null);
-                break;
-            default:
-                Timber.w("business status not defined :" + cardDetails.getStatus());
-                break;
-        }
-    }
+public class CardDetailsUtil extends org.smartregister.tasking.util.CardDetailsUtil {
 
     public void populateSprayCardTextViews(SprayCardDetails sprayCardDetails, Activity activity) {
         try {
@@ -207,68 +161,6 @@ public class CardDetailsUtil {
         } catch (Resources.NotFoundException e) {
             Timber.e(e);
         }
-    }
-
-    /**
-     * Takes in a business status and returns the translated value according to locale set.
-     *
-     * @param businessStatus Business status of the task attached to a structure
-     * @return status Translated status according to locale set
-     */
-    public static String getTranslatedBusinessStatus(String businessStatus) {
-        Context context = RevealApplication.getInstance().getApplicationContext();
-
-        if (businessStatus == null)
-            return context.getString(R.string.not_eligible);
-        switch (businessStatus) {
-            case NOT_VISITED:
-                return context.getString(R.string.not_visited);
-            case NOT_SPRAYED:
-                return context.getString(R.string.not_sprayed);
-            case SPRAYED:
-            case PARTIALLY_SPRAYED:
-                return context.getString(R.string.sprayed);
-            case NOT_SPRAYABLE:
-                return context.getString(R.string.not_sprayable);
-            case COMPLETE:
-                return context.getString(R.string.complete);
-            case INCOMPLETE:
-                return context.getString(R.string.incomplete);
-            case NOT_ELIGIBLE:
-                return context.getString(R.string.not_eligible);
-            case IN_PROGRESS:
-                return context.getString(R.string.in_progress);
-            default:
-                return businessStatus;
-        }
-
-    }
-
-    /**
-     * Takes in a IRS intervention status and returns the translated value .
-     *
-     * @param status Status of the IRS Verification type
-     * @return status Translated status
-     */
-    public static String getTranslatedIRSVerificationStatus(String status) {
-        Context context = RevealApplication.getInstance().getApplicationContext();
-
-        if (status == null)
-            return context.getString(R.string.not_sprayed);
-        switch (status) {
-            case Constants.IRSVerificationStatus.SPRAYED:
-                return context.getString(R.string.sprayed);
-            case Constants.IRSVerificationStatus.NOT_SPRAYED:
-                return context.getString(R.string.not_sprayed);
-            case Constants.IRSVerificationStatus.NOT_FOUND_OR_VISITED:
-                return context.getString(R.string.structure_not_found_or_visited_during_campaign);
-            case Constants.IRSVerificationStatus.OTHER:
-                return context.getString(R.string.other);
-            default:
-                return status;
-        }
-
-
     }
 
 

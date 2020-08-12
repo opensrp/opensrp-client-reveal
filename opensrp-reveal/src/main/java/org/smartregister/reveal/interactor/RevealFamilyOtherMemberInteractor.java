@@ -8,8 +8,8 @@ import org.smartregister.family.interactor.FamilyOtherMemberProfileInteractor;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract.Interactor;
 import org.smartregister.reveal.sync.RevealClientProcessor;
-import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.tasking.util.InteractorUtils;
+import org.smartregister.util.AppExecutors;
 
 import static org.smartregister.reveal.application.RevealApplication.getInstance;
 

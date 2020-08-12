@@ -34,7 +34,7 @@ import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.GeoJsonUtils;
 import org.smartregister.reveal.util.IndicatorUtils;
-import org.smartregister.reveal.util.Utils;
+import org.smartregister.tasking.util.Utils;
 import org.smartregister.tasking.interactor.BaseInteractor;
 import org.smartregister.tasking.model.CardDetails;
 import org.smartregister.tasking.model.TaskDetails;
@@ -94,8 +94,8 @@ import static org.smartregister.reveal.util.Constants.Tables.MOSQUITO_COLLECTION
 import static org.smartregister.reveal.util.Constants.Tables.PAOT_TABLE;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
-import static org.smartregister.reveal.util.Utils.getInterventionLabel;
-import static org.smartregister.reveal.util.Utils.getPropertyValue;
+import static org.smartregister.tasking.util.Utils.getInterventionLabel;
+import static org.smartregister.tasking.util.Utils.getPropertyValue;
 
 /**
  * Created by samuelgithengi on 11/27/18.

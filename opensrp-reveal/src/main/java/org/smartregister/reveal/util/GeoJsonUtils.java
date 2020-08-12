@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.model.StructureDetails;
+import org.smartregister.tasking.util.Utils;
 
 import java.util.HashMap;
 import java.util.List;

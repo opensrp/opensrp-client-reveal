@@ -9,8 +9,9 @@ import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
 import org.smartregister.reveal.BaseUnitTest;
-import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.tasking.contract.BaseContract;
+import org.smartregister.tasking.interactor.TaskRegisterInteractor;
 
 import java.util.Collections;
 import java.util.List;

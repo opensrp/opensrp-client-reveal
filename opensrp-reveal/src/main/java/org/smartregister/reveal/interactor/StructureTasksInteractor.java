@@ -23,11 +23,11 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.model.EventTask;
 import org.smartregister.reveal.model.StructureTaskDetails;
-import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.tasking.interactor.BaseInteractor;
 import org.smartregister.tasking.util.InteractorUtils;
+import org.smartregister.util.AppExecutors;
 
 import java.util.ArrayList;
 import java.util.Collections;

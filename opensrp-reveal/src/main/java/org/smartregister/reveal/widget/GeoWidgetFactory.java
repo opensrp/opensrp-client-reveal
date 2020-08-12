@@ -70,8 +70,8 @@ import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
-import static org.smartregister.reveal.util.Utils.getLocationBuffer;
-import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
+import static org.smartregister.tasking.util.Utils.getLocationBuffer;
+import static org.smartregister.tasking.util.Utils.getPixelsPerDPI;
 
 /**
  * Created by samuelgithengi on 12/13/18.

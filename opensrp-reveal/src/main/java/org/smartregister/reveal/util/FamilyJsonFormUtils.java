@@ -284,7 +284,7 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
                 (Event) new Event().withBaseEntityId(baseEntityId).withEventDate(new Date()).withEventType(eventType)
                         .withLocationId(locationId).withEntityType(familyMetadata.familyMemberRegister.tableName)
                         .withFormSubmissionId(UUID.randomUUID().toString()).withDateCreated(new Date());
-        org.smartregister.reveal.util.Utils.tagEventMetadata(updateMemberNameEvent, org.smartregister.reveal.util.Utils.getFormTag());
+        org.smartregister.tasking.util.Utils.tagEventMetadata(updateMemberNameEvent, org.smartregister.tasking.util.Utils.getFormTag());
         updateMemberNameEvent.setDetails(details);
         return updateMemberNameEvent;
     }

@@ -28,7 +28,7 @@ import org.smartregister.reveal.adapter.StructureTaskAdapter;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.presenter.StructureTasksPresenter;
-import org.smartregister.reveal.util.Utils;
+import org.smartregister.tasking.util.Utils;
 import org.smartregister.tasking.util.AlertDialogUtils;
 import org.smartregister.tasking.util.LocationUtils;
 import org.smartregister.tasking.util.RevealJsonFormUtils;

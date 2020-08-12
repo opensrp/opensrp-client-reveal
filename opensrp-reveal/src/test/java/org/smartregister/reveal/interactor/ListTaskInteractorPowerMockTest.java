@@ -14,8 +14,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
-import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.CardDetailsUtil;
+import org.smartregister.util.AppExecutors;
 
 import java.util.concurrent.Executor;
 

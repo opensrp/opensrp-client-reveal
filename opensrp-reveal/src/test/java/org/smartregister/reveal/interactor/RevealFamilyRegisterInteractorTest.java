@@ -17,9 +17,9 @@ import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.FamilyRegisterContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
-import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.sync.ClientProcessorForJava;
+import org.smartregister.util.AppExecutors;
 
 import java.util.ArrayList;
 import java.util.Collections;

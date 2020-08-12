@@ -24,11 +24,11 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
-import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.sync.ClientProcessorForJava;
 import org.smartregister.tasking.util.InteractorUtils;
+import org.smartregister.util.AppExecutors;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.ArrayList;

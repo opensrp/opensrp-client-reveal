@@ -24,8 +24,8 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.JsonForm;
-import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.tasking.util.PreferencesUtil;
 import org.smartregister.util.AppExecutors;
 
 import java.util.ArrayList;
@@ -222,7 +222,7 @@ public class RevealClientProcessorPowerMockTest {
         PowerMockito.when(preferencesUtil.getCurrentOperationalArea()).thenReturn("");
 
         PowerMockito.when(PreferencesUtil.getInstance()).thenReturn(preferencesUtil);
-        PowerMockito.when(Utils.getOperationalAreaLocation(anyString())).thenReturn(new Location());
+        PowerMockito.when(org.smartregister.tasking.util.Utils.getOperationalAreaLocation(anyString())).thenReturn(new Location());
     }
 
     private void mockRepositories() {

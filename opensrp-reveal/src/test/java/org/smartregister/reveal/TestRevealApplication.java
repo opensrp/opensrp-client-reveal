@@ -11,7 +11,7 @@ import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.family.FamilyLibrary;
 import org.smartregister.repository.Repository;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.util.AppExecutors;
 
 import java.util.concurrent.Executors;
 

@@ -102,10 +102,10 @@ import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_G
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_TASK_LISTS;
 import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
-import static org.smartregister.reveal.util.Utils.displayDistanceScale;
+import static org.smartregister.tasking.util.Utils.displayDistanceScale;
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
-import static org.smartregister.reveal.util.Utils.getLocationBuffer;
-import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
+import static org.smartregister.tasking.util.Utils.getLocationBuffer;
+import static org.smartregister.tasking.util.Utils.getPixelsPerDPI;
 
 /**
  * Created by samuelgithengi on 11/20/18.
@@ -397,13 +397,13 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         } else {
             int progressHeight = getResources().getDimensionPixelSize(R.dimen.progress_height);
 
-            int bottomMargin = org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? progressHeight + 40 : 40;
+            int bottomMargin = org.smartregister.tasking.util.Utils.getInterventionLabel() == R.string.irs ? progressHeight + 40 : 40;
             positionMyLocationAndLayerSwitcher(myLocationButtonParams, bottomMargin);
 
             if (layerSwitcherFab != null) {
                 FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) layerSwitcherFab.getLayoutParams();
                 //position the layer selector above location button and with similar bottom margin
-                if (org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs)
+                if (org.smartregister.tasking.util.Utils.getInterventionLabel() == R.string.irs)
                     params.bottomMargin = myLocationButton.getMeasuredHeight() + progressHeight + 80;
                 else
                     params.bottomMargin = myLocationButton.getMeasuredHeight() + bottomMargin + 40;

@@ -1,8 +1,9 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
-import androidx.core.util.Pair;
+
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.util.Pair;
 
 import com.mapbox.mapboxsdk.geometry.LatLng;
 
@@ -22,14 +23,15 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.domain.Location;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.contract.BaseFormFragmentContract;
-import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.model.StructureTaskDetails;
-import org.smartregister.reveal.model.TaskDetails;
-import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.TestingUtils;
+import org.smartregister.tasking.contract.BaseFormFragmentContract;
+import org.smartregister.tasking.interactor.BaseFormFragmentInteractor;
+import org.smartregister.tasking.model.TaskDetails;
+import org.smartregister.tasking.presenter.BaseFormFragmentPresenter;
+import org.smartregister.tasking.repository.RevealMappingHelper;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.JsonFormUtils;
 

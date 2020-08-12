@@ -16,7 +16,7 @@ import org.powermock.reflect.Whitebox;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.presenter.StatsFragmentPresenter;
-import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.util.AppExecutors;
 
 import java.util.Map;
 import java.util.concurrent.Executors;

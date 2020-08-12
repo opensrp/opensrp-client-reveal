@@ -1,6 +1,7 @@
 package org.smartregister.reveal.util;
 
 import android.location.Location;
+
 import androidx.core.util.Pair;
 
 import com.google.gson.Gson;
@@ -17,13 +18,13 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.domain.form.FormLocation;
-import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.model.StructureTaskDetails;
-import org.smartregister.reveal.model.TaskDetails;
-import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
+import org.smartregister.tasking.model.OfflineMapModel;
+import org.smartregister.tasking.model.TaskDetails;
+import org.smartregister.tasking.model.TaskFilterParams;
 import org.smartregister.util.DateTimeTypeConverter;
 
 import java.util.ArrayList;
@@ -40,7 +41,6 @@ import io.ona.kujaku.data.realm.objects.MapBoxOfflineQueueTask;
 
 import static io.ona.kujaku.downloaders.MapBoxOfflineResourcesDownloader.METADATA_JSON_FIELD_REGION_NAME;
 import static org.smartregister.family.util.DBConstants.KEY;
-import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.DOWNLOADED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
@@ -135,7 +135,7 @@ public class TestingUtils {
 
     public static OfflineMapModel getOfflineMapModel() {
         OfflineMapModel model = new OfflineMapModel();
-        model.setOfflineMapStatus(DOWNLOADED);
+        model.setOfflineMapStatus(OfflineMapModel.OfflineMapStatus.DOWNLOADED);
         model.setLocation(TestingUtils.gson.fromJson(TestingUtils.operationalAreaGeoJSON, org.smartregister.domain.Location.class));
         return model;
     }
