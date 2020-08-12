@@ -159,9 +159,9 @@ public class IndicatorUtils {
     public static IndicatorDetails getNamibiaIndicators(String locationId, SQLiteDatabase sqLiteDatabase) {
         String query = "select count(s._id) as totStruct" +
                 ", sum(case when ss.spray_status is null  then 1 else 0 end) as notVisitedStruct" +
-                ", sum(case when ss.nSprayableTotal >0 then 1 else 0 end) as foundStruct" +
+                ", sum(case when ss.spray_status is not null and ss.property_type='Residential Structure' then 1 else 0 end) as foundStruct" +
                 ", sum(case when ss.ableToSprayFirst ='yes'  then 1 else 0 end) as sprayedStruct" +
-                ", sum(case when ss.ableToSprayFirst ='no'  then 1 else 0 end) as notSprayedStruct" +
+                ", sum(case when ss.ableToSprayFirst ='no' or ss.householdAccessible='no'  then 1 else 0 end) as notSprayedStruct" +
                 ", round(sum(ifNull(nSprayedTotalFirst,0)+ifNull(nSprayedTotalMop,0))*100.0/sum(ss.nSprayableTotal)) as roomCov" +
                 " from structure s" +
                 " left join sprayed_structures ss on s._id=ss.id" +
