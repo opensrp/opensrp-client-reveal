@@ -214,7 +214,7 @@ public class Utils {
      * @return validateFarStructures
      */
     public static Boolean validateFarStructures() {
-        return Boolean.valueOf(getGlobalConfig(CONFIGURATION.VALIDATE_FAR_STRUCTURES, BuildConfig.VALIDATE_FAR_STRUCTURES + ""));
+        return false;
     }
 
     /**

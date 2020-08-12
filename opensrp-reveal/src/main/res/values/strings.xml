@@ -239,7 +239,7 @@
     <string name="structures_visited_found">Structures Visited/Found</string>
     <string name="structures_sprayed">Structures Sprayed</string>
     <string name="structures_not_sprayed">Structures Not Sprayed</string>
-    <string name="room_coverage">Room Coverage</string>
+    <string name="room_coverage">Room coverage of sprayed</string>
     <string name="n_percent">%1$d%%</string>
     <string name="indicator">Indicator</string>
     <string name="value">Value</string>
