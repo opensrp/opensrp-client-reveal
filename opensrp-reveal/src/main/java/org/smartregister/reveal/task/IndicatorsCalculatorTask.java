@@ -3,6 +3,7 @@ package org.smartregister.reveal.task;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -97,16 +98,17 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             progressIndicator3.setProgress(progress3);
             progressIndicator3.setTitle(this.activity.getString(R.string.n_percent, progress3));
         } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
-            progressIndicator.setSubTitle(activity.getString(R.string.structures_not_sprayed));
-            progressIndicator.setProgress(indicatorDetails.getNotSprayed());
-            progressIndicator.setTitle(this.activity.getString(R.string.n_percent, indicatorDetails.getNotSprayed()));
+
+            progressIndicator3.setSubTitle(activity.getString(R.string.structures_not_sprayed));
+            progressIndicator3.setProgress(indicatorDetails.getNotSprayed());
+            progressIndicator3.setTitle(String.valueOf(indicatorDetails.getNotSprayed()));
 
             progressIndicator2.setSubTitle(activity.getString(R.string.found_coverage));
-            int coverage = (int) (indicatorDetails.getSprayed() * 1.0 / indicatorDetails.getFoundStructures());
+            int coverage = (int) (indicatorDetails.getSprayed() * 100.0 / indicatorDetails.getFoundStructures());
             progressIndicator2.setProgress(coverage);
             progressIndicator2.setTitle(this.activity.getString(R.string.n_percent, coverage));
 
-            progressIndicator3.setVisibility(View.GONE);
+            progressIndicator.setVisibility(View.GONE);
         }
 
         tableView.setTableData(Arrays.asList(new String[]{this.activity.getString(R.string.indicator), this.activity.getString(R.string.value)}), indicatorDetails.getSprayIndicatorList());
