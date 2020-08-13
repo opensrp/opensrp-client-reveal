@@ -373,8 +373,14 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
 
             // generate mda task
-            taskUtils.generateTask(context, entityId, areaId, Constants.BusinessStatus.NOT_VISITED, Constants.Intervention.NTD_MDA_DISPENSE,
-                    R.string.mass_drug_administration);
+            // calculate task
+            if (StringUtils.isNotBlank(age)) {
+                Integer current_age = Integer.parseInt(age);
+
+                if (current_age >= 5 && current_age <= 15)
+                    taskUtils.generateTask(context, entityId, areaId, Constants.BusinessStatus.NOT_VISITED, Constants.Intervention.NTD_MDA_DISPENSE,
+                            R.string.mass_drug_administration);
+            }
 
             return null;
         };

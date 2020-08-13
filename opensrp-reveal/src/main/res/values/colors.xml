@@ -53,4 +53,10 @@
 
     <color name="light_gray">#FAFAFA</color>
 
+    <color name="ntd_green">#6CBF0F</color>
+    <color name="ntd_red">#EE0427</color>
+    <color name="ntd_orange">#CD800E</color>
+    <color name="ntd_yellow">#FFCA16</color>
+    <color name="ntd_black">#000000</color>
+    <color name="ntd_grey">#8B8B8B</color>
 </resources>

@@ -410,7 +410,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             sortTasks(filteredTasks, filterParams.getSortBy());
         }
         setTasks(filteredTasks, withinBuffer);
-        getView().setSearchPhrase("");
+        //getView().setSearchPhrase("");
         getView().hideProgressDialog();
         getView().hideProgressView();
         isTasksFiltered = true;

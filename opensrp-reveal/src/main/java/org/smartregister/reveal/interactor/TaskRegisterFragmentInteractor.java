@@ -27,6 +27,7 @@ import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.InteractorUtils;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.ArrayList;
@@ -226,14 +227,18 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
                 tasks.addAll(queryTaskDetails(indexCaseSelect(), params, lastLocation,
                         operationalAreaCenter, houseLabel, false));
 
-                Collections.sort(tasks);
             } else {
-                TaskDetailsDao taskDetailsDao = TaskDetailsDao.getInstance();
-                tasks.addAll(taskDetailsDao.getTasks(mainCondition.second[0], lastLocation, operationalAreaCenter));
-                tasks.addAll(taskDetailsDao.getUnRegisteredStructures(mainCondition.second[0], lastLocation, operationalAreaCenter));
 
-                Collections.sort(tasks);
+                String planId = PreferencesUtil.getInstance().getCurrentPlanId();
+
+                TaskDetailsDao taskDetailsDao = TaskDetailsDao.getInstance();
+                tasks.addAll(taskDetailsDao.fetchFloatingFamilies(mainCondition.second[0], planId, lastLocation, operationalAreaCenter));
+                tasks.addAll(taskDetailsDao.fetchTaskFamilies(mainCondition.second[0], planId, lastLocation, operationalAreaCenter));
+                tasks.addAll(taskDetailsDao.fetchFixedStructures(mainCondition.second[0], planId, lastLocation, operationalAreaCenter));
+                tasks.addAll(taskDetailsDao.fetchUnRegisteredStructures(mainCondition.second[0], planId, lastLocation, operationalAreaCenter));
+
             }
+            Collections.sort(tasks);
             appExecutors.mainThread().execute(() -> {
                 getPresenter().onTasksFound(tasks, structuresWithinBuffer);
             });

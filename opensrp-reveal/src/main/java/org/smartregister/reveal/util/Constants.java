@@ -155,6 +155,7 @@ public interface Constants {
         String FAMILY_MEMBER_NAMES = "family_member_names";
         String PLAN_IDENTIFIER = "planIdentifier";
         String STRUCTURE_ID = "structure_id";
+        String TASK_AGGREGATE_STATUS = "taskAggregateStatus";
     }
 
 

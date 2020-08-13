@@ -9,11 +9,13 @@ import android.view.ViewGroup;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.viewholder.TaskRegisterViewHolder;
 
 import java.util.ArrayList;
@@ -44,8 +46,57 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
         return new TaskRegisterViewHolder(view);
     }
 
+
+    public void onBindNTDViewHolder(@NonNull TaskRegisterViewHolder viewHolder, int position){
+        TaskDetails task = taskDetails.get(position);
+        Float distance = task.getDistanceFromUser();
+        String name = task.getStructureName();
+
+        if(StringUtils.isBlank(name))
+            name = task.getStructureName() != null ? task.getStructureName() : context.getString(R.string.unenumerated_structure);
+
+        viewHolder.setTaskName(name);
+        String action = task.getTaskStatus();
+
+
+        CardDetails cardDetails = new CardDetails(task.getBusinessStatus());
+        cardDetails.setStatusColor(R.color.ntd_yellow);
+        if("Complete".equals(task.getBusinessStatus())){
+            cardDetails.setStatusColor(R.color.ntd_green);
+            task.setAggregateBusinessStatus("Complete");
+        }else if("Partial".equals(task.getBusinessStatus())){
+            cardDetails.setStatusColor(R.color.ntd_orange);
+            action = "Visited, Partially treated";
+            task.setAggregateBusinessStatus("Incomplete");
+        }else if("Not Visited".equals(task.getBusinessStatus())){
+            cardDetails.setStatusColor(R.color.ntd_yellow);
+            task.setAggregateBusinessStatus("Not Visited");
+        }else if("Ineligible".equals(task.getBusinessStatus())){
+            cardDetails.setStatusColor(R.color.ntd_black);
+            task.setAggregateBusinessStatus("Complete");
+        }else if("Visited, Denied consent".equals(task.getBusinessStatus())){
+            cardDetails.setStatusColor(R.color.ntd_red);
+            action = "Visited, SACs not treated";
+            task.setAggregateBusinessStatus("Incomplete");
+        }else if("Included in another household".equals(task.getBusinessStatus())){
+            cardDetails.setStatusColor(R.color.ntd_red);
+            task.setAggregateBusinessStatus("Complete");
+        }
+
+        viewHolder.setTaskAction(action, task, cardDetails, registerActionHandler);
+        viewHolder.setDistanceFromStructure(distance, task.isDistanceFromCenter());
+        viewHolder.setTaskDetails(task.getBusinessStatus(), task.getTaskDetails());
+
+        viewHolder.hideHouseNumber();
+    }
+
     @Override
     public void onBindViewHolder(@NonNull TaskRegisterViewHolder viewHolder, int position) {
+        if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
+            onBindNTDViewHolder(viewHolder, position);
+            return;
+        }
+
         TaskDetails task = taskDetails.get(position);
         Float distance = task.getDistanceFromUser();
         String name = task.getStructureName();

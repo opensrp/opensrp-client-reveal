@@ -138,7 +138,7 @@ public class NativeFormProcessor {
         if (hasClient && _client == null)
             _client = JsonFormUtils.createBaseClient(
                     getFields(),
-                    JsonClientProcessingUtils.formTag(allSharedPreferences),
+                    Utils.getFormTag(),
                     entityId
             );
 
@@ -150,7 +150,7 @@ public class NativeFormProcessor {
             _event = JsonFormUtils.createEvent(
                     getFields(),
                     getJSONObject(jsonForm, METADATA),
-                    JsonClientProcessingUtils.formTag(allSharedPreferences),
+                    Utils.getFormTag(),
                     entityId,
                     encounterType,
                     bindType

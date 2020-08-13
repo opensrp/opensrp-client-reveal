@@ -121,6 +121,7 @@ import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_AGGREGATE_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE_LIST;
@@ -629,6 +630,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                         }
                     }
                     listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
+                    refreshStructures(true);
 
                     view.setLoadingState(false);
                     view.onEligibilityStatusConfirmed(task.getBusinessStatus());
@@ -735,6 +737,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                         }
                     }
                     listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
+                    refreshStructures(true);
 
                     if (runnable != null)
                         runnable.run();
@@ -811,6 +814,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     form.setWizard(true);
 
                     view.startJSONForm(jsonObject, form);
+                    refreshStructures(true);
                 }
             }
 
@@ -1077,6 +1081,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                         }
                     }
                     listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
+                    refreshStructures(true);
 
                     view.setLoadingState(false);
                 }
@@ -1538,6 +1543,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             boolean matches = true;
             if (filterStatus != null) {
                 matches = feature.hasProperty(TASK_BUSINESS_STATUS) && filterStatus.contains(feature.getStringProperty(TASK_BUSINESS_STATUS));
+                if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY))
+                    matches = feature.hasProperty(TASK_AGGREGATE_STATUS) && filterStatus.contains(feature.getStringProperty(TASK_AGGREGATE_STATUS));
             }
             if (matches && filterTaskCode != null) {
                 matches = matchesTaskCodeFilterList(feature, filterTaskCode, pattern);

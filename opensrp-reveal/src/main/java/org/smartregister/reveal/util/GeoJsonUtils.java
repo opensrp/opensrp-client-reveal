@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.model.StructureDetails;
 
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.BLOOD_SCREE
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_REGISTERED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FULLY_RECEIVED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NONE_RECEIVED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
@@ -36,6 +38,7 @@ import static org.smartregister.reveal.util.Constants.Properties.LOCATION_TYPE;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_VERSION;
 import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_AGGREGATE_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE_LIST;
@@ -63,8 +66,16 @@ public class GeoJsonUtils {
             mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, 0);
             Set<String> status = new HashSet<>();
             StateWrapper state = new StateWrapper();
-            if (taskSet == null)
+            if (taskSet == null) {
+                if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
+                    taskProperties = new HashMap<>();
+                    taskProperties.put(TASK_AGGREGATE_STATUS, NOT_VISITED);
+                    structure.getProperties().setCustomProperties(taskProperties);
+                }
+
+
                 continue;
+            }
             for (Task task : taskSet) {
                 calculateState(task, state, mdaStatusMap);
 
@@ -106,25 +117,37 @@ public class GeoJsonUtils {
     private static void calculateNTDStatus(HashMap<String, String> taskProperties, Set<String> status, StateWrapper state) {
         if (status.contains(Constants.BusinessStatus.VISITED_DENIED_CONSENT)) {
             taskProperties.put(TASK_BUSINESS_STATUS, Constants.BusinessStatus.VISITED_DENIED_CONSENT);
+            taskProperties.put(TASK_AGGREGATE_STATUS, COMPLETE);
             taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, Constants.BusinessStatus.VISITED_DENIED_CONSENT);
 
         } else if (status.contains(Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD)) {
             taskProperties.put(TASK_BUSINESS_STATUS, Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD);
+            taskProperties.put(TASK_AGGREGATE_STATUS, COMPLETE);
             taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD);
 
         } else if (status.contains(Constants.BusinessStatus.WAITING_FOR_QR_CODE)) {
             taskProperties.put(TASK_BUSINESS_STATUS, Constants.BusinessStatus.WAITING_FOR_QR_CODE);
+            taskProperties.put(TASK_AGGREGATE_STATUS, INCOMPLETE);
             taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, Constants.BusinessStatus.WAITING_FOR_QR_CODE);
 
         } else if (status.contains(Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION)) {
             taskProperties.put(TASK_BUSINESS_STATUS, Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION);
+            taskProperties.put(TASK_AGGREGATE_STATUS, INCOMPLETE);
             taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION);
 
         } else if (status.contains(Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION)) {
             taskProperties.put(TASK_BUSINESS_STATUS, Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION);
+            taskProperties.put(TASK_AGGREGATE_STATUS, INCOMPLETE);
             taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION);
-        } else if(state.familyRegistered || !state.familyRegTaskExists){
+
+        } else if (status.contains(Constants.BusinessStatus.INELIGIBLE)) {
+            taskProperties.put(TASK_BUSINESS_STATUS, Constants.BusinessStatus.INELIGIBLE);
+            taskProperties.put(TASK_AGGREGATE_STATUS, Constants.BusinessStatus.INELIGIBLE);
+            taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, Constants.BusinessStatus.INELIGIBLE);
+
+        }  else if(state.familyRegistered || !state.familyRegTaskExists){
             taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
+            taskProperties.put(TASK_AGGREGATE_STATUS, COMPLETE);
             taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, COMPLETE);
         }
     }

@@ -5,16 +5,9 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.tag.FormTag;
 import org.smartregister.family.FamilyLibrary;
 import org.smartregister.repository.AllSharedPreferences;
+import org.smartregister.reveal.BuildConfig;
 
 public class JsonClientProcessingUtils {
-
-    public static FormTag formTag(AllSharedPreferences allSharedPreferences) {
-        FormTag formTag = new FormTag();
-        formTag.providerId = allSharedPreferences.fetchRegisteredANM();
-        formTag.appVersion = FamilyLibrary.getInstance().getApplicationVersion();
-        formTag.databaseVersion = FamilyLibrary.getInstance().getDatabaseVersion();
-        return formTag;
-    }
 
     public static Event tagSyncMetadata(AllSharedPreferences allSharedPreferences, Event event) {
         String providerId = allSharedPreferences.fetchRegisteredANM();
@@ -24,8 +17,9 @@ public class JsonClientProcessingUtils {
         event.setTeam(allSharedPreferences.fetchDefaultTeam(providerId));
         event.setTeamId(allSharedPreferences.fetchDefaultTeamId(providerId));
 
-        event.setClientDatabaseVersion(FamilyLibrary.getInstance().getDatabaseVersion());
-        event.setClientApplicationVersion(FamilyLibrary.getInstance().getApplicationVersion());
+        event.setClientDatabaseVersion(BuildConfig.DATABASE_VERSION);
+        event.setClientApplicationVersion(BuildConfig.VERSION_CODE);
+        event.setClientApplicationVersionName(BuildConfig.VERSION_NAME);
         return event;
     }
 

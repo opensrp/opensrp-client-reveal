@@ -9,7 +9,6 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
-import org.smartregister.util.QueryComposer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,42 +21,87 @@ public class TaskDetailsDao extends AbstractDao {
         return new TaskDetailsDao();
     }
 
-    public List<TaskDetails> getTasks(String operationalAreaID, Location lastLocation, Location operationalAreaCenter) {
+    public List<TaskDetails> fetchTaskFamilies(String operationalAreaId, String planId, Location lastLocation, Location operationalAreaCenter) {
 
-        String sql = "" +
-                "select ec_family.base_entity_id , summary.total_tasks , summary.completed_tasks , ec_family.first_name , structure_eligibility.qr_code " +
-                "from ec_family " +
-                "left join structure_eligibility on structure_eligibility.structure_id = ec_family.structure_id " +
+        String sql = "select task.structure_id , ec_family.base_entity_id , qr_code , " +
+                "(case when max(ifnull(ec_family.nsac,0),ifnull(total_tasks,0)) = 0 then 'Complete' " +
+                "when ifnull(pending_tasks,0) < max(ifnull(ec_family.nsac,0),ifnull(total_tasks,0)) then 'Partial' " +
+                "else 'Not Visited' end) task_status , ec_family.first_name fam_name , structure.latitude , structure.longitude " +
+                "from task  " +
+                "inner join structure on structure._id = task.structure_id " +
+                "left join structure_eligibility on structure_eligibility.structure_id = task.structure_id " +
                 "left join ( " +
-                " select sum(case when task.status = 'COMPLETED' then 1 else 0 end) completed_tasks , count(*) total_tasks , ec_family_member.relational_id " +
-                " from task " +
-                " inner join ec_family_member on ec_family_member.base_entity_id = task.for " +
-                " group by ec_family_member.relational_id " +
-                ") summary " +
-                "on summary.relational_id = ec_family.base_entity_id " +
-                "where ec_family.operational_area_id = '" + operationalAreaID + "' ";
-
-        // add floating families
+                " select structure_id , " +
+                " count(*) total_tasks , sum(case when business_status = 'Drug Administered' then 0 else 1 end) pending_tasks " +
+                " from task where code = '" + Constants.Intervention.NTD_MDA_DISPENSE + "' " +
+                " and plan_id = '" + planId + "' and group_id = '" + operationalAreaId + "' " +
+                " group by structure_id " +
+                ") dispenses on dispenses.structure_id = task.structure_id " +
+                "left join ec_family on ec_family.structure_id = task.structure_id " +
+                "where task.code = '" + Constants.Intervention.REGISTER_FAMILY + "' and task.business_status = 'Complete' " +
+                "and task.plan_id = '" + planId + "' and task.group_id = '" + operationalAreaId + "'";
 
         DataMap<TaskDetails> dataMap = cursor -> {
             TaskDetails taskDetails = new TaskDetails(getCursorValue(cursor, "base_entity_id", ""));
-            taskDetails.setStructureName(getCursorValue(cursor, "first_name") + " Family");
+            taskDetails.setStructureName(getCursorValue(cursor, "fam_name") + " Family");
             taskDetails.setFamilyBaseEntityID(getCursorValue(cursor, "base_entity_id"));
             taskDetails.setQrCode(getCursorValue(cursor, "qr_code"));
-            taskDetails.setTaskCode(Constants.Intervention.NTD_COMMUNITY);
-            taskDetails.setTaskStatus(Task.TaskStatus.COMPLETED.name());
+            taskDetails.setTaskCode(Constants.Intervention.REGISTER_FAMILY);
+            taskDetails.setTaskStatus(getCursorValue(cursor, "task_status"));
+            taskDetails.setBusinessStatus(getCursorValue(cursor, "task_status"));
 
-            Integer total = getCursorIntValue(cursor, "total_tasks", 0);
-            Integer completed = getCursorIntValue(cursor, "completed_tasks", 0);
-            taskDetails.setTaskCount(total);
+            Location location = new Location((String) null);
+            String longitude = getCursorValue(cursor, "longitude");
+            String latitude = getCursorValue(cursor, "latitude");
 
-            if (total == 0) {
-                taskDetails.setBusinessStatus(Constants.BusinessStatus.NO_TASK);
-            } else if (total > completed) {
-                taskDetails.setBusinessStatus(Constants.BusinessStatus.VISITED_PARTIALLY_TREATED);
-            } else if (total.equals(completed)) {
-                taskDetails.setBusinessStatus(Constants.BusinessStatus.COMPLETE);
+            if (StringUtils.isNotBlank(longitude) && StringUtils.isNotBlank(latitude)) {
+                location.setLatitude(Double.parseDouble(latitude));
+                location.setLongitude(Double.parseDouble(longitude));
+            } else if (lastLocation != null) {
+                location.setLatitude(lastLocation.getLatitude());
+                location.setLongitude(lastLocation.getLongitude());
+            } else {
+                location.setLatitude(0d);
+                location.setLongitude(0d);
             }
+
+            taskDetails.setLocation(location);
+
+            calculateDistance(taskDetails, location, lastLocation, operationalAreaCenter);
+
+            return taskDetails;
+        };
+
+        List<TaskDetails> result = readData(sql, dataMap);
+
+        return (result == null ? new ArrayList<>() : result);
+    }
+
+    public List<TaskDetails> fetchFloatingFamilies(String operationalAreaId, String planId, Location lastLocation, Location operationalAreaCenter) {
+
+        String sql = "select base_entity_id , first_name fam_name ,  " +
+                "(case   " +
+                "when total_tasks is null then 'Not Visited'  " +
+                "when max(ifnull(ec_family.nsac,0),ifnull(total_tasks,0)) = 0 then 'Complete'   " +
+                "when ifnull(pending_tasks,0) < max(ifnull(ec_family.nsac,0),ifnull(total_tasks,0)) then 'Partial'   " +
+                "else 'Not Visited' end) task_status  " +
+                "from ec_family  " +
+                "left join (  " +
+                "  select ec_family_member.relational_id ,  " +
+                "    count(*) total_tasks , sum(case when business_status = 'Drug Administered' then 0 else 1 end) pending_tasks  " +
+                "  from ec_family_member  " +
+                "  inner join task on ec_family_member.base_entity_id = task.for and task.code = '" + Constants.Intervention.NTD_MDA_DISPENSE + "'  " +
+                "  where task.plan_id = '" + planId + "' and task.group_id = '" + operationalAreaId + "'  " +
+                ") dispenses on ec_family.base_entity_id = dispenses.relational_id  " +
+                "where structure_id is null or structure_id = operational_area_id";
+
+        DataMap<TaskDetails> dataMap = cursor -> {
+            TaskDetails taskDetails = new TaskDetails(getCursorValue(cursor, "base_entity_id", ""));
+            taskDetails.setStructureName(getCursorValue(cursor, "fam_name") + " Family");
+            taskDetails.setFamilyBaseEntityID(getCursorValue(cursor, "base_entity_id"));
+            taskDetails.setTaskCode(Constants.InterventionType.FLOATING_FAMILY);
+            taskDetails.setTaskStatus(getCursorValue(cursor, "task_status"));
+            taskDetails.setBusinessStatus(getCursorValue(cursor, "task_status"));
 
             Location location = new Location((String) null);
             if (lastLocation != null) {
@@ -80,35 +124,79 @@ public class TaskDetailsDao extends AbstractDao {
         return (result == null ? new ArrayList<>() : result);
     }
 
-    public List<TaskDetails> getUnRegisteredStructures(String operationalAreaID, Location lastLocation, Location operationalAreaCenter) {
+    public List<TaskDetails> fetchUnRegisteredStructures(String operationalAreaId, String planId, Location lastLocation, Location operationalAreaCenter) {
 
-        String sql = "SELECT structure._id , structure.name , structure.latitude , structure.longitude , structure_eligibility.qr_code " +
-                "from structure " +
-                "left join structure_eligibility on structure_eligibility.structure_id = structure._id " +
-                "where structure.parent_id = '" + operationalAreaID + "' " +
-                "and structure._id not in (select structure_id from ec_family where structure_id is not null) ";
+        String sql = "select _id structure_id , name ,  latitude , longitude  " +
+                "from structure  " +
+                "where _id not in (  " +
+                "  select structure_id from task where code = 'Structure Visited'   " +
+                "  and plan_id = '" + planId + "' and group_id = '" + operationalAreaId + "'  " +
+                ")";
 
         DataMap<TaskDetails> dataMap = cursor -> {
-            TaskDetails taskDetails = new TaskDetails(getCursorValue(cursor, "_id", ""));
+            TaskDetails taskDetails = new TaskDetails(getCursorValue(cursor, "structure_id", ""));
             taskDetails.setStructureName(getCursorValue(cursor, "name"));
-            taskDetails.setStructureId(getCursorValue(cursor, "_id"));
-            taskDetails.setQrCode(getCursorValue(cursor, "qr_code"));
-            taskDetails.setTaskStatus(Task.TaskStatus.READY.name());
-            taskDetails.setBusinessStatus(Constants.BusinessStatus.NOT_VISITED);
+            taskDetails.setTaskCode(Constants.Intervention.REGISTER_FAMILY);
+            taskDetails.setTaskStatus("Not Visited");
+            taskDetails.setBusinessStatus("Not Visited");
 
             Location location = new Location((String) null);
-
             String longitude = getCursorValue(cursor, "longitude");
             String latitude = getCursorValue(cursor, "latitude");
 
             if (StringUtils.isNotBlank(longitude) && StringUtils.isNotBlank(latitude)) {
-                location.setLatitude(Long.parseLong(latitude));
-                location.setLongitude(Long.parseLong(longitude));
+                location.setLatitude(Double.parseDouble(latitude));
+                location.setLongitude(Double.parseDouble(longitude));
+            } else if (lastLocation != null) {
+                location.setLatitude(lastLocation.getLatitude());
+                location.setLongitude(lastLocation.getLongitude());
             } else {
                 location.setLatitude(0d);
                 location.setLongitude(0d);
             }
 
+            taskDetails.setLocation(location);
+
+            calculateDistance(taskDetails, location, lastLocation, operationalAreaCenter);
+
+            return taskDetails;
+        };
+
+        List<TaskDetails> result = readData(sql, dataMap);
+
+        return (result == null ? new ArrayList<>() : result);
+    }
+
+    public List<TaskDetails> fetchFixedStructures(String operationalAreaId, String planId, Location lastLocation, Location operationalAreaCenter) {
+
+        String sql = "select structure_id , business_status , structure.latitude , structure.longitude , structure.name " +
+                "from task inner join structure on structure._id = task.structure_id " +
+                "where business_status in ('Included in another household', 'Ineligible', 'Visited, Denied consent')  " +
+                "and code in ('" + Constants.Intervention.STRUCTURE_VISITED + "', '" + Constants.Intervention.REGISTER_FAMILY + "')  " +
+                "and plan_id = '" + planId + "' and group_id = '" + operationalAreaId + "'";
+
+        DataMap<TaskDetails> dataMap = cursor -> {
+            TaskDetails taskDetails = new TaskDetails(getCursorValue(cursor, "structure_id", ""));
+            taskDetails.setStructureName(getCursorValue(cursor, "name"));
+            taskDetails.setTaskCode(Constants.Intervention.REGISTER_FAMILY);
+            taskDetails.setTaskStatus(getCursorValue(cursor, "business_status"));
+            taskDetails.setBusinessStatus(getCursorValue(cursor, "business_status"));
+
+
+            Location location = new Location((String) null);
+            String longitude = getCursorValue(cursor, "longitude");
+            String latitude = getCursorValue(cursor, "latitude");
+
+            if (StringUtils.isNotBlank(longitude) && StringUtils.isNotBlank(latitude)) {
+                location.setLatitude(Double.parseDouble(latitude));
+                location.setLongitude(Double.parseDouble(longitude));
+            } else if (lastLocation != null) {
+                location.setLatitude(lastLocation.getLatitude());
+                location.setLongitude(lastLocation.getLongitude());
+            } else {
+                location.setLatitude(0d);
+                location.setLongitude(0d);
+            }
             taskDetails.setLocation(location);
 
             calculateDistance(taskDetails, location, lastLocation, operationalAreaCenter);
