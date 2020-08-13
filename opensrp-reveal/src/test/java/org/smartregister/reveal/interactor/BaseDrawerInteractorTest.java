@@ -89,7 +89,7 @@ public class BaseDrawerInteractorTest extends BaseUnitTest {
 
     @Test
     public void testValidateCurrentPlanFailure() {
-        interactor.validateCurrentPlan(planId, operationalArea);
+        interactor.validateCurrentPlanId(planId, operationalArea);
         verify(presenter, timeout(ASYNC_TIMEOUT)).onPlanValidated(false);
 
     }
@@ -98,7 +98,7 @@ public class BaseDrawerInteractorTest extends BaseUnitTest {
     @Test
     public void testValidateCurrentPlanSuccess() {
         when(planDefinitionSearchRepository.planExists(planId, operationalArea)).thenReturn(true);
-        interactor.validateCurrentPlan(operationalArea, planId);
+        interactor.validateCurrentPlanId(operationalArea, planId);
         verify(presenter, timeout(ASYNC_TIMEOUT)).onPlanValidated(true);
         verify(planDefinitionSearchRepository, timeout(ASYNC_TIMEOUT)).planExists(planId, operationalArea);
 

@@ -120,6 +120,7 @@ public interface Constants {
         String CURRENT_OPERATIONAL_AREA = "CURRENT_OPERATIONAL_AREA";
         String CURRENT_OPERATIONAL_AREA_ID = "CURRENT_OPERATIONAL_AREA_ID";
         String CURRENT_STRUCTURE = "CURRENT_STRUCTURE";
+        String CURRENT_STRUCTURE_ID = "CURRENT_STRUCTURE_ID";
     }
 
     interface Tags {

@@ -367,7 +367,7 @@ public class NativeFormProcessor {
     }
 
     public Location getCurrentOperationalArea() {
-        return Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
+        return Utils.getOperationalAreaLocationID(PreferencesUtil.getInstance().getCurrentOperationalAreaId());
     }
 
     public Location getCurrentSelectedStructure() {

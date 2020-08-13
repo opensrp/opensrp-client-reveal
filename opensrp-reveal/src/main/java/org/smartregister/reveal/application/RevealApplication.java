@@ -1,6 +1,7 @@
 package org.smartregister.reveal.application;
 
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
@@ -57,6 +58,8 @@ import org.smartregister.view.receiver.TimeChangedBroadcastReceiver;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 import io.fabric.sdk.android.Fabric;
 import io.ona.kujaku.KujakuLibrary;

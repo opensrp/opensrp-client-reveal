@@ -98,8 +98,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
         }
 
         ArrayList<Client> clients = new ArrayList<>();
-        Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
-        String operationalAreaLocationId = operationalArea == null ? null : operationalArea.getId();
+        String operationalAreaLocationId = PreferencesUtil.getInstance().getCurrentOperationalAreaId();
         boolean hasSyncedEventsInTarget = false;
         if (!eventClients.isEmpty()) {
             String operationalAreaId = null;

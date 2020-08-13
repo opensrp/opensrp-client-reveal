@@ -3,6 +3,7 @@ package org.smartregister.reveal.interactor;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.repository.PlanDefinitionSearchRepository;
@@ -49,13 +50,17 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
     }
 
     @Override
-    public void autoSelectPlan(String jurisdictionName) {
+    public void autoSelectPlan(String jurisdictionName, String jurisdictionId) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Location operationalArea = Utils.getOperationalAreaLocation(jurisdictionName);
-                String jurisdictionIdentifier = operationalArea != null ? operationalArea.getId() : null;
-                Set<PlanDefinition> planDefinitionSet = planDefinitionSearchRepository.findActivePlansByJurisdiction(jurisdictionIdentifier);
+
+                //if(StringUtils.isBlank(jurisdictionIdentifier)) {
+                    //Location operationalArea = Utils.getOperationalAreaLocation(jurisdictionName);
+                    //jurisdictionIdentifier = operationalArea != null ? operationalArea.getId() : null;
+                //}
+
+                Set<PlanDefinition> planDefinitionSet = planDefinitionSearchRepository.findActivePlansByJurisdiction(jurisdictionId);
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -70,13 +75,19 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
     }
 
     @Override
-    public void fetchPlans(String jurisdictionName) {
+    public void fetchPlans(String jurisdictionName, String jurisdictionId) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Location operationalArea = Utils.getOperationalAreaLocation(jurisdictionName);
-                String jurisdictionIdentifier = operationalArea != null ? operationalArea.getId() : null;
-                Set<PlanDefinition> planDefinitionSet = planDefinitionSearchRepository.findActivePlansByJurisdiction(jurisdictionIdentifier);
+
+                /*
+                if(StringUtils.isBlank(jurisdictionIdentifier)) {
+                    Location operationalArea = Utils.getOperationalAreaLocation(jurisdictionName);
+                    jurisdictionIdentifier = operationalArea != null ? operationalArea.getId() : null;
+                }
+                 */
+
+                Set<PlanDefinition> planDefinitionSet = planDefinitionSearchRepository.findActivePlansByJurisdiction(jurisdictionId);
                 appExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {
@@ -91,11 +102,11 @@ public class BaseDrawerInteractor implements BaseDrawerContract.Interactor {
     }
 
     @Override
-    public void validateCurrentPlan(String selectedOperationalArea, String currentPlanId) {
+    public void validateCurrentPlanId(String selectedOperationalAreaId, String currentPlanId) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Location operationalArea = Utils.getOperationalAreaLocation(selectedOperationalArea);
+                Location operationalArea = Utils.getOperationalAreaLocationID(selectedOperationalAreaId);
                 String jurisdictionIdentifier = operationalArea != null ? operationalArea.getId() : null;
                 boolean isValid = planDefinitionSearchRepository.planExists(currentPlanId, jurisdictionIdentifier);
                 appExecutors.mainThread().execute(() -> presenter.onPlanValidated(isValid));

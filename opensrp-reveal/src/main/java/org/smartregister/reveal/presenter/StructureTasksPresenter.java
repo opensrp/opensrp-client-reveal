@@ -94,7 +94,7 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
         this.familyBaseEntityId = familyBaseEntityId;
         if (StringUtils.isNotBlank(structureId)) {
             interactor.findTasks(structureId, prefsUtil.getCurrentPlanId(),
-                    Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId());
+                    prefsUtil.getCurrentOperationalAreaId());
         } else if (StringUtils.isNotBlank(familyBaseEntityId)) {
             interactor.findTasks(familyBaseEntityId);
         }

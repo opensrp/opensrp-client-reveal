@@ -207,7 +207,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void onDrawerClosed() {
         if (drawerPresenter.isChangedCurrentSelection()) {
             listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
-            listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalArea());
+            listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalAreaId());
             fetchReportStats();
         }
     }
@@ -219,7 +219,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             setChangeMapPosition(true);
         }
         listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
-        listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalArea());
+        listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalAreaId());
     }
 
     @Override
@@ -266,10 +266,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     public void onMapReady() {
         String planId = PreferencesUtil.getInstance().getCurrentPlanId();
-        String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
+        String areaId = PreferencesUtil.getInstance().getCurrentOperationalAreaId();
         if (StringUtils.isNotBlank(planId) &&
-                StringUtils.isNotBlank(operationalArea)) {
-            listTaskInteractor.fetchLocations(planId, operationalArea);
+                StringUtils.isNotBlank(areaId)) {
+            listTaskInteractor.fetchLocations(planId, areaId);
         } else {
             listTaskView.displayNotification(R.string.select_campaign_operational_area_title, R.string.select_campaign_operational_area);
             drawerPresenter.getView().lockNavigationDrawerForSelection();

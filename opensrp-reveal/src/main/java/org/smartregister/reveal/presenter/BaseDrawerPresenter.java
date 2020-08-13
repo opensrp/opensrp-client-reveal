@@ -199,7 +199,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         operationalAreaLevels.add(OPERATIONAL_AREA);
         operationalAreaLevels.add(SCHOOL);
 
-        List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels);
+        List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels,true);
 
         if (defaultLocation != null) {
             Map<String, TreeNode<String, Location>> map = locationHelper.map();
@@ -210,7 +210,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
                 LocationHierarchyUtil.growTree(map, listMap);
             }
 
-            List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels, map);
+            List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels, map, true);
 
             if (BuildConfig.BUILD_COUNTRY != Country.NTD_SCHOOL && BuildConfig.BUILD_COUNTRY != Country.NTD_COMMUNITY) {
                 List<String> authorizedOperationalAreas = Arrays.asList(StringUtils.split(prefsUtil.getPreferenceValue(OPERATIONAL_AREAS), ','));
@@ -227,9 +227,11 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         }
     }
 
-    public void onOperationalAreaSelectorClicked(ArrayList<String> name) {
+    @Override
+    public void onOperationalAreaSelectorClicked(ArrayList<String> name, ArrayList<String> values) {
 
         Timber.d("Selected Location Hierarchy: " + TextUtils.join(",", name));
+        Timber.d("Selected Location Hierarchy Ids: " + TextUtils.join(",", values));
         if (name.size() <= 2)//no operational area was selected, dialog was dismissed
             return;
         ArrayList<String> operationalAreaLevels = new ArrayList<>();
@@ -244,13 +246,15 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             prefsUtil.setCurrentProvince(name.get(1));
             prefsUtil.setCurrentDistrict(name.get(name.size() - districtOffset));
             String operationalArea = name.get(name.size() - 1);
+            String operationalAreaId = values.get(values.size() - 1);
             prefsUtil.setCurrentOperationalArea(operationalArea);
+            prefsUtil.setCurrentOperationalAreaId(values.get(values.size() - 1));
             Pair<String, String> facility = getFacilityFromOperationalArea(name.get(name.size() - districtOffset), name.get(name.size() - 1), entireTree);
             if (facility != null) {
                 prefsUtil.setCurrentFacility(facility.second);
                 prefsUtil.setCurrentFacilityLevel(facility.first);
             }
-            validateSelectedPlan(operationalArea);
+            validateSelectedPlanId(operationalAreaId);
         } catch (NullPointerException e) {
             Timber.e(e);
         }
@@ -258,7 +262,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         populateLocationsFromPreferences();
 
         if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY))
-            interactor.autoSelectPlan(prefsUtil.getCurrentOperationalArea());
+            interactor.autoSelectPlan(prefsUtil.getCurrentOperationalArea(), prefsUtil.getCurrentOperationalAreaId());
 
         unlockDrawerLayout();
     }
@@ -269,16 +273,18 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     }
 
     @Override
-    public void onStructureSelectorClicked(ArrayList<String> name) {
+    public void onStructureSelectorClicked(ArrayList<String> name, ArrayList<String> values) {
         Timber.d("Selected Structure Location Hierarchy: " + TextUtils.join(",", name));
         if (name.size() <= 2)//no operational area was selected, dialog was dismissed
             return;
 
         // remove the last element
-        ArrayList<String> result = new ArrayList<>(name.subList(0, name.size() - 1));
+        ArrayList<String> names_result = new ArrayList<>(name.subList(0, name.size() - 1));
+        ArrayList<String> values_result = new ArrayList<>(values.subList(0, values.size() - 1));
 
         prefsUtil.setCurrentStructure(name.get(name.size() - 1));
-        onOperationalAreaSelectorClicked(result);
+        prefsUtil.setCurrentStructureID(values.get(values.size() - 1));
+        onOperationalAreaSelectorClicked(names_result,values_result);
     }
 
 
@@ -321,10 +327,10 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     @Override
     public void onShowPlanSelector() {
-        if (StringUtils.isBlank(prefsUtil.getCurrentOperationalArea())) {
+        if (StringUtils.isBlank(prefsUtil.getCurrentOperationalArea()) && StringUtils.isBlank(prefsUtil.getCurrentOperationalAreaId())) {
             view.displayNotification(R.string.operational_area, R.string.operational_area_not_selected);
         } else {
-            interactor.fetchPlans(prefsUtil.getCurrentOperationalArea());
+            interactor.fetchPlans(prefsUtil.getCurrentOperationalArea(), prefsUtil.getCurrentOperationalAreaId());
         }
     }
 
@@ -399,9 +405,9 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         getView().openOfflineMapsView();
     }
 
-    private void validateSelectedPlan(String operationalArea) {
+    private void validateSelectedPlanId(String operationalAreaId) {
         if (!prefsUtil.getCurrentPlanId().isEmpty()) {
-            interactor.validateCurrentPlan(operationalArea, prefsUtil.getCurrentPlanId());
+            interactor.validateCurrentPlanId(operationalAreaId, prefsUtil.getCurrentPlanId());
         }
     }
 

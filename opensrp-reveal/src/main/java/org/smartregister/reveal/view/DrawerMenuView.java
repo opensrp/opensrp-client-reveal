@@ -256,7 +256,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             treeViewDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    presenter.onOperationalAreaSelectorClicked(treeViewDialog.getName());
+                    presenter.onOperationalAreaSelectorClicked(treeViewDialog.getName(),treeViewDialog.getValue());
                 }
             });
             treeViewDialog.show();
@@ -277,7 +277,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             treeViewDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    presenter.onStructureSelectorClicked(treeViewDialog.getName());
+                    presenter.onStructureSelectorClicked(treeViewDialog.getName(),treeViewDialog.getValue());
                 }
             });
             treeViewDialog.show();
@@ -392,7 +392,9 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         TextView syncButton = this.activity.getActivity().findViewById(R.id.sync_button);
         TextView syncBadge = this.activity.getActivity().findViewById(R.id.sync_label);
 
-        if (syncing && progressBar != null) {
+        if(progressBar == null) return;
+
+        if (syncing) {
             progressBar.setVisibility(View.VISIBLE);
             progressLabel.setVisibility(View.VISIBLE);
             syncButton.setVisibility(View.INVISIBLE);

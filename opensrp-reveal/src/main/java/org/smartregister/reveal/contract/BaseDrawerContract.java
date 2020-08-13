@@ -72,11 +72,11 @@ public interface BaseDrawerContract {
 
         void onShowOperationalAreaSelector();
 
-        void onOperationalAreaSelectorClicked(ArrayList<String> name);
+        void onOperationalAreaSelectorClicked(ArrayList<String> name, ArrayList<String> values);
 
         void onShowStructureSelector();
 
-        void onStructureSelectorClicked(ArrayList<String> name);
+        void onStructureSelectorClicked(ArrayList<String> name, ArrayList<String> values);
 
         void onShowPlanSelector();
 
@@ -105,11 +105,11 @@ public interface BaseDrawerContract {
 
     interface Interactor {
 
-        void autoSelectPlan(String jurisdictionName);
+        void autoSelectPlan(String jurisdictionName, String jurisdictionId);
 
-        void fetchPlans(String jurisdictionName);
+        void fetchPlans(String jurisdictionName, String jurisdictionId);
 
-        void validateCurrentPlan(String selectedOperationalArea, String currentPlanId);
+        void validateCurrentPlanId(String selectedOperationalAreaId, String currentPlanId);
 
         void checkSynced();
     }

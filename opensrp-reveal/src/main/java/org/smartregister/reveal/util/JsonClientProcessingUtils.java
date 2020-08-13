@@ -24,7 +24,6 @@ public class JsonClientProcessingUtils {
     }
 
     public static String getCurrentLocationID() {
-        Location operationalArea = Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
-        return operationalArea == null ? "" : operationalArea.getId();
+        return PreferencesUtil.getInstance().getCurrentOperationalAreaId();
     }
 }

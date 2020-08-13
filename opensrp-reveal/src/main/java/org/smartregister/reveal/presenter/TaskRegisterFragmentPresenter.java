@@ -143,7 +143,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     }
 
     private android.location.Location getOperationalAreaCenter() {
-        Location operationalAreaLocation = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
+        Location operationalAreaLocation = Utils.getOperationalAreaLocationID(prefsUtil.getCurrentOperationalAreaId());
         if (operationalAreaLocation == null)
             return null;
         return mappingHelper.getCenter(gson.toJson(operationalAreaLocation.getGeometry()));
@@ -164,13 +164,12 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
      * @return pair of filter clause and values for filter
      */
     private Pair<String, String[]> getMainCondition() {
-        Location operationalArea = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
+        //Location operationalArea = Utils.getOperationalAreaLocationID(prefsUtil.getCurrentOperationalAreaId());
         String whereClause = String.format("%s.%s = ? AND %s.%s = ? AND %s.%s NOT IN (%s)",
                 Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.GROUPID, Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.PLAN_ID,
                 Constants.DatabaseKeys.TASK_TABLE, Constants.DatabaseKeys.STATUS,
                 TextUtils.join(",", Collections.nCopies(INACTIVE_TASK_STATUS.length, "?")));
-        return new Pair<>(whereClause, ArrayUtils.addAll(new String[]{operationalArea == null ?
-                null : operationalArea.getId(), prefsUtil.getCurrentPlanId()}, INACTIVE_TASK_STATUS));
+        return new Pair<>(whereClause, ArrayUtils.addAll(new String[]{prefsUtil.getCurrentOperationalAreaId(), prefsUtil.getCurrentPlanId()}, INACTIVE_TASK_STATUS));
     }
 
     @Override
@@ -252,7 +251,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
 
             if (CASE_CONFIRMATION.equals(details.getTaskCode())) {
                 interactor.getIndexCaseDetails(details.getStructureId(),
-                        Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(), details.getReasonReference());
+                        prefsUtil.getCurrentOperationalAreaId(), details.getReasonReference());
             } else if (Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())
                     &&
                     (

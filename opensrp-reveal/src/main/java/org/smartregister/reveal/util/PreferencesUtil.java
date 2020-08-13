@@ -12,6 +12,7 @@ import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PLAN;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PLAN_ID;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PROVINCE;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_STRUCTURE;
+import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.Preferences.FACILITY_LEVEL;
 
 /**
@@ -45,13 +46,17 @@ public class PreferencesUtil {
 
     public void setCurrentOperationalArea(String operationalArea) {
         allSharedPreferences.savePreference(CURRENT_OPERATIONAL_AREA, operationalArea);
-        if (StringUtils.isNotBlank(operationalArea)) {
-            allSharedPreferences.savePreference(CURRENT_OPERATIONAL_AREA_ID, Utils.getCurrentLocationId());
-        }
+        //if (StringUtils.isNotBlank(operationalArea)) {
+           // setCurrentOperationalAreaId(Utils.getCurrentLocationId());
+        //}
     }
 
     public String getCurrentOperationalArea() {
         return allSharedPreferences.getPreference(CURRENT_OPERATIONAL_AREA);
+    }
+
+    public void setCurrentOperationalAreaId(String operationalAreaId) {
+        allSharedPreferences.savePreference(CURRENT_OPERATIONAL_AREA_ID, operationalAreaId);
     }
 
     public String getCurrentOperationalAreaId() {
@@ -64,6 +69,14 @@ public class PreferencesUtil {
 
     public void setCurrentStructure(String structure) {
         allSharedPreferences.savePreference(CURRENT_STRUCTURE, structure);
+    }
+
+    public String getCurrentStructureID() {
+        return allSharedPreferences.getPreference(CURRENT_STRUCTURE_ID);
+    }
+
+    public void setCurrentStructureID(String structureID) {
+        allSharedPreferences.savePreference(CURRENT_STRUCTURE_ID, structureID);
     }
 
     public void setCurrentDistrict(String district) {

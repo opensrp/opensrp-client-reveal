@@ -128,7 +128,8 @@ public class TaskDetailsDao extends AbstractDao {
 
         String sql = "select _id structure_id , name ,  latitude , longitude  " +
                 "from structure  " +
-                "where _id not in (  " +
+                "where plan_id = '" + planId + "' and group_id = '" + operationalAreaId + "'  \"  " +
+                " and _id not in (  " +
                 "  select structure_id from task where code = 'Structure Visited'   " +
                 "  and plan_id = '" + planId + "' and group_id = '" + operationalAreaId + "'  " +
                 ")";

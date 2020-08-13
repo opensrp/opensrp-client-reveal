@@ -257,14 +257,14 @@ public class ListTaskInteractor extends BaseInteractor {
         );
     }
 
-    public void fetchLocations(String plan, String operationalArea) {
+    public void fetchLocations(String plan, final String areaId) {
         Runnable runnable = new Runnable() {
 
             @Override
             public void run() {
                 JSONObject featureCollection = null;
 
-                Location operationalAreaLocation = Utils.getOperationalAreaLocation(operationalArea);
+                Location operationalAreaLocation = Utils.getOperationalAreaLocationID(areaId);
                 List<TaskDetails> taskDetailsList = null;
 
                 try {

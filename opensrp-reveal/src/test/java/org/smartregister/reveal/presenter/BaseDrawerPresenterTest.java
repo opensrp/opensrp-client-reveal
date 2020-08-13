@@ -201,7 +201,7 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
         Whitebox.setInternalState(presenter, "locationHelper", locationHelper);
         Whitebox.setInternalState(presenter, "interactor", interactor);
         presenter.onOperationalAreaSelectorClicked(list);
-        verify(interactor).validateCurrentPlan(operationArea, planId);
+        verify(interactor).validateCurrentPlanId(operationArea, planId);
 
     }
 
@@ -242,7 +242,7 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
         FormLocation locationHierarchy = TestingUtils.generateLocationHierarchy();
         when(locationHelper.generateLocationHierarchyTree(anyBoolean(), any())).thenReturn(Collections.singletonList(locationHierarchy));
         presenter.onOperationalAreaSelectorClicked(list);
-        verify(interactor).validateCurrentPlan(operationArea, planId);
+        verify(interactor).validateCurrentPlanId(operationArea, planId);
 
     }
 
@@ -323,7 +323,7 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
         Whitebox.setInternalState(presenter, "interactor", interactor);
         when(preferencesUtil.getCurrentOperationalArea()).thenReturn("Lusaka");
         presenter.onShowPlanSelector();
-        verify(interactor).fetchPlans("Lusaka");
+        verify(interactor).fetchPlans("Lusaka",null);
     }
 
     @Test

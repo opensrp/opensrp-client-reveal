@@ -131,11 +131,11 @@ public class Utils {
         DocumentConfigurationServiceJob.scheduleJobImmediately(DocumentConfigurationServiceJob.TAG);
     }
 
-    public static Location getOperationalAreaLocation(String operationalArea) {
-        return cache.get(operationalArea, new CacheableData<Location>() {
+    public static Location getOperationalAreaLocationID(String operationalAreaId) {
+        return cache.get(operationalAreaId, new CacheableData<Location>() {
             @Override
             public Location fetch() {
-                return RevealApplication.getInstance().getLocationRepository().getLocationByName(operationalArea);
+                return RevealApplication.getInstance().getLocationRepository().getLocationById(operationalAreaId);
             }
         });
     }
@@ -336,8 +336,7 @@ public class Utils {
     }
 
     public static String getCurrentLocationId() {
-        Location currentOperationalArea = getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea());
-        return currentOperationalArea == null ? null : currentOperationalArea.getId();
+        return PreferencesUtil.getInstance().getCurrentOperationalAreaId();
     }
 
     public static FormTag getFormTag() {
