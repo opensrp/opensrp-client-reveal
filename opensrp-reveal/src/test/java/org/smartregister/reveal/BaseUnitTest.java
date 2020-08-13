@@ -6,7 +6,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.joda.time.DateTime;
+import org.junit.Rule;
 import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.robolectric.RobolectricTestRunner;
@@ -36,6 +39,9 @@ import org.smartregister.util.DateTimeTypeConverter;
         AsyncTaskShadow.class, CloudantDataHandlerShadowUtils.class}, sdk = Build.VERSION_CODES.P)
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*"})
 public abstract class BaseUnitTest {
+
+    @Rule
+    public MockitoRule rule = MockitoJUnit.rule();
 
     protected static final String DUMMY_USERNAME = "myusername";
     protected static final char[] DUMMY_PASSWORD = "mypassword".toCharArray();

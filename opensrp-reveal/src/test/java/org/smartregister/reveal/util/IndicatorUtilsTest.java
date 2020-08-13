@@ -1,8 +1,13 @@
 package org.smartregister.reveal.util;
 
+
+import net.sqlcipher.MatrixCursor;
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.BaseUnitTest;
@@ -15,10 +20,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * Created by ndegwamartin on 2019-09-27.
@@ -26,6 +36,8 @@ import static junit.framework.TestCase.assertTrue;
 public class IndicatorUtilsTest extends BaseUnitTest {
 
     private Map<String, Set<Task>> taskTestMap = new HashMap<>();
+    @Mock
+    private SQLiteDatabase sqLiteDatabase;
 
     @Before
     public void setUp() {
@@ -193,5 +205,25 @@ public class IndicatorUtilsTest extends BaseUnitTest {
         assertEquals("6", sprayIndicatorList.get(5));
 
 
+    }
+
+    @Test
+    public void testGetNamibiaIndicatorsShouldReturnCorrectIndicators() {
+        String id = UUID.randomUUID().toString();
+        MatrixCursor cursor = new MatrixCursor(new String[]{"totStruct", "notVisitedStruct",
+                "foundStruct", "sprayedStruct", "notSprayedStruct", "roomCov"});
+        when(sqLiteDatabase.rawQuery(anyString(), eq(new String[]{id}))).thenReturn(cursor);
+        cursor.addRow(new Object[]{
+                76, 1, 75, 74, 1, 93
+        });
+        IndicatorDetails indicatorDetails = IndicatorUtils.getNamibiaIndicators(id, sqLiteDatabase);
+        assertEquals(76, indicatorDetails.getTotalStructures());
+        assertEquals(1, indicatorDetails.getNotVisited());
+        assertEquals(75, indicatorDetails.getFoundStructures());
+        assertEquals(74, indicatorDetails.getSprayed());
+        assertEquals(1, indicatorDetails.getNotSprayed());
+        assertEquals(93, indicatorDetails.getRoomCoverage());
+        assertEquals(97, indicatorDetails.getProgress());
+        verify(sqLiteDatabase).rawQuery(anyString(),eq(new String[]{id}));
     }
 }
