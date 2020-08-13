@@ -78,7 +78,6 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
 
     @Override
     protected void onPostExecute(IndicatorDetails indicatorDetails) {
-
         if (progressIndicator == null || indicatorDetails == null) {
             Timber.w("progress indicator or indicators is null");
             return;

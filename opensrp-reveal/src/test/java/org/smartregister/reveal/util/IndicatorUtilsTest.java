@@ -1,10 +1,10 @@
 package org.smartregister.reveal.util;
 
 
+import net.sqlcipher.Cursor;
 import net.sqlcipher.MatrixCursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -44,112 +44,15 @@ public class IndicatorUtilsTest extends BaseUnitTest {
     @Before
     public void setUp() {
 
-        Set<Task> tasks = new HashSet<>();
-
-        Task task = new Task();
-        task.setStructureId("struct-id-1");
-        task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(Constants.BusinessStatus.SPRAYED);
-        task.setCode(Constants.Intervention.IRS);
-        task.setDescription("random descriptions");
-        task.setPlanIdentifier("plan-id-1");
-        task.setStatus(Task.TaskStatus.COMPLETED);
-        task.setForEntity("my-base-entity-id");
-        tasks.add(task);
-
-
-        task = new Task();
-        task.setStructureId("struct-id-1");
-        task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(Constants.BusinessStatus.NOT_ELIGIBLE);
-        task.setCode(Constants.Intervention.FI);
-        task.setDescription("random descriptions 2");
-        task.setPlanIdentifier("plan-id-1");
-        task.setStatus(Task.TaskStatus.CANCELLED);
-        task.setForEntity("my-base-entity-id");
-        tasks.add(task);
-        taskTestMap.put(task.getStructureId(), tasks);
-
-        tasks = new HashSet<>();
-
-        task = new Task();
-        task.setStructureId("struct-id-2");
-        task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(Constants.BusinessStatus.NOT_VISITED);
-        task.setCode(Constants.Intervention.IRS);
-        task.setDescription("random descriptions xx");
-        task.setPlanIdentifier("plan-id-1");
-        task.setStatus(Task.TaskStatus.READY);
-        task.setForEntity("my-base-entity-id");
-        tasks.add(task);
-        taskTestMap.put(task.getStructureId(), tasks);
-
-        task = new Task();
-        task.setStructureId("struct-id-3");
-        task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(Constants.BusinessStatus.SPRAYED);
-        task.setCode(Constants.Intervention.IRS);
-        task.setDescription("random descriptions 3");
-        task.setPlanIdentifier("plan-id-1");
-        task.setStatus(Task.TaskStatus.COMPLETED);
-        task.setForEntity("my-base-entity-id");
-        tasks.add(task);
-
-        taskTestMap.put(task.getStructureId(), tasks);
-
-
-        tasks = new HashSet<>();
-
-        task = new Task();
-        task.setStructureId("struct-id-4");
-        task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(Constants.BusinessStatus.NOT_SPRAYED);
-        task.setCode(Constants.Intervention.IRS);
-        task.setDescription("random descriptions 4");
-        task.setPlanIdentifier("plan-id-1");
-        task.setStatus(Task.TaskStatus.READY);
-        task.setForEntity("my-base-entity-id");
-        tasks.add(task);
-        taskTestMap.put(task.getStructureId(), tasks);
-
-        task = new Task();
-        task.setStructureId("struct-id-5");
-        task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(Constants.BusinessStatus.SPRAYED);
-        task.setCode(Constants.Intervention.IRS);
-        task.setDescription("random descriptions");
-        task.setStatus(Task.TaskStatus.COMPLETED);
-        task.setForEntity("my-base-entity-id");
-        task.setPlanIdentifier("plan-id-1");
-        tasks.add(task);
-        taskTestMap.put(task.getStructureId(), tasks);
-
-        tasks = new HashSet<>();
-
-        task = new Task();
-        task.setStructureId("struct-id-6");
-        task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(Constants.BusinessStatus.NOT_VISITED);
-        task.setCode(Constants.Intervention.IRS);
-        task.setDescription("random descriptions 5");
-        task.setPlanIdentifier("plan-id-1");
-        task.setStatus(Task.TaskStatus.READY);
-        task.setForEntity("my-base-entity-id");
-        tasks.add(task);
-        taskTestMap.put(task.getStructureId(), tasks);
-
-
-        task = new Task();
-        task.setStructureId("struct-id-7");
-        task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(Constants.BusinessStatus.NOT_ELIGIBLE);
-        task.setCode(Constants.Intervention.IRS);
-        task.setDescription("random descriptions 7");
-        task.setPlanIdentifier("plan-id-1");
-        task.setStatus(Task.TaskStatus.READY);
-        task.setForEntity("my-base-entity-id");
-        tasks.add(task);
-        taskTestMap.put(task.getStructureId(), tasks);
+        TestingUtils.createTasks().forEach(t -> {
+            if (taskTestMap.containsKey(t.getStructureId())) {
+                taskTestMap.get(t.getStructureId()).add(t);
+            } else {
+                Set<Task> tasks = new HashSet<>();
+                tasks.add(t);
+                taskTestMap.put(t.getStructureId(), tasks);
+            }
+        });
     }
 
 
@@ -169,7 +72,7 @@ public class IndicatorUtilsTest extends BaseUnitTest {
 
         assertNotNull(taskDetailsList);
         assertTrue(taskDetailsList.size() > 0);
-        assertEquals(14, taskDetailsList.size());
+        assertEquals(TestingUtils.createTasks().size(), taskDetailsList.size());
 
     }
 
@@ -214,12 +117,7 @@ public class IndicatorUtilsTest extends BaseUnitTest {
     @Test
     public void testGetNamibiaIndicatorsShouldReturnCorrectIndicators() {
         String id = UUID.randomUUID().toString();
-        MatrixCursor cursor = new MatrixCursor(new String[]{"totStruct", "notVisitedStruct",
-                "foundStruct", "sprayedStruct", "notSprayedStruct", "roomCov"});
-        when(sqLiteDatabase.rawQuery(anyString(), eq(new String[]{id}))).thenReturn(cursor);
-        cursor.addRow(new Object[]{
-                76, 1, 75, 74, 1, 93
-        });
+        when(sqLiteDatabase.rawQuery(anyString(), eq(new String[]{id}))).thenReturn(getCursor());
         IndicatorDetails indicatorDetails = IndicatorUtils.getNamibiaIndicators(id, sqLiteDatabase);
         assertEquals(76, indicatorDetails.getTotalStructures());
         assertEquals(1, indicatorDetails.getNotVisited());
@@ -229,5 +127,15 @@ public class IndicatorUtilsTest extends BaseUnitTest {
         assertEquals(93, indicatorDetails.getRoomCoverage());
         assertEquals(97, indicatorDetails.getProgress());
         verify(sqLiteDatabase).rawQuery(anyString(), eq(new String[]{id}));
+    }
+
+    public static Cursor getCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{"totStruct", "notVisitedStruct",
+                "foundStruct", "sprayedStruct", "notSprayedStruct", "roomCov"});
+
+        cursor.addRow(new Object[]{
+                76, 1, 75, 74, 1, 93
+        });
+        return cursor;
     }
 }
