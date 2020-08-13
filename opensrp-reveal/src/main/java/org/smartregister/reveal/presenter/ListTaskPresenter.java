@@ -20,7 +20,6 @@ import com.vijay.jsonwizard.domain.Form;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,8 +28,6 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
-import org.smartregister.repository.BaseRepository;
-import org.smartregister.repository.TaskRepository;
 import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -128,7 +125,6 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
-import static org.smartregister.reveal.util.FamilyJsonFormUtils.getFormValue;
 import static org.smartregister.reveal.util.Utils.formatDate;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 import static org.smartregister.reveal.util.Utils.validateFarStructures;
@@ -558,12 +554,57 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonObject);
             org.smartregister.domain.Location operationalArea = processor.getCurrentOperationalArea();
 
+            String statusResidential = processor.getFieldValue("statusResidential");
+            String statusHouseholdaccessible = processor.getFieldValue("statusHouseholdaccessible");
+            String statusHouseholdAllPresent = processor.getFieldValue("statusHouseholdAllPresent");
+            String statusHohstructure = processor.getFieldValue("statusHohstructure");
+
+            String eligibilityBusinessStatus;
+            boolean registerFamily = false;
+
+            if (statusResidential.equalsIgnoreCase("No")) {
+                eligibilityBusinessStatus = Constants.BusinessStatus.INELIGIBLE;
+            } else if (statusHohstructure.equalsIgnoreCase("No")) {
+                eligibilityBusinessStatus = Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD;
+            } else if (statusHouseholdaccessible.equalsIgnoreCase("No")) {
+                eligibilityBusinessStatus = Constants.BusinessStatus.WAITING_FOR_QR_CODE;
+                registerFamily = true;
+            } else if (statusHouseholdAllPresent.equalsIgnoreCase("No")) {
+                eligibilityBusinessStatus = Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION;
+                registerFamily = true;
+            } else {
+                eligibilityBusinessStatus = Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION;
+                registerFamily = true;
+            }
+
+            TaskUtils taskUtils = TaskUtils.getInstance();
+            // save visit event
+            Task structureEligibilityTask = taskUtils.updateTaskStatus(
+                    feature.id(),
+                    Constants.Intervention.STRUCTURE_VISITED,
+                    eligibilityBusinessStatus,
+                    Task.TaskStatus.COMPLETED
+            );
+
+            if (structureEligibilityTask == null)
+                structureEligibilityTask = taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
+                        feature.id(), feature.id(), eligibilityBusinessStatus,
+                        registerFamily ? TaskStatus.IN_PROGRESS : Task.TaskStatus.COMPLETED,
+                        Constants.Intervention.STRUCTURE_VISITED,
+                        R.string.confirm_structure_eligibility);
+
+            taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
+                    feature.id(), feature.id(), eligibilityBusinessStatus, Task.TaskStatus.IN_PROGRESS, Constants.Intervention.REGISTER_FAMILY,
+                    R.string.register_structure_and_family);
+
+
             // update metadata
             processor
                     .withBindType(Constants.Tables.STRUCTURE_ELIGIBILITY_TABLE)
                     .withEncounterType(Constants.EventType.STRUCTURE_ELIGIBILITY)
                     .withEntityId(feature.id())
                     .tagFeatureId(feature.id())
+                    .tagTaskDetails(structureEligibilityTask)
                     .tagLocationData(operationalArea)
                     .tagEventMetadata()
 
@@ -571,45 +612,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     .saveEvent()
                     .clientProcessForm();
 
-            String statusResidential = processor.getFieldValue("statusResidential");
-            String statusHouseholdaccessible = processor.getFieldValue("statusHouseholdaccessible");
-            String statusHouseholdAllPresent = processor.getFieldValue("statusHouseholdAllPresent");
-            String statusHohstructure = processor.getFieldValue("statusHohstructure");
-
-            String eligibilityBusinessStatus;
-            String registrationBusinessStatus;
-
-            if (statusResidential.equalsIgnoreCase("No")) {
-                eligibilityBusinessStatus = Constants.BusinessStatus.INELIGIBLE;
-                registrationBusinessStatus = null;
-            } else if (statusHohstructure.equalsIgnoreCase("No")) {
-                eligibilityBusinessStatus = Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD;
-                registrationBusinessStatus = null;
-            } else if (statusHouseholdaccessible.equalsIgnoreCase("No")) {
-                eligibilityBusinessStatus = Constants.BusinessStatus.ELIGIBLE;
-                registrationBusinessStatus = Constants.BusinessStatus.WAITING_FOR_QR_CODE;
-            } else if (statusHouseholdAllPresent.equalsIgnoreCase("No")) {
-                eligibilityBusinessStatus = Constants.BusinessStatus.ELIGIBLE;
-                registrationBusinessStatus = Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION;
-            } else {
-                eligibilityBusinessStatus = Constants.BusinessStatus.ELIGIBLE;
-                registrationBusinessStatus = Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION;
-            }
-
-            TaskUtils taskUtils = TaskUtils.getInstance();
-            // save visit event
-            Task structureEligibilityTask = taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
-                    feature.id(), feature.id(), eligibilityBusinessStatus, Task.TaskStatus.COMPLETED, Constants.Intervention.STRUCTURE_VISITED,
-                    R.string.confirm_structure_eligibility);
-
-
-            Task familyRegistrationTask = registrationBusinessStatus == null ? null :
-                    taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
-                            feature.id(), feature.id(), registrationBusinessStatus, Task.TaskStatus.IN_PROGRESS, Constants.Intervention.REGISTER_FAMILY,
-                            R.string.register_structure_and_family);
 
             // generate
-            return familyRegistrationTask == null ? structureEligibilityTask : familyRegistrationTask;
+            return structureEligibilityTask;
         };
 
         getView().setLoadingState(true);
@@ -620,15 +625,17 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 if (view != null) {
 
                     setChangeMapPosition(false);
-                    for (Feature feature : getFeatureCollection().features()) {
-                        if (task.getStructureId().equals(feature.id())) {
-                            feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus());
-                            feature.addStringProperty(TASK_BUSINESS_STATUS, task.getBusinessStatus());
-                            feature.addStringProperty(TASK_STATUS, task.getStatus().name());
-                            feature.addStringProperty(TASK_IDENTIFIER, task.getIdentifier());
-                            break;
+                    if (getFeatureCollection() != null)
+                        for (Feature feature : getFeatureCollection().features()) {
+                            if (task.getStructureId().equals(feature.id())) {
+                                feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                                feature.addStringProperty(TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                                feature.addStringProperty(TASK_STATUS, task.getStatus().name());
+                                feature.addStringProperty(TASK_IDENTIFIER, task.getIdentifier());
+                                break;
+                            }
                         }
-                    }
+
                     listTaskView.setGeoJsonSource(getFeatureCollection(), null, isChangeMapPosition());
                     refreshStructures(true);
 
@@ -649,7 +656,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
-    public void assignQRCodeToStructure(Context context, Feature feature, String qrcode, Runnable runnable) {
+    public void assignQRCodeToStructure(Context context, @NonNull Feature feature, String qrcode, Runnable runnable) {
         CallableInteractor myInteractor = getInteractor();
 
         Callable<Task> callable = () -> {
@@ -664,34 +671,34 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 throw new QRCodeAssignException(qrcode, "QR Code is already assigned");
 
 
-            String taskID = getPropertyValue(feature, TASK_IDENTIFIER);
-            if (StringUtils.isBlank(taskID))
-                taskID = StructureDao.getInstance().getTaskByStructureID(feature.id());
+            TaskUtils taskUtils = TaskUtils.getInstance();
 
-            TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
-            Task task = taskRepository.getTaskByIdentifier(taskID);
+            // update overall task
+            Task task = taskUtils.updateTaskStatus(
+                    feature.id(),
+                    Constants.Intervention.STRUCTURE_VISITED,
+                    Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION,
+                    TaskStatus.COMPLETED
+            );
 
-            task.setBusinessStatus(Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION);
-            task.setStatus(Task.TaskStatus.IN_PROGRESS);
-            if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus()))
-                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+            if (task == null) throw new IllegalStateException("Missing registration task");
 
-            task.setLastModified(new DateTime());
-            taskRepository.addOrUpdate(task);
+            // update reg task
+            taskUtils.updateTaskStatus(
+                    feature.id(),
+                    Constants.Intervention.REGISTER_FAMILY,
+                    Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION,
+                    TaskStatus.COMPLETED
+            );
 
-            // read json
-            String jsonForm = readAssetContents(context, org.smartregister.reveal.util.Constants.JsonForm.NTD_COMMUNITY_STRUCTURE_QR);
-            JSONObject jsonObject = new JSONObject(jsonForm);
-
+            // save form
             Map<String, Object> values = new HashMap<>();
             values.put("structure_id", feature.id());
             values.put("qr_code", qrcode);
 
-            NativeFormProcessor.createInstance(jsonObject)
-                    .populateValues(values);
-
             // save event details
-            NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonObject);
+            NativeFormProcessor processor = NativeFormProcessor.createInstanceFromAsset(org.smartregister.reveal.util.Constants.JsonForm.NTD_COMMUNITY_STRUCTURE_QR)
+                    .populateValues(values);
             org.smartregister.domain.Location operationalArea = processor.getCurrentOperationalArea();
 
             // update metadata
@@ -835,7 +842,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonObject);
             String consent = processor.getFieldValue("statusHouseholdconsent");
 
-
             String age = processor.getFieldValue("age");
             String unique_id = processor.getFieldValue("unique_id");
             String fam_name = processor.getFieldValue("fam_name");
@@ -846,46 +852,56 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             String familyEntityId = UUID.randomUUID().toString();
             String familyHeadyEntityId = UUID.randomUUID().toString();
 
-            TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
             TaskUtils taskUtils = TaskUtils.getInstance();
             Feature feature = getSelectedFeature();
 
+            boolean hasConsent = "Yes".equalsIgnoreCase(consent);
+            int childrenCount = (StringUtils.isNotBlank(nsac)) ? Integer.parseInt(nsac) : 0;
+
             Task task;
-
+            String registrationStatus = hasConsent ? COMPLETE : Constants.BusinessStatus.VISITED_DENIED_CONSENT;
+            String structureVisitStatus = hasConsent && childrenCount == 0 ? COMPLETE : Constants.BusinessStatus.VISITED_NOT_TREATED;
             if (feature != null) {
-                // update task
-                Set<Task> tasks = taskUtils.getTasksByEntityAndCode(feature.id(), Constants.Intervention.REGISTER_FAMILY);
-                task = tasks.iterator().next();
 
-                String businessStatus = !"Yes".equalsIgnoreCase(consent) ?
-                        Constants.BusinessStatus.VISITED_DENIED_CONSENT :
-                        COMPLETE;
+                // update visit task
+                task = taskUtils.updateTaskStatus(
+                        feature.id(),
+                        Constants.Intervention.STRUCTURE_VISITED,
+                        structureVisitStatus,
+                        TaskStatus.COMPLETED
+                );
 
-                task.setBusinessStatus(businessStatus);
-                task.setStatus(TaskStatus.COMPLETED);
-                if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus()))
-                    task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                if (task == null) throw new IllegalStateException("Missing registration task");
 
-                task.setLastModified(new DateTime());
-                taskRepository.addOrUpdate(task);
+                // update reg task
+                taskUtils.updateTaskStatus(
+                        feature.id(),
+                        Constants.Intervention.REGISTER_FAMILY,
+                        registrationStatus,
+                        TaskStatus.COMPLETED
+                );
+
             } else {
-                // floating family
-                String businessStatus = !"Yes".equalsIgnoreCase(consent) ?
-                        Constants.BusinessStatus.VISITED_DENIED_CONSENT :
-                        Constants.BusinessStatus.COMPLETED_FAMILY_REGISTRATION;
 
-                task = TaskUtils.getInstance().generateTask(context, operationalArea.getId(), "", businessStatus, TaskStatus.COMPLETED,
+                /*
+                taskUtils.generateTask(context,
+                        operationalArea.getId(), null, structureVisitStatus, Task.TaskStatus.COMPLETED, Constants.Intervention.STRUCTURE_VISITED,
+                        R.string.confirm_structure_eligibility);
+                 */
+
+                task = taskUtils.generateTask(context, familyEntityId, operationalArea.getId(), registrationStatus, TaskStatus.COMPLETED,
                         Constants.Intervention.FLOATING_FAMILY_REGISTRATION,
                         R.string.register_family);
             }
 
-            if (!"Yes".equalsIgnoreCase(consent)) {
+            if (!hasConsent) {
                 processor = NativeFormProcessor.createInstance(jsonObject.toString());
                 processor
                         .withEntityId(feature != null ? feature.id() : operationalArea.getId())
                         .withBindType(FamilyConstants.TABLE_NAME.FAMILY)
                         .withEncounterType(FamilyConstants.EventType.FAMILY_REGISTRATION_DENIED_CONSENT)
                         .tagLocationData(operationalArea)
+                        .tagTaskDetails(task)
                         .tagEventMetadata()
                         .saveEvent();
 
@@ -1362,7 +1378,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
 
         // NTD to intercept and start eligibility form
-        if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)){
+        if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
             selectedFeature = feature;
             listTaskView.startEligibilityForm();
         }
@@ -1555,7 +1571,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             boolean matches = true;
             if (filterStatus != null) {
                 matches = feature.hasProperty(TASK_BUSINESS_STATUS) && filterStatus.contains(feature.getStringProperty(TASK_BUSINESS_STATUS));
-                if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY))
+                if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY))
                     matches = feature.hasProperty(TASK_AGGREGATE_STATUS) && filterStatus.contains(feature.getStringProperty(TASK_AGGREGATE_STATUS));
             }
             if (matches && filterTaskCode != null) {
