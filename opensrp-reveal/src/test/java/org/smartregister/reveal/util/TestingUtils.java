@@ -231,7 +231,7 @@ public class TestingUtils {
         Task task = new Task();
         task.setStructureId("struct-id-1");
         task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(Constants.BusinessStatus.SPRAYED);
+        task.setBusinessStatus(BusinessStatus.SPRAYED);
         task.setCode(Constants.Intervention.IRS);
         task.setDescription("random descriptions");
         task.setPlanIdentifier("plan-id-1");
@@ -243,7 +243,7 @@ public class TestingUtils {
         task = new Task();
         task.setStructureId("struct-id-1");
         task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(Constants.BusinessStatus.NOT_ELIGIBLE);
+        task.setBusinessStatus(BusinessStatus.NOT_ELIGIBLE);
         task.setCode(Constants.Intervention.FI);
         task.setDescription("random descriptions 2");
         task.setPlanIdentifier("plan-id-1");
@@ -255,7 +255,7 @@ public class TestingUtils {
         task = new Task();
         task.setStructureId("struct-id-2");
         task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(Constants.BusinessStatus.NOT_VISITED);
+        task.setBusinessStatus(BusinessStatus.NOT_VISITED);
         task.setCode(Constants.Intervention.IRS);
         task.setDescription("random descriptions xx");
         task.setPlanIdentifier("plan-id-1");
@@ -267,7 +267,7 @@ public class TestingUtils {
         task = new Task();
         task.setStructureId("struct-id-3");
         task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(Constants.BusinessStatus.SPRAYED);
+        task.setBusinessStatus(BusinessStatus.SPRAYED);
         task.setCode(Constants.Intervention.IRS);
         task.setDescription("random descriptions 3");
         task.setPlanIdentifier("plan-id-1");
@@ -279,7 +279,7 @@ public class TestingUtils {
         task = new Task();
         task.setStructureId("struct-id-4");
         task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(Constants.BusinessStatus.NOT_SPRAYED);
+        task.setBusinessStatus(BusinessStatus.NOT_SPRAYED);
         task.setCode(Constants.Intervention.IRS);
         task.setDescription("random descriptions 4");
         task.setPlanIdentifier("plan-id-1");
@@ -291,7 +291,7 @@ public class TestingUtils {
         task = new Task();
         task.setStructureId("struct-id-5");
         task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(Constants.BusinessStatus.SPRAYED);
+        task.setBusinessStatus(BusinessStatus.SPRAYED);
         task.setCode(Constants.Intervention.IRS);
         task.setDescription("random descriptions");
         task.setStatus(Task.TaskStatus.COMPLETED);
@@ -303,7 +303,7 @@ public class TestingUtils {
         task = new Task();
         task.setStructureId("struct-id-6");
         task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(Constants.BusinessStatus.NOT_VISITED);
+        task.setBusinessStatus(BusinessStatus.NOT_VISITED);
         task.setCode(Constants.Intervention.IRS);
         task.setDescription("random descriptions 5");
         task.setPlanIdentifier("plan-id-1");
@@ -315,7 +315,7 @@ public class TestingUtils {
         task = new Task();
         task.setStructureId("struct-id-7");
         task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(Constants.BusinessStatus.NOT_ELIGIBLE);
+        task.setBusinessStatus(BusinessStatus.NOT_ELIGIBLE);
         task.setCode(Constants.Intervention.IRS);
         task.setDescription("random descriptions 7");
         task.setPlanIdentifier("plan-id-1");

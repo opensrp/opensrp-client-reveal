@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
@@ -225,11 +226,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             }
         }
 
-        if (taskDetailsList != null) {
-
-            if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
-                new IndicatorsCalculatorTask(listTaskView.getActivity(), taskDetailsList).execute();
-            }
+        if (taskDetailsList != null && (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA
+                || BuildConfig.BUILD_COUNTRY == Country.NAMIBIA)) {
+            new IndicatorsCalculatorTask(listTaskView.getActivity(), taskDetailsList).execute();
         }
     }
 
@@ -289,7 +288,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
         } else if (isLongclick) {
             if (BuildConfig.BUILD_COUNTRY != Country.THAILAND && BuildConfig.BUILD_COUNTRY != Country.THAILAND_EN) {
-            onFeatureSelectedByLongClick(feature);
+                onFeatureSelectedByLongClick(feature);
             }
         } else {
             onFeatureSelectedByNormalClick(feature);
@@ -376,6 +375,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void findLastEvent(String featureId, String eventType) {
         listTaskInteractor.findLastEvent(featureId, eventType);
     }
+
     public void onFociBoundaryLongClicked() {
         revealApplication.setFeatureCollection(featureCollection);
         revealApplication.setOperationalArea(operationalArea);
@@ -454,9 +454,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         familyCardDetails.setDateCreated(formatDate(originalDate));
     }
 
-    public void startForm(Feature feature, CardDetails cardDetails, String interventionType){
+    public void startForm(Feature feature, CardDetails cardDetails, String interventionType) {
         startForm(feature, cardDetails, interventionType, null);
     }
+
     public void startForm(Feature feature, CardDetails cardDetails, String interventionType, Event event) {
         String formName = jsonFormUtils.getFormName(null, interventionType);
         String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();

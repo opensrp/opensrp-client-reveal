@@ -76,12 +76,12 @@ public class IndicatorsCalculatorTaskTest extends BaseUnitTest {
         Country country = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         IndicatorDetails indicatorDetails = indicatorsCalculatorTask.doInBackground();
-        TestCase.assertEquals(6, indicatorDetails.getTotalStructures());
-        TestCase.assertEquals(2, indicatorDetails.getNotVisited());
-        TestCase.assertEquals(0, indicatorDetails.getFoundStructures());
-        TestCase.assertEquals(3, indicatorDetails.getSprayed());
-        TestCase.assertEquals(1, indicatorDetails.getNotSprayed());
-        TestCase.assertEquals(50, indicatorDetails.getProgress());
+        assertEquals(6, indicatorDetails.getTotalStructures());
+        assertEquals(2, indicatorDetails.getNotVisited());
+        assertEquals(0, indicatorDetails.getFoundStructures());
+        assertEquals(3, indicatorDetails.getSprayed());
+        assertEquals(1, indicatorDetails.getNotSprayed());
+        assertEquals(50, indicatorDetails.getProgress());
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, country);
     }
 
@@ -100,13 +100,13 @@ public class IndicatorsCalculatorTaskTest extends BaseUnitTest {
 
         when(sqLiteDatabase.rawQuery(anyString(), any())).thenReturn(getCursor());
         IndicatorDetails indicatorDetails = indicatorsCalculatorTask.doInBackground();
-        TestCase.assertEquals(76, indicatorDetails.getTotalStructures());
-        TestCase.assertEquals(1, indicatorDetails.getNotVisited());
-        TestCase.assertEquals(75, indicatorDetails.getFoundStructures());
-        TestCase.assertEquals(74, indicatorDetails.getSprayed());
-        TestCase.assertEquals(1, indicatorDetails.getNotSprayed());
-        TestCase.assertEquals(93, indicatorDetails.getRoomCoverage());
-        TestCase.assertEquals(97, indicatorDetails.getProgress());
+        assertEquals(76, indicatorDetails.getTotalStructures());
+        assertEquals(1, indicatorDetails.getNotVisited());
+        assertEquals(75, indicatorDetails.getFoundStructures());
+        assertEquals(74, indicatorDetails.getSprayed());
+        assertEquals(1, indicatorDetails.getNotSprayed());
+        assertEquals(93, indicatorDetails.getRoomCoverage());
+        assertEquals(97, indicatorDetails.getProgress());
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, country);
     }
 

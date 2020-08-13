@@ -117,7 +117,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
 
         //Show or hide depending on plan
 
-        ((View) progressIndicator.getParent()).setVisibility(org.smartregister.reveal.util.Utils.getInterventionLabel() == R.string.irs ? View.VISIBLE : View.GONE);
+        ((View) progressIndicator.getParent()).setVisibility(Utils.getInterventionLabel() == R.string.irs ? View.VISIBLE : View.GONE);
 
         if (activity instanceof ListTasksActivity)
             ((ListTasksActivity) activity).positionMyLocationAndLayerSwitcher();
