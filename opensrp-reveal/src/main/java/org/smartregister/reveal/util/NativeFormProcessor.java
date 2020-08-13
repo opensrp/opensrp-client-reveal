@@ -21,6 +21,7 @@ import org.smartregister.domain.db.EventClient;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.sync.helper.ECSyncHelper;
 import org.smartregister.util.DateTimeTypeConverter;
@@ -60,6 +61,12 @@ public class NativeFormProcessor {
 
     public static NativeFormProcessor createInstance(JSONObject jsonObject) {
         return new NativeFormProcessor(jsonObject);
+    }
+
+    public static NativeFormProcessor createInstanceFromAsset(String filePath) throws  JSONException{
+        String jsonString = org.smartregister.util.Utils.readAssetContents(RevealApplication.getInstance().getContext().applicationContext()
+                , filePath);
+        return createInstance(jsonString);
     }
 
     @VisibleForTesting

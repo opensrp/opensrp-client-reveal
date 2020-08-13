@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.annotation.Nullable;
+
 import timber.log.Timber;
 
 import static org.smartregister.domain.Task.TaskStatus.READY;
@@ -89,6 +91,31 @@ public class TaskUtils {
         String planId = prefsUtil.getCurrentPlanId();
         String groupId = prefsUtil.getCurrentOperationalAreaId();
         return taskRepository.getTasksByEntityAndCode(planId, groupId, entityId, code);
+    }
+
+    /**
+     * returns null if task was not found
+     * @param entityId
+     * @param code
+     * @param businessStatus
+     * @param taskStatus
+     * @return
+     */
+    public @Nullable Task updateTaskStatus(String entityId, String code, String businessStatus, Task.TaskStatus taskStatus){
+        Set<Task> tasks = getTasksByEntityAndCode(entityId,code);
+        Task task = tasks.size() > 0 ? tasks.iterator().next() : null;
+        if (task != null) {
+            task.setBusinessStatus(businessStatus);
+            task.setStatus(taskStatus);
+
+            if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+            }
+            task.setLastModified(new DateTime());
+            taskRepository.addOrUpdate(task);
+        }
+
+        return task;
     }
 
     public Task generateTask(Context context, String entityId, String structureId, String businessStatus, Task.TaskStatus status, String intervention, @StringRes int description) {

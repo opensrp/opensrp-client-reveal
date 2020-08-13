@@ -30,7 +30,6 @@ import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.repository.BaseRepository;
-import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.repository.UniqueIdRepository;
 import org.smartregister.reveal.BuildConfig;
@@ -129,6 +128,7 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.FamilyJsonFormUtils.getFormValue;
 import static org.smartregister.reveal.util.Utils.formatDate;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 import static org.smartregister.reveal.util.Utils.validateFarStructures;
@@ -664,6 +664,21 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 throw new QRCodeAssignException(qrcode, "QR Code is already assigned");
 
 
+            String taskID = getPropertyValue(feature, TASK_IDENTIFIER);
+            if (StringUtils.isBlank(taskID))
+                taskID = StructureDao.getInstance().getTaskByStructureID(feature.id());
+
+            TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
+            Task task = taskRepository.getTaskByIdentifier(taskID);
+
+            task.setBusinessStatus(Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION);
+            task.setStatus(Task.TaskStatus.IN_PROGRESS);
+            if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus()))
+                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
+
+            task.setLastModified(new DateTime());
+            taskRepository.addOrUpdate(task);
+
             // read json
             String jsonForm = readAssetContents(context, org.smartregister.reveal.util.Constants.JsonForm.NTD_COMMUNITY_STRUCTURE_QR);
             JSONObject jsonObject = new JSONObject(jsonForm);
@@ -685,33 +700,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                     .withEncounterType(Constants.EventType.STRUCTURE_QR)
                     .withEntityId(feature.id())
                     .tagFeatureId(feature.id())
+                    .tagTaskDetails(task)
                     .tagLocationData(operationalArea)
                     .tagEventMetadata()
 
                     // save
                     .saveEvent()
                     .clientProcessForm();
-
-            String taskID = getPropertyValue(feature, TASK_IDENTIFIER);
-            if (StringUtils.isBlank(taskID))
-                taskID = StructureDao.getInstance().getTaskByStructureID(feature.id());
-
-            TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
-            Task task = taskRepository.getTaskByIdentifier(taskID);
-
-            task.setBusinessStatus(Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION);
-            task.setStatus(Task.TaskStatus.IN_PROGRESS);
-            if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus()))
-                task.setSyncStatus(BaseRepository.TYPE_Unsynced);
-
-            task.setLastModified(new DateTime());
-            taskRepository.addOrUpdate(task);
-
-            StructureRepository structureRepository = RevealApplication.getInstance().getStructureRepository();
-            org.smartregister.domain.Location structure = structureRepository.getLocationById(feature.id());
-            structure.getProperties().setName(qrcode);
-            structure.setSyncStatus(BaseRepository.TYPE_Unsynced);
-            structureRepository.addOrUpdate(structure);
 
             return task;
         };
@@ -1037,27 +1032,44 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         Callable<Task> callable = () -> {
 
-            TaskRepository taskRepository = RevealApplication.getInstance().getTaskRepository();
             TaskUtils taskUtils = TaskUtils.getInstance();
 
-            Set<Task> tasks = taskUtils.getTasksByEntityAndCode(feature.id(), Constants.Intervention.STRUCTURE_VISITED);
+            Task task = taskUtils.updateTaskStatus(feature.id(),
+                    Constants.Intervention.STRUCTURE_VISITED,
+                    Constants.BusinessStatus.INELIGIBLE,
+                    Task.TaskStatus.COMPLETED
+            );
 
-            Task task = tasks.size() > 0 ? tasks.iterator().next() : null;
-            if (task != null) {
-                task.setBusinessStatus(Constants.BusinessStatus.INELIGIBLE);
-                task.setStatus(Task.TaskStatus.COMPLETED);
-
-                if (BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
-                    task.setSyncStatus(BaseRepository.TYPE_Unsynced);
-                }
-                task.setLastModified(new DateTime());
-                taskRepository.addOrUpdate(task);
-            } else {
+            if (task == null) {
                 // create a new task
                 task = taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
                         feature.id(), feature.id(), Constants.BusinessStatus.INELIGIBLE, Task.TaskStatus.COMPLETED, Constants.Intervention.STRUCTURE_VISITED,
                         R.string.confirm_structure_eligibility);
             }
+
+
+            NativeFormProcessor processor = NativeFormProcessor.createInstanceFromAsset(org.smartregister.reveal.util.Constants.JsonForm.NTD_COMMUNITY_ELIGIBILITY);
+            org.smartregister.domain.Location operationalArea = processor.getCurrentOperationalArea();
+
+            Map<String, Object> values = new HashMap<>();
+            values.put("statusResidential", "No");
+            values.put("statusHouseholdaccessible", "No");
+            values.put("statusHouseholdAllPresent", "No");
+            values.put("statusHohstructure", "No");
+
+            processor
+                    .populateValues(values)
+                    .withBindType(Constants.Tables.STRUCTURE_ELIGIBILITY_TABLE)
+                    .withEncounterType(Constants.EventType.STRUCTURE_ELIGIBILITY)
+                    .withEntityId(feature.id())
+                    .tagFeatureId(feature.id())
+                    .tagLocationData(operationalArea)
+                    .tagTaskDetails(task)
+                    .tagEventMetadata()
+
+                    // save
+                    .saveEvent()
+                    .clientProcessForm();
 
 
             return task;

@@ -1,5 +1,7 @@
 package org.smartregister.reveal.interactor;
 
+import androidx.core.util.Consumer;
+
 import com.mapbox.geojson.Feature;
 
 import net.sqlcipher.Cursor;
@@ -33,6 +35,7 @@ import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.GeoJSON;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.GeoJsonUtils;
@@ -41,6 +44,7 @@ import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -83,7 +87,6 @@ import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
-import static org.smartregister.reveal.util.Constants.Intervention.NTD_COMMUNITY;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
@@ -257,6 +260,23 @@ public class ListTaskInteractor extends BaseInteractor {
         );
     }
 
+    private Map<String, Set<Task>> fetchTasks(String plan, final String areaId) {
+        Map<String, Set<Task>> results = new HashMap<>();
+
+        Consumer<Task> consumer = task -> {
+            Set<Task> current = results.get(task.getStructureId());
+            if (current == null) current = new HashSet<>();
+            current.add(task);
+
+            results.put(task.getStructureId(), current);
+        };
+
+        taskRepository.readTasks(plan, areaId, Constants.Intervention.STRUCTURE_VISITED, consumer);
+
+
+        return results;
+    }
+
     public void fetchLocations(String plan, final String areaId) {
         Runnable runnable = new Runnable() {
 
@@ -271,7 +291,10 @@ public class ListTaskInteractor extends BaseInteractor {
                     featureCollection = createFeatureCollection();
                     if (operationalAreaLocation != null) {
                         // get all tasks in this plan and group by plan
-                        Map<String, Set<Task>> tasks = taskRepository.getTasksByPlanAndGroup(plan, operationalAreaLocation.getId());
+                        Map<String, Set<Task>> tasks = BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY) ?
+                                fetchTasks(plan, areaId) :
+                                taskRepository.getTasksByPlanAndGroup(plan, operationalAreaLocation.getId());
+
                         List<Location> structures = structureRepository.getLocationsByParentId(operationalAreaLocation.getId());
 
                         // get structure name
