@@ -8,9 +8,11 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.IndicatorDetails;
 import org.smartregister.reveal.model.TaskDetails;
@@ -190,6 +192,8 @@ public class IndicatorUtilsTest extends BaseUnitTest {
 
     @Test
     public void testPopulateSprayIndicatorsPopulatesCorrectly() {
+        Country country = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         List<TaskDetails> taskDetailsList = IndicatorUtils.processTaskDetails(taskTestMap);
         IndicatorDetails indicatorDetails = IndicatorUtils.processIndicators(taskDetailsList);
         List<String> sprayIndicatorList = IndicatorUtils.populateSprayIndicators(RuntimeEnvironment.application, indicatorDetails);
@@ -203,7 +207,7 @@ public class IndicatorUtilsTest extends BaseUnitTest {
         assertEquals("2", sprayIndicatorList.get(3));
         assertEquals(getString(R.string.total_structures), sprayIndicatorList.get(4));
         assertEquals("6", sprayIndicatorList.get(5));
-
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, country);
 
     }
 
@@ -224,6 +228,6 @@ public class IndicatorUtilsTest extends BaseUnitTest {
         assertEquals(1, indicatorDetails.getNotSprayed());
         assertEquals(93, indicatorDetails.getRoomCoverage());
         assertEquals(97, indicatorDetails.getProgress());
-        verify(sqLiteDatabase).rawQuery(anyString(),eq(new String[]{id}));
+        verify(sqLiteDatabase).rawQuery(anyString(), eq(new String[]{id}));
     }
 }
