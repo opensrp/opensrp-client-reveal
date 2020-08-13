@@ -340,11 +340,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         } else if (Constants.BusinessStatus.WAITING_FOR_QR_CODE.equals(businessStatus) || Constants.BusinessStatus.WAITING_FOR_QR_AND_REGISTRATION.equals(businessStatus)) {
             listTaskView.onEligibilityStatusConfirmed(businessStatus);
             return;
-        } else if (Constants.BusinessStatus.VISITED_DENIED_CONSENT.equals(businessStatus)) {
-            // if has no structure
-            listTaskView.displayNotification("Info", "Family denied consent");
-            return;
-        } else if (Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION.equals(businessStatus)) {
+        }else if (Constants.BusinessStatus.ELIGIBLE_WAITING_REGISTRATION.equals(businessStatus)) {
             listTaskView.registerFamily();
             return;
         }
@@ -361,6 +357,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
             if (StringUtils.isNotBlank(structureDao.getFamilyIDFromStructureID(feature.id())))
                 return SHOW_FAMILY;
+
+            if(Constants.BusinessStatus.VISITED_NOT_TREATED.equalsIgnoreCase(businessStatus))
+                return Constants.BusinessStatus.VISITED_NOT_TREATED;
 
             if (structureDao.structureHasQr(feature.id()))
                 return HAS_QR;
@@ -382,6 +381,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                         listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
                     } else if (HAS_QR.equalsIgnoreCase(result)) {
                         onCardDetailsFetched(new QRCodeDetailsCard(""));
+                    } else if (Constants.BusinessStatus.VISITED_NOT_TREATED.equalsIgnoreCase(result)) {
+                        listTaskView.displayNotification("Info", "Family denied consent");
                     }
 
                     view.onEligibilityStatusConfirmed(result);
@@ -593,9 +594,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                         Constants.Intervention.STRUCTURE_VISITED,
                         R.string.confirm_structure_eligibility);
 
-            taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
-                    feature.id(), feature.id(), eligibilityBusinessStatus, Task.TaskStatus.IN_PROGRESS, Constants.Intervention.REGISTER_FAMILY,
-                    R.string.register_structure_and_family);
+            if (registerFamily)
+                taskUtils.generateTask(RevealApplication.getInstance().getContext().applicationContext(),
+                        feature.id(), feature.id(), eligibilityBusinessStatus, Task.TaskStatus.IN_PROGRESS, Constants.Intervention.REGISTER_FAMILY,
+                        R.string.register_structure_and_family);
 
 
             // update metadata
