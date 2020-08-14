@@ -98,9 +98,12 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             progressIndicator3.setTitle(this.activity.getString(R.string.n_percent, progress3));
         } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
 
-            progressIndicator3.setSubTitle(activity.getString(R.string.structures_not_sprayed));
-            progressIndicator3.setProgress(indicatorDetails.getNotSprayed());
-            progressIndicator3.setTitle(String.valueOf(indicatorDetails.getNotSprayed()));
+            progressIndicator3.setSubTitle(activity.getString(R.string.target_coverage));
+            //TODO add logic to fetch targets for this jurisdiction from server settings
+            int target = indicatorDetails.getTotalStructures();
+            int targetCoverage = (int) (indicatorDetails.getSprayed() * 100.0 / target);
+            progressIndicator3.setProgress(targetCoverage);
+            progressIndicator3.setTitle(String.valueOf(targetCoverage));
 
             progressIndicator2.setSubTitle(activity.getString(R.string.found_coverage));
             int coverage = (int) (indicatorDetails.getSprayed() * 100.0 / indicatorDetails.getFoundStructures());

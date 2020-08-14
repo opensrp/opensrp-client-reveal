@@ -240,6 +240,7 @@
     <string name="structures_sprayed">Structures Sprayed</string>
     <string name="structures_not_sprayed">Structures Not Sprayed</string>
     <string name="room_coverage">Room coverage of sprayed</string>
+    <string name="target_coverage">Target coverage</string>
     <string name="n_percent">%1$d%%</string>
     <string name="indicator">Indicator</string>
     <string name="value">Value</string>
