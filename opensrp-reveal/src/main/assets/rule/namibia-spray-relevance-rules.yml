@@ -97,6 +97,13 @@ condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSpra
 actions:
   - "isRelevant = true"
 ---
+name: step1_nSprayedSumishieldFirst
+description: step1_nSprayedSumishieldFirst
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0 && step1_ableToSprayFirst.equals('yes') && helper.ifNull(step1_nSprayedTotalFirst,0) > 0"
+actions:
+  - "isRelevant = true"
+---
 name: step1_nUnsprayedTotalFirstLabel
 description: step1_nUnsprayedTotalFirstLabel
 priority: 1
@@ -196,6 +203,13 @@ actions:
   - "isRelevant = true"
 ---
 name: step1_nSprayedActellicMop
+description:
+priority: 1
+condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0 && step1_mopUpVisit.equals('yes') && helper.ifNull(step1_nSprayedTotalMop,0) > 0"
+actions:
+  - "isRelevant = true"
+ ---
+name: step1_nSprayedSumishieldMop
 description:
 priority: 1
 condition: "step1_householdAccessible.equals('yes') && helper.ifNull(step1_nSprayableTotal,0) > 0 && step1_mopUpVisit.equals('yes') && helper.ifNull(step1_nSprayedTotalMop,0) > 0"
