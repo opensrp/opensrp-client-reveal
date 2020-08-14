@@ -404,6 +404,9 @@ public class Utils {
             interventions.addAll(Constants.Intervention.IRS_INTERVENTIONS);
             codes.addAll(interventions);
         }
+        if (filterList.contains(Constants.InterventionType.FLOATING_FAMILY)) {
+            codes.add(Constants.InterventionType.FLOATING_FAMILY);
+        }
         return codes;
 
     }

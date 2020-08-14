@@ -88,6 +88,10 @@
           ],
           "hsl(89, 52%, 48%)",
           [
+            "Visited, Partially treated"
+          ],
+          "hsl(32, 90%, 61%)",
+          [
             "Not Sprayable",
             "Not Eligible",
             "Ineligible"
@@ -208,6 +212,10 @@
             "Completed Family Registration"
           ],
           "hsl(89, 52%, 48%)",
+          [
+            "Visited, Partially treated"
+          ],
+          "hsl(32, 90%, 61%)",
           [
             "Not Sprayable",
             "Not Eligible",

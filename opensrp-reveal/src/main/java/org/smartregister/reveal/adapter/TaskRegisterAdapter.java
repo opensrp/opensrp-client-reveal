@@ -14,6 +14,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.CardDetailsUtil;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.viewholder.TaskRegisterViewHolder;
@@ -56,7 +57,7 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
             name = task.getStructureName() != null ? task.getStructureName() : context.getString(R.string.unenumerated_structure);
 
         viewHolder.setTaskName(name);
-        String action = task.getTaskStatus();
+        String action = task.getBusinessStatus();
 
 
         CardDetails cardDetails = new CardDetails(task.getBusinessStatus());
@@ -64,21 +65,21 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
         if("Complete".equals(task.getBusinessStatus())){
             cardDetails.setStatusColor(R.color.ntd_green);
             task.setAggregateBusinessStatus("Complete");
-        }else if("Partial".equals(task.getBusinessStatus())){
+        }else if(Constants.BusinessStatus.VISITED_PARTIALLY_TREATED.equals(task.getBusinessStatus())){
             cardDetails.setStatusColor(R.color.ntd_orange);
-            action = "Visited, Partially treated";
+            action = Constants.BusinessStatus.VISITED_PARTIALLY_TREATED;
             task.setAggregateBusinessStatus("Incomplete");
         }else if("Not Visited".equals(task.getBusinessStatus())){
             cardDetails.setStatusColor(R.color.ntd_yellow);
             task.setAggregateBusinessStatus("Not Visited");
-        }else if("Ineligible".equals(task.getBusinessStatus())){
+        }else if(Constants.BusinessStatus.INELIGIBLE.equals(task.getBusinessStatus())){
             cardDetails.setStatusColor(R.color.ntd_black);
             task.setAggregateBusinessStatus("Complete");
-        }else if("Visited, Denied consent".equals(task.getBusinessStatus())){
+        }else if(Constants.BusinessStatus.VISITED_NOT_TREATED.equals(task.getBusinessStatus())){
             cardDetails.setStatusColor(R.color.ntd_red);
-            action = "Visited, SACs not treated";
+            action = Constants.BusinessStatus.VISITED_NOT_TREATED;
             task.setAggregateBusinessStatus("Incomplete");
-        }else if("Included in another household".equals(task.getBusinessStatus())){
+        }else if(Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD.equals(task.getBusinessStatus())){
             cardDetails.setStatusColor(R.color.ntd_red);
             task.setAggregateBusinessStatus("Complete");
         }

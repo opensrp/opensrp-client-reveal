@@ -1053,7 +1053,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
                         dialog.dismiss();
                     }
-                }).show();
+                })
+                .setNegativeButton("Maybe Later", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
         alertDialog.setCancelable(false);
     }
 
@@ -1166,7 +1173,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
                         dialog.dismiss();
                     }
-                }).show();
+                })
+                .setNegativeButton("Maybe Later", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
         alertDialog.setCancelable(false);
     }
 

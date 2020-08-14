@@ -77,6 +77,67 @@ public class TaskDetailsDao extends AbstractDao {
         return (result == null ? new ArrayList<>() : result);
     }
 
+
+    public List<TaskDetails> fetchStructures(String operationalAreaId, String planId, Location lastLocation, Location operationalAreaCenter) {
+        String sql =
+                "select ec_family.base_entity_id , ec_family.structure_id , ec_family.first_name fam_name , structure.latitude , structure.longitude, ifnull(task.business_status,'Not Visited') business_status , task.status task_status , '" + Constants.Intervention.REGISTER_FAMILY + "' code " +
+                        "from ec_family " +
+                        "inner join structure on ec_family.structure_id = structure._id " +
+                        "inner join task on task.structure_id = ec_family.structure_id and task.code = '" + Constants.Intervention.STRUCTURE_VISITED + "'  " +
+                        "and task.plan_id = '" + planId + "' and  task.group_id = '" + operationalAreaId + "' " +
+                        "union  " +
+                        "select null base_entity_id , structure._id structure_id , structure.name , structure.latitude , structure.longitude, ifnull(task.business_status,'Not Visited') , task.status , '" + Constants.Intervention.REGISTER_FAMILY + "' code " +
+                        "from structure " +
+                        "left join task on task.structure_id = structure._id and task.code = '" + Constants.Intervention.STRUCTURE_VISITED + "'  " +
+                        "where structure.parent_id = '" + operationalAreaId + "' " +
+                        "and structure._id not in ( " +
+                        "select structure_id from task where code = '" + Constants.Intervention.STRUCTURE_VISITED + "' and  " +
+                        "task.plan_id = '" + planId + "' and  task.group_id = '" + operationalAreaId + "' and structure_id is not null ) " +
+                        "union " +
+                        "select ec_family.base_entity_id , ec_family.structure_id , ec_family.first_name , null latitude , null longitude, ifnull(task.business_status,'Not Visited') business_status , task.status , '" + Constants.InterventionType.FLOATING_FAMILY + "'code " +
+                        "from ec_family " +
+                        "inner join task on task.for = ec_family.base_entity_id and task.code = '" + Constants.Intervention.FLOATING_FAMILY_REGISTRATION + "'  " +
+                        "and task.plan_id = '" + planId + "' and  task.group_id = '" + operationalAreaId + "' ";
+
+
+        DataMap<TaskDetails> dataMap = cursor -> {
+            TaskDetails taskDetails = new TaskDetails(getCursorValue(cursor, "structure_id", ""));
+
+            String familyName = getCursorValue(cursor, "fam_name");
+            if (StringUtils.isNotBlank(familyName))
+                taskDetails.setStructureName(familyName + " Family");
+            taskDetails.setFamilyBaseEntityID(getCursorValue(cursor, "base_entity_id"));
+            taskDetails.setTaskCode(getCursorValue(cursor, "code"));
+            taskDetails.setTaskStatus(getCursorValue(cursor, "task_status"));
+            taskDetails.setBusinessStatus(getCursorValue(cursor, "business_status"));
+
+            Location location = new Location((String) null);
+            String longitude = getCursorValue(cursor, "longitude");
+            String latitude = getCursorValue(cursor, "latitude");
+
+            if (StringUtils.isNotBlank(longitude) && StringUtils.isNotBlank(latitude)) {
+                location.setLatitude(Double.parseDouble(latitude));
+                location.setLongitude(Double.parseDouble(longitude));
+            } else if (lastLocation != null) {
+                location.setLatitude(lastLocation.getLatitude());
+                location.setLongitude(lastLocation.getLongitude());
+            } else {
+                location.setLatitude(0d);
+                location.setLongitude(0d);
+            }
+
+            taskDetails.setLocation(location);
+
+            calculateDistance(taskDetails, location, lastLocation, operationalAreaCenter);
+
+            return taskDetails;
+        };
+
+        List<TaskDetails> result = readData(sql, dataMap);
+
+        return (result == null ? new ArrayList<>() : result);
+    }
+
     public List<TaskDetails> fetchFloatingFamilies(String operationalAreaId, String planId, Location lastLocation, Location operationalAreaCenter) {
 
         String sql = "select base_entity_id , first_name fam_name ,  " +

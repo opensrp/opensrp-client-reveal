@@ -220,13 +220,8 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "concept",
         "openmrs_entity_id": "personOrgheirarchyreceivingeturneddrugs",
-        "openmrs_data_type": "select one",
-        "type": "spinner",
-        "hint": "Please select the organizational unit affiliation of person receiving returned drugs",
-        "values": [
-          "Sample School",
-          "Sample HF"
-        ],
+        "type": "edit_text",
+        "hint": "Enter the organizational unit affiliation of person receiving returned drugs",
         "v_required": {
           "value": "true",
           "err": "Please enter the organizational unit"
