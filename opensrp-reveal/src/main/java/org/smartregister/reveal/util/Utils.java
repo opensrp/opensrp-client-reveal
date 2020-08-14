@@ -381,10 +381,15 @@ public class Utils {
     }
 
     public static boolean matchesSearchPhrase(String toSearch, String searchPhrase) {
-        if (StringUtils.isBlank(toSearch))
-            return false;
-        String wordsSpaceAndCommaRegex = "[\\w\\h,]*";
-        return toSearch.toLowerCase().matches(wordsSpaceAndCommaRegex + searchPhrase.toLowerCase() + wordsSpaceAndCommaRegex);
+        try {
+            if (StringUtils.isBlank(toSearch))
+                return false;
+            String wordsSpaceAndCommaRegex = "[\\w\\h,]*";
+            return toSearch.toLowerCase().matches(wordsSpaceAndCommaRegex + searchPhrase.toLowerCase() + wordsSpaceAndCommaRegex);
+        }catch (Exception e){
+            Timber.e(e);
+        }
+        return false;
     }
 
 

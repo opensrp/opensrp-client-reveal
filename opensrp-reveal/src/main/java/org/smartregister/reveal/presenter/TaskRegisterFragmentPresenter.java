@@ -369,7 +369,8 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                         Utils.matchesSearchPhrase(task.getStructureName(), searchText) ||
                         Utils.matchesSearchPhrase(task.getHouseNumber(), searchText) ||
                         Utils.matchesSearchPhrase(task.getQrCode(), searchText) ||
-                        Utils.matchesSearchPhrase(task.getFamilyMemberNames(), searchText)) {
+                        Utils.matchesSearchPhrase(task.getFamilyMemberNames(), searchText) ||
+                        Utils.matchesSearchPhrase(task.getPhoneNumbers(), searchText)) {
                     filteredTasks.add(task);
                     if (task.getDistanceFromUser() > 0 && task.getDistanceFromUser() <= Utils.getLocationBuffer())
                         withinBuffer++;

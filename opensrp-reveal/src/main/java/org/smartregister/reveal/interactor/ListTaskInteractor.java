@@ -72,6 +72,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.OWNER;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_COMMENTS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_STATUS;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.PHONE_NUMBER;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.REPORT_SPRAY;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
@@ -338,7 +339,7 @@ public class ListTaskInteractor extends BaseInteractor {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
         queryBuilder.selectInitiateMainTable(STRUCTURES_TABLE, new String[]{
                 String.format("COALESCE(%s.%s,%s,%s)", FAMILY, FIRST_NAME, STRUCTURE_NAME, NAME),
-                String.format("group_concat(%s.%s||' '||%s.%s)", FAMILY_MEMBER, FIRST_NAME, FAMILY_MEMBER, LAST_NAME)}, ID);
+                String.format("group_concat(%s.%s||' '||%s.%s||' '||%s.%s)", FAMILY_MEMBER, FIRST_NAME, FAMILY_MEMBER, LAST_NAME, FAMILY_MEMBER, PHONE_NUMBER)}, ID);
         queryBuilder.customJoin(String.format("LEFT JOIN %s ON %s.%s = %s.%s AND %s.%s IS NULL collate nocase ",
                 FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID, FAMILY, DATE_REMOVED));
         queryBuilder.customJoin(String.format("LEFT JOIN %s ON %s.%s = %s.%s AND %s.%s IS NULL collate nocase ",

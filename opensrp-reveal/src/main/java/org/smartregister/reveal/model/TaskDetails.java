@@ -79,6 +79,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
     private String qrCode;
 
+    private String phoneNumbers;
+
     public TaskDetails(@NonNull String taskId) {
         super(taskId);
     }
@@ -385,5 +387,13 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
     public void setQrCode(String qrCode) {
         this.qrCode = qrCode;
+    }
+
+    public String getPhoneNumbers() {
+        return phoneNumbers;
+    }
+
+    public void setPhoneNumbers(String phoneNumbers) {
+        this.phoneNumbers = phoneNumbers;
     }
 }

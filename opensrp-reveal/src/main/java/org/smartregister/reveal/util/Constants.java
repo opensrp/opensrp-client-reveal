@@ -649,6 +649,8 @@ public interface Constants {
 
         String LAST_NAME = "last_name";
 
+        String PHONE_NUMBER = "phone_number";
+
         String MIDDLE_NAME = "middle_name";
 
         String GENDER = "gender";
