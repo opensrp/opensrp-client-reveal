@@ -203,6 +203,9 @@ public class ReportDao extends AbstractDao {
             int totalTasks = getCursorIntValue(cursor, "total_tasks", 0);
             int completedTasks = getCursorIntValue(cursor, "completed_tasks", 0);
 
+            if(result.getExpectedForms() < totalTasks)
+                result.setExpectedForms(totalTasks);
+
             result.setNegativeForms(totalTasks - completedTasks);
             result.setPositiveForms(completedTasks);
             return null;

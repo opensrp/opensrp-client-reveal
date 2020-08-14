@@ -8,6 +8,7 @@ import androidx.core.util.Pair;
 
 import com.mapbox.geojson.Feature;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
+import com.vijay.jsonwizard.domain.Form;
 import com.vijay.jsonwizard.utils.FormUtils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +19,7 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Obs;
+import org.smartregister.family.activity.FamilyWizardFormActivity;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.model.BaseTaskDetails;
@@ -211,6 +213,28 @@ public class RevealJsonFormUtils {
             }
         }
 
+    }
+
+    public void startJsonWizardForm(JSONObject jsonObject, Activity context) {
+        startJsonWizardForm(jsonObject, context, REQUEST_CODE_GET_JSON);
+    }
+
+    public void startJsonWizardForm(JSONObject jsonObject, Activity context, int requestCode) {
+        Form form = new Form();
+        form.setActionBarBackground(org.smartregister.family.R.color.family_actionbar);
+        form.setNavigationBackground(org.smartregister.family.R.color.family_navigation);
+        form.setHomeAsUpIndicator(org.smartregister.family.R.mipmap.ic_cross_white);
+        form.setPreviousLabel(context.getResources().getString(org.smartregister.family.R.string.back));
+        form.setWizard(false);
+
+        Intent intent = new Intent(context, FamilyWizardFormActivity.class);
+        try {
+            intent.putExtra(JsonFormConstants.JSON_FORM_KEY.FORM, form);
+            intent.putExtra(JSON_FORM_PARAM_JSON, jsonObject.toString());
+            context.startActivityForResult(intent, requestCode);
+        } catch (Exception e) {
+            Timber.e(e);
+        }
     }
 
 

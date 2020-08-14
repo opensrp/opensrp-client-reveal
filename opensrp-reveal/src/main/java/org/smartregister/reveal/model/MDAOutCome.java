@@ -9,6 +9,10 @@ public class MDAOutCome {
         this.expectedForms = expectedForms;
     }
 
+    public int getExpectedForms() {
+        return expectedForms;
+    }
+
     public void setNegativeForms(int negativeForms) {
         this.negativeForms = negativeForms;
     }
@@ -28,7 +32,7 @@ public class MDAOutCome {
 
             if(completedForms == 0 || (negativeForms == completedForms && negativeForms >= expectedForms)){
                 return MDAOutComeStatus.NEGATIVE;
-            }else if(expectedForms > completedForms || (expectedForms >= completedForms && positiveForms > 0)){
+            }else if(expectedForms > completedForms || (expectedForms > completedForms && positiveForms > 0)){
                 return MDAOutComeStatus.PARTIAL;
             }
         }

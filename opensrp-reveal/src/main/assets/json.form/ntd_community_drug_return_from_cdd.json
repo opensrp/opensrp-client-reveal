@@ -221,6 +221,7 @@
         "openmrs_entity": "concept",
         "openmrs_entity_id": "personOrgheirarchyreceivingeturneddrugs",
         "type": "edit_text",
+        "text_size": "8sp",
         "hint": "Enter the organizational unit affiliation of person receiving returned drugs",
         "v_required": {
           "value": "true",

@@ -5,17 +5,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import com.google.android.material.tabs.TabLayout;
+import com.vijay.jsonwizard.constants.JsonFormConstants;
+import com.vijay.jsonwizard.domain.Form;
+
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 
 import org.json.JSONObject;
+import org.smartregister.family.activity.FamilyWizardFormActivity;
 import org.smartregister.family.adapter.ViewPagerAdapter;
+import org.smartregister.family.util.JsonFormUtils;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.contract.FormProcessor;
 import org.smartregister.reveal.contract.OtherFormsContract;
 import org.smartregister.reveal.fragment.SummaryFormsFragment;
 import org.smartregister.reveal.presenter.OtherFormsPresenter;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 
 import timber.log.Timber;
@@ -82,6 +90,11 @@ public class SummaryFormsActivity extends AppCompatActivity implements OtherForm
 
     @Override
     public void startFormActivity(JSONObject jsonObject) {
+        if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
+            jsonFormUtils.startJsonWizardForm(jsonObject,this);
+            return;
+        }
+
         jsonFormUtils.startJsonForm(jsonObject, this);
     }
 

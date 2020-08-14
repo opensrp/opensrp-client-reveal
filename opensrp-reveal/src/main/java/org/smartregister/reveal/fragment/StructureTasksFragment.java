@@ -203,6 +203,11 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
 
     @Override
     public void startForm(JSONObject formJSON) {
+        if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
+            jsonFormUtils.startJsonWizardForm(formJSON,getActivity(),REQUEST_CODE_GET_JSON_FRAGMENT);
+            return;
+        }
+
         jsonFormUtils.startJsonForm(formJSON, getActivity(), REQUEST_CODE_GET_JSON_FRAGMENT);
     }
 
