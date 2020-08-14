@@ -5,6 +5,7 @@ import android.location.Location;
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.dao.AbstractDao;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
@@ -124,6 +125,22 @@ public class TaskDetailsDao extends AbstractDao {
             } else {
                 location.setLatitude(0d);
                 location.setLongitude(0d);
+            }
+
+
+
+            if("Complete".equals(taskDetails.getBusinessStatus())){
+                taskDetails.setAggregateBusinessStatus("Complete");
+            }else if(Constants.BusinessStatus.VISITED_PARTIALLY_TREATED.equals(taskDetails.getBusinessStatus())){
+                taskDetails.setAggregateBusinessStatus("Incomplete");
+            }else if("Not Visited".equals(taskDetails.getBusinessStatus())){
+                taskDetails.setAggregateBusinessStatus("Not Visited");
+            }else if(Constants.BusinessStatus.INELIGIBLE.equals(taskDetails.getBusinessStatus())){
+                taskDetails.setAggregateBusinessStatus("Complete");
+            }else if(Constants.BusinessStatus.VISITED_NOT_TREATED.equals(taskDetails.getBusinessStatus())){
+                taskDetails.setAggregateBusinessStatus("Incomplete");
+            }else if(Constants.BusinessStatus.INCLUDED_IN_ANOTHER_HOUSEHOLD.equals(taskDetails.getBusinessStatus())){
+                taskDetails.setAggregateBusinessStatus("Complete");
             }
 
             taskDetails.setLocation(location);
