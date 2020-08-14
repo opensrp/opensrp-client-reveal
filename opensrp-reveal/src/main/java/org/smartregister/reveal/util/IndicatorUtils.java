@@ -128,11 +128,11 @@ public class IndicatorUtils {
         sprayIndicator.add(String.valueOf(Math.round(totalStructures * 0.9) - indicatorDetails.getSprayed()));
 
 
-        sprayIndicator.add(context.getResources().getString(R.string.total_structures));
+        sprayIndicator.add(context.getResources().getString(BuildConfig.BUILD_COUNTRY == Country.ZAMBIA ? R.string.total_structures : R.string.total_structures_targeted));
         sprayIndicator.add(String.valueOf(totalStructures));
 
 
-        sprayIndicator.add(context.getResources().getString(R.string.structures_not_visited));
+        sprayIndicator.add(context.getResources().getString(BuildConfig.BUILD_COUNTRY == Country.ZAMBIA ? R.string.structures_not_visited : R.string.households_not_visited));
         sprayIndicator.add(String.valueOf(indicatorDetails.getNotVisited()));
 
 

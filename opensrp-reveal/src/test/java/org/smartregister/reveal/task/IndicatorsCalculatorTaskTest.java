@@ -156,8 +156,8 @@ public class IndicatorsCalculatorTaskTest extends BaseUnitTest {
         assertEquals(View.GONE, progressIndicator.getVisibility());
         assertEquals("98%", progressIndicator2.getTitle());
         assertEquals(activity.getString(R.string.found_coverage), progressIndicator2.getSubTitle());
-        assertEquals("1", progressIndicator3.getTitle());
-        assertEquals(activity.getString(R.string.structures_not_sprayed), progressIndicator3.getSubTitle());
+        assertEquals("97", progressIndicator3.getTitle());
+        assertEquals(activity.getString(R.string.target_coverage), progressIndicator3.getSubTitle());
         verify(activity).positionMyLocationAndLayerSwitcher();
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, country);
 
