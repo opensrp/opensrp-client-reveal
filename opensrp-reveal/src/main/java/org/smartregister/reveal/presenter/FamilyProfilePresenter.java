@@ -3,10 +3,13 @@ package org.smartregister.reveal.presenter;
 import android.content.Context;
 import android.content.DialogInterface;
 
+import androidx.core.util.Pair;
+
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.smartregister.AllConstants;
 import org.smartregister.clientandeventmodel.Obs;
@@ -16,15 +19,19 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.presenter.BaseFamilyProfilePresenter;
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.contract.FamilyProfileContract;
+import org.smartregister.reveal.dao.ReportDao;
 import org.smartregister.reveal.dao.StructureDao;
+import org.smartregister.reveal.dao.TaskDetailsDao;
 import org.smartregister.reveal.interactor.RevealFamilyOtherMemberInteractor;
 import org.smartregister.reveal.interactor.RevealFamilyProfileInteractor;
 import org.smartregister.reveal.model.FamilyProfileModel;
+import org.smartregister.reveal.model.MDAOutCome;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
@@ -380,6 +387,48 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                 if (current_age >= 5 && current_age <= 15)
                     taskUtils.generateTask(context, entityId, areaId, Constants.BusinessStatus.NOT_VISITED, Constants.Intervention.NTD_MDA_DISPENSE,
                             R.string.mass_drug_administration);
+
+                PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
+                StructureDao structureDao = StructureDao.getInstance();
+                Pair<String, String> result = structureDao.getFamilyIdAndStructureIdByMemberId(entityId);
+
+                ReportDao reportDao = ReportDao.getInstance();
+                MDAOutCome mdaOutCome = reportDao.calculateFamilyMDA(result.first, prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalAreaId());
+
+                MDAOutCome.MDAOutComeStatus mdaOutComeStatus = mdaOutCome.getStatus();
+
+                String status;
+                switch (mdaOutComeStatus) {
+                    case PARTIAL:
+                        status = Constants.BusinessStatus.VISITED_PARTIALLY_TREATED;
+                        break;
+                    case POSITIVE:
+                        status = Constants.BusinessStatus.COMPLETE;
+                        break;
+                    default:
+                        status = Constants.BusinessStatus.VISITED_NOT_TREATED;
+                }
+
+                if (StringUtils.isNotBlank(result.second)) {
+                    TaskUtils taskUtils = TaskUtils.getInstance();
+                    taskUtils.updateTaskStatus(
+                            result.second,
+                            Constants.Intervention.STRUCTURE_VISITED,
+                            status,
+                            Task.TaskStatus.COMPLETED
+                    );
+                } else {
+                    // floating family MDA
+                    Task floatingRegistration = TaskDetailsDao.getInstance().getCurrentTask(result.first, Constants.Intervention.FLOATING_FAMILY_REGISTRATION);
+                    floatingRegistration.setBusinessStatus(status);
+                    floatingRegistration.setStatus(Task.TaskStatus.COMPLETED);
+
+                    if (BaseRepository.TYPE_Synced.equals(floatingRegistration.getSyncStatus())) {
+                        floatingRegistration.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                    }
+                    floatingRegistration.setLastModified(new DateTime());
+                    RevealApplication.getInstance().getTaskRepository().addOrUpdate(floatingRegistration);
+                }
             }
 
             return null;

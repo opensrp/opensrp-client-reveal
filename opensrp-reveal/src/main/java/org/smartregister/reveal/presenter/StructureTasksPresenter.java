@@ -4,6 +4,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
+import androidx.core.util.Pair;
 
 import com.mapbox.geojson.Feature;
 
@@ -12,36 +13,31 @@ import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
-
-import org.smartregister.domain.Event;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.reveal.BuildConfig;
-
-import org.smartregister.domain.Event;
-
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
-import org.smartregister.reveal.contract.ChildRegisterFragmentContract;
 import org.smartregister.reveal.contract.StructureTasksContract;
+import org.smartregister.reveal.dao.ReportDao;
+import org.smartregister.reveal.dao.StructureDao;
 import org.smartregister.reveal.dao.TaskDetailsDao;
 import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.interactor.StructureTasksInteractor;
-import org.smartregister.reveal.model.Child;
-import org.smartregister.reveal.model.ChildModel;
+import org.smartregister.reveal.model.MDAOutCome;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.NativeFormProcessor;
 import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.reveal.util.Utils;
+import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.util.CallableInteractor;
 import org.smartregister.util.CallableInteractorCallBack;
 import org.smartregister.util.GenericInteractor;
-import org.smartregister.view.ListContract;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -216,6 +212,48 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
                     // save and clientM
                     .saveEvent()
                     .clientProcessForm();
+
+
+            StructureDao structureDao = StructureDao.getInstance();
+            Pair<String, String> result = structureDao.getFamilyIdAndStructureIdByMemberId(entityId);
+
+            ReportDao reportDao = ReportDao.getInstance();
+            MDAOutCome mdaOutCome = reportDao.calculateFamilyMDA(result.first, prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalAreaId());
+
+            MDAOutCome.MDAOutComeStatus mdaOutComeStatus = mdaOutCome.getStatus();
+
+            String status;
+            switch (mdaOutComeStatus) {
+                case PARTIAL:
+                    status = Constants.BusinessStatus.VISITED_PARTIALLY_TREATED;
+                    break;
+                case POSITIVE:
+                    status = Constants.BusinessStatus.COMPLETE;
+                    break;
+                default:
+                    status = Constants.BusinessStatus.VISITED_NOT_TREATED;
+            }
+
+            if (StringUtils.isNotBlank(result.second)) {
+                TaskUtils taskUtils = TaskUtils.getInstance();
+                taskUtils.updateTaskStatus(
+                        result.second,
+                        Constants.Intervention.STRUCTURE_VISITED,
+                        status,
+                        Task.TaskStatus.COMPLETED
+                );
+            } else {
+                // floating family MDA
+                Task floatingRegistration = TaskDetailsDao.getInstance().getCurrentTask(result.first, Constants.Intervention.FLOATING_FAMILY_REGISTRATION);
+                floatingRegistration.setBusinessStatus(status);
+                floatingRegistration.setStatus(Task.TaskStatus.COMPLETED);
+
+                if (BaseRepository.TYPE_Synced.equals(floatingRegistration.getSyncStatus())) {
+                    floatingRegistration.setSyncStatus(BaseRepository.TYPE_Unsynced);
+                }
+                floatingRegistration.setLastModified(new DateTime());
+                RevealApplication.getInstance().getTaskRepository().addOrUpdate(floatingRegistration);
+            }
 
             return TaskDetailsDao.getInstance().getFamilyStructureTasks(familyBaseEntityId);
         };

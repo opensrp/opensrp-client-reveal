@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.dao.AbstractDao;
+import org.smartregister.reveal.model.MDAOutCome;
 import org.smartregister.reveal.util.Constants;
 
 import java.util.HashMap;
@@ -177,6 +178,39 @@ public class ReportDao extends AbstractDao {
                 " where nsac is not null and trim(nsac) !=  '' and operational_area_id = '" + operationalAreaID + "'";
         DataMap<Integer> dataMap = cursor -> getCursorIntValue(cursor, "expected_total");
         return readSingleValue(sql, dataMap, 0);
+    }
+
+    public MDAOutCome calculateFamilyMDA(String familyBaseEntityId, String planId, String operationalId) {
+        MDAOutCome result = new MDAOutCome();
+
+        // total nsac
+        String expectedTotal = "select ifnull(nsac,0) expected_total from ec_family " +
+                "where nsac is not null and trim(nsac) !=  '' and base_entity_id = '" + familyBaseEntityId + "'";
+        DataMap<Integer> expectedDataMap = cursor -> getCursorIntValue(cursor, "expected_total");
+
+        result.setExpectedForms(readSingleValue(expectedTotal, expectedDataMap, 0));
+
+        // get submissions
+        String submissionsSql = "select count(*) total_tasks , sum(case when business_status = '" + Constants.BusinessStatus.VISITED_DRUG_ADMINISTERED + "' then 1 else 0 end) completed_tasks " +
+                "from task  " +
+                "inner join ec_family_member on ec_family_member.base_entity_id = task.for " +
+                "inner join ec_family on ec_family.base_entity_id = ec_family_member.relational_id " +
+                "where code ='" + Constants.Intervention.NTD_MDA_DISPENSE + "' " +
+                "and plan_id = '" + planId + "' and group_id = '" + operationalId + "' " +
+                "and ec_family.base_entity_id = '" + familyBaseEntityId + "'";
+
+        DataMap<Void> resultsDataMap = cursor -> {
+            int totalTasks = getCursorIntValue(cursor, "total_tasks", 0);
+            int completedTasks = getCursorIntValue(cursor, "completed_tasks", 0);
+
+            result.setNegativeForms(totalTasks - completedTasks);
+            result.setPositiveForms(completedTasks);
+            return null;
+        };
+
+        readData(submissionsSql, resultsDataMap);
+
+        return result;
     }
 
 }

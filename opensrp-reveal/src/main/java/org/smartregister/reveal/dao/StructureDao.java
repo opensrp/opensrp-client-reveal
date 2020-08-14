@@ -94,7 +94,8 @@ public class StructureDao extends AbstractDao {
         return readSingleValue(sql, dataMap);
     }
 
-    public @Nullable Pair<String, String> getStructureAndFamilyIDByQrCode(String qrCode) {
+    public @Nullable
+    Pair<String, String> getStructureAndFamilyIDByQrCode(String qrCode) {
         String sql = "select structure_eligibility.structure_id , ec_family.base_entity_id " +
                 "from structure_eligibility " +
                 "left join ec_family on ec_family.structure_id = structure_eligibility.structure_id " +
@@ -125,4 +126,18 @@ public class StructureDao extends AbstractDao {
         return readSingleValue(sql, dataMap);
     }
 
+    public Pair<String, String> getFamilyIdAndStructureIdByMemberId(String familyMemberID) {
+        String sql = "select ec_family.base_entity_id , ec_family.structure_id " +
+                "from ec_family_member " +
+                "inner join ec_family on ec_family_member.relational_id = ec_family.base_entity_id " +
+                "where ec_family_member.base_entity_id = '" + familyMemberID + "'";
+
+        DataMap<Pair<String, String>> dataMap = cursor ->
+                Pair.create(
+                        getCursorValue(cursor, "base_entity_id"),
+                        getCursorValue(cursor, "structure_id")
+                );
+
+        return readSingleValue(sql, dataMap);
+    }
 }
