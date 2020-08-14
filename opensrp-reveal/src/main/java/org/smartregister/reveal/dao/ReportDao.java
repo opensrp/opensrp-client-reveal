@@ -191,7 +191,8 @@ public class ReportDao extends AbstractDao {
         result.setExpectedForms(readSingleValue(expectedTotal, expectedDataMap, 0));
 
         // get submissions
-        String submissionsSql = "select count(*) total_tasks , sum(case when business_status = '" + Constants.BusinessStatus.VISITED_DRUG_ADMINISTERED + "' then 1 else 0 end) completed_tasks " +
+        String submissionsSql = "select count(*) total_tasks , sum(case when business_status = '" + Constants.BusinessStatus.VISITED_DRUG_ADMINISTERED + "' then 1 else 0 end) completed_tasks ,  " +
+                " sum(case when business_status = '" + Constants.BusinessStatus.NOT_VISITED + "' then 1 else 0 end) not_visited " +
                 "from task  " +
                 "inner join ec_family_member on ec_family_member.base_entity_id = task.for " +
                 "inner join ec_family on ec_family.base_entity_id = ec_family_member.relational_id " +
@@ -202,11 +203,12 @@ public class ReportDao extends AbstractDao {
         DataMap<Void> resultsDataMap = cursor -> {
             int totalTasks = getCursorIntValue(cursor, "total_tasks", 0);
             int completedTasks = getCursorIntValue(cursor, "completed_tasks", 0);
+            int pendingVisits = getCursorIntValue(cursor, "not_visited", 0);
 
             if(result.getExpectedForms() < totalTasks)
                 result.setExpectedForms(totalTasks);
 
-            result.setNegativeForms(totalTasks - completedTasks);
+            result.setNegativeForms(totalTasks - completedTasks - pendingVisits);
             result.setPositiveForms(completedTasks);
             return null;
         };

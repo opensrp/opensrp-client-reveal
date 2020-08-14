@@ -222,6 +222,7 @@ public class Utils {
      * @return validateFarStructures
      */
     public static Boolean validateFarStructures() {
+        if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY) && BuildConfig.DEBUG) return false;
         return Boolean.valueOf(getGlobalConfig(CONFIGURATION.VALIDATE_FAR_STRUCTURES, BuildConfig.VALIDATE_FAR_STRUCTURES + ""));
     }
 
