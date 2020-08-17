@@ -9,7 +9,6 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.domain.Location;
 import org.smartregister.domain.Setting;
 import org.smartregister.reporting.view.ProgressIndicatorView;
 import org.smartregister.reporting.view.TableView;
@@ -27,8 +26,6 @@ import org.smartregister.reveal.view.ListTasksActivity;
 
 import java.util.Arrays;
 import java.util.List;
-
-import javax.json.JsonObject;
 
 import timber.log.Timber;
 
@@ -66,12 +63,10 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
     @Override
     protected IndicatorDetails doInBackground(Void... params) {
         IndicatorDetails indicatorDetails = null;
+        indicatorDetails = IndicatorUtils.processIndicators(this.tasks);
         if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
-            indicatorDetails = IndicatorUtils.processIndicators(this.tasks);
             indicatorDetails.setSprayIndicatorList(IndicatorUtils.populateSprayIndicators(this.activity, indicatorDetails));
         } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
-            Location operationalArea = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
-            indicatorDetails = IndicatorUtils.getNamibiaIndicators(operationalArea.getId(), sqLiteDatabase);
             indicatorDetails.setTarget(calculateTarget());
             indicatorDetails.setSprayIndicatorList(IndicatorUtils.populateNamibiaSprayIndicators(this.activity, indicatorDetails));
         }
@@ -129,7 +124,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             progressIndicator3.setTitle(activity.getString(R.string.n_percent, targetCoverage));
 
             progressIndicator2.setSubTitle(activity.getString(R.string.found_coverage));
-            int coverage = (int) (indicatorDetails.getSprayed() * 100.0 / indicatorDetails.getFoundStructures());
+            int coverage = (int) (indicatorDetails.getSprayed() * 100.0 / indicatorDetails.getTotalStructures());
             progressIndicator2.setProgress(coverage);
             progressIndicator2.setTitle(this.activity.getString(R.string.n_percent, coverage));
 

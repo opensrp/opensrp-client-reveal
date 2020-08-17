@@ -163,31 +163,4 @@ public class IndicatorUtils {
 
         return sprayIndicator;
     }
-
-    public static IndicatorDetails getNamibiaIndicators(String locationId, SQLiteDatabase sqLiteDatabase) {
-        String query = "select count(s._id) as totStruct" +
-                ", sum(case when ss.spray_status is null  then 1 else 0 end) as notVisitedStruct" +
-                ", sum(case when ss.spray_status is not null and ss.property_type='Residential Structure' then 1 else 0 end) as foundStruct" +
-                ", sum(case when ss.ableToSprayFirst ='yes'  then 1 else 0 end) as sprayedStruct" +
-                ", sum(case when ss.ableToSprayFirst ='no' or ss.householdAccessible='no'  then 1 else 0 end) as notSprayedStruct" +
-                ", round(sum(ifNull(nSprayedTotalFirst,0)+ifNull(nSprayedTotalMop,0))*100.0/sum(ss.nSprayableTotal)) as roomCov" +
-                " from structure s" +
-                " left join sprayed_structures ss on s._id=ss.id" +
-                " where  parent_id=?";
-        IndicatorDetails indicatorDetails = new IndicatorDetails();
-        try (Cursor cursor = sqLiteDatabase.rawQuery(query, new String[]{locationId})) {
-            if (cursor.moveToNext()) {
-                indicatorDetails.setTotalStructures(cursor.getInt(cursor.getColumnIndex("totStruct")));
-                indicatorDetails.setNotVisited(cursor.getInt(cursor.getColumnIndex("notVisitedStruct")));
-                indicatorDetails.setFoundStructures(cursor.getInt(cursor.getColumnIndex("foundStruct")));
-                indicatorDetails.setSprayed(cursor.getInt(cursor.getColumnIndex("sprayedStruct")));
-                indicatorDetails.setNotSprayed(cursor.getInt(cursor.getColumnIndex("notSprayedStruct")));
-                indicatorDetails.setRoomCoverage(cursor.getInt(cursor.getColumnIndex("roomCov")));
-                indicatorDetails.setProgress((int) (indicatorDetails.getSprayed() * 100.0 / indicatorDetails.getTotalStructures()));
-            }
-        } catch (SQLiteException e) {
-            Timber.e(e);
-        }
-        return indicatorDetails;
-    }
 }
