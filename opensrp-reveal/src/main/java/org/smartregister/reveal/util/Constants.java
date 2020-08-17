@@ -66,6 +66,7 @@ public interface Constants {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";
         String TEAM_CONFIGS = "team_configs";
+        String JURISDICTION_METADATA = "jurisdiction_metadata-target";
         String KEY = "key";
         String VALUE = "value";
         String VALUES = "values";

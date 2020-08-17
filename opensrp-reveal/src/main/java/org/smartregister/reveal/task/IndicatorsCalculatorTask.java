@@ -3,10 +3,12 @@ package org.smartregister.reveal.task;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.reporting.view.ProgressIndicatorView;
 import org.smartregister.reporting.view.TableView;
@@ -15,6 +17,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.IndicatorDetails;
 import org.smartregister.reveal.model.TaskDetails;
+import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.IndicatorUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -71,8 +74,30 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             indicatorDetails.setSprayIndicatorList(sprayIndicator);
         }
 
+        indicatorDetails.setTarget(calculateTarget());
         return indicatorDetails;
 
+    }
+
+    public int calculateTarget() {
+        int target = -1;
+        String operationalId = Utils.getCurrentLocationId();
+        String metadata = RevealApplication.getInstance().getSettingsRepository().get(CONFIGURATION.JURISDICTION_METADATA);
+        if (metadata != null) {
+            try {
+                JSONArray settings = new JSONObject(metadata).getJSONArray(CONFIGURATION.SETTINGS);
+                for (int i = 0; i < settings.length(); i++) {
+                    JSONObject setting = settings.getJSONObject(i);
+                    if (setting.getString(CONFIGURATION.KEY).equalsIgnoreCase(operationalId)) {
+                        target = setting.getInt(CONFIGURATION.VALUE);
+                        break;
+                    }
+                }
+            } catch (JSONException e) {
+                Timber.e(e);
+            }
+        }
+        return target;
     }
 
 
@@ -99,9 +124,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
         } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
 
             progressIndicator3.setSubTitle(activity.getString(R.string.target_coverage));
-            //TODO add logic to fetch targets for this jurisdiction from server settings
-            int target = indicatorDetails.getTotalStructures();
-            int targetCoverage = (int) (indicatorDetails.getSprayed() * 100.0 / target);
+            int targetCoverage = (int) (indicatorDetails.getSprayed() * 100.0 / indicatorDetails.getTarget());
             progressIndicator3.setProgress(targetCoverage);
             progressIndicator3.setTitle(String.valueOf(targetCoverage));
 

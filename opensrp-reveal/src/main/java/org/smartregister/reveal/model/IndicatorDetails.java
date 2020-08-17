@@ -16,6 +16,7 @@ public class IndicatorDetails {
     private int foundStructures;
     private int roomCoverage;
     private List<String> sprayIndicatorList;
+    int target;
 
     public int getSprayed() {
         return sprayed;
@@ -85,7 +86,16 @@ public class IndicatorDetails {
         return roomCoverage;
     }
 
+    public int getTarget() {
+        return target;
+    }
+
+    public void setTarget(int target) {
+        this.target = target;
+    }
+
     public void setRoomCoverage(int roomCoverage) {
         this.roomCoverage = roomCoverage;
     }
+
 }
