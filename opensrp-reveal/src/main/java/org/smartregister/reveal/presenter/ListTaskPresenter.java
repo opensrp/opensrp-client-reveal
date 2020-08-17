@@ -43,6 +43,7 @@ import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -387,7 +388,23 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     @Override
     public void onMarkStructureActiveConfirmed() {
-        //TODO generate add structure task / event
+        listTaskInteractor.markStructureAsActive(selectedFeature);
+    }
+
+    @Override
+    public void onStructureMarkedActive(Task task) {
+        for (Feature feature : getFeatureCollection().features()) {
+            if (selectedFeature.id().equals(feature.id()) && task != null) {
+                feature.addStringProperty(TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                feature.addStringProperty(Constants.Properties.TASK_IDENTIFIER, task.getIdentifier());
+                feature.addStringProperty(Constants.Properties.TASK_STATUS, task.getStatus().name());
+                feature.addStringProperty(Constants.Properties.TASK_CODE, task.getCode());
+                break;
+            }
+        }
+
+        listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, false);
     }
 
     @Override

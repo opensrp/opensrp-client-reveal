@@ -127,5 +127,7 @@ public interface ListTaskContract {
         void onFociBoundaryLongClicked();
 
         void onMarkStructureActiveConfirmed();
+
+        void onStructureMarkedActive(Task task);
     }
 }

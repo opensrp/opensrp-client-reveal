@@ -1,5 +1,7 @@
 package org.smartregister.reveal.interactor;
 
+import android.content.Context;
+
 import com.mapbox.geojson.Feature;
 
 import net.sqlcipher.Cursor;
@@ -47,6 +49,7 @@ import java.util.Set;
 
 import timber.log.Timber;
 
+import static org.smartregister.domain.LocationProperty.PropertyStatus.ACTIVE;
 import static org.smartregister.domain.LocationProperty.PropertyStatus.INACTIVE;
 import static org.smartregister.family.util.DBConstants.KEY.DATE_REMOVED;
 import static org.smartregister.family.util.DBConstants.KEY.RELATIONAL_ID;
@@ -87,6 +90,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
+import static org.smartregister.reveal.util.Constants.Properties.TYPE;
 import static org.smartregister.reveal.util.Constants.Tables.IRS_VERIFICATION_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.LARVAL_DIPPINGS_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.MOSQUITO_COLLECTIONS_TABLE;
@@ -503,6 +507,41 @@ public class ListTaskInteractor extends BaseInteractor {
     @Override
     public void handleLasteventFound(org.smartregister.domain.Event event) {
         getPresenter().onEventFound(event);
+    }
+
+
+    public void markStructureAsActive(Feature feature) {
+
+        appExecutors.diskIO().execute(() -> {
+            try {
+                Location structure = structureRepository.getLocationById(feature.id());
+                structure.getProperties().setStatus(ACTIVE);
+                structureRepository.addOrUpdate(structure);
+                revealApplication.setSynced(false);
+
+                Context applicationContext = revealApplication.getApplicationContext();
+                String structureType = getPropertyValue(feature, TYPE);
+                Task task = null;
+                if (Constants.StructureType.MOSQUITO_COLLECTION_POINT.equals(structureType)) {
+                    task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
+                            Constants.BusinessStatus.NOT_VISITED, Constants.Intervention.MOSQUITO_COLLECTION, R.string.mosquito_collection_task_description);
+                } else if (Constants.StructureType.LARVAL_BREEDING_SITE.equals(structureType)) {
+                    task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
+                            Constants.BusinessStatus.NOT_VISITED, Constants.Intervention.LARVAL_DIPPING, R.string.larval_dipping_task_description);
+                } else if (Constants.StructureType.POTENTIAL_AREA_OF_TRANSMISSION.equals(structureType)) {
+                    task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
+                            Constants.BusinessStatus.NOT_VISITED, PAOT, R.string.poat_task_description);
+                }
+
+                Task finalTask = task;
+                appExecutors.mainThread().execute(() -> {
+                   ((ListTaskPresenter) presenterCallBack).onStructureMarkedActive(finalTask);
+                });
+            } catch (Exception e) {
+                Timber.e(e);
+            }
+        });
+
     }
 
 }
