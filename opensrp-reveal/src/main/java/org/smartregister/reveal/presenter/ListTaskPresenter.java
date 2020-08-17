@@ -287,7 +287,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         listTaskView.displaySelectedFeature(feature, clickedPoint);
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
             //listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
-            listTaskView.displayMarkStructureNotVisitedDialog();
+            listTaskView.displayMarkStructureActiveDialog();
         } else if (isLongclick) {
             if (BuildConfig.BUILD_COUNTRY != Country.THAILAND && BuildConfig.BUILD_COUNTRY != Country.THAILAND_EN) {
             onFeatureSelectedByLongClick(feature);
@@ -383,6 +383,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         Intent intent = new Intent(listTaskView.getContext(), EditFociBoundaryActivity.class);
         listTaskView.getActivity().startActivity(intent);
+    }
+
+    @Override
+    public void onMarkStructureActiveConfirmed() {
+        //TODO generate add structure task / event
     }
 
     @Override

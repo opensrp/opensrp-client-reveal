@@ -369,6 +369,6 @@
     <string name="drag_selected_point_msg">Drag selected point to change boundary</string>
     <string name="progressBarLabel">Syncing %s : %d%% </string>
     <string name="manifest_version_parenthesis_placeholder">(%1$s)</string>
-    <string name="mark_location_not_visited">Mark Location as Not Visited</string>
-    <string name="confirm_mark_location_not_visited">Please confirm that this location should be marked as not visited</string>
+    <string name="mark_location_active">Mark Location Active</string>
+    <string name="confirm_mark_location_active">Please confirm that this location should be marked active</string>
 </resources>

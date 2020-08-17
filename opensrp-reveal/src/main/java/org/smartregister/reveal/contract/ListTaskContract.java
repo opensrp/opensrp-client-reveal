@@ -78,7 +78,7 @@ public interface ListTaskContract {
 
         void toggleProgressBarView(boolean syncing);
 
-        void displayMarkStructureNotVisitedDialog();
+        void displayMarkStructureActiveDialog();
     }
 
     interface Presenter extends BaseContract.BasePresenter {
@@ -125,5 +125,7 @@ public interface ListTaskContract {
         void findLastEvent(String featureId, String eventType);
       
         void onFociBoundaryLongClicked();
+
+        void onMarkStructureActiveConfirmed();
     }
 }
