@@ -109,9 +109,6 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             int coverage = (int) (indicatorDetails.getSprayed() * 100.0 / indicatorDetails.getFoundStructures());
             progressIndicator2.setProgress(coverage);
             progressIndicator2.setTitle(this.activity.getString(R.string.n_percent, coverage));
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) progressIndicator2.getLayoutParams();
-            params.weight = 2f;
-            progressIndicator2.setLayoutParams(params);
 
             progressIndicator.setVisibility(View.GONE);
         }
