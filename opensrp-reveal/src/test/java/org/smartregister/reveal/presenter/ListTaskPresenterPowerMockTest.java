@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
+
 import androidx.appcompat.app.AlertDialog;
 
 import com.mapbox.geojson.Feature;
@@ -75,6 +76,7 @@ import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
+import static org.smartregister.reveal.util.Constants.Properties.TYPE;
 
 /**
  * @author Vincent Karuri
@@ -318,6 +320,7 @@ public class ListTaskPresenterPowerMockTest {
     @Test
     public void testOnFeatureSelectedShouldShowErrorDialogWhenTaskIdentifierIsNull() throws Exception {
         Feature feature = mock(Feature.class);
+        PowerMockito.when(Utils.getPropertyValue(feature, TYPE)).thenReturn(Constants.StructureType.RESIDENTIAL);
 
         PreferencesUtil preferencesUtil = mock(PreferencesUtil.class);
         Whitebox.setInternalState(listTaskPresenter, "prefsUtil", preferencesUtil);
