@@ -112,6 +112,22 @@ public class IndicatorUtils {
         return indicatorDetails;
     }
 
+
+    public static List<String> populateNamibiaSprayIndicators(Context context, IndicatorDetails indicatorDetails) {
+        List<String> sprayIndicator = new ArrayList<>();
+        sprayIndicator.add(context.getResources().getString(R.string.total_structures_targeted));
+        sprayIndicator.add(String.valueOf(indicatorDetails.getTarget()));
+
+        sprayIndicator.add(context.getResources().getString(R.string.structures_visited_found));
+        sprayIndicator.add(String.valueOf(indicatorDetails.getFoundStructures()));
+
+        sprayIndicator.add(context.getResources().getString(R.string.structures_sprayed));
+        sprayIndicator.add(String.valueOf(indicatorDetails.getSprayed()));
+
+
+        return sprayIndicator;
+    }
+
     public static List<String> populateSprayIndicators(Context context, IndicatorDetails indicatorDetails) {
 
         int totalStructures = indicatorDetails.getTotalStructures();
@@ -128,24 +144,16 @@ public class IndicatorUtils {
         sprayIndicator.add(String.valueOf(Math.round(totalStructures * 0.9) - indicatorDetails.getSprayed()));
 
 
-        sprayIndicator.add(context.getResources().getString(BuildConfig.BUILD_COUNTRY == Country.ZAMBIA ? R.string.total_structures : R.string.total_structures_targeted));
+        sprayIndicator.add(context.getResources().getString(R.string.total_structures));
         sprayIndicator.add(String.valueOf(totalStructures));
 
 
-        sprayIndicator.add(context.getResources().getString(BuildConfig.BUILD_COUNTRY == Country.ZAMBIA ? R.string.structures_not_visited : R.string.households_not_visited));
+        sprayIndicator.add(context.getResources().getString(R.string.structures_not_visited));
         sprayIndicator.add(String.valueOf(indicatorDetails.getNotVisited()));
 
 
         sprayIndicator.add(context.getResources().getString(R.string.structures_visited_found));
-        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
-            sprayIndicator.add(String.valueOf(totalFound));
-        } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
-            sprayIndicator.add(String.valueOf(indicatorDetails.getFoundStructures()));
-
-            sprayIndicator.add(context.getResources().getString(R.string.room_coverage));
-            sprayIndicator.add(context.getResources().getString(R.string.n_percent, indicatorDetails.getRoomCoverage()));
-        }
-
+        sprayIndicator.add(String.valueOf(totalFound));
 
         sprayIndicator.add(context.getResources().getString(R.string.sprayed));
         sprayIndicator.add(String.valueOf(indicatorDetails.getSprayed()));

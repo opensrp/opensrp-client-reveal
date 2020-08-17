@@ -68,22 +68,19 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
         IndicatorDetails indicatorDetails = null;
         if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
             indicatorDetails = IndicatorUtils.processIndicators(this.tasks);
+            indicatorDetails.setSprayIndicatorList(IndicatorUtils.populateSprayIndicators(this.activity, indicatorDetails));
         } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
             Location operationalArea = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
             indicatorDetails = IndicatorUtils.getNamibiaIndicators(operationalArea.getId(), sqLiteDatabase);
+            indicatorDetails.setTarget(calculateTarget());
+            indicatorDetails.setSprayIndicatorList(IndicatorUtils.populateNamibiaSprayIndicators(this.activity, indicatorDetails));
         }
-        if (indicatorDetails != null) {
-            List<String> sprayIndicator = IndicatorUtils.populateSprayIndicators(this.activity, indicatorDetails);
-            indicatorDetails.setSprayIndicatorList(sprayIndicator);
-        }
-
-        indicatorDetails.setTarget(calculateTarget());
         return indicatorDetails;
 
     }
 
     public int calculateTarget() {
-        int target = -1;
+        int target = 0;
         String operationalId = Utils.getCurrentLocationId();
         Setting metadata = RevealApplication.getInstance().getSettingsRepository().getSetting(CONFIGURATION.JURISDICTION_METADATA);
         if (metadata != null) {
@@ -127,7 +124,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
         } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
 
             progressIndicator3.setSubTitle(activity.getString(R.string.target_coverage));
-            int targetCoverage = (int) (indicatorDetails.getSprayed() * 100.0 / indicatorDetails.getTarget());
+            int targetCoverage = indicatorDetails.getTarget() == 0 ? 100 : (int) (indicatorDetails.getSprayed() * 100.0 / indicatorDetails.getTarget());
             progressIndicator3.setProgress(targetCoverage);
             progressIndicator3.setTitle(activity.getString(R.string.n_percent, targetCoverage));
 
