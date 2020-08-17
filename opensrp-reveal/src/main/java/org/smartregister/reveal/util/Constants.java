@@ -149,6 +149,7 @@ public interface Constants {
         String TASK_CODE_LIST = "task_code_list";
         String FAMILY_MEMBER_NAMES = "family_member_names";
         String PLAN_IDENTIFIER = "planIdentifier";
+        String TYPE = "type";
     }
 
 
@@ -218,6 +219,8 @@ public interface Constants {
         String MDA_ADHERENCE = "mda_adherence";
 
         String IRS_VERIFICATION = "irs_verification";
+
+        String ACTIVATE_LOCATION_EVENT = "activate_location";
     }
 
     interface Tables {

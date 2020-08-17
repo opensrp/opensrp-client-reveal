@@ -40,6 +40,7 @@ import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.GeoJsonUtils;
 import org.smartregister.reveal.util.IndicatorUtils;
 import org.smartregister.reveal.util.InteractorUtils;
+import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.HashMap;
@@ -81,6 +82,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TRUE_STRUCTURE;
+import static org.smartregister.reveal.util.Constants.EventType.ACTIVATE_LOCATION_EVENT;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS_VERIFICATION;
@@ -532,6 +534,11 @@ public class ListTaskInteractor extends BaseInteractor {
                     task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
                             Constants.BusinessStatus.NOT_VISITED, PAOT, R.string.poat_task_description);
                 }
+
+                Event event = RevealJsonFormUtils.createTaskEvent(structure.getId(), Utils.getCurrentLocationId(),
+                        null, ACTIVATE_LOCATION_EVENT, Constants.STRUCTURE);
+
+                eventClientRepository.addEvent(feature.id(), new JSONObject(gson.toJson(event)));
 
                 Task finalTask = task;
                 appExecutors.mainThread().execute(() -> {
