@@ -77,6 +77,8 @@ public interface ListTaskContract {
         void setSearchPhrase(String searchPhrase);
 
         void toggleProgressBarView(boolean syncing);
+
+        void displayMarkStructureNotVisitedDialog();
     }
 
     interface Presenter extends BaseContract.BasePresenter {

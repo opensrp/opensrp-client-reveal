@@ -884,6 +884,19 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
+    public void displayMarkStructureNotVisitedDialog() {
+        AlertDialogUtils.displayNotificationWithCallback(this, R.string.mark_location_not_visited,
+            R.string.confirm_mark_location_not_visited, R.string.confirm, R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == BUTTON_POSITIVE)
+                        listTaskPresenter.onMarkStructureInactiveConfirmed();
+                    dialog.dismiss();
+                }
+        });
+    }
+
+    @Override
     public void onSyncProgress(SyncProgress syncProgress) {
         int progress = syncProgress.getPercentageSynced();
         String entity = syncProgress.getSyncEntity().toString();
