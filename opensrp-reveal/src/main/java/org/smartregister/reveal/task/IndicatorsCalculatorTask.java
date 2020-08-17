@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.Setting;
 import org.smartregister.reporting.view.ProgressIndicatorView;
 import org.smartregister.reporting.view.TableView;
 import org.smartregister.reveal.BuildConfig;
@@ -26,6 +27,8 @@ import org.smartregister.reveal.view.ListTasksActivity;
 
 import java.util.Arrays;
 import java.util.List;
+
+import javax.json.JsonObject;
 
 import timber.log.Timber;
 
@@ -82,10 +85,10 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
     public int calculateTarget() {
         int target = -1;
         String operationalId = Utils.getCurrentLocationId();
-        String metadata = RevealApplication.getInstance().getSettingsRepository().get(CONFIGURATION.JURISDICTION_METADATA);
+        Setting metadata = RevealApplication.getInstance().getSettingsRepository().getSetting(CONFIGURATION.JURISDICTION_METADATA);
         if (metadata != null) {
             try {
-                JSONArray settings = new JSONObject(metadata).getJSONArray(CONFIGURATION.SETTINGS);
+                JSONArray settings = new JSONObject(metadata.getValue()).getJSONArray(CONFIGURATION.SETTINGS);
                 for (int i = 0; i < settings.length(); i++) {
                     JSONObject setting = settings.getJSONObject(i);
                     if (setting.getString(CONFIGURATION.KEY).equalsIgnoreCase(operationalId)) {
@@ -126,7 +129,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             progressIndicator3.setSubTitle(activity.getString(R.string.target_coverage));
             int targetCoverage = (int) (indicatorDetails.getSprayed() * 100.0 / indicatorDetails.getTarget());
             progressIndicator3.setProgress(targetCoverage);
-            progressIndicator3.setTitle(String.valueOf(targetCoverage));
+            progressIndicator3.setTitle(activity.getString(R.string.n_percent, targetCoverage));
 
             progressIndicator2.setSubTitle(activity.getString(R.string.found_coverage));
             int coverage = (int) (indicatorDetails.getSprayed() * 100.0 / indicatorDetails.getFoundStructures());
