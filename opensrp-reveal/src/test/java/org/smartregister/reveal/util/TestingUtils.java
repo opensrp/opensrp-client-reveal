@@ -22,7 +22,6 @@ import org.smartregister.reveal.model.OfflineMapModel;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
-import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.util.DateTimeTypeConverter;
@@ -42,7 +41,12 @@ import io.ona.kujaku.data.realm.objects.MapBoxOfflineQueueTask;
 import static io.ona.kujaku.downloaders.MapBoxOfflineResourcesDownloader.METADATA_JSON_FIELD_REGION_NAME;
 import static org.smartregister.family.util.DBConstants.KEY;
 import static org.smartregister.reveal.model.OfflineMapModel.OfflineMapStatus.DOWNLOADED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYABLE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
@@ -81,7 +85,7 @@ public class TestingUtils {
         taskDetails.setTaskStatus(TaskStatus.COMPLETED.name());
         taskDetails.setStructureName("Kenny House");
         taskDetails.setTaskCode(Intervention.IRS);
-        taskDetails.setBusinessStatus(BusinessStatus.NOT_SPRAYABLE);
+        taskDetails.setBusinessStatus(NOT_SPRAYABLE);
         taskDetails.setTaskEntity(UUID.randomUUID().toString());
         taskDetails.setLocation(new Location("Test"));
         return taskDetails;
@@ -115,7 +119,7 @@ public class TestingUtils {
     public static Task getTask(String entityId) {
         Task task = new Task();
         task.setIdentifier(UUID.randomUUID().toString());
-        task.setBusinessStatus(BusinessStatus.IN_PROGRESS);
+        task.setBusinessStatus(IN_PROGRESS);
         task.setStatus(TaskStatus.COMPLETED);
         task.setCode(Intervention.CASE_CONFIRMATION);
         task.setForEntity(entityId);
@@ -231,7 +235,7 @@ public class TestingUtils {
         Task task = new Task();
         task.setStructureId("struct-id-1");
         task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(BusinessStatus.SPRAYED);
+        task.setBusinessStatus(SPRAYED);
         task.setCode(Constants.Intervention.IRS);
         task.setDescription("random descriptions");
         task.setPlanIdentifier("plan-id-1");
@@ -243,7 +247,7 @@ public class TestingUtils {
         task = new Task();
         task.setStructureId("struct-id-1");
         task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(BusinessStatus.NOT_ELIGIBLE);
+        task.setBusinessStatus(NOT_ELIGIBLE);
         task.setCode(Constants.Intervention.FI);
         task.setDescription("random descriptions 2");
         task.setPlanIdentifier("plan-id-1");
@@ -255,7 +259,7 @@ public class TestingUtils {
         task = new Task();
         task.setStructureId("struct-id-2");
         task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(BusinessStatus.NOT_VISITED);
+        task.setBusinessStatus(NOT_VISITED);
         task.setCode(Constants.Intervention.IRS);
         task.setDescription("random descriptions xx");
         task.setPlanIdentifier("plan-id-1");
@@ -267,7 +271,7 @@ public class TestingUtils {
         task = new Task();
         task.setStructureId("struct-id-3");
         task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(BusinessStatus.SPRAYED);
+        task.setBusinessStatus(SPRAYED);
         task.setCode(Constants.Intervention.IRS);
         task.setDescription("random descriptions 3");
         task.setPlanIdentifier("plan-id-1");
@@ -279,7 +283,7 @@ public class TestingUtils {
         task = new Task();
         task.setStructureId("struct-id-4");
         task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(BusinessStatus.NOT_SPRAYED);
+        task.setBusinessStatus(NOT_SPRAYED);
         task.setCode(Constants.Intervention.IRS);
         task.setDescription("random descriptions 4");
         task.setPlanIdentifier("plan-id-1");
@@ -291,7 +295,7 @@ public class TestingUtils {
         task = new Task();
         task.setStructureId("struct-id-5");
         task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(BusinessStatus.SPRAYED);
+        task.setBusinessStatus(SPRAYED);
         task.setCode(Constants.Intervention.IRS);
         task.setDescription("random descriptions");
         task.setStatus(Task.TaskStatus.COMPLETED);
@@ -303,7 +307,7 @@ public class TestingUtils {
         task = new Task();
         task.setStructureId("struct-id-6");
         task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(BusinessStatus.NOT_VISITED);
+        task.setBusinessStatus(NOT_VISITED);
         task.setCode(Constants.Intervention.IRS);
         task.setDescription("random descriptions 5");
         task.setPlanIdentifier("plan-id-1");
@@ -315,7 +319,7 @@ public class TestingUtils {
         task = new Task();
         task.setStructureId("struct-id-7");
         task.setAuthoredOn(new DateTime());
-        task.setBusinessStatus(BusinessStatus.NOT_ELIGIBLE);
+        task.setBusinessStatus(NOT_ELIGIBLE);
         task.setCode(Constants.Intervention.IRS);
         task.setDescription("random descriptions 7");
         task.setPlanIdentifier("plan-id-1");
