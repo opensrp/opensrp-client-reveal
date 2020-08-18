@@ -402,9 +402,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             if (selectedFeature.id().equals(feature.id()) && task != null) {
                 feature.addStringProperty(TASK_BUSINESS_STATUS, task.getBusinessStatus());
                 feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus());
-                feature.addStringProperty(Constants.Properties.TASK_IDENTIFIER, task.getIdentifier());
-                feature.addStringProperty(Constants.Properties.TASK_STATUS, task.getStatus().name());
-                feature.addStringProperty(Constants.Properties.TASK_CODE, task.getCode());
+                feature.addStringProperty(TASK_IDENTIFIER, task.getIdentifier());
+                feature.addStringProperty(TASK_STATUS, task.getStatus().name());
+                feature.addStringProperty(TASK_CODE, task.getCode());
                 break;
             }
         }

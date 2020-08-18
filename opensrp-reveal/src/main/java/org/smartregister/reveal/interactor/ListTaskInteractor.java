@@ -526,10 +526,10 @@ public class ListTaskInteractor extends BaseInteractor {
                 Task task = null;
                 if (Constants.StructureType.MOSQUITO_COLLECTION_POINT.equals(structureType)) {
                     task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
-                            Constants.BusinessStatus.NOT_VISITED, Constants.Intervention.MOSQUITO_COLLECTION, R.string.mosquito_collection_task_description);
+                            Constants.BusinessStatus.NOT_VISITED, MOSQUITO_COLLECTION, R.string.mosquito_collection_task_description);
                 } else if (Constants.StructureType.LARVAL_BREEDING_SITE.equals(structureType)) {
                     task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
-                            Constants.BusinessStatus.NOT_VISITED, Constants.Intervention.LARVAL_DIPPING, R.string.larval_dipping_task_description);
+                            Constants.BusinessStatus.NOT_VISITED, LARVAL_DIPPING, R.string.larval_dipping_task_description);
                 } else if (Constants.StructureType.POTENTIAL_AREA_OF_TRANSMISSION.equals(structureType)) {
                     task = taskUtils.generateTask(applicationContext, structure.getId(), structure.getId(),
                             Constants.BusinessStatus.NOT_VISITED, PAOT, R.string.poat_task_description);
