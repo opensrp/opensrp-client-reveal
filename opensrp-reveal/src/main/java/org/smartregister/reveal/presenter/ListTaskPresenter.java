@@ -474,7 +474,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         if (cardDetails instanceof MosquitoHarvestCardDetails && PAOT.equals(((MosquitoHarvestCardDetails) cardDetails).getInterventionType())) {
             jsonFormUtils.populatePAOTForm((MosquitoHarvestCardDetails) cardDetails, formJson);
         } else if (cardDetails instanceof SprayCardDetails && Country.NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
-            jsonFormUtils.populateSprayForm(((SprayCardDetails) cardDetails).getCommonPersonObject(), formJson);
+            jsonFormUtils.populateForm(event, formJson);
         } else if (JsonForm.SPRAY_FORM_ZAMBIA.equals(formName)) {
             try {
                 jsonFormUtils.populateField(formJson, DISTRICT_NAME, prefsUtil.getCurrentDistrict().trim(), VALUE);
