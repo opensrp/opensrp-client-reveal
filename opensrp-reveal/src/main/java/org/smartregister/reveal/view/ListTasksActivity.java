@@ -893,6 +893,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void onReportCountReloaded(Map<String, Double> reportCounts) {
         LinearLayout progressIndicatorsGroupView = findViewById(R.id.progressIndicatorsGroupView);
+        if(progressIndicatorsGroupView == null) return; // NPE prevention for builds with no reporting
 
         ProgressIndicatorView progressIndicatorView = progressIndicatorsGroupView.findViewById(R.id.progressIndicatorViewTitle);
 
