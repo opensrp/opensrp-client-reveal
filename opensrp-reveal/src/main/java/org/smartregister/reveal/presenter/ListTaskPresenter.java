@@ -43,6 +43,7 @@ import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -51,13 +52,18 @@ import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.EditFociBoundaryActivity;
+import org.smartregister.util.CallableInteractor;
+import org.smartregister.util.CallableInteractorCallBack;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
 
 import timber.log.Timber;
@@ -178,6 +184,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         if (drawerPresenter.isChangedCurrentSelection()) {
             listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
             listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalArea());
+            fetchReportStats();
         }
     }
 
@@ -382,6 +389,34 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         Intent intent = new Intent(listTaskView.getContext(), EditFociBoundaryActivity.class);
         listTaskView.getActivity().startActivity(intent);
+    }
+
+    @Override
+    public void fetchReportStats() {
+
+        Callable<Map<String, Double>> callable = () -> listTaskInteractor.getReportCounts(prefsUtil.getCurrentOperationalAreaId());
+
+        listTaskInteractor.execute(callable, new CallableInteractorCallBack<Map<String, Double>>() {
+            @Override
+            public void onResult(Map<String, Double> results) {
+                if (listTaskView != null) {
+                    if (results != null) {
+                        listTaskView.onReportCountReloaded(results);
+                    } else {
+                        listTaskView.onError(new IllegalStateException("An error occurred while fetching results"));
+                    }
+                    listTaskView.setLoadingState(false);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                if (listTaskView != null) {
+                    listTaskView.onError(ex);
+                    listTaskView.setLoadingState(false);
+                }
+            }
+        });
     }
 
     @Override
@@ -688,6 +723,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             revealApplication.setRefreshMapOnEventSaved(false);
         }
         updateLocationComponentState();
+        fetchReportStats();
     }
 
     private void updateLocationComponentState() {
