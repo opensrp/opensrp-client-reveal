@@ -5,7 +5,6 @@ import android.view.View;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.smartregister.domain.Location;
@@ -154,10 +153,11 @@ public class IndicatorsCalculatorTaskTest extends BaseUnitTest {
         Location jurisdiction = new Location();
         jurisdiction.setId("2980");
         Cache<Location> cache = mock(Cache.class);
-        Mockito.when(cache.get(anyString(), any())).thenReturn(jurisdiction);
+        when(cache.get(anyString(), any())).thenReturn(jurisdiction);
         Whitebox.setInternalState(Utils.class, cache);
 
         when(settingsRepository.getSetting(CONFIGURATION.JURISDICTION_METADATA)).thenReturn(setting);
+        AllSettings contextSettingsRepository = RevealApplication.getInstance().getSettingsRepository();
         Whitebox.setInternalState(RevealApplication.getInstance().getContext(), "allSettings", settingsRepository);
         when(setting.getValue()).thenReturn("{\"settings\":[{\"settingMetadataId\":\"7148\",\"serverVersion\":0,\"description\":\"Jurisdiction Metadata for Nyaluwiro metadata id 2980\",\"label\":\"Nyaluwiro metadata metadata\",\"type\":\"Setting\",\"value\":\"30\",\"uuid\":\"1c2fc15c-732c-4ed1-84be-8d271debd442\",\"key\":\"2980\",\"settingIdentifier\":\"jurisdiction_metadata-risk\"}]}");
 
@@ -175,6 +175,7 @@ public class IndicatorsCalculatorTaskTest extends BaseUnitTest {
         verify(activity).positionMyLocationAndLayerSwitcher();
         verify(settingsRepository).getSetting(CONFIGURATION.JURISDICTION_METADATA);
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, country);
+        Whitebox.setInternalState(RevealApplication.getInstance().getContext(), "allSettings", contextSettingsRepository);
 
     }
 }
