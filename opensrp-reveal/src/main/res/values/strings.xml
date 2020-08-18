@@ -239,7 +239,8 @@
     <string name="structures_visited_found">Structures Visited/Found</string>
     <string name="structures_sprayed">Structures Sprayed</string>
     <string name="structures_not_sprayed">Structures Not Sprayed</string>
-    <string name="room_coverage">Room Coverage</string>
+    <string name="room_coverage">Room coverage of sprayed</string>
+    <string name="target_coverage">Target coverage</string>
     <string name="n_percent">%1$d%%</string>
     <string name="indicator">Indicator</string>
     <string name="value">Value</string>
@@ -369,4 +370,6 @@
     <string name="drag_selected_point_msg">Drag selected point to change boundary</string>
     <string name="progressBarLabel">Syncing %s : %d%% </string>
     <string name="manifest_version_parenthesis_placeholder">(%1$s)</string>
+    <string name="total_structures_targeted">Total structures targeted</string>
+    <string name="households_not_visited">Registered households not visited</string>
 </resources>
