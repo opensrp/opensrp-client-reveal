@@ -482,7 +482,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         if (cardDetails instanceof MosquitoHarvestCardDetails && PAOT.equals(((MosquitoHarvestCardDetails) cardDetails).getInterventionType())) {
             jsonFormUtils.populatePAOTForm((MosquitoHarvestCardDetails) cardDetails, formJson);
         } else if (cardDetails instanceof SprayCardDetails && Country.NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
-            jsonFormUtils.populateSprayForm(((SprayCardDetails) cardDetails).getCommonPersonObject(), formJson);
+            jsonFormUtils.populateForm(event, formJson);
         } else if (JsonForm.SPRAY_FORM_ZAMBIA.equals(formName)) {
             try {
                 jsonFormUtils.populateField(formJson, DISTRICT_NAME, prefsUtil.getCurrentDistrict().trim(), VALUE);
@@ -791,7 +791,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.setGeoJsonSource(filterFeatureCollection == null ? getFeatureCollection() : FeatureCollection.fromFeatures(filterFeatureCollection), operationalArea, false);
         } else {
             List<Feature> features = new ArrayList<>();
-            for (Feature feature : searchFeatureCollection != null && searchPhrase.length() > this.searchPhrase.length() ? searchFeatureCollection : Utils.isEmptyCollection(filterFeatureCollection) ? getFeatureCollection().features() : filterFeatureCollection) {
+            for (Feature feature : !Utils.isEmptyCollection(searchFeatureCollection) && searchPhrase.length() > this.searchPhrase.length() ? searchFeatureCollection : Utils.isEmptyCollection(filterFeatureCollection) ? getFeatureCollection().features() : filterFeatureCollection) {
                 String structureName = feature.getStringProperty(STRUCTURE_NAME);
                 String familyMemberNames = feature.getStringProperty(FAMILY_MEMBER_NAMES);
                 if (org.smartregister.reveal.util.Utils.matchesSearchPhrase(structureName, searchPhrase) ||
