@@ -2,8 +2,6 @@ package org.smartregister.reveal.task;
 
 import android.view.View;
 
-import junit.framework.TestCase;
-
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.junit.Before;

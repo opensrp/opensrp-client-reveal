@@ -16,7 +16,7 @@ public class IndicatorDetails {
     private int foundStructures;
     private int roomCoverage;
     private List<String> sprayIndicatorList;
-    int target;
+    private int target;
 
     public int getSprayed() {
         return sprayed;
