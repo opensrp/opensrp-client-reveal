@@ -67,6 +67,7 @@ import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
+import static org.smartregister.domain.LocationProperty.PropertyStatus.INACTIVE;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
@@ -94,6 +95,7 @@ import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
@@ -332,9 +334,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private void onFeatureSelectedByLongClick(Feature feature) {
         String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
         String code = getPropertyValue(feature, TASK_CODE);
+        String status = getPropertyValue(feature, LOCATION_STATUS);
 
         selectedFeatureInterventionType = code;
-        if (NOT_VISITED.equals(businessStatus)) {
+        if (INACTIVE.name().equals(status)){
+            listTaskView.displayToast(R.string.structure_is_inactive);
+        } else if (NOT_VISITED.equals(businessStatus) || !feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayMarkStructureInactiveDialog();
         } else {
             listTaskView.displayToast(R.string.cannot_make_structure_inactive);
@@ -651,6 +656,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             if (selectedFeature.id().equals(feature.id())) {
                 feature.removeProperty(TASK_BUSINESS_STATUS);
                 feature.removeProperty(TASK_IDENTIFIER);
+                feature.addStringProperty(LOCATION_STATUS, INACTIVE.name());
                 break;
             }
         }

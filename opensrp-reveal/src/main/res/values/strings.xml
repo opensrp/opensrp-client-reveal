@@ -372,4 +372,5 @@
     <string name="manifest_version_parenthesis_placeholder">(%1$s)</string>
     <string name="total_structures_targeted">Total structures targeted</string>
     <string name="households_not_visited">Registered households not visited</string>
+    <string name="structure_is_inactive">This structure is inactive</string>
 </resources>
