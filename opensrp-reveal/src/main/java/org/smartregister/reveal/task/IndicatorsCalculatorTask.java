@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.view.View;
 
-import net.sqlcipher.database.SQLiteDatabase;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +18,6 @@ import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.IndicatorUtils;
-import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.ListTasksActivity;
 
@@ -34,8 +31,6 @@ import timber.log.Timber;
  */
 public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDetails> {
 
-    private final PreferencesUtil prefsUtil;
-    private final SQLiteDatabase sqLiteDatabase;
     private ProgressIndicatorView progressIndicator;
     private ProgressIndicatorView progressIndicator2;
     private ProgressIndicatorView progressIndicator3;
@@ -46,8 +41,6 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
     public IndicatorsCalculatorTask(Activity context, List<TaskDetails> tasks) {
         this.activity = context;
         this.tasks = tasks;
-        prefsUtil = PreferencesUtil.getInstance();
-        sqLiteDatabase = RevealApplication.getInstance().getRepository().getReadableDatabase();
 
     }
 

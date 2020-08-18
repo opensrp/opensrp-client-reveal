@@ -2,22 +2,21 @@ package org.smartregister.reveal.task;
 
 import android.view.View;
 
-import junit.framework.TestCase;
-
-import net.sqlcipher.database.SQLiteDatabase;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.Setting;
 import org.smartregister.reporting.view.ProgressIndicatorView;
+import org.smartregister.repository.AllSettings;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.IndicatorDetails;
+import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.IndicatorUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -37,8 +36,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.smartregister.reveal.util.IndicatorUtilsTest.getCursor;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by samuelgithengi on 8/13/20.
@@ -50,7 +48,10 @@ public class IndicatorsCalculatorTaskTest extends BaseUnitTest {
     private ListTasksActivity activity;
 
     @Mock
-    private SQLiteDatabase sqLiteDatabase;
+    private AllSettings settingsRepository;
+
+    @Mock
+    private Setting setting;
 
     @Before
     public void setUp() {
@@ -89,24 +90,14 @@ public class IndicatorsCalculatorTaskTest extends BaseUnitTest {
     public void testDoInBackgroundForNamibia() {
         Country country = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.NAMIBIA);
-        Whitebox.setInternalState(indicatorsCalculatorTask, "sqLiteDatabase", sqLiteDatabase);
 
-        PreferencesUtil.getInstance().setCurrentOperationalArea("mti");
-        Location jurisdiction = new Location();
-        jurisdiction.setId("112");
-        Cache<Location> cache = mock(Cache.class);
-        Mockito.when(cache.get(anyString(), any())).thenReturn(jurisdiction);
-        Whitebox.setInternalState(Utils.class, cache);
-
-        when(sqLiteDatabase.rawQuery(anyString(), any())).thenReturn(getCursor());
         IndicatorDetails indicatorDetails = indicatorsCalculatorTask.doInBackground();
-        assertEquals(76, indicatorDetails.getTotalStructures());
-        assertEquals(1, indicatorDetails.getNotVisited());
-        assertEquals(75, indicatorDetails.getFoundStructures());
-        assertEquals(74, indicatorDetails.getSprayed());
+        assertEquals(6, indicatorDetails.getTotalStructures());
+        assertEquals(2, indicatorDetails.getNotVisited());
+        assertEquals(0, indicatorDetails.getFoundStructures());
+        assertEquals(3, indicatorDetails.getSprayed());
         assertEquals(1, indicatorDetails.getNotSprayed());
-        assertEquals(93, indicatorDetails.getRoomCoverage());
-        assertEquals(97, indicatorDetails.getProgress());
+        assertEquals(50, indicatorDetails.getProgress());
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, country);
     }
 
@@ -133,19 +124,9 @@ public class IndicatorsCalculatorTaskTest extends BaseUnitTest {
     }
 
     @Test
-    public void testOnPostExecuteNamibia() {
+    public void testOnPostExecuteNamibiaWithoutTargets() {
         Country country = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.NAMIBIA);
-        Whitebox.setInternalState(indicatorsCalculatorTask, "sqLiteDatabase", sqLiteDatabase);
-
-        PreferencesUtil.getInstance().setCurrentOperationalArea("mti");
-        Location jurisdiction = new Location();
-        jurisdiction.setId("112");
-        Cache<Location> cache = mock(Cache.class);
-        Mockito.when(cache.get(anyString(), any())).thenReturn(jurisdiction);
-        Whitebox.setInternalState(Utils.class, cache);
-
-        when(sqLiteDatabase.rawQuery(anyString(), any())).thenReturn(getCursor());
 
         indicatorsCalculatorTask.onPreExecute();
         indicatorsCalculatorTask.onPostExecute(indicatorsCalculatorTask.doInBackground());
@@ -154,12 +135,47 @@ public class IndicatorsCalculatorTaskTest extends BaseUnitTest {
         ProgressIndicatorView progressIndicator3 = activity.findViewById(R.id.progressIndicatorView3);
 
         assertEquals(View.GONE, progressIndicator.getVisibility());
-        assertEquals("98%", progressIndicator2.getTitle());
+        assertEquals("50%", progressIndicator2.getTitle());
         assertEquals(activity.getString(R.string.found_coverage), progressIndicator2.getSubTitle());
-        assertEquals("97", progressIndicator3.getTitle());
+        assertEquals("100%", progressIndicator3.getTitle());
         assertEquals(activity.getString(R.string.target_coverage), progressIndicator3.getSubTitle());
         verify(activity).positionMyLocationAndLayerSwitcher();
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, country);
+
+    }
+
+    @Test
+    public void testOnPostExecuteNamibiaWithTargets() {
+        Country country = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.NAMIBIA);
+
+        PreferencesUtil.getInstance().setCurrentOperationalArea("mti");
+        Location jurisdiction = new Location();
+        jurisdiction.setId("2980");
+        Cache<Location> cache = mock(Cache.class);
+        when(cache.get(anyString(), any())).thenReturn(jurisdiction);
+        Whitebox.setInternalState(Utils.class, cache);
+
+        when(settingsRepository.getSetting(CONFIGURATION.JURISDICTION_METADATA)).thenReturn(setting);
+        AllSettings contextSettingsRepository = RevealApplication.getInstance().getSettingsRepository();
+        Whitebox.setInternalState(RevealApplication.getInstance().getContext(), "allSettings", settingsRepository);
+        when(setting.getValue()).thenReturn("{\"settings\":[{\"settingMetadataId\":\"7148\",\"serverVersion\":0,\"description\":\"Jurisdiction Metadata for Nyaluwiro metadata id 2980\",\"label\":\"Nyaluwiro metadata metadata\",\"type\":\"Setting\",\"value\":\"30\",\"uuid\":\"1c2fc15c-732c-4ed1-84be-8d271debd442\",\"key\":\"2980\",\"settingIdentifier\":\"jurisdiction_metadata-risk\"}]}");
+
+        indicatorsCalculatorTask.onPreExecute();
+        indicatorsCalculatorTask.onPostExecute(indicatorsCalculatorTask.doInBackground());
+        ProgressIndicatorView progressIndicator = activity.findViewById(R.id.progressIndicatorView);
+        ProgressIndicatorView progressIndicator2 = activity.findViewById(R.id.progressIndicatorView2);
+        ProgressIndicatorView progressIndicator3 = activity.findViewById(R.id.progressIndicatorView3);
+
+        assertEquals(View.GONE, progressIndicator.getVisibility());
+        assertEquals("50%", progressIndicator2.getTitle());
+        assertEquals(activity.getString(R.string.found_coverage), progressIndicator2.getSubTitle());
+        assertEquals("10%", progressIndicator3.getTitle());
+        assertEquals(activity.getString(R.string.target_coverage), progressIndicator3.getSubTitle());
+        verify(activity).positionMyLocationAndLayerSwitcher();
+        verify(settingsRepository).getSetting(CONFIGURATION.JURISDICTION_METADATA);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, country);
+        Whitebox.setInternalState(RevealApplication.getInstance().getContext(), "allSettings", contextSettingsRepository);
 
     }
 }
