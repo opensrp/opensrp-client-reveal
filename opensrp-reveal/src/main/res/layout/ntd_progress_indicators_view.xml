@@ -18,6 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="3"
         app:progress="0"
-        app:subTitle="% structures found and visited" />
+        app:subTitle="@string/percentage_structures_found_and_visited" />
 
 </LinearLayout>
