@@ -10,17 +10,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
-import androidx.annotation.StringRes;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.cardview.widget.CardView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.StringRes;
+import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.Task;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
 import org.smartregister.family.util.DBConstants;
@@ -479,6 +481,20 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     private void setViewVisibility(View view, boolean isVisible) {
         view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onSyncStart() {
+        super.onSyncStart();
+        drawerView.toggleProgressBarView(true);
+    }
+
+    @Override
+    public void onSyncComplete(FetchStatus fetchStatus) {
+        super.onSyncComplete(fetchStatus);
+        //Check sync status and Update UI to show sync status
+        drawerView.checkSynced();
+        drawerView.toggleProgressBarView(false);
     }
 
 }
