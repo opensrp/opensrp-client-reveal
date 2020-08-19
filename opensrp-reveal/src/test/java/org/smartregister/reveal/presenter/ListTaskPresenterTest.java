@@ -2,8 +2,9 @@ package org.smartregister.reveal.presenter;
 
 import android.graphics.PointF;
 import android.graphics.RectF;
-import androidx.appcompat.app.AlertDialog;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.gson.JsonPrimitive;
 import com.mapbox.geojson.Feature;
@@ -66,12 +67,15 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.domain.LocationProperty.PropertyStatus.ACTIVE;
+import static org.smartregister.domain.LocationProperty.PropertyStatus.INACTIVE;
 import static org.smartregister.domain.Task.TaskStatus.IN_PROGRESS;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.BEDNET_DISTRIBUTED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -80,6 +84,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
@@ -843,6 +848,50 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         verify(listTaskInteractor).fetchInterventionDetails(PAOT, "id1", true);
     }
 
+    @Test
+    public void testOnFeatureSelectedByLongClickWhenStructureIsInactive() throws Exception {
+
+        Feature feature = initTestFeature("id1");
+        feature.addStringProperty(LOCATION_STATUS, INACTIVE.name());
+
+        Whitebox.invokeMethod(listTaskPresenter,"onFeatureSelectedByLongClick", feature);
+        verify(listTaskView).displayToast(R.string.structure_is_inactive);
+    }
+
+    @Test
+    public void testOnFeatureSelectedByLongClickWhenStructureHasNoTask() throws Exception {
+
+        Feature feature = initTestFeature("id1");
+        feature.addStringProperty(LOCATION_STATUS, ACTIVE.name());
+        feature.removeProperty(TASK_IDENTIFIER);
+
+        Whitebox.invokeMethod(listTaskPresenter,"onFeatureSelectedByLongClick", feature);
+        verify(listTaskView).displayMarkStructureInactiveDialog();
+    }
+
+    @Test
+    public void testOnFeatureSelectedByLongClickWhenTaskBusinessStatusIsNotVisited() throws Exception {
+
+        Feature feature = initTestFeature("id1");
+        feature.addStringProperty(LOCATION_STATUS, ACTIVE.name());
+        feature.addStringProperty(TASK_BUSINESS_STATUS, NOT_VISITED);
+        feature.addStringProperty(TASK_IDENTIFIER, "task-1");
+
+        Whitebox.invokeMethod(listTaskPresenter,"onFeatureSelectedByLongClick", feature);
+        verify(listTaskView).displayMarkStructureInactiveDialog();
+    }
+
+    @Test
+    public void testOnFeatureSelectedByLongClickWhenTaskHasBeenCompleted() throws Exception {
+
+        Feature feature = initTestFeature("id1");
+        feature.addStringProperty(LOCATION_STATUS, ACTIVE.name());
+        feature.addStringProperty(TASK_BUSINESS_STATUS, SPRAYED);
+        feature.addStringProperty(TASK_IDENTIFIER, "task-1");
+
+        Whitebox.invokeMethod(listTaskPresenter,"onFeatureSelectedByLongClick", feature);
+        verify(listTaskView).displayToast(R.string.cannot_make_structure_inactive);
+    }
 
     private Feature initTestFeature(String identifier) throws JSONException {
         String structureId = identifier;
