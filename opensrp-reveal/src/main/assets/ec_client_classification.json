@@ -22,28 +22,28 @@
           },
           {
             "field": "eventType",
-            "field_value": "Family Registration",
+            "field_value": "Family_Registration",
             "creates_case": [
               "ec_family"
             ]
           },
           {
             "field": "eventType",
-            "field_value": "Family Member Registration",
+            "field_value": "Family_Member_Registration",
             "creates_case": [
               "ec_family_member"
             ]
           },
           {
             "field": "eventType",
-            "field_value": "Update Family Registration",
+            "field_value": "Update_Family_Registration",
             "creates_case": [
               "ec_family"
             ]
           },
           {
             "field": "eventType",
-            "field_value": "Update Family Member Registration",
+            "field_value": "Update_Family_Member_Registration",
             "creates_case": [
               "ec_family_member"
             ]
@@ -97,7 +97,7 @@
           },
           {
             "field": "eventType",
-            "field_value": "Archive Family Member",
+            "field_value": "Archive_Family_Member",
             "closes_case": [
               "ec_family_member"
             ],
@@ -107,7 +107,7 @@
           },
           {
             "field": "eventType",
-            "field_value": "Archive Family",
+            "field_value": "Archive_Family",
             "closes_case": [
               "ec_family"
             ],
