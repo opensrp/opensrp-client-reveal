@@ -238,7 +238,6 @@ public class CardDetailsUtil {
             case NOT_SPRAYED:
                 return context.getString(R.string.not_sprayed);
             case SPRAYED:
-            case PARTIALLY_SPRAYED:
                 return context.getString(R.string.sprayed);
             case NOT_SPRAYABLE:
                 return context.getString(R.string.not_sprayable);
@@ -250,6 +249,12 @@ public class CardDetailsUtil {
                 return context.getString(R.string.not_eligible);
             case IN_PROGRESS:
                 return context.getString(R.string.in_progress);
+            case PARTIALLY_SPRAYED:
+                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                    return context.getString(R.string.sprayed);
+                } else {
+                    return context.getString(R.string.partially_sprayed);
+                }
             default:
                 return businessStatus;
         }
