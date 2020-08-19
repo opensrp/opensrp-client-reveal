@@ -150,6 +150,7 @@ public interface Constants {
         String TASK_CODE_LIST = "task_code_list";
         String FAMILY_MEMBER_NAMES = "family_member_names";
         String PLAN_IDENTIFIER = "planIdentifier";
+        String LOCATION_STATUS = "status";
     }
 
 
@@ -210,7 +211,7 @@ public interface Constants {
 
         String CASE_CONFIRMATION_EVENT = "case_confirmation";
 
-        String CASE_DETAILS_EVENT = "Case Details";
+        String CASE_DETAILS_EVENT = "Case_Details";
 
         String PAOT_EVENT = "PAOT";
 
