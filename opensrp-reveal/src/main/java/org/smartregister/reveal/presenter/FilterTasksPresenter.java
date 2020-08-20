@@ -17,6 +17,7 @@ import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
+import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.Arrays;
@@ -79,6 +80,16 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
         labelsMap.put(BusinessStatus.INCOMPLETE, R.string.incomplete);
         labelsMap.put(BusinessStatus.NOT_ELIGIBLE, R.string.not_eligible);
         labelsMap.put(BusinessStatus.IN_PROGRESS, R.string.in_progress);
+
+
+        //Forms
+        labelsMap.put(JsonForm.SPRAY_FORM_ZAMBIA, R.string.hh_form);
+        labelsMap.put(JsonForm.VERIFICATION_FORM_ZAMBIA, R.string.verification_form_name);
+        labelsMap.put(JsonForm.DAILY_SUMMARY_ZAMBIA, R.string.daily_summary_name);
+        labelsMap.put(JsonForm.TEAM_LEADER_DOS_ZAMBIA, R.string.team_leader_dos_form);
+        labelsMap.put(JsonForm.MOBILIZATION_FORM_ZAMBIA, R.string.mobilization_form_name);
+        labelsMap.put(JsonForm.IRS_SA_DECISION_ZAMBIA, R.string.irs_field_officer_form);
+        labelsMap.put(JsonForm.IRS_FIELD_OFFICER_ZAMBIA, R.string.irs_field_officer_form);
     }
 
 
