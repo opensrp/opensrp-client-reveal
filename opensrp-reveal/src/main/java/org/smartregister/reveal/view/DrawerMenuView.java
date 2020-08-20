@@ -4,13 +4,17 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.google.android.material.navigation.NavigationView;
+
 import androidx.core.util.Pair;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
@@ -346,6 +350,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     private void startP2PActivity() {
         getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
     }
+
     @Override
     public void openOfflineMapsView() {
         Intent intent = new Intent(getContext(), OfflineMapsActivity.class);
@@ -363,14 +368,14 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         TextView progressLabel = this.activity.getActivity().findViewById(R.id.sync_progress_bar_label);
         TextView syncButton = this.activity.getActivity().findViewById(R.id.sync_button);
         TextView syncBadge = this.activity.getActivity().findViewById(R.id.sync_label);
-
+        if (progressBar == null || syncBadge == null)
+            return;
         if (syncing) {
             progressBar.setVisibility(View.VISIBLE);
             progressLabel.setVisibility(View.VISIBLE);
             syncButton.setVisibility(View.INVISIBLE);
             syncBadge.setVisibility(View.INVISIBLE);
-        }
-        else {
+        } else {
             progressBar.setVisibility(View.INVISIBLE);
             progressLabel.setVisibility(View.INVISIBLE);
             syncButton.setVisibility(View.VISIBLE);
