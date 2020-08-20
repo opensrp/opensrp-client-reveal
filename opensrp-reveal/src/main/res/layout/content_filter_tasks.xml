@@ -185,39 +185,35 @@
                 style="@style/FilterTaskStyle.Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
                 android:text="@string/filter_by_date"
                 android:textStyle="bold" />
 
-
-            <com.google.android.flexbox.FlexboxLayout
-                android:id="@+id/form_name_layout"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/filter_by_date"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="16dp"
-                app:alignContent="stretch"
-                app:alignItems="stretch"
-                app:flexWrap="wrap" />
+                android:background="@drawable/toggle_bg"
+                android:drawableEnd="@drawable/ic_calendar_today"
+                style="@style/TaskFilterToggle"
+                android:hint="@string/date_format" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/lighter_grey" />
 
-            <TextView
-                android:id="@+id/filter_by_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/date_format"
-                android:drawableEnd="@drawable/ic_calendar_today"/>
-
-
             <CheckBox
                 android:id="@+id/view_all_events"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/view_all_events"
-                android:hint="@string/date_format"/>
+                android:layout_margin="16dp"
+                android:hint="@string/date_format"
+                android:text="@string/view_all_events" />
+
 
         </LinearLayout>
 

@@ -18,6 +18,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FilterTasksContract;
+import org.smartregister.reveal.model.FilterConfiguration;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Filter;
@@ -64,6 +65,8 @@ public class FilterTasksPresenterTest extends BaseUnitTest {
     private FilterTasksPresenter filterTasksPresenter;
 
     private String planId = UUID.randomUUID().toString();
+
+    private FilterConfiguration filterConfiguration = FilterConfiguration.builder().build();
 
     @Before
     public void setUp() {
