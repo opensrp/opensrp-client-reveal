@@ -191,7 +191,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/filter_by_date"
+                android:id="@+id/filter_from_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"

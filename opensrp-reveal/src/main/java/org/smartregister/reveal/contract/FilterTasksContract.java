@@ -7,6 +7,7 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import org.smartregister.reveal.model.TaskFilterParams;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +26,12 @@ public interface FilterTasksContract {
         FlexboxLayout getTaskCodeLayout();
 
         FlexboxLayout getInterventionTypeLayout();
+
+        FlexboxLayout getFormNameLayout();
+
+        Date getFromDateFilter();
+
+        boolean viewAllEvents();
 
         void setSortBySelection(int sortBySpinner);
     }

@@ -138,7 +138,10 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
     @Override
     public void onApplyFilters(String selectedItem) {
         Intent intent = new Intent();
-        intent.putExtra(Filter.FILTER_SORT_PARAMS, new TaskFilterParams(selectedItem, checkedFilters));
+        intent.putExtra(Filter.FILTER_SORT_PARAMS, TaskFilterParams.builder().sortBy(selectedItem)
+                .checkedFilters(checkedFilters).fromDate(view.getFromDateFilter())
+                .viewAllEvents(view.viewAllEvents()).build());
+
         view.applyFilters(intent);
     }
 
@@ -149,6 +152,7 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
             restoreSelections(checkedFilters.get(Constants.Filter.STATUS), view.getBusinessStatusLayout());
             restoreSelections(checkedFilters.get(Constants.Filter.CODE), view.getTaskCodeLayout());
             restoreSelections(checkedFilters.get(Filter.INTERVENTION_UNIT), view.getInterventionTypeLayout());
+            restoreSelections(checkedFilters.get(Filter.FORM_NAME), view.getInterventionTypeLayout());
             if (StringUtils.isNotBlank(taskFilterParams.getSortBy())) {
                 int index = Arrays.asList(view.getBusinessStatusLayout().getResources().getStringArray(R.array.task_sort_options)).indexOf(taskFilterParams.getSortBy());
                 view.setSortBySelection(index == -1 ? 0 : index);

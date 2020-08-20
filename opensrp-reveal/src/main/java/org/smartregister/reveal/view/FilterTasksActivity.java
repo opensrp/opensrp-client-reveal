@@ -9,12 +9,14 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.google.android.flexbox.FlexboxLayout;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FilterTasksContract;
 import org.smartregister.reveal.model.FilterConfiguration;
@@ -24,7 +26,14 @@ import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.view.activity.MultiLanguageActivity;
 
+import java.time.LocalDate;
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
+
+import timber.log.Timber;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATION;
@@ -44,6 +53,10 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     private FlexboxLayout formNameLayout;
 
     private TextView applyFiltersTextView;
+
+    private TextView fromDateFilterTextView;
+
+    private CheckBox viewAllEventsCheckBox;
 
     private FilterConfiguration filterConfiguration;
 
@@ -66,9 +79,12 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         interventionTypeLayout = findViewById(R.id.intervention_type_layout);
         applyFiltersTextView = findViewById(R.id.apply_filters);
         formNameLayout = findViewById(R.id.form_name_layout);
+        fromDateFilterTextView = findViewById(R.id.filter_from_date);
+        viewAllEventsCheckBox = findViewById(R.id.view_all_events);
 
         setFilterVisibility();
         setUpToggleButtonGroups();
+        registerCheckedChangeListener();
 
         findViewById(R.id.clear_filters).setOnClickListener(view -> {
             clearSelections();
@@ -99,6 +115,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         registerCheckedChangeListener(businessStatusLayout, Filter.STATUS);
         registerCheckedChangeListener(taskCodeLayout, Filter.CODE);
         registerCheckedChangeListener(interventionTypeLayout, Filter.INTERVENTION_UNIT);
+        registerCheckedChangeListener(formNameLayout, Filter.FORM_NAME);
     }
 
     private void registerCheckedChangeListener(FlexboxLayout layout, String category) {
@@ -195,6 +212,29 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     @Override
     public FlexboxLayout getInterventionTypeLayout() {
         return interventionTypeLayout;
+    }
+
+    @Override
+    public FlexboxLayout getFormNameLayout() {
+        return formNameLayout;
+    }
+
+    @Override
+    public Date getFromDateFilter() {
+        CharSequence date = fromDateFilterTextView.getText();
+        if (StringUtils.isNotBlank(date)) {
+            try {
+                return new SimpleDateFormat("dd-mm-yyyy", Locale.ENGLISH).parse(date.toString());
+            } catch (ParseException e) {
+                Timber.e(e);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean viewAllEvents() {
+        return viewAllEventsCheckBox.isChecked();
     }
 
     @Override

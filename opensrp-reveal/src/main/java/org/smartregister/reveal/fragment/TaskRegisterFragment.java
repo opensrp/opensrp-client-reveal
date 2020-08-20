@@ -150,7 +150,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
             taskFilterParams.setSearchPhrase(getSearchView().getText().toString());
             intent.putExtra(FILTER_SORT_PARAMS, taskFilterParams);
         } else if (StringUtils.isNotBlank(getSearchView().getText())) {
-            intent.putExtra(FILTER_SORT_PARAMS, new TaskFilterParams(getSearchView().getText().toString()));
+            intent.putExtra(FILTER_SORT_PARAMS, TaskFilterParams.builder().searchPhrase(searchView.getText().toString()).build());
         }
         getActivity().setResult(RESULT_OK, intent);
         getActivity().finish();
