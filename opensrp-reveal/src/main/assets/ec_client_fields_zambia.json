@@ -621,6 +621,13 @@
           }
         },
         {
+          "column_name": "provider_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "providerId"
+          }
+        },
+        {
           "column_name": "sop",
           "type": "Event",
           "json_mapping": {

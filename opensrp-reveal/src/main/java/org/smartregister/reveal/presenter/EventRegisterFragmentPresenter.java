@@ -8,12 +8,15 @@ import org.smartregister.configurableviews.model.View;
 import org.smartregister.configurableviews.model.ViewConfiguration;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Event;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.EventRegisterContract;
 import org.smartregister.reveal.interactor.EventRegisterFragmentInteractor;
 import org.smartregister.reveal.model.EventRegisterDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.Set;
@@ -35,6 +38,8 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
 
     private EventRegisterDetails eventRegisterDetails;
 
+    private AllSharedPreferences allSharedPreferences;
+
     private TaskFilterParams filterParams;
 
     public EventRegisterFragmentPresenter(EventRegisterContract.View view, String viewConfigurationIdentifier) {
@@ -42,6 +47,7 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
         this.interactor = new EventRegisterFragmentInteractor(this);
         this.viewConfigurationIdentifier = viewConfigurationIdentifier;
         this.viewsHelper = ConfigurableViewsLibrary.getInstance().getConfigurableViewsHelper();
+        this.allSharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
     }
 
     @Override
@@ -79,14 +85,14 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
     protected String[] mainColumns(String tableName) {
         String[] columns = new String[]{
                 tableName + ".relationalid",
-                tableName + "." + Constants.DatabaseKeys.EVENT_DATE,
-                tableName + "." + Constants.DatabaseKeys.EVENT_TYPE,
-                tableName + "." + Constants.DatabaseKeys.SOP,
-                tableName + "." + Constants.DatabaseKeys.ENTITY,
-                tableName + "." + Constants.DatabaseKeys.STATUS,
-                tableName + "." + Constants.DatabaseKeys.BASE_ENTITY_ID,
-                tableName + "." + Constants.DatabaseKeys.SPRAYED,
-                tableName + "." + Constants.DatabaseKeys.FOUND
+                tableName + "." + DatabaseKeys.EVENT_DATE,
+                tableName + "." + DatabaseKeys.EVENT_TYPE,
+                tableName + "." + DatabaseKeys.SOP,
+                tableName + "." + DatabaseKeys.ENTITY,
+                tableName + "." + DatabaseKeys.STATUS,
+                tableName + "." + DatabaseKeys.BASE_ENTITY_ID,
+                tableName + "." + DatabaseKeys.SPRAYED,
+                tableName + "." + DatabaseKeys.FOUND
         };
         return columns;
     }
@@ -145,7 +151,7 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
 
     @Override
     public String getMainCondition() {
-        return "";
+        return String.format("%s = '%s'", DatabaseKeys.PROVIDER_ID, allSharedPreferences.fetchRegisteredANM());
     }
 
 }

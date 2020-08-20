@@ -646,6 +646,8 @@ public interface Constants {
         String SPRAYED = "sprayed";
 
         String FOUND = "found";
+
+        String PROVIDER_ID = "provider_id";
     }
 
     interface UseContextCode {
@@ -701,6 +703,6 @@ public interface Constants {
         String INTERVENTION_UNIT = "intervention_unit";
         String FORM_NAME = "form_name";
         String FILTER_SORT_PARAMS = "filter_sort_params";
-        String FILTER_CONFIGURATION="filter_configuration";
+        String FILTER_CONFIGURATION = "filter_configuration";
     }
 }
