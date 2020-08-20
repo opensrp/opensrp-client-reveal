@@ -361,7 +361,8 @@ public class RevealJsonFormUtils {
                 String key = field.getString(KEY);
                 if (commonPersonObject.getDetails().containsKey(key)) {
                     String value = commonPersonObject.getDetails().get(key);
-                    field.put(VALUE, value);
+                    if (StringUtils.isNotBlank(value))
+                        field.put(VALUE, value);
                     if (nonEditablefields.contains(key) && "Yes".equalsIgnoreCase(value)) {
                         field.put(JsonFormConstants.READ_ONLY, true);
                         field.remove(JsonFormConstants.RELEVANCE);
