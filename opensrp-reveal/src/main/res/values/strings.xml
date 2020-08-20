@@ -383,4 +383,8 @@
     <string name="total_structures_targeted">Total structures targeted</string>
     <string name="households_not_visited">Registered households not visited</string>
     <string name="structure_is_inactive">This structure is inactive</string>
+    <string name="filter_by_date">Filter By Date</string>
+
+    <string name="date_format">DD-MM-YYYY</string>
+    <string name="view_all_events">View All Events</string>
 </resources>
