@@ -1,5 +1,7 @@
 package org.smartregister.reveal.presenter;
 
+import android.text.TextUtils;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
@@ -146,12 +148,31 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
     @Override
     public void filterTasks(TaskFilterParams filterParams) {
         this.filterParams = filterParams;
+        initializeQueries(getMainCondition());
 
     }
 
     @Override
     public String getMainCondition() {
-        return String.format("%s = '%s'", DatabaseKeys.PROVIDER_ID, allSharedPreferences.fetchRegisteredANM());
+        StringBuilder stringBuilder = new StringBuilder();
+        if (filterParams == null || !filterParams.isViewAllEvents()) {
+            stringBuilder.append(String.format("%s = '%s'", DatabaseKeys.PROVIDER_ID, allSharedPreferences.fetchRegisteredANM()));
+            stringBuilder.append(" AND ");
+        }
+        if (filterParams != null) {
+            Set<String> forms = filterParams.getCheckedFilters().get(Constants.Filter.FORM_NAME);
+            if (forms != null) {
+                stringBuilder.append(String.format("%s IN ('%s')", DatabaseKeys.EVENT_TYPE, StringUtils.join(forms, "','")));
+                stringBuilder.append(" AND ");
+            }
+            Set<String> status = filterParams.getCheckedFilters().get(Constants.Filter.STATUS);
+            if (status != null) {
+                stringBuilder.append(String.format("%s IN ('%s')", DatabaseKeys.STATUS, StringUtils.join(status, "','")));
+                stringBuilder.append(" AND ");
+            }
+        }
+
+        return stringBuilder.length() == 0 ? "" : stringBuilder.substring(0, stringBuilder.length() - 5);
     }
 
 }

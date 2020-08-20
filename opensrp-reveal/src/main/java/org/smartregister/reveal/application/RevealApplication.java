@@ -351,7 +351,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             return new String[]{DBConstants.KEY.DOB, DBConstants.KEY.DOD, DBConstants.KEY
                     .LAST_INTERACTED_WITH, DBConstants.KEY.DATE_REMOVED};
         } else if (tableName.equals(EventsRegister.TABLE_NAME)) {
-            return new String[]{DatabaseKeys.PROVIDER_ID, DatabaseKeys.EVENT_DATE};
+            return new String[]{DatabaseKeys.PROVIDER_ID, DatabaseKeys.EVENT_DATE, DatabaseKeys.EVENT_TYPE, DatabaseKeys.STATUS};
         }
         return null;
     }
