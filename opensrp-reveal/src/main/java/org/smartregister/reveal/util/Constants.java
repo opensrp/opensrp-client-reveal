@@ -435,6 +435,10 @@ public interface Constants {
 
         String NTD_COMMUNITY_FAMILY_MEMBER_REGISTER = "json.form/ntd_community_family_member_registration.json";
 
+        String NTD_COMMUNITY_FAMILY_HEAD_REGISTER = "json.form/ntd_community_family_head_registration.json";
+
+        String NTD_COMMUNITY_FAMILY_HEAD_UPDATE = "json.form/ntd_community_update_family.json";
+
         String NTD_COMMUNITY_FAMILY_REGISTER = "json.form/ntd_community_family_register.json";
 
         String NTD_COMMUNITY_MASS_DRUG_ADMINISTRATION = "json.form/ntd_community_drug_distribution_child.json";

@@ -10,16 +10,19 @@ import net.sqlcipher.database.SQLiteDatabase;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.AllConstants;
 import org.smartregister.clientandeventmodel.Obs;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Client;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.presenter.BaseFamilyProfilePresenter;
 import org.smartregister.repository.BaseRepository;
+import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -44,9 +47,11 @@ import org.smartregister.reveal.util.NativeFormProcessor;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
+import org.smartregister.sync.helper.ECSyncHelper;
 import org.smartregister.util.CallableInteractor;
 import org.smartregister.util.CallableInteractorCallBack;
 import org.smartregister.util.GenericInteractor;
+import org.smartregister.util.JsonFormUtils;
 
 import java.util.Calendar;
 import java.util.UUID;
@@ -55,6 +60,8 @@ import java.util.concurrent.Callable;
 import timber.log.Timber;
 
 import static org.smartregister.family.util.Constants.INTENT_KEY.BASE_ENTITY_ID;
+import static org.smartregister.family.util.JsonFormUtils.RELATIONSHIPS;
+import static org.smartregister.reveal.application.RevealApplication.getInstance;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY;
 
@@ -230,6 +237,142 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         } catch (Exception e) {
             Timber.e(e);
         }
+    }
+
+    public ECSyncHelper getSyncHelper() {
+        return ECSyncHelper.getInstance(getInstance().getContext().applicationContext());
+    }
+
+    public void mergeAndSaveClient(Client client) throws JSONException {
+        JSONObject updatedClientJson = new JSONObject(JsonFormUtils.gson.toJson(client));
+
+        JSONObject originalClientJsonObject = getSyncHelper().getClient(client.getBaseEntityId());
+
+        JSONObject mergedJson = JsonFormUtils.merge(originalClientJsonObject, updatedClientJson);
+
+        //retain existing relationships, relationships are deleted on @Link org.smartregister.util.JsonFormUtils.createBaseClient
+        JSONObject relationships = mergedJson.optJSONObject(RELATIONSHIPS);
+        if ((relationships == null || relationships.length() == 0) && originalClientJsonObject != null) {
+            mergedJson.put(RELATIONSHIPS, originalClientJsonObject.optJSONObject(RELATIONSHIPS));
+        }
+
+        getSyncHelper().addClient(client.getBaseEntityId(), mergedJson);
+    }
+
+    public void updateFamilyMemberHead(JSONObject jsonObject, String familyEntityId, String familyName) {
+        CallableInteractor myInteractor = getCallableInteractor();
+
+        Callable<Void> callable = () -> {
+
+            NativeFormProcessor processor = NativeFormProcessor.createInstance(jsonObject);
+            Location operationalArea = processor.getCurrentOperationalArea();
+
+            // save family
+            String nsac = processor.getFieldValue("nSAC");
+
+            // read the family head and update the family
+            EventClientRepository eventClientRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+            Client familyClient = eventClientRepository.fetchClientByBaseEntityId(familyEntityId);
+            familyClient.addAttribute("nsac", nsac);
+            mergeAndSaveClient(familyClient);
+
+            // create update family event
+            NativeFormProcessor familyProcessor = NativeFormProcessor.createInstanceFromAsset(org.smartregister.reveal.util.Constants.JsonForm.NTD_COMMUNITY_FAMILY_HEAD_UPDATE);
+            familyProcessor
+                    .withBindType(FAMILY)
+                    .withEntityId(familyEntityId)
+                    .withEncounterType(FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION)
+                    .tagLocationData(operationalArea)
+                    .tagEventMetadata()
+
+                    .hasClient(true)
+                    .mergeAndSaveClient()
+                    .saveEvent()
+
+                    .clientProcessForm();
+
+            // save the family member
+
+            String age = processor.getFieldValue("age");
+            String same_as_fam_name = processor.getFieldValue("same_as_fam_name");
+            String entityId = jsonObject.getString(Constants.Properties.BASE_ENTITY_ID);
+
+            processor
+                    .withEntityId(entityId)
+                    .withBindType(FamilyConstants.TABLE_NAME.FAMILY_MEMBER)
+                    .withEncounterType(FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION)
+                    .tagLocationData(operationalArea)
+                    .tagEventMetadata()
+
+                    // create and save client
+                    .hasClient(true)
+                    .saveClient(client -> {
+                        client.setBirthdateApprox(true);
+                        if (StringUtils.isNotBlank(age)) {
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.add(Calendar.YEAR, -1 * Integer.parseInt(age));
+                            client.setBirthdate(calendar.getTime());
+                        }
+                        if (same_as_fam_name.contains("same_as_fam_name"))
+                            client.setLastName(familyName);
+                    })
+                    .mergeAndSaveClient()
+                    .saveEvent()
+                    .clientProcessForm();
+
+
+            PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
+            ReportDao reportDao = ReportDao.getInstance();
+            MDAOutCome mdaOutCome = reportDao.calculateFamilyMDA(familyEntityId, prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalAreaId());
+
+            MDAOutCome.MDAOutComeStatus mdaOutComeStatus = mdaOutCome.getStatus();
+
+            String status;
+            switch (mdaOutComeStatus) {
+                case PARTIAL:
+                    status = Constants.BusinessStatus.VISITED_PARTIALLY_TREATED;
+                    break;
+                case POSITIVE:
+                    status = Constants.BusinessStatus.COMPLETE;
+                    break;
+                default:
+                    status = Constants.BusinessStatus.VISITED_NOT_TREATED;
+            }
+
+            String structureId = StructureDao.getInstance().getStructureIDFromFamilyID(familyEntityId);
+
+            if(StringUtils.isNotBlank(structureId)){
+                TaskUtils taskUtils = TaskUtils.getInstance();
+                taskUtils.updateTaskStatus(
+                        structureId,
+                        Constants.Intervention.STRUCTURE_VISITED,
+                        status,
+                        Task.TaskStatus.COMPLETED
+                );
+            }
+
+            return null;
+        };
+
+        getView().setLoadingState(true);
+        myInteractor.execute(callable, new CallableInteractorCallBack<Void>() {
+            @Override
+            public void onResult(Void aVoid) {
+                FamilyProfileContract.View view = getView();
+                if (view != null) {
+                    view.setLoadingState(false);
+                    view.refreshViews(structureId);
+                }
+            }
+
+            @Override
+            public void onError(Exception ex) {
+                FamilyProfileContract.View view = getView();
+                if (view == null) return;
+                view.onError(ex);
+                view.setLoadingState(false);
+            }
+        });
     }
 
     public void updateFamilyMember(JSONObject jsonObject, String familyEntityId, String familyName) {

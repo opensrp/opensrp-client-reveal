@@ -21,6 +21,7 @@ public interface FamilyConstants {
 
         String UPDATE_FAMILY_REGISTRATION = "Update Family Registration";
         String UPDATE_FAMILY_MEMBER_REGISTRATION = "Update Family Member Registration";
+        String UPDATE_FAMILY_HEAD_MEMBER_REGISTRATION = "Update Family Head Registration";
 
         String ARCHIVE_FAMILY = "Archive Family";
 

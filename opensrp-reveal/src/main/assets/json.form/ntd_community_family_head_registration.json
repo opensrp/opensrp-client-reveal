@@ -1,0 +1,202 @@
+{
+  "count": "1",
+  "encounter_type": "Update Family Head Registration",
+  "entity_id": "",
+  "relational_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": "",
+    "look_up": {
+      "entity_id": "",
+      "value": ""
+    }
+  },
+  "step1": {
+    "title": "Update Family head",
+    "fields": [
+      {
+        "key": "unique_id",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_identifier",
+        "openmrs_entity_id": "opensrp_id",
+        "type": "hidden",
+        "hint": "ID",
+        "read_only": "True",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the ID"
+        }
+      },
+      {
+        "key": "firstName",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "first_name",
+        "type": "edit_text",
+        "hint": "Head of Household given names",
+        "edit_type": "name",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter first name of Head of Household"
+        }
+      },
+      {
+        "key": "surname",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "last_name",
+        "type": "edit_text",
+        "hint": "Head of Household Surname",
+        "edit_type": "name",
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the surname"
+        }
+      },
+      {
+        "key": "gender",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "gender",
+        "type": "native_radio",
+        "label": "HOH gender",
+        "options": [
+          {
+            "key": "Male",
+            "text": "Male"
+          },
+          {
+            "key": "Female",
+            "text": "Female"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Please enter the sex"
+        }
+      },
+      {
+        "key": "age",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "age_entered",
+        "type": "edit_text",
+        "hint": "HOH age",
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_min": {
+          "value": "5",
+          "err": "Age must be equal or greater than 5"
+        },
+        "v_max": {
+          "value": "120",
+          "err": "Age must be equal or less than 120"
+        },
+        "v_required": {
+          "value": true,
+          "err": "Please enter the age"
+        }
+      },
+      {
+        "key": "personPhonenumber",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "person_phone_number",
+        "type": "edit_text",
+        "hint": "Head of Household phone number",
+        "v_numeric": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_regex": {
+          "value": "^$|0[0-9]{8,9}",
+          "err": "Number must be 9-10 digits and must start with 0."
+        },
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "nSAC",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "nsac",
+        "type": "edit_text",
+        "hint": "Total number of children up to age 15 in the household?",
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Please enter a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Age must be equal or greater than 5"
+        },
+        "v_max": {
+          "value": "35",
+          "err": "Please divide the household by mothers of the children"
+        },
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "nameGrantingconsent",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "person_attribute",
+        "openmrs_entity_id": "name_granting_consent",
+        "type": "edit_text",
+        "edit_type": "name",
+        "hint": "Name of person providing consent for drug distribution",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      }
+    ]
+  }
+}

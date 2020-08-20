@@ -24,7 +24,9 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FamilyOtherMemberProfileContract;
 import org.smartregister.reveal.fragment.FamilyOtherMemberProfileFragment;
 import org.smartregister.reveal.presenter.FamilyOtherMemberPresenter;
+import org.smartregister.reveal.presenter.FamilyProfilePresenter;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
@@ -36,11 +38,12 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
 
 
     private boolean isFamilyHead = false;
+    private String familyBaseEntityId;
 
     @Override
     protected void initializePresenter() {
         String baseEntityId = getIntent().getStringExtra(Constants.INTENT_KEY.BASE_ENTITY_ID);
-        String familyBaseEntityId = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID);
+        familyBaseEntityId = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_BASE_ENTITY_ID);
         String familyHead = getIntent().getStringExtra(Constants.INTENT_KEY.FAMILY_HEAD);
         String primaryCaregiver = getIntent().getStringExtra(Constants.INTENT_KEY.PRIMARY_CAREGIVER);
         String operationalArea = PreferencesUtil.getInstance().getCurrentOperationalArea();
@@ -154,6 +157,8 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
                 JSONObject form = new JSONObject(jsonString);
                 if (form.getString(JsonFormUtils.ENCOUNTER_TYPE).equals(Utils.metadata().familyMemberRegister.updateEventType)) {
                     presenter().updateFamilyMember(jsonString);
+                } else if (form.getString(JsonFormUtils.ENCOUNTER_TYPE).equals(FamilyConstants.EventType.UPDATE_FAMILY_HEAD_MEMBER_REGISTRATION)) {
+                    ((FamilyOtherMemberPresenter)presenter()).updateFamilyMemberHead(form, familyBaseEntityId);
                 }
             } catch (Exception e) {
                 Timber.e(e, "Error processing form submission");

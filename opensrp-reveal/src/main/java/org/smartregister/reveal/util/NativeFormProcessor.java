@@ -30,6 +30,7 @@ import org.smartregister.util.JsonFormUtils;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import static org.smartregister.family.util.JsonFormUtils.RELATIONSHIPS;
@@ -63,7 +64,7 @@ public class NativeFormProcessor {
         return new NativeFormProcessor(jsonObject);
     }
 
-    public static NativeFormProcessor createInstanceFromAsset(String filePath) throws  JSONException{
+    public static NativeFormProcessor createInstanceFromAsset(String filePath) throws JSONException {
         String jsonString = org.smartregister.util.Utils.readAssetContents(RevealApplication.getInstance().getContext().applicationContext()
                 , filePath);
         return createInstance(jsonString);
@@ -214,16 +215,64 @@ public class NativeFormProcessor {
 
         JSONObject originalClientJsonObject = getSyncHelper().getClient(createClient().getBaseEntityId());
 
-        JSONObject mergedJson = JsonFormUtils.merge(originalClientJsonObject, updatedClientJson);
+        JSONObject mergedJson = new JSONObject(updatedClientJson.toString());
 
-        //retain existing relationships, relationships are deleted on @Link org.smartregister.util.JsonFormUtils.createBaseClient
-        JSONObject relationships = mergedJson.optJSONObject(RELATIONSHIPS);
-        if ((relationships == null || relationships.length() == 0) && originalClientJsonObject != null) {
-            mergedJson.put(RELATIONSHIPS, originalClientJsonObject.optJSONObject(RELATIONSHIPS));
-        }
+        mergeJsonObject(mergedJson, originalClientJsonObject);
 
         getSyncHelper().addClient(createClient().getBaseEntityId(), mergedJson);
         return this;
+    }
+
+    /**
+     * when updating client info
+     *
+     * @return
+     * @throws JSONException
+     */
+    public NativeFormProcessor updateAndSaveClient(Consumer<Client> consumer) throws JSONException {
+        Client client = createClient();
+        if (consumer != null)
+            consumer.accept(client);
+
+        JSONObject updatedClientJson = new JSONObject(JsonFormUtils.gson.toJson(client));
+
+        JSONObject originalClientJsonObject = getSyncHelper().getClient(createClient().getBaseEntityId());
+
+        JSONObject mergedJson = new JSONObject(updatedClientJson.toString());
+
+        mergeJsonObject(mergedJson, originalClientJsonObject);
+
+        getSyncHelper().addClient(createClient().getBaseEntityId(), mergedJson);
+        return this;
+    }
+
+    private void mergeJsonObject(JSONObject updated, JSONObject original) throws JSONException {
+        Iterator<String> keys = original.keys();
+
+        while (keys.hasNext()) {
+            String key = keys.next();
+            if (key.equals("_rev") || key.equals("serverVersion")) continue;
+
+            if (original.get(key) instanceof JSONObject) {
+                // do something with jsonObject here
+                if (!updated.has(key))
+                    updated.put(key, new JSONObject());
+
+                JSONObject updatedJSONObject = updated.getJSONObject(key);
+                JSONObject originalJSONObject = original.getJSONObject(key);
+
+                mergeJsonObject(updatedJSONObject, originalJSONObject);
+
+            } else if (original.get(key) instanceof String) {
+                if (!updated.has(key))
+                    updated.put(key, original.getString(key));
+
+            } else if (original.get(key) instanceof JSONArray) {
+                if (!updated.has(key))
+                    updated.put(key, original.getJSONArray(key));
+
+            }
+        }
     }
 
     /**

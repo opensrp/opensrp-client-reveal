@@ -159,6 +159,8 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
                         ((FamilyProfilePresenter) presenter()).saveFamilyMember(getContext(), form, familyBaseEntityId, familyName);
                     } else if (form.getString(JsonFormUtils.ENCOUNTER_TYPE).equals(FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION)) {
                         ((FamilyProfilePresenter) presenter()).updateFamilyMember(form, familyBaseEntityId, familyName);
+                    } else if (form.getString(JsonFormUtils.ENCOUNTER_TYPE).equals(FamilyConstants.EventType.UPDATE_FAMILY_HEAD_MEMBER_REGISTRATION)) {
+                        ((FamilyProfilePresenter) presenter()).updateFamilyMemberHead(form, familyBaseEntityId, familyName);
                     } else {
                         super.onActivityResult(requestCode, resultCode, data);
                     }
