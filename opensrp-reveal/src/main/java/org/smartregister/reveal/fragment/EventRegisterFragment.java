@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATION;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
@@ -116,7 +117,7 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
 
     @Override
     protected String getMainCondition() {
-        return "";
+        return getPresenter().getMainCondition();
     }
 
     @Override
@@ -197,6 +198,15 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
                         JsonForm.IRS_FIELD_OFFICER_ZAMBIA))
                 .build());
         getActivity().startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_FILTER_TASKS && resultCode == RESULT_OK && data.hasExtra(FILTER_SORT_PARAMS)) {
+            TaskFilterParams filterParams = (TaskFilterParams) data.getSerializableExtra(FILTER_SORT_PARAMS);
+            getPresenter().filterTasks(filterParams);
+        }
     }
 
 

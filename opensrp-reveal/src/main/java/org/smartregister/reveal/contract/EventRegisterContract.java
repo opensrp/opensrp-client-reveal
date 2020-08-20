@@ -48,6 +48,10 @@ public interface EventRegisterContract {
         void onEventSelected(EventRegisterDetails details);
 
         void onFilterTasksClicked();
+
+        void filterTasks(TaskFilterParams filterParams);
+
+        String getMainCondition();
     }
 
     interface Interactor {

@@ -137,4 +137,15 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
         view.openFilterActivity(filterParams);
     }
 
+    @Override
+    public void filterTasks(TaskFilterParams filterParams) {
+        this.filterParams = filterParams;
+
+    }
+
+    @Override
+    public String getMainCondition() {
+        return "";
+    }
+
 }
