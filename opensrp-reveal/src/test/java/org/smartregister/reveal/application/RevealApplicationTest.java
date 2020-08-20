@@ -75,7 +75,7 @@ public class RevealApplicationTest extends BaseUnitTest {
         assertNotNull(actualMetaData);
         assertEquals("opensrp_id", actualMetaData.uniqueIdentifierKey);
         assertEquals("ec_family", actualMetaData.familyRegister.tableName);
-        assertEquals("Family Registration", actualMetaData.familyRegister.registerEventType);
+        assertEquals("Family_Registration", actualMetaData.familyRegister.registerEventType);
         assertEquals("family_register", actualMetaData.familyRegister.config);
         assertEquals("family_head", actualMetaData.familyRegister.familyHeadRelationKey);
     }

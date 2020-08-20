@@ -9,7 +9,6 @@
     android:orientation="horizontal"
     android:padding="8dp"
     android:visibility="gone"
-    android:weightSum="5"
     tools:visibility="visible">
 
     <org.smartregister.reporting.view.ProgressIndicatorView

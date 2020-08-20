@@ -10,6 +10,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.smartregister.AllConstants;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.CardDetails;
@@ -55,10 +56,7 @@ public class CardDetailsUtil {
             case BusinessStatus.SPRAYED:
             case BusinessStatus.COMPLETE:
             case BusinessStatus.FULLY_RECEIVED:
-            case PARTIALLY_SPRAYED:
-                cardDetails.setStatusColor(R.color.sprayed);
-                cardDetails.setStatusMessage(R.string.details_sprayed);
-                cardDetails.setReason(null);
+                formatCardDetailsForCompletedTasks(cardDetails);
                 break;
             case BusinessStatus.NOT_SPRAYABLE:
             case BusinessStatus.NOT_ELIGIBLE:
@@ -66,10 +64,24 @@ public class CardDetailsUtil {
                 cardDetails.setStatusMessage(R.string.details_not_sprayable);
                 cardDetails.setReason(null);
                 break;
+            case PARTIALLY_SPRAYED:
+                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                    formatCardDetailsForCompletedTasks(cardDetails);
+                } else {
+                    cardDetails.setStatusColor(R.color.partially_sprayed);
+                    cardDetails.setStatusMessage(R.string.partially_sprayed);
+                }
+                break;
             default:
                 Timber.w("business status not defined :" + cardDetails.getStatus());
                 break;
         }
+    }
+
+    private static void formatCardDetailsForCompletedTasks(CardDetails cardDetails) {
+        cardDetails.setStatusColor(R.color.sprayed);
+        cardDetails.setStatusMessage(R.string.details_sprayed);
+        cardDetails.setReason(null);
     }
 
     public void populateSprayCardTextViews(SprayCardDetails sprayCardDetails, Activity activity) {
@@ -226,7 +238,6 @@ public class CardDetailsUtil {
             case NOT_SPRAYED:
                 return context.getString(R.string.not_sprayed);
             case SPRAYED:
-            case PARTIALLY_SPRAYED:
                 return context.getString(R.string.sprayed);
             case NOT_SPRAYABLE:
                 return context.getString(R.string.not_sprayable);
@@ -238,6 +249,12 @@ public class CardDetailsUtil {
                 return context.getString(R.string.not_eligible);
             case IN_PROGRESS:
                 return context.getString(R.string.in_progress);
+            case PARTIALLY_SPRAYED:
+                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                    return context.getString(R.string.sprayed);
+                } else {
+                    return context.getString(R.string.partially_sprayed);
+                }
             default:
                 return businessStatus;
         }

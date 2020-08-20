@@ -105,18 +105,31 @@ public class IndicatorUtils {
         return indicatorDetails;
     }
 
+
+    public static List<String> populateNamibiaSprayIndicators(Context context, IndicatorDetails indicatorDetails) {
+        List<String> sprayIndicator = new ArrayList<>();
+        sprayIndicator.add(context.getResources().getString(R.string.total_structures_targeted));
+        sprayIndicator.add(String.valueOf(indicatorDetails.getTarget()));
+
+        sprayIndicator.add(context.getResources().getString(R.string.structures_visited_found));
+        sprayIndicator.add(String.valueOf(indicatorDetails.getFoundStructures()));
+
+        sprayIndicator.add(context.getResources().getString(R.string.structures_sprayed));
+        sprayIndicator.add(String.valueOf(indicatorDetails.getSprayed()));
+
+
+        return sprayIndicator;
+    }
+
     public static List<String> populateSprayIndicators(Context context, IndicatorDetails indicatorDetails) {
 
         int totalStructures = indicatorDetails.getTotalStructures();
-        int progress = indicatorDetails.getProgress();
-
-        indicatorDetails.setTotalStructures(totalStructures);
-        indicatorDetails.setProgress(progress);
+        int sprayCoverage = indicatorDetails.getProgress();
 
         List<String> sprayIndicator = new ArrayList<>();
 
         sprayIndicator.add(context.getResources().getString(R.string.spray_coverage));
-        sprayIndicator.add(context.getResources().getString(R.string.n_percent, progress));
+        sprayIndicator.add(context.getResources().getString(R.string.n_percent, sprayCoverage));
 
         int totalFound = (indicatorDetails.getSprayed() + indicatorDetails.getNotSprayed());
 
@@ -134,7 +147,6 @@ public class IndicatorUtils {
 
         sprayIndicator.add(context.getResources().getString(R.string.structures_visited_found));
         sprayIndicator.add(String.valueOf(totalFound));
-
 
         sprayIndicator.add(context.getResources().getString(R.string.sprayed));
         sprayIndicator.add(String.valueOf(indicatorDetails.getSprayed()));

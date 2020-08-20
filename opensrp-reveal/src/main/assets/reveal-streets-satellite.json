@@ -74,8 +74,7 @@
           [
             "Sprayed",
             "Complete",
-            "Fully Received",
-            "Partially Sprayed"
+            "Fully Received"
           ],
           "hsl(89, 52%, 48%)",
           [
@@ -97,6 +96,7 @@
           ],
           "hsl(262, 100%, 68%)",
           [
+            "Partially Sprayed",
             "Partially Received"
           ],
           "hsl(26, 84%, 56%)",
@@ -175,8 +175,7 @@
           [
             "Sprayed",
             "Complete",
-            "Fully Received",
-            "Partially Sprayed"
+            "Fully Received"
           ],
           "hsl(89, 52%, 48%)",
           [
@@ -198,6 +197,7 @@
           ],
           "hsl(262, 100%, 68%)",
           [
+            "Partially Sprayed",
             "Partially Received"
           ],
           "hsl(26, 84%, 56%)",

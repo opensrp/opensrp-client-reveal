@@ -436,13 +436,42 @@
           "value": "0",
           "err": "Must be greater than or equal to 0"
         },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+	  {
+        "key": "nSprayedSumishieldFirst",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# structures sprayed with Sumishield",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
         "v_cumulative_total": {
           "value": "nSprayedTotalFirst",
           "related_fields": [
             "nSprayedDDTFirst",
-            "nSprayedDeltaFirst"
+            "nSprayedDeltaFirst",
+			"nSprayedActellicFirst"
           ],
-          "err": "The sum of DDT, Delta and Actellic must equal total sprayed"
+          "err": "The sum of DDT, Delta, Actellic and Sumishield must equal total sprayed"
         },
         "relevance": {
           "rules-engine": {
@@ -916,13 +945,42 @@
           "value": "0",
           "err": "Must be greater than or equal to 0"
         },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "namibia-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+	  {
+        "key": "nSprayedSumishieldMop",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "# structures sprayed with Sumishield during mop-up",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "Must be greater than or equal to 0"
+        },
         "v_cumulative_total": {
           "value": "nSprayedTotalMop",
           "related_fields": [
             "nSprayedDDTMop",
-            "nSprayedDeltaMop"
+            "nSprayedDeltaMop",
+			"nSprayedActellicMop"
           ],
-          "err": "The sum of DDT, Delta and Actellic must equal total sprayed during mop-up"
+          "err": "The sum of DDT, Delta, Actellic and Sumishield must equal total sprayed during mop-up"
         },
         "relevance": {
           "rules-engine": {
