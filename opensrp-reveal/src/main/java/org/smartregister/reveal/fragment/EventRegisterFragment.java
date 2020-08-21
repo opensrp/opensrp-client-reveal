@@ -187,14 +187,11 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
         intent.putExtra(FILTER_SORT_PARAMS, filterParams);
         intent.putExtra(FILTER_CONFIGURATION, FilterConfiguration.builder()
                 .businessStatusLayoutEnabled(true)
-                .businessStatusList(Arrays.asList(BusinessStatus.SPRAYED, BusinessStatus.NOT_SPRAYED, BusinessStatus.NOT_ELIGIBLE))
+                .businessStatusList(Arrays.asList(BusinessStatus.COMPLETE, BusinessStatus.SPRAYED, BusinessStatus.NOT_SPRAYED, BusinessStatus.NOT_ELIGIBLE))
                 .interventionTypeLayoutEnabled(false)
                 .taskCodeLayoutEnabled(false)
                 .formsLayoutEnabled(true)
-                .eventTypeList(Arrays.asList(Constants.SPRAY_EVENT, EventType.VERIFICATION_EVENT,
-                        EventType.DAILY_SUMMARY_EVENT, EventType.TEAM_LEADER_DOS_EVENT,
-                        EventType.MOBILIZATION_EVENT, EventType.IRS_SA_DECISION_EVENT,
-                        EventType.IRS_FIELD_OFFICER_EVENT))
+                .eventTypeList(EventType.SUMMARY_EVENT_TYPES)
                 .build());
         getActivity().startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
 

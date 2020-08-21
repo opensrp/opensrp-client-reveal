@@ -234,8 +234,10 @@ public interface Constants {
 
         String VERIFICATION_EVENT = "verification";
 
+        String CB_SPRAY_AREA_EVENT = "cb_spray_area";
+
         List<String> SUMMARY_EVENT_TYPES = Arrays.asList(DAILY_SUMMARY_EVENT, IRS_FIELD_OFFICER_EVENT,
-                IRS_SA_DECISION_EVENT, MOBILIZATION_EVENT, TEAM_LEADER_DOS_EVENT, VERIFICATION_EVENT);
+                IRS_SA_DECISION_EVENT, MOBILIZATION_EVENT, TEAM_LEADER_DOS_EVENT, VERIFICATION_EVENT, CB_SPRAY_AREA_EVENT);
     }
 
     interface Tables {

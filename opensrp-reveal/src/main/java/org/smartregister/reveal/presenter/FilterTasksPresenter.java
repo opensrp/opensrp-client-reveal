@@ -91,6 +91,7 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
         labelsMap.put(EventType.MOBILIZATION_EVENT, R.string.mobilization_form_name);
         labelsMap.put(EventType.IRS_SA_DECISION_EVENT, R.string.irs_field_officer_form);
         labelsMap.put(EventType.IRS_FIELD_OFFICER_EVENT, R.string.irs_field_officer_form);
+        labelsMap.put(EventType.CB_SPRAY_AREA_EVENT, R.string.cb_spray_area_form);
 
     }
 
