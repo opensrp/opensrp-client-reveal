@@ -68,6 +68,7 @@ import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
+import static org.smartregister.domain.LocationProperty.PropertyStatus.INACTIVE;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
@@ -95,6 +96,7 @@ import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
@@ -286,14 +288,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         listTaskView.closeAllCardViews();
         listTaskView.displaySelectedFeature(feature, clickedPoint);
-        if (!feature.hasProperty(TASK_IDENTIFIER)) {
-            String structureType = getPropertyValue(feature, TYPE);
-            if (Constants.StructureType.RESIDENTIAL.equals(structureType)) {
-                listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
-            } else {
-                listTaskView.displayMarkStructureActiveDialog();
-            }
-        } else if (isLongclick) {
+      
+        if (isLongclick) {
             if (BuildConfig.BUILD_COUNTRY != Country.THAILAND && BuildConfig.BUILD_COUNTRY != Country.THAILAND_EN) {
                 onFeatureSelectedByLongClick(feature);
             }
@@ -303,6 +299,16 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     private void onFeatureSelectedByNormalClick(Feature feature) {
+        if (!feature.hasProperty(TASK_IDENTIFIER)) {
+            String structureType = getPropertyValue(feature, TYPE);
+            if (Constants.StructureType.RESIDENTIAL.equals(structureType)) {
+                listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
+            } else {
+                listTaskView.displayMarkStructureActiveDialog();
+            }
+          return;
+        }
+
         String businessStatus = getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
         String code = getPropertyValue(feature, TASK_CODE);
         selectedFeatureInterventionType = code;
@@ -336,9 +342,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private void onFeatureSelectedByLongClick(Feature feature) {
         String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
         String code = getPropertyValue(feature, TASK_CODE);
+        String status = getPropertyValue(feature, LOCATION_STATUS);
 
         selectedFeatureInterventionType = code;
-        if (NOT_VISITED.equals(businessStatus)) {
+        if (INACTIVE.name().equals(status)){
+            listTaskView.displayToast(R.string.structure_is_inactive);
+        } else if (NOT_VISITED.equals(businessStatus) || !feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayMarkStructureInactiveDialog();
         } else {
             listTaskView.displayToast(R.string.cannot_make_structure_inactive);
@@ -502,7 +511,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         if (cardDetails instanceof MosquitoHarvestCardDetails && PAOT.equals(((MosquitoHarvestCardDetails) cardDetails).getInterventionType())) {
             jsonFormUtils.populatePAOTForm((MosquitoHarvestCardDetails) cardDetails, formJson);
         } else if (cardDetails instanceof SprayCardDetails && Country.NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
-            jsonFormUtils.populateSprayForm(((SprayCardDetails) cardDetails).getCommonPersonObject(), formJson);
+            jsonFormUtils.populateForm(event, formJson);
         } else if (JsonForm.SPRAY_FORM_ZAMBIA.equals(formName)) {
             try {
                 jsonFormUtils.populateField(formJson, DISTRICT_NAME, prefsUtil.getCurrentDistrict().trim(), VALUE);
@@ -676,6 +685,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             if (selectedFeature.id().equals(feature.id())) {
                 feature.removeProperty(TASK_BUSINESS_STATUS);
                 feature.removeProperty(TASK_IDENTIFIER);
+                feature.addStringProperty(LOCATION_STATUS, INACTIVE.name());
                 break;
             }
         }

@@ -181,14 +181,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         return repository;
     }
 
-    public char[] getPassword() {
-        if (password == null) {
-            String username = getContext().allSharedPreferences().fetchRegisteredANM();
-            password = getContext().userService().getGroupId(username);
-        }
-        return password;
-    }
-
     @Override
     public void logoutCurrentUser() {
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);

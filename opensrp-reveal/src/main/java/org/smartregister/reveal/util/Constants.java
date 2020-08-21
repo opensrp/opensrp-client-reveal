@@ -151,6 +151,7 @@ public interface Constants {
         String FAMILY_MEMBER_NAMES = "family_member_names";
         String PLAN_IDENTIFIER = "planIdentifier";
         String TYPE = "type";
+        String LOCATION_STATUS = "status";
     }
 
 
@@ -211,7 +212,7 @@ public interface Constants {
 
         String CASE_CONFIRMATION_EVENT = "case_confirmation";
 
-        String CASE_DETAILS_EVENT = "Case Details";
+        String CASE_DETAILS_EVENT = "Case_Details";
 
         String PAOT_EVENT = "PAOT";
 
