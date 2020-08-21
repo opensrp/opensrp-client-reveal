@@ -114,7 +114,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     }
 
     private void setSortOptions() {
-        if (filterConfiguration.getSortOptions() != null) {
+        if (filterConfiguration != null && filterConfiguration.getSortOptions() != null) {
             String[] sortOptions = getResources().getStringArray(filterConfiguration.getSortOptions());
             ArrayAdapter<String> adapter = new ArrayAdapter<>(
                     this, android.R.layout.simple_spinner_item, sortOptions);

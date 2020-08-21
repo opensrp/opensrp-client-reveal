@@ -251,7 +251,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         List<TaskDetails> detailsList = new ArrayList<>();
         detailsList.add(TestingUtils.getTaskDetails());
         Whitebox.setInternalState(presenter, "applyFilterOnTasksFound", true);
-        Whitebox.setInternalState(presenter, "filterParams", new TaskFilterParams("search"));
+        Whitebox.setInternalState(presenter, "filterParams", TaskFilterParams.builder().searchPhrase("search").build());
         presenter.onTasksFound(detailsList, 1);
         verify(view).setTotalTasks(1);
         verify(view).clearFilter();
@@ -610,7 +610,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void filterTasksWithBusinessStatus() {
         initFilterSearchTasks();
-        TaskFilterParams params = new TaskFilterParams("", new HashMap<>());
+        TaskFilterParams params = TaskFilterParams.builder().searchPhrase("").build();
         params.getCheckedFilters().put(Filter.STATUS, Collections.singleton(BusinessStatus.BLOOD_SCREENING_COMPLETE));
         presenter.filterTasks(params);
         verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
@@ -629,7 +629,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void filterTasksWithTaskCode() {
         initFilterSearchTasks();
-        TaskFilterParams params = new TaskFilterParams("", new HashMap<>());
+        TaskFilterParams params = TaskFilterParams.builder().searchPhrase("").build();
         params.getCheckedFilters().put(Filter.CODE, Collections.singleton(Intervention.IRS));
         presenter.filterTasks(params);
         verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
@@ -649,7 +649,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void filterTasksWithStructureInterventionType() {
         initFilterSearchTasks();
-        TaskFilterParams params = new TaskFilterParams("", new HashMap<>());
+        TaskFilterParams params = TaskFilterParams.builder().searchPhrase("").build();
         params.getCheckedFilters().put(Filter.INTERVENTION_UNIT, Collections.singleton(InterventionType.STRUCTURE));
         presenter.filterTasks(params);
         verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
@@ -663,7 +663,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void filterTasksWithPersonInterventionType() {
         initFilterSearchTasks();
-        TaskFilterParams params = new TaskFilterParams("", new HashMap<>());
+        TaskFilterParams params = TaskFilterParams.builder().searchPhrase("").build();
         params.getCheckedFilters().put(Filter.INTERVENTION_UNIT, Collections.singleton(InterventionType.PERSON));
         presenter.filterTasks(params);
         verify(view).setTaskDetails(taskDetailsArgumentCaptor.capture());
@@ -677,7 +677,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void filterTasksWithMissingInterventionType() {
         initFilterSearchTasks();
-        TaskFilterParams params = new TaskFilterParams("", new HashMap<>());
+        TaskFilterParams params = TaskFilterParams.builder().build();
         params.getCheckedFilters().put(Filter.INTERVENTION_UNIT, Collections.singleton(InterventionType.OPERATIONAL_AREA));
         presenter.filterTasks(params);
         verify(view).setTaskDetails(new ArrayList<>());
@@ -690,7 +690,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void filterTaskWithAllParams() {
         initFilterSearchTasks();
-        TaskFilterParams params = new TaskFilterParams("Status", new HashMap<>());
+        TaskFilterParams params = TaskFilterParams.builder().sortBy("Status").build();
         params.getCheckedFilters().put(Filter.STATUS, Collections.singleton(BusinessStatus.BLOOD_SCREENING_COMPLETE));
         params.getCheckedFilters().put(Filter.CODE, Collections.singleton(Intervention.BLOOD_SCREENING));
         params.getCheckedFilters().put(Filter.INTERVENTION_UNIT, Collections.singleton(InterventionType.PERSON));

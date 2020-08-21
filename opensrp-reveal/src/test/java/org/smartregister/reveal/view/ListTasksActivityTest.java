@@ -609,7 +609,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testOnActivityResultFilterFeatures() {
         Whitebox.setInternalState(listTasksActivity, "listTaskPresenter", listTaskPresenter);
-        TaskFilterParams params = new TaskFilterParams("Doe");
+        TaskFilterParams params = TaskFilterParams.builder().searchPhrase("Doe").build();
         Intent intent = new Intent();
         intent.putExtra(FILTER_SORT_PARAMS, params);
         listTasksActivity.onActivityResult(REQUEST_CODE_FILTER_TASKS, Activity.RESULT_OK, intent);
@@ -620,7 +620,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testOnActivityResultInializeFilterParams() {
         Whitebox.setInternalState(listTasksActivity, "listTaskPresenter", listTaskPresenter);
-        TaskFilterParams params = new TaskFilterParams("Doe");
+        TaskFilterParams params = TaskFilterParams.builder().searchPhrase("Doe").build();
         Intent intent = new Intent();
         intent.putExtra(FILTER_SORT_PARAMS, params);
         listTasksActivity.onActivityResult(REQUEST_CODE_TASK_LISTS, Activity.RESULT_OK, intent);
@@ -864,11 +864,11 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testOnSyncProgress() {
         ProgressBar progress = new ProgressBar(context);
-        TextView  progressLabel = new TextView(context);
+        TextView progressLabel = new TextView(context);
         SyncProgress mockSyncProgress = mock(SyncProgress.class);
         SyncEntity mockSyncEntity = mock(SyncEntity.class);
         ListTasksActivity spyListTasksActivity = spy(listTasksActivity);
-        doReturn(50 ).when(mockSyncProgress).getPercentageSynced();
+        doReturn(50).when(mockSyncProgress).getPercentageSynced();
         doReturn(mockSyncEntity).when(mockSyncProgress).getSyncEntity();
         doReturn("Tasks").when(mockSyncEntity).toString();
         doReturn(progress).when(spyListTasksActivity).findViewById(eq(R.id.sync_progress_bar));
