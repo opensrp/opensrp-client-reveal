@@ -2,17 +2,17 @@ package org.smartregister.reveal.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.appcompat.view.ContextThemeWrapper;
-import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.flexbox.FlexboxLayout;
 
@@ -26,9 +26,9 @@ import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.view.activity.MultiLanguageActivity;
 
-import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -83,6 +83,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         fromDateFilterTextView = findViewById(R.id.filter_from_date);
         viewAllEventsCheckBox = findViewById(R.id.view_all_events);
 
+        setSortOptions();
         setFilterVisibility();
         setUpToggleButtonGroups();
         registerCheckedChangeListener();
@@ -103,6 +104,15 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
 
     }
 
+    private void setSortOptions() {
+        if (filterConfiguration.getSortOptions() != null) {
+            String[] sortOptions = getResources().getStringArray(filterConfiguration.getSortOptions());
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    this, android.R.layout.simple_spinner_item, sortOptions);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sortBySpinner.setAdapter(adapter);
+        }
+    }
 
     private void clearSelections() {
         sortBySpinner.setSelection(0);

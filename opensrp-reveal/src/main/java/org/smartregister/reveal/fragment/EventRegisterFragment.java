@@ -121,7 +121,7 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
 
     @Override
     protected String getDefaultSortQuery() {
-        return Constants.DatabaseKeys.EVENT_DATE + " DESC";
+        return getPresenter().getSortQuery();
     }
 
     @Override
@@ -192,6 +192,7 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
                 .taskCodeLayoutEnabled(false)
                 .formsLayoutEnabled(true)
                 .eventTypeList(EventType.SUMMARY_EVENT_TYPES)
+                .sortOptions(R.array.form_sort_options)
                 .build());
         getActivity().startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
 

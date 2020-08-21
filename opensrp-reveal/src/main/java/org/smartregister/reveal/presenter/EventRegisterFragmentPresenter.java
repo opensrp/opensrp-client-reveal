@@ -149,7 +149,6 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
     public void filterTasks(TaskFilterParams filterParams) {
         this.filterParams = filterParams;
         initializeQueries(getMainCondition());
-
     }
 
     @Override
@@ -175,4 +174,8 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
         return stringBuilder.length() == 0 ? "" : stringBuilder.substring(0, stringBuilder.length() - 5);
     }
 
+    @Override
+    public String getSortQuery() {
+        return Constants.DatabaseKeys.EVENT_DATE + " DESC";
+    }
 }

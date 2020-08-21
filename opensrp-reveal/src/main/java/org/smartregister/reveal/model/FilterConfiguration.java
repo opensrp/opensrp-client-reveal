@@ -1,5 +1,9 @@
 package org.smartregister.reveal.model;
 
+import androidx.annotation.ArrayRes;
+
+import org.smartregister.reveal.R;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -28,4 +32,7 @@ public class FilterConfiguration implements Serializable {
     private List<String> businessStatusList;
 
     private List<String> eventTypeList;
+
+    @ArrayRes
+    private Integer sortOptions;
 }

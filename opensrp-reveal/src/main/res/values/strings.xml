@@ -338,6 +338,12 @@
         <item>Type</item>
     </string-array>
 
+    <string-array name="form_sort_options">
+        <item>Date (Recent)</item>
+        <item>Form Name</item>
+        <item>SOP</item>
+    </string-array>
+
     <string name="select_task_action">Select action to perform</string>
     <string name="choose_action">Choose action</string>
     <string name="view_details">View Details</string>

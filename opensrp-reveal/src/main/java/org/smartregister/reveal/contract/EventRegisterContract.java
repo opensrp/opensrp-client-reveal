@@ -52,6 +52,8 @@ public interface EventRegisterContract {
         void filterTasks(TaskFilterParams filterParams);
 
         String getMainCondition();
+
+        String getSortQuery();
     }
 
     interface Interactor {
