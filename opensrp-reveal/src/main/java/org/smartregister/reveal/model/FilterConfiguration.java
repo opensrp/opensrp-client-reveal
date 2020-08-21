@@ -27,5 +27,5 @@ public class FilterConfiguration implements Serializable {
 
     private List<String> businessStatusList;
 
-    private List<String> formsList;
+    private List<String> eventTypeList;
 }

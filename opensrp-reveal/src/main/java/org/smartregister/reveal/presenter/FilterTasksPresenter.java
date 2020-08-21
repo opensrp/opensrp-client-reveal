@@ -14,6 +14,7 @@ import org.smartregister.reveal.model.FilterConfiguration;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
+import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
@@ -83,13 +84,14 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
 
 
         //Forms
-        labelsMap.put(JsonForm.SPRAY_FORM_ZAMBIA, R.string.hh_form);
-        labelsMap.put(JsonForm.VERIFICATION_FORM_ZAMBIA, R.string.verification_form_name);
-        labelsMap.put(JsonForm.DAILY_SUMMARY_ZAMBIA, R.string.daily_summary_name);
-        labelsMap.put(JsonForm.TEAM_LEADER_DOS_ZAMBIA, R.string.team_leader_dos_form);
-        labelsMap.put(JsonForm.MOBILIZATION_FORM_ZAMBIA, R.string.mobilization_form_name);
-        labelsMap.put(JsonForm.IRS_SA_DECISION_ZAMBIA, R.string.irs_field_officer_form);
-        labelsMap.put(JsonForm.IRS_FIELD_OFFICER_ZAMBIA, R.string.irs_field_officer_form);
+        labelsMap.put(Constants.SPRAY_EVENT, R.string.hh_form);
+        labelsMap.put(EventType.VERIFICATION_EVENT, R.string.verification_form_name);
+        labelsMap.put(EventType.DAILY_SUMMARY_EVENT, R.string.daily_summary_name);
+        labelsMap.put(EventType.TEAM_LEADER_DOS_EVENT, R.string.team_leader_dos_form);
+        labelsMap.put(EventType.MOBILIZATION_EVENT, R.string.mobilization_form_name);
+        labelsMap.put(EventType.IRS_SA_DECISION_EVENT, R.string.irs_field_officer_form);
+        labelsMap.put(EventType.IRS_FIELD_OFFICER_EVENT, R.string.irs_field_officer_form);
+
     }
 
 

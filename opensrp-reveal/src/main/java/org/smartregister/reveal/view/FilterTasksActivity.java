@@ -26,7 +26,6 @@ import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.view.activity.MultiLanguageActivity;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -136,8 +135,8 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         populateToggleButtons(businessStatusLayout, presenter.getBusinessStatusOptions());
         populateToggleButtons(taskCodeLayout, presenter.getIntentionTypes());
         populateToggleButtons(interventionTypeLayout, InterventionType.FILTERABLE_INTERVENTION_TYPES);
-        if (filterConfiguration.isFormsLayoutEnabled() && filterConfiguration.getFormsList() != null) {
-            populateToggleButtons(formNameLayout, filterConfiguration.getFormsList());
+        if (filterConfiguration.isFormsLayoutEnabled() && filterConfiguration.getEventTypeList() != null) {
+            populateToggleButtons(formNameLayout, filterConfiguration.getEventTypeList());
         }
     }
 
