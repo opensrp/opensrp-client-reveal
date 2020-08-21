@@ -256,4 +256,11 @@
         <item>ประเภทกิจกรรม</item>
     </string-array>
 
+    <string name="archive_family">ลบข้อมูลครัว เรือน</string>
+    <string name="confirm_archive_family">ยืนยันการลบข้อมูล ครัวเรือน</string>
+    <string name="confirm_archive_family_message">โปรดยืนยันว่าคุณ ต้องการลบข้อมูลครัว เรือนของบ้านหลังนี หากยืนยันข้อมูลจะถูก ลบและไม่สามารถเรียก คืนได</string>
+    <string name="confirm">ยืนยัน</string>
+    <string name="archive_member">ลบข้อมูลบุคคลนี</string>
+    <string name="confirm_archive_member">โปรดยืนยันว่าคุณต้องการลบข้อมูลบุคคลนี  ข้อมูลของบุคคลและกิจกรรมที่บุคคลนี้ได้ทําาจะถูก ลบ</string>
+
 </resources>
