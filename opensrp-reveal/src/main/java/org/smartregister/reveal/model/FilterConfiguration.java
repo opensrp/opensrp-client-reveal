@@ -2,8 +2,6 @@ package org.smartregister.reveal.model;
 
 import androidx.annotation.ArrayRes;
 
-import org.smartregister.reveal.R;
-
 import java.io.Serializable;
 import java.util.List;
 

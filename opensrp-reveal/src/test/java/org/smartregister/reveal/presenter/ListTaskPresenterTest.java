@@ -54,7 +54,6 @@ import org.smartregister.reveal.util.TestingUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.UUID;
 
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
@@ -350,7 +349,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
     @Test
     public void testFilterWithAllFilters() {
         Feature structure = TestingUtils.getStructure();
-        TaskFilterParams params = TaskFilterParams.builder().searchPhrase("").build();;
+        TaskFilterParams params = TaskFilterParams.builder().searchPhrase("").build();
         params.getCheckedFilters().put(Filter.STATUS, Collections.singleton(NOT_VISITED));
         params.getCheckedFilters().put(Filter.CODE, Collections.singleton(Intervention.IRS));
         Whitebox.setInternalState(listTaskPresenter, "featureCollection", FeatureCollection.fromFeature(structure));

@@ -50,8 +50,6 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
 
     private RevealJsonFormUtils jsonFormUtils;
 
-    private TextView filterTextView;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +96,7 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
 
         getSearchView().setHint(R.string.search);
 
-        filterTextView = view.findViewById(R.id.filter_text_view);
+        TextView filterTextView = view.findViewById(R.id.filter_text_view);
         filterTextView.setOnClickListener(v -> {
             getPresenter().onFilterTasksClicked();
         });
