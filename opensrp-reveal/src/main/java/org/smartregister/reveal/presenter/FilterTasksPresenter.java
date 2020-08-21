@@ -144,7 +144,7 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
         Intent intent = new Intent();
         intent.putExtra(Filter.FILTER_SORT_PARAMS, TaskFilterParams.builder().sortBy(selectedItem)
                 .checkedFilters(checkedFilters).fromDate(view.getFromDateFilter())
-                .viewAllEvents(view.viewAllEvents()).fromDate(fromDateFilter.getTime()).build());
+                .viewAllEvents(view.viewAllEvents()).fromDate(fromDateFilter == null ? null : fromDateFilter.getTime()).build());
 
         view.applyFilters(intent);
     }

@@ -170,7 +170,8 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     }
 
     private void setViewVisibility(View view, boolean visible) {
-        view.setVisibility(visible ? View.VISIBLE : View.GONE);
+        if (view != null)
+            view.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
 
