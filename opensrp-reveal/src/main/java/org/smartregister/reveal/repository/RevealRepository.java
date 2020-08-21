@@ -56,6 +56,7 @@ import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.Constants.StructureType.RESIDENTIAL;
+import static org.smartregister.reveal.util.Constants.Tables.EVENT_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.LARVAL_DIPPINGS_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.MOSQUITO_COLLECTIONS_TABLE;
 import static org.smartregister.reveal.util.Constants.Tables.PAOT_TABLE;
@@ -219,6 +220,9 @@ public class RevealRepository extends Repository {
     }
 
     private void upgradeToVersion8(SQLiteDatabase db) {
+        // replace whitespaces with underscores in event type field
+        db.execSQL(String.format("UPDATE %s set %s = REPLACE(%s, ' ', '_') ", EVENT_TABLE, DatabaseKeys.EVENT_TYPE_FIELD, DatabaseKeys.EVENT_TYPE_FIELD));
+
         if (!ManifestRepository.isVersionColumnExist(db)) {
             ManifestRepository.addVersionColumn(db);
         }
