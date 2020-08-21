@@ -157,13 +157,6 @@
             "creates_case": [
               "ec_events"
             ]
-          },
-          {
-            "field": "eventType",
-            "field_value": "cb_spray_area",
-            "creates_case": [
-              "ec_events"
-            ]
           }
         ]
       }
