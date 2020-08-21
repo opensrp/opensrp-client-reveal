@@ -1,11 +1,11 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Intent;
+import android.view.ViewGroup;
+import android.widget.DatePicker;
+import android.widget.ToggleButton;
 
 import androidx.annotation.StringRes;
-
-import android.view.ViewGroup;
-import android.widget.ToggleButton;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.reveal.R;
@@ -18,10 +18,10 @@ import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
-import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,7 +33,6 @@ import java.util.Set;
  */
 public class FilterTasksPresenter implements FilterTasksContract.Presenter {
 
-
     private FilterTasksContract.View view;
 
     private Map<String, Integer> labelsMap;
@@ -41,6 +40,8 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
     private Map<String, Set<String>> checkedFilters = new HashMap<>();
 
     private FilterConfiguration filterConfiguration;
+
+    private Calendar fromDateFilter;
 
     public FilterTasksPresenter(FilterTasksContract.View view, FilterConfiguration filterConfiguration) {
         this.view = view;
@@ -143,7 +144,7 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
         Intent intent = new Intent();
         intent.putExtra(Filter.FILTER_SORT_PARAMS, TaskFilterParams.builder().sortBy(selectedItem)
                 .checkedFilters(checkedFilters).fromDate(view.getFromDateFilter())
-                .viewAllEvents(view.viewAllEvents()).build());
+                .viewAllEvents(view.viewAllEvents()).fromDate(fromDateFilter.getTime()).build());
 
         view.applyFilters(intent);
     }
@@ -176,5 +177,12 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
             ToggleButton toggleButton = viewGroup.findViewWithTag(filter);
             toggleButton.setChecked(true);
         }
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+        fromDateFilter = Calendar.getInstance();
+        fromDateFilter.set(year, month, dayOfMonth);
+        view.setFilterFromDate(fromDateFilter.getTime());
     }
 }

@@ -1,5 +1,6 @@
 package org.smartregister.reveal.contract;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import androidx.annotation.StringRes;
 
@@ -40,7 +41,7 @@ public interface FilterTasksContract {
         void setSortBySelection(int sortBySpinner);
     }
 
-    interface Presenter {
+    interface Presenter extends  DatePickerDialog.OnDateSetListener  {
 
         @StringRes
         Integer getStringResource(String intervention);

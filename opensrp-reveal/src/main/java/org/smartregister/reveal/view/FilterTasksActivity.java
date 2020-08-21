@@ -1,5 +1,6 @@
 package org.smartregister.reveal.view;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -28,6 +30,7 @@ import org.smartregister.view.activity.MultiLanguageActivity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +42,7 @@ import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATIO
 
 public class FilterTasksActivity extends MultiLanguageActivity implements FilterTasksContract.View, CompoundButton.OnCheckedChangeListener {
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy", Locale.ENGLISH);
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
 
     private FilterTasksContract.Presenter presenter;
 
@@ -94,6 +97,13 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
 
         applyFiltersTextView.setOnClickListener(view -> {
             presenter.onApplyFilters(sortBySpinner.getSelectedItem().toString());
+        });
+
+        Calendar cal = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this, presenter, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+        fromDateFilterTextView.setOnClickListener(view -> {
+            datePickerDialog.show();
         });
 
 
@@ -262,5 +272,4 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     public void setSortBySelection(int sortBySpinner) {
         this.sortBySpinner.setSelection(sortBySpinner);
     }
-
 }
