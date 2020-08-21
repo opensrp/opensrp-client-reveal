@@ -157,7 +157,9 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
             restoreSelections(checkedFilters.get(Filter.INTERVENTION_UNIT), view.getInterventionTypeLayout());
             restoreSelections(checkedFilters.get(Filter.FORM_NAME), view.getFormNameLayout());
             if (StringUtils.isNotBlank(taskFilterParams.getSortBy())) {
-                int index = Arrays.asList(view.getBusinessStatusLayout().getResources().getStringArray(R.array.task_sort_options)).indexOf(taskFilterParams.getSortBy());
+                int index = Arrays.asList(view.getBusinessStatusLayout().getResources().getStringArray(
+                        filterConfiguration.getSortOptions() == null ? R.array.task_sort_options : filterConfiguration.getSortOptions()))
+                        .indexOf(taskFilterParams.getSortBy());
                 view.setSortBySelection(index == -1 ? 0 : index);
             }
             if (taskFilterParams.getFromDate() != null)
