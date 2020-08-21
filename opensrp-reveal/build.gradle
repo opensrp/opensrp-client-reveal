@@ -6,7 +6,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.0'
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.3'
         classpath 'io.fabric.tools:gradle:1.31.2'
     }
 }
@@ -183,12 +182,12 @@ dependencies {
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
 
-    implementation('io.ona.kujaku:library:0.8.8') {
+    implementation('io.ona.kujaku:library:0.8.9') {
         exclude group: 'com.android.volley'
         exclude group: 'stax', module: 'stax-api'
     }
 
-    implementation('org.smartregister:opensrp-client-core:2.0.3-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:2.0.6-PREVIEW-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.android.support', module: 'appcompat-v7'

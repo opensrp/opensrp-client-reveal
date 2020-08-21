@@ -80,23 +80,4 @@ public class RevealApplicationTest extends BaseUnitTest {
         assertEquals("family_head", actualMetaData.familyRegister.familyHeadRelationKey);
     }
 
-    @Test
-    public void testGetPasswordRetrievesCharPasswordCorrectly() {
-
-        ReflectionHelpers.setField(revealApplication.getContext(), "allSharedPreferences", allSharedPreferences);
-        Mockito.doReturn(DUMMY_USERNAME).when(allSharedPreferences).fetchRegisteredANM();
-        Mockito.doReturn(DUMMY_PASSWORD).when(userService).getGroupId(ArgumentMatchers.anyString());
-        ReflectionHelpers.setField(userService, "allSharedPreferences", allSharedPreferences);
-
-        revealApplication.setPassword(null);
-
-        char[] password = revealApplication.getPassword();
-
-        assertNotNull(password);
-        assertEquals(DUMMY_PASSWORD, password);
-
-        Mockito.verify(userService, Mockito.times(1)).getGroupId(DUMMY_USERNAME);
-
-    }
-
 }
