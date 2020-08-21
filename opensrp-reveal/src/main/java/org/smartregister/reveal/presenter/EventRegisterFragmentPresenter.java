@@ -21,6 +21,7 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Utils;
 
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -176,6 +177,19 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
 
     @Override
     public String getSortQuery() {
-        return Constants.DatabaseKeys.EVENT_DATE + " DESC";
+        StringBuilder stringBuilder = new StringBuilder();
+        if (filterParams == null || StringUtils.isBlank(filterParams.getSortBy())) {
+            stringBuilder.append(Constants.DatabaseKeys.EVENT_DATE + " DESC");
+        } else {
+            int sortType = Arrays.asList(view.getContext().getResources().getStringArray(R.array.form_sort_options)).indexOf(filterParams.getSortBy());
+            if (sortType == 0) {//date default
+                stringBuilder.append(Constants.DatabaseKeys.EVENT_DATE + " DESC");
+            } else if (sortType == 1) {//form
+                stringBuilder.append(DatabaseKeys.EVENT_TYPE);
+            } else if (sortType == 2) {//SOP
+                stringBuilder.append(DatabaseKeys.SOP);
+            }
+        }
+        return stringBuilder.toString();
     }
 }
