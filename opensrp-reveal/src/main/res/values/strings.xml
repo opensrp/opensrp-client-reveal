@@ -327,7 +327,9 @@
     <string name="paot">PAOT</string>
     <string name="mda_dispense">MDA Dispense</string>
     <string name="mda_adherence">MDA Adherence</string>
-
+    <string name="bednet_distributed">Bednet Distributed</string>
+    <string name="family_registered">Family Registered</string>
+    <string name="blood_screening_complete">Blood Screening Complete</string>
 
     <!-- form -->
     <string name="add_fam">Household Registration</string>

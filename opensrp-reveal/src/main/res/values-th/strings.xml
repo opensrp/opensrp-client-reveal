@@ -238,7 +238,7 @@
     <string name="task_type">ประเภทกจกรรม</string>
     <string name="intervention_unit">ระดบการปฏิบติงาน</string>
     <string name="apply_filters">ตกลง</string>
-    <string name="apply_filters_formatter">Apply Filters (%1$d)</string>
+    <string name="apply_filters_formatter">ตกลง (%1$d)</string>
     <string name="bcc_code">BCC</string>
     <string name="mosquito_collection">จบยุง</string>
     <string name="larval_dipping">ตกลูกนาา</string>
@@ -246,5 +246,14 @@
     <string name="blood_screening">กจกรรมเจาะเลือด</string>
     <string name="case_confirmation">ยืนยนบานผูปวย</string>
     <string name="paot">ตาาแหนงทีคาดวาเปนแหลงแพรเชอ</string>
+    <string name="family_registered">ลงทะเบียนครัวเรือนแล้ว</string>
+    <string name="bednet_distributed">บันทึกข้อมูลมุ้งแล้ว</string>
+    <string name="blood_screening_complete">บันทึกการเจาะเลือดแล้ว</string>
+
+    <string-array name="task_sort_options">
+        <item>ระยะทาง(ที่ใกล้ที่สุดก่อน)</item>
+        <item>สถานะ</item>
+        <item>ประเภทกิจกรรม</item>
+    </string-array>
 
 </resources>
