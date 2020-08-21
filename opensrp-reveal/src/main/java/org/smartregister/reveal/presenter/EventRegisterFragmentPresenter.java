@@ -3,6 +3,7 @@ package org.smartregister.reveal.presenter;
 import android.text.TextUtils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
@@ -168,6 +169,11 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
             Set<String> status = filterParams.getCheckedFilters().get(Constants.Filter.STATUS);
             if (status != null) {
                 stringBuilder.append(String.format("%s IN ('%s')", DatabaseKeys.STATUS, StringUtils.join(status, "','")));
+                stringBuilder.append(" AND ");
+            }
+
+            if (filterParams.getFromDate() != null) {
+                stringBuilder.append(String.format("%s >= '%s'", DatabaseKeys.EVENT_DATE, new DateTime(filterParams.getFromDate().getTime()).toString()));
                 stringBuilder.append(" AND ");
             }
         }

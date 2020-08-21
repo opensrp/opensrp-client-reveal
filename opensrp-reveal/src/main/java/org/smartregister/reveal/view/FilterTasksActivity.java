@@ -42,7 +42,7 @@ import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATIO
 
 public class FilterTasksActivity extends MultiLanguageActivity implements FilterTasksContract.View, CompoundButton.OnCheckedChangeListener {
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+    public static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
 
     private FilterTasksContract.Presenter presenter;
 
