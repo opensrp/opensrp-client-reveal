@@ -39,6 +39,8 @@ import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATIO
 
 public class FilterTasksActivity extends MultiLanguageActivity implements FilterTasksContract.View, CompoundButton.OnCheckedChangeListener {
 
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy", Locale.ENGLISH);
+
     private FilterTasksContract.Presenter presenter;
 
     private AppCompatSpinner sortBySpinner;
@@ -223,7 +225,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         CharSequence date = fromDateFilterTextView.getText();
         if (StringUtils.isNotBlank(date)) {
             try {
-                return new SimpleDateFormat("dd-mm-yyyy", Locale.ENGLISH).parse(date.toString());
+                return dateFormat.parse(date.toString());
             } catch (ParseException e) {
                 Timber.e(e);
             }
@@ -237,7 +239,18 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     }
 
     @Override
+    public void setViewAllEvents(boolean viewAllEvents) {
+        viewAllEventsCheckBox.setChecked(viewAllEvents);
+    }
+
+    @Override
+    public void setFilterFromDate(Date dateFrom) {
+        fromDateFilterTextView.setText(dateFormat.format(dateFrom));
+    }
+
+    @Override
     public void setSortBySelection(int sortBySpinner) {
         this.sortBySpinner.setSelection(sortBySpinner);
     }
+
 }

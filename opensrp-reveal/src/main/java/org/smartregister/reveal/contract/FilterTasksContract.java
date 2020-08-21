@@ -33,6 +33,10 @@ public interface FilterTasksContract {
 
         boolean viewAllEvents();
 
+        void setViewAllEvents(boolean viewAllEvents);
+
+        void setFilterFromDate(Date dateFrom);
+
         void setSortBySelection(int sortBySpinner);
     }
 

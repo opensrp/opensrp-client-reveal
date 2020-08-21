@@ -159,6 +159,9 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
                 int index = Arrays.asList(view.getBusinessStatusLayout().getResources().getStringArray(R.array.task_sort_options)).indexOf(taskFilterParams.getSortBy());
                 view.setSortBySelection(index == -1 ? 0 : index);
             }
+            if (taskFilterParams.getFromDate() != null)
+                view.setFilterFromDate(taskFilterParams.getFromDate());
+            view.setViewAllEvents(taskFilterParams.isViewAllEvents());
 
         }
     }
