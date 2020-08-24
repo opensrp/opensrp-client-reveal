@@ -62,10 +62,6 @@
           {
             "key": "1",
             "text": "Eligible"
-          },
-          {
-            "key": "0",
-            "text": "InEligible"
           }
         ],
         "value": "1",
