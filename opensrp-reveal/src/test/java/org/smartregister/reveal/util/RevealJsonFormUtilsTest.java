@@ -281,5 +281,19 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         assertEquals(JsonForm.THAILAND_EN_LARVAL_DIPPING_FORM, actualFormName);
     }
 
+    @Test
+    public void testGetThailandENBednetDistributionForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND_EN);
+        String actualFormName = revealJsonFormUtils.getFormName(BEDNET_DISTRIBUTION_EVENT, BEDNET_DISTRIBUTION);
+        assertEquals(JsonForm.THAILAND_EN_BEDNET_DISTRIBUTION_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetThailandENBloodScreeningForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND_EN);
+        String actualFormName = revealJsonFormUtils.getFormName(BLOOD_SCREENING_EVENT, BLOOD_SCREENING);
+        assertEquals(JsonForm.THAILAND_EN_BLOOD_SCREENING_FORM, actualFormName);
+    }
+
 }
 
