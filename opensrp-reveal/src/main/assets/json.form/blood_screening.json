@@ -56,12 +56,16 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "native_radio",
+        "type": "hidden",
         "label": "Is this person eligible for blood screening?",
         "options": [
           {
             "key": "1",
             "text": "Eligible"
+          },
+          {
+            "key": "0",
+            "text": "InEligible"
           }
         ],
         "value": "1",
