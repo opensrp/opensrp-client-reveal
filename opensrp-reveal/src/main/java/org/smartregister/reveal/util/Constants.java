@@ -333,7 +333,11 @@ public interface Constants {
 
         String THAILAND_LARVAL_DIPPING_FORM = "json.form/thailand_larval_dipping_form.json";
 
+        String THAILAND_EN_LARVAL_DIPPING_FORM = "json.form/thailand_en_larval_dipping_form.json";
+
         String THAILAND_MOSQUITO_COLLECTION_FORM = "json.form/thailand_mosquito_collection_form.json";
+
+        String THAILAND_EN_MOSQUITO_COLLECTION_FORM = "json.form/thailand_en_mosquito_collection_form.json";
 
         String THAILAND_SPRAY_FORM = "json.form/thailand_spray_form.json";
 
@@ -341,7 +345,11 @@ public interface Constants {
 
         String THAILAND_BEDNET_DISTRIBUTION_FORM = "json.form/thailand_bednet_distribution.json";
 
+        String THAILAND_EN_BEDNET_DISTRIBUTION_FORM = "json.form/thailand_en_bednet_distribution.json";
+
         String THAILAND_BLOOD_SCREENING_FORM = "json.form/thailand_blood_screening.json";
+
+        String THAILAND_EN_BLOOD_SCREENING_FORM = "json.form/thailand_en_blood_screening.json";
 
         String THAILAND_CASE_CONFIRMATION_FORM = "json.form/thailand_case_confirmation.json";
 
