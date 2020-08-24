@@ -387,12 +387,12 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         if (syncBadge != null && syncLabel != null) {
             if (synced) {
                 syncBadge.setBackground(ContextCompat.getDrawable(activity, R.drawable.badge_green_oval));
-                syncLabel.setText("Device data synced");
+                syncLabel.setText(getView().getContext().getString(R.string.device_data_synced));
                 syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_complete_green));
                 syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_green));
             } else {
                 syncBadge.setBackground(ContextCompat.getDrawable(activity, R.drawable.badge_oval));
-                syncLabel.setText("Device data not synced");
+                syncLabel.setText(getView().getContext().getString(R.string.device_data_not_synced));
                 syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_urgent_red));
                 syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_red));
             }

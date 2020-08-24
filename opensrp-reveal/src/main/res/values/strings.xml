@@ -327,7 +327,9 @@
     <string name="paot">PAOT</string>
     <string name="mda_dispense">MDA Dispense</string>
     <string name="mda_adherence">MDA Adherence</string>
-
+    <string name="bednet_distributed">Bednet Distributed</string>
+    <string name="family_registered">Family Registered</string>
+    <string name="blood_screening_complete">Blood Screening Complete</string>
 
     <!-- form -->
     <string name="add_fam">Household Registration</string>
@@ -369,6 +371,8 @@
     <string name="tap_point_msg">Tap black point to move or delete</string>
     <string name="drag_selected_point_msg">Drag selected point to change boundary</string>
     <string name="progressBarLabel">Syncing %s : %d%% </string>
+    <string name="device_data_synced">Device data synced</string>
+    <string name="device_data_not_synced">Device data not synced</string>
     <string name="manifest_version_parenthesis_placeholder">(%1$s)</string>
     <string name="total_structures_targeted">Total structures targeted</string>
     <string name="households_not_visited">Registered households not visited</string>
