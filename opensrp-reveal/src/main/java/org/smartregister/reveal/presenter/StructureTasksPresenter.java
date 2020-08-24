@@ -234,8 +234,8 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
                     status = Constants.BusinessStatus.VISITED_NOT_TREATED;
             }
 
+            TaskUtils taskUtils = TaskUtils.getInstance();
             if (StringUtils.isNotBlank(result.second)) {
-                TaskUtils taskUtils = TaskUtils.getInstance();
                 taskUtils.updateTaskStatus(
                         result.second,
                         Constants.Intervention.STRUCTURE_VISITED,
@@ -244,6 +244,15 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
                 );
             } else {
                 // floating family MDA
+
+                // floating families task
+                taskUtils.updateTaskStatus(
+                        result.first,
+                        Constants.Intervention.FLOATING_FAMILY_REGISTRATION,
+                        status,
+                        Task.TaskStatus.COMPLETED
+                );
+                /*
                 Task floatingRegistration = TaskDetailsDao.getInstance().getCurrentTask(result.first, Constants.Intervention.FLOATING_FAMILY_REGISTRATION);
                 floatingRegistration.setBusinessStatus(status);
                 floatingRegistration.setStatus(Task.TaskStatus.COMPLETED);
@@ -253,6 +262,8 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
                 }
                 floatingRegistration.setLastModified(new DateTime());
                 RevealApplication.getInstance().getTaskRepository().addOrUpdate(floatingRegistration);
+
+                 */
             }
 
             return TaskDetailsDao.getInstance().getFamilyStructureTasks(familyBaseEntityId);

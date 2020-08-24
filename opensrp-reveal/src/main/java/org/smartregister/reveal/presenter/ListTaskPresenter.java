@@ -891,7 +891,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                         R.string.confirm_structure_eligibility);
                  */
 
-                task = taskUtils.generateTask(context, familyEntityId, null, registrationStatus, TaskStatus.COMPLETED,
+                String floatingStatus = hasConsent ? structureVisitStatus : registrationStatus;
+                task = taskUtils.generateTask(context, familyEntityId, null, floatingStatus, TaskStatus.COMPLETED,
                         Constants.Intervention.FLOATING_FAMILY_REGISTRATION,
                         R.string.register_family);
             }

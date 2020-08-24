@@ -341,11 +341,19 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
             String structureId = StructureDao.getInstance().getStructureIDFromFamilyID(familyEntityId);
 
+            TaskUtils taskUtils = TaskUtils.getInstance();
             if(StringUtils.isNotBlank(structureId)){
-                TaskUtils taskUtils = TaskUtils.getInstance();
                 taskUtils.updateTaskStatus(
                         structureId,
                         Constants.Intervention.STRUCTURE_VISITED,
+                        status,
+                        Task.TaskStatus.COMPLETED
+                );
+            }else{
+                // floating families task
+                taskUtils.updateTaskStatus(
+                        familyEntityId,
+                        Constants.Intervention.FLOATING_FAMILY_REGISTRATION,
                         status,
                         Task.TaskStatus.COMPLETED
                 );
