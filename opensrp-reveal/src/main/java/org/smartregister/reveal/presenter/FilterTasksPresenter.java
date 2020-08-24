@@ -73,6 +73,11 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
         labelsMap.put(BusinessStatus.INCOMPLETE, R.string.incomplete);
         labelsMap.put(BusinessStatus.NOT_ELIGIBLE, R.string.not_eligible);
         labelsMap.put(BusinessStatus.IN_PROGRESS, R.string.in_progress);
+
+        // Following are for grouped structure tasks.
+        labelsMap.put(BusinessStatus.FAMILY_REGISTERED, R.string.family_registered);
+        labelsMap.put(BusinessStatus.BEDNET_DISTRIBUTED, R.string.bednet_distributed);
+        labelsMap.put(BusinessStatus.BLOOD_SCREENING_COMPLETE, R.string.blood_screening_complete);
     }
 
 
