@@ -2,6 +2,7 @@ package org.smartregister.reveal.util;
 
 import androidx.annotation.NonNull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.BuildConfig;
@@ -73,8 +74,12 @@ public class GeoJsonUtils {
                 calculateState(task, state, mdaStatusMap);
 
                 taskProperties = new HashMap<>();
+                //temporary fix to errorneous business status in Nigeria
+                if (task.getBusinessStatus().equals("0") || StringUtils.isBlank(task.getBusinessStatus())) {
+                    task.setBusinessStatus(NOT_VISITED);
+                }
                 taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
-                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA  && PARTIALLY_SPRAYED.equals(task.getBusinessStatus())) { // Set here for non residential structures
+                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA && PARTIALLY_SPRAYED.equals(task.getBusinessStatus())) { // Set here for non residential structures
                     taskProperties.put(TASK_BUSINESS_STATUS, SPRAYED);
                 } else {
                     taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
