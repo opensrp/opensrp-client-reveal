@@ -77,7 +77,7 @@ public class FilterTasksPresenterTest extends BaseUnitTest {
     @Test
     public void testPopulateLabels() {
         Map<String, Integer> labelsMap = Whitebox.getInternalState(filterTasksPresenter, "labelsMap");
-        assertEquals(32, labelsMap.size());
+        assertEquals(35, labelsMap.size());
         assertEquals(R.string.irs, labelsMap.get(Intervention.IRS).intValue());
         assertEquals(R.string.in_progress, labelsMap.get(BusinessStatus.IN_PROGRESS).intValue());
     }
