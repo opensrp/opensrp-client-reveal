@@ -1,5 +1,0 @@
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <solid android:color="@color/download_map" />
-    <corners android:radius="32dp" />
-</shape>
