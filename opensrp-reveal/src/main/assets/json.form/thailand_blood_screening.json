@@ -1,0 +1,420 @@
+{
+  "count": "1",
+  "encounter_type": "blood_screening",
+  "form_version": "0.0.1",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "เจาะเลือด SCD",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "eligiblePerson",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this person eligible for blood screening?",
+        "options": [
+          {
+            "key": "1",
+            "text": "Eligible"
+          },
+          {
+            "key": "0",
+            "text": "InEligible"
+          }
+        ],
+        "value": "1",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "whyNotEligiblePerson",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Why is this person ineligible?",
+        "options": [
+          {
+            "key": "1",
+            "text": "Sick"
+          },
+          {
+            "key": "2",
+            "text": "Index case - test not necessary"
+          },
+          {
+            "key": "3",
+            "text": "Tested within past week"
+          },
+          {
+            "key": "99",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "step1:eligiblePerson": {
+            "type": "string",
+            "ex": "equalTo(., \"0\")"
+          }
+        }
+      },
+      {
+        "key": "caseTestingProtocol",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "ประเภทกิจกรรมการเจาะเลือด",
+        "options": [
+          {
+            "key": "RACD/CIS",
+            "text": "RACD/CIS"
+          },
+          {
+            "key": "SCD",
+            "text": "SCD"
+          },
+          {
+            "key": "MBS",
+            "text": "MBS"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "กรุณาเลือกวิธีทดสอบ"
+        },
+        "relevance": {
+          "step1:eligiblePerson": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "forestGoerYesNo",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "เมื่อสองอาทิตย์ที่ผ่านมาได้ค้างแรม/ทำงานนอกบ้านในเวลากลางคืนหรือไม่?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "ใช่"
+          },
+          {
+            "key": "No",
+            "text": "ไม่ใช่"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "ต้องใส่ข้อมูลในช่องนี้"
+        },
+        "relevance": {
+          "step1:eligiblePerson": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "personTested",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "ได้รับการเจาะโลหิตหรือไม่?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "ใช่"
+          },
+          {
+            "key": "No",
+            "text": "ไม่ใช่"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "ต้องใส่ข้อมูลในช่องนี้"
+        },
+        "relevance": {
+          "step1:eligiblePerson": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "notTestedReason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "หากไม่เคย โปรดระบุเหตุผล",
+        "options": [
+          {
+            "key": "Not present",
+            "text": "ไม่พบตัว"
+          },
+          {
+            "key": "Refused",
+            "text": "ปฏิเสธ"
+          },
+          {
+            "key": "Sick",
+            "text": "ป่วย"
+          },
+          {
+            "key": "Tested within past week",
+            "text": "เคยเจาะแล้วเมื่ออาทิตย์ที่ผ่านมา"
+          },
+          {
+            "key": "Index case - not test necessary",
+            "text": "เป็น index case ไม่ต้องเจาะ"
+          },
+          {
+            "key": "Other",
+            "text": "อื่นๆ"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "หากไม่ตรวจ โปรดระบุเหตุผล"
+        },
+        "relevance": {
+          "step1:personTested": {
+            "type": "string",
+            "ex": "equalTo(., \"No\")"
+          }
+        }
+      },
+      {
+        "key": "testType",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "ตรวจโดยวิธี",
+        "options": [
+          {
+            "key": "Microscopy",
+            "text": "กล้องจุลทรรศน์"
+          },
+          {
+            "key": "RDT",
+            "text": "RDT"
+          }
+        ],
+        "value": "Microscopy",
+        "v_required": {
+          "value": true,
+          "err": "ต้องใส่ประเภทการทดสอบ"
+        },
+        "relevance": {
+          "step1:personTested": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "slideNumber",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "ลำดับฟิล์ม",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "ต้องใส่หมายเลขสไลด์"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "step1:testType": {
+            "type": "string",
+            "ex": "equalTo(., \"Microscopy\")"
+          }
+        }
+      },
+      {
+        "key": "testRdtResult",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "ผลตรวจจาก RDT",
+        "options": [
+          {
+            "key": "Negative",
+            "text": "ไม่พบเชื้อ"
+          },
+          {
+            "key": "PositiveFalciparum",
+            "text": "Pf"
+          },
+          {
+            "key": "PositiveVivax",
+            "text": "Pv"
+          },
+          {
+            "key": "PositiveMixed",
+            "text": "Positive - Mixed"
+          },
+          {
+            "key": "Inconclusive",
+            "text": "Inconclusive"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "กรุณาเลือกผลการทดสอบ"
+        },
+        "relevance": {
+          "step1:testType": {
+            "type": "string",
+            "ex": "equalTo(., \"RDT\")"
+          }
+        }
+      },
+      {
+        "key": "testMicrosResult",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "ผลตรวจจากกล้องจุลทรรศน์",
+        "combine_checkbox_option_values" : "true",
+        "options": [
+          {
+            "key": "Negative",
+            "text": "ไม่พบเชื้อ"
+          },
+          {
+            "key": "PositiveFalciparum",
+            "text": "Pf"
+          },
+          {
+            "key": "PositiveVivax",
+            "text": "Pv"
+          },
+          {
+            "key": "PositiveMalariae",
+            "text": "Pm"
+          },
+          {
+            "key": "PositiveOvalae",
+            "text": "Po"
+          },
+          {
+            "key": "PositiveKnowelsi",
+            "text": "Pk"
+          },
+          {
+            "key": "Fg",
+            "text": "Fg"
+          }
+        ],
+        "exclusive": [
+          "Negative"
+        ],
+        "relevance": {
+          "step1:testType": {
+            "type": "string",
+            "ex": "equalTo(., \"Microscopy\")"
+          }
+        }
+      },
+      {
+        "key": "comment",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "รายละเอียดเพิ่มเติม",
+        "relevance": {
+          "step1:eligiblePerson": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "value": "Complete",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "blood-screening-calculation.yml"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

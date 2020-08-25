@@ -1,0 +1,320 @@
+{
+  "count": "1",
+  "encounter_type": "Spray",
+  "form_version": "0.0.1",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "พ่นสารเคมี (IRS)",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "structureType",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "ชนิดสถานที่",
+        "options": [
+          {
+            "key": "Residential Structure",
+            "text": "บ้าน"
+          },
+          {
+            "key": "Non-Residential Structure",
+            "text": "กระท่อม"
+          },
+          {
+            "key": "Facility",
+            "text": "สิ่งอำนวยความสะดวก"
+          }
+        ],
+        "value": "[structure_type]",
+        "v_required": {
+          "value": "true",
+          "err": "ระบุประเภทของสิ่งปลูกสร้าง"
+        }
+      },
+      {
+        "key": "sprayStatus",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "สถานที่นี้เคยได้รับการพ่นสารเคมีหรือไม่?",
+        "options": [
+          {
+            "key": "Sprayed",
+            "text": "ได้พ่น"
+          },
+          {
+            "key": "Not Sprayed",
+            "text": "ไม่ได้พ่น"
+          },
+          {
+            "key": "Not Sprayable",
+            "text": "ไม่มีสิทธิ์"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "ระบุสถานะสเปรย์"
+        },
+        "relevance": {
+          "step1:structureType": {
+            "type": "string",
+            "ex": "equalTo(., \"Residential Structure\")"
+          }
+        }
+      },
+      {
+        "key": "notSprayedReason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "เหตุผลที่ไม่ได้พ่นสารเคมี",
+        "options": [
+          {
+            "key": "No one home/Missed",
+            "text": "ไม่มีคนอยู่ในบ้าน"
+          },
+          {
+            "key": "Locked",
+            "text": "บ้านปิด"
+          },
+          {
+            "key": "Sick",
+            "text": "ป่วย"
+          },
+          {
+            "key": "Refused",
+            "text": "ปฏิเสธ"
+          },
+          {
+            "key": "other",
+            "text": "อื่น ๆ"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "ระบุเหตุผลที่ไม่ได้ทำการฉีดพ่นสารเคมี"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "notSprayedOtherReason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "อื่นๆ : โปรดระบุเหตุผล",
+        "edit_type": "name",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "โปรดระบุเหตุผลที่ไม่ได้ทำการฉีดพ่นสารเคมี"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "familyHeadName",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "ชื่อเจ้าบ้าน",
+        "edit_type": "name",
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "roomsFound",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนห้องในบ้าน (พิมพ์ 99 หากไม่ทราบ)",
+        "text_size": "8sp",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "กรุณาระบุจำนวนห้อง (ให้ใส่เลข 99 หากไม่สามารถประเมินได้)"
+        },
+        "shortened_hint": "จำนวนห้องในบ้าน",
+        "v_numeric": {
+          "value": "true",
+          "err": "ต้องเป็นตัวเลขเท่านั้น"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sprayedRooms",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนห้องในบ้านที่ได้พ่นสารเคมี (พิมพ์ 99 หากไม่ทราบ)",
+        "text_size": "8sp",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "กรุณาระบุจำนวนห้องที่ได้ฉีดพ่นสารเคมีไปแล้ว (ให้ใส่เลข 99 หากไม่สามารถประเมินได้)"
+        },
+        "shortened_hint": "จำนวนห้องในบ้านที่ได้พ่นสารเคมี",
+        "v_relative_max": {
+          "value": "roomsFound",
+          "exception": 99,
+          "err": "จำนวนห้องที่ได้ฉีดพ่นสารเคมีไปแล้วต้องไม่เกินจำนวนห้องที่มีอยู่"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "ต้องเป็นตัวเลขจำนวนเต็ม"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "netsFound",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้งที่ใช้งาน (พิมพ์ 99 หากไม่ทราบ)",
+        "text_size": "8sp",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "กรุณาระบุจำนวนมุ้งทั้งหมด (ให้ใส่เลข 99 หากไม่สามารถประเมินได้)"
+        },
+        "shortened_hint": "จำนวนมุ้งที่ใช้งาน",
+        "v_numeric": {
+          "value": "true",
+          "err": "ต้องเป็นตัวเลขเท่านั้น"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "mopUp",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "เป็นกิจกรรมเก็บรายละเอียด (mop-up) ใช่หรือไม่?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "ใช่"
+          },
+          {
+            "key": "No",
+            "text": "ไม่ใช่"
+          }
+        ],
+        "value": "No",
+        "v_required": {
+          "value": "true",
+          "err": "นี่เป็นกิจกรรม mop-up หรือไม่"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "thailand-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "spray-calculation-rules.yml"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+---
+name: step1_business_status
+description: Business status calculation
+priority: 1
+condition: "true"
+actions:
+  - "calculation = ('1'.equals(step1_currently_present) && 'Yes'.equals(step1_administeredSpaq)) ? 'SMC Complete' : ('1'.equals(step1_currently_present)  &&  'No'.equals(step1_administeredSpaq)) ? 'Not Dispensed' :  ('0'.equals(step1_currently_present) && '0'.equals(step1_child_present_days)) ? 'Ineligible' : 'Not Dispensed'"
+

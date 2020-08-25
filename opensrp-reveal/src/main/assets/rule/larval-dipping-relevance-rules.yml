@@ -1,0 +1,7 @@
+---
+name: step1_occurred_date
+description: Display if task_business_status is In Progress or Complete
+priority: 1
+condition: "step1_task_business_status =='Complete' || step1_task_business_status =='In Progress'"
+actions:
+- "isRelevant = true"

@@ -1,0 +1,56 @@
+---
+name: step1_about_malaria
+description: about_malaria relevance
+priority: 1
+condition: "step1_present.equals('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_information
+description: information relevance
+priority: 1
+condition: "step1_about_malaria.equals('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_other_information
+description: other_information relevance
+priority: 1
+condition: "step1_information.contains('other')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_preferred_source
+description: preferred_source relevance
+priority: 1
+condition: "step1_present.equals('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_other_preferred_source
+description: other_preferred_source relevance
+priority: 1
+condition: "step1_preferred_source.contains('other')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_ineligible_reason
+description: ineligible_reason relevance
+priority: 1
+condition: "step1_eligible.equals('No')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_treatment
+description: treatment relevance
+priority: 1
+condition: "step1_eligible.equals('Yes')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_day_1
+description: day_1 relevance
+priority: 1
+condition: "step1_treatment.equals('received')"
+actions:
+  - "isRelevant = true"

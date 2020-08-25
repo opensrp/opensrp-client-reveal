@@ -1,0 +1,50 @@
+---
+name: step1_notSprayedReason
+description: Not Sprayed Reason
+priority: 1
+condition: "step1_structureType.equals('Residential Structure') && step1_sprayStatus.equals('Not Sprayed')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_notSprayedOtherReason
+description: Not Sprayed Other Reason
+priority: 1
+condition: "step1_structureType.equals('Residential Structure') && step1_sprayStatus.equals('Not Sprayed') && step1_notSprayedReason.equals('other')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_familyHeadName
+description: Family Head name
+priority: 1
+condition: "step1_structureType.equals('Residential Structure') && (step1_sprayStatus.equals('Sprayed') || step1_sprayStatus.equals('Not Sprayed'))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_roomsFound
+description: Rooms Found
+priority: 1
+condition: "step1_structureType.equals('Residential Structure') && (step1_sprayStatus.equals('Sprayed') || step1_sprayStatus.equals('Not Sprayed'))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_sprayedRooms
+description: Sprayed Rooms
+priority: 1
+condition: "step1_structureType.equals('Residential Structure') && step1_sprayStatus.equals('Sprayed') && !step1_roomsFound.equals(null) && !step1_roomsFound.equals('')"
+actions:
+  - "isRelevant = true"
+---
+name: step1_netsFound
+description: Nets Found
+priority: 1
+condition: "step1_structureType.equals('Residential Structure') && (step1_sprayStatus.equals('Sprayed') || step1_sprayStatus.equals('Not Sprayed'))"
+actions:
+  - "isRelevant = true"
+---
+name: step1_mopUp
+description: Mopup Activity
+priority: 1
+condition: "step1_structureType.equals('Residential Structure') && (step1_sprayStatus.equals('Sprayed') || step1_sprayStatus.equals('Not Sprayed'))"
+actions:
+  - "isRelevant = true"
+

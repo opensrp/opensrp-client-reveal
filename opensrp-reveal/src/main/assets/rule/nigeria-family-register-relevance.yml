@@ -1,0 +1,28 @@
+---
+name: step2_surname
+description: surname relevance
+priority: 1
+condition: "!step2_same_as_fam_name.contains('same_as_fam_name')"
+actions:
+  - "isRelevant = true"
+---
+name: step2_dob
+description: dob relevance
+priority: 1
+condition: "!step2_dob_unknown.contains('dob_unknown')"
+actions:
+  - "isRelevant = true"
+---
+name: step2_age
+description: age relevance
+priority: 1
+condition: "step2_dob_unknown.contains('dob_unknown')"
+actions:
+  - "isRelevant = true"
+#---
+    ##name: step1_individualsUnderEleven
+    ##description: step1_individualsUnderEleven
+    ##priority: 1
+    ##condition: "(step1_individualsUnderEleven != null && step1_numberOfIndividuals != null) && (Integer.valueOf(helper.ifNull(step1_individualsUnderEleven,0)) < Integer.valueOf(helper.ifNull(step1_bottles_empty,0)))"
+  ##actions:
+  ##  - "isRelevant = true"

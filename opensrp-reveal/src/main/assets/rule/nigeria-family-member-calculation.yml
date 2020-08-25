@@ -1,0 +1,14 @@
+---
+name: step1_surname_calculation
+description: surname calculation
+priority: 1
+condition: "true"
+actions:
+  - "calculation = step1_same_as_fam_name.contains('same_as_fam_name')? step1_fam_name : step1_surname"
+---
+name: step1_age
+description: age calculation threeToTwelve
+priority: 1
+condition: "step1_job_aid.contains('threeToTwelve') || step1_job_aid.contains('twelveToFiftyNine') || step1_job_aid.contains('moreThanSixty')"
+actions:
+  - "calculation = step1_job_aid.contains('threeToTwelve') ? 1 : step1_job_aid.contains('twelveToFiftyNine') ? 3 : step1_job_aid.contains('moreThanSixty') ? 7"

@@ -1,0 +1,244 @@
+{
+  "count": "1",
+  "encounter_type": "",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "HF-level drug reconciliation - Evening",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "dayOfCycle",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Day of cycle",
+        "values": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "keys": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ]
+      },
+      {
+        "key": "nameOfHWIssuing",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of HW receiving",
+        "values": [
+          "Health Worker 1",
+          "Health Worker 2",
+          "Health Worker 3",
+          "Health Worker 4"
+        ],
+        "keys": [
+          "Health Worker 1",
+          "Health Worker 2",
+          "Health Worker 3",
+          "Health Worker 4"
+        ]
+      },
+      {
+        "key": "nameOfCDDreceiving",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "spinner",
+        "hint": "Name of CDD returning",
+        "values": [
+          "CDD 1",
+          "CDD 2",
+          "CDD 3",
+          "CDD 4",
+          "CDD 5"
+        ],
+        "keys": [
+          "CDD 1",
+          "CDD 2",
+          "CDD 3",
+          "CDD 4",
+          "CDD 5"
+        ]
+      },
+      {
+        "key": "spaqBlistersIssuedFirst",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of SPAQ unused whole blisters returned for 3<12 mos:",
+        "text_size": "8sp",
+        "v_numeric": {
+          "value": "true",
+          "err": "This field is required"
+        },
+        "v_min": {
+          "value": "1",
+          "err": "Number must be equal or greater than 1"
+        },
+        "v_max": {
+          "value": "100",
+          "err": "Number must be equal or less than 100"
+        }
+      },
+      {
+        "key": "spaqBlistersIssuedSecond",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of SPAQ unused whole blisters returned for 12-59 mos:",
+        "text_size": "8sp",
+        "v_numeric": {
+          "value": "true",
+          "err": "This field is required"
+        },
+        "v_min": {
+          "value": "1",
+          "err": "Number must be equal or greater than 1"
+        },
+        "v_max": {
+          "value": "100",
+          "err": "Number must be equal or less than 100"
+        }
+      },
+      {
+        "key": "spaqBlistersIssuedThird",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of SPAQ damaged blisters returned for 3<12 mos:",
+        "text_size": "8sp",
+        "v_numeric": {
+          "value": "true",
+          "err": "This field is required"
+        },
+        "v_min": {
+          "value": "1",
+          "err": "Number must be equal or greater than 1"
+        },
+        "v_max": {
+          "value": "100",
+          "err": "Number must be equal or less than 100"
+        }
+      },
+      {
+        "key": "spaqBlistersIssuedFourth",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of SPAQ damaged blisters returned for 12-59 mos:",
+        "text_size": "8sp",
+        "v_numeric": {
+          "value": "true",
+          "err": "This field is required"
+        },
+        "v_min": {
+          "value": "1",
+          "err": "Number must be equal or greater than 1"
+        },
+        "v_max": {
+          "value": "100",
+          "err": "Number must be equal or less than 100"
+        }
+      },
+      {
+        "key": "spaqBlistersIssuedFifth",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of SPAQ opened blisters returned for 3<12 mos:",
+        "text_size": "8sp",
+        "v_numeric": {
+          "value": "true",
+          "err": "This field is required"
+        },
+        "v_min": {
+          "value": "1",
+          "err": "Number must be equal or greater than 1"
+        },
+        "v_max": {
+          "value": "100",
+          "err": "Number must be equal or less than 100"
+        }
+      },
+      {
+        "key": "spaqBlistersIssuedSixth",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of SPAQ opened blisters returned for 12-59 mos:",
+        "text_size": "8sp",
+        "v_numeric": {
+          "value": "true",
+          "err": "This field is required"
+        },
+        "v_min": {
+          "value": "1",
+          "err": "Number must be equal or greater than 1"
+        },
+        "v_max": {
+          "value": "100",
+          "err": "Number must be equal or less than 100"
+        }
+      }
+    ]
+  }
+}
+

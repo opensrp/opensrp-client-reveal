@@ -1,0 +1,77 @@
+---
+name: step1_calcExistingNets
+description: Number of existinf nets needed
+priority: 1
+condition: "true"
+actions:
+- "calculation = helper.ifNull(step1_existingLLINs + step1_existingLLIHNs + step1_existingITNs,0)"
+---
+name: step1_calcNumNetsNeeded
+description: Number of nets needed
+priority: 1
+condition: "true"
+actions:
+- "calculation =  Math.ceil(helper.ifNull(step1_totPopulation,0)/2.0)"
+---
+name: step1_calcTotalNetsDistributed
+description: The total number of nets distributed
+priority: 1
+condition: "true"
+actions:
+- "calculation = helper.ifNull(step1_distributedITNs + step1_distributedLLINs + step1_distributedLLIHNs,0)"
+---
+name: step1_displayRecommendedNumNets
+description: Display Calculated number of nets needed
+priority: 1
+condition: "true"
+actions:
+- "calculation = ['calcNumNetsNeeded' : step1_calcNumNetsNeeded]"
+---
+name: step1_displayCalcExistingNets
+description: Display Calculated number of nets needed
+priority: 1
+condition: "true"
+actions:
+- "calculation = ['calcExistingNets' : step1_calcExistingNets]"
+---
+name: step1_calcNumNetsToRedip
+description: Display Calculated number of nets eligible for dipping
+priority: 1
+condition: "true"
+actions:
+- "calculation = helper.ifNull(step1_existingLLINsGreaterThan3yr + step1_existingLLIHNsGreaterThan3yr + step1_existingITNs - step1_existingITNDipped,0)"
+---
+name: step1_displayNumNetsToRedip
+description: Display Number of nets eligible for redipping
+priority: 1
+condition: "true"
+actions:
+- "calculation = ['calcNumNetsToRedip' : step1_calcNumNetsToRedip]"
+---
+name: step1_calcPopulationMinusExistingNets
+description: Population minus existing notes
+priority: 1
+condition: "true"
+actions:
+- "calculation = helper.ifNull(step1_totPopulation-step1_calcExistingNets,0) < 1 ? 0 : helper.ifNull(step1_totPopulation-step1_calcExistingNets,0)"
+---
+name: step1_calcNumNetsToDistribute
+description: Number of nets to give
+priority: 1
+condition: "true"
+actions:
+- "calculation = helper.ifNull(step1_calcNumNetsNeeded - step1_calcExistingNets,0)"
+---
+name: step1_displayRecommendedNumNetsToDistribute
+description: Display Calculated number of nets to distribute
+priority: 1
+condition: "true"
+actions:
+- "calculation = ['calcNumNetsToDistribute' : step1_calcNumNetsToDistribute]"
+---
+name: step1_business_status
+description: Task business status
+priority: 1
+condition: "true"
+actions:
+- "calculation = (step1_eligibleForNet == '1') ?  'Complete' : 'Not Eligible' "

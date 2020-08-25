@@ -1,0 +1,4 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/family_no_task_registered" />
+    <corners android:radius="4dp" />
+</shape>

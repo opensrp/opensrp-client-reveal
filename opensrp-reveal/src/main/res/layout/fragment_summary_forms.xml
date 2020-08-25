@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/summary_forms_group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <View
+            android:id="@+id/separator1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/light_grey" />
+
+        <Button
+            android:id="@+id/summary_daily_summary_morning"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="@string/daily_summary_morning"
+            android:textAllCaps="false"
+            android:textColor="@color/text_black"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/separator2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/light_grey" />
+
+        <Button
+            android:id="@+id/summary_daily_summary_evening"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="@string/daily_summary_evening"
+            android:textAllCaps="false"
+            android:textColor="@color/text_black"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/separator3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/light_grey" />
+        <Button
+            android:id="@+id/summary_team_leader_dos"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="@string/team_leader_dos"
+            android:textAllCaps="false"
+            android:textColor="@color/text_black"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/separator4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/light_grey" />
+
+        <Button
+            android:id="@+id/summary_cb_spray_area"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="@string/cb_spray_area"
+            android:textAllCaps="false"
+            android:textColor="@color/text_black"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/separator5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/light_grey" />
+
+        <Button
+            android:id="@+id/summary_irs_sa_decision"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="@string/irs_sa_decision"
+            android:textAllCaps="false"
+            android:textColor="@color/text_black"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/separator6"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/light_grey" />
+
+        <Button
+            android:id="@+id/summary_mobilization_form"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="@string/mobilization_form"
+            android:textAllCaps="false"
+            android:textColor="@color/text_black"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/separator7"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/light_grey" />
+
+        <Button
+            android:id="@+id/summary_irs_field_officer"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="@string/irs_field_officer"
+            android:textAllCaps="false"
+            android:textColor="@color/text_black"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/separator8"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/light_grey" />
+
+        <Button
+            android:id="@+id/summary_verification_form"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="@string/verification_form"
+            android:textAllCaps="false"
+            android:textColor="@color/text_black"
+            android:textSize="20sp" />
+
+        <View
+            android:id="@+id/separator9"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/light_grey" />
+
+        <Button
+            android:id="@+id/hfw_level_referral"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="@string/hfw_level_referral"
+            android:textAllCaps="false"
+            android:textColor="@color/text_black"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,1125 @@
+{
+  "count": "1",
+  "encounter_type": "Spray",
+  "form_version": "0.0.1",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "Record Spray Status",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "structureType",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Type of Structure",
+        "options": [
+          {
+            "key": "Residential Structure",
+            "text": "Residential Structure"
+          },
+          {
+            "key": "Non-Residential Structure",
+            "text": "Non-Residential Structure"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Specify type of Structure"
+        }
+      },
+      {
+        "key": "visit_number",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "First visit or mop-up",
+        "options": [
+          {
+            "key": "First Visit",
+            "text": "First Visit"
+          },
+          {
+            "key": "Mop-up",
+            "text": "Mop-up"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Specify if its First visit or mop-up"
+        }
+      },
+      {
+        "key": "cattle_post_place_name",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Record cattle post or other place name (if applicable)",
+        "edit_type": "name"
+      },
+      {
+        "key": "nonresidentialtype",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is a non-residential structure?",
+        "options": [
+          {
+            "key": "Toilet",
+            "text": "Toilet"
+          },
+          {
+            "key": "Offices",
+            "text": "Offices"
+          },
+          {
+            "key": "Place of Worship",
+            "text": "Place of Worship"
+          },
+          {
+            "key": "Shop",
+            "text": "Shop"
+          },
+          {
+            "key": "Clinic",
+            "text": "Clinic"
+          },
+          {
+            "key": "Hospital",
+            "text": "Hospital"
+          },
+          {
+            "key": "Lodge",
+            "text": "Lodge"
+          },
+          {
+            "key": "School",
+            "text": "School"
+          },
+          {
+            "key": "Kitchen",
+            "text": "Kitchen"
+          },
+          {
+            "key": "Storage",
+            "text": "Storage"
+          },
+          {
+            "key": "Animal Shelter",
+            "text": "Animal Shelter"
+          },
+          {
+            "key": "Structure Not Present",
+            "text": "Structure Not Present"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Specify type of non-residential structure?"
+        },
+        "relevance": {
+          "step1:structureType": {
+            "type": "string",
+            "ex": "equalTo(., \"Non-Residential Structure\")"
+          }
+        }
+      },
+      {
+        "key": "household_name",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Head of Household name",
+        "edit_type": "name",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify household name"
+        },
+        "relevance": {
+          "step1:structureType": {
+            "type": "string",
+            "ex": "equalTo(., \"Residential Structure\")"
+          }
+        }
+      },
+      {
+        "key": "number_of_buildings_in_homesteads",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many buildings are in this home?",
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "n_people_homestead",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Total number of people in this home?",
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "relevance": {
+          "step1:structureType": {
+            "type": "string",
+            "ex": "equalTo(., \"Residential Structure\")"
+          }
+        }
+      },
+      {
+        "key": "n_people_homestead_underage5",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of people in the home UNDER the age of 5",
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "n_people_homestead",
+          "err": "Number people UNDER  5 cannot be greater than Total number of people"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "n_people_homestead_overage5",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of people in the home at the age of 5 or ABOVE",
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "n_people_homestead",
+          "err": "Number people age 5 and ABOVE cannot be greater than Total number of people"
+        },
+        "v_cumulative_total": {
+          "value": "n_people_homestead",
+          "related_fields": [
+            "n_people_homestead_underage5"
+          ],
+          "err": "Number people below age 5 and those age 5 and ABOVE should be equal to Total number of people"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "number_of_rooms",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many SPRAYABLE rooms are in this home? (Count all rooms in all buildings)",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "How many SPRAYABLE rooms are in this home? (Count all rooms in all buildings)"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "number_rooms_modern",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many sprayable rooms in this home are MODERN?",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify how many sprayable rooms in this home are MODERN?"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_of_rooms",
+          "err": "Number MODERN rooms cannot be greater than Total number of rooms"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "number_rooms_traditional",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many sprayable rooms in this home are TRADITIONAL?",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify how many sprayable rooms in this home are TRADITIONAL?"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_of_rooms",
+          "err": "Number TRADITIONAL rooms cannot be greater than Total number of rooms"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "unsprayable",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many UNsprayable rooms are in this home?",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify how many UNsprayable rooms are in this home?"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "number_other_structures",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many other structures are in this home? (Other structures such as toilets and corridors)",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify how many other structures are in this home? (Other structures such as toilets and corridors)"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "any_sprayed",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Were there any rooms SPRAYED in this home during this visit?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Were there any rooms SPRAYED in this home during this visit?"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "number_sprayed",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many rooms were sprayed on this visit?",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify how many rooms were sprayed on this visit?"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_of_rooms",
+          "err": "Number of sprayed rooms cannot be greater than total number rooms"
+        },
+        "relevance": {
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "number_sprayed_modern_partial_spray",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many rooms sprayed on this visit are MODERN?",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify how many rooms sprayed on this visit are MODERN?"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_sprayed",
+          "err": "Number of sprayed MODERN rooms cannot be greater than Total number of sprayed rooms"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "number_sprayed_traditional_partial_spray",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many rooms sprayed on this visit are TRADITIONAL?",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify how many rooms sprayed on this visit are TRADITIONAL?"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_sprayed",
+          "err": "Number of sprayed TRADITIONAL rooms cannot be greater than Total number of sprayed rooms"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "number_sprayed_other_partial_spray",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many other structures were sprayed in this home during this visit?",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "How many other structures were sprayed in this home during this visit?"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_other_structures",
+          "err": "Number of other structures sprayed cannot be greater than Total number of other structures"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "number_sprayed_ddt",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many rooms in this home were sprayed with DDT? (If none, enter 0)",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "How many rooms in this home were sprayed with DDT? (If none, enter 0)"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_sprayed",
+          "err": "Number of sprayed rooms with DDT cannot be greater than Total number of sprayed rooms"
+        },
+        "relevance": {
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "number_sprayed_lambdacyhalothrin",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many rooms in this home were sprayed with Lambdacyhalothrin? (If none, enter 0)",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "How many rooms in this home were sprayed with Lambdacyhalothrin? (If none, enter 0)"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_sprayed",
+          "err": "Number of sprayed rooms with Lambdacyhalothrin cannot be greater than Total number of sprayed rooms"
+        },
+        "relevance": {
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "number_sprayed_actellic",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many rooms in this home were sprayed with Actellic? (If none, enter 0)",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "How many rooms in this home were sprayed with Actellic? (If none, enter 0)"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_sprayed",
+          "err": "Number of sprayed rooms with Actellic cannot be greater than Total number of sprayed rooms"
+        },
+        "v_cumulative_total": {
+          "value": "number_sprayed",
+          "related_fields": [
+            "number_sprayed_ddt",
+            "number_sprayed_lambdacyhalothrin"
+          ],
+          "err": "Number of rooms sprayed with ddt + actellic + lamba should be equal to total number of rooms sprayed"
+        },
+        "relevance": {
+          "step1:any_sprayed": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "number_of_rooms_not_sprayed",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "How many rooms were NOT sprayed?",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "How many rooms were NOT sprayed?"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_relative_max": {
+          "value": "number_of_rooms",
+          "err": "Number of rooms not sprayed cannot be greater than Total number of rooms"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "unsprayed_reason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "check_box",
+        "label": "Reasons for not spraying rooms",
+        "options": [
+          {
+            "key": "Locked",
+            "text": "Locked"
+          },
+          {
+            "key": "No one home",
+            "text": "No one home"
+          },
+          {
+            "key": "Head of household refused",
+            "text": "Head of household refused"
+          },
+          {
+            "key": "There is a newborn",
+            "text": "There is a newborn"
+          },
+          {
+            "key": "There is a funeral",
+            "text": "There is a funeral"
+          },
+          {
+            "key": "Room is a kitchen",
+            "text": "Room is a kitchen"
+          },
+          {
+            "key": "Room is a food store",
+            "text": "Room is a food store"
+          },
+          {
+            "key": "There is a patient in the home",
+            "text": "There is a patient in the home"
+          },
+          {
+            "key": "Other",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "Please specify reasons for not spraying rooms"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "rooms_locked",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of rooms not sprayed due to being locked",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify number of rooms not sprayed due to being locked"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "n_rooms_nobody",
+            "n_rooms_refused",
+            "n_rooms_baby",
+            "n_rooms_funeral",
+            "n_rooms_kitchen",
+            "n_rooms_food",
+            "n_rooms_patient",
+            "n_rooms_other"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
+        "relevance": {
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "Locked"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "n_rooms_nobody",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of rooms not sprayed due to nobody home",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify number of rooms not sprayed due to nobody home"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "rooms_locked",
+            "n_rooms_refused",
+            "n_rooms_baby",
+            "n_rooms_funeral",
+            "n_rooms_kitchen",
+            "n_rooms_food",
+            "n_rooms_patient",
+            "n_rooms_other"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
+        "relevance": {
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "No one home"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "n_rooms_refused",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of rooms not sprayed due to  head of household refusing",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify number of rooms not sprayed due to  head of household refusing"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "rooms_locked",
+            "n_rooms_nobody",
+            "n_rooms_baby",
+            "n_rooms_funeral",
+            "n_rooms_kitchen",
+            "n_rooms_food",
+            "n_rooms_patient",
+            "n_rooms_other"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
+        "relevance": {
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "Head of household refused"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "n_rooms_baby",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of rooms not sprayed due to a newborn",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify number of rooms not sprayed due to a newborn"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "rooms_locked",
+            "n_rooms_nobody",
+            "n_rooms_refused",
+            "n_rooms_funeral",
+            "n_rooms_kitchen",
+            "n_rooms_food",
+            "n_rooms_patient",
+            "n_rooms_other"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
+        "relevance": {
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "There is a newborn"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "n_rooms_funeral",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of rooms not sprayed due to a funeral",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify number of rooms not sprayed due to a funeral"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "rooms_locked",
+            "n_rooms_nobody",
+            "n_rooms_refused",
+            "n_rooms_baby",
+            "n_rooms_kitchen",
+            "n_rooms_food",
+            "n_rooms_patient",
+            "n_rooms_other"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
+        "relevance": {
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "There is a funeral"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "n_rooms_kitchen",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of rooms not sprayed due to being a kitchen",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify number of rooms not sprayed due to being a kitchen"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "rooms_locked",
+            "n_rooms_nobody",
+            "n_rooms_refused",
+            "n_rooms_baby",
+            "n_rooms_funeral",
+            "n_rooms_food",
+            "n_rooms_patient",
+            "n_rooms_other"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
+        "relevance": {
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "Room is a kitchen"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "n_rooms_food",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of rooms not sprayed due to being a food store",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify number of rooms not sprayed due to being a food store"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "rooms_locked",
+            "n_rooms_nobody",
+            "n_rooms_refused",
+            "n_rooms_baby",
+            "n_rooms_funeral",
+            "n_rooms_kitchen",
+            "n_rooms_patient",
+            "n_rooms_other"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
+        "relevance": {
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "Room is a food store"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "n_rooms_patient",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of rooms not sprayed due to a patient",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify number of rooms not sprayed due to being a food store"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "rooms_locked",
+            "n_rooms_nobody",
+            "n_rooms_refused",
+            "n_rooms_baby",
+            "n_rooms_funeral",
+            "n_rooms_kitchen",
+            "n_rooms_food",
+            "n_rooms_other"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
+        "relevance": {
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "There is a patient in the home"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "n_rooms_other",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Number of rooms not sprayed due to other reason",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "Please specify Number of rooms not sprayed due to other reason"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "Must be a number"
+        },
+        "v_cumulative_total": {
+          "value": "number_of_rooms_not_sprayed",
+          "related_fields": [
+            "rooms_locked",
+            "n_rooms_nobody",
+            "n_rooms_refused",
+            "n_rooms_baby",
+            "n_rooms_funeral",
+            "n_rooms_kitchen",
+            "n_rooms_food",
+            "n_rooms_patient"
+          ],
+          "err": "Number of all rooms not sprayed should be equal to total rooms NOT sprayed?"
+        },
+        "relevance": {
+          "step1:unsprayed_reason": {
+            "ex-checkbox": [
+              {
+                "or": [
+                  "Other"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "botswana-spray-calculation-rules.yml"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

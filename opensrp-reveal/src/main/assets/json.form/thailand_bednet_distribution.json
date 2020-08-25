@@ -1,0 +1,841 @@
+{
+  "count": "1",
+  "encounter_type": "bednet_distribution",
+  "form_version": "0.0.1",
+  "entity_id": "",
+  "metadata": {
+    "start": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "start",
+      "openmrs_entity_id": "163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "end": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "end",
+      "openmrs_entity_id": "163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "today": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "encounter",
+      "openmrs_entity_id": "encounter_date"
+    },
+    "deviceid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "deviceid",
+      "openmrs_entity_id": "163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "subscriberid": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "subscriberid",
+      "openmrs_entity_id": "163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "simserial": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "simserial",
+      "openmrs_entity_id": "163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "phonenumber": {
+      "openmrs_entity_parent": "",
+      "openmrs_entity": "concept",
+      "openmrs_data_type": "phonenumber",
+      "openmrs_entity_id": "163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    },
+    "encounter_location": ""
+  },
+  "step1": {
+    "title": "การกระจายสุทธิ",
+    "display_back_button": "true",
+    "fields": [
+      {
+        "key": "eligibleForNet",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this structure eligible for net survey/distribution?",
+        "options": [
+          {
+            "key": "1",
+            "text": "Eligible"
+          },
+          {
+            "key": "0",
+            "text": "InEligible"
+          }
+        ],
+        "value": "1",
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "whyNotEligibleNet",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Why is it not ineligible?",
+        "options": [
+          {
+            "key": "99",
+            "text": "Other"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"0\")"
+          }
+        }
+      },
+      {
+        "key": "totPopulation",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนคนในบ้าน",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "ต้องใส่จำนวนประชากรทั้งหมดที่อาศัยอยู่ในสิ่งปลูกสร้างนี้"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "1",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 1"
+        },
+        "v_max": {
+          "value": "[num_fam_members]",
+          "err": "ต้องไม่เกินจำนวนสมาชิกในครัวเรือนที่ลงทะเบียน"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "existingLLINs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้ง LLIN ที่มีอยูู่",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "ต้องใส่จำนวนมุ้ง LLIN ที่มีอยู่ทั้งหมด"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "existingLLINsLessThan1yr",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้ง LLIN ที่ใช้งานไม่เกิน 1 ปี",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "โปรดกรอกจำนวน LLIN ที่น้อยกว่า 1 ปี"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "existingLLINs1yrTo2yr",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้ง LLIN ที่ใช้งาน 1-2 ปี",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "จำนวนมุ้ง LLIN ที่ใช้งาน 1-2 ปี"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "existingLLINs2yrTo3yr",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้ง LLIN ที่ใช้งาน 2-3 ปี",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "จำนวนมุ้ง LLIN ที่ใช้งาน 2-3 ปี"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "existingLLINsGreaterThan3yr",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้ง LLIN ที่ใช้งานเกิน 3 ปี",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "โปรดกรอกจำนวน LLIN ที่อายุมากกว่า 3 ปี"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "v_cumulative_total": {
+          "value": "existingLLINs",
+          "related_fields": [
+            "existingLLINsLessThan1yr",
+            "existingLLINs1yrTo2yr",
+            "existingLLINs2yrTo3yr"
+          ],
+          "err": "ผลรวมของจำนวนมุ้ง LLIN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง LLIN ที่มีอยู่ทั้งหมด"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "existingLLIHNs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้ง LLIHN ที่มีอยูู่",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "ต้องใส่จำนวนมุ้ง LLIHN ที่มีอยู่ทั้งหมด"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "existingLLIHNsLessThan1yr",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้ง LLIHN ที่ใช้งานไม่เกิน 1 ปี",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "โปรดกรอกจำนวน LLIHN ที่น้อยกว่า 1 ปี"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "existingLLIHNs1yrTo2yr",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้ง LLIHN ที่ใช้งาน 1-2 ปี",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "จำนวนมุ้ง LLIHN ที่ใช้งาน 1-2 ปี"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "existingLLIHNs2yrTo3yr",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้ง LLIHN ที่ใช้งาน 2-3 ปี",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "จำนวนมุ้ง LLIHN ที่ใช้งาน 2-3 ปี"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "existingLLIHNsGreaterThan3yr",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้ง LLIHN ที่ใช้งานเกิน 3 ปี",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "โปรดกรอกจำนวน LLIHN ที่อายุมากกว่า 3 ปี"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "v_cumulative_total": {
+          "value": "existingLLIHNs",
+          "related_fields": [
+            "existingLLIHNsLessThan1yr",
+            "existingLLIHNs1yrTo2yr",
+            "existingLLIHNs2yrTo3yr"
+          ],
+          "err": "ผลรวมของจำนวนมุ้ง LLIHN ที่ใช้งานมา 1-3 ปี ที่มีอยู่ทั้งหมดควรจะเท่ากับจำนวนของมุ้ง LLIHN ที่มีอยู่ทั้งหมด"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "existingITNs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้งธรรมดาที่มีอยู่",
+        "shortened_hint": "จำนวนมุ้งธรรมดาที่มีอยู่",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "ต้องใส่จำนวนมุ้งธรรมดาที่มีอยู่ทั้งหมด"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "existingITNDipped",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้งที่ได้ชุบภายใน 6 เดือนที่ผ่านมา",
+        "shortened_hint": "จำนวนมุ้งที่ได้ชุบภายใน 6 เดือนที่ผ่านมา",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "โปรดกรอกจำนวนมุ้งที่ได้ชุบสารเคมีภายใน 6 เดือนที่ผ่านมา"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "v_relative_max": {
+          "value": "existingITNs",
+          "err": "จำนวนมุ้งชุบภายใน 6 เดือนที่ผ่านมาต้องไม่เกินจำนวนมุ้งธรรมดาที่มี"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "calcExistingNets",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "displayCalcExistingNets",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "{calcExistingNets} จำนวนมุ้งทั้งหมดในบ้านหลังนี้",
+        "text_color": "#000000",
+        "toaster_type": "info",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "calcNumNetsNeeded",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "calcNumNetsToDistribute",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "displayRecommendedNumNetsToDistribute",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "{calcNumNetsToDistribute} จำนวนมุ้งที่ต้องการ",
+        "text_color": "#000000",
+        "toaster_type": "info",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "distributedLLINs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้ง LLIN ทั้งหมดที่แจกไป",
+        "shortened_hint": "จำนวน LLIN แจก",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "ต้องใส่จำนวนมุ้ง LLIN ทั้งหมดที่แจกไป"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_relative_max": {
+          "value": "totPopulation",
+          "err": "ต้องไม่เกินจำนวนคนในบ้าน"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "distributedLLIHNs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้ง LLIHN ทั้งหมดที่แจกไป",
+        "shortened_hint": "จำนวน LLIHN แจก",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "ต้องใส่จำนวนมุ้ง LLIHN ทั้งหมดที่แจกไป"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "v_max": {
+          "value": "[num_sleeps_outdoors]",
+          "err": "ต้องไม่เกินจำนวนสมาชิกในครอบครัวที่ใช้เวลากลางคืนข้างนอก"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "distributedITNs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้ง ITN ทั้งหมดที่แจกไป",
+        "shortened_hint": "จำนวน ITN แจก",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "ต้องใส่จำนวนมุ้งธรรมดาทั้งหมดที่แจกไป"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "v_relative_max": {
+          "value": "calcPopulationMinusExistingNets",
+          "err": "จำนวนมุ้งไม่ควรเกินจำนวนคนในบ้าน"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "calcPopulationMinusExistingNets",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "calcTotalNetsDistributed",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "calcDistributedRecommendation",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "calcNumNetsToRedip",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "displayNumNetsToRedip",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "{calcNumNetsToRedip} จำนวนมุ้งที่ควรชุบ",
+        "text_color": "#000000",
+        "toaster_type": "info",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "redippedITNs",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนมุ้งที่ได้ชุบ",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "ต้องใส่จำนวนมุ้งทั้งหมดที่ทำการชุบน้ำยาซ้ำ"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "v_relative_max": {
+          "value": "calcNumNetsToRedip",
+          "err": "จำนวนมุ้งธรรมดาไม่ควรเกินจำนวนมุ้งที่ชุบ"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "distributedRepellent",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "จำนวนยาทากันยุงที่แจก",
+        "shortened_hint": "จำนวนยาทากันยุงที่ได้รับ",
+        "edit_type": "number",
+        "v_required": {
+          "value": true,
+          "err": "ต้องใส่จำนวนยากันยุงทั้งหมดที่แจกให้แก่แต่ละบุคคล"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "กรุณาใส่เป็นตัวเลข"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+        },
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "comment",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "หมายเหตุ",
+        "relevance": {
+          "step1:eligibleForNet": {
+            "type": "string",
+            "ex": "equalTo(., \"1\")"
+          }
+        }
+      },
+      {
+        "key": "business_status",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "value": "Complete",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "bednet-distribution-calculation-rules.yml"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+---
+name: step1_business_status
+description: Task business status
+priority: 1
+condition: "true"
+actions:
+  - "calculation = step1_eligibleMos == '0' ? 'Not Eligible' : step1_task_business_status "

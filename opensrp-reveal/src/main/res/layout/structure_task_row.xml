@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp">
+
+    <TextView
+        android:id="@+id/task_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="@color/text_black"
+        android:textSize="@dimen/task_action_text"
+        app:layout_constraintBottom_toTopOf="@id/task_details"
+        app:layout_constraintEnd_toStartOf="@id/task_action"
+        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <org.smartregister.view.customcontrols.CustomFontTextView
+        android:id="@+id/task_details"
+        style="@style/CustomFontTextViewStyle.ClientList.Light"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/task_action_text"
+        android:paddingBottom="@dimen/task_action_text"
+        android:textColor="@color/light_grey_text"
+        android:textSize="@dimen/register_list_desc_size"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/task_action"
+        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/task_name" />
+
+
+    <ImageView
+        android:id="@+id/view_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:src="@drawable/ic_edit_task"
+        app:layout_constraintBottom_toTopOf="@id/view_undo"
+        app:layout_constraintEnd_toStartOf="@id/task_action"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/view_undo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="8dp"
+        android:src="@drawable/ic_undo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_edit"
+        app:layout_constraintEnd_toStartOf="@id/task_action" />
+
+
+    <TextView
+        android:id="@+id/task_action"
+        android:layout_width="@dimen/task_register_action_width"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/structure_task_action_bg"
+        android:gravity="center_horizontal"
+        android:paddingTop="@dimen/task_register_padding"
+        android:paddingBottom="@dimen/task_register_padding"
+        android:scrollHorizontally="false"
+        android:textAllCaps="true"
+        android:textColor="#FAAB00"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/last_edited"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/task_name"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/last_edited"
+        android:layout_width="@dimen/task_register_action_width"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:gravity="center_horizontal"
+        android:paddingBottom="@dimen/task_register_padding"
+        android:textColor="#C7CDD0"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/task_name"
+        app:layout_constraintTop_toBottomOf="@id/task_action" />
+
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/task_action_text"
+        android:background="@color/light_grey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/last_edited" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

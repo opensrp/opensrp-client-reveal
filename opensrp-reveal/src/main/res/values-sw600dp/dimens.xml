@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="login_font_size">16sp</dimen>
+    <dimen name="login_view_component_height">48dp</dimen>
+    <dimen name="login_logo_height">220dp</dimen>
+    <dimen name="login_logo_top_padding">100dp</dimen>
+    <dimen name="login_horizontal_margin">100dp</dimen>
+    <dimen name="login_bottom_margin">50dp</dimen>
+    <dimen name="login_edit_text_textSize">18sp</dimen>
+
+    <dimen name="hamburger_padding">10dp</dimen>
+    <dimen name="hamburger_margin">32dp</dimen>
+
+    <dimen name="drawer_drawable_padding">40dp</dimen>
+    <dimen name="drawer_margin_vertical">16dp</dimen>
+    <dimen name="drawer_separator_margin">32dp</dimen>
+    <dimen name="drawer_icon_margin">60dp</dimen>
+
+    <dimen name="dialog_min_width_major">@dimen/abc_dialog_min_width_major</dimen>
+
+    <dimen name="structure_info_card_text_size">24sp</dimen>
+    <dimen name="structure_info_card_status_text_size">28sp</dimen>
+    <dimen name="structure_info_card_scroll_layout_height">280dp</dimen>
+
+    <dimen name="status_label_vertical_padding">12dp</dimen>
+    <dimen name="status_label_horizontal_padding">20dp</dimen>
+    <dimen name="mosquito_collection_card_view_title_text_size">26sp</dimen>
+    <dimen name="mosquito_collection_card_view_title_left_margin">40dp</dimen>
+    <dimen name="mosquito_collection_card_view_status_left_margin">75dp</dimen>
+    <dimen name="change_spray_status_btn_bottom_margin">15dp</dimen>
+    <dimen name="my_location_btn_margin">32dp</dimen>
+    <dimen name="my_location_button_dimen">70dp</dimen>
+
+    <dimen name="task_register_launcher_horizontal_padding">16dp</dimen>
+    <dimen name="task_register_launcher_vertical_padding">12dp</dimen>
+    <dimen name="task_register_text_size">18sp</dimen>
+    <dimen name="task_register_action_text">18sp</dimen>
+    <dimen name="task_register_action_width">140dp</dimen>
+
+    <dimen name="detect_case_padding">40dp</dimen>
+
+</resources>
