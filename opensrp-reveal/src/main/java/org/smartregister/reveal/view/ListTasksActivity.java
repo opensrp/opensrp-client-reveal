@@ -44,6 +44,7 @@ import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.maps.UiSettings;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.pluginscalebar.ScaleBarOptions;
 import com.mapbox.pluginscalebar.ScaleBarPlugin;
@@ -329,6 +330,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
 
+                        enableCompass(mapboxMap);
+
                         geoJsonSource = style.getSourceAs(getString(R.string.reveal_datasource_name));
 
                         selectedGeoJsonSource = style.getSourceAs(getString(R.string.selected_datasource_name));
@@ -376,6 +379,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             }
         });
 
+    }
+
+    protected void enableCompass(MapboxMap mapboxMap) {
+        UiSettings uiSettings = mapboxMap.getUiSettings();
+
+        uiSettings.setCompassGravity(Gravity.CENTER_HORIZONTAL);
+        uiSettings.setCompassFadeFacingNorth(false);
+        uiSettings.setCompassEnabled(true);
     }
 
     protected void initializeScaleBarPlugin(MapboxMap mapboxMap) {
