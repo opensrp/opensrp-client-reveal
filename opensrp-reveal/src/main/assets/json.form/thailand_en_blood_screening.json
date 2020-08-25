@@ -48,7 +48,7 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "เจาะเลือด SCD",
+    "title": "Blood Screening",
     "display_back_button": "true",
     "fields": [
       {
@@ -104,7 +104,7 @@
           "err": "This field is required"
         },
         "relevance": {
-          "step1:eligiblePerson": {
+          "step1:eligibleForNet": {
             "type": "string",
             "ex": "equalTo(., \"0\")"
           }
@@ -116,24 +116,24 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "ประเภทกิจกรรมการเจาะเลือด",
+        "label": "Type of blood screening",
         "options": [
           {
             "key": "RACD/CIS",
-            "text": "RACD/CIS"
+            "text": "Reactive Case Detection / Case Investigation Screening"
           },
           {
             "key": "SCD",
-            "text": "SCD"
+            "text": "Special Case Detection"
           },
           {
             "key": "MBS",
-            "text": "MBS"
+            "text": "Mass Blood Screening"
           }
         ],
         "v_required": {
           "value": "true",
-          "err": "กรุณาเลือกวิธีทดสอบ"
+          "err": "select type of blood screening"
         },
         "relevance": {
           "step1:eligiblePerson": {
@@ -148,20 +148,20 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "เมื่อสองอาทิตย์ที่ผ่านมาได้ค้างแรม/ทำงานนอกบ้านในเวลากลางคืนหรือไม่?",
+        "label": "Has this person spent the night outside within the past two weeks?",
         "options": [
           {
             "key": "Yes",
-            "text": "ใช่"
+            "text": "Yes"
           },
           {
             "key": "No",
-            "text": "ไม่ใช่"
+            "text": "No"
           }
         ],
         "v_required": {
           "value": true,
-          "err": "ต้องใส่ข้อมูลในช่องนี้"
+          "err": "This field is required"
         },
         "relevance": {
           "step1:eligiblePerson": {
@@ -176,20 +176,20 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "ได้รับการเจาะโลหิตหรือไม่?",
+        "label": "Was this person tested?",
         "options": [
           {
             "key": "Yes",
-            "text": "ใช่"
+            "text": "Yes"
           },
           {
             "key": "No",
-            "text": "ไม่ใช่"
+            "text": "No"
           }
         ],
         "v_required": {
           "value": true,
-          "err": "ต้องใส่ข้อมูลในช่องนี้"
+          "err": "This field is required"
         },
         "relevance": {
           "step1:eligiblePerson": {
@@ -204,36 +204,24 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "หากไม่เคย โปรดระบุเหตุผล",
+        "label": "Reason this person was not tested?",
         "options": [
           {
             "key": "Not present",
-            "text": "ไม่พบตัว"
+            "text": "Not present"
           },
           {
             "key": "Refused",
-            "text": "ปฏิเสธ"
-          },
-          {
-            "key": "Sick",
-            "text": "ป่วย"
-          },
-          {
-            "key": "Tested within past week",
-            "text": "เคยเจาะแล้วเมื่ออาทิตย์ที่ผ่านมา"
-          },
-          {
-            "key": "Index case - not test necessary",
-            "text": "เป็น index case ไม่ต้องเจาะ"
+            "text": "Refused"
           },
           {
             "key": "Other",
-            "text": "อื่นๆ"
+            "text": "Other"
           }
         ],
         "v_required": {
           "value": true,
-          "err": "หากไม่ตรวจ โปรดระบุเหตุผล"
+          "err": "Enter reason person was not tested"
         },
         "relevance": {
           "step1:personTested": {
@@ -248,11 +236,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "ตรวจโดยวิธี",
+        "label": "Which type of test was used?",
         "options": [
           {
             "key": "Microscopy",
-            "text": "กล้องจุลทรรศน์"
+            "text": "Microscopy"
           },
           {
             "key": "RDT",
@@ -262,7 +250,7 @@
         "value": "Microscopy",
         "v_required": {
           "value": true,
-          "err": "ต้องใส่ประเภทการทดสอบ"
+          "err": "A test type is required"
         },
         "relevance": {
           "step1:personTested": {
@@ -277,19 +265,19 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "ลำดับฟิล์ม",
+        "hint": "Slide Number",
         "edit_type": "number",
         "v_required": {
           "value": true,
-          "err": "ต้องใส่หมายเลขสไลด์"
+          "err": "The slide number is required"
         },
         "v_numeric": {
           "value": "true",
-          "err": "กรุณาใส่เป็นตัวเลข"
+          "err": "Enter a number"
         },
         "v_min": {
           "value": "0",
-          "err": "ต้องมีค่ามากกว่าหรือเท่ากับ 0"
+          "err": "Must be greater than or equal to 0"
         },
         "relevance": {
           "step1:testType": {
@@ -304,19 +292,19 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "ผลตรวจจาก RDT",
+        "label": "RDT Result",
         "options": [
           {
             "key": "Negative",
-            "text": "ไม่พบเชื้อ"
+            "text": "Negative"
           },
           {
             "key": "PositiveFalciparum",
-            "text": "Pf"
+            "text": "Positive - Falciparum"
           },
           {
             "key": "PositiveVivax",
-            "text": "Pv"
+            "text": "Positive - Vivax"
           },
           {
             "key": "PositiveMixed",
@@ -329,7 +317,7 @@
         ],
         "v_required": {
           "value": "true",
-          "err": "กรุณาเลือกผลการทดสอบ"
+          "err": "Please select RDT result"
         },
         "relevance": {
           "step1:testType": {
@@ -344,32 +332,32 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "check_box",
-        "label": "ผลตรวจจากกล้องจุลทรรศน์",
-        "combine_checkbox_option_values" : "true",
+        "label": "Microscopy Result",
+        "combine_checkbox_option_values": "true",
         "options": [
           {
             "key": "Negative",
-            "text": "ไม่พบเชื้อ"
+            "text": "Negative"
           },
           {
             "key": "PositiveFalciparum",
-            "text": "Pf"
+            "text": "Positive - Falciparum"
           },
           {
             "key": "PositiveVivax",
-            "text": "Pv"
+            "text": "Positive - Vivax"
           },
           {
             "key": "PositiveMalariae",
-            "text": "Pm"
+            "text": "Positive - Malariae"
           },
           {
             "key": "PositiveOvalae",
-            "text": "Po"
+            "text": "Positive - Ovalae"
           },
           {
             "key": "PositiveKnowelsi",
-            "text": "Pk"
+            "text": "Positive - Knowelsi"
           },
           {
             "key": "Fg",
@@ -392,11 +380,11 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "รายละเอียดเพิ่มเติม",
+        "hint": "Please add a comment",
         "relevance": {
           "step1:eligiblePerson": {
             "type": "string",
-            "ex": "equalTo(., \"1\")"
+            "ex": "equalTo(., \"Yes\")"
           }
         }
       },

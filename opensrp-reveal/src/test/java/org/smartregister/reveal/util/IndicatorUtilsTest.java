@@ -1,8 +1,13 @@
 package org.smartregister.reveal.util;
 
 
+import net.sqlcipher.Cursor;
+import net.sqlcipher.MatrixCursor;
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.domain.Task;
@@ -17,10 +22,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * Created by ndegwamartin on 2019-09-27.
@@ -28,6 +38,8 @@ import static junit.framework.TestCase.assertTrue;
 public class IndicatorUtilsTest extends BaseUnitTest {
 
     private Map<String, Set<Task>> taskTestMap = new HashMap<>();
+    @Mock
+    private SQLiteDatabase sqLiteDatabase;
 
     @Before
     public void setUp() {
@@ -102,5 +114,23 @@ public class IndicatorUtilsTest extends BaseUnitTest {
 
     }
 
+    @Test
+    public void testGetNamibiaIndicatorsShouldReturnCorrectIndicators() {
+        String locationId = UUID.randomUUID().toString();
+        String planId = UUID.randomUUID().toString();
+        when(sqLiteDatabase.rawQuery(anyString(), eq(new String[]{locationId, planId}))).thenReturn(getCursor());
+        IndicatorDetails indicatorDetails = IndicatorUtils.getNamibiaIndicators(locationId, planId, sqLiteDatabase);
+        assertEquals(75, indicatorDetails.getFoundStructures());
+        assertEquals(74, indicatorDetails.getSprayed());
+        assertEquals(1, indicatorDetails.getNotSprayed());
+        verify(sqLiteDatabase).rawQuery(anyString(), eq(new String[]{locationId, planId}));
+    }
 
+    public static Cursor getCursor() {
+        MatrixCursor cursor = new MatrixCursor(new String[]{"foundStruct", "sprayedStruct", "notSprayedStruct"});
+        cursor.addRow(new Object[]{
+                75, 74, 1
+        });
+        return cursor;
+    }
 }

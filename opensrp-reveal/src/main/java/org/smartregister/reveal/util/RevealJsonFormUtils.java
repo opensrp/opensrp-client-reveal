@@ -249,6 +249,8 @@ public class RevealJsonFormUtils {
                 || Intervention.MOSQUITO_COLLECTION.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
+                formName = JsonForm.THAILAND_EN_MOSQUITO_COLLECTION_FORM;
             } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.REFAPP_MOSQUITO_COLLECTION_FORM;
             } else {
@@ -258,6 +260,8 @@ public class RevealJsonFormUtils {
                 || Intervention.BEDNET_DISTRIBUTION.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_BEDNET_DISTRIBUTION_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
+                formName = JsonForm.THAILAND_EN_BEDNET_DISTRIBUTION_FORM;
             } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.REFAPP_BEDNET_DISTRIBUTION_FORM;
             } else {
@@ -276,6 +280,8 @@ public class RevealJsonFormUtils {
                 || Intervention.BLOOD_SCREENING.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_BLOOD_SCREENING_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
+                formName = JsonForm.THAILAND_EN_BLOOD_SCREENING_FORM;
             } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.REFAPP_BLOOD_SCREENING_FORM;
             } else {
@@ -284,6 +290,8 @@ public class RevealJsonFormUtils {
         } else if (LARVAL_DIPPING_EVENT.equals(encounterType) || Intervention.LARVAL_DIPPING.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_LARVAL_DIPPING_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
+                formName = JsonForm.THAILAND_EN_LARVAL_DIPPING_FORM;
             } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.REFAPP_LARVAL_DIPPING_FORM;
             } else {

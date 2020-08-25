@@ -83,7 +83,6 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
         labelsMap.put(BusinessStatus.NOT_ELIGIBLE, R.string.not_eligible);
         labelsMap.put(BusinessStatus.IN_PROGRESS, R.string.in_progress);
 
-
         //Forms
         labelsMap.put(Constants.SPRAY_EVENT, R.string.hh_form);
         labelsMap.put(EventType.VERIFICATION_EVENT, R.string.verification_form_name);
@@ -94,6 +93,10 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
         labelsMap.put(EventType.IRS_FIELD_OFFICER_EVENT, R.string.irs_field_officer_form);
         labelsMap.put(EventType.CB_SPRAY_AREA_EVENT, R.string.cb_spray_area_form);
 
+        // Following are for grouped structure tasks.
+        labelsMap.put(BusinessStatus.FAMILY_REGISTERED, R.string.family_registered);
+        labelsMap.put(BusinessStatus.BEDNET_DISTRIBUTED, R.string.bednet_distributed);
+        labelsMap.put(BusinessStatus.BLOOD_SCREENING_COMPLETE, R.string.blood_screening_complete);
     }
 
 

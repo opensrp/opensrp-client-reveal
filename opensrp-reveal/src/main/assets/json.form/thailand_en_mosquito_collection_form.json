@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "larval_dipping",
+  "encounter_type": "mosquito_collection",
   "form_version": "0.0.1",
   "entity_id": "",
   "metadata": {
@@ -48,11 +48,11 @@
     "encounter_location": ""
   },
   "step1": {
-    "title": "สำรวจลูกน้ำ",
+    "title": "Mosquito Collection Details",
     "display_back_button": "true",
     "fields": [
       {
-        "key": "eligibleLarv",
+        "key": "eligibleMos",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -75,7 +75,7 @@
         }
       },
       {
-        "key": "whyNotEligibleLarv",
+        "key": "whyNotEligibleMos",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
@@ -83,8 +83,8 @@
         "label": "Why is it not ineligible?",
         "options": [
           {
-            "key": "No longer breeding site",
-            "text": "No longer breeding site"
+            "key": "No longer collection site",
+            "text": "No longer collection site"
           },
           {
             "key": "99",
@@ -104,7 +104,7 @@
       },
       {
         "key": "task_business_status",
-        "label": "สถานะ",
+        "label": "Status",
         "type": "native_radio",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -112,48 +112,44 @@
         "options": [
           {
             "key": "In Progress",
-            "text": "กำลังดำเนินการ"
+            "text": "In Progress"
           },
           {
             "key": "Incomplete",
-            "text": "ไม่สมบูรณ์"
+            "text": "Incomplete"
           },
           {
             "key": "Not Eligible",
-            "text": "ไม่มีสิทธิ์"
+            "text": "Not Eligible"
           },
           {
             "key": "Complete",
-            "text": "ดำเนินการแล้ว"
+            "text": "Complete"
           }
         ],
         "v_required": {
           "value": true,
-          "err": "กรุณาระบุสถานะงาน"
+          "err": "Please specify status"
         },
         "relevance": {
-          "step1:eligibleLarv": {
+          "step1:eligibleMos": {
             "type": "string",
             "ex": "equalTo(., \"1\")"
           }
         }
       },
       {
-        "key": "occurred_date",
+        "key": "trap_start",
         "type": "date_picker",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "hint": "วันที่สำรวจลูกน้ำ",
+        "hint": "Date trap was set",
         "max_date": "today",
-        "v_required": {
-          "value": true,
-          "err": "กรุณาระบุวันที่ทำการเก็บลูกน้ำเสร็จ"
-        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "larval-dipping-relevance-rules.yml"
+              "rules-file": "mosquito-collection-relevance-rules.yml"
             }
           }
         }
@@ -167,7 +163,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "larval-dipping-calculation-rules.yml"
+              "rules-file": "mosquito-collection-calculation-rules.yml"
             }
           }
         }

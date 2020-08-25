@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.view.View;
 
+import net.sqlcipher.database.SQLiteDatabase;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.domain.Location;
 import org.smartregister.domain.Setting;
 import org.smartregister.reporting.view.ProgressIndicatorView;
 import org.smartregister.reporting.view.TableView;
@@ -18,6 +21,7 @@ import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.IndicatorUtils;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.ListTasksActivity;
 
@@ -31,6 +35,8 @@ import timber.log.Timber;
  */
 public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDetails> {
 
+    private final PreferencesUtil prefsUtil;
+    private final SQLiteDatabase sqLiteDatabase;
     private ProgressIndicatorView progressIndicator;
     private ProgressIndicatorView progressIndicator2;
     private ProgressIndicatorView progressIndicator3;
@@ -41,6 +47,8 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
     public IndicatorsCalculatorTask(Activity context, List<TaskDetails> tasks) {
         this.activity = context;
         this.tasks = tasks;
+        prefsUtil = PreferencesUtil.getInstance();
+        sqLiteDatabase = RevealApplication.getInstance().getRepository().getReadableDatabase();
 
     }
 
@@ -56,10 +64,13 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
     @Override
     protected IndicatorDetails doInBackground(Void... params) {
         IndicatorDetails indicatorDetails = null;
-        indicatorDetails = IndicatorUtils.processIndicators(this.tasks);
+
         if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+            indicatorDetails = IndicatorUtils.processIndicators(this.tasks);
             indicatorDetails.setSprayIndicatorList(IndicatorUtils.populateSprayIndicators(this.activity, indicatorDetails));
         } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
+            Location operationalArea = Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea());
+            indicatorDetails = IndicatorUtils.getNamibiaIndicators(operationalArea.getId(), prefsUtil.getCurrentPlanId(), sqLiteDatabase);
             indicatorDetails.setTarget(calculateTarget());
             indicatorDetails.setSprayIndicatorList(IndicatorUtils.populateNamibiaSprayIndicators(this.activity, indicatorDetails));
         }
@@ -117,7 +128,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             progressIndicator3.setTitle(activity.getString(R.string.n_percent, targetCoverage));
 
             progressIndicator2.setSubTitle(activity.getString(R.string.found_coverage));
-            int coverage = (int) (indicatorDetails.getSprayed() * 100.0 / indicatorDetails.getTotalStructures());
+            int coverage = (int) (indicatorDetails.getSprayed() * 100.0 / indicatorDetails.getFoundStructures());
             progressIndicator2.setProgress(coverage);
             progressIndicator2.setTitle(this.activity.getString(R.string.n_percent, coverage));
 
