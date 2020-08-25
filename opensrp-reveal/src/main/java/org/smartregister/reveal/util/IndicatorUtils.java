@@ -2,6 +2,10 @@ package org.smartregister.reveal.util;
 
 import android.content.Context;
 
+import net.sqlcipher.Cursor;
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SQLiteException;
+
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.IndicatorDetails;
@@ -12,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import timber.log.Timber;
 
 /**
  * Created by ndegwamartin on 2019-09-27.
@@ -108,7 +114,7 @@ public class IndicatorUtils {
 
     public static List<String> populateNamibiaSprayIndicators(Context context, IndicatorDetails indicatorDetails) {
         List<String> sprayIndicator = new ArrayList<>();
-        sprayIndicator.add(context.getResources().getString(R.string.total_structures_targeted));
+        sprayIndicator.add(context.getResources().getString(R.string.structures_targeted));
         sprayIndicator.add(String.valueOf(indicatorDetails.getTarget()));
 
         sprayIndicator.add(context.getResources().getString(R.string.structures_visited_found));
@@ -116,6 +122,9 @@ public class IndicatorUtils {
 
         sprayIndicator.add(context.getResources().getString(R.string.structures_sprayed));
         sprayIndicator.add(String.valueOf(indicatorDetails.getSprayed()));
+
+        sprayIndicator.add(context.getResources().getString(R.string.structures_not_sprayed));
+        sprayIndicator.add(String.valueOf(indicatorDetails.getNotSprayed()));
 
 
         return sprayIndicator;
@@ -155,5 +164,26 @@ public class IndicatorUtils {
         sprayIndicator.add(String.valueOf(indicatorDetails.getNotSprayed()));
 
         return sprayIndicator;
+    }
+
+    public static IndicatorDetails getNamibiaIndicators(String locationId, String planId, SQLiteDatabase sqLiteDatabase) {
+        String query = "select" +
+                " sum(ifNull(ss.nSprayableTotal,0)) as foundStruct" +
+                " ,sum(ifNull(ss.nSprayedTotalFirst,0)+ifNull(ss.nSprayedTotalMop,0)) as sprayedStruct" +
+                " ,sum(ifNull(nSprayableTotal,0)- ifNull(nSprayedTotalFirst,0) - ifnull(nSprayedTotalMop,0)) as notSprayedStruct" +
+                " from sprayed_structures ss " +
+                " join structure s on s._id=ss.id" +
+                " where parent_id=? and ss.plan_id=?";
+        IndicatorDetails indicatorDetails = new IndicatorDetails();
+        try (Cursor cursor = sqLiteDatabase.rawQuery(query, new String[]{locationId, planId})) {
+            if (cursor.moveToNext()) {
+                indicatorDetails.setFoundStructures(cursor.getInt(cursor.getColumnIndex("foundStruct")));
+                indicatorDetails.setSprayed(cursor.getInt(cursor.getColumnIndex("sprayedStruct")));
+                indicatorDetails.setNotSprayed(cursor.getInt(cursor.getColumnIndex("notSprayedStruct")));
+            }
+        } catch (SQLiteException e) {
+            Timber.e(e);
+        }
+        return indicatorDetails;
     }
 }
