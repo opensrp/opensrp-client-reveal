@@ -1403,10 +1403,6 @@
           "value": "true",
           "err": "Total Number of Nets Hanging and in Use must be a whole number"
         },
-        "v_min": {
-          "value": "0",
-          "err": "Total Number of Nets Hanging and in Use must be greater than or equal to 0"
-        },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
