@@ -30,8 +30,10 @@ import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.reveal.viewholder.EventViewHolder;
 import org.smartregister.view.fragment.BaseRegisterFragment;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import static android.app.Activity.RESULT_OK;
@@ -183,13 +185,16 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
     public void openFilterActivity(TaskFilterParams filterParams) {
         Intent intent = new Intent(getContext(), FilterTasksActivity.class);
         intent.putExtra(FILTER_SORT_PARAMS, filterParams);
+        List<String> forms = new ArrayList<>();
+        forms.add(Constants.SPRAY_EVENT);
+        forms.addAll(EventType.SUMMARY_EVENT_TYPES);
         intent.putExtra(FILTER_CONFIGURATION, FilterConfiguration.builder()
                 .businessStatusLayoutEnabled(true)
                 .businessStatusList(Arrays.asList(BusinessStatus.COMPLETE, BusinessStatus.SPRAYED, BusinessStatus.NOT_SPRAYED, BusinessStatus.NOT_ELIGIBLE))
                 .interventionTypeLayoutEnabled(false)
                 .taskCodeLayoutEnabled(false)
                 .formsLayoutEnabled(true)
-                .eventTypeList(EventType.SUMMARY_EVENT_TYPES)
+                .eventTypeList(forms)
                 .sortOptions(R.array.form_sort_options)
                 .build());
         getActivity().startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
