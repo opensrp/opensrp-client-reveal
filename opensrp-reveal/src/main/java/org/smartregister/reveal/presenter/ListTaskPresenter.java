@@ -52,6 +52,7 @@ import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.EditFociBoundaryActivity;
+import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
@@ -288,7 +289,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         listTaskView.closeAllCardViews();
         listTaskView.displaySelectedFeature(feature, clickedPoint);
         if (isLongclick) {
-                onFeatureSelectedByLongClick(feature);
+            onFeatureSelectedByLongClick(feature);
         } else {
             onFeatureSelectedByNormalClick(feature);
         }
@@ -336,7 +337,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         String status = getPropertyValue(feature, LOCATION_STATUS);
 
         selectedFeatureInterventionType = code;
-        if (INACTIVE.name().equals(status)){
+        if (INACTIVE.name().equals(status)) {
             listTaskView.displayToast(R.string.structure_is_inactive);
         } else if (NOT_VISITED.equals(businessStatus) || !feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayMarkStructureInactiveDialog();
@@ -494,6 +495,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.HEALTH_FACILITIES, fields.get(JsonForm.HFC_SEEK), prefsUtil.getCurrentDistrict());
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.HEALTH_FACILITIES, fields.get(JsonForm.HFC_BELONG), prefsUtil.getCurrentDistrict());
             jsonFormUtils.populateForm(event, formJson);
+            String dataCollector = JsonFormUtils.getString(fields.get(JsonForm.DATA_COLLECTOR), VALUE);
+            if (StringUtils.isNotBlank(dataCollector)) {
+                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        CONFIGURATION.SPRAY_OPERATORS, fields.get(JsonForm.SPRAY_OPERATOR_CODE),
+                        dataCollector.split(":")[0]);
+            }
+
         } else if (JsonForm.SPRAY_FORM_REFAPP.equals(formName)) {
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DATA_COLLECTORS, jsonFormUtils.getFields(formJson).get(JsonForm.DATA_COLLECTOR), prefsUtil.getCurrentDistrict());
         }
