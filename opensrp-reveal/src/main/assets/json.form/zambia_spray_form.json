@@ -1433,35 +1433,6 @@
         }
       },
       {
-        "key": "notsprayed_total_uNet",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Total Number of Residents Sleeping Under Nets",
-        "text_size": "8sp",
-        "v_numeric": {
-          "value": "true",
-          "err": "Total Number of Residents Sleeping Under Nets must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Total Number of Residents Sleeping Under Nets must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Total Number of Residents Sleeping Under Nets must be greater than or equal to 0"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "notsprayed_total_uNet_validation_err",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
