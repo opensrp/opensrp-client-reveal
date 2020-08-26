@@ -191,7 +191,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             } else if (tasks.isEmpty()) {
                 getView().displayNotification(R.string.fetching_structure_title, R.string.no_structures_found);
                 getView().setTaskDetails(tasks);
-            } else if (applyFilterOnTasksFound) {
+            } else if (applyFilterOnTasksFound || (filterParams != null && BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY))) {
                 filterTasks(filterParams);
                 getView().setSearchPhrase(filterParams.getSearchPhrase());
                 applyFilterOnTasksFound = false;
@@ -359,6 +359,12 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
     @Override
     public void searchTasks(String searchText) {
         Timber.d("searching task matching %s", searchText);
+        if(filterParams == null){
+            filterParams = new TaskFilterParams(searchText);
+        }else {
+            filterParams.setSearchPhrase(searchText);
+        }
+
         if (StringUtils.isBlank(searchText)) {
             setTasks(getActiveTasks(), this.withinBuffer);
         } else {

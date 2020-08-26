@@ -23,18 +23,39 @@ public class TaskDetailsDao extends AbstractDao {
         return new TaskDetailsDao();
     }
 
+    public Map<String, String> fetchFamilyMemberDetails(String operationalAreaId) {
+        Map<String, String> results = new HashMap<>();
+
+        String sql = "Select structure._id as _id , " +
+                "group_concat(ec_family_member.first_name||' '||ec_family_member.last_name||' '||ec_family_member.phone_number) family_details " +
+                "FROM structure " +
+                "LEFT JOIN ec_family ON structure._id = ec_family.structure_id AND ec_family.date_removed IS NULL collate nocase  " +
+                "LEFT JOIN ec_family_member ON ec_family.base_entity_id = ec_family_member.relational_id AND ec_family_member.date_removed IS NULL collate nocase  " +
+                "LEFT JOIN sprayed_structures ON structure._id = sprayed_structures.base_entity_id collate nocase  " +
+                "WHERE parent_id='" + operationalAreaId + "'  GROUP BY structure._id";
+
+        DataMap<Void> voidDataMap = cursor -> {
+            results.put(getCursorValue(cursor, "_id"), getCursorValue(cursor, "family_details"));
+            return null;
+        };
+        readData(sql, voidDataMap);
+
+        return results;
+    }
+
     public List<TaskDetails> fetchStructures(String operationalAreaId, String planId, Location lastLocation, Location operationalAreaCenter) {
         String sqlPhones = "select relational_id , group_concat(phone_number) phone_numbers from ec_family_member group by relational_id";
 
-        Map<String,String> numbers = new HashMap<>();
+        Map<String, String> numbers = new HashMap<>();
 
         DataMap<Void> voidDataMap = cursor -> {
-            numbers.put(getCursorValue(cursor,"relational_id"),getCursorValue(cursor,"phone_numbers"));
+            numbers.put(getCursorValue(cursor, "relational_id"), getCursorValue(cursor, "phone_numbers"));
             return null;
         };
 
-        readData(sqlPhones,voidDataMap);
+        readData(sqlPhones, voidDataMap);
 
+        Map<String, String> memberDetails = fetchFamilyMemberDetails(operationalAreaId);
 
         String sql =
                 "select ec_family.base_entity_id , ec_family.structure_id , ec_family.first_name fam_name , structure.latitude , structure.longitude, ifnull(task.business_status,'Not Visited') business_status , task.status task_status , '" + Constants.Intervention.REGISTER_FAMILY + "' code " +
@@ -103,6 +124,8 @@ public class TaskDetailsDao extends AbstractDao {
             taskDetails.setLocation(location);
 
             calculateDistance(taskDetails, location, lastLocation, operationalAreaCenter);
+
+            taskDetails.setFamilyMemberNames(memberDetails.get(getCursorValue(cursor, "structure_id", "")));
 
             return taskDetails;
         };

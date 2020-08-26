@@ -232,7 +232,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             } else if (filterParams != null && !filterParams.getCheckedFilters().isEmpty()) {
                 searchFeatureCollection = null;
                 searchTasks(searchPhrase);
-            } else {
+            } else if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY) && StringUtils.isNotBlank(searchPhrase)){
+                searchFeatureCollection = null;
+                searchTasks(searchPhrase);
+            }else {
                 listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, isChangeMapPosition());
             }
             this.operationalArea = operationalArea;
