@@ -1,6 +1,7 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -83,12 +84,15 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     @Override
     public void generateTasks(Context applicationContext, String baseEntityId, String structureId, Date birthDate) {
         appExecutors.diskIO().execute(() -> {
-            if (Utils.isFocusInvestigation())
+            if (Utils.isFocusInvestigation()) {
                 taskUtils.generateBloodScreeningTask(applicationContext, baseEntityId, structureId);
-            else if (Utils.isMDA()) {
+                RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
+            } else if (Utils.isMDA()) {
                 int age = Years.yearsBetween(new DateTime(birthDate.getTime()), DateTime.now()).getYears();
-                    if (age < Constants.MDA_MIN_AGE)
-                        taskUtils.generateMDADispenseTask(applicationContext, baseEntityId, structureId);
+                if (age < Constants.MDA_MIN_AGE) {
+                    taskUtils.generateMDADispenseTask(applicationContext, baseEntityId, structureId);
+                    RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
+                }
             }
             appExecutors.mainThread().execute(() -> {
                 presenter.onTasksGenerated();
