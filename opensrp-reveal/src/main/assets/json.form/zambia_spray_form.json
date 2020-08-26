@@ -1387,35 +1387,6 @@
         }
       },
       {
-        "key": "notsprayed_nets_available",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Total Number of Nets Available",
-        "text_size": "8sp",
-        "v_numeric": {
-          "value": "true",
-          "err": "Total Number of Nets Available must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Total Number of Nets Available must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Total Number of Nets Available must be greater than or equal to 0"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "notsprayed_nets_use",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
