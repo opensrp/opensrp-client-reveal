@@ -481,6 +481,7 @@ public interface Constants {
         String HEALTH_FACILITY = "health_facility";
 
 
+        String ZONE = "zone";
     }
 
     interface DateFormat {
