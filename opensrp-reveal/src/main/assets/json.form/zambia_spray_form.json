@@ -270,25 +270,6 @@
         }
       },
       {
-        "key": "location",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "What is the name of the location (zone) this structure is in?",
-        "text_size": "8sp",
-        "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
-          }
-        },
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        }
-      },
-      {
         "key": "datacollector",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
