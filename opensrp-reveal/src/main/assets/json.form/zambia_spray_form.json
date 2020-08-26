@@ -1043,6 +1043,31 @@
         }
       },
       {
+        "key": "no_of_sachets",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Number of insecticide sachets mixed",
+        "text_size": "8sp",
+        "is_mandatory": true,
+        "v_numeric": {
+          "value": "true",
+          "err": "Number of insecticide sachets must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "Number of insecticide sachets must be a whole number"
+        },
+        "relevance": {
+          "step1:new_sachet": {
+            "type": "string",
+            "ex": "equalTo(., \"yes\")"
+          }
+        }
+      },
+      {
         "key": "serial_number",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
