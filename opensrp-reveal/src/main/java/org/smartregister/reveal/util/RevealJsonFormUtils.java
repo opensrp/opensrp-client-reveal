@@ -506,17 +506,10 @@ public class RevealJsonFormUtils {
                         PreferencesUtil.getInstance().getCurrentDistrict());
 
             case JsonForm.TEAM_LEADER_DOS_ZAMBIA:
-                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        Constants.CONFIGURATION.SUPERVISORS, fieldsMap.get(JsonForm.SUPERVISOR),
-                        PreferencesUtil.getInstance().getCurrentDistrict());
 
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         Constants.CONFIGURATION.DATA_COLLECTORS, fieldsMap.get(JsonForm.DATA_COLLECTOR),
                         PreferencesUtil.getInstance().getCurrentDistrict());
-                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        Constants.CONFIGURATION.DISTRICT_MANAGERS, fieldsMap.get(JsonForm.DISTRICT_MANAGER),
-                        PreferencesUtil.getInstance().getCurrentDistrict());
-
 
                 String dataCollector = JsonFormUtils.getString(fieldsMap.get(JsonForm.DATA_COLLECTOR), VALUE);
                 if (StringUtils.isNotBlank(dataCollector)) {
