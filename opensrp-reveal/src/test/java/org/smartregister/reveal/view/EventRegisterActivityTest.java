@@ -13,7 +13,6 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
-import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.EventRegisterActivityContract;
