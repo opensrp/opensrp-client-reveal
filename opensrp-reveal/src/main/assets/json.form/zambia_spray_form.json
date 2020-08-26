@@ -393,7 +393,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Were any rooms in this structure sprayed",
+        "label": "Was this structure sprayed?",
         "text_size": "8sp",
         "options": [
           {
