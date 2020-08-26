@@ -1043,55 +1043,40 @@
         }
       },
       {
-        "key": "no_of_sachets",
+        "key": "serial_numbers",
+        "type": "repeating_group",
+        "reference_edit_text_hint":"Number of insecticide sachets mixed",
+        "repeating_group_label": "serial number",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Number of insecticide sachets mixed",
-        "text_size": "8sp",
-        "is_mandatory": true,
-        "v_numeric": {
-          "value": "true",
-          "err": "Number of insecticide sachets must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Number of insecticide sachets must be a whole number"
-        },
         "relevance": {
           "step1:new_sachet": {
             "type": "string",
             "ex": "equalTo(., \"yes\")"
           }
-        }
-      },
-      {
-        "key": "serial_number",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Sachet Serial Number",
-        "text_size": "8sp",
-        "is_mandatory": true,
-        "v_numeric": {
-          "value": "true",
-          "err": "Sachet Serial Number must be a number"
         },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Sachet Serial Number must be a whole number"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+        "value": [
+          {
+            "key": "serial_number",
+            "openmrs_entity_parent": "",
+            "openmrs_entity": "",
+            "openmrs_entity_id": "",
+            "type": "edit_text",
+            "edit_type": "number",
+            "hint": "Sachet Serial Number",
+            "text_size": "8sp",
+            "is_mandatory": true,
+            "v_numeric": {
+              "value": "true",
+              "err": "Sachet Serial Number must be a number"
+            },
+            "v_numeric_integer": {
+              "value": "true",
+              "err": "Sachet Serial Number must be a whole number"
             }
           }
-        }
+        ]
       },
       {
         "key": "notsprayed_reason",
