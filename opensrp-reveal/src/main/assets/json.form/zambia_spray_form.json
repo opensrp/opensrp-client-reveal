@@ -188,6 +188,10 @@
             "text": "No person lives here now"
           },
           {
+            "key": "structureDoesNotExist",
+            "text": "Structure does not exist"
+          },
+          {
             "key": "other",
             "text": "Other"
           }
