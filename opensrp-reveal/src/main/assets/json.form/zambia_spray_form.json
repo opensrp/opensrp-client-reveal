@@ -312,7 +312,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Head of household name?",
+        "hint": "Name of structure household head",
         "text_size": "8sp",
         "v_required": {
           "value": "true",
