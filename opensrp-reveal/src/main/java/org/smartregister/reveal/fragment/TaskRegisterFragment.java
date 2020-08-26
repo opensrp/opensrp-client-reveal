@@ -32,6 +32,7 @@ import org.smartregister.reveal.adapter.TaskRegisterAdapter;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.BaseTaskDetails;
+import org.smartregister.reveal.model.FilterConfiguration;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
@@ -61,6 +62,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.smartregister.reveal.util.Constants.Action;
+import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATION;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
 import static org.smartregister.reveal.util.Constants.Intervention.TASK_RESET_INTERVENTIONS;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
@@ -148,7 +150,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
             taskFilterParams.setSearchPhrase(getSearchView().getText().toString());
             intent.putExtra(FILTER_SORT_PARAMS, taskFilterParams);
         } else if (StringUtils.isNotBlank(getSearchView().getText())) {
-            intent.putExtra(FILTER_SORT_PARAMS, new TaskFilterParams(getSearchView().getText().toString()));
+            intent.putExtra(FILTER_SORT_PARAMS, TaskFilterParams.builder().searchPhrase(searchView.getText().toString()).build());
         }
         getActivity().setResult(RESULT_OK, intent);
         getActivity().finish();
@@ -402,6 +404,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     public void openFilterActivity(TaskFilterParams filterParams) {
         Intent intent = new Intent(getContext(), FilterTasksActivity.class);
         intent.putExtra(FILTER_SORT_PARAMS, filterParams);
+        intent.putExtra(FILTER_CONFIGURATION, FilterConfiguration.builder().build());
         getActivity().startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
     }
 

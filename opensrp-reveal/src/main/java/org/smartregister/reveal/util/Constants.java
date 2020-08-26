@@ -130,6 +130,7 @@ public interface Constants {
         String CANTON = "Canton";
         String VILLAGE = "Village";
         String OPERATIONAL_AREA = "Operational Area";
+        String ZONE = "Zones";
     }
 
     interface Properties {
@@ -220,6 +221,23 @@ public interface Constants {
         String MDA_ADHERENCE = "mda_adherence";
 
         String IRS_VERIFICATION = "irs_verification";
+
+        String DAILY_SUMMARY_EVENT = "daily_summary";
+
+        String IRS_FIELD_OFFICER_EVENT = "irs_field_officer";
+
+        String IRS_SA_DECISION_EVENT = "irs_sa_decision";
+
+        String MOBILIZATION_EVENT = "mobilization";
+
+        String TEAM_LEADER_DOS_EVENT = "team_leader_dos";
+
+        String VERIFICATION_EVENT = "verification";
+
+        String CB_SPRAY_AREA_EVENT = "cb_spray_area";
+
+        List<String> SUMMARY_EVENT_TYPES = Arrays.asList(DAILY_SUMMARY_EVENT, IRS_FIELD_OFFICER_EVENT,
+                IRS_SA_DECISION_EVENT, MOBILIZATION_EVENT, TEAM_LEADER_DOS_EVENT, VERIFICATION_EVENT);
     }
 
     interface Tables {
@@ -460,6 +478,8 @@ public interface Constants {
 
         String CATCHMENT_AREA = "catchment_area";
 
+        String HEALTH_FACILITY = "health_facility";
+
 
     }
 
@@ -503,6 +523,12 @@ public interface Constants {
 
         String LAST_USER_LOCATION = "last_location";
 
+    }
+
+    interface EventsRegister {
+        String VIEW_IDENTIFIER = "event_register";
+
+        String TABLE_NAME = "ec_events";
     }
 
     interface DatabaseKeys {
@@ -621,6 +647,17 @@ public interface Constants {
 
         String LOCATION_SYNC_STATUS = "sync_status";
 
+        String SOP = "sop";
+
+        String ENTITY = "entity";
+
+        String EVENT_TYPE = "event_type";
+
+        String SPRAYED = "sprayed";
+
+        String FOUND = "found";
+
+        String PROVIDER_ID = "provider_id";
     }
 
     interface UseContextCode {
@@ -674,6 +711,8 @@ public interface Constants {
         String CODE = "task_code";
         String STATUS = "task_status";
         String INTERVENTION_UNIT = "intervention_unit";
+        String FORM_NAME = "form_name";
         String FILTER_SORT_PARAMS = "filter_sort_params";
+        String FILTER_CONFIGURATION = "filter_configuration";
     }
 }

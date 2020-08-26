@@ -5,8 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AlertDialog;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +13,9 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -256,7 +257,9 @@ public class ListTasksActivityTest extends BaseUnitTest {
     }
 
     @Test
-    public void testPositionMyLocation() {
+    public void testPositionMyLocationThailand() {
+        listTasksActivity = spy(listTasksActivity);
+        when(listTasksActivity.getBuildCountry()).thenReturn(Country.THAILAND);
         listTasksActivity.positionMyLocationAndLayerSwitcher();
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
         assertEquals(0, layoutParams.topMargin);
@@ -606,7 +609,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testOnActivityResultFilterFeatures() {
         Whitebox.setInternalState(listTasksActivity, "listTaskPresenter", listTaskPresenter);
-        TaskFilterParams params = new TaskFilterParams("Doe");
+        TaskFilterParams params = TaskFilterParams.builder().searchPhrase("Doe").build();
         Intent intent = new Intent();
         intent.putExtra(FILTER_SORT_PARAMS, params);
         listTasksActivity.onActivityResult(REQUEST_CODE_FILTER_TASKS, Activity.RESULT_OK, intent);
@@ -617,7 +620,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testOnActivityResultInializeFilterParams() {
         Whitebox.setInternalState(listTasksActivity, "listTaskPresenter", listTaskPresenter);
-        TaskFilterParams params = new TaskFilterParams("Doe");
+        TaskFilterParams params = TaskFilterParams.builder().searchPhrase("Doe").build();
         Intent intent = new Intent();
         intent.putExtra(FILTER_SORT_PARAMS, params);
         listTasksActivity.onActivityResult(REQUEST_CODE_TASK_LISTS, Activity.RESULT_OK, intent);
@@ -861,11 +864,11 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testOnSyncProgress() {
         ProgressBar progress = new ProgressBar(context);
-        TextView  progressLabel = new TextView(context);
+        TextView progressLabel = new TextView(context);
         SyncProgress mockSyncProgress = mock(SyncProgress.class);
         SyncEntity mockSyncEntity = mock(SyncEntity.class);
         ListTasksActivity spyListTasksActivity = spy(listTasksActivity);
-        doReturn(50 ).when(mockSyncProgress).getPercentageSynced();
+        doReturn(50).when(mockSyncProgress).getPercentageSynced();
         doReturn(mockSyncEntity).when(mockSyncProgress).getSyncEntity();
         doReturn("Tasks").when(mockSyncEntity).toString();
         doReturn(progress).when(spyListTasksActivity).findViewById(eq(R.id.sync_progress_bar));

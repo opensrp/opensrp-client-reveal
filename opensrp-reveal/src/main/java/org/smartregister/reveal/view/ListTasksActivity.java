@@ -68,6 +68,7 @@ import org.smartregister.reveal.contract.ListTaskContract;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationView;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.FamilyCardDetails;
+import org.smartregister.reveal.model.FilterConfiguration;
 import org.smartregister.reveal.model.IRSVerificationCardDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
@@ -97,6 +98,7 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_D
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
+import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATION;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -434,6 +436,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private void initializeToolbar() {
         searchView = findViewById(R.id.edt_search);
+        searchView.setSingleLine();
         searchView.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { //do nothing
@@ -445,7 +448,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
             @Override
             public void afterTextChanged(Editable s) {
-                listTaskPresenter.searchTasks(s.toString());
+                listTaskPresenter.searchTasks(s.toString().trim());
             }
         });
         filterTasksFab = findViewById(R.id.filter_tasks_fab);
@@ -503,6 +506,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void openFilterTaskActivity(TaskFilterParams filterParams) {
         Intent intent = new Intent(getContext(), FilterTasksActivity.class);
         intent.putExtra(FILTER_SORT_PARAMS, filterParams);
+        intent.putExtra(FILTER_CONFIGURATION, FilterConfiguration.builder().build());
         startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
     }
 
@@ -521,7 +525,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
             filterParams.setSearchPhrase(searchView.getText().toString());
             intent.putExtra(FILTER_SORT_PARAMS, filterParams);
         } else if (StringUtils.isNotBlank(searchView.getText())) {
-            intent.putExtra(FILTER_SORT_PARAMS, new TaskFilterParams(searchView.getText().toString()));
+            intent.putExtra(FILTER_SORT_PARAMS, TaskFilterParams.builder().searchPhrase(searchView.getText().toString()).build());
         }
         startActivityForResult(intent, REQUEST_CODE_TASK_LISTS);
     }

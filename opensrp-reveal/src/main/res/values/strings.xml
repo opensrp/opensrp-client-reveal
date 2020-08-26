@@ -341,6 +341,12 @@
         <item>Type</item>
     </string-array>
 
+    <string-array name="form_sort_options">
+        <item>Date (Recent)</item>
+        <item>Form Name</item>
+        <item>SOP</item>
+    </string-array>
+
     <string name="select_task_action">Select action to perform</string>
     <string name="choose_action">Choose action</string>
     <string name="view_details">View Details</string>
@@ -375,6 +381,29 @@
     <string name="device_data_synced">Device data synced</string>
     <string name="device_data_not_synced">Device data not synced</string>
     <string name="manifest_version_parenthesis_placeholder">(%1$s)</string>
+
+    <string name="filled_forms">Filled Forms</string>
+    <string name="event_date">Date</string>
+    <string name="form_name">Form Name</string>
+    <string name="sop">SOP</string>
+    <string name="hh_village_name">HH/ village Name</string>
+    <string name="daily_summary_status">%1$dF/%2$dS/%3$dNS</string>
+    <string name="search">Search</string>
+    <string name="hh_form">HH Form</string>
+    <string name="daily_summary_name">Daily Summary Form</string>
+    <string name="team_leader_dos_form">Team Leader DOS Form</string>
+    <string name="cb_spray_area_form">CB Spray Area Visit Form</string>
+    <string name="irs_sa_decision_form">IRS SA Decision Form</string>
+    <string name="mobilization_form_name">Mobilization Form</string>
+    <string name="irs_field_officer_form">IRS Field Officer Form</string>
+    <string name="verification_form_name"> Verification Form</string>
+
+    <string name="total_structures_targeted">Total structures targeted</string>
+
     <string name="households_not_visited">Registered households not visited</string>
     <string name="structure_is_inactive">This structure is inactive</string>
+    <string name="filter_by_date">Filter By Date</string>
+
+    <string name="date_format">DD-MM-YYYY</string>
+    <string name="view_all_events">View All Events</string>
 </resources>

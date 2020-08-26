@@ -1,9 +1,10 @@
 package org.smartregister.reveal.view;
 
 import android.content.Intent;
-import androidx.appcompat.widget.AppCompatSpinner;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
+import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.google.android.flexbox.FlexboxLayout;
 
@@ -21,6 +22,7 @@ import org.robolectric.shadows.ShadowActivity;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FilterTasksContract;
+import org.smartregister.reveal.model.FilterConfiguration;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Filter;
@@ -34,6 +36,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.InterventionType.STRUCTURE;
 
@@ -53,7 +56,9 @@ public class FilterTasksActivityTest extends BaseUnitTest {
     @Before
     public void setUp() {
         org.smartregister.Context.bindtypes = new ArrayList<>();
-        filterTasksActivity = Robolectric.buildActivity(FilterTasksActivity.class).create().resume().get();
+        Intent intent = new Intent();
+        intent.putExtra(FILTER_CONFIGURATION, FilterConfiguration.builder().build());
+        filterTasksActivity = Robolectric.buildActivity(FilterTasksActivity.class, intent).create().resume().get();
     }
 
     @Test
@@ -98,6 +103,7 @@ public class FilterTasksActivityTest extends BaseUnitTest {
         Intent intent = new Intent();
         TaskFilterParams filterParams = TestingUtils.getFilterParams();
         intent.putExtra(Filter.FILTER_SORT_PARAMS, filterParams);
+        intent.putExtra(FILTER_CONFIGURATION, FilterConfiguration.builder().build());
         filterTasksActivity = Robolectric.buildActivity(FilterTasksActivity.class, intent).create().resume().get();
 
 

@@ -1,6 +1,7 @@
 package org.smartregister.reveal.application;
 
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
@@ -45,6 +46,8 @@ import org.smartregister.reveal.repository.RevealRepository;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.DatabaseKeys;
+import org.smartregister.reveal.util.Constants.EventsRegister;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealSyncConfiguration;
 import org.smartregister.reveal.util.Utils;
@@ -316,7 +319,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
     }
 
     private static String[] getFtsTables() {
-        return new String[]{TABLE_NAME.FAMILY, TABLE_NAME.FAMILY_MEMBER};
+        return new String[]{TABLE_NAME.FAMILY, TABLE_NAME.FAMILY_MEMBER, EventsRegister.TABLE_NAME};
     }
 
     private static String[] getFtsSearchFields(String tableName) {
@@ -326,6 +329,9 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         } else if (tableName.equals(TABLE_NAME.FAMILY_MEMBER)) {
             return new String[]{DBConstants.KEY.BASE_ENTITY_ID, DBConstants.KEY.FIRST_NAME, DBConstants.KEY.MIDDLE_NAME,
                     DBConstants.KEY.LAST_NAME, DBConstants.KEY.UNIQUE_ID};
+        } else if (tableName.equals(EventsRegister.TABLE_NAME)) {
+            return new String[]{DatabaseKeys.EVENT_DATE, DatabaseKeys.EVENT_TYPE, DatabaseKeys.SOP,
+                    DatabaseKeys.ENTITY, DatabaseKeys.STATUS};
         }
         return null;
     }
@@ -336,6 +342,9 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         } else if (tableName.equals(TABLE_NAME.FAMILY_MEMBER)) {
             return new String[]{DBConstants.KEY.DOB, DBConstants.KEY.DOD, DBConstants.KEY
                     .LAST_INTERACTED_WITH, DBConstants.KEY.DATE_REMOVED};
+        } else if (tableName.equals(EventsRegister.TABLE_NAME)) {
+            return new String[]{DatabaseKeys.PROVIDER_ID, DatabaseKeys.EVENT_DATE,
+                    DatabaseKeys.EVENT_TYPE, DatabaseKeys.STATUS, DatabaseKeys.SOP};
         }
         return null;
     }

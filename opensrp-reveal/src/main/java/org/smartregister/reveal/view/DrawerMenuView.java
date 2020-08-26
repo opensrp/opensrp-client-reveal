@@ -164,6 +164,10 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             summaryFormsTextView.setVisibility(View.VISIBLE);
             summaryFormsTextView.setOnClickListener(this);
 
+            TextView filledForms = headerView.findViewById(R.id.btn_navMenu_filled_forms);
+            filledForms.setVisibility(View.VISIBLE);
+            filledForms.setOnClickListener(this);
+
         }
 
         offlineMapTextView.setVisibility(View.VISIBLE);
@@ -330,6 +334,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             startOtherFormsActivity();
         else if (v.getId() == R.id.btn_navMenu_offline_maps)
             presenter.onShowOfflineMaps();
+        else if (v.getId() == R.id.btn_navMenu_filled_forms)
+            presenter.onShowFilledForms();
         else if (v.getId() == R.id.sync_button) {
             toggleProgressBarView(true);
             org.smartregister.reveal.util.Utils.startImmediateSync();
