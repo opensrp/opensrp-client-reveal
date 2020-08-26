@@ -506,52 +506,6 @@
         }
       },
       {
-        "key": "partiallysprayed_reason",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Main reason why some ELIGIBLE rooms in this structure were not sprayed?",
-        "text_size": "8sp",
-        "options": [
-          {
-            "key": "refused",
-            "text": "Refused"
-          },
-          {
-            "key": "locked",
-            "text": "Locked"
-          },
-          {
-            "key": "sick",
-            "text": "Sick"
-          },
-          {
-            "key": "foodStorage",
-            "text": "Food Storage"
-          },
-          {
-            "key": "didntWantToClear",
-            "text": "Didn't want to clear"
-          },
-          {
-            "key": "other",
-            "text": "Other"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "sprayed_males",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
