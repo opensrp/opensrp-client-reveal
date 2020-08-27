@@ -10,17 +10,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -34,6 +23,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -78,7 +75,6 @@ import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Action;
-import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.Country;
@@ -96,10 +92,12 @@ import timber.log.Timber;
 
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.smartregister.reveal.util.Constants.ANIMATE_TO_LOCATION_DURATION;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.*;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_SPRAYED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.UPDATE_LOCATION_BUFFER_RADIUS;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATION;
