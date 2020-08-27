@@ -246,7 +246,7 @@ actions:
 name: step1_structure_num
 description: step1_structure_num
 priority: 1
-condition: "step1_eligibility.equals('eligible') && ( step1_provinceName.equals('Copperbelt') || step1_provinceName.equals('Luapula') || step1_provinceName.equals('Eastern') || step1_provinceName.equals('Lusaka')  )"
+condition: "step1_eligibility.equals('eligible')"
 actions:
   - "isRelevant = true"
 ---
