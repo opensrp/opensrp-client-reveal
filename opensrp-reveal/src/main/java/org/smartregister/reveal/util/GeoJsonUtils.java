@@ -14,12 +14,11 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.smartregister.reveal.interactor.ListTaskInteractor.gson;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.DRUG_RECON_COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.BEDNET_DISTRIBUTED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.BLOOD_SCREENING_COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_NO_TASK_REGISTERED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_REGISTERED;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_DISPENSED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SMC_COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INELIGIBLE;
@@ -66,6 +65,7 @@ public class GeoJsonUtils {
             mdaStatusMap.put(SMC_COMPLETE, 0);
             mdaStatusMap.put(NOT_DISPENSED, 0);
             mdaStatusMap.put(INELIGIBLE, 0);
+            mdaStatusMap.put(FAMILY_NO_TASK_REGISTERED, 0);
             mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, 0);
             StateWrapper state = new StateWrapper();
             if (taskSet == null)
@@ -75,9 +75,9 @@ public class GeoJsonUtils {
 
                 taskProperties = new HashMap<>();
                 //temporary fix to errorneous business status in Nigeria
-                if (task.getBusinessStatus().equals("0") || StringUtils.isBlank(task.getBusinessStatus())) {
-                    task.setBusinessStatus(NOT_VISITED);
-                }
+//                if (task.getBusinessStatus().equals("0")) {
+//                    task.setBusinessStatus(FAMILY_NO_TASK_REGISTERED);
+//                }
                 taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
                 if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA && PARTIALLY_SPRAYED.equals(task.getBusinessStatus())) { // Set here for non residential structures
                     taskProperties.put(TASK_BUSINESS_STATUS, SPRAYED);
@@ -139,7 +139,7 @@ public class GeoJsonUtils {
                     state.mdaAdhered = COMPLETE.equals((task.getBusinessStatus()));
                     break;
                 case MDA_ADHERENCE:
-                    state.mdaAdhered = COMPLETE.equals(task.getBusinessStatus()) || TASKS_INCOMPLETE.equals(task.getBusinessStatus());
+                    state.mdaAdhered = COMPLETE.equals(task.getBusinessStatus()) || SMC_COMPLETE.equals(task.getBusinessStatus());
                     break;
                 case MDA_DISPENSE:
                     populateMDAStatus(task, mdaStatusMap);
@@ -198,10 +198,11 @@ public class GeoJsonUtils {
                 state.nonReceived = (mdaStatusMap.get(NOT_DISPENSED).equals(mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)));
                 state.nonEligible = (mdaStatusMap.get(INELIGIBLE).equals(mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT)));
                 state.partiallyReceived = (!state.fullyReceived && (mdaStatusMap.get(SMC_COMPLETE) > 0));
+                state.familyRegNoTasksExists = (mdaStatusMap.get(FAMILY_NO_TASK_REGISTERED) == 1);
 
                 if (familyRegTaskMissingOrFamilyRegComplete) {
                     if (state.mdaAdhered) {
-                        taskProperties.put(TASK_BUSINESS_STATUS, DRUG_RECON_COMPLETE);
+                        taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE); 
                     } else if (state.fullyReceived) {
                         taskProperties.put(TASK_BUSINESS_STATUS, SMC_COMPLETE);
                     } else if (state.partiallyReceived) {
@@ -210,6 +211,8 @@ public class GeoJsonUtils {
                         taskProperties.put(TASK_BUSINESS_STATUS, NOT_DISPENSED);
                     } else if (state.nonEligible) {
                         taskProperties.put(TASK_BUSINESS_STATUS, INELIGIBLE);
+                    } else if (state.familyRegNoTasksExists) {
+                        taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_NO_TASK_REGISTERED);
                     } else {
                         taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
                     }
@@ -227,6 +230,7 @@ public class GeoJsonUtils {
         private boolean bednetDistributed = false;
         private boolean bloodScreeningDone = false;
         private boolean familyRegTaskExists = false;
+        private boolean familyRegNoTasksExists = false;
         private boolean caseConfirmed = false;
         private boolean mdaAdhered = false;
         private boolean fullyReceived;

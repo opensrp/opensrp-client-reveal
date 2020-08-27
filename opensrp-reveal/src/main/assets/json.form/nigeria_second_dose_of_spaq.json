@@ -194,7 +194,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "hidden",
-        "value": "Complete"
+        "value": "Tasks Incomplete"
       }
     ]
   }

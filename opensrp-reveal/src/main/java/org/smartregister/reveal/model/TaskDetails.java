@@ -13,6 +13,7 @@ import java.util.Map;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.BEDNET_DISTRIBUTED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.BLOOD_SCREENING_COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_NO_TASK_REGISTERED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_REGISTERED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_DISPENSED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SMC_COMPLETE;
@@ -75,6 +76,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
     private boolean notEligible;
 
     private String aggregateBusinessStatus;
+
+    private boolean familyNoTaskRegistered;
 
     public TaskDetails(@NonNull String taskId) {
         super(taskId);
@@ -225,6 +228,7 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
     }
 
     public void setGroupedTaskCodeStatus(String groupedTaskCodeStatusString) {
+        setFamilyNoTaskRegistered(false);
         setFamilyRegistered(false);
         setBednetDistributed(false);
         setBloodScreeningDone(false);
@@ -236,7 +240,9 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
         String MDA_DISPENSE_TASK_COUNT = "mda_dispense_task_count";
 
         Map<String, Integer> mdaStatusMap = new HashMap<>();
+        mdaStatusMap.put(FAMILY_NO_TASK_REGISTERED, 0);
         mdaStatusMap.put(SMC_COMPLETE, 0);
+        mdaStatusMap.put(TASKS_INCOMPLETE, 0);
         mdaStatusMap.put(NOT_DISPENSED, 0);
         mdaStatusMap.put(INELIGIBLE, 0);
         mdaStatusMap.put(MDA_DISPENSE_TASK_COUNT, 0);
@@ -253,6 +259,7 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
             switch (taskCodeStatusArray[0]) {
                 case REGISTER_FAMILY:
                     setFamilyRegTaskExists(true);
+                    this.familyNoTaskRegistered = FAMILY_NO_TASK_REGISTERED.equals(taskCodeStatusArray[1]);
                     this.familyRegistered = COMPLETE.equals(taskCodeStatusArray[1]);
                     break;
                 case BEDNET_DISTRIBUTION:
@@ -268,7 +275,7 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
                     caseConfirmed = COMPLETE.equals(taskCodeStatusArray[1]);
                     break;
                 case MDA_ADHERENCE:
-                    this.mdaAdhered = TASKS_INCOMPLETE.equals(taskCodeStatusArray[1]) || COMPLETE.equals(taskCodeStatusArray[1]);
+                    this.mdaAdhered = COMPLETE.equals(taskCodeStatusArray[1]) || TASKS_INCOMPLETE.equals(taskCodeStatusArray[1]);
                     break;
                 case MDA_DRUG_RECON:
                     this.mdaAdhered = COMPLETE.equals(taskCodeStatusArray[1]);
@@ -295,10 +302,12 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
             setBloodScreeningDone(true);
         }
 
-        setFullyReceived(mdaStatusMap.get(SMC_COMPLETE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
+        setFullyReceived(mdaStatusMap.get(TASKS_INCOMPLETE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
         setNoneReceived(mdaStatusMap.get(NOT_DISPENSED) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
         setNotEligible(mdaStatusMap.get(INELIGIBLE) == mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT));
         setPartiallyReceived(!isFullyReceived() && (mdaStatusMap.get(SMC_COMPLETE) > 0));
+        setFamilyNoTaskRegistered(!isFullyReceived() && mdaStatusMap.get(FAMILY_NO_TASK_REGISTERED) == 1);
+
 
         setAggregateBusinessStatus(calculateAggregateBusinessStatus());
     }
@@ -323,13 +332,15 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
             if (isFamilyRegisteredOrNoTaskExists() && isMdaAdhered()) {
                 return COMPLETE;
             } else if (isFamilyRegisteredOrNoTaskExists() && isFullyReceived()) {
-                return SMC_COMPLETE;
+                return TASKS_INCOMPLETE;
             } else if (isFamilyRegisteredOrNoTaskExists() && isPartiallyReceived()) {
                 return INELIGIBLE;
             } else if (isFamilyRegisteredOrNoTaskExists() && isNoneReceived()) {
                 return NOT_DISPENSED;
             } else if (isFamilyRegisteredOrNoTaskExists()) {
                 return FAMILY_REGISTERED;
+            } else if (isFamilyNoTaskRegistered() && taskCount.equals(1)) {
+                return FAMILY_NO_TASK_REGISTERED;
             }
         } else if (isNotEligible()) {
             return INELIGIBLE;
@@ -369,5 +380,13 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
     public void setAggregateBusinessStatus(String aggregateBusinessStatus) {
         this.aggregateBusinessStatus = aggregateBusinessStatus;
+    }
+
+    public boolean isFamilyNoTaskRegistered() {
+        return familyNoTaskRegistered;
+    }
+
+    public void setFamilyNoTaskRegistered(boolean familyNoTaskRegistered) {
+        this.familyNoTaskRegistered = familyNoTaskRegistered;
     }
 }

@@ -68,8 +68,7 @@
             "Not Sprayed",
             "Incomplete",
             "In Progress",
-            "Not Dispensed",
-            "Ineligible"
+            "Not Dispensed"
           ],
           "hsl(3, 71%, 54%)",
           [
@@ -104,7 +103,8 @@
           ],
           "hsl(26, 84%, 56%)",
           [
-            "Family No Task Registered"
+            "Family No Task Registered",
+            "Ineligible"
           ],
           "hsl(0, 0%, 78%)",
           "hsl(0, 0%, 78%)"
@@ -208,12 +208,12 @@
             "Tasks Incomplete",
             "Ineligible",
             "Partially Received",
-            "Partially Sprayed",
-            "SMC Complete"
+            "Partially Sprayed"
           ],
           "hsl(26, 84%, 56%)",
           [
-            "Family No Task Registered"
+            "Family No Task Registered",
+            "SMC Complete"
           ],
           "hsl(0, 0%, 78%)",
           "hsl(0, 0%, 78%)"

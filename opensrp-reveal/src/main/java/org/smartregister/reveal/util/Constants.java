@@ -263,10 +263,10 @@ public interface Constants {
         String DRUG_RECON_COMPLETE = "Drug Recon Complete";
         String TASKS_INCOMPLETE = "Tasks Incomplete";
         String NOT_DISPENSED = "Not Dispensed";
+        String FAMILY_NO_TASK_REGISTERED = "Family No Task Registered";
 
         // Following are for grouped structure tasks. Not synced to server
         String FAMILY_REGISTERED = "Family Registered";
-        String FAMILY_NO_TASK_REGISTERED = "Family No Task Registered";
         String BEDNET_DISTRIBUTED = "Bednet Distributed";
         String BLOOD_SCREENING_COMPLETE = "Blood Screening Complete";
         String PARTIALLY_SPRAYED = "Partially Sprayed";
@@ -279,7 +279,7 @@ public interface Constants {
                 BLOOD_SCREENING_COMPLETE, COMPLETE, NOT_ELIGIBLE);
 
         List<String> MDA_BUSINESS_STATUS = Arrays.asList(NOT_VISITED, SMC_COMPLETE, INELIGIBLE,
-                DRUG_RECON_COMPLETE, TASKS_INCOMPLETE, COMPLETE, NOT_ELIGIBLE);
+                DRUG_RECON_COMPLETE, TASKS_INCOMPLETE, COMPLETE, NOT_ELIGIBLE, FAMILY_NO_TASK_REGISTERED);
     }
 
     interface BusinessStatusWrapper {
