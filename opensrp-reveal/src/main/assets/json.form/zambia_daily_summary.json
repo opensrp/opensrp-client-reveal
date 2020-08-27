@@ -56,9 +56,8 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Please write the name of the Zone/Location",
-        "text_size": "6sp",
+        "type": "spinner",
+        "hint": "Name of location",
         "v_required": {
           "value": "true",
           "err": "Required field"
