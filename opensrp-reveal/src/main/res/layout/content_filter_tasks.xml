@@ -179,7 +179,8 @@
             android:id="@+id/filter_date_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 style="@style/FilterTaskStyle.Label"
@@ -192,13 +193,13 @@
 
             <TextView
                 android:id="@+id/filter_from_date"
+                style="@style/TaskFilterToggle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/toggle_bg"
                 android:drawableEnd="@drawable/ic_calendar_today"
-                style="@style/TaskFilterToggle"
                 android:hint="@string/date_format" />
 
             <View

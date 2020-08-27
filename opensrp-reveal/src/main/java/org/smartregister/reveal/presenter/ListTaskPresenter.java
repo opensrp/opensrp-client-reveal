@@ -288,8 +288,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         listTaskView.closeAllCardViews();
         listTaskView.displaySelectedFeature(feature, clickedPoint);
-        if (isLongclick) {
-            onFeatureSelectedByLongClick(feature);
+        if (isLongclick && BuildConfig.BUILD_COUNTRY != Country.ZAMBIA) {
+             onFeatureSelectedByLongClick(feature);
         } else {
             onFeatureSelectedByNormalClick(feature);
         }

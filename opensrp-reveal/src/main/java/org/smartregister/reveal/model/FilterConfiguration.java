@@ -27,6 +27,8 @@ public class FilterConfiguration implements Serializable {
 
     private boolean formsLayoutEnabled;
 
+    private boolean filterFromDateAndViewAllEventsEnabled;
+
     private List<String> businessStatusList;
 
     private List<String> eventTypeList;
