@@ -52,20 +52,6 @@
     "display_back_button": "true",
     "fields": [
       {
-        "key": "date",
-        "type": "date_picker",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "hint": "Date of data collection?",
-        "text_size": "6sp",
-        "max_date": "today",
-        "v_required": {
-          "value": true,
-          "err": "This field is required"
-        }
-      },
-      {
         "key": "zone",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -76,30 +62,6 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
-        }
-      },
-      {
-        "key": "district_manager",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "District Manager name",
-        "v_required": {
-          "value": "true",
-          "err": "This field is required."
-        }
-      },
-      {
-        "key": "supervisor",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "Name of Coordinator/Decision Maker/Supervisor",
-        "v_required": {
-          "value": "true",
-          "err": "This field is required."
         }
       },
       {
@@ -229,7 +191,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "How many full bottles/sachets were RECEIVED by the SOP at the begining of the day?",
+        "hint": "How many full sachets were RECEIVED by the SOP at the begining of the day?",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -259,7 +221,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "How many FULL bottles/sachets were RETURNED by the SOP at the end of the day?",
+        "hint": "How many FULL sachets were RETURNED by the SOP at the end of the day?",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -279,7 +241,7 @@
         },
         "v_relative_max": {
           "value": "bottles_start",
-          "err": "Must be less than or equal to bottles/sachets received"
+          "err": "Must be less than or equal to sachets received"
         }
       },
       {
@@ -289,7 +251,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "How many EMPTY bottles/sachets were RETURNED by the SOP at the end of the day?",
+        "hint": "How many EMPTY sachets were RETURNED by the SOP at the end of the day?",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -314,7 +276,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "Must be less than or equal to the number of bottles/sachets received minus bottles/sachets full",
+        "text": "Must be less than or equal to the number of sachets received minus sachets full",
         "text_color": "#CF0800",
         "text_size": "8sp",
         "toaster_type": "problem",
@@ -336,7 +298,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "How many sachets/bottles were lost or damaged?",
+        "hint": "How many sachets were lost or damaged?",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -361,7 +323,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "Must be less than or equal to the number of bottles/sachets received minus bottles/sachets full minus bottles/sachets empty",
+        "text": "Must be less than or equal to the number of sachets received minus sachets full minus sachets empty",
         "text_color": "#CF0800",
         "text_size": "8sp",
         "toaster_type": "problem",
@@ -397,7 +359,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "A total of {bottles_accounted} bottles/sachets are unaccounted for.",
+        "text": "A total of {bottles_accounted} sachets are unaccounted for.",
         "text_color": "#CF0800",
         "toaster_type": "info",
         "text_size": "8sp",
@@ -452,7 +414,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Select a reason for the unaccounted bottles/sachets",
+        "label": "Select a reason for the unaccounted sachets",
         "text_size": "8sp",
         "options": [
           {
@@ -486,7 +448,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Please write the reason for the unaccounted bottles/sachets",
+        "hint": "Please write the reason for the unaccounted sachets",
         "text_size": "8sp",
         "v_required": {
           "value": "true",
