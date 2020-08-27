@@ -178,7 +178,8 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
             return;
         for (String filter : filters) {
             ToggleButton toggleButton = viewGroup.findViewWithTag(filter);
-            toggleButton.setChecked(true);
+            if (toggleButton != null)
+                toggleButton.setChecked(true);
         }
     }
 

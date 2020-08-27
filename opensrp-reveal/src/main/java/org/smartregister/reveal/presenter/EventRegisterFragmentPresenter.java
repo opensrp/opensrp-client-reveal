@@ -17,6 +17,7 @@ import org.smartregister.reveal.interactor.EventRegisterFragmentInteractor;
 import org.smartregister.reveal.model.EventRegisterDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Utils;
 
@@ -166,6 +167,10 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
             }
             Set<String> status = filterParams.getCheckedFilters().get(Constants.Filter.STATUS);
             if (status != null) {
+                if (status.contains(BusinessStatus.SPRAYED)) {
+                    status.add(BusinessStatus.COMPLETE);
+                    status.add(BusinessStatus.PARTIALLY_SPRAYED);
+                }
                 stringBuilder.append(String.format("%s IN ('%s')", DatabaseKeys.STATUS, StringUtils.join(status, "','")));
                 stringBuilder.append(" AND ");
             }
