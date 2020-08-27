@@ -18,6 +18,7 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Obs;
+import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.application.RevealApplication;
@@ -34,6 +35,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -63,6 +65,8 @@ import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
+import static org.smartregister.reveal.util.Constants.Tags.ZONE;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
 
@@ -72,6 +76,7 @@ import static org.smartregister.reveal.util.Utils.getPropertyValue;
 public class RevealJsonFormUtils {
 
     private Set<String> nonEditablefields;
+    private LocationHelper locationHelper = LocationHelper.getInstance();
 
     public RevealJsonFormUtils() {
         nonEditablefields = new HashSet<>(Arrays.asList(JsonForm.HOUSEHOLD_ACCESSIBLE,
@@ -506,17 +511,10 @@ public class RevealJsonFormUtils {
                         PreferencesUtil.getInstance().getCurrentDistrict());
 
             case JsonForm.TEAM_LEADER_DOS_ZAMBIA:
-                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        Constants.CONFIGURATION.SUPERVISORS, fieldsMap.get(JsonForm.SUPERVISOR),
-                        PreferencesUtil.getInstance().getCurrentDistrict());
 
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         Constants.CONFIGURATION.DATA_COLLECTORS, fieldsMap.get(JsonForm.DATA_COLLECTOR),
                         PreferencesUtil.getInstance().getCurrentDistrict());
-                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        Constants.CONFIGURATION.DISTRICT_MANAGERS, fieldsMap.get(JsonForm.DISTRICT_MANAGER),
-                        PreferencesUtil.getInstance().getCurrentDistrict());
-
 
                 String dataCollector = JsonFormUtils.getString(fieldsMap.get(JsonForm.DATA_COLLECTOR), VALUE);
                 if (StringUtils.isNotBlank(dataCollector)) {
@@ -524,6 +522,9 @@ public class RevealJsonFormUtils {
                             CONFIGURATION.SPRAY_OPERATORS, fieldsMap.get(JsonForm.SPRAY_OPERATOR_CODE),
                             dataCollector.split(":")[0]);
                 }
+
+                populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
+
                 break;
 
             case JsonForm.VERIFICATION_FORM_ZAMBIA:
@@ -545,6 +546,19 @@ public class RevealJsonFormUtils {
                 break;
             default:
                 break;
+        }
+    }
+
+    private void populateUserAssignedLocations(JSONObject formJSON, String fieldKey, List<String> allowedTags) {
+        JSONArray options = new JSONArray();
+        locationHelper.generateDefaultLocationHierarchy(allowedTags).stream().forEach(options::put);
+        JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJSON), fieldKey);
+
+        try {
+            field.put(KEYS, options);
+            field.put(VALUES, options);
+        } catch (JSONException e) {
+            Timber.e(e);
         }
     }
 }

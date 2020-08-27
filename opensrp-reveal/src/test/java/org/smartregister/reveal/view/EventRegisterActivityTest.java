@@ -45,6 +45,9 @@ public class EventRegisterActivityTest extends BaseUnitTest {
     @Mock
     private EventRegisterActivityContract.Presenter presenter;
 
+    @Mock
+    private BaseRegisterFragment mBaseFragment;
+
     private EventRegisterActivity eventRegisterActivity;
 
     @Before
@@ -78,6 +81,15 @@ public class EventRegisterActivityTest extends BaseUnitTest {
         intent.putExtra(JSON_FORM_PARAM_JSON, "{formjson}");
         eventRegisterActivity.onActivityResultExtended(REQUEST_CODE_GET_JSON, Activity.RESULT_OK, intent);
         verify(presenter).saveJsonForm("{formjson}");
+    }
+
+    @Test
+    public void testOnActivityResultExtendedShouldInvokeRegisterFragment() {
+        eventRegisterActivity = spy(eventRegisterActivity);
+        Whitebox.setInternalState(eventRegisterActivity, "mBaseFragment", mBaseFragment);
+        Intent intent = new Intent();
+        eventRegisterActivity.onActivityResultExtended(REQUEST_CODE_GET_JSON, Activity.RESULT_OK, intent);
+        verify(mBaseFragment).onActivityResult(REQUEST_CODE_GET_JSON, Activity.RESULT_OK, intent);
     }
 
     @Test
