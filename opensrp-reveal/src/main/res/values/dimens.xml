@@ -64,6 +64,9 @@
     <dimen name="event_register_list_title_size">16sp</dimen>
     <dimen name="event_register_row_title_size">15sp</dimen>
 
+    <dimen name="compass_top_margin">35dp</dimen>
+    <dimen name="compass_left_margin">8dp</dimen>
+
 </resources>
 
 
