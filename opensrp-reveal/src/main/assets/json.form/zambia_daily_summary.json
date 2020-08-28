@@ -83,6 +83,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Number of eligible structures FOUND by the SOP",
+        "text_size": "7sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -125,6 +126,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "Number of eligible structures SPRAYED by the SOP",
+        "text_size": "7sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -167,6 +169,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "How many full sachets were RECEIVED by the SOP at the begining of the day?",
+        "text_size": "7sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -197,6 +200,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "How many FULL sachets were RETURNED by the SOP at the end of the day?",
+        "text_size": "7sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -227,6 +231,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "How many EMPTY sachets were RETURNED by the SOP at the end of the day?",
+        "text_size": "7sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
@@ -274,6 +279,7 @@
         "type": "edit_text",
         "edit_type": "number",
         "hint": "How many sachets were lost or damaged?",
+        "text_size": "7sp",
         "is_mandatory": true,
         "v_required": {
           "value": true,
