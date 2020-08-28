@@ -491,15 +491,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 Timber.e(e);
             }
             Map<String, JSONObject> fields = jsonFormUtils.getFields(formJson);
-            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DATA_COLLECTORS, fields.get(JsonForm.DATA_COLLECTOR), prefsUtil.getCurrentDistrict());
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.HEALTH_FACILITIES, fields.get(JsonForm.HFC_SEEK), prefsUtil.getCurrentDistrict());
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.HEALTH_FACILITIES, fields.get(JsonForm.HFC_BELONG), prefsUtil.getCurrentDistrict());
             jsonFormUtils.populateForm(event, formJson);
-            String dataCollector = JsonFormUtils.getString(fields.get(JsonForm.DATA_COLLECTOR), VALUE);
+            String dataCollector = RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM();
             if (StringUtils.isNotBlank(dataCollector)) {
                 jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         CONFIGURATION.SPRAY_OPERATORS, fields.get(JsonForm.SPRAY_OPERATOR_CODE),
-                        dataCollector.split(":")[0]);
+                        dataCollector);
             }
 
         } else if (JsonForm.SPRAY_FORM_REFAPP.equals(formName)) {
