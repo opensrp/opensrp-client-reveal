@@ -270,24 +270,6 @@
         }
       },
       {
-        "key": "datacollector",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "Select your name as the data collector",
-        "v_required": {
-          "value": "true",
-          "err": "Please enter the data collector."
-        },
-        "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
-          }
-        }
-      },
-      {
         "key": "sprayop_code",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
