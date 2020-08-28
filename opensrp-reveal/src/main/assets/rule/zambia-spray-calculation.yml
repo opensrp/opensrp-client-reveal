@@ -46,11 +46,11 @@ description: step1_sprayed_totalmale
 priority: 1
 condition: "true"
 actions:
-  - "calculation = Integer.valueOf(helper.ifNull(step1_sprayed_males,0))"
+  - "calculation = helper.ifNull(step1_sprayed_males,0)"
 ---
 name: step1_sprayed_totalfemale
 description: step1_sprayed_totalmale
 priority: 1
 condition: "true"
 actions:
-  - "calculation = Integer.valueOf(helper.ifNull(step1_sprayed_females,0))"
+  - "calculation = helper.ifNull(step1_sprayed_females,0)"
