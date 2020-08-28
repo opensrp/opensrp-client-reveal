@@ -516,6 +516,10 @@
           "value": "20",
           "err": "Male population must be less than 20"
         },
+        "v_relative_min": {
+          "value": "sprayed_totalmale",
+          "err": "Male population must be greater than 0"
+        },
         "relevance": {
           "step1:structure_sprayed": {
             "type": "string",
@@ -552,6 +556,10 @@
         "v_max": {
           "value": "20",
           "err": "Female population must be less than 20"
+        },
+        "v_relative_min": {
+          "value": "sprayed_totalfemale",
+          "err": "Female population must be greater than 0"
         },
         "relevance": {
           "step1:structure_sprayed": {
@@ -1252,6 +1260,10 @@
           "value": "20",
           "err": "Male population must be less than 20"
         },
+        "v_relative_min": {
+          "value": "sprayed_totalmale",
+          "err": "Male population must be greater than 0"
+        },
         "relevance": {
           "step1:structure_sprayed": {
             "type": "string",
@@ -1283,6 +1295,10 @@
         "v_max": {
           "value": "20",
           "err": "Female population must be less than 20"
+        },
+        "v_relative_min": {
+          "value": "sprayed_totalfemale",
+          "err": "Female population must be greater than 0"
         },
         "relevance": {
           "step1:structure_sprayed": {
