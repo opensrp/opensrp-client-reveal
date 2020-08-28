@@ -167,6 +167,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         setViewVisibility(findViewById(R.id.task_type_group), filterConfiguration.isTaskCodeLayoutEnabled());
         setViewVisibility(findViewById(R.id.intervention_group), filterConfiguration.isInterventionTypeLayoutEnabled());
         setViewVisibility(findViewById(R.id.form_name_group), filterConfiguration.isFormsLayoutEnabled());
+        setViewVisibility(findViewById(R.id.filter_date_group), filterConfiguration.isFilterFromDateAndViewAllEventsEnabled());
     }
 
     private void setViewVisibility(View view, boolean visible) {

@@ -194,6 +194,7 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
                 .interventionTypeLayoutEnabled(false)
                 .taskCodeLayoutEnabled(false)
                 .formsLayoutEnabled(true)
+                .filterFromDateAndViewAllEventsEnabled(true)
                 .eventTypeList(forms)
                 .sortOptions(R.array.form_sort_options)
                 .build());
