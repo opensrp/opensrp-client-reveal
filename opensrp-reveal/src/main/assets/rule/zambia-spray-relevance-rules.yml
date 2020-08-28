@@ -236,13 +236,6 @@ condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('el
 actions:
   - "isRelevant = true"
 ---
-name: step1_sprayop_code
-description: sprayop_code
-priority: 1
-condition: "step1_datacollector != '' "
-actions:
-  - "isRelevant = true"
----
 name: step1_structure_num
 description: step1_structure_num
 priority: 1

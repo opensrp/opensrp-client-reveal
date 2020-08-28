@@ -299,10 +299,9 @@
           "err": "Please enter the spray operator code"
         },
         "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
-            }
+          "step1:eligibility": {
+            "type": "string",
+            "ex": "equalTo(., \"eligible\")"
           }
         }
       },
