@@ -32,6 +32,7 @@ import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -516,7 +517,7 @@ public class RevealJsonFormUtils {
                             dataCollector);
                 }
 
-                populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
+                populateUserAssignedLocations(formJSON, JsonForm.ZONE, Collections.singletonList(ZONE));
                 break;
 
             case JsonForm.TEAM_LEADER_DOS_ZAMBIA:
@@ -532,7 +533,7 @@ public class RevealJsonFormUtils {
                             dataCollector.split(":")[0]);
                 }
 
-                populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
+                populateUserAssignedLocations(formJSON, JsonForm.ZONE, Collections.singletonList(ZONE));
 
                 break;
 
