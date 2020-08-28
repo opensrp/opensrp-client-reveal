@@ -601,6 +601,36 @@
         }
       },
       {
+        "key": "sprayed_totalmale",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "text_size": "8sp",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-calculation.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "sprayed_totalfemale",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "text_size": "8sp",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-spray-calculation.yml"
+            }
+          }
+        }
+      },
+      {
         "key": "sprayed_totalpop_approve",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
