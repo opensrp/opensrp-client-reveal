@@ -177,6 +177,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     private CardDetailsUtil cardDetailsUtil = new CardDetailsUtil();
 
+    private boolean formOpening;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -680,7 +682,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     @Override
     public void startJsonForm(JSONObject form) {
-        jsonFormUtils.startJsonForm(form, this);
+        if (!formOpening) {
+            jsonFormUtils.startJsonForm(form, this);
+            formOpening = true;
+        }
     }
 
     @Override
@@ -827,6 +832,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void onResume() {
         super.onResume();
+        formOpening = false;
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
         IntentFilter filter = new IntentFilter(Action.STRUCTURE_TASK_SYNCED);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(refreshGeowidgetReceiver, filter);
