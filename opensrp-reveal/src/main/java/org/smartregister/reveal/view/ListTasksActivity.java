@@ -386,7 +386,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     protected void enableCompass(MapboxMap mapboxMap) {
         UiSettings uiSettings = mapboxMap.getUiSettings();
 
-        uiSettings.setCompassGravity(Gravity.CENTER_HORIZONTAL);
+        uiSettings.setCompassGravity(Gravity.START | Gravity.TOP);
+        uiSettings.setCompassMargins(getResources().getDimensionPixelSize(R.dimen.compass_left_margin),
+                getResources().getDimensionPixelSize(R.dimen.compass_top_margin), 0, 0);
         uiSettings.setCompassFadeFacingNorth(false);
         uiSettings.setCompassEnabled(true);
     }
