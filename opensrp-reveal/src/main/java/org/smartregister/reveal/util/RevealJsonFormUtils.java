@@ -32,7 +32,6 @@ import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.util.JsonFormUtils;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -66,6 +65,7 @@ import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.ZONE;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
@@ -516,7 +516,7 @@ public class RevealJsonFormUtils {
                             dataCollector);
                 }
 
-                populateUserAssignedLocations(formJSON, JsonForm.ZONE, Collections.singletonList(ZONE));
+                populateUserAssignedLocations(formJSON, JsonForm.ZONE,  Arrays.asList(OPERATIONAL_AREA, ZONE));
                 break;
 
             case JsonForm.TEAM_LEADER_DOS_ZAMBIA:
@@ -532,7 +532,7 @@ public class RevealJsonFormUtils {
                             dataCollector.split(":")[0]);
                 }
 
-                populateUserAssignedLocations(formJSON, JsonForm.ZONE, Collections.singletonList(ZONE));
+                populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
 
                 break;
 
