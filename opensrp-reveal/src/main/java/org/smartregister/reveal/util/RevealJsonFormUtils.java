@@ -560,7 +560,11 @@ public class RevealJsonFormUtils {
 
     private void populateUserAssignedLocations(JSONObject formJSON, String fieldKey, List<String> allowedTags) {
         JSONArray options = new JSONArray();
-        locationHelper.generateDefaultLocationHierarchy(allowedTags).stream().forEach(options::put);
+        List<String> defaultLocationHierarchy = locationHelper.generateDefaultLocationHierarchy(allowedTags);
+        if (defaultLocationHierarchy == null) {
+            return;
+        }
+        defaultLocationHierarchy.stream().forEach(options::put);
         JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJSON), fieldKey);
 
         try {
