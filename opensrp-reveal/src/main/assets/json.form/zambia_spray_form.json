@@ -783,40 +783,6 @@
         }
       },
       {
-        "key": "sprayed_nets_available",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Total Number of Nets Available",
-        "is_mandatory": true,
-        "text_size": "8sp",
-        "v_required": {
-          "value": true,
-          "err": "Total Number of Nets Available is mandatory"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Total Number of Nets Available must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Total Number of Nets Available must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Total Number of Nets Available must be greater than or equal to 0"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "sprayed_nets_use",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -862,40 +828,6 @@
         "toaster_type": "problem",
         "v_required": {
           "value": "true"
-        },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
-            }
-          }
-        }
-      },
-      {
-        "key": "sprayed_total_uNet",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Total Number of Residents Sleeping Under Nets",
-        "text_size": "8sp",
-        "is_mandatory": true,
-        "v_required": {
-          "value": true,
-          "err": "Total Number of Residents Sleeping Under Nets is mandatory"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "Total Number of Residents Sleeping Under Nets must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "Total Number of Residents Sleeping Under Nets must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "Total Number of Residents Sleeping Under Nets must be greater than or equal to 0"
         },
         "relevance": {
           "rules-engine": {
