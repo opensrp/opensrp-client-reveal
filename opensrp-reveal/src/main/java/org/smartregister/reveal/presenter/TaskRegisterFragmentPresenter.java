@@ -23,6 +23,7 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -411,6 +413,13 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             } else {
                 JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), formName, getTaskDetails(), getStructure());
                 getView().getJsonFormUtils().populateForm(event, formJSON);
+                Map<String, JSONObject> fields = getView().getJsonFormUtils().getFields(formJSON);
+                String dataCollector = RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM();
+                if (StringUtils.isNotBlank(dataCollector)) {
+                    getView().getJsonFormUtils().populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                            Constants.CONFIGURATION.SPRAY_OPERATORS, fields.get(Constants.JsonForm.SPRAY_OPERATOR_CODE),
+                            dataCollector);
+                }
                 if (IRS.equals(getTaskDetails().getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
                     formInteractor.findSprayDetails(IRS, getStructure().getId(), formJSON);
                 } else {

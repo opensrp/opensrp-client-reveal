@@ -546,11 +546,11 @@ public class RevealJsonFormUtils {
                         Constants.CONFIGURATION.DATA_COLLECTORS, fieldsMap.get(JsonForm.DATA_COLLECTOR),
                         PreferencesUtil.getInstance().getCurrentDistrict());
 
-                dataCollector = JsonFormUtils.getString(fieldsMap.get(JsonForm.DATA_COLLECTOR), VALUE);
+                dataCollector = RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM();
                 if (StringUtils.isNotBlank(dataCollector)) {
                     populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                             CONFIGURATION.SPRAY_OPERATORS, fieldsMap.get(JsonForm.SPRAY_OPERATOR_CODE),
-                            dataCollector.split(":")[0]);
+                            dataCollector);
                 }
                 break;
             default:
