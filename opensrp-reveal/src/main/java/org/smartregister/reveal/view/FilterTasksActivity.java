@@ -63,6 +63,8 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
 
     private FilterConfiguration filterConfiguration;
 
+    private DatePickerDialog datePickerDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +101,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         });
 
         Calendar cal = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
+        datePickerDialog = new DatePickerDialog(
                 this, presenter, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
         fromDateFilterTextView.setOnClickListener(view -> {
             datePickerDialog.show();
@@ -128,6 +130,8 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         clearSelectedButtons(businessStatusLayout);
         clearSelectedButtons(taskCodeLayout);
         clearSelectedButtons(interventionTypeLayout);
+        clearSelectedButtons(formNameLayout);
+        clearDatePicker();
     }
 
 
@@ -149,6 +153,14 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
     private void clearSelectedButtons(FlexboxLayout layout) {
         for (int i = 0; i < layout.getFlexItemCount(); i++) {
             ((ToggleButton) layout.getFlexItemAt(i)).setChecked(false);
+        }
+    }
+
+    private void clearDatePicker() {
+        if (datePickerDialog != null) {
+            Calendar cal = Calendar.getInstance();
+            datePickerDialog.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            fromDateFilterTextView.setText(getString(R.string.date_format));
         }
     }
 
