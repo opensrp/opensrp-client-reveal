@@ -413,13 +413,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             } else {
                 JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), formName, getTaskDetails(), getStructure());
                 getView().getJsonFormUtils().populateForm(event, formJSON);
-                Map<String, JSONObject> fields = getView().getJsonFormUtils().getFields(formJSON);
-                String dataCollector = RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM();
-                if (StringUtils.isNotBlank(dataCollector)) {
-                    getView().getJsonFormUtils().populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                            Constants.CONFIGURATION.SPRAY_OPERATORS, fields.get(Constants.JsonForm.SPRAY_OPERATOR_CODE),
-                            dataCollector);
-                }
+                getView().getJsonFormUtils().populateFormWithServerOptions(formName,formJSON);
                 if (IRS.equals(getTaskDetails().getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
                     formInteractor.findSprayDetails(IRS, getStructure().getId(), formJSON);
                 } else {
