@@ -23,7 +23,6 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
@@ -39,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
