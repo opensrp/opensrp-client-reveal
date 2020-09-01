@@ -17,6 +17,7 @@ import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.viewholder.DownloadedOfflineMapViewHolder;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DownloadedOfflineMapAdapter extends RecyclerView.Adapter<DownloadedOfflineMapViewHolder> {
@@ -72,7 +73,8 @@ public class DownloadedOfflineMapAdapter extends RecyclerView.Adapter<Downloaded
                 viewHolder.displayDownloadSizeLabel(true);
 
                 String mapDownloadSize = Formatter.formatFileSize(context, status.getCompletedResourceSize());
-                String downloadDate = Utils.formatDate(offlineMapModel.getDateCreated());
+                Date dateCreated = offlineMapModel.getDateCreated() != null ? offlineMapModel.getDateCreated() : new Date();
+                String downloadDate = Utils.formatDate(dateCreated);
 
                 viewHolder.setDownloadedMapSize(context.getString(R.string.offline_map_size, mapDownloadSize, downloadDate));
 
