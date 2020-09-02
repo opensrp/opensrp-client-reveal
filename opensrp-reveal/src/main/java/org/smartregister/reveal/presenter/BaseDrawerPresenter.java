@@ -348,7 +348,12 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             initializeDrawerLayout();
             viewInitialized = true;
         }
-        updateSyncStatusDisplay(revealApplication.getSynced());
+        if (revealApplication.getSynced() && revealApplication.isRefreshMapOnEventSaved()) {
+            view.checkSynced();
+        } else {
+            updateSyncStatusDisplay(revealApplication.getSynced());
+        }
+
     }
 
 
