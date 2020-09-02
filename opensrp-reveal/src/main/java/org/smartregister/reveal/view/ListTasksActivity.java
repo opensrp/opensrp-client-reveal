@@ -17,6 +17,7 @@ import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -90,6 +91,7 @@ import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
+import org.smartregister.reveal.util.ViewGroupUtils;
 import org.smartregister.util.PermissionUtils;
 import org.smartregister.view.activity.BarcodeScanActivity;
 
@@ -354,6 +356,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         myLocationButton = findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
 
+        if(getBuildCountry() == Country.NTD_COMMUNITY)
+            ViewGroupUtils.replaceView(findViewById(R.id.bt_current_location), findViewById(R.id.ib_mapview_focusOnMyLocationIcon));
+
+
         layerSwitcherFab = findViewById(R.id.fab_mapview_layerSwitcher);
 
         kujakuMapView.getMapboxLocationComponentWrapper().setOnLocationComponentInitializedCallback(this);
@@ -449,6 +455,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     public void positionMyLocationAndLayerSwitcher() {
+        if(getBuildCountry() == Country.NTD_COMMUNITY) return;
+
         FrameLayout.LayoutParams myLocationButtonParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
         if (getBuildCountry() != Country.ZAMBIA) {
             positionMyLocationAndLayerSwitcher(myLocationButtonParams, myLocationButtonParams.topMargin);

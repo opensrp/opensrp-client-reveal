@@ -23,10 +23,10 @@
                 android:id="@+id/kujakuMapView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:locationClient="android_gps_client"
                 app:mapbox_uiAttributionGravity="center_horizontal|bottom"
                 app:mapbox_uiLogoGravity="center_horizontal|bottom"
                 app:mapbox_uiLogoMarginRight="30dp"
-                app:locationClient="android_gps_client"
                 app:mapbox_uiRotateGestures="false" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -70,17 +70,33 @@
                 android:layout_gravity="bottom|start"
                 android:orientation="vertical">
 
-                <ImageButton
-                    android:id="@+id/btn_add_structure"
-                    android:layout_width="@dimen/my_location_button_dimen"
-                    android:layout_height="@dimen/my_location_button_dimen"
-                    android:layout_margin="@dimen/my_location_btn_margin"
-                    android:background="@drawable/circle_button_black_border"
-                    android:contentDescription="@string/add_structure"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_add"
-                    android:textColor="@color/white" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
+                    <ImageButton
+                        android:id="@+id/btn_add_structure"
+                        android:layout_width="@dimen/my_location_button_dimen"
+                        android:layout_height="@dimen/my_location_button_dimen"
+                        android:layout_margin="@dimen/my_location_btn_margin"
+                        android:background="@drawable/circle_button_black_border"
+                        android:contentDescription="@string/add_structure"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_add"
+                        android:textColor="@color/white" />
+
+                    <ImageButton
+                        android:id="@+id/bt_current_location"
+                        android:layout_width="@dimen/my_location_button_dimen"
+                        android:layout_height="@dimen/my_location_button_dimen"
+                        android:layout_gravity="end"
+                        android:layout_margin="@dimen/my_location_btn_margin"
+                        android:background="@drawable/circle_button_black_border"
+                        android:padding="10dp"
+                        android:layout_alignParentEnd="true"
+                        android:src="@drawable/ic_cross_hair"
+                        android:textColor="@color/white" />
+                </RelativeLayout>
 
                 <include
                     android:id="@+id/spray_card_view"
@@ -129,9 +145,9 @@
                     android:id="@+id/progressIndicatorsGroupView"
                     layout="@layout/ntd_progress_indicators_view"
                     android:layout_width="match_parent"
-                    android:visibility="visible"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|left" />
+                    android:layout_gravity="bottom|left"
+                    android:visibility="visible" />
 
                 <include
                     android:id="@+id/irs_verification_card_view"

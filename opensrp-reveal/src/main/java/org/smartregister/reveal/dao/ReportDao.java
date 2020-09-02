@@ -52,7 +52,7 @@ public class ReportDao extends AbstractDao {
                 Map<String, String> values = readEventJsonValues(json);
 
                 double returnedTins = parseDouble(values.get("nPZQreturnedtins"));
-                double returnedTinsQuantity = parseDouble(values.get("nPZQreturnedtinsquantity"));
+                double returnedTinsQuantity = "Other".equalsIgnoreCase(values.get("nPZQreturnedtinsquantity")) ? 0 : parseDouble(values.get("nPZQreturnedtinsquantity"));
                 double returnedTinsQuantityOther = parseDouble(values.get("nPZQreturnedtinsquantityother"));
                 double returnedTinsLoose = parseDouble(values.get("nPZQreturnedloose"));
 
@@ -118,7 +118,7 @@ public class ReportDao extends AbstractDao {
                 Map<String, String> values = readEventJsonValues(json);
 
                 double receivedTins = parseDouble(values.get("nPZQreceivedtins"));
-                double receivedTinsSize = parseDouble(values.get("nPZQreceivedtinsize"));
+                double receivedTinsSize = "Other".equalsIgnoreCase(values.get("nPZQreceivedtinsize")) ? 0 : parseDouble(values.get("nPZQreceivedtinsize"));
                 double receivedTinsSizeOther = parseDouble(values.get("nPZQreceivedtinsizeother"));
                 double receivedTinsLoose = parseDouble(values.get("nPZQreceivedloose"));
 
