@@ -15,6 +15,7 @@ import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.interactor.BaseDrawerInteractor;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -368,6 +369,54 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
         assertEquals("[{\"name\":\"Zambia\",\"nodes\":[{\"name\":\"Chadiza 1\"}]}]", pairArgumentCaptor.getValue().first );
         assertTrue(pairArgumentCaptor.getValue().second.contains("Lusaka"));
         assertTrue(pairArgumentCaptor.getValue().second.contains("Mtendere"));
+    }
+
+    @Test
+    public void testOnViewResumedCallsCheckSyncedIfAlreadySyncedAndRefreshMapOnEventSaved() {
+
+        Whitebox.setInternalState(RevealApplication.getInstance(), "refreshMapOnEventSaved", true);
+        Whitebox.setInternalState(RevealApplication.getInstance(), "synced", true);
+        Whitebox.setInternalState(presenter, "viewInitialized", true);
+        when(preferencesUtil.getCurrentPlan()).thenReturn("IRS Lusaka");
+
+        presenter = spy(presenter);
+        doNothing().doNothing().when(presenter).updateSyncStatusDisplay(synced.capture());
+        presenter.onViewResumed();
+
+        verify(view).checkSynced();
+
+    }
+
+    @Test
+    public void testOnViewResumedUpdateSyncStatusDisplayIfNotRefreshMapOnEventSavedAndSynced() {
+
+        Whitebox.setInternalState(RevealApplication.getInstance(), "refreshMapOnEventSaved", false);
+        Whitebox.setInternalState(RevealApplication.getInstance(), "synced", true);
+        Whitebox.setInternalState(presenter, "viewInitialized", true);
+        when(preferencesUtil.getCurrentPlan()).thenReturn("IRS Lusaka");
+
+        presenter = spy(presenter);
+        doNothing().doNothing().when(presenter).updateSyncStatusDisplay(synced.capture());
+        presenter.onViewResumed();
+
+        verify(presenter).updateSyncStatusDisplay(true);
+
+    }
+
+    @Test
+    public void testOnViewResumedUpdateSyncStatusDisplayIfNotRefreshMapOnEventSavedAndNotSynced() {
+
+        Whitebox.setInternalState(RevealApplication.getInstance(), "refreshMapOnEventSaved", false);
+        Whitebox.setInternalState(RevealApplication.getInstance(), "synced", false);
+        Whitebox.setInternalState(presenter, "viewInitialized", true);
+        when(preferencesUtil.getCurrentPlan()).thenReturn("IRS Lusaka");
+
+        presenter = spy(presenter);
+        doNothing().doNothing().when(presenter).updateSyncStatusDisplay(synced.capture());
+        presenter.onViewResumed();
+
+        verify(presenter).updateSyncStatusDisplay(false);
+
     }
 
 }
