@@ -91,7 +91,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
         view.setOperator();
 
-        if (StringUtils.isBlank(prefsUtil.getCurrentOperationalArea())) {
+        if (StringUtils.isBlank(prefsUtil.getCurrentOperationalArea()) && !org.smartregister.reveal.util.Utils.isHealthFacilityApp()) {
             ArrayList<String> operationalAreaLevels = new ArrayList<>();
             operationalAreaLevels.add(DISTRICT);
             operationalAreaLevels.add(HEALTH_CENTER);
@@ -161,7 +161,9 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         view.setDistrict(prefsUtil.getCurrentDistrict());
         view.setFacility(prefsUtil.getCurrentFacility(), prefsUtil.getCurrentFacilityLevel());
 
-        if (BuildConfig.BUILD_COUNTRY != Country.NTD_SCHOOL) {
+        if(org.smartregister.reveal.util.Utils.isHealthFacilityApp()) {
+            view.setOperationalArea(prefsUtil.getCurrentHealthFacility());
+        } else if (BuildConfig.BUILD_COUNTRY != Country.NTD_SCHOOL) {
             view.setOperationalArea(prefsUtil.getCurrentOperationalArea());
         } else {
             view.setOperationalArea(prefsUtil.getCurrentStructure());
@@ -189,17 +191,23 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     private Pair<String, ArrayList<String>> extractLocationHierarchy() {
 
+        boolean isHFApplication = org.smartregister.reveal.util.Utils.isHealthFacilityApp();
+
         ArrayList<String> operationalAreaLevels = new ArrayList<>();
         operationalAreaLevels.add(COUNTRY);
         operationalAreaLevels.add(PROVINCE);
         operationalAreaLevels.add(REGION);
         operationalAreaLevels.add(DISTRICT);
         operationalAreaLevels.add(SUB_DISTRICT);
-        operationalAreaLevels.add(ZONES);
-        operationalAreaLevels.add(OPERATIONAL_AREA);
-        operationalAreaLevels.add(SCHOOL);
+        operationalAreaLevels.add(HEALTH_CENTER);
+        if (!isHFApplication) {
+            operationalAreaLevels.add(ZONES);
+            operationalAreaLevels.add(OPERATIONAL_AREA);
+            operationalAreaLevels.add(SCHOOL);
+            operationalAreaLevels.add("");
+        }
 
-        List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels,true);
+        List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels, true);
 
         if (defaultLocation != null) {
             Map<String, TreeNode<String, Location>> map = locationHelper.map();
@@ -234,35 +242,51 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         Timber.d("Selected Location Hierarchy Ids: " + TextUtils.join(",", values));
         if (name.size() <= 2)//no operational area was selected, dialog was dismissed
             return;
-        ArrayList<String> operationalAreaLevels = new ArrayList<>();
-        operationalAreaLevels.add(DISTRICT);
-        operationalAreaLevels.add(HEALTH_CENTER);
-        operationalAreaLevels.add(SUB_DISTRICT);
-        operationalAreaLevels.add(CANTON);
-        operationalAreaLevels.add(OPERATIONAL_AREA);
-        List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
-        int districtOffset = name.get(0).equalsIgnoreCase(Country.BOTSWANA.name()) || name.get(0).equalsIgnoreCase(Country.NAMIBIA.name()) ? 3 : 2;
-        try {
-            prefsUtil.setCurrentProvince(name.get(1));
-            prefsUtil.setCurrentDistrict(name.get(name.size() - districtOffset));
-            String operationalArea = name.get(name.size() - 1);
-            String operationalAreaId = values.get(values.size() - 1);
-            prefsUtil.setCurrentOperationalArea(operationalArea);
-            prefsUtil.setCurrentOperationalAreaId(values.get(values.size() - 1));
-            Pair<String, String> facility = getFacilityFromOperationalArea(name.get(name.size() - districtOffset), name.get(name.size() - 1), entireTree);
-            if (facility != null) {
-                prefsUtil.setCurrentFacility(facility.second);
-                prefsUtil.setCurrentFacilityLevel(facility.first);
-            }
-            validateSelectedPlanId(operationalAreaId);
-        } catch (NullPointerException e) {
-            Timber.e(e);
-        }
-        changedCurrentSelection = true;
-        populateLocationsFromPreferences();
 
-        if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY))
-            interactor.autoSelectPlan(prefsUtil.getCurrentOperationalArea(), prefsUtil.getCurrentOperationalAreaId());
+        if (!org.smartregister.reveal.util.Utils.isHealthFacilityApp()) {
+            ArrayList<String> operationalAreaLevels = new ArrayList<>();
+            operationalAreaLevels.add(DISTRICT);
+            operationalAreaLevels.add(HEALTH_CENTER);
+            operationalAreaLevels.add(SUB_DISTRICT);
+            operationalAreaLevels.add(CANTON);
+            operationalAreaLevels.add(OPERATIONAL_AREA);
+            List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
+            int districtOffset = name.get(0).equalsIgnoreCase(Country.BOTSWANA.name()) || name.get(0).equalsIgnoreCase(Country.NAMIBIA.name()) ? 3 : 2;
+            try {
+                prefsUtil.setCurrentProvince(name.get(1));
+                prefsUtil.setCurrentDistrict(name.get(name.size() - districtOffset));
+                String operationalArea = name.get(name.size() - 1);
+                String operationalAreaId = values.get(values.size() - 1);
+                prefsUtil.setCurrentOperationalArea(operationalArea);
+                prefsUtil.setCurrentOperationalAreaId(values.get(values.size() - 1));
+                Pair<String, String> facility = getFacilityFromOperationalArea(name.get(name.size() - districtOffset), name.get(name.size() - 1), entireTree);
+                if (facility != null) {
+                    prefsUtil.setCurrentFacility(facility.second);
+                    prefsUtil.setCurrentFacilityLevel(facility.first);
+                }
+                validateSelectedPlanId(operationalAreaId);
+            } catch (NullPointerException e) {
+                Timber.e(e);
+            }
+            changedCurrentSelection = true;
+            populateLocationsFromPreferences();
+
+            if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY))
+                interactor.autoSelectPlan(prefsUtil.getCurrentOperationalArea(), prefsUtil.getCurrentOperationalAreaId());
+
+        }else{
+            prefsUtil.setCurrentProvince(name.get(1));
+            prefsUtil.setCurrentDistrict(name.get(2));
+
+            prefsUtil.setCurrentOperationalArea(null);
+            prefsUtil.setCurrentOperationalAreaId(null);
+
+            prefsUtil.setCurrentHealthFacility(name.get(values.size() - 1));
+            prefsUtil.setCurrentHealthFacilityID(values.get(values.size() - 1));
+            changedCurrentSelection = true;
+            populateLocationsFromPreferences();
+            unlockDrawerLayout();
+        }
 
         unlockDrawerLayout();
     }
@@ -284,7 +308,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
         prefsUtil.setCurrentStructure(name.get(name.size() - 1));
         prefsUtil.setCurrentStructureID(values.get(values.size() - 1));
-        onOperationalAreaSelectorClicked(names_result,values_result);
+        onOperationalAreaSelectorClicked(names_result, values_result);
     }
 
 
@@ -395,8 +419,10 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     public boolean isPlanAndOperationalAreaSelected() {
         String planId = prefsUtil.getCurrentPlanId();
         String operationalArea = prefsUtil.getCurrentOperationalArea();
+        String healthFacilityId = prefsUtil.getCurrentHealthFacilityID();
 
-        return StringUtils.isNotBlank(planId) && StringUtils.isNotBlank(operationalArea);
+        return (StringUtils.isNotBlank(planId) && StringUtils.isNotBlank(operationalArea)) ||
+                (org.smartregister.reveal.util.Utils.isHealthFacilityApp() && StringUtils.isNotBlank(healthFacilityId));
 
     }
 
@@ -451,13 +477,13 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
     @Override
     public void onPlanAutoSelected(Set<PlanDefinition> planDefinitions) {
-        if(planDefinitions.size() > 0) {
+        if (planDefinitions.size() > 0) {
             PlanDefinition definition = planDefinitions.iterator().next();
 
             prefsUtil.setCurrentPlan(definition.getName());
             prefsUtil.setCurrentPlanId(definition.getIdentifier());
             unlockDrawerLayout();
-        }else{
+        } else {
             view.showPlanSelector(null, null);
         }
     }

@@ -6,6 +6,8 @@ import org.smartregister.reveal.application.RevealApplication;
 
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_DISTRICT;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_FACILITY;
+import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_HEALTH_FACILITY;
+import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_HEALTH_FACILITY_ID;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_OPERATIONAL_AREA_ID;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PLAN;
@@ -132,4 +134,19 @@ public class PreferencesUtil {
         return allSharedPreferences.getPreference(planId);
     }
 
+    public void setCurrentHealthFacilityID(String healthFacilityId) {
+        allSharedPreferences.savePreference(CURRENT_HEALTH_FACILITY_ID, healthFacilityId);
+    }
+
+    public String getCurrentHealthFacilityID() {
+        return allSharedPreferences.getPreference(CURRENT_HEALTH_FACILITY_ID);
+    }
+
+    public void setCurrentHealthFacility(String healthFacility) {
+        allSharedPreferences.savePreference(CURRENT_HEALTH_FACILITY, healthFacility);
+    }
+
+    public String getCurrentHealthFacility() {
+        return allSharedPreferences.getPreference(CURRENT_HEALTH_FACILITY);
+    }
 }

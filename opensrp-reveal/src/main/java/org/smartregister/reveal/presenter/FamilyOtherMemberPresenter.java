@@ -11,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
-import org.smartregister.domain.Client;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.family.contract.FamilyOtherMemberContract.Model;
@@ -19,7 +18,6 @@ import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.family.interactor.FamilyProfileInteractor;
 import org.smartregister.family.presenter.BaseFamilyOtherMemberProfileActivityPresenter;
 import org.smartregister.family.util.DBConstants;
-import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -40,11 +38,9 @@ import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.NativeFormProcessor;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TaskUtils;
-import org.smartregister.sync.helper.ECSyncHelper;
 import org.smartregister.util.CallableInteractor;
 import org.smartregister.util.CallableInteractorCallBack;
 import org.smartregister.util.GenericInteractor;
-import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.Utils;
 
 import java.util.Calendar;
@@ -54,8 +50,6 @@ import java.util.concurrent.Callable;
 
 import timber.log.Timber;
 
-import static org.smartregister.family.util.JsonFormUtils.RELATIONSHIPS;
-import static org.smartregister.reveal.application.RevealApplication.getInstance;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;
 import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
 import static org.smartregister.reveal.util.FamilyConstants.EventType.UPDATE_FAMILY_HEAD_MEMBER_REGISTRATION;

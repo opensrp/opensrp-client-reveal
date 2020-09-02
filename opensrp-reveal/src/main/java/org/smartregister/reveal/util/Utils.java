@@ -15,6 +15,7 @@ import android.util.TypedValue;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.util.Pair;
 
@@ -34,9 +35,11 @@ import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.jsonmapping.util.TreeNode;
 import org.smartregister.domain.tag.FormTag;
 import org.smartregister.job.DocumentConfigurationServiceJob;
 import org.smartregister.job.PullUniqueIdsServiceJob;
+import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -73,6 +76,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MDA;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
+import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
 
 public class Utils {
 
@@ -110,6 +114,22 @@ public class Utils {
         }
     }
 
+    public static String listToCsv(List<String> listOfStrings) {
+        StringBuilder sb = new StringBuilder();
+
+        // all but last
+        for (int i = 0; i < listOfStrings.size() - 1; i++)
+            sb.append("'")
+                    .append(listOfStrings.get(i))
+                    .append("'")
+                    .append(",");
+
+
+        if (listOfStrings.size() > 0)
+            sb.append("'").append(listOfStrings.get(listOfStrings.size() - 1)).append("'");
+
+        return sb.toString();
+    }
 
     public static void setTextViewText(@NonNull TextView textView, @NonNull @StringRes Integer labelResource, String value) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
@@ -213,6 +233,48 @@ public class Utils {
      */
     public static Boolean getDrawOperationalAreaBoundaryAndLabel() {
         return Boolean.valueOf(getGlobalConfig(CONFIGURATION.DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL, CONFIGURATION.DEFAULT_DRAW_OPERATIONAL_AREA_BOUNDARY_AND_LABEL.toString()));
+    }
+
+    /**
+     * Uses the server setting "validate_far_structures" to determine whether to Validate Far Structures
+     * If this variable is not available on the server the value is retrieved from BuildConfig.VALIDATE_FAR_STRUCTURES
+     *
+     * @return validateFarStructures
+     */
+    public static boolean isHealthFacilityApp() {
+        if(!BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) return false;
+
+        try {
+            // check if the default location tag is "Rural Health Centre"
+            AllSharedPreferences allSharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
+            String locationId = allSharedPreferences.fetchUserLocalityId(allSharedPreferences.fetchRegisteredANM());
+
+            LocationHelper locationHelper = LocationHelper.getInstance();
+            Map<String, TreeNode<String, org.smartregister.domain.jsonmapping.Location>> map = locationHelper.map();
+            org.smartregister.domain.jsonmapping.Location location = findNode(map, locationId);
+            if (location != null) {
+                return location.getTags().contains(HEALTH_CENTER);
+            }
+        }catch (Exception e){
+            return false;
+        }
+
+        return false;
+    }
+
+    private static  @Nullable org.smartregister.domain.jsonmapping.Location findNode(Map<String, TreeNode<String, org.smartregister.domain.jsonmapping.Location>> hayStack, String locationId){
+
+        if(hayStack == null){
+            return null;
+        }else if(hayStack.containsKey(locationId)){
+            return hayStack.get(locationId).getNode();
+        }else{
+            org.smartregister.domain.jsonmapping.Location result = null;
+            for(Map.Entry<String,TreeNode<String, org.smartregister.domain.jsonmapping.Location>> entry: hayStack.entrySet()){
+                result = findNode(entry.getValue().getChildren(), locationId);
+            }
+            return result;
+        }
     }
 
     /**

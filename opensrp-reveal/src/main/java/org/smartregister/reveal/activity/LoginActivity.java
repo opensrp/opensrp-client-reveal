@@ -12,8 +12,10 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.presenter.LoginPresenter;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.ChildRegisterActivity;
 import org.smartregister.reveal.view.ListTasksActivity;
+import org.smartregister.reveal.view.TaskRegisterActivity;
 import org.smartregister.task.SaveTeamLocationsTask;
 import org.smartregister.view.activity.BaseLoginActivity;
 import org.smartregister.view.contract.BaseLoginContract;
@@ -40,8 +42,11 @@ public class LoginActivity extends BaseLoginActivity implements BaseLoginContrac
 
         Class<?> startActivity = ListTasksActivity.class;
 
-        if (BuildConfig.BUILD_COUNTRY == Country.NTD_SCHOOL)
+        if (BuildConfig.BUILD_COUNTRY == Country.NTD_SCHOOL) {
             startActivity = ChildRegisterActivity.class;
+        } else if(Utils.isHealthFacilityApp()) {
+            startActivity = TaskRegisterActivity.class;
+        }
 
         Intent intent = new Intent(this, startActivity);
         startActivity(intent);

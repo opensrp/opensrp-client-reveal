@@ -40,6 +40,7 @@ import org.smartregister.util.CallableInteractorCallBack;
 import org.smartregister.util.GenericInteractor;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;

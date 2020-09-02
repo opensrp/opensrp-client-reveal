@@ -32,7 +32,8 @@ public class TaskDetailsDao extends AbstractDao {
                 "LEFT JOIN ec_family ON structure._id = ec_family.structure_id AND ec_family.date_removed IS NULL collate nocase  " +
                 "LEFT JOIN ec_family_member ON ec_family.base_entity_id = ec_family_member.relational_id AND ec_family_member.date_removed IS NULL collate nocase  " +
                 "LEFT JOIN sprayed_structures ON structure._id = sprayed_structures.base_entity_id collate nocase  " +
-                "WHERE parent_id='" + operationalAreaId + "'  GROUP BY structure._id";
+                (StringUtils.isBlank(operationalAreaId) ? "" : "WHERE parent_id='" + operationalAreaId + "'  ") +
+                "GROUP BY structure._id";
 
         DataMap<Void> voidDataMap = cursor -> {
             results.put(getCursorValue(cursor, "_id"), getCursorValue(cursor, "family_details"));
@@ -57,25 +58,38 @@ public class TaskDetailsDao extends AbstractDao {
 
         Map<String, String> memberDetails = fetchFamilyMemberDetails(operationalAreaId);
 
-        String sql =
-                "select ec_family.base_entity_id , ec_family.structure_id , ec_family.first_name fam_name , structure.latitude , structure.longitude, ifnull(task.business_status,'Not Visited') business_status , task.status task_status , '" + Constants.Intervention.REGISTER_FAMILY + "' code " +
-                        "from ec_family " +
-                        "inner join structure on ec_family.structure_id = structure._id " +
-                        "inner join task on task.structure_id = ec_family.structure_id and task.code = '" + Constants.Intervention.STRUCTURE_VISITED + "'  " +
-                        "and task.plan_id = '" + planId + "' and  task.group_id = '" + operationalAreaId + "' " +
-                        "union  " +
-                        "select null base_entity_id , structure._id structure_id , '' name , structure.latitude , structure.longitude, ifnull(task.business_status,'Not Visited') , task.status , '" + Constants.Intervention.REGISTER_FAMILY + "' code " +
-                        "from structure " +
-                        "left join task on task.structure_id = structure._id and task.code = '" + Constants.Intervention.STRUCTURE_VISITED + "'  " +
-                        "where structure.parent_id = '" + operationalAreaId + "' " +
-                        "and structure._id not in ( " +
-                        "select structure_id from task where code = '" + Constants.Intervention.STRUCTURE_VISITED + "' and  " +
-                        "task.plan_id = '" + planId + "' and  task.group_id = '" + operationalAreaId + "' and structure_id is not null ) " +
-                        "union " +
-                        "select ec_family.base_entity_id , ec_family.structure_id , ec_family.first_name , null latitude , null longitude, ifnull(task.business_status,'Not Visited') business_status , task.status , '" + Constants.InterventionType.FLOATING_FAMILY + "'code " +
-                        "from ec_family " +
-                        "inner join task on task.for = ec_family.base_entity_id and task.code = '" + Constants.Intervention.FLOATING_FAMILY_REGISTRATION + "'  " +
-                        "and task.plan_id = '" + planId + "' and  task.group_id = '" + operationalAreaId + "' ";
+        String sql = "";
+        if (StringUtils.isBlank(planId) || StringUtils.isBlank(operationalAreaId)) {
+            sql =
+                    "select ec_family.base_entity_id , ec_family.structure_id , ec_family.first_name fam_name , structure.latitude , structure.longitude, ifnull(task.business_status,'Not Visited') business_status , task.status task_status , '" + Constants.Intervention.REGISTER_FAMILY + "' code " +
+                            "from ec_family " +
+                            "inner join structure on ec_family.structure_id = structure._id " +
+                            "left join task on task.structure_id = ec_family.structure_id and task.code = '" + Constants.Intervention.STRUCTURE_VISITED + "' and ec_family.structure_id is not null " +
+                            "union " +
+                            "select ec_family.base_entity_id , ec_family.structure_id , ec_family.first_name , null latitude , null longitude, ifnull(task.business_status,'Not Visited') business_status , task.status , '" + Constants.InterventionType.FLOATING_FAMILY + "'code " +
+                            "from ec_family " +
+                            "left join task on task.for = ec_family.base_entity_id and task.code = '" + Constants.Intervention.FLOATING_FAMILY_REGISTRATION + "' and ec_family.structure_id is null ";
+        } else {
+            sql =
+                    "select ec_family.base_entity_id , ec_family.structure_id , ec_family.first_name fam_name , structure.latitude , structure.longitude, ifnull(task.business_status,'Not Visited') business_status , task.status task_status , '" + Constants.Intervention.REGISTER_FAMILY + "' code " +
+                            "from ec_family " +
+                            "inner join structure on ec_family.structure_id = structure._id " +
+                            "inner join task on task.structure_id = ec_family.structure_id and task.code = '" + Constants.Intervention.STRUCTURE_VISITED + "'  " +
+                            "and task.plan_id = '" + planId + "' and  task.group_id = '" + operationalAreaId + "' " +
+                            "union  " +
+                            "select null base_entity_id , structure._id structure_id , '' name , structure.latitude , structure.longitude, ifnull(task.business_status,'Not Visited') , task.status , '" + Constants.Intervention.REGISTER_FAMILY + "' code " +
+                            "from structure " +
+                            "left join task on task.structure_id = structure._id and task.code = '" + Constants.Intervention.STRUCTURE_VISITED + "'  " +
+                            "where structure.parent_id = '" + operationalAreaId + "' " +
+                            "and structure._id not in ( " +
+                            "select structure_id from task where code = '" + Constants.Intervention.STRUCTURE_VISITED + "' and  " +
+                            "task.plan_id = '" + planId + "' and  task.group_id = '" + operationalAreaId + "' and structure_id is not null ) " +
+                            "union " +
+                            "select ec_family.base_entity_id , ec_family.structure_id , ec_family.first_name , null latitude , null longitude, ifnull(task.business_status,'Not Visited') business_status , task.status , '" + Constants.InterventionType.FLOATING_FAMILY + "'code " +
+                            "from ec_family " +
+                            "inner join task on task.for = ec_family.base_entity_id and task.code = '" + Constants.Intervention.FLOATING_FAMILY_REGISTRATION + "'  " +
+                            "and task.plan_id = '" + planId + "' and  task.group_id = '" + operationalAreaId + "' ";
+        }
 
 
         DataMap<TaskDetails> dataMap = cursor -> {
@@ -139,7 +153,8 @@ public class TaskDetailsDao extends AbstractDao {
         if (lastLocation != null) {
             task.setDistanceFromUser(location.distanceTo(lastLocation));
         } else {
-            task.setDistanceFromUser(location.distanceTo(operationalAreaCenter));
+            if (operationalAreaCenter != null)
+                task.setDistanceFromUser(location.distanceTo(operationalAreaCenter));
             task.setDistanceFromCenter(true);
         }
     }

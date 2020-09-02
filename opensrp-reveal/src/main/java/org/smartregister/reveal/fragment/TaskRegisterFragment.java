@@ -9,21 +9,28 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.StringRes;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.cardview.widget.CardView;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.StringRes;
+import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import com.google.android.material.snackbar.Snackbar;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.Task;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
 import org.smartregister.family.util.DBConstants;
+import org.smartregister.receiver.SyncStatusBroadcastReceiver;
 import org.smartregister.reporting.view.ProgressIndicatorView;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
@@ -72,7 +79,7 @@ import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_F
 /**
  * Created by samuelgithengi on 3/11/19.
  */
-public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity {
+public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity , SyncStatusBroadcastReceiver.SyncStatusListener {
 
     private TaskRegisterAdapter taskAdapter;
 
@@ -93,6 +100,9 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     private TextView filterTextView;
 
     private View view;
+
+    private Snackbar syncProgressSnackbar;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,23 +126,33 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     public void setupViews(View view) {
         super.setupViews(view);
         this.view = view;
+
+
+        syncProgressSnackbar = Snackbar.make(view.findViewById(R.id.content_frame), getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
+        centerText();
+
         interventionTypeTv = view.findViewById(R.id.intervention_type);
         if (getActivity() != null) {
-            if(BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)){
+            if (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) {
                 interventionTypeTv.setText("NTD Community");
-            }else{
+            } else {
                 interventionTypeTv.setText(
                         getActivity().getIntent().getStringExtra(TaskRegister.INTERVENTION_TYPE));
             }
         }
-        view.findViewById(R.id.txt_map_label).setOnClickListener(v -> getPresenter().onOpenMapClicked());
+        view.findViewById(R.id.txt_map_label).setOnClickListener(v -> {
+            if (!Utils.isHealthFacilityApp())
+                getPresenter().onOpenMapClicked();
+        });
+
+        view.findViewById(R.id.txt_map_label).setVisibility(Utils.isHealthFacilityApp()? View.GONE : View.VISIBLE);
         drawerView.initializeDrawerLayout();
         view.findViewById(R.id.drawerMenu).setOnClickListener(v -> drawerView.openDrawerLayout());
 
         boolean hasQRSearch = BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY);
 
         view.findViewById(R.id.btn_qr_code).setVisibility(hasQRSearch ? View.VISIBLE : View.GONE);
-        if(hasQRSearch)
+        if (hasQRSearch)
             view.findViewById(R.id.btn_qr_code).setOnClickListener(v -> scanQRCode());
 
 
@@ -151,7 +171,17 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         }
     }
 
-    private void scanQRCode(){
+    private void centerText(){
+        View view = syncProgressSnackbar.getView();
+        TextView tv =view.findViewById(R.id.snackbar_text);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            tv.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        } else {
+            tv.setGravity(Gravity.CENTER_HORIZONTAL);
+        }
+    }
+
+    private void scanQRCode() {
         BaseRegisterActivity baseRegisterActivity = (BaseRegisterActivity) getActivity();
         if (baseRegisterActivity != null) {
             baseRegisterActivity.startQrCodeScanner();
@@ -219,11 +249,11 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         tvSuccessRate.setText(getMapValue(reportCounts, org.smartregister.reveal.util.Constants.ReportCounts.SUCCESS_RATE) + "%");
     }
 
-    private Integer toInt(Double value){
-        try{
-            if(value != null)
+    private Integer toInt(Double value) {
+        try {
+            if (value != null)
                 return value.intValue();
-        }catch (Exception e){
+        } catch (Exception e) {
             Timber.v(e);
         }
         return 0;
@@ -231,10 +261,10 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     @Override
     public void onError(Exception ex) {
-        if(ex instanceof QRCodeSearchException){
+        if (ex instanceof QRCodeSearchException) {
             QRCodeSearchException e = (QRCodeSearchException) ex;
             AlertDialogUtils.displayNotification(getContext(), e.getSearchMessage(), "QR code : " + e.getQrCode());
-        }else{
+        } else {
             Timber.e(ex, ex.toString());
         }
     }
@@ -248,7 +278,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                     public void onClick(DialogInterface dialog, int which) {
                         if (which == BUTTON_POSITIVE)
                             // start registration
-                        dialog.dismiss();
+                            dialog.dismiss();
                     }
                 });
     }
@@ -311,9 +341,9 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     protected void onViewClicked(View view) {
         TaskDetails details = (TaskDetails) view.getTag(R.id.task_details);
 
-        if(org.smartregister.reveal.util.Constants.Intervention.NTD_COMMUNITY.equals(details.getTaskCode())){
+        if (org.smartregister.reveal.util.Constants.Intervention.NTD_COMMUNITY.equals(details.getTaskCode())) {
             getPresenter().onTaskSelected(details, view.getId() == R.id.task_action);
-        }else if (TASK_RESET_INTERVENTIONS.contains(details.getTaskCode())
+        } else if (TASK_RESET_INTERVENTIONS.contains(details.getTaskCode())
                 && Task.TaskStatus.COMPLETED.name().equals(details.getTaskStatus())) {
             displayTaskActionDialog(details, view);
         } else {
@@ -327,7 +357,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                 R.string.choose_action, R.string.view_details, R.string.undo, new Dialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
+                        switch (which) {
                             case BUTTON_POSITIVE:
                                 getPresenter().onTaskSelected(details, view.getId() == R.id.task_action);
                                 break;
@@ -340,7 +370,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                         dialog.dismiss();
                     }
 
-         } );
+                });
     }
 
     public void displayResetTaskInfoDialog(TaskDetails details) {
@@ -479,7 +509,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         intent.putExtra(org.smartregister.family.util.Constants.INTENT_KEY.GO_TO_DUE_PAGE, false);
 
 
-        if(taskDetails != null) {
+        if (taskDetails != null) {
             intent.putExtra(Properties.LOCATION_UUID, taskDetails.getStructureId());
             intent.putExtra(Properties.TASK_IDENTIFIER, taskDetails.getTaskId());
             intent.putExtra(Properties.TASK_BUSINESS_STATUS, taskDetails.getBusinessStatus());
@@ -600,4 +630,54 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
+    @Override
+    protected void onResumption() {
+        super.onResumption();
+        drawerView.onResume();
+        if(SyncStatusBroadcastReceiver.getInstance().isSyncing()){
+            drawerView.toggleProgressBarView(true);
+            syncProgressSnackbar.show();
+        }
+    }
+
+    @Override
+    protected void showShortToast(Context context, String message) {
+        //super.showShortToast(context, message);
+    }
+
+    @Override
+    public void onSyncInProgress(FetchStatus fetchStatus) {
+        super.onSyncInProgress(fetchStatus);
+        if (FetchStatus.fetched.equals(fetchStatus)) {
+            syncProgressSnackbar.show();
+        }else{
+            syncProgressSnackbar.dismiss();
+        }
+        if (fetchStatus.equals(FetchStatus.fetchedFailed)) {
+            Snackbar.make(rootView, org.smartregister.R.string.sync_failed, Snackbar.LENGTH_LONG).show();
+        } else if (fetchStatus.equals(FetchStatus.nothingFetched)) {
+            Snackbar.make(rootView, org.smartregister.R.string.sync_complete, Snackbar.LENGTH_LONG).show();
+        } else if (fetchStatus.equals(FetchStatus.noConnection)) {
+            Snackbar.make(rootView, org.smartregister.R.string.sync_failed_no_internet, Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onSyncStart() {
+        super.onSyncStart();
+        if (SyncStatusBroadcastReceiver.getInstance().isSyncing() && org.smartregister.reveal.util.Utils.isNetworkAvailable(getContext())) {
+            syncProgressSnackbar.show();
+        }
+        drawerView.toggleProgressBarView(true);
+    }
+
+    @Override
+    public void onSyncComplete(FetchStatus fetchStatus) {
+        super.onSyncComplete(fetchStatus);
+        syncProgressSnackbar.dismiss();
+        //Check sync status and Update UI to show sync status
+        drawerView.checkSynced();
+        // revert to sync status view
+        drawerView.toggleProgressBarView(false);
+    }
 }
