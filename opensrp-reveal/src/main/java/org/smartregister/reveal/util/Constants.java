@@ -165,6 +165,8 @@ public interface Constants {
     interface Intervention {
         String IRS = "IRS";
 
+        String DYNAMIC_IRS = "Dynamic-IRS";
+
         String MOSQUITO_COLLECTION = "Mosquito Collection";
 
         String LARVAL_DIPPING = "Larval Dipping";
@@ -181,6 +183,8 @@ public interface Constants {
 
         String FI = "FI";
 
+        String DYNAMIC_FI = "Dynamic-FI";
+
         String PAOT = "PAOT";
 
         String MDA_DISPENSE = "MDA Dispense";
@@ -188,6 +192,8 @@ public interface Constants {
         String MDA_ADHERENCE = "MDA Adherence";
 
         String MDA = "MDA";
+
+        String DYNAMIC_MDA = "Dynamic-MDA";
 
         String IRS_VERIFICATION = "IRS Verification";
 
