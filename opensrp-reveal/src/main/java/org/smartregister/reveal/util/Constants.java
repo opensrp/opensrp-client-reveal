@@ -197,6 +197,7 @@ public interface Constants {
         String MDA_DRUG_RECON = "Drug Reconciliation";
 
         String MDA = "MDA";
+//        String MDA = "Dynamic MDA";
 
         String SMC = "SMC";
 
@@ -253,17 +254,22 @@ public interface Constants {
         String SPRAYED = "Sprayed";
         String NOT_SPRAYABLE = "Not Sprayable";
         String COMPLETE = "Complete";
+        String ALL_TASKS_COMPLETE = "All Tasks Complete";
         String INCOMPLETE = "Incomplete";
         String NOT_ELIGIBLE = "Not Eligible";
         String IN_PROGRESS = "In Progress";
 
         //MDA status
         String SMC_COMPLETE = "SMC Complete";
+        String SPAQ_COMPLETE = "SPAQ Complete";
+        String SPAQ_NO_ADDITIONAL_DOSE = "SPAQ No Additional Dose";
         String INELIGIBLE = "Ineligible";
-        String DRUG_RECON_COMPLETE = "Drug Recon Complete";
         String TASKS_INCOMPLETE = "Tasks Incomplete";
         String NOT_DISPENSED = "Not Dispensed";
         String FAMILY_NO_TASK_REGISTERED = "Family No Task Registered";
+        String NO_SPAQ_SICK = "No SPAQ - SICK";
+        String NO_SPAQ_ALLERGY_SAE = "No SPAQ - ALLERGY/SAE";
+        String NO_SPAQ_REFUSED = "No SPAQ - REFUSED";
 
         // Following are for grouped structure tasks. Not synced to server
         String FAMILY_REGISTERED = "Family Registered";
@@ -279,7 +285,7 @@ public interface Constants {
                 BLOOD_SCREENING_COMPLETE, COMPLETE, NOT_ELIGIBLE);
 
         List<String> MDA_BUSINESS_STATUS = Arrays.asList(NOT_VISITED, SMC_COMPLETE, INELIGIBLE,
-                DRUG_RECON_COMPLETE, TASKS_INCOMPLETE, COMPLETE, NOT_ELIGIBLE, FAMILY_NO_TASK_REGISTERED);
+                TASKS_INCOMPLETE, COMPLETE, NOT_ELIGIBLE, FAMILY_NO_TASK_REGISTERED, ALL_TASKS_COMPLETE, SPAQ_COMPLETE);
     }
 
     interface BusinessStatusWrapper {
@@ -320,6 +326,8 @@ public interface Constants {
         String WAS_NOT_ADMINISTERED_SPAQ = "[wasNotAdministeredSpaq]";
 
         String NUMBER_OF_FAMILY_MEMBERS = "[num_fam_members]";
+
+        String NUMBER_OF_ADHERED_FAMILY_MEMBERS = "[num_adhered_family_members]";
 
         String NUMBER_OF_FAMILY_MEMBERS_SLEEPING_OUTDOORS = "[num_sleeps_outdoors]";
 

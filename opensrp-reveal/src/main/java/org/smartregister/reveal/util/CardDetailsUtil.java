@@ -23,7 +23,6 @@ import org.smartregister.reveal.util.Constants.BusinessStatus;
 import timber.log.Timber;
 
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.DRUG_RECON_COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_DISPENSED;
@@ -56,14 +55,18 @@ public class CardDetailsUtil {
                 break;
             case BusinessStatus.NOT_SPRAYED:
             case BusinessStatus.NOT_DISPENSED:
+            case BusinessStatus.NO_SPAQ_SICK:
+            case BusinessStatus.NO_SPAQ_ALLERGY_SAE:
+            case BusinessStatus.NO_SPAQ_REFUSED:
             case BusinessStatus.IN_PROGRESS:
                 cardDetails.setStatusColor(R.color.unsprayed);
                 cardDetails.setStatusMessage(R.string.details_not_sprayed);
                 break;
             case BusinessStatus.SPRAYED:
-            case BusinessStatus.COMPLETE:
             case BusinessStatus.SMC_COMPLETE:
-            case BusinessStatus.DRUG_RECON_COMPLETE:
+            case BusinessStatus.SPAQ_COMPLETE:
+            case BusinessStatus.ALL_TASKS_COMPLETE:
+            case BusinessStatus.COMPLETE:
                 formatCardDetailsForCompletedTasks(cardDetails);
                 break;
             case BusinessStatus.NOT_SPRAYABLE:
@@ -73,6 +76,7 @@ public class CardDetailsUtil {
                 cardDetails.setReason(null);
                 break;
             case BusinessStatus.INCOMPLETE:
+            case BusinessStatus.TASKS_INCOMPLETE:
                 cardDetails.setStatusColor(R.color.partially_sprayed);
                 break;
             case PARTIALLY_SPRAYED:
@@ -264,8 +268,6 @@ public class CardDetailsUtil {
                 return context.getString(R.string.in_progress);
             case NOT_DISPENSED:
                 return context.getString(R.string.not_dispensed);
-            case DRUG_RECON_COMPLETE:
-                return context.getString(R.string.drug_recon_complete);
             case PARTIALLY_SPRAYED:
                 if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
                     return context.getString(R.string.sprayed);

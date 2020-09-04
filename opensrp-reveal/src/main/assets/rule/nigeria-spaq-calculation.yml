@@ -4,4 +4,4 @@ description: Task business status
 priority: 1
 condition: "true"
 actions:
-  - "calculation = step1_administeredSpaq == 'Complete' ?  'Incomplete' : 'Ineligible' "
+  - "calculation = step1_number_of_additional_doses == 1 ? 'SPAQ Complete' : 'Tasks Incomplete' "

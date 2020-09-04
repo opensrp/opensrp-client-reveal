@@ -88,14 +88,18 @@ public class TaskRegisterViewHolder extends RecyclerView.ViewHolder {
      */
     public void setTaskAction(String actionLabel, TaskDetails task, CardDetails cardDetails, View.OnClickListener onClickListener) {
         actionView.setText(actionLabel);
+        if ((task.isFamilyRegistered() || task.isFamilyRegTaskExists()) && task.getMdaTasksCount() == 0) {
+            actionView.setBackground(context.getResources().getDrawable(R.drawable.family_no_task_registered_bg));
+            actionView.setText(R.string.family_member_registered);
+        }
 
         // registered family with multiple tasks
-        if (cardDetails != null && task.getTaskCount() != null) { // task grouping only for FI
+        else if (cardDetails != null && task.getTaskCount() != null) { // task grouping only for FI
             if (task.getTaskCount() > 1) {
                 if (task.getTaskCount() != task.getCompleteTaskCount()) {
 
 
-                    Pair<Drawable, String > actionViewPair = getActionDrawable(task);
+                    Pair<Drawable, String> actionViewPair = getActionDrawable(task);
                     actionView.setTextColor(context.getResources().getColor(R.color.text_black));
                     actionView.setBackground(actionViewPair.first);
                     actionView.setText(actionViewPair.second);

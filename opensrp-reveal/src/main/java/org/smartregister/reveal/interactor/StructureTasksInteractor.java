@@ -3,6 +3,7 @@ package org.smartregister.reveal.interactor;
 import android.content.Context;
 import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
+import android.util.Pair;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.SQLException;
@@ -26,6 +27,7 @@ import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.InteractorUtils;
+import org.smartregister.reveal.util.PreferencesUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +42,8 @@ import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.LAST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.MIDDLE_NAME;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.SMC_COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.SPAQ_COMPLETE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
@@ -179,6 +183,49 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
         });
     }
 
+    @Override
+    public void findCompletedDispenseTasks(StructureTaskDetails taskDetails) {
+        appExecutors.diskIO().execute(() -> {
+            int numberOfMembers = 0;
+            try (Cursor cursor = database.rawQuery(
+                    String.format("SELECT count(*) FROM %s WHERE %s = ? AND %s =? AND %s=?",
+                            TASK_TABLE, STRUCTURE_ID, PLAN_ID, BUSINESS_STATUS),
+                    new String[]{taskDetails.getStructureId(), PreferencesUtil.getInstance().getCurrentPlanId(), SMC_COMPLETE})) {
+
+                while (cursor.moveToNext()) {
+                    numberOfMembers = cursor.getInt(0);
+                }
+            } catch (Exception e) {
+                Timber.e(e, "Error find Number of members ");
+            }
+            int finalNumberOfMembers = numberOfMembers;
+            appExecutors.mainThread().execute(() -> {
+                presenter.onFetchedMembersCount(new Pair<>(finalNumberOfMembers, finalNumberOfMembers));
+            });
+        });
+    }
+
+    @Override
+    public void findCompletedAdherenceTasks(StructureTaskDetails taskDetails) {
+        appExecutors.diskIO().execute(() -> {
+            int numberOfMembers = 0;
+            try (Cursor cursor = database.rawQuery(
+                    String.format("SELECT count(*) FROM %s WHERE %s = ? AND %s =? AND %s=?",
+                            TASK_TABLE, STRUCTURE_ID, PLAN_ID, BUSINESS_STATUS),
+                    new String[]{taskDetails.getStructureId(), PreferencesUtil.getInstance().getCurrentPlanId(), SPAQ_COMPLETE})) {
+
+                while (cursor.moveToNext()) {
+                    numberOfMembers = cursor.getInt(0);
+                }
+            } catch (Exception e) {
+                Timber.e(e, "Error find Number of members ");
+            }
+            int finalNumberOfMembers = numberOfMembers;
+            appExecutors.mainThread().execute(() -> {
+                presenter.onFetchedMembersCount(new Pair<>(finalNumberOfMembers, finalNumberOfMembers));
+            });
+        });
+    }
 
     private void populateEventsPerTask(List<StructureTaskDetails> tasks) {
         SQLiteStatement eventsPerTask = database.compileStatement("SELECT count(*) as events_per_task FROM event_task WHERE task_id = ?");
@@ -198,8 +245,8 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
 
                 }
 
-                if (Intervention.BLOOD_SCREENING.equals(task.getTaskCode())){
-                    setPersonTested(task,eventTask.getEventsPerTask() > 1);
+                if (Intervention.BLOOD_SCREENING.equals(task.getTaskCode())) {
+                    setPersonTested(task, eventTask.getEventsPerTask() > 1);
                 }
 
             }
@@ -223,7 +270,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
         SQLiteStatement personTested = null;
 
         try {
-            if (isEdit){
+            if (isEdit) {
                 String personTestWithEditsSql = "select person_tested from event_task where id in " +
                         "(select formSubmissionId from event where baseEntityId = ? and eventType = ? " +
                         "order by updatedAt desc limit 1)";

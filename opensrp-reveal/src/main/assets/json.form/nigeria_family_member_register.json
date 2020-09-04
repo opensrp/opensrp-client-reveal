@@ -212,6 +212,21 @@
         ]
       },
       {
+        "key": "dobUnknownNote",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "Please select AGE unknown if not sure!",
+        "toaster_type": "warning",
+        "relevance": {
+          "step1:dob_unknown": {
+            "type": "string",
+            "ex": "equalTo(., \"true\")"
+          }
+        }
+      },
+      {
         "key": "age",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person_attribute",
@@ -224,16 +239,10 @@
           "value": "true",
           "err": "Please enter a number"
         },
-        "relevance": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "nigeria-family-member-relevance.yml"
-            }
+        "rules-engine": {
+          "ex-rules": {
+            "rules-file": "nigeria-family-member-relevance.yml"
           }
-        },
-        "v_required": {
-          "value": true,
-          "err": "Please enter the age"
         },
         "calculation": {
           "rules-engine": {
@@ -258,6 +267,51 @@
             "value": "false"
           }
         ]
+      },
+      {
+        "key": "eligibleChild",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "The Selected Age \nConfirms Child As Eligible",
+        "toaster_type": "positive",
+        "relevance": {
+          "step1:job_aid": {
+            "type": "string",
+            "ex": "equalTo(., \"threeToTwelve\")"
+          }
+        }
+      },
+      {
+        "key": "eligibleChild2",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "Awesome! Selected Age \nConfirms Child As Eligible",
+        "toaster_type": "info",
+        "relevance": {
+          "step1:job_aid": {
+            "type": "string",
+            "ex": "equalTo(., \"twelveToFiftyNine\")"
+          }
+        }
+      },
+      {
+        "key": "ineligibleChild",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "Oops! The Selected Age \nConfirms Child Is Not Eligible",
+        "toaster_type": "problem",
+        "relevance": {
+          "step1:job_aid": {
+            "type": "string",
+            "ex": "equalTo(., \"moreThanSixty\")"
+          }
+        }
       },
       {
         "key": "job_aid_label",

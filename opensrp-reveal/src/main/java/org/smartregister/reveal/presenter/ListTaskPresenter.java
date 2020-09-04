@@ -231,7 +231,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
 
         if (taskDetailsList != null && (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA
-                || BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) || BuildConfig.BUILD_COUNTRY == Country.NIGERIA) {
+                || BuildConfig.BUILD_COUNTRY == Country.NAMIBIA)) {
             new IndicatorsCalculatorTask(listTaskView.getActivity(), taskDetailsList).execute();
         }
     }
@@ -602,6 +602,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             markStructureIneligibleConfirmed = false;
         } else if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)) {
             displayMarkStructureIneligibleDialog();
+            RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
         } else if (cardDetails == null || !changeInterventionStatus) {
             startForm(selectedFeature, null, selectedFeatureInterventionType);
         } else {
@@ -726,16 +727,20 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                         }
                         if (which == BUTTON_POSITIVE) {
                             listTaskView.registerFamily();
+                            RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
                             dialog.dismiss();
                         }
                         if (validateFarStructures()) {
                             validateUserLocation();
                         } else {
                             onLocationValidated();
+                            RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
                         }
                         dialog.dismiss();
+                        RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
                     }
                 });
+        RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
     }
 
 

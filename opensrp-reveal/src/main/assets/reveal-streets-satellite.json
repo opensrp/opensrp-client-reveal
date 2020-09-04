@@ -68,14 +68,18 @@
             "Not Sprayed",
             "Incomplete",
             "In Progress",
-            "Not Dispensed"
+            "Not Dispensed",
+            "No SPAQ - SICK",
+            "No SPAQ - ALLERGY/SAE",
+            "No SPAQ - REFUSED"
           ],
           "hsl(3, 71%, 54%)",
           [
             "Sprayed",
             "Complete",
             "Fully Received",
-            "Drug Recon Complete"
+            "Drug Recon Complete",
+            "All Tasks Complete"
           ],
           "hsl(89, 52%, 48%)",
           [
@@ -99,7 +103,8 @@
             "Tasks Incomplete",
             "Partially Received",
             "Adherence Visit Done",
-            "SMC Complete"
+            "SMC Complete",
+            "SPAQ Complete"
           ],
           "hsl(26, 84%, 56%)",
           [
@@ -176,7 +181,10 @@
             "Not Sprayed",
             "Incomplete",
             "In Progress",
-            "Not Dispensed"
+            "Not Dispensed",
+            "No SPAQ - SICK",
+            "No SPAQ - ALLERGY/SAE",
+            "No SPAQ - REFUSED"
           ],
           "hsl(3, 71%, 54%)",
           [
@@ -184,7 +192,7 @@
             "Complete",
             "Fully Received",
             "Drug Recon Complete",
-            "Adherence Visit Done"
+            "All Tasks Complete"
           ],
           "hsl(89, 52%, 48%)",
           [
@@ -206,14 +214,16 @@
           "hsl(262, 100%, 68%)",
           [
             "Tasks Incomplete",
-            "Ineligible",
             "Partially Received",
-            "Partially Sprayed"
+            "Adherence Visit Done",
+            "SMC Complete",
+            "SPAQ Complete",
+            "SPAQ No Additional Dose"
           ],
           "hsl(26, 84%, 56%)",
           [
             "Family No Task Registered",
-            "SMC Complete"
+            "Ineligible"
           ],
           "hsl(0, 0%, 78%)",
           "hsl(0, 0%, 78%)"

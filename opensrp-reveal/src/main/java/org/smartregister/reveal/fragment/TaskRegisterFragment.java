@@ -270,7 +270,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     public void setTaskDetails(List<TaskDetails> tasks) {
         taskAdapter.setTaskDetails(tasks);
-        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.NAMIBIA || BuildConfig.BUILD_COUNTRY == Country.NIGERIA) {
+        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
             new IndicatorsCalculatorTask(getActivity(), tasks).execute();
         }
     }

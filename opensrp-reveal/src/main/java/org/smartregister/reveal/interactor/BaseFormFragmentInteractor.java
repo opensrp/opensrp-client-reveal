@@ -79,8 +79,31 @@ public class BaseFormFragmentInteractor implements BaseFormFragmentContract.Inte
                 presenter.onFetchedMembersCount(new Pair<>(finalNumberOfMembers, finalNumberOfMembersSleepingOutdoors), formJSON);
             });
         });
-
     }
+
+//    public void findNumberOfDispensedMembers(String structureId, JSONObject formJSON) {
+//        appExecutors.diskIO().execute(() -> {
+//            Cursor cursor = null;
+//            int numberOfDispensedMembers = 0;
+//            try {
+//                cursor = sqLiteDatabase.rawQuery(
+//                        String.format("select count(*) from %s where %s like 'SMC Complete'", metadata().familyMemberRegister.tableName, STRUCTURE_ID),
+//                        new String[]{structureId});
+//                while (cursor.moveToNext()) {
+//                    numberOfDispensedMembers = cursor.getInt(0);
+//                }
+//            } catch (Exception e) {
+//                Timber.e(e, "Error finding number of dispensed members");
+//            } finally {
+//                if (cursor != null)
+//                    cursor.close();
+//            }
+//            int finalNumbers = numberOfDispensedMembers;
+//            appExecutors.mainThread().execute(() -> {
+//                presenter.onFetchedDispensedFamilyMembers(finalNumbers, formJSON);
+//            });
+//        });
+//    }
 
     @Override
     public void findMemberDetails(String structureId, JSONObject formJSON) {

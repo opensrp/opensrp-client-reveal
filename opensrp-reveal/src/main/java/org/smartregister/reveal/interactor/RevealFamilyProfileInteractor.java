@@ -25,12 +25,15 @@ import org.smartregister.family.util.DBConstants.KEY;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.TaskRepository;
+import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyProfileContract;
+import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
+import org.smartregister.reveal.util.GeoJsonUtils;
 import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
@@ -55,7 +58,6 @@ import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_ME
 public class RevealFamilyProfileInteractor extends FamilyProfileInteractor implements FamilyProfileContract.Interactor {
 
     private TaskUtils taskUtils;
-
     private AppExecutors appExecutors;
     private FamilyProfileContract.Presenter presenter;
     private EventClientRepository eventClientRepository;

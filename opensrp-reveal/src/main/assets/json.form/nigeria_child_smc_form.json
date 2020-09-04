@@ -305,6 +305,21 @@
         }
       },
       {
+        "key": "childRecordCard",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "toaster_notes",
+        "text": "Please complete the child record card!",
+        "toaster_type": "problem",
+        "relevance": {
+          "step1:child_record": {
+            "type": "string",
+            "ex": "equalTo(., \"0\")"
+          }
+        }
+      },
+      {
         "key": "referred",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",

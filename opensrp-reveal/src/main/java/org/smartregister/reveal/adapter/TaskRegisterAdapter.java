@@ -13,6 +13,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.CardDetailsUtil;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.viewholder.TaskRegisterViewHolder;
 
@@ -92,6 +93,9 @@ public class TaskRegisterAdapter extends RecyclerView.Adapter<TaskRegisterViewHo
         if (Task.TaskStatus.COMPLETED.name().equals(task.getTaskStatus())) {
             if (task.getBusinessStatus() != null) {
                 action = CardDetailsUtil.getTranslatedBusinessStatus(task.getBusinessStatus()).replaceAll(" ", "\n");
+            }
+            if ((task.isFamilyRegistered() || task.isFamilyRegTaskExists()) && task.getMdaTasksCount() == 0) {
+                cardDetails.setStatus(Constants.BusinessStatus.FAMILY_NO_TASK_REGISTERED);
             }
             CardDetailsUtil.formatCardDetails(cardDetails);
         }

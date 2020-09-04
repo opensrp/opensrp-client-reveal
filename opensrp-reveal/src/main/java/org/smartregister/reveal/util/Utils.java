@@ -190,7 +190,7 @@ public class Utils {
         else if (interventionType.equals(IRS))
             return R.string.irs;
         else if (interventionType.equals(MDA))
-            return R.string.smc;
+            return R.string.mda;
         else
             return R.string.irs;
     }
@@ -323,7 +323,7 @@ public class Utils {
     }
 
     public static boolean isMDA() {
-        return getInterventionLabel() == R.string.smc;
+        return getInterventionLabel() == R.string.mda;
     }
 
     public static boolean isFocusInvestigationOrMDA() {

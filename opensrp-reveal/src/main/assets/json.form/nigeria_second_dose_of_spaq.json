@@ -153,13 +153,11 @@
         "type": "spinner",
         "hint": "What is the reason(s) for referral?",
         "values": [
-          "Severe sickness/fever",
-          "Severe allergy or adverse reaction",
+         "Child vomited twice",
           "Other Reason - specify"
         ],
         "keys": [
-          "Severe sickness/fever",
-          "Severe allergy or adverse reaction",
+          "Child vomited twice",
           "Other Reason - specify"
         ],
         "relevance": {
@@ -194,7 +192,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "hidden",
-        "value": "Tasks Incomplete"
+        "value": "SPAQ Complete"
       }
     ]
   }

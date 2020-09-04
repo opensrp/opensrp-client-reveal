@@ -1,6 +1,7 @@
 package org.smartregister.reveal.contract;
 
 import android.content.Context;
+import android.util.Pair;
 
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Task;
@@ -35,6 +36,9 @@ public interface StructureTasksContract {
         void resetTaskInfo(StructureTaskDetails taskDetails);
 
         void onTaskInfoReset(String structureId);
+
+//        void onFetchedMembersCount(int finalNumberOfMembers);
+        void onFetchedMembersCount(Pair<Integer, Integer> finalNumberOfMembers);
     }
 
     interface Interactor extends BaseContract.BaseInteractor {
@@ -46,6 +50,11 @@ public interface StructureTasksContract {
         void findLastEvent(StructureTaskDetails taskDetails);
 
         void resetTaskInfo(Context context, StructureTaskDetails taskDetails);
+
+        void findCompletedDispenseTasks(StructureTaskDetails taskDetails);
+
+        void findCompletedAdherenceTasks(StructureTaskDetails taskDetails);
+
     }
 
     interface View extends UserLocationContract.UserLocationView, BaseFormFragmentContract.View {
