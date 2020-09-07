@@ -527,7 +527,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         if (BuildConfig.BUILD_COUNTRY.equals(Country.NAMIBIA)) {
             builder.taskCodeLayoutEnabled(false)
                     .interventionTypeLayoutEnabled(false)
-                    .businessStatusList(Arrays.asList(NOT_VISITED, NOT_SPRAYED, PARTIALLY_SPRAYED, SPRAYED));
+                    .businessStatusList(Arrays.asList(NOT_VISITED, NOT_SPRAYED, PARTIALLY_SPRAYED, SPRAYED))
+                    .sortOptions(R.array.task_sort_options_namibia);
         }
         intent.putExtra(FILTER_CONFIGURATION, builder.build());
         startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);

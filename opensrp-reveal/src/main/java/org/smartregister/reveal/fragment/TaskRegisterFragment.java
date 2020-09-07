@@ -413,7 +413,8 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
         if (BuildConfig.BUILD_COUNTRY.equals(Country.NAMIBIA)) {
             builder.taskCodeLayoutEnabled(false)
                     .interventionTypeLayoutEnabled(false)
-                    .businessStatusList(Arrays.asList(NOT_VISITED, NOT_SPRAYED, PARTIALLY_SPRAYED, SPRAYED));
+                    .businessStatusList(Arrays.asList(NOT_VISITED, NOT_SPRAYED, PARTIALLY_SPRAYED, SPRAYED))
+                    .sortOptions(R.array.task_sort_options_namibia);
         }
         intent.putExtra(FILTER_CONFIGURATION, builder.build());
         getActivity().startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
