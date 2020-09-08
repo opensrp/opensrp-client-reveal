@@ -104,10 +104,6 @@
         "v_min": {
           "value": "0",
           "err": "Number must be equal or greater than 0"
-        },
-        "v_max": {
-          "value": "[num_adhered_family_members]",
-          "err": "Cannot be more than number of children who were administered additional SPAQ"
         }
       },
       {

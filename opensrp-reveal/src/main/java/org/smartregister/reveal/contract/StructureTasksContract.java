@@ -37,8 +37,8 @@ public interface StructureTasksContract {
 
         void onTaskInfoReset(String structureId);
 
-//        void onFetchedMembersCount(int finalNumberOfMembers);
-        void onFetchedMembersCount(Pair<Integer, Integer> finalNumberOfMembers);
+        void onFetchedMembersCount(int finalNumberOfMembers);
+//        void onFetchedMembersCount(Pair<Integer, Integer> finalNumberOfMembers);
     }
 
     interface Interactor extends BaseContract.BaseInteractor {
@@ -53,7 +53,7 @@ public interface StructureTasksContract {
 
         void findCompletedDispenseTasks(StructureTaskDetails taskDetails);
 
-        void findCompletedAdherenceTasks(StructureTaskDetails taskDetails);
+//        void findCompletedAdherenceTasks(StructureTaskDetails taskDetails);
 
     }
 

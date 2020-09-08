@@ -122,7 +122,6 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
             interactor.findLastEvent(taskDetails);
         } else if (MDA_DRUG_RECON.equals(taskDetails.getTaskCode())) {
             interactor.findCompletedDispenseTasks(taskDetails);
-            interactor.findCompletedAdherenceTasks(taskDetails);
         } else {
             super.onLocationValidated();
         }
@@ -158,10 +157,10 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
     @Override
     public void onEventFound(Event event) {
-        onEventFound(event);
+        onEventFound(event, 0);
     }
 
-    public void onEventFound(Event event, Pair<Integer, Integer> numberOfMembers) {
+    public void onEventFound(Event event, int numberOfMembers) {
 
         String formName = getView().getJsonFormUtils().getFormName(null, getTaskDetails().getTaskCode());
         if (StringUtils.isBlank(formName)) {
@@ -174,8 +173,7 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
                 formInteractor.findNumberOfMembers(getTaskDetails().getTaskEntity(), formJSON);
             } else if (MDA_DRUG_RECON.equals(getTaskDetails().getTaskCode())) {
                 try {
-                    String jsonStr = formJSON.toString().replace(Constants.JsonForm.NUMBER_OF_FAMILY_MEMBERS, numberOfMembers.first + "");
-                    jsonStr = jsonStr.replace(Constants.JsonForm.NUMBER_OF_ADHERED_FAMILY_MEMBERS, numberOfMembers.second + "");
+                    String jsonStr = formJSON.toString().replace(Constants.JsonForm.NUMBER_OF_FAMILY_MEMBERS, numberOfMembers + "");
                     getView().startForm(new JSONObject(jsonStr));
                 } catch (JSONException e) {
                     Timber.e(e, "Error updating Number of members");
@@ -189,7 +187,7 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     }
 
     @Override
-    public void onFetchedMembersCount(Pair<Integer, Integer> finalNumberOfMembers) {
+    public void onFetchedMembersCount(int finalNumberOfMembers) {
         onEventFound(null, finalNumberOfMembers);
     }
 

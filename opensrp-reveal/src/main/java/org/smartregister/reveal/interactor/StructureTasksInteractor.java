@@ -200,31 +200,10 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
             }
             int finalNumberOfMembers = numberOfMembers;
             appExecutors.mainThread().execute(() -> {
-                presenter.onFetchedMembersCount(new Pair<>(finalNumberOfMembers, finalNumberOfMembers));
+                presenter.onFetchedMembersCount(finalNumberOfMembers);
             });
         });
-    }
 
-    @Override
-    public void findCompletedAdherenceTasks(StructureTaskDetails taskDetails) {
-        appExecutors.diskIO().execute(() -> {
-            int numberOfMembers = 0;
-            try (Cursor cursor = database.rawQuery(
-                    String.format("SELECT count(*) FROM %s WHERE %s = ? AND %s =? AND %s=?",
-                            TASK_TABLE, STRUCTURE_ID, PLAN_ID, BUSINESS_STATUS),
-                    new String[]{taskDetails.getStructureId(), PreferencesUtil.getInstance().getCurrentPlanId(), SPAQ_COMPLETE})) {
-
-                while (cursor.moveToNext()) {
-                    numberOfMembers = cursor.getInt(0);
-                }
-            } catch (Exception e) {
-                Timber.e(e, "Error find Number of members ");
-            }
-            int finalNumberOfMembers = numberOfMembers;
-            appExecutors.mainThread().execute(() -> {
-                presenter.onFetchedMembersCount(new Pair<>(finalNumberOfMembers, finalNumberOfMembers));
-            });
-        });
     }
 
     private void populateEventsPerTask(List<StructureTaskDetails> tasks) {
