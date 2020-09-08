@@ -347,6 +347,11 @@
         <item>SOP</item>
     </string-array>
 
+    <string-array name="task_sort_options_namibia">
+        <item>Distance (nearest first)</item>
+        <item>Status</item>
+    </string-array>
+
     <string name="select_task_action">Select action to perform</string>
     <string name="choose_action">Choose action</string>
     <string name="view_details">View Details</string>
