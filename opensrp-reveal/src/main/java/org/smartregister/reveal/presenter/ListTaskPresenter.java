@@ -727,13 +727,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                         if (which == BUTTON_NEGATIVE || which == BUTTON_NEUTRAL) {
                             markStructureIneligibleConfirmed = true;
                             reasonUnEligible = which == BUTTON_NEGATIVE ? listTaskView.getContext().getString(R.string.not_eligible_unoccupied) : listTaskView.getContext().getString(R.string.not_eligible_other);
+                            onLocationValidated();
                         }
                         if (which == BUTTON_POSITIVE) {
                             markStructureIneligibleSelected = true;
                             if (validateFarStructures()) {
                                 validateUserLocation();
                             } else {
-                                listTaskView.registerFamily();
+                                onLocationValidated();
                             }
 
                         }
