@@ -2,7 +2,6 @@ package org.smartregister.reveal.util;
 
 import androidx.annotation.NonNull;
 
-import org.apache.commons.lang3.StringUtils;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.reveal.BuildConfig;
@@ -19,14 +18,13 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.BLOOD_SCREE
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_NO_TASK_REGISTERED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_REGISTERED;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_DISPENSED;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.SMC_COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INELIGIBLE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_DISPENSED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.SPAQ_COMPLETE;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.TASKS_INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_SPRAYED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.SMC_COMPLETE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.SPAQ_COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
@@ -121,7 +119,7 @@ public class GeoJsonUtils {
                 case REGISTER_FAMILY:
                     state.familyRegTaskExists = true;
                     state.familyRegistered = COMPLETE.equals(task.getBusinessStatus());
-                    state.ineligibleForFamReg = NOT_ELIGIBLE.equals((task.getBusinessStatus()));
+                    state.ineligibleForFamReg = NOT_ELIGIBLE.equals(task.getBusinessStatus());
                     break;
                 case BEDNET_DISTRIBUTION:
                     state.bednetDistributed = COMPLETE.equals(task.getBusinessStatus()) || NOT_ELIGIBLE.equals(task.getBusinessStatus());
@@ -174,7 +172,6 @@ public class GeoJsonUtils {
             boolean familyRegTaskMissingOrFamilyRegComplete = state.familyRegistered || !state.familyRegTaskExists;
 
             if (Utils.isFocusInvestigation()) {
-
                 if (familyRegTaskMissingOrFamilyRegComplete &&
                         state.bednetDistributed && state.bloodScreeningDone) {
                     taskProperties.put(TASK_BUSINESS_STATUS, COMPLETE);
@@ -215,6 +212,8 @@ public class GeoJsonUtils {
                     } else {
                         taskProperties.put(TASK_BUSINESS_STATUS, FAMILY_REGISTERED);
                     }
+                } else if (state.ineligibleForFamReg) {
+                    taskProperties.put(TASK_BUSINESS_STATUS, NOT_ELIGIBLE);
                 } else {
                     taskProperties.put(TASK_BUSINESS_STATUS, NOT_VISITED);
                 }
