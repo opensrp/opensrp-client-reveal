@@ -9,7 +9,7 @@ actions:
 name: step1_dob
 description: dob relevance
 priority: 1
-condition: "!step1_dob_unknown.contains('dob_unknown') && !step1_age_unknown.contains('age_unknown')"
+condition: "!step1_dob_unknown.contains('dob_unknown')"
 actions:
   - "isRelevant = true"
 #---
