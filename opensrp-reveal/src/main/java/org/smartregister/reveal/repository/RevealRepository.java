@@ -12,6 +12,7 @@ import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.ClientFormRepository;
+import org.smartregister.repository.ClientRelationshipRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.ManifestRepository;
@@ -119,6 +120,9 @@ public class RevealRepository extends Repository {
                     break;
                 case 8:
                     upgradeToVersion8(db);
+                    break;
+                case 9:
+                    upgradeToVersion9(db);
                     break;
                 default:
                     break;
@@ -238,6 +242,11 @@ public class RevealRepository extends Repository {
         EventClientRepository.createTable(db,
                 EventClientRepository.Table.foreignClient,
                 EventClientRepository.client_column.values());
+    }
+
+    private void upgradeToVersion9(SQLiteDatabase db) {
+        ClientRelationshipRepository.createTable(db);
+        EventClientRepository.createAdditionalColumns(db);
     }
 
     @Override
