@@ -69,20 +69,6 @@
         "openmrs_entity_id": ""
       },
       {
-        "key": "calculateTotal",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "hidden",
-        "calculation": {
-          "rules-engine": {
-            "ex-rules": {
-              "rules-file": "nigeria-drug-recon-calculation-rules.yml"
-            }
-          }
-        }
-      },
-      {
         "key": "childrenTreated",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -173,10 +159,6 @@
         "v_min": {
           "value": "0",
           "err": "Number must be equal or greater than 0"
-        },
-        "v_relative_max": {
-          "value": "calculateTotal",
-          "err": "Cannot be more than Total SPAQ blisters used"
         }
       },
       {
