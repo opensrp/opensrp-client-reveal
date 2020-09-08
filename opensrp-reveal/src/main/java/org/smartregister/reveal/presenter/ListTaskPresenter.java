@@ -44,7 +44,6 @@ import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -156,6 +155,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private RevealMappingHelper mappingHelper;
 
     private boolean markStructureIneligibleConfirmed;
+
+    private boolean markStructureIneligibleSelected;
 
     private String reasonUnEligible;
 
@@ -284,6 +285,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private void onFeatureSelected(Feature feature, boolean isLongclick) {
         this.selectedFeature = feature;
         this.changeInterventionStatus = false;
+        markStructureIneligibleSelected = false;
         cardDetails = null;
 
         listTaskView.closeAllCardViews();
@@ -339,7 +341,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         String status = getPropertyValue(feature, LOCATION_STATUS);
 
         selectedFeatureInterventionType = code;
-        if (INACTIVE.name().equals(status)){
+        if (INACTIVE.name().equals(status)) {
             listTaskView.displayToast(R.string.structure_is_inactive);
         } else if (NOT_VISITED.equals(businessStatus) || !feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayMarkStructureInactiveDialog();
@@ -600,6 +602,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         if (markStructureIneligibleConfirmed) {
             onMarkStructureIneligibleConfirmed();
             markStructureIneligibleConfirmed = false;
+        } else if (markStructureIneligibleSelected) {
+            listTaskView.registerFamily();
         } else if (REGISTER_FAMILY.equals(selectedFeatureInterventionType)) {
             displayMarkStructureIneligibleDialog();
             RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
@@ -716,7 +720,6 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     public void displayMarkStructureIneligibleDialog() {
-
         AlertDialogUtils.displayNotificationWithCallback(listTaskView.getContext(), R.string.mark_location_ineligible,
                 R.string.is_structure_eligible_for_fam_reg, R.string.eligible, R.string.not_eligible_unoccupied, R.string.not_eligible_other, new DialogInterface.OnClickListener() {
                     @Override
@@ -726,18 +729,15 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                             reasonUnEligible = which == BUTTON_NEGATIVE ? listTaskView.getContext().getString(R.string.not_eligible_unoccupied) : listTaskView.getContext().getString(R.string.not_eligible_other);
                         }
                         if (which == BUTTON_POSITIVE) {
-                            listTaskView.registerFamily();
-                            RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
-                            dialog.dismiss();
-                        }
-                        if (validateFarStructures()) {
-                            validateUserLocation();
-                        } else {
-                            onLocationValidated();
-                            RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
+                            markStructureIneligibleSelected = true;
+                            if (validateFarStructures()) {
+                                validateUserLocation();
+                            } else {
+                                listTaskView.registerFamily();
+                            }
+
                         }
                         dialog.dismiss();
-                        RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
                     }
                 });
         RevealApplication.getInstance().setRefreshMapOnEventSaved(true);
