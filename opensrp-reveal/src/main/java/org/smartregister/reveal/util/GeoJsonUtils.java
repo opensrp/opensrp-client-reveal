@@ -135,9 +135,11 @@ public class GeoJsonUtils {
                     break;
                 case MDA_DRUG_RECON:
                     state.mdaAdhered = COMPLETE.equals((task.getBusinessStatus()));
+                    populateMDAStatus(task, mdaStatusMap);
                     break;
                 case MDA_ADHERENCE:
                     state.mdaAdhered = COMPLETE.equals(task.getBusinessStatus()) || SPAQ_COMPLETE.equals(task.getBusinessStatus());
+                    populateMDAStatus(task, mdaStatusMap);
                     break;
                 case MDA_DISPENSE:
                     populateMDAStatus(task, mdaStatusMap);
