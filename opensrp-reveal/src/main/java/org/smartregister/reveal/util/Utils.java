@@ -425,12 +425,12 @@ public class Utils {
         JSONArray updatedCoords = null;
         try {
             if (originalGeometry instanceof  MultiPolygon) {
-                MultiPolygon editedGeometryMultiPolygon = MultiPolygon.fromPolygons(Collections.singletonList((Polygon) updatedGeometry));
+                MultiPolygon editedGeometryMultiPolygon = MultiPolygon.fromPolygon((Polygon) updatedGeometry);;
                 editedGeometryJson = new JSONObject(editedGeometryMultiPolygon.toJson());
             } else {
                 editedGeometryJson = new JSONObject(updatedGeometry.toJson());
             }
-            updatedCoords = (JSONArray) editedGeometryJson.get("coordinates");
+            updatedCoords = editedGeometryJson.getJSONArray("coordinates");;
         } catch (JSONException e) {
             Timber.e(e);
         }
