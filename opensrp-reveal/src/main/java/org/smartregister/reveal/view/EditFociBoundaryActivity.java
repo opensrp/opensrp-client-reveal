@@ -325,14 +325,14 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
     }
 
     protected void saveBoundary() {
-        Geometry geometry = boundaryLayer.getFeatureCollection().features().get(0).geometry();
-        if ( geometry instanceof  MultiPolygon) {
+        Geometry updatedGeometry = boundaryLayer.getFeatureCollection().features().get(0).geometry();
+        if ( updatedGeometry instanceof  MultiPolygon) {
             // boundary has not been edited
             exitEditBoundaryActivity();
             return;
         }
 
-        JSONArray updatedCoords = getCoordsFromGeometry(geometry);
+        JSONArray updatedCoords = getCoordsFromGeometry(updatedGeometry, revealApplication.getOperationalArea().geometry());
 
         Location operationalAreaLocation = LocationServiceHelper.locationGson.fromJson(revealApplication.getOperationalArea().toJson(), Location.class);
         JsonArray updatedCoordsJsonArray = LocationServiceHelper.locationGson.fromJson(updatedCoords.toString(), JsonArray.class);
