@@ -234,6 +234,8 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                 interventionType = Intervention.MDA_ADHERENCE;
             } else if (encounterType.equals(EventType.IRS_VERIFICATION)) {
                 interventionType = Intervention.IRS_VERIFICATION;
+            } else if (encounterType.equals(EventType.DAILY_SUMMARY_EVENT)) {
+                jsonForm.put(ENTITY_ID, UUID.randomUUID().toString());
             }
         } catch (JSONException e) {
             Timber.e(e);

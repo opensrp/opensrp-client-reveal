@@ -130,6 +130,7 @@ public interface Constants {
         String CANTON = "Canton";
         String VILLAGE = "Village";
         String OPERATIONAL_AREA = "Operational Area";
+        String ZONE = "Zones";
     }
 
     interface Properties {
@@ -165,6 +166,8 @@ public interface Constants {
     interface Intervention {
         String IRS = "IRS";
 
+        String DYNAMIC_IRS = "Dynamic-IRS";
+
         String MOSQUITO_COLLECTION = "Mosquito Collection";
 
         String LARVAL_DIPPING = "Larval Dipping";
@@ -181,6 +184,8 @@ public interface Constants {
 
         String FI = "FI";
 
+        String DYNAMIC_FI = "Dynamic-FI";
+
         String PAOT = "PAOT";
 
         String MDA_DISPENSE = "MDA Dispense";
@@ -188,6 +193,8 @@ public interface Constants {
         String MDA_ADHERENCE = "MDA Adherence";
 
         String MDA = "MDA";
+
+        String DYNAMIC_MDA = "Dynamic-MDA";
 
         String IRS_VERIFICATION = "IRS Verification";
 
@@ -223,6 +230,24 @@ public interface Constants {
         String IRS_VERIFICATION = "irs_verification";
 
         String ACTIVATE_LOCATION_EVENT = "activate_location";
+
+        String DAILY_SUMMARY_EVENT = "daily_summary";
+
+        String IRS_FIELD_OFFICER_EVENT = "irs_field_officer";
+
+        String IRS_SA_DECISION_EVENT = "irs_sa_decision";
+
+        String MOBILIZATION_EVENT = "mobilization";
+
+        String TEAM_LEADER_DOS_EVENT = "team_leader_dos";
+
+        String VERIFICATION_EVENT = "verification";
+
+        String CB_SPRAY_AREA_EVENT = "cb_spray_area";
+
+        List<String> SUMMARY_EVENT_TYPES = Arrays.asList(DAILY_SUMMARY_EVENT, IRS_FIELD_OFFICER_EVENT,
+                IRS_SA_DECISION_EVENT, MOBILIZATION_EVENT, TEAM_LEADER_DOS_EVENT, VERIFICATION_EVENT);
+
     }
 
     interface Tables {
@@ -336,7 +361,11 @@ public interface Constants {
 
         String THAILAND_LARVAL_DIPPING_FORM = "json.form/thailand_larval_dipping_form.json";
 
+        String THAILAND_EN_LARVAL_DIPPING_FORM = "json.form/thailand_en_larval_dipping_form.json";
+
         String THAILAND_MOSQUITO_COLLECTION_FORM = "json.form/thailand_mosquito_collection_form.json";
+
+        String THAILAND_EN_MOSQUITO_COLLECTION_FORM = "json.form/thailand_en_mosquito_collection_form.json";
 
         String THAILAND_SPRAY_FORM = "json.form/thailand_spray_form.json";
 
@@ -344,7 +373,11 @@ public interface Constants {
 
         String THAILAND_BEDNET_DISTRIBUTION_FORM = "json.form/thailand_bednet_distribution.json";
 
+        String THAILAND_EN_BEDNET_DISTRIBUTION_FORM = "json.form/thailand_en_bednet_distribution.json";
+
         String THAILAND_BLOOD_SCREENING_FORM = "json.form/thailand_blood_screening.json";
+
+        String THAILAND_EN_BLOOD_SCREENING_FORM = "json.form/thailand_en_blood_screening.json";
 
         String THAILAND_CASE_CONFIRMATION_FORM = "json.form/thailand_case_confirmation.json";
 
@@ -455,7 +488,10 @@ public interface Constants {
 
         String CATCHMENT_AREA = "catchment_area";
 
+        String HEALTH_FACILITY = "health_facility";
 
+
+        String ZONE = "zone";
     }
 
     interface DateFormat {
@@ -498,6 +534,12 @@ public interface Constants {
 
         String LAST_USER_LOCATION = "last_location";
 
+    }
+
+    interface EventsRegister {
+        String VIEW_IDENTIFIER = "event_register";
+
+        String TABLE_NAME = "ec_events";
     }
 
     interface DatabaseKeys {
@@ -616,6 +658,17 @@ public interface Constants {
 
         String LOCATION_SYNC_STATUS = "sync_status";
 
+        String SOP = "sop";
+
+        String ENTITY = "entity";
+
+        String EVENT_TYPE = "event_type";
+
+        String SPRAYED = "sprayed";
+
+        String FOUND = "found";
+
+        String PROVIDER_ID = "provider_id";
     }
 
     interface UseContextCode {
@@ -669,6 +722,8 @@ public interface Constants {
         String CODE = "task_code";
         String STATUS = "task_status";
         String INTERVENTION_UNIT = "intervention_unit";
+        String FORM_NAME = "form_name";
         String FILTER_SORT_PARAMS = "filter_sort_params";
+        String FILTER_CONFIGURATION = "filter_configuration";
     }
 }

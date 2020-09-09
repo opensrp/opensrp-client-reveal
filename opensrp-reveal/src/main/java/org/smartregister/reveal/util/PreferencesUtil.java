@@ -1,6 +1,7 @@
 package org.smartregister.reveal.util;
 
 import org.apache.commons.lang3.StringUtils;
+import org.smartregister.account.AccountHelper;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.application.RevealApplication;
 
@@ -108,6 +109,10 @@ public class PreferencesUtil {
 
     public String getInterventionTypeForPlan(String planId) {
         return allSharedPreferences.getPreference(planId);
+    }
+
+    public boolean isKeycloakConfigured() {
+        return allSharedPreferences.getPreferences().getBoolean(AccountHelper.CONFIGURATION_CONSTANTS.IS_KEYCLOAK_CONFIGURED, false);
     }
 
 }

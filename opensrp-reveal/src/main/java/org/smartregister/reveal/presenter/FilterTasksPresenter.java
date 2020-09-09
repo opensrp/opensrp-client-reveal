@@ -1,22 +1,27 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Intent;
-import androidx.annotation.StringRes;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.ToggleButton;
+
+import androidx.annotation.StringRes;
 
 import org.apache.commons.lang3.StringUtils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FilterTasksContract;
+import org.smartregister.reveal.model.FilterConfiguration;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
+import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -28,15 +33,19 @@ import java.util.Set;
  */
 public class FilterTasksPresenter implements FilterTasksContract.Presenter {
 
-
     private FilterTasksContract.View view;
 
     private Map<String, Integer> labelsMap;
 
     private Map<String, Set<String>> checkedFilters = new HashMap<>();
 
-    public FilterTasksPresenter(FilterTasksContract.View view) {
+    private FilterConfiguration filterConfiguration;
+
+    private Calendar fromDateFilter;
+
+    public FilterTasksPresenter(FilterTasksContract.View view, FilterConfiguration filterConfiguration) {
         this.view = view;
+        this.filterConfiguration = filterConfiguration;
         populateLabels();
     }
 
@@ -73,6 +82,21 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
         labelsMap.put(BusinessStatus.INCOMPLETE, R.string.incomplete);
         labelsMap.put(BusinessStatus.NOT_ELIGIBLE, R.string.not_eligible);
         labelsMap.put(BusinessStatus.IN_PROGRESS, R.string.in_progress);
+
+        //Forms
+        labelsMap.put(Constants.SPRAY_EVENT, R.string.hh_form);
+        labelsMap.put(EventType.VERIFICATION_EVENT, R.string.verification_form_name);
+        labelsMap.put(EventType.DAILY_SUMMARY_EVENT, R.string.daily_summary_name);
+        labelsMap.put(EventType.TEAM_LEADER_DOS_EVENT, R.string.team_leader_dos_form);
+        labelsMap.put(EventType.MOBILIZATION_EVENT, R.string.mobilization_form_name);
+        labelsMap.put(EventType.IRS_SA_DECISION_EVENT, R.string.irs_field_officer_form);
+        labelsMap.put(EventType.IRS_FIELD_OFFICER_EVENT, R.string.irs_field_officer_form);
+        labelsMap.put(EventType.CB_SPRAY_AREA_EVENT, R.string.cb_spray_area_form);
+
+        // Following are for grouped structure tasks.
+        labelsMap.put(BusinessStatus.FAMILY_REGISTERED, R.string.family_registered);
+        labelsMap.put(BusinessStatus.BEDNET_DISTRIBUTED, R.string.bednet_distributed);
+        labelsMap.put(BusinessStatus.BLOOD_SCREENING_COMPLETE, R.string.blood_screening_complete);
     }
 
 
@@ -114,13 +138,17 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
 
     @Override
     public List<String> getBusinessStatusOptions() {
-        return Utils.isFocusInvestigation() ? BusinessStatus.FI_BUSINESS_STATUS : Utils.isMDA() ? BusinessStatus.MDA_BUSINESS_STATUS : BusinessStatus.IRS_BUSINESS_STATUS;
+        return filterConfiguration.getBusinessStatusList() != null ? filterConfiguration.getBusinessStatusList() :
+                Utils.isFocusInvestigation() ? BusinessStatus.FI_BUSINESS_STATUS : Utils.isMDA() ? BusinessStatus.MDA_BUSINESS_STATUS : BusinessStatus.IRS_BUSINESS_STATUS;
     }
 
     @Override
     public void onApplyFilters(String selectedItem) {
         Intent intent = new Intent();
-        intent.putExtra(Filter.FILTER_SORT_PARAMS, new TaskFilterParams(selectedItem, checkedFilters));
+        intent.putExtra(Filter.FILTER_SORT_PARAMS, TaskFilterParams.builder().sortBy(selectedItem)
+                .checkedFilters(checkedFilters).fromDate(view.getFromDateFilter())
+                .viewAllEvents(view.viewAllEvents()).fromDate(fromDateFilter == null ? null : fromDateFilter.getTime()).build());
+
         view.applyFilters(intent);
     }
 
@@ -131,10 +159,16 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
             restoreSelections(checkedFilters.get(Constants.Filter.STATUS), view.getBusinessStatusLayout());
             restoreSelections(checkedFilters.get(Constants.Filter.CODE), view.getTaskCodeLayout());
             restoreSelections(checkedFilters.get(Filter.INTERVENTION_UNIT), view.getInterventionTypeLayout());
+            restoreSelections(checkedFilters.get(Filter.FORM_NAME), view.getFormNameLayout());
             if (StringUtils.isNotBlank(taskFilterParams.getSortBy())) {
-                int index = Arrays.asList(view.getBusinessStatusLayout().getResources().getStringArray(R.array.task_sort_options)).indexOf(taskFilterParams.getSortBy());
+                int index = Arrays.asList(view.getBusinessStatusLayout().getResources().getStringArray(
+                        filterConfiguration.getSortOptions() == null ? R.array.task_sort_options : filterConfiguration.getSortOptions()))
+                        .indexOf(taskFilterParams.getSortBy());
                 view.setSortBySelection(index == -1 ? 0 : index);
             }
+            if (taskFilterParams.getFromDate() != null)
+                view.setFilterFromDate(taskFilterParams.getFromDate());
+            view.setViewAllEvents(taskFilterParams.isViewAllEvents());
 
         }
     }
@@ -144,7 +178,15 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
             return;
         for (String filter : filters) {
             ToggleButton toggleButton = viewGroup.findViewWithTag(filter);
-            toggleButton.setChecked(true);
+            if (toggleButton != null)
+                toggleButton.setChecked(true);
         }
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+        fromDateFilter = Calendar.getInstance();
+        fromDateFilter.set(year, month, dayOfMonth);
+        view.setFilterFromDate(fromDateFilter.getTime());
     }
 }

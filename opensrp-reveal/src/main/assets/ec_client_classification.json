@@ -10,7 +10,8 @@
             "field_value": "Spray",
             "creates_case": [
               "sprayed_structures",
-              "event_task"
+              "event_task",
+              "ec_events"
             ]
           },
           {
@@ -113,6 +114,48 @@
             ],
             "creates_case": [
               "ec_family"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "daily_summary",
+            "creates_case": [
+              "ec_events"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "team_leader_dos",
+            "creates_case": [
+              "ec_events"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "irs_sa_decision",
+            "creates_case": [
+              "ec_events"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "mobilization",
+            "creates_case": [
+              "ec_events"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "irs_field_officer",
+            "creates_case": [
+              "ec_events"
+            ]
+          },
+          {
+            "field": "eventType",
+            "field_value": "verification",
+            "creates_case": [
+              "ec_events"
             ]
           }
         ]

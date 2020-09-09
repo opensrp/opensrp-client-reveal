@@ -1,8 +1,9 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
-import androidx.core.util.Pair;
+
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.util.Pair;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -122,7 +123,7 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
                 } else if (IRS.equals(taskDetails.getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
                     interactor.findSprayDetails(IRS, structure.getId(), formJSON);
                 } else if (MDA_DISPENSE.equals(taskDetails.getTaskCode()) || MDA_ADHERENCE.equals(taskDetails.getTaskCode())) {
-                    jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJSON, Constants.CONFIGURATION.MDA_CATCHMENT_AREAS, JsonForm.CATCHMENT_AREA, prefsUtil.getCurrentDistrict());
+                    jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), Constants.CONFIGURATION.MDA_CATCHMENT_AREAS, jsonFormUtils.getFields(formJSON).get(JsonForm.CATCHMENT_AREA), prefsUtil.getCurrentDistrict());
                     getView().startForm(formJSON);
                 } else {
                     getView().startForm(formJSON);
@@ -134,54 +135,7 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
 
     public void showBasicForm(String formName) {
         JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(context, formName, null, null);
-        switch (formName) {
-
-            case JsonForm.IRS_SA_DECISION_ZAMBIA:
-            case JsonForm.CB_SPRAY_AREA_ZAMBIA:
-            case JsonForm.MOBILIZATION_FORM_ZAMBIA:
-                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        formJSON, Constants.CONFIGURATION.SUPERVISORS, JsonForm.SUPERVISOR,
-                        PreferencesUtil.getInstance().getCurrentDistrict());
-                break;
-
-            case JsonForm.IRS_FIELD_OFFICER_ZAMBIA:
-                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        formJSON, Constants.CONFIGURATION.FIELD_OFFICERS, JsonForm.FIELD_OFFICER,
-                        PreferencesUtil.getInstance().getCurrentDistrict());
-                break;
-
-            case JsonForm.DAILY_SUMMARY_ZAMBIA:
-                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        formJSON, Constants.CONFIGURATION.TEAM_LEADERS, JsonForm.TEAM_LEADER,
-                        PreferencesUtil.getInstance().getCurrentDistrict());
-
-            case JsonForm.TEAM_LEADER_DOS_ZAMBIA:
-                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        formJSON, Constants.CONFIGURATION.SUPERVISORS, JsonForm.SUPERVISOR,
-                        PreferencesUtil.getInstance().getCurrentDistrict());
-
-                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        formJSON, Constants.CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR,
-                        PreferencesUtil.getInstance().getCurrentDistrict());
-                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        formJSON, Constants.CONFIGURATION.DISTRICT_MANAGERS, JsonForm.DISTRICT_MANAGER,
-                        PreferencesUtil.getInstance().getCurrentDistrict());
-
-                break;
-
-            case JsonForm.VERIFICATION_FORM_ZAMBIA:
-                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        formJSON, Constants.CONFIGURATION.FIELD_OFFICERS, JsonForm.FIELD_OFFICER,
-                        PreferencesUtil.getInstance().getCurrentDistrict());
-
-                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        formJSON, Constants.CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR,
-                        PreferencesUtil.getInstance().getCurrentDistrict());
-
-                break;
-            default:
-                break;
-        }
+        jsonFormUtils.populateFormWithServerOptions(formName, formJSON);
         getView().startForm(formJSON);
     }
 

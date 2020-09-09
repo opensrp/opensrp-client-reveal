@@ -11,6 +11,13 @@
           }
         },
         {
+          "column_name": "plan_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "details.planIdentifier"
+          }
+        },
+        {
           "column_name": "spray_status",
           "type": "Event",
           "json_mapping": {

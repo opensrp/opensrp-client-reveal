@@ -194,7 +194,7 @@
     <string name="register_outside_boundary_title">Register structure outside area boundary?</string>
     <string name="register_outside_boundary_warning">Warning: this location is beyond the boundaries of the selected operational area. If you continue, the structure may be added to an incorrect area</string>
     <string name="register">Register</string>
-    <string name="cancel">Cancel</string>
+    <string name="cancel">ยกเลิ ก</string>
     <string name="partially_sprayed">Partially Sprayed</string>
 
     <string name="opensrp_url" translatable="false">@string/opensrp_base_url</string>
@@ -220,4 +220,47 @@
     <string name="discard_changes_msg">การดำเนินการนี้จะยกเลิกการแก้ไขที่ไม่ได้บันทึกที่คุณทำไว้ในขอบเขตกลุ่มบ้าน</string>
     <string name="tap_point_msg">แตะจุดดำเพื่อย้ายหรือลบ</string>
     <string name="drag_selected_point_msg">ลากจุดที่เลือกเพื่อเปลี่ยนขอบเขต</string>
+
+    <string name="menu">เมนู</string>
+    <string name="offline_maps">แผนทีแบบออฟไลน</string>
+    <string name="device_data_synced">ซิงค์ข้อมูลในอุปกรณ์แล้ว</string>
+    <string name="device_data_not_synced">ยังไม่ได้ซิงค ์ข้อมูล</string>
+    <string name="available">ทั้งหมด</string>
+    <string name="downloaded">ที่ดาวน์โหลดไว</string>
+    <string name="download">ดาวน์โหลด</string>
+    <string name="delete">ลบ</string>
+    <string name="clear">ลางตวกรอง</string>
+    <string name="sort_by">จดเรียงตาม</string>
+    <string name="status">สถานะ</string>
+    <string name="structure">สงปลูกสราง</string>
+    <string name="person">บุคคล</string>
+    <string name="family">ครวเรือน</string>
+    <string name="task_type">ประเภทกจกรรม</string>
+    <string name="intervention_unit">ระดบการปฏิบติงาน</string>
+    <string name="apply_filters">ตกลง</string>
+    <string name="apply_filters_formatter">ตกลง (%1$d)</string>
+    <string name="bcc_code">BCC</string>
+    <string name="mosquito_collection">จบยุง</string>
+    <string name="larval_dipping">ตกลูกนาา</string>
+    <string name="bednet_distribution">กจกรรมเรืองมุง</string>
+    <string name="blood_screening">กจกรรมเจาะเลือด</string>
+    <string name="case_confirmation">ยืนยนบานผูปวย</string>
+    <string name="paot">ตาาแหนงทีคาดวาเปนแหลงแพรเชอ</string>
+    <string name="family_registered">ลงทะเบียนครัวเรือนแล้ว</string>
+    <string name="bednet_distributed">บันทึกข้อมูลมุ้งแล้ว</string>
+    <string name="blood_screening_complete">บันทึกการเจาะเลือดแล้ว</string>
+
+    <string-array name="task_sort_options">
+        <item>ระยะทาง(ที่ใกล้ที่สุดก่อน)</item>
+        <item>สถานะ</item>
+        <item>ประเภทกิจกรรม</item>
+    </string-array>
+
+    <string name="archive_family">ลบข้อมูลครัว เรือน</string>
+    <string name="confirm_archive_family">ยืนยันการลบข้อมูล ครัวเรือน</string>
+    <string name="confirm_archive_family_message">โปรดยืนยันว่าคุณ ต้องการลบข้อมูลครัว เรือนของบ้านหลังนี หากยืนยันข้อมูลจะถูก ลบและไม่สามารถเรียก คืนได</string>
+    <string name="confirm">ยืนยัน</string>
+    <string name="archive_member">ลบข้อมูลบุคคลนี</string>
+    <string name="confirm_archive_member">โปรดยืนยันว่าคุณต้องการลบข้อมูลบุคคลนี  ข้อมูลของบุคคลและกิจกรรมที่บุคคลนี้ได้ทําาจะถูก ลบ</string>
+
 </resources>

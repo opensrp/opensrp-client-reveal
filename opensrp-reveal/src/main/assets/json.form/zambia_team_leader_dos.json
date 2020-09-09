@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "",
+  "encounter_type": "team_leader_dos",
   "form_version": "0.0.1",
   "entity_id": "",
   "metadata": {
@@ -56,36 +56,11 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Please write the name of the Zone/Location",
-        "text_size": "8sp",
+        "type": "spinner",
+        "hint": "Name of location",
         "v_required": {
           "value": "true",
           "err": "Required field"
-        }
-      },
-      {
-        "key": "district_manager",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "District Manager name",
-        "v_required": {
-          "value": "true",
-          "err": "This field is required."
-        }
-      },
-      {
-        "key": "supervisor",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "spinner",
-        "hint": "Name of Coordinator/Decision Maker/Supervisor",
-        "v_required": {
-          "value": "true",
-          "err": "This field is required."
         }
       },
       {
@@ -112,7 +87,7 @@
           "err": "Please enter the spray operator code"
         }
       },
-     {
+      {
         "key": "correct_mix",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -142,29 +117,6 @@
         "openmrs_entity_id": "",
         "type": "native_radio",
         "label": "Insecticide Mixing: Did the SO mix with the pump on the plastic sheet?",
-        "text_size": "8sp",
-        "options": [
-          {
-            "key": "yes",
-            "text": "Yes"
-          },
-          {
-            "key": "no",
-            "text": "No"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        }
-      },
-      {
-        "key": "rinse",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Insecticide Mixing: Did the SO triple rinse the empty insecticide bottle?",
         "text_size": "8sp",
         "options": [
           {
@@ -274,29 +226,6 @@
         }
       },
       {
-        "key": "pump_cfv",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "native_radio",
-        "label": "Spray Technique: (Hudson Only) Is SO spraying with a pump fitted with a CFV?",
-        "text_size": "8sp",
-        "options": [
-          {
-            "key": "yes",
-            "text": "Yes"
-          },
-          {
-            "key": "no",
-            "text": "No"
-          }
-        ],
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        }
-      },
-      {
         "key": "correct_distance",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -383,12 +312,100 @@
             "text": "No"
           },
           {
-            "key": "no",
-            "text": "No"
-          },
-          {
             "key": "na",
             "text": "N/A"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "physical_inspection",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Have the Team Leaders performed a physical inspection of each Spray Operator?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "yes",
+            "text": "Yes"
+          },
+          {
+            "key": "no",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "health_problems",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Were any health problems observed among the Spray Operators?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "yes",
+            "text": "Yes"
+          },
+          {
+            "key": "no",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "full_ppe",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Are the SOPs in full PPE before boarding the truck?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "yes",
+            "text": "Yes"
+          },
+          {
+            "key": "no",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        }
+      },
+      {
+        "key": "vehicles_inspected",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Was the vehicle used to carry SOPs inspected prior to being engaged?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "yes",
+            "text": "Yes"
+          },
+          {
+            "key": "no",
+            "text": "No"
           }
         ],
         "v_required": {

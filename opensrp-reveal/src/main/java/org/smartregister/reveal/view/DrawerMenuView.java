@@ -38,6 +38,7 @@ import org.smartregister.reveal.presenter.BaseDrawerPresenter;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Tags;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.util.NetworkUtils;
 import org.smartregister.util.Utils;
 
 import java.text.SimpleDateFormat;
@@ -163,6 +164,10 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
 
             summaryFormsTextView.setVisibility(View.VISIBLE);
             summaryFormsTextView.setOnClickListener(this);
+
+            TextView filledForms = headerView.findViewById(R.id.btn_navMenu_filled_forms);
+            filledForms.setVisibility(View.VISIBLE);
+            filledForms.setOnClickListener(this);
 
         }
 
@@ -330,6 +335,8 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
             startOtherFormsActivity();
         else if (v.getId() == R.id.btn_navMenu_offline_maps)
             presenter.onShowOfflineMaps();
+        else if (v.getId() == R.id.btn_navMenu_filled_forms)
+            presenter.onShowFilledForms();
         else if (v.getId() == R.id.sync_button) {
             toggleProgressBarView(true);
             org.smartregister.reveal.util.Utils.startImmediateSync();
@@ -370,7 +377,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         TextView syncBadge = this.activity.getActivity().findViewById(R.id.sync_label);
         if (progressBar == null || syncBadge == null)
             return;
-        if (syncing) {
+        if (syncing && NetworkUtils.isNetworkAvailable()) { //only hide the sync button when there is internet connection
             progressBar.setVisibility(View.VISIBLE);
             progressLabel.setVisibility(View.VISIBLE);
             syncButton.setVisibility(View.INVISIBLE);

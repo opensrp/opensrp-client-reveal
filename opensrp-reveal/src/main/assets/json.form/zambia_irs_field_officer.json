@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "",
+  "encounter_type": "irs_field_officer",
   "form_version": "0.0.1",
   "entity_id": "",
   "metadata": {
@@ -62,13 +62,10 @@
       {
         "key": "health_facility",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "concept",
+        "openmrs_entity": "",
         "openmrs_entity_id": "",
-        "openmrs_data_type": "text",
-        "type": "tree",
+        "type": "spinner",
         "hint": "Which Health Facility Catchment Area was visited today?",
-        "tree": [
-        ],
         "v_required": {
           "value": true,
           "err": "This field is required"
@@ -522,7 +519,7 @@
       {
         "key": "datafals_type",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "concept",
+        "openmrs_entity": "",
         "openmrs_entity_id": "",
         "openmrs_data_type": "select one",
         "type": "check_box",

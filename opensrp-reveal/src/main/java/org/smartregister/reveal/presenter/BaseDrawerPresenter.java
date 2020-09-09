@@ -1,12 +1,13 @@
 package org.smartregister.reveal.presenter;
 
-import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
 import android.app.Activity;
-
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.reflect.TypeToken;
@@ -22,6 +23,7 @@ import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.interactor.BaseDrawerInteractor;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PreferencesUtil;
+import org.smartregister.reveal.view.EventRegisterActivity;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
@@ -42,6 +44,7 @@ import static org.smartregister.reveal.util.Constants.Tags.PROVINCE;
 import static org.smartregister.reveal.util.Constants.Tags.REGION;
 import static org.smartregister.reveal.util.Constants.Tags.SUB_DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.VILLAGE;
+import static org.smartregister.reveal.util.Constants.Tags.ZONE;
 import static org.smartregister.reveal.util.Constants.UseContextCode.INTERVENTION_TYPE;
 
 /**
@@ -93,6 +96,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
 
             if (defaultLocation != null) {
                 view.setDistrict(defaultLocation.get(0));
+                prefsUtil.setCurrentDistrict(defaultLocation.get(0));
                 ArrayList<String> levels = new ArrayList<>();
                 levels.add(CANTON);
                 String level;
@@ -181,13 +185,16 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         operationalAreaLevels.add(OPERATIONAL_AREA);
         operationalAreaLevels.add(HEALTH_CENTER);
         operationalAreaLevels.add(VILLAGE);
+        operationalAreaLevels.add(ZONE);
 
         List<String> defaultLocation = locationHelper.generateDefaultLocationHierarchy(operationalAreaLevels);
 
         if (defaultLocation != null) {
             List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
-            List<String> authorizedOperationalAreas = Arrays.asList(StringUtils.split(prefsUtil.getPreferenceValue(OPERATIONAL_AREAS), ','));
-            removeUnauthorizedOperationalAreas(authorizedOperationalAreas, entireTree);
+            if (!prefsUtil.isKeycloakConfigured()) { // Only required when fetching hierarchy from openmrs
+                List<String> authorizedOperationalAreas = Arrays.asList(StringUtils.split(prefsUtil.getPreferenceValue(OPERATIONAL_AREAS), ','));
+                removeUnauthorizedOperationalAreas(authorizedOperationalAreas, entireTree);
+            }
 
             String entireTreeString = AssetHandler.javaToJsonString(entireTree,
                     new TypeToken<List<FormLocation>>() {
@@ -212,7 +219,11 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         operationalAreaLevels.add(CANTON);
         operationalAreaLevels.add(OPERATIONAL_AREA);
         List<FormLocation> entireTree = locationHelper.generateLocationHierarchyTree(false, operationalAreaLevels);
-        int districtOffset = name.get(0).equalsIgnoreCase(Country.BOTSWANA.name()) || name.get(0).equalsIgnoreCase(Country.NAMIBIA.name()) ? 3 : 2;
+        int districtOffset = name.get(0).equalsIgnoreCase(Country.BOTSWANA.name())
+                || name.get(0).equalsIgnoreCase(Country.NAMIBIA.name()) ? 3 : 2;
+        if (name.get(0).toUpperCase().startsWith(Country.ZAMBIA.name()) && name.size() > 4) {
+            districtOffset = name.size() - 2;
+        }
         try {
             prefsUtil.setCurrentProvince(name.get(1));
             prefsUtil.setCurrentDistrict(name.get(name.size() - districtOffset));
@@ -337,7 +348,12 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             initializeDrawerLayout();
             viewInitialized = true;
         }
-        updateSyncStatusDisplay(revealApplication.getSynced());
+        if (revealApplication.getSynced() && revealApplication.isRefreshMapOnEventSaved()) {
+            view.checkSynced();
+        } else {
+            updateSyncStatusDisplay(revealApplication.getSynced());
+        }
+
     }
 
 
@@ -387,16 +403,22 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         if (syncBadge != null && syncLabel != null) {
             if (synced) {
                 syncBadge.setBackground(ContextCompat.getDrawable(activity, R.drawable.badge_green_oval));
-                syncLabel.setText("Device data synced");
+                syncLabel.setText(getView().getContext().getString(R.string.device_data_synced));
                 syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_complete_green));
                 syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_green));
             } else {
                 syncBadge.setBackground(ContextCompat.getDrawable(activity, R.drawable.badge_oval));
-                syncLabel.setText("Device data not synced");
+                syncLabel.setText(getView().getContext().getString(R.string.device_data_not_synced));
                 syncLabel.setTextColor(ContextCompat.getColor(activity, R.color.alert_urgent_red));
                 syncLabel.setBackground(ContextCompat.getDrawable(activity, R.drawable.rounded_border_alert_red));
             }
         }
+    }
+
+    @Override
+    public void onShowFilledForms() {
+        if (drawerActivity.getActivity() != null)
+            drawerActivity.getActivity().startActivity(new Intent(drawerActivity.getActivity(), EventRegisterActivity.class));
     }
 
 }

@@ -154,7 +154,7 @@ public class TestingUtils {
         filters.put(Constants.Filter.STATUS, new HashSet<>(Collections.singleton(NOT_VISITED)));
         filters.put(Constants.Filter.CODE, new HashSet<>(Collections.singleton(Intervention.IRS)));
         filters.put(Constants.Filter.INTERVENTION_UNIT, new HashSet<>(Collections.singleton(InterventionType.STRUCTURE)));
-        return new TaskFilterParams("Status", filters);
+        return TaskFilterParams.builder().sortBy("Status").checkedFilters(filters).build();
     }
 
     public static org.smartregister.domain.Location getOperationalArea() {

@@ -72,7 +72,7 @@ actions:
 name: step1_sprayed_nets_use
 description: step1_sprayed_nets_use
 priority: 1
-condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && Integer.valueOf(helper.ifNull(step1_sprayed_nets_available,0)) > 0"
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible')"
 actions:
   - "isRelevant = true"
 ---
@@ -236,17 +236,10 @@ condition: "step1_structure_sprayed.equals('no') && step1_eligibility.equals('el
 actions:
   - "isRelevant = true"
 ---
-name: step1_sprayop_code
-description: sprayop_code
-priority: 1
-condition: "step1_datacollector != '' "
-actions:
-  - "isRelevant = true"
----
 name: step1_structure_num
 description: step1_structure_num
 priority: 1
-condition: "step1_eligibility.equals('eligible') && ( step1_provinceName.equals('Copperbelt') || step1_provinceName.equals('Luapula') || step1_provinceName.equals('Eastern') || step1_provinceName.equals('Lusaka')  )"
+condition: "step1_eligibility.equals('eligible')"
 actions:
   - "isRelevant = true"
 ---

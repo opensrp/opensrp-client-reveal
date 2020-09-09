@@ -1,5 +1,6 @@
 package org.smartregister.reveal.contract;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import androidx.annotation.StringRes;
 
@@ -7,6 +8,7 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import org.smartregister.reveal.model.TaskFilterParams;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,10 +28,20 @@ public interface FilterTasksContract {
 
         FlexboxLayout getInterventionTypeLayout();
 
+        FlexboxLayout getFormNameLayout();
+
+        Date getFromDateFilter();
+
+        boolean viewAllEvents();
+
+        void setViewAllEvents(boolean viewAllEvents);
+
+        void setFilterFromDate(Date dateFrom);
+
         void setSortBySelection(int sortBySpinner);
     }
 
-    interface Presenter {
+    interface Presenter extends  DatePickerDialog.OnDateSetListener  {
 
         @StringRes
         Integer getStringResource(String intervention);
