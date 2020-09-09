@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import timber.log.Timber;
+
 import static org.smartregister.reveal.interactor.ListTaskInteractor.gson;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.BEDNET_DISTRIBUTED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.BLOOD_SCREENING_COMPLETE;
@@ -135,9 +137,11 @@ public class GeoJsonUtils {
                     break;
                 case MDA_DRUG_RECON:
                     state.mdaAdhered = COMPLETE.equals((task.getBusinessStatus()));
+                    populateMDAStatus(task, mdaStatusMap);
                     break;
                 case MDA_ADHERENCE:
                     state.mdaAdhered = COMPLETE.equals(task.getBusinessStatus()) || SPAQ_COMPLETE.equals(task.getBusinessStatus());
+                    populateMDAStatus(task, mdaStatusMap);
                     break;
                 case MDA_DISPENSE:
                     populateMDAStatus(task, mdaStatusMap);
