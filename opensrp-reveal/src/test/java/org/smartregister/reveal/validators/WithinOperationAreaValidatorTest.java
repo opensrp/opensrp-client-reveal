@@ -39,11 +39,11 @@ public class WithinOperationAreaValidatorTest extends BaseUnitTest {
     @Mock
     private MapboxMap mapboxMap;
 
-    private WithinOperationAreaValidator validator;
+    private GeoFencingValidator validator;
 
     @Before
     public void setUp() {
-        validator = new WithinOperationAreaValidator("error", revealMapView, operationalArea);
+        validator = new GeoFencingValidator("error", revealMapView, operationalArea);
     }
 
     @Test

@@ -46,16 +46,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.domain.Location;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
-import org.smartregister.reveal.interactor.BaseInteractor;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Map;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.reveal.validators.MinZoomValidator;
-import org.smartregister.reveal.validators.WithinOperationAreaValidator;
+import org.smartregister.reveal.validators.GeoFencingValidator;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
@@ -99,7 +97,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
     private boolean autoSizeGeoWidget = true;
 
-    private Set<com.mapbox.geojson.Feature> otherOperationalAreas = new HashSet<>();
+    private GeoFencingValidator geoFencingValidator;
 
     public GeoWidgetFactory() {
     }
@@ -119,20 +117,31 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         Toast.makeText(formFragmentView.getContext(), validator.getErrorMessage(), Toast.LENGTH_LONG).show();
                         return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
                     }
-                } else if ((validator instanceof WithinOperationAreaValidator)
+                } else if ((validator instanceof GeoFencingValidator)
                         && !validator.isValid("", true)) {
                     // perform within op area validation
+                    GeoFencingValidator geoFencingValidator = (GeoFencingValidator) validator;
+                    int title = R.string.register_outside_boundary_title;
+                    int message = R.string.register_outside_boundary_warning;
+                    int positiveLabel = R.string.register;
+                    int negativeLabel = R.string.cancel;
+                    Object[] formatAgs = new String[]{};
+                    if (geoFencingValidator.getErrorId() == R.string.point_in_another_area) {
+                        message = geoFencingValidator.getErrorId();
+                        formatAgs = geoFencingValidator.getErrorMessageArgs();
+                        positiveLabel = R.string.add_point;
+                        negativeLabel = R.string.undo;
+                    }
 
-                    AlertDialogUtils.displayNotificationWithCallback(formFragmentView.getContext(), R.string.register_outside_boundary_title, R.string.register_outside_boundary_warning, R.string.register, R.string.cancel, new DialogInterface.OnClickListener() {
+                    AlertDialogUtils.displayNotificationWithCallback(formFragmentView.getContext(), title, message, positiveLabel, negativeLabel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
                                 case BUTTON_NEGATIVE:
-                                case BUTTON_NEUTRAL:
                                     dialog.dismiss();
                                     break;
                                 case BUTTON_POSITIVE:
-                                    ((WithinOperationAreaValidator) validator).setDisabled(true);
+                                    ((GeoFencingValidator) validator).setDisabled(true);
                                     presenter.validateAndWriteValues();
                                     dialog.dismiss();
                                     break;
@@ -140,7 +149,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                                     break;
                             }
                         }
-                    });
+                    }, formatAgs);
 
                     return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
 
@@ -328,12 +337,12 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
 
         addMaximumZoomLevel(jsonObject, mapView);
-        addWithinOperationalAreaValidator(context);
+        addGeoFencingValidator(context);
         RevealApplication.getInstance().getAppExecutors().diskIO().execute(() -> {
             RevealApplication.getInstance().getLocationRepository().getAllLocations()
                     .stream()
-                    .filter(location -> location.getId().equals(finalOperationalAreaFeature.id()))
-                    .forEach(location -> otherOperationalAreas.add(com.mapbox.geojson.Feature.fromJson(gson.toJson(location))));
+                    .filter(location -> !location.getId().equals(finalOperationalAreaFeature.id()))
+                    .forEach(location -> geoFencingValidator.getOtherOperationalAreas().add(com.mapbox.geojson.Feature.fromJson(gson.toJson(location))));
         });
         views.add(mapView);
         mapView.onStart();
@@ -394,8 +403,9 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         }
     }
 
-    private void addWithinOperationalAreaValidator(Context context) {
-        mapView.addValidator(new WithinOperationAreaValidator(context.getString(R.string.register_outside_boundary_warning), mapView, operationalArea));
+    private void addGeoFencingValidator(Context context) {
+        geoFencingValidator = new GeoFencingValidator(context.getString(R.string.register_outside_boundary_warning), mapView, operationalArea);
+        mapView.addValidator(geoFencingValidator);
     }
 
     @Override

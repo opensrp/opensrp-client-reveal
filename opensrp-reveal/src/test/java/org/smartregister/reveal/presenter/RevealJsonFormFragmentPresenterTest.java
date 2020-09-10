@@ -25,7 +25,7 @@ import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.fragment.RevealJsonFormFragment;
 import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.validators.MinZoomValidator;
-import org.smartregister.reveal.validators.WithinOperationAreaValidator;
+import org.smartregister.reveal.validators.GeoFencingValidator;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.AssetHandler;
 
@@ -65,7 +65,7 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
     private RevealMapView mapView;
 
     @Mock
-    private WithinOperationAreaValidator withinOperationAreaValidator;
+    private GeoFencingValidator geoFencingValidator;
 
     @Mock
     private ImageButton imageButton;
@@ -219,10 +219,10 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
         presenter = spy(presenter);
         List<METValidator> validators = new ArrayList<>();
         validators.add(new MinZoomValidator("error", 20));
-        validators.add(withinOperationAreaValidator);
+        validators.add(geoFencingValidator);
         when(mapView.getValidators()).thenReturn(validators);
         when(mapView.getMapboxMapZoom()).thenReturn(20.5);
-        when(withinOperationAreaValidator.isValid(anyString(), anyBoolean())).thenReturn(true);
+        when(geoFencingValidator.isValid(anyString(), anyBoolean())).thenReturn(true);
         formFragment.getJsonApi().addFormDataView(mapView);
         JsonFormFragmentView view = spy(Whitebox.getInternalState(presenter, JsonFormFragmentView.class));
         Whitebox.setInternalState(presenter, "viewRef", new WeakReference<>(view));

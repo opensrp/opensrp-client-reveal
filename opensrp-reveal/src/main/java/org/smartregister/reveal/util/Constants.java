@@ -152,6 +152,7 @@ public interface Constants {
         String FAMILY_MEMBER_NAMES = "family_member_names";
         String PLAN_IDENTIFIER = "planIdentifier";
         String LOCATION_STATUS = "status";
+        String LOCATION_NAME = "name";
     }
 
 

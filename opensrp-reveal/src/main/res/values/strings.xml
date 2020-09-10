@@ -411,4 +411,6 @@
 
     <string name="date_format">DD-MM-YYYY</string>
     <string name="view_all_events">View All Events</string>
+    <string name="point_in_another_area">This point falls within the boundaries of another operational area (%1$s). Would you like to add it to that operational area or undo</string>
+    <string name="add_point">Add Point</string>
 </resources>
