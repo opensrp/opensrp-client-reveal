@@ -43,7 +43,7 @@ public class GeoFencingValidator extends METValidator {
                 if (inside(selectedPoint, feature)) {
                     errorId = R.string.point_in_another_operational_area;
                     errorMessageArgs = new String[]{feature.getStringProperty(Properties.LOCATION_NAME)};
-                    selectedOperationalArea=feature.id();
+                    selectedOperationalArea = errorMessageArgs[0];
                     break;
                 }
             }

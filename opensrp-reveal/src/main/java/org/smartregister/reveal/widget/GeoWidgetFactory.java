@@ -286,8 +286,13 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
 
                 if (finalSelectedFeature != null || (finalOperationalAreaFeature != null && !finalLocationComponentActive)) {
-                    CameraPosition cameraPosition = mapboxMap.getCameraForGeometry(finalSelectedFeature != null ? finalSelectedFeature.geometry() : finalOperationalAreaFeature.geometry());
-                    if (cameraPosition != null) {
+                    CameraPosition cameraPosition;
+                    if (finalSelectedFeature != null) {
+                        cameraPosition = mapboxMap.getCameraForGeometry(finalSelectedFeature.geometry());
+                        mapboxMap.setCameraPosition(new CameraPosition.Builder().target(cameraPosition.target).zoom(19.1).build());
+
+                    } else {
+                        cameraPosition = mapboxMap.getCameraForGeometry(finalOperationalAreaFeature.geometry());
                         mapboxMap.setCameraPosition(cameraPosition);
                     }
                 } else {
