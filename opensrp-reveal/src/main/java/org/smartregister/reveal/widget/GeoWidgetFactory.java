@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -44,9 +46,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.domain.Location;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.reveal.interactor.BaseInteractor;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Map;
 import org.smartregister.reveal.util.RevealMapHelper;
@@ -57,6 +61,7 @@ import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -67,6 +72,7 @@ import timber.log.Timber;
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
+import static org.smartregister.reveal.interactor.BaseInteractor.gson;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
@@ -93,6 +99,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
     private boolean autoSizeGeoWidget = true;
 
+    private Set<com.mapbox.geojson.Feature> otherOperationalAreas = new HashSet<>();
+
     public GeoWidgetFactory() {
     }
 
@@ -112,7 +120,6 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
                     }
                 } else if ((validator instanceof WithinOperationAreaValidator)
-                        && org.smartregister.reveal.util.Utils.displayAddStructureOutOfBoundaryWarningDialog()
                         && !validator.isValid("", true)) {
                     // perform within op area validation
 
@@ -322,6 +329,12 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
         addMaximumZoomLevel(jsonObject, mapView);
         addWithinOperationalAreaValidator(context);
+        RevealApplication.getInstance().getAppExecutors().diskIO().execute(() -> {
+            RevealApplication.getInstance().getLocationRepository().getAllLocations()
+                    .stream()
+                    .filter(location -> location.getId().equals(finalOperationalAreaFeature.id()))
+                    .forEach(location -> otherOperationalAreas.add(com.mapbox.geojson.Feature.fromJson(gson.toJson(location))));
+        });
         views.add(mapView);
         mapView.onStart();
         mapView.showCurrentLocationBtn(true);
@@ -351,8 +364,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 formFragmentView.writeValue(stepName, key, markerPosition.toJSON().toString(), openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
                 formFragmentView.writeValue(stepName, ZOOM_LEVEL, zoomLevel + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
                 formFragmentView.writeValue(stepName, LOCATION_COMPONENT_ACTIVE, finalLocationComponentActive + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
-            }
-            else{
+            } else {
                 Timber.w("cannot write values JsonApi is null");
             }
         } catch (JSONException e) {
