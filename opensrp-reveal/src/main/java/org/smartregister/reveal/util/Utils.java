@@ -415,20 +415,26 @@ public class Utils {
 
     /**
      * This method takes in a geometry object and returns a JSONArray representation of the coordinates
-     * @param geometry
+     * @param updatedGeometry The geometry of the updated feature
+     * @param originalGeometry The geometry of the original feature used to determine whether
+     *                         it was a MultiPolygon or a Polygon
      * @return
      */
-    public static JSONArray getCoordsFromGeometry(Geometry geometry) {
-        MultiPolygon multiPolygon = MultiPolygon.fromPolygons(Collections.singletonList((Polygon) geometry));
-        JSONObject multiPolygonJson;
-        JSONArray multiPolygonCoords = null;
+    public static JSONArray getCoordsFromGeometry(Geometry updatedGeometry, Geometry originalGeometry) {
+        JSONObject editedGeometryJson ;
+        JSONArray updatedCoords = null;
         try {
-            multiPolygonJson = new JSONObject(multiPolygon.toJson());
-            multiPolygonCoords = (JSONArray) multiPolygonJson.get("coordinates");
+            if (originalGeometry instanceof  MultiPolygon) {
+                MultiPolygon editedGeometryMultiPolygon = MultiPolygon.fromPolygon((Polygon) updatedGeometry);
+                editedGeometryJson = new JSONObject(editedGeometryMultiPolygon.toJson());
+            } else {
+                editedGeometryJson = new JSONObject(updatedGeometry.toJson());
+            }
+            updatedCoords = editedGeometryJson.getJSONArray("coordinates");
         } catch (JSONException e) {
             Timber.e(e);
         }
-        return multiPolygonCoords;
+        return updatedCoords;
     }
 
 }
