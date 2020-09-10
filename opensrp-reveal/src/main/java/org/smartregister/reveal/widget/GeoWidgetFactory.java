@@ -142,6 +142,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                                 case BUTTON_POSITIVE:
                                     if (R.string.point_in_another_operational_area == finalMessage) {
                                         writeValues(mapView, formFragmentView, geoFencingValidator.getSelectedOperationalArea());
+                                        Context context = formFragmentView.getContext();
+                                        Toast.makeText(context, context.getString(R.string.add_structure_form_redirecting, geoFencingValidator.getSelectedOperationalArea()), Toast.LENGTH_LONG).show();
                                     }
                                     geoFencingValidator.setDisabled(true);
                                     presenter.validateAndWriteValues();
