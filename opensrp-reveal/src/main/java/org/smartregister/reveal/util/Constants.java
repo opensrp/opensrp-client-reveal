@@ -322,6 +322,8 @@ public interface Constants {
 
         String STRUCTURE_TYPE = "structureType";
 
+        String STRUCTURE = "structure";
+
         String HEAD_OF_HOUSEHOLD = "familyHeadName";
 
         String STRUCTURE_PROPERTIES_TYPE = "[structure_type]";
@@ -412,6 +414,8 @@ public interface Constants {
         String STRUCTURES_TAG = "structures";
 
         String LOCATION_COMPONENT_ACTIVE = "my_location_active";
+
+        String VALID_OPERATIONAL_AREA = "valid_operational_area";
 
         String NO_PADDING = "no_padding";
 

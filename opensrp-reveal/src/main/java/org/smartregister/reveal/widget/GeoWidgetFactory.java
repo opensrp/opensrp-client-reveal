@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.cocoahero.android.geojson.Feature;
 import com.cocoahero.android.geojson.Point;
@@ -52,14 +51,13 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Map;
 import org.smartregister.reveal.util.RevealMapHelper;
-import org.smartregister.reveal.validators.MinZoomValidator;
 import org.smartregister.reveal.validators.GeoFencingValidator;
+import org.smartregister.reveal.validators.MinZoomValidator;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -68,11 +66,11 @@ import io.ona.kujaku.layers.BoundaryLayer;
 import timber.log.Timber;
 
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
-import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.smartregister.reveal.interactor.BaseInteractor.gson;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
+import static org.smartregister.reveal.util.Constants.JsonForm.VALID_OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
 import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
 
@@ -126,14 +124,15 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                     int positiveLabel = R.string.register;
                     int negativeLabel = R.string.cancel;
                     Object[] formatAgs = new String[]{};
-                    if (geoFencingValidator.getErrorId() == R.string.point_in_another_area) {
+                    if (geoFencingValidator.getErrorId() == R.string.point_in_another_operational_area) {
                         message = geoFencingValidator.getErrorId();
                         formatAgs = geoFencingValidator.getErrorMessageArgs();
                         positiveLabel = R.string.add_point;
                         negativeLabel = R.string.undo;
                     }
 
-                    AlertDialogUtils.displayNotificationWithCallback(formFragmentView.getContext(), title, message, positiveLabel, negativeLabel, new DialogInterface.OnClickListener() {
+                    int finalMessage = message;
+                    AlertDialogUtils.displayNotificationWithCallback(formFragmentView.getContext(), title, finalMessage, positiveLabel, negativeLabel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
@@ -141,7 +140,10 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                                     dialog.dismiss();
                                     break;
                                 case BUTTON_POSITIVE:
-                                    ((GeoFencingValidator) validator).setDisabled(true);
+                                    if (R.string.point_in_another_operational_area == finalMessage) {
+                                        writeValues(mapView, formFragmentView, geoFencingValidator.getSelectedOperationalArea());
+                                    }
+                                    geoFencingValidator.setDisabled(true);
                                     presenter.validateAndWriteValues();
                                     dialog.dismiss();
                                     break;
@@ -194,6 +196,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         String relevance = jsonObject.optString(JsonFormConstants.RELEVANCE);
         String key = jsonObject.optString(JsonFormConstants.KEY);
 
+        String value = jsonObject.optString(JsonFormConstants.VALUE);
+
 
         List<View> views = new ArrayList<>(1);
 
@@ -204,11 +208,15 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         String operationalArea = null;
         String featureCollection = null;
         boolean locationComponentActive = false;
+        com.mapbox.geojson.Feature selectedFeature = null;
 
         try {
             operationalArea = new JSONObject(formFragment.getCurrentJsonState()).optString(OPERATIONAL_AREA_TAG);
             featureCollection = RevealApplication.getInstance().getFeatureCollection().toJson();
             locationComponentActive = new JSONObject(formFragment.getCurrentJsonState()).optBoolean(LOCATION_COMPONENT_ACTIVE);
+            if (StringUtils.isNotBlank(value)) {
+                selectedFeature = com.mapbox.geojson.Feature.fromJson(value);
+            }
         } catch (JSONException e) {
             Timber.e(e, "error extracting geojson form jsonform");
         }
@@ -239,6 +247,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         this.operationalArea = operationalAreaFeature;
 
         boolean finalLocationComponentActive = locationComponentActive;
+        com.mapbox.geojson.Feature finalSelectedFeature = selectedFeature;
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
@@ -276,8 +285,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 mapView.setLocationBufferRadius(bufferRadius);
 
 
-                if (finalOperationalAreaFeature != null && !finalLocationComponentActive) {
-                    CameraPosition cameraPosition = mapboxMap.getCameraForGeometry(finalOperationalAreaFeature.geometry());
+                if (finalSelectedFeature != null || (finalOperationalAreaFeature != null && !finalLocationComponentActive)) {
+                    CameraPosition cameraPosition = mapboxMap.getCameraForGeometry(finalSelectedFeature != null ? finalSelectedFeature.geometry() : finalOperationalAreaFeature.geometry());
                     if (cameraPosition != null) {
                         mapboxMap.setCameraPosition(cameraPosition);
                     }
@@ -286,7 +295,9 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 }
 
 
-                writeValues(formFragment, stepName, getCenterPointFeature(mapboxMap.getCameraPosition()), key, openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom, finalLocationComponentActive);
+                writeValues(formFragment, stepName, getCenterPointFeature(mapboxMap.getCameraPosition()),
+                        key, openMrsEntityParent, openMrsEntity, openMrsEntityId,
+                        mapboxMap.getCameraPosition().zoom, finalLocationComponentActive);
 
                 mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
                     @Override
@@ -380,6 +391,16 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
             Timber.e(e, "error writing Geowidget values");
         }
 
+    }
+
+    private static void writeValues(RevealMapView mapView, JsonFormFragmentView formFragmentView, String otherOperationalArea) {
+        String stepName = String.valueOf(mapView.getTag(com.vijay.jsonwizard.R.id.step_title));
+        String openMrsEntityParent = String.valueOf(mapView.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_parent));
+        String openMrsEntity = String.valueOf(mapView.getTag(com.vijay.jsonwizard.R.id.openmrs_entity));
+        String openMrsEntityId = String.valueOf(mapView.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_id));
+        if (StringUtils.isNotBlank(otherOperationalArea)) {
+            formFragmentView.writeValue(stepName, VALID_OPERATIONAL_AREA, otherOperationalArea, openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
+        }
     }
 
 

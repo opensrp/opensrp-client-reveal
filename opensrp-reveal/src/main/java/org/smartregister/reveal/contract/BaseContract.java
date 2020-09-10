@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.mapbox.geojson.Feature;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Task;

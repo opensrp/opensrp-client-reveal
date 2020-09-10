@@ -44,6 +44,7 @@ import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -52,6 +53,7 @@ import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.EditFociBoundaryActivity;
+import org.smartregister.reveal.widget.GeoWidgetFactory;
 import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.Utils;
 
@@ -90,7 +92,9 @@ import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLL
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.JsonForm.DISTRICT_NAME;
+import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
+import static org.smartregister.reveal.util.Constants.JsonForm.VALID_OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.PROVINCE_NAME;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
@@ -106,6 +110,7 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.Utils.formatDate;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 import static org.smartregister.reveal.util.Utils.validateFarStructures;
@@ -194,6 +199,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         }
         listTaskView.showProgressDialog(R.string.fetching_structures_title, R.string.fetching_structures_message);
         listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), prefsUtil.getCurrentOperationalArea());
+    }
+
+    @Override
+    public void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea, List<TaskDetails> taskDetailsList, String point, Boolean locationComponentActive) {
+        prefsUtil.setCurrentOperationalArea(operationalArea.getStringProperty(Constants.Properties.LOCATION_NAME));
+        onStructuresFetched(structuresGeoJson, operationalArea, taskDetailsList);
+        onAddStructureClicked(locationComponentActive, point);
     }
 
     @Override
@@ -289,7 +301,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         listTaskView.closeAllCardViews();
         listTaskView.displaySelectedFeature(feature, clickedPoint);
         if (isLongclick && BuildConfig.BUILD_COUNTRY != Country.ZAMBIA) {
-             onFeatureSelectedByLongClick(feature);
+            onFeatureSelectedByLongClick(feature);
         } else {
             onFeatureSelectedByNormalClick(feature);
         }
@@ -526,8 +538,24 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     public void saveJsonForm(String json) {
-        listTaskView.showProgressDialog(R.string.saving_title, R.string.saving_message);
-        listTaskInteractor.saveJsonForm(json);
+        try {
+            JSONObject jsonForm = new JSONObject(json);
+            String encounterType = jsonForm.getString(ENCOUNTER_TYPE);
+            JSONArray fields = JsonFormUtils.getMultiStepFormFields(jsonForm);
+            String validOperationalArea = JsonFormUtils.getFieldValue(fields, VALID_OPERATIONAL_AREA);
+            if (Constants.REGISTER_STRUCTURE_EVENT.equals(encounterType) && StringUtils.isNotBlank(validOperationalArea)) {
+                listTaskView.showProgressDialog(R.string.opening_form_title, R.string.add_structure_form_redirecting, validOperationalArea);
+                Boolean locationComponentActive = Boolean.valueOf(JsonFormUtils.getFieldValue(fields, LOCATION_COMPONENT_ACTIVE));
+                String point = JsonFormUtils.getFieldValue(fields, JsonForm.STRUCTURE);
+                listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), validOperationalArea, point, locationComponentActive);
+            } else {
+                listTaskView.showProgressDialog(R.string.saving_title, R.string.saving_message);
+                listTaskInteractor.saveJsonForm(json);
+            }
+        } catch (JSONException e) {
+            Timber.e(e);
+            listTaskView.displayToast(R.string.error_occurred_saving_form);
+        }
     }
 
     @Override
@@ -581,17 +609,24 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void onFormSaveFailure(String eventType) {
         listTaskView.hideProgressDialog();
         listTaskView.displayNotification(R.string.form_save_failure_title,
-                eventType.equals(SPRAY_EVENT) ? R.string.spray_form_save_failure : R.string.add_structure_form_save_failure);
+                SPRAY_EVENT.equals(eventType) ? R.string.spray_form_save_failure : R.string.add_structure_form_save_failure);
     }
 
 
     public void onAddStructureClicked(boolean myLocationComponentActive) {
+        onAddStructureClicked(myLocationComponentActive, null);
+    }
+
+    public void onAddStructureClicked(boolean myLocationComponentActive, String point) {
         String formName = jsonFormUtils.getFormName(REGISTER_STRUCTURE_EVENT);
         try {
             JSONObject formJson = new JSONObject(jsonFormUtils.getFormString(listTaskView.getContext(), formName, null));
             formJson.put(OPERATIONAL_AREA_TAG, operationalArea.toJson());
             revealApplication.setFeatureCollection(featureCollection);
             jsonFormUtils.populateField(formJson, JsonForm.SELECTED_OPERATIONAL_AREA_NAME, prefsUtil.getCurrentOperationalArea(), TEXT);
+            if (StringUtils.isNotBlank(point)) {
+                jsonFormUtils.populateField(formJson, JsonForm.STRUCTURE, point, VALUE);
+            }
             formJson.put(LOCATION_COMPONENT_ACTIVE, myLocationComponentActive);
             listTaskView.startJsonForm(formJson);
         } catch (Exception e) {

@@ -25,6 +25,7 @@ public class GeoFencingValidator extends METValidator {
     private int errorId;
     private String[] errorMessageArgs;
     private List<Feature> otherOperationalAreas = new ArrayList<>();
+    private String selectedOperationalArea;
 
     public GeoFencingValidator(String errorMessage, RevealMapView mapView, Feature operationalArea) {
         super(errorMessage);
@@ -40,8 +41,9 @@ public class GeoFencingValidator extends METValidator {
         if (!isWithinOperationArea) {
             for (Feature feature : otherOperationalAreas) {
                 if (inside(selectedPoint, feature)) {
-                    errorId = R.string.point_in_another_area;
+                    errorId = R.string.point_in_another_operational_area;
                     errorMessageArgs = new String[]{feature.getStringProperty(Properties.LOCATION_NAME)};
+                    selectedOperationalArea=feature.id();
                     break;
                 }
             }
@@ -78,5 +80,9 @@ public class GeoFencingValidator extends METValidator {
 
     public String[] getErrorMessageArgs() {
         return errorMessageArgs;
+    }
+
+    public String getSelectedOperationalArea() {
+        return selectedOperationalArea;
     }
 }
