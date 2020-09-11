@@ -45,6 +45,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.domain.Geometry;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -57,6 +58,7 @@ import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -360,7 +362,14 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
             RevealApplication.getInstance().getLocationRepository().getAllLocations()
                     .stream()
                     .filter(location -> !location.getId().equals(finalOperationalAreaFeature.id()))
-                    .forEach(location -> geoFencingValidator.getOtherOperationalAreas().add(com.mapbox.geojson.Feature.fromJson(gson.toJson(location))));
+                    .forEach(location -> {
+                                try {
+                                    geoFencingValidator.getOtherOperationalAreas().add(com.mapbox.geojson.Feature.fromJson(gson.toJson(location)));
+                                } catch (IllegalStateException e) {
+                                    Timber.e(e, "Error converting Feature %s %s ", location.getGeometry().getType(), location.getId());
+                                }
+                            }
+                    );
         });
         views.add(mapView);
         mapView.onStart();
