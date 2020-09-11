@@ -47,6 +47,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.PhysicalLocation;
+import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -67,7 +68,6 @@ import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
 import timber.log.Timber;
 
-import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.smartregister.reveal.interactor.BaseInteractor.gson;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
@@ -84,6 +84,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
     public static final String ZOOM_LEVEL = "zoom_level";
 
     private static final String MAX_ZOOM_LEVEL = "v_zoom_max";
+
+    private static final String OTHER = "other";
 
     private RevealMapView mapView;
 
@@ -147,7 +149,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                                 case BUTTON_POSITIVE:
                                     if (R.string.other_operational_area_not_defined == finalMessage) {
                                         break;
-                                    } else if (R.string.point_in_another_operational_area == finalMessage) {
+                                    } else if (R.string.point_in_normal_operational_area == finalMessage || R.string.point_in_other_operational_area == finalMessage) {
                                         writeValues(mapView, formFragmentView, geoFencingValidator.getSelectedOperationalArea());
                                         Context context = formFragmentView.getContext();
                                         Toast.makeText(context, context.getString(R.string.add_structure_form_redirecting, geoFencingValidator.getSelectedOperationalArea()), Toast.LENGTH_LONG).show();
@@ -353,12 +355,17 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
         addMaximumZoomLevel(jsonObject, mapView);
         addGeoFencingValidator(context);
+        LocationRepository locationRepository = RevealApplication.getInstance().getLocationRepository();
         RevealApplication.getInstance().getAppExecutors().diskIO().execute(() -> {
-            for (Location location : RevealApplication.getInstance().getLocationRepository().getAllLocations()) {
+            String parentId = locationRepository.getLocationById(operationalAreaFeature.id()).getProperties().getParentId();
+            for (Location location : locationRepository.getAllLocations()) {
                 if (!location.getId().equals(operationalAreaFeature.id())) {
                     com.mapbox.geojson.Feature feature = convertFromLocation(location);
                     if (feature != null) {
-                        geoFencingValidator.getOtherOperationalAreas().add(feature);
+                        if (location.getProperties().getParentId().equals(parentId) && location.getProperties().getName().toLowerCase().contains(OTHER)) {
+                            geoFencingValidator.setOtherOperationalArea(feature);
+                        }
+                        geoFencingValidator.getOperationalAreas().add(feature);
                         createBoundaryLayer(feature, context);//TODO to remove for aiding testing
                     }
                 }

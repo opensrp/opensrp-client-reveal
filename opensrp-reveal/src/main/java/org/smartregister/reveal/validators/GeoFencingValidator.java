@@ -24,8 +24,9 @@ public class GeoFencingValidator extends METValidator {
     private boolean disabled = false;
     private int errorId;
     private String[] errorMessageArgs;
-    private List<Feature> otherOperationalAreas = new ArrayList<>();
+    private List<Feature> operationalAreas = new ArrayList<>();
     private String selectedOperationalArea;
+    private Feature otherOperationalArea;
 
     public GeoFencingValidator(String errorMessage, RevealMapView mapView, Feature operationalArea) {
         super(errorMessage);
@@ -40,9 +41,9 @@ public class GeoFencingValidator extends METValidator {
         boolean isWithinOperationArea = inside(selectedPoint, operationalArea);
         boolean validOperationalFound = false;
         if (!isWithinOperationArea) {
-            for (Feature feature : otherOperationalAreas) {
+            for (Feature feature : operationalAreas) {
                 if (inside(selectedPoint, feature)) {
-                    errorId = R.string.point_in_another_operational_area;
+                    errorId = R.string.point_in_normal_operational_area;
                     errorMessageArgs = new String[]{feature.getStringProperty(Properties.LOCATION_NAME)};
                     selectedOperationalArea = errorMessageArgs[0];
                     validOperationalFound = true;
@@ -54,7 +55,11 @@ public class GeoFencingValidator extends METValidator {
             errorMessageArgs = null;
             selectedOperationalArea = null;
         }
-        if (!isWithinOperationArea && !validOperationalFound) {
+        if (!isWithinOperationArea && !validOperationalFound && otherOperationalArea != null) {
+            errorId = R.string.point_in_other_operational_area;
+            errorMessageArgs = new String[]{otherOperationalArea.getStringProperty(Properties.LOCATION_NAME)};
+            selectedOperationalArea = errorMessageArgs[0];
+        } else if (!isWithinOperationArea && !validOperationalFound) {
             errorId = R.string.other_operational_area_not_defined;
             errorMessageArgs = new String[]{operationalArea.getStringProperty(Properties.LOCATION_NAME)};
         }
@@ -80,8 +85,8 @@ public class GeoFencingValidator extends METValidator {
         this.disabled = disabled;
     }
 
-    public List<Feature> getOtherOperationalAreas() {
-        return otherOperationalAreas;
+    public List<Feature> getOperationalAreas() {
+        return operationalAreas;
     }
 
     public int getErrorId() {
@@ -94,5 +99,9 @@ public class GeoFencingValidator extends METValidator {
 
     public String getSelectedOperationalArea() {
         return selectedOperationalArea;
+    }
+
+    public void setOtherOperationalArea(Feature otherOperationalArea) {
+        this.otherOperationalArea = otherOperationalArea;
     }
 }
