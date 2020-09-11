@@ -53,6 +53,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Map;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.reveal.validators.GeoFencingValidator;
 import org.smartregister.reveal.validators.MinZoomValidator;
@@ -120,7 +121,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
                     }
                 } else if ((validator instanceof GeoFencingValidator)
-                        && !validator.isValid("", true)) {
+                        && !validator.isValid("", true)
+                        && Country.ZAMBIA == BuildConfig.BUILD_COUNTRY) {
                     // perform within op area validation
                     GeoFencingValidator geoFencingValidator = (GeoFencingValidator) validator;
                     int title = R.string.register_outside_boundary_title;
