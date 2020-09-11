@@ -45,7 +45,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.smartregister.domain.Geometry;
+import org.smartregister.domain.Location;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -58,7 +58,6 @@ import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -233,22 +232,13 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
         myLocationButton = mapView.findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
 
-        com.mapbox.geojson.Feature operationalAreaFeature = null;
-        if (operationalArea != null) {
-            operationalAreaFeature = com.mapbox.geojson.Feature.fromJson(operationalArea);
-            BoundaryLayer.Builder boundaryBuilder = new BoundaryLayer.Builder(FeatureCollection.fromFeature(operationalAreaFeature))
-                    .setLabelProperty(Map.NAME_PROPERTY)
-                    .setLabelTextSize(context.getResources().getDimension(R.dimen.operational_area_boundary_text_size))
-                    .setLabelColorInt(Color.WHITE)
-                    .setBoundaryColor(Color.WHITE)
-                    .setBoundaryWidth(context.getResources().getDimension(R.dimen.operational_area_boundary_width));
-            mapView.addLayer(boundaryBuilder.build());
-        }
+        com.mapbox.geojson.Feature operationalAreaFeature = com.mapbox.geojson.Feature.fromJson(operationalArea);
 
+        this.operationalArea = operationalAreaFeature;
+
+        createBoundaryLayer(operationalAreaFeature, context);
 
         String finalFeatureCollection = featureCollection;
-        com.mapbox.geojson.Feature finalOperationalAreaFeature = operationalAreaFeature;
-        this.operationalArea = operationalAreaFeature;
 
         boolean finalLocationComponentActive = locationComponentActive;
         com.mapbox.geojson.Feature finalSelectedFeature = selectedFeature;
@@ -270,7 +260,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         String baseMapFeatureString = AssetHandler.readFileFromAssetsFolder(context.getString(R.string.base_map_feature_json), context);
 
                         if (BuildConfig.DISPLAY_OUTSIDE_OPERATIONAL_AREA_MASK) {
-                            RevealMapHelper.addOutOfBoundaryMask(style, finalOperationalAreaFeature,
+                            RevealMapHelper.addOutOfBoundaryMask(style, operationalAreaFeature,
                                     com.mapbox.geojson.Feature.fromJson(baseMapFeatureString), context);
                         }
 
@@ -289,14 +279,14 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 mapView.setLocationBufferRadius(bufferRadius);
 
 
-                if (finalSelectedFeature != null || (finalOperationalAreaFeature != null && !finalLocationComponentActive)) {
+                if (finalSelectedFeature != null || (operationalAreaFeature != null && !finalLocationComponentActive)) {
                     CameraPosition cameraPosition;
                     if (finalSelectedFeature != null) {
                         cameraPosition = mapboxMap.getCameraForGeometry(finalSelectedFeature.geometry());
                         mapboxMap.setCameraPosition(new CameraPosition.Builder().target(cameraPosition.target).zoom(19.1).build());
 
                     } else {
-                        cameraPosition = mapboxMap.getCameraForGeometry(finalOperationalAreaFeature.geometry());
+                        cameraPosition = mapboxMap.getCameraForGeometry(operationalAreaFeature.geometry());
                         mapboxMap.setCameraPosition(cameraPosition);
                     }
                 } else {
@@ -359,17 +349,15 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         addMaximumZoomLevel(jsonObject, mapView);
         addGeoFencingValidator(context);
         RevealApplication.getInstance().getAppExecutors().diskIO().execute(() -> {
-            RevealApplication.getInstance().getLocationRepository().getAllLocations()
-                    .stream()
-                    .filter(location -> !location.getId().equals(finalOperationalAreaFeature.id()))
-                    .forEach(location -> {
-                                try {
-                                    geoFencingValidator.getOtherOperationalAreas().add(com.mapbox.geojson.Feature.fromJson(gson.toJson(location)));
-                                } catch (IllegalStateException e) {
-                                    Timber.e(e, "Error converting Feature %s %s ", location.getGeometry().getType(), location.getId());
-                                }
-                            }
-                    );
+            for (Location location : RevealApplication.getInstance().getLocationRepository().getAllLocations()) {
+                if (!location.getId().equals(operationalAreaFeature.id())) {
+                    try {
+                        geoFencingValidator.getOtherOperationalAreas().add(com.mapbox.geojson.Feature.fromJson(gson.toJson(location)));
+                    } catch (Exception e) {
+                        Timber.e(e, "Error converting Feature %s %s ", location.getGeometry().getType(), location.getId());
+                    }
+                }
+            }
         });
         views.add(mapView);
         mapView.onStart();
@@ -377,6 +365,19 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         mapView.enableAddPoint(true);
         disableParentScroll((Activity) context, mapView);
         return views;
+    }
+
+    private void createBoundaryLayer(com.mapbox.geojson.Feature operationalArea, Context context) {
+        if (operationalArea != null) {
+
+            BoundaryLayer.Builder boundaryBuilder = new BoundaryLayer.Builder(FeatureCollection.fromFeature(operationalArea))
+                    .setLabelProperty(Map.NAME_PROPERTY)
+                    .setLabelTextSize(context.getResources().getDimension(R.dimen.operational_area_boundary_text_size))
+                    .setLabelColorInt(Color.WHITE)
+                    .setBoundaryColor(Color.WHITE)
+                    .setBoundaryWidth(context.getResources().getDimension(R.dimen.operational_area_boundary_width));
+            mapView.addLayer(boundaryBuilder.build());
+        }
     }
 
     private void disableParentScroll(Activity context, View mapView) {
