@@ -366,10 +366,15 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                             geoFencingValidator.setOtherOperationalArea(feature);
                         }
                         geoFencingValidator.getOperationalAreas().add(feature);
-                        createBoundaryLayer(feature, context);//TODO to remove for aiding testing
+
                     }
                 }
             }
+            RevealApplication.getInstance().getAppExecutors().mainThread().execute(() -> {
+                for (com.mapbox.geojson.Feature feature : geoFencingValidator.getOperationalAreas()) {
+                    createBoundaryLayer(feature, context);
+                }
+            });
         });
         views.add(mapView);
         mapView.onStart();
