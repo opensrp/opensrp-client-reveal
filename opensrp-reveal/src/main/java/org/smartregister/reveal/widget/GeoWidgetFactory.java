@@ -126,11 +126,17 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                     int positiveLabel = R.string.register;
                     int negativeLabel = R.string.cancel;
                     Object[] formatAgs = new String[]{};
-                    if (geoFencingValidator.getErrorId() == R.string.point_in_another_operational_area) {
+
+                    if (geoFencingValidator.getErrorId() != 0) {
                         message = geoFencingValidator.getErrorId();
                         formatAgs = geoFencingValidator.getErrorMessageArgs();
-                        positiveLabel = R.string.add_point;
-                        negativeLabel = R.string.undo;
+                        if (R.string.other_operational_area_not_defined == geoFencingValidator.getErrorId()) {
+                            positiveLabel = R.string.ok;
+                            negativeLabel = 0;
+                        } else {
+                            positiveLabel = R.string.add_point;
+                            negativeLabel = R.string.undo;
+                        }
                     }
 
                     int finalMessage = message;
@@ -138,18 +144,16 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
-                                case BUTTON_NEGATIVE:
-                                    dialog.dismiss();
-                                    break;
                                 case BUTTON_POSITIVE:
-                                    if (R.string.point_in_another_operational_area == finalMessage) {
+                                    if (R.string.other_operational_area_not_defined == finalMessage) {
+                                        break;
+                                    } else if (R.string.point_in_another_operational_area == finalMessage) {
                                         writeValues(mapView, formFragmentView, geoFencingValidator.getSelectedOperationalArea());
                                         Context context = formFragmentView.getContext();
                                         Toast.makeText(context, context.getString(R.string.add_structure_form_redirecting, geoFencingValidator.getSelectedOperationalArea()), Toast.LENGTH_LONG).show();
                                     }
                                     geoFencingValidator.setDisabled(true);
                                     presenter.validateAndWriteValues();
-                                    dialog.dismiss();
                                     break;
                                 default:
                                     break;

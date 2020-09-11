@@ -38,15 +38,25 @@ public class GeoFencingValidator extends METValidator {
         if (disabled) return true;
         com.mapbox.geojson.Point selectedPoint = getCenterPoint(mapView.getMapboxMap());
         boolean isWithinOperationArea = inside(selectedPoint, operationalArea);
+        boolean validOperationalFound = false;
         if (!isWithinOperationArea) {
             for (Feature feature : otherOperationalAreas) {
                 if (inside(selectedPoint, feature)) {
                     errorId = R.string.point_in_another_operational_area;
                     errorMessageArgs = new String[]{feature.getStringProperty(Properties.LOCATION_NAME)};
                     selectedOperationalArea = errorMessageArgs[0];
+                    validOperationalFound = true;
                     break;
                 }
             }
+        } else {
+            errorId = 0;
+            errorMessageArgs = null;
+            selectedOperationalArea = null;
+        }
+        if (!isWithinOperationArea && !validOperationalFound) {
+            errorId = R.string.other_operational_area_not_defined;
+            errorMessageArgs = new String[]{operationalArea.getStringProperty(Properties.LOCATION_NAME)};
         }
         return isWithinOperationArea;
     }

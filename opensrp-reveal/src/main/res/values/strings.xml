@@ -415,4 +415,6 @@
     <string name="add_point">Add Point</string>
     <string name="add_structure_form_redirecting">Redirecting you to operational area (%1$s) so you can collect information against this point.</string>
     <string name="error_occurred_saving_form">Error Occurred Saving form</string>
+    <string name="point_in_unknown_operational_area">This point falls outside of any operational area boundaries known at this time and will be added to an area called ‘other’ for this HFCA.</string>
+    <string name="other_operational_area_not_defined">Operational area called ‘other’ for this HFCA does not exist. Please contact the system administrator noting operational area number %1$s.</string>
 </resources>
