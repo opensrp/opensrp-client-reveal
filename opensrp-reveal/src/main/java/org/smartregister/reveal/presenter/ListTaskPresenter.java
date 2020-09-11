@@ -204,6 +204,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     @Override
     public void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea, List<TaskDetails> taskDetailsList, String point, Boolean locationComponentActive) {
         prefsUtil.setCurrentOperationalArea(operationalArea.getStringProperty(Constants.Properties.LOCATION_NAME));
+        listTaskView.setOperationalArea(prefsUtil.getCurrentOperationalArea());
         onStructuresFetched(structuresGeoJson, operationalArea, taskDetailsList);
         onAddStructureClicked(locationComponentActive, point);
     }

@@ -929,6 +929,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     }
 
     @Override
+    public void setOperationalArea(String operationalArea) {
+        drawerView.setOperationalArea(operationalArea);
+    }
+
+    @Override
     public void onSyncProgress(SyncProgress syncProgress) {
         int progress = syncProgress.getPercentageSynced();
         String entity = syncProgress.getSyncEntity().toString();
