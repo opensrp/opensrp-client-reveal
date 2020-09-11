@@ -228,7 +228,7 @@ public class CardDetailsUtil {
      * @return status Translated status according to locale set
      */
     public static String getTranslatedBusinessStatus(String businessStatus) {
-        Context context =  RevealApplication.getInstance().getContext().applicationContext();;
+        Context context =  RevealApplication.getInstance().getContext().applicationContext();
 
         if (businessStatus == null)
             return context.getString(R.string.not_eligible);
