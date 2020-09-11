@@ -386,6 +386,8 @@
     <string name="device_data_synced">Device data synced</string>
     <string name="device_data_not_synced">Device data not synced</string>
     <string name="manifest_version_parenthesis_placeholder">(%1$s)</string>
+    <string name="mark_location_active">Mark Location Active</string>
+    <string name="confirm_mark_location_active">Please confirm that this location should be marked active</string>
 
     <string name="filled_forms">Filled Forms</string>
     <string name="event_date">Date</string>

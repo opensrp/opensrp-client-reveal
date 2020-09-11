@@ -151,6 +151,7 @@ public interface Constants {
         String TASK_CODE_LIST = "task_code_list";
         String FAMILY_MEMBER_NAMES = "family_member_names";
         String PLAN_IDENTIFIER = "planIdentifier";
+        String TYPE = "type";
         String LOCATION_STATUS = "status";
     }
 
@@ -228,6 +229,8 @@ public interface Constants {
 
         String IRS_VERIFICATION = "irs_verification";
 
+        String ACTIVATE_LOCATION_EVENT = "activate_location";
+
         String DAILY_SUMMARY_EVENT = "daily_summary";
 
         String IRS_FIELD_OFFICER_EVENT = "irs_field_officer";
@@ -244,6 +247,7 @@ public interface Constants {
 
         List<String> SUMMARY_EVENT_TYPES = Arrays.asList(DAILY_SUMMARY_EVENT, IRS_FIELD_OFFICER_EVENT,
                 IRS_SA_DECISION_EVENT, MOBILIZATION_EVENT, TEAM_LEADER_DOS_EVENT, VERIFICATION_EVENT);
+
     }
 
     interface Tables {

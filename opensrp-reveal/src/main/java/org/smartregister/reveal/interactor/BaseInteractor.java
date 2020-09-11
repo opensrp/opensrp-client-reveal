@@ -132,7 +132,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
     protected RevealClientProcessor clientProcessor;
 
-    private TaskUtils taskUtils;
+    protected TaskUtils taskUtils;
 
     private SQLiteDatabase database;
 

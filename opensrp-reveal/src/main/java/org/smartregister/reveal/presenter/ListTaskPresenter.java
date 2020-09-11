@@ -44,6 +44,7 @@ import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -104,6 +105,7 @@ import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE_LIST;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.TYPE;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Utils.formatDate;
@@ -288,6 +290,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         listTaskView.closeAllCardViews();
         listTaskView.displaySelectedFeature(feature, clickedPoint);
+
         if (isLongclick && BuildConfig.BUILD_COUNTRY != Country.ZAMBIA) {
              onFeatureSelectedByLongClick(feature);
         } else {
@@ -297,8 +300,13 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private void onFeatureSelectedByNormalClick(Feature feature) {
         if (!feature.hasProperty(TASK_IDENTIFIER)) {
-            listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
-            return;
+            String structureType = getPropertyValue(feature, TYPE);
+            if (Constants.StructureType.RESIDENTIAL.equals(structureType)) {
+                listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
+            } else {
+                listTaskView.displayMarkStructureActiveDialog();
+            }
+          return;
         }
 
         String businessStatus = getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
@@ -390,6 +398,27 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         Intent intent = new Intent(listTaskView.getContext(), EditFociBoundaryActivity.class);
         listTaskView.getActivity().startActivity(intent);
+    }
+
+    @Override
+    public void onMarkStructureActiveConfirmed() {
+        listTaskInteractor.markStructureAsActive(selectedFeature);
+    }
+
+    @Override
+    public void onStructureMarkedActive(Task task) {
+        for (Feature feature : getFeatureCollection().features()) {
+            if (selectedFeature.id().equals(feature.id()) && task != null) {
+                feature.addStringProperty(TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                feature.addStringProperty(TASK_IDENTIFIER, task.getIdentifier());
+                feature.addStringProperty(TASK_STATUS, task.getStatus().name());
+                feature.addStringProperty(TASK_CODE, task.getCode());
+                break;
+            }
+        }
+
+        listTaskView.setGeoJsonSource(getFeatureCollection(), operationalArea, false);
     }
 
     @Override

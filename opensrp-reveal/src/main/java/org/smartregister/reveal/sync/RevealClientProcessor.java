@@ -39,6 +39,7 @@ import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNC
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
+import static org.smartregister.reveal.util.Constants.EventType.ACTIVATE_LOCATION_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.EventType.PAOT_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.SUMMARY_EVENT_TYPES;
@@ -121,7 +122,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                     processUpdateFamilyRegistrationEvent(event, eventClient.getClient(), clientClassification, localEvents);
                 } else if (eventType.equals(PAOT_EVENT)) {
                     operationalAreaId = processEvent(event, clientClassification, localEvents, JsonForm.PAOT_STATUS);
-                } else if (eventType.equals(TASK_RESET_EVENT)) {
+                } else if (eventType.equals(TASK_RESET_EVENT) || eventType.equals(ACTIVATE_LOCATION_EVENT)) {
                     continue;
                 } else if (SUMMARY_EVENT_TYPES.contains(event.getEventType())) {
                     processSummaryFormEvent(event, clientClassification);
