@@ -46,6 +46,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.PhysicalLocation;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -351,10 +352,10 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         RevealApplication.getInstance().getAppExecutors().diskIO().execute(() -> {
             for (Location location : RevealApplication.getInstance().getLocationRepository().getAllLocations()) {
                 if (!location.getId().equals(operationalAreaFeature.id())) {
-                    try {
-                        geoFencingValidator.getOtherOperationalAreas().add(com.mapbox.geojson.Feature.fromJson(gson.toJson(location)));
-                    } catch (Exception e) {
-                        Timber.e(e, "Error converting Feature %s %s ", location.getGeometry().getType(), location.getId());
+                    com.mapbox.geojson.Feature feature = convertFromLocation(location);
+                    if (feature != null) {
+                        geoFencingValidator.getOtherOperationalAreas().add(feature);
+                        createBoundaryLayer(feature, context);//TODO to remove for aiding testing
                     }
                 }
             }
@@ -365,6 +366,15 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         mapView.enableAddPoint(true);
         disableParentScroll((Activity) context, mapView);
         return views;
+    }
+
+    private com.mapbox.geojson.Feature convertFromLocation(PhysicalLocation location) {
+        try {
+            return com.mapbox.geojson.Feature.fromJson(gson.toJson(location));
+        } catch (Exception e) {
+            Timber.e(e, "Error converting Feature %s %s ", location.getGeometry().getType(), location.getId());
+        }
+        return null;
     }
 
     private void createBoundaryLayer(com.mapbox.geojson.Feature operationalArea, Context context) {
