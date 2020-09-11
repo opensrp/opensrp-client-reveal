@@ -52,14 +52,13 @@ import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.FamilyProfileActivity;
 import org.smartregister.sync.ClientProcessorForJava;
 import org.smartregister.sync.DrishtiSyncScheduler;
+import org.smartregister.util.CrashLyticsTree;
 import org.smartregister.util.LangUtils;
 import org.smartregister.view.activity.DrishtiApplication;
 import org.smartregister.view.receiver.TimeChangedBroadcastReceiver;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.annotation.Nullable;
 
 import io.fabric.sdk.android.Fabric;
 import io.ona.kujaku.KujakuLibrary;
@@ -161,6 +160,11 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         }
         NativeFormLibrary.getInstance().setClientFormDao(CoreLibrary.getInstance().context().getClientFormRepository());
 
+    }
+
+    @Override
+    public void initializeCrashLyticsTree() {
+        Timber.plant(new CrashLyticsTree());
     }
 
     /**

@@ -158,6 +158,9 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
         }
 
         if (BuildConfig.BUILD_COUNTRY == Country.NTD_COMMUNITY) {
+            p2pSyncTextView.setVisibility(View.VISIBLE);
+            p2pSyncTextView.setOnClickListener(this);
+
             summaryFormsTextView.setVisibility(View.VISIBLE);
             summaryFormsTextView.setOnClickListener(this);
         }
