@@ -195,6 +195,7 @@ public class GeoJsonUtils {
                 int taskCount = mdaStatusMap.get(MDA_DISPENSE_TASK_COUNT);
                 state.fullyReceived = mdaStatusMap.get(SMC_COMPLETE) == taskCount;
                 state.allMdaTasksVisited = mdaStatusMap.get(NOT_VISITED) == 0;
+                state.nonReceived = mdaStatusMap.get(NOT_DISPENSED) == taskCount;
                 state.nonEligible = mdaStatusMap.get(INELIGIBLE) == taskCount;
                 state.partiallyReceived = (!state.fullyReceived && (mdaStatusMap.get(SMC_COMPLETE) > 0));
                 state.fullyReceived = mdaStatusMap.get(SMC_COMPLETE) == taskCount;

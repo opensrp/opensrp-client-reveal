@@ -4,4 +4,4 @@ description: Surname calculation
 priority: 1
 condition: "true"
 actions:
-  - "calculation = step2_same_as_fam_name.contains('same_as_fam_name')? step1_fam_name : step2_surname"
+  - "calculation = step2_same_as_fam_name.contains('same_as_fam_name')? step1_family_name : step2_surname"

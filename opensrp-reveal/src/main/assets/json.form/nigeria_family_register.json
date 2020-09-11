@@ -234,7 +234,7 @@
         "openmrs_entity_id": ""
       },
       {
-        "key": "fam_name",
+        "key": "family_name",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
         "openmrs_entity_id": "last_name",
