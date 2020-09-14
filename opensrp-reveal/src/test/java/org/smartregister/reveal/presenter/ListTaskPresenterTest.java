@@ -64,12 +64,12 @@ import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -91,7 +91,6 @@ import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLL
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
-import static org.smartregister.reveal.util.Constants.JsonForm.SELECTED_OPERATIONAL_AREA_NAME;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM_ZAMBIA;
 import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
@@ -929,8 +928,8 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         when(jsonFormUtils.getFormJSON(listTaskView.getContext(), SPRAY_FORM_ZAMBIA, feature, null, null)).thenReturn(new JSONObject(TestingUtils.DUMMY_JSON_FORM_STRING));
         listTaskPresenter.startForm(feature, null, IRS);
         verify(jsonFormUtils).populateForm(any(), any());
-        verify(jsonFormUtils, times(2)).populateServerOptions(any(), any(), any(), any());
-        verify(jsonFormUtils, times(2)).populateField(any(), anyString(), anyString(), anyString());
+        verify(jsonFormUtils, atLeastOnce()).populateServerOptions(any(), any(), any(), any());
+        verify(jsonFormUtils, atLeastOnce()).populateField(any(), anyString(), anyString(), anyString());
         verify(listTaskView).startJsonForm(any());
     }
 

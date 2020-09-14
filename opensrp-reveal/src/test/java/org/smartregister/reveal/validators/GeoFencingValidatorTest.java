@@ -96,7 +96,7 @@ public class GeoFencingValidatorTest extends BaseUnitTest {
     @Test
     public void testIsValidWithPointInAnotherOperationalArea() {
 
-        Feature validOA = Feature.fromJson(TestingUtils.feature2);
+        Feature validOA = Feature.fromJson(TestingUtils.operationalArea2Feature);
         validator.getOperationalAreas().add(validOA);
         LatLng target = new LatLng(-9.342380199986167, 28.857339199944192);
         initializeMocks(target);
@@ -113,7 +113,7 @@ public class GeoFencingValidatorTest extends BaseUnitTest {
     @Test
     public void testIsValidWithPointOutsideOAWhenOtherOAIsDefined() {
 
-        Feature otherOA = Feature.fromJson(TestingUtils.feature2);
+        Feature otherOA = Feature.fromJson(TestingUtils.operationalArea2Feature);
         validator.setOtherOperationalArea(otherOA);
         LatLng target = new LatLng(-9.342380199986167, 28.857339199944192);
         initializeMocks(target);
