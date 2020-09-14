@@ -573,7 +573,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
 
     @Test
     public void testSaveJsonForm() {
-        String jsonString = "{\"name\":\"trever\"}";
+        String jsonString = "{\"name\":\"trever\",\"encounter_type\":\"custom\"}";
 
         listTaskPresenter.saveJsonForm(jsonString);
         verify(listTaskView).showProgressDialog(R.string.saving_title, R.string.saving_message);
