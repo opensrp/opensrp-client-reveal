@@ -14,10 +14,11 @@ import com.rengwuxian.materialedittext.validation.METValidator;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.view.RevealMapView;
-import org.smartregister.reveal.widget.GeoWidgetFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.smartregister.reveal.widget.GeoWidgetFactory.OTHER;
 
 public class GeoFencingValidator extends METValidator {
     private RevealMapView mapView;
@@ -34,7 +35,8 @@ public class GeoFencingValidator extends METValidator {
         super(errorMessage);
         this.mapView = mapView;
         this.operationalArea = operationalArea;
-        if (operationalArea.hasProperty(Properties.LOCATION_NAME) && operationalArea.getStringProperty(Properties.LOCATION_NAME).contains(GeoWidgetFactory.OTHER)) {
+        if (operationalArea.hasProperty(Properties.LOCATION_NAME) &&
+                operationalArea.getStringProperty(Properties.LOCATION_NAME).toLowerCase().contains(OTHER)) {
             otherOperationalArea = operationalArea;
             operationalAreaOther = true;
         }
@@ -49,7 +51,7 @@ public class GeoFencingValidator extends METValidator {
         if (!isWithinOperationArea) {
             for (Feature feature : operationalAreas) {
                 if (inside(selectedPoint, feature)) {
-                    errorId = R.string.point_in_normal_operational_area;
+                    errorId = R.string.point_within_known_operational_area;
                     errorMessageArgs = new String[]{feature.getStringProperty(Properties.LOCATION_NAME)};
                     selectedOperationalArea = errorMessageArgs[0];
                     validOperationalFound = true;
@@ -62,11 +64,11 @@ public class GeoFencingValidator extends METValidator {
             selectedOperationalArea = null;
         }
         if (isOperationalAreaOther()) {
-            errorId = R.string.point_in_unknown_operational_area;
+            errorId = R.string.point_not_within_other_operational_area;
             errorMessageArgs = new String[]{otherOperationalArea.getStringProperty(Properties.LOCATION_NAME)};
             selectedOperationalArea = errorMessageArgs[0];
         } else if (!isWithinOperationArea && !validOperationalFound && otherOperationalArea != null) {
-            errorId = R.string.point_in_other_operational_area;
+            errorId = R.string.point_not_within_known_operational_area;
             errorMessageArgs = new String[]{otherOperationalArea.getStringProperty(Properties.LOCATION_NAME)};
             selectedOperationalArea = errorMessageArgs[0];
         } else if (!isWithinOperationArea && !validOperationalFound) {

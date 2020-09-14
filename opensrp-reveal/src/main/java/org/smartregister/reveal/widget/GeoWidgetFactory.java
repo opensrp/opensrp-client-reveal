@@ -151,7 +151,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                                 case BUTTON_POSITIVE:
                                     if (R.string.other_operational_area_not_defined == finalMessage || geoFencingValidator.isOperationalAreaOther()) {
                                         break;
-                                    } else if (R.string.point_in_normal_operational_area == finalMessage || R.string.point_in_other_operational_area == finalMessage) {
+                                    } else if (R.string.point_within_known_operational_area == finalMessage || R.string.point_not_within_known_operational_area == finalMessage) {
                                         writeValues(mapView, formFragmentView, geoFencingValidator.getSelectedOperationalArea());
                                         Context context = formFragmentView.getContext();
                                         Toast.makeText(context, context.getString(R.string.add_structure_form_redirecting, geoFencingValidator.getSelectedOperationalArea()), Toast.LENGTH_LONG).show();

@@ -411,11 +411,11 @@
 
     <string name="date_format">DD-MM-YYYY</string>
     <string name="view_all_events">View All Events</string>
-    <string name="point_in_normal_operational_area">This point falls within the boundaries of another operational area (%1$s). Would you like to add it to that operational area or undo</string>
+    <string name="point_within_known_operational_area">This point falls within the boundaries of another operational area (%1$s). Would you like to add it to that operational area or undo</string>
     <string name="add_point">Add Point</string>
     <string name="add_structure_form_redirecting">Redirecting you to operational area (%1$s) so you can collect information against this point.</string>
     <string name="error_occurred_saving_form">Error Occurred Saving form</string>
-    <string name="point_in_other_operational_area">This point falls outside of any operational area boundaries known at this time and will be added to an ‘other’ area (%1$s) for this HFCA.</string>
+    <string name="point_not_within_known_operational_area">This point falls outside of any operational area boundaries known at this time and will be added to an ‘other’ area (%1$s) for this HFCA.</string>
     <string name="other_operational_area_not_defined">Operational area called ‘other’ for this HFCA does not exist. Please contact the system administrator noting operational area number %1$s.</string>
-    <string name="point_in_unknown_operational_area">This point falls outside of any operational area boundaries known. Add the point to current Operational area which is the ‘other’ area (%1$s) for this HFCA.</string>
+    <string name="point_not_within_other_operational_area">This point falls outside of any operational area boundaries known. Add the point to current Operational area which is the ‘other’ area (%1$s) for this HFCA.</string>
 </resources>

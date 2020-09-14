@@ -16,19 +16,17 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.Context;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Task;
-import org.smartregister.domain.Event;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.BuildConfig;
-import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.FamilyCardDetails;
@@ -38,7 +36,6 @@ import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
-import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Constants.Intervention;
@@ -57,7 +54,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.Executor;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -65,16 +61,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 import static org.smartregister.domain.Task.TaskStatus.COMPLETED;
-import static org.smartregister.reveal.interactor.ListTaskInteractorPowerMockTest.mosquitoCollectionForm;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
@@ -456,7 +446,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
     public void testSaveJsonFormShouldSaveMosquitoCollectionForm() {
         listTaskInteractor.saveJsonForm(TestingUtils.mosquitoCollectionForm);
 
-        verify(eventClientRepository,timeout(ASYNC_TIMEOUT)).addEvent(any(), any());
+        verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addEvent(any(), any());
     }
 
     private Cursor createSprayCursor() {
