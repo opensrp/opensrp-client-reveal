@@ -14,6 +14,7 @@ import com.rengwuxian.materialedittext.validation.METValidator;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.view.RevealMapView;
+import org.smartregister.reveal.widget.GeoWidgetFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +28,16 @@ public class GeoFencingValidator extends METValidator {
     private List<Feature> operationalAreas = new ArrayList<>();
     private String selectedOperationalArea;
     private Feature otherOperationalArea;
+    private boolean operationalAreaOther;
 
     public GeoFencingValidator(String errorMessage, RevealMapView mapView, Feature operationalArea) {
         super(errorMessage);
         this.mapView = mapView;
         this.operationalArea = operationalArea;
+        if (operationalArea.getStringProperty(Properties.LOCATION_NAME).contains(GeoWidgetFactory.OTHER)) {
+            otherOperationalArea = operationalArea;
+            operationalAreaOther = true;
+        }
     }
 
     @Override
@@ -55,7 +61,11 @@ public class GeoFencingValidator extends METValidator {
             errorMessageArgs = null;
             selectedOperationalArea = null;
         }
-        if (!isWithinOperationArea && !validOperationalFound && otherOperationalArea != null) {
+        if (isOperationalAreaOther()) {
+            errorId = R.string.point_in_unknown_operational_area;
+            errorMessageArgs = new String[]{otherOperationalArea.getStringProperty(Properties.LOCATION_NAME)};
+            selectedOperationalArea = errorMessageArgs[0];
+        } else if (!isWithinOperationArea && !validOperationalFound && otherOperationalArea != null) {
             errorId = R.string.point_in_other_operational_area;
             errorMessageArgs = new String[]{otherOperationalArea.getStringProperty(Properties.LOCATION_NAME)};
             selectedOperationalArea = errorMessageArgs[0];
@@ -103,5 +113,9 @@ public class GeoFencingValidator extends METValidator {
 
     public void setOtherOperationalArea(Feature otherOperationalArea) {
         this.otherOperationalArea = otherOperationalArea;
+    }
+
+    public boolean isOperationalAreaOther() {
+        return operationalAreaOther;
     }
 }

@@ -86,7 +86,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
     private static final String MAX_ZOOM_LEVEL = "v_zoom_max";
 
-    private static final String OTHER = "other";
+    public static final String OTHER = "other";
 
     private RevealMapView mapView;
 
@@ -134,7 +134,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                     if (geoFencingValidator.getErrorId() != 0) {
                         message = geoFencingValidator.getErrorId();
                         formatAgs = geoFencingValidator.getErrorMessageArgs();
-                        if (R.string.other_operational_area_not_defined == geoFencingValidator.getErrorId()) {
+                        if (R.string.other_operational_area_not_defined == geoFencingValidator.getErrorId() || geoFencingValidator.isOperationalAreaOther()) {
                             positiveLabel = R.string.ok;
                             negativeLabel = 0;
                         } else {
@@ -149,7 +149,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
                                 case BUTTON_POSITIVE:
-                                    if (R.string.other_operational_area_not_defined == finalMessage) {
+                                    if (R.string.other_operational_area_not_defined == finalMessage || geoFencingValidator.isOperationalAreaOther()) {
                                         break;
                                     } else if (R.string.point_in_normal_operational_area == finalMessage || R.string.point_in_other_operational_area == finalMessage) {
                                         writeValues(mapView, formFragmentView, geoFencingValidator.getSelectedOperationalArea());
