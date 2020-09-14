@@ -46,10 +46,12 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
+import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.TestingUtils;
+import org.smartregister.util.JsonFormUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,6 +64,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -83,6 +86,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM_ZAMBIA;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_STATUS;
@@ -580,6 +584,16 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         verify(listTaskInteractor).saveJsonForm(jsonString);
     }
 
+
+    @Test
+    public void testSaveJsonFormForRegisterStructureShouldFetchLocations() {
+        String jsonString = "{\"name\":\"trever\",\"encounter_type\":\"Register_Structure\",\"step1\":{\"fields\":[{\"key\":\"valid_operational_area\",\"type\":\"hidden\",\"value\":\"3244354-345435434\"},{\"key\":\"my_location_active\",\"type\":\"hidden\",\"value\":\"true\"},{\"key\":\"structure\",\"type\":\"geowidget\",\"v_zoom_max\":{\"value\":\"16.5\",\"err\":\"Please zoom in to add a point\"},\"value\":{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":[28.740448054710495,-9.311798364364043,0]},\"properties\":null}}]}}";
+        listTaskPresenter.saveJsonForm(jsonString);
+        String name = JsonFormUtils.getFieldValue(jsonString, JsonForm.VALID_OPERATIONAL_AREA);
+        verify(listTaskView).showProgressDialog(R.string.opening_form_title, R.string.add_structure_form_redirecting, name);
+        verify(listTaskInteractor).fetchLocations(planId, name, JsonFormUtils.getFieldValue(jsonString, JsonForm.STRUCTURE), Boolean.valueOf(JsonFormUtils.getFieldValue(jsonString, JsonForm.LOCATION_COMPONENT_ACTIVE)));
+    }
+
     @Test
     public void testOnFormSaved() throws Exception {
         String structureId = "id1";
@@ -896,6 +910,18 @@ public class ListTaskPresenterTest extends BaseUnitTest {
 
         Whitebox.invokeMethod(listTaskPresenter, "onFeatureSelectedByLongClick", feature);
         verify(listTaskView).displayToast(R.string.cannot_make_structure_inactive);
+    }
+
+
+    @Test
+    public void testStartFormShouldPopulateFormData() throws Exception {
+        when(jsonFormUtils.getFormName(null, IRS)).thenReturn(SPRAY_FORM_ZAMBIA);
+        when(jsonFormUtils.getFormJSON(listTaskView.getContext(), SPRAY_FORM_ZAMBIA, feature, null, null)).thenReturn(new JSONObject(TestingUtils.DUMMY_JSON_FORM_STRING));
+        listTaskPresenter.startForm(feature, null, IRS);
+        verify(jsonFormUtils).populateForm(any(), any());
+        verify(jsonFormUtils, times(2)).populateServerOptions(any(), any(), any(), any());
+        verify(jsonFormUtils, times(2)).populateField(any(), anyString(), anyString(), anyString());
+        verify(listTaskView).startJsonForm(any());
     }
 
     private Feature initTestFeature(String identifier) throws JSONException {

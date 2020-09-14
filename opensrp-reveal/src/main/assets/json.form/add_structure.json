@@ -160,6 +160,13 @@
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
         "openmrs_entity_id": ""
+      },
+      {
+        "key": "my_location_active",
+        "type": "hidden",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": ""
       }
     ]
   }
