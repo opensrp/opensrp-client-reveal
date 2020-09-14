@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.google.gson.JsonPrimitive;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
@@ -59,8 +60,11 @@ import java.util.Collections;
 import java.util.UUID;
 
 import static android.content.DialogInterface.BUTTON_NEGATIVE;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -86,7 +90,10 @@ import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPIN
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
+import static org.smartregister.reveal.util.Constants.JsonForm.SELECTED_OPERATIONAL_AREA_NAME;
 import static org.smartregister.reveal.util.Constants.JsonForm.SPRAY_FORM_ZAMBIA;
+import static org.smartregister.reveal.util.Constants.JsonForm.STRUCTURE;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_STATUS;
@@ -149,6 +156,9 @@ public class ListTaskPresenterTest extends BaseUnitTest {
 
     @Captor
     private ArgumentCaptor<CommonPersonObjectClient> commonPersonObjectClientArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<JSONObject> jsonArgumentCaptor;
 
     private PreferencesUtil prefsUtil = PreferencesUtil.getInstance();
 
@@ -591,7 +601,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         listTaskPresenter.saveJsonForm(jsonString);
         String name = JsonFormUtils.getFieldValue(jsonString, JsonForm.VALID_OPERATIONAL_AREA);
         verify(listTaskView).showProgressDialog(R.string.opening_form_title, R.string.add_structure_form_redirecting, name);
-        verify(listTaskInteractor).fetchLocations(planId, name, JsonFormUtils.getFieldValue(jsonString, JsonForm.STRUCTURE), Boolean.valueOf(JsonFormUtils.getFieldValue(jsonString, JsonForm.LOCATION_COMPONENT_ACTIVE)));
+        verify(listTaskInteractor).fetchLocations(planId, name, JsonFormUtils.getFieldValue(jsonString, STRUCTURE), Boolean.valueOf(JsonFormUtils.getFieldValue(jsonString, JsonForm.LOCATION_COMPONENT_ACTIVE)));
     }
 
     @Test
@@ -923,6 +933,21 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         verify(jsonFormUtils, times(2)).populateField(any(), anyString(), anyString(), anyString());
         verify(listTaskView).startJsonForm(any());
     }
+
+    @Test
+    public void testOnAddStructureClickedShouldPopulateFormAndOpenIt() throws JSONException {
+        Point point = Point.fromLngLat(28.740448054710495, -9.311798364364043);
+        when(jsonFormUtils.getFormName(REGISTER_STRUCTURE_EVENT)).thenReturn(JsonForm.ADD_STRUCTURE_FORM);
+        when(jsonFormUtils.getFormString(listTaskView.getContext(), JsonForm.ADD_STRUCTURE_FORM, null)).thenReturn(TestingUtils.AddStructureFormJson);
+        Whitebox.setInternalState(listTaskPresenter, "operationalArea", feature);
+        listTaskPresenter.onAddStructureClicked(true, point.toJson());
+        verify(listTaskView).startJsonForm(jsonArgumentCaptor.capture());
+        JSONObject formJson = jsonArgumentCaptor.getValue();
+        assertEquals("true", jsonArgumentCaptor.getValue().getString(LOCATION_COMPONENT_ACTIVE));
+        verify(jsonFormUtils).populateField(formJson, JsonForm.SELECTED_OPERATIONAL_AREA_NAME, prefsUtil.getCurrentOperationalArea(), TEXT);
+        verify(jsonFormUtils).populateField(formJson, JsonForm.STRUCTURE, point.toJson(), VALUE);
+    }
+
 
     private Feature initTestFeature(String identifier) throws JSONException {
         String structureId = identifier;
