@@ -16,6 +16,7 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.Context;
 import org.smartregister.domain.Location;
@@ -27,6 +28,7 @@ import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.FamilyCardDetails;
@@ -36,6 +38,7 @@ import org.smartregister.reveal.model.SprayCardDetails;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.presenter.ListTaskPresenter;
+import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Constants.Intervention;
@@ -54,6 +57,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Executor;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -61,10 +65,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 import static org.smartregister.domain.Task.TaskStatus.COMPLETED;
+import static org.smartregister.reveal.interactor.ListTaskInteractorPowerMockTest.mosquitoCollectionForm;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.IN_PROGRESS;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
@@ -332,7 +342,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         MatrixCursor taskCursor = TestingUtils.getTaskCursor(expectedTask);
 
         when(database.rawQuery(any(), any())).thenReturn(taskCursor);
-        when(interactorUtils.resetTaskInfo(any(),any())).thenReturn(true);
+        when(interactorUtils.resetTaskInfo(any(), any())).thenReturn(true);
 
         listTaskInteractor.resetInterventionTaskInfo(BEDNET_DISTRIBUTION, expectedTask.getStructureId());
 
@@ -386,7 +396,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
         when(taskRepository.getTaskByIdentifier(anyString())).thenReturn(task);
 
-        listTaskInteractor.markStructureAsIneligible(feature,reasonUnEligible);
+        listTaskInteractor.markStructureAsIneligible(feature, reasonUnEligible);
 
         verify(taskRepository).getTaskByIdentifier(stringArgumentCaptor.capture());
         assertEquals(taskIdentifier, stringArgumentCaptor.getValue());
@@ -399,7 +409,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals(taskIdentifier, task.getIdentifier());
 
 
-        verify(eventClientRepository).addEvent(stringArgumentCaptor.capture(),jsonObjectArgumentCaptor.capture());
+        verify(eventClientRepository).addEvent(stringArgumentCaptor.capture(), jsonObjectArgumentCaptor.capture());
         Event actualEvent = taskGson.fromJson(jsonObjectArgumentCaptor.getValue().toString(), Event.class);
         assertEquals(BuildConfig.VERSION_NAME, actualEvent.getDetails().get(APP_VERSION_NAME));
         assertEquals(expectedBusinessStatus, actualEvent.getDetails().get(TASK_BUSINESS_STATUS));
@@ -441,7 +451,14 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals("11/02/1977", cardDetails.getDateCreated());
         assertEquals("Nifi-User", cardDetails.getOwner());
     }
-  
+
+    @Test
+    public void testSaveJsonFormShouldSaveMosquitoCollectionForm() {
+        listTaskInteractor.saveJsonForm(TestingUtils.mosquitoCollectionForm);
+
+        verify(eventClientRepository,timeout(ASYNC_TIMEOUT)).addEvent(any(), any());
+    }
+
     private Cursor createSprayCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{"spray_status", "not_sprayed_reason",
                 "not_sprayed_other_reason", "property_type", "spray_date", "spray_operator", "family_head_name"});

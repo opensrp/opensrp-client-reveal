@@ -2,33 +2,23 @@ package org.smartregister.reveal.interactor;
 
 import net.sqlcipher.Cursor;
 
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.SprayCardDetails;
-import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.CardDetailsUtil;
-
-import java.util.concurrent.Executor;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 
 /**
@@ -220,32 +210,10 @@ public class ListTaskInteractorPowerMockTest {
             "  }\n" +
             "}";
 
-    @Captor
-    private ArgumentCaptor<JSONObject> captor;
-
-
     @Before
     public void setUp() {
         listTaskInteractor = spy(Whitebox.newInstance(ListTaskInteractor.class));
         PowerMockito.mockStatic(CardDetailsUtil.class);
-    }
-
-    @Test
-    public void testSaveJsonFormShouldSaveMosquitoCollectionForm() throws Exception {
-        ListTaskInteractor listTaskInteractorSpy = spy(listTaskInteractor);
-
-        AppExecutors appExecutors = mock(AppExecutors.class);
-        Whitebox.setInternalState(listTaskInteractorSpy, "appExecutors", appExecutors);
-
-        Executor executor = mock(Executor.class);
-
-        doReturn(executor).when(appExecutors).diskIO();
-        doNothing().when(executor).execute(any(Runnable.class));
-
-        listTaskInteractorSpy.saveJsonForm(mosquitoCollectionForm);
-
-        verifyPrivate(listTaskInteractorSpy, times(1)).invoke("saveLocationInterventionForm", captor.capture());
-        assertEquals(new JSONObject(mosquitoCollectionForm).toString(), captor.getValue().toString());
     }
 
     @Test
