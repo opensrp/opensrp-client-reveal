@@ -34,7 +34,7 @@ public class GeoFencingValidator extends METValidator {
         super(errorMessage);
         this.mapView = mapView;
         this.operationalArea = operationalArea;
-        if (operationalArea.getStringProperty(Properties.LOCATION_NAME).contains(GeoWidgetFactory.OTHER)) {
+        if (operationalArea.hasProperty(Properties.LOCATION_NAME) && operationalArea.getStringProperty(Properties.LOCATION_NAME).contains(GeoWidgetFactory.OTHER)) {
             otherOperationalArea = operationalArea;
             operationalAreaOther = true;
         }
