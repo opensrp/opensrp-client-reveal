@@ -37,7 +37,7 @@ public class GeoFencingValidator extends METValidator {
     @Override
     public boolean isValid(@NonNull CharSequence text, boolean isEmpty) {
         if (disabled) return true;
-        com.mapbox.geojson.Point selectedPoint = getCenterPoint(mapView.getMapboxMap());
+        Point selectedPoint = getCenterPoint(mapView.getMapboxMap());
         boolean isWithinOperationArea = inside(selectedPoint, operationalArea);
         boolean validOperationalFound = false;
         if (!isWithinOperationArea) {
@@ -75,9 +75,9 @@ public class GeoFencingValidator extends METValidator {
         return false;
     }
 
-    private com.mapbox.geojson.Point getCenterPoint(MapboxMap mapboxMap) {
+    private Point getCenterPoint(MapboxMap mapboxMap) {
         LatLng latLng = mapboxMap.getCameraPosition().target;
-        com.mapbox.geojson.Point centerpoint = com.mapbox.geojson.Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
+        Point centerpoint = Point.fromLngLat(latLng.getLongitude(), latLng.getLatitude());
         return centerpoint;
     }
 
