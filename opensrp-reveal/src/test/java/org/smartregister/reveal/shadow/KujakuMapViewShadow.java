@@ -42,6 +42,7 @@ public class KujakuMapViewShadow extends MapViewShadow {
 
     @Implementation
     public void onResume() {
+        //Do nothing
     }
 
     @Implementation

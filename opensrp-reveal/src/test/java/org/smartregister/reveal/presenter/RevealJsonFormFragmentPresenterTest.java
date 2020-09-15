@@ -315,7 +315,6 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
         presenter.onSaveClick(formFragment.getMainView());
 
         verify(presenter).validateAndWriteValues();
-        verify(view).showSnackBar(anyString());
         Whitebox.setInternalState(RevealApplication.getInstance().getContext(), "locationRepository", new LocationRepository());
 
     }

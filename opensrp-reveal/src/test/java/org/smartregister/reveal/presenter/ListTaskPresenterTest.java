@@ -600,7 +600,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         listTaskPresenter.saveJsonForm(jsonString);
         String name = JsonFormUtils.getFieldValue(jsonString, JsonForm.VALID_OPERATIONAL_AREA);
         verify(listTaskView).showProgressDialog(R.string.opening_form_title, R.string.add_structure_form_redirecting, name);
-        verify(listTaskInteractor).fetchLocations(planId, name, JsonFormUtils.getFieldValue(jsonString, STRUCTURE), Boolean.valueOf(JsonFormUtils.getFieldValue(jsonString, JsonForm.LOCATION_COMPONENT_ACTIVE)));
+        verify(listTaskInteractor).fetchLocations(planId, name, JsonFormUtils.getFieldValue(jsonString, STRUCTURE), Boolean.valueOf(JsonFormUtils.getFieldValue(jsonString, LOCATION_COMPONENT_ACTIVE)));
     }
 
     @Test
@@ -944,7 +944,7 @@ public class ListTaskPresenterTest extends BaseUnitTest {
         JSONObject formJson = jsonArgumentCaptor.getValue();
         assertEquals("true", jsonArgumentCaptor.getValue().getString(LOCATION_COMPONENT_ACTIVE));
         verify(jsonFormUtils).populateField(formJson, JsonForm.SELECTED_OPERATIONAL_AREA_NAME, prefsUtil.getCurrentOperationalArea(), TEXT);
-        verify(jsonFormUtils).populateField(formJson, JsonForm.STRUCTURE, point.toJson(), VALUE);
+        verify(jsonFormUtils).populateField(formJson, STRUCTURE, point.toJson(), VALUE);
     }
 
 
