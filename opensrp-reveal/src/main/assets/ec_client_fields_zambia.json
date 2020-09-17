@@ -656,7 +656,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "nameHoH"
+            "concept": "structure_num"
           }
         },
         {
