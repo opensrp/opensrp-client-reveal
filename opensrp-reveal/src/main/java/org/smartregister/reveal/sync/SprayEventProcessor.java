@@ -15,6 +15,7 @@ import org.smartregister.reveal.util.Constants.Tables;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -34,9 +35,11 @@ public class SprayEventProcessor {
         Client client = new Client(event.getBaseEntityId());
         clientProcessor.processEvent(event, client, normalClassification);
 
+        if (event.getDetails() == null)
+            event.setDetails(new HashMap<>());
+        event.getDetails().put(DatabaseKeys.FORM_SUBMISSION_ID, event.getFormSubmissionId());
 
         if (isLocalEvent) {
-            event.getDetails().putIfAbsent(DatabaseKeys.FORM_SUBMISSION_ID, event.getFormSubmissionId());
             Obs mopup = event.findObs(null, true, "mopup");
             if (mopup != null) {
                 event.setFormSubmissionId(event.getBaseEntityId() + ":" + mopup.getValue());
