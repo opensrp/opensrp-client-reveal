@@ -607,6 +607,20 @@
           }
         },
         {
+          "column_name": "form_submission_id",
+          "type": "Event",
+          "json_mapping": {
+            "field": "formSubmissionId"
+          }
+        },
+        {
+          "column_name": "version",
+          "type": "Event",
+          "json_mapping": {
+            "field": "version"
+          }
+        },
+        {
           "column_name": "event_date",
           "type": "Event",
           "json_mapping": {
