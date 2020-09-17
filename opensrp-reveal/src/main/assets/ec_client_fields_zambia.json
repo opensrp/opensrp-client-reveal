@@ -614,13 +614,6 @@
           }
         },
         {
-          "column_name": "version",
-          "type": "Event",
-          "json_mapping": {
-            "field": "version"
-          }
-        },
-        {
           "column_name": "event_date",
           "type": "Event",
           "json_mapping": {
