@@ -150,7 +150,7 @@ public class EventViewHolder implements RecyclerViewProvider<EventViewHolder.Reg
 
     private EventRegisterDetails populateEventRegisterDetails(CommonPersonObjectClient pc) {
         EventRegisterDetails eventRegisterDetails = new EventRegisterDetails();
-        eventRegisterDetails.setFormSubmissionId(Utils.getValue(pc.getColumnmaps(), DatabaseKeys.BASE_ENTITY_ID, false));
+        eventRegisterDetails.setFormSubmissionId(Utils.getValue(pc.getColumnmaps(), DatabaseKeys.FORM_SUBMISSION_ID, false));
         eventRegisterDetails.setEventType(Utils.getValue(pc.getColumnmaps(), DatabaseKeys.EVENT_TYPE, false));
         return eventRegisterDetails;
     }
