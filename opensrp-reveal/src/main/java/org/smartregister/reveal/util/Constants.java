@@ -281,6 +281,7 @@ public interface Constants {
         String IN_PROGRESS = "In Progress";
         String NO_TASK = "No Task";
         String FAMILY_MEMBER_REGISTERED = "Registered Family Member";
+        String VOIDED = "Voided";
 
 
         //MDA status

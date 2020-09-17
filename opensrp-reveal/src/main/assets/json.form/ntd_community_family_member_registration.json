@@ -239,8 +239,8 @@
           "err": "Please enter a number"
         },
         "v_min": {
-          "value": "5",
-          "err": "Age must be equal or greater than 5"
+          "value": "0",
+          "err": "Age must be equal or greater than 0"
         },
         "v_max": {
           "value": "120",

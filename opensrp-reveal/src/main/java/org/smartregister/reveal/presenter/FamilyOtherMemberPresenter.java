@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 
+import androidx.core.util.Pair;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Triple;
 import org.json.JSONException;
@@ -46,6 +48,7 @@ import org.smartregister.util.Utils;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import timber.log.Timber;
@@ -342,14 +345,14 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
             String structureId = StructureDao.getInstance().getStructureIDFromFamilyID(familyEntityId);
 
             TaskUtils taskUtils = TaskUtils.getInstance();
-            if(StringUtils.isNotBlank(structureId)){
+            if (StringUtils.isNotBlank(structureId)) {
                 taskUtils.updateTaskStatus(
                         structureId,
                         Constants.Intervention.STRUCTURE_VISITED,
                         status,
                         Task.TaskStatus.COMPLETED
                 );
-            }else{
+            } else {
                 // floating families task
                 taskUtils.updateTaskStatus(
                         familyEntityId,
@@ -408,6 +411,9 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
             Location operationalArea = processor.getCurrentOperationalArea();
             String entityId = jsonObject.getString(Constants.Properties.BASE_ENTITY_ID);
 
+
+            String age = processor.getFieldValue("age");
+
             // update metadata
             processor.withBindType(FAMILY_MEMBER)
                     .withEncounterType(UPDATE_FAMILY_MEMBER_REGISTRATION)
@@ -417,6 +423,15 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
 
                     // create and save client
                     .hasClient(true)
+                    .saveClient(client -> {
+                        client.setBirthdateApprox(true);
+                        if (StringUtils.isNotBlank(age)) {
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.add(Calendar.YEAR, -1 * Integer.parseInt(age));
+
+                            client.setBirthdate(calendar.getTime());
+                        }
+                    })
                     .mergeAndSaveClient()
 
                     // create and save event to db
@@ -424,6 +439,31 @@ public class FamilyOtherMemberPresenter extends BaseFamilyOtherMemberProfileActi
 
                     // execute client processing
                     .clientProcessForm();
+
+            TaskUtils taskUtils = TaskUtils.getInstance();
+            if (StringUtils.isNotBlank(age)) {
+                Integer current_age = Integer.parseInt(age);
+                if (current_age >= 5 && current_age <= 15) {
+                    // create a task if not exists
+                    Set<Task> tasks = taskUtils.getTasksByEntityAndCode(entityId, Constants.Intervention.NTD_MDA_DISPENSE);
+                    // create a new task for missing tasks
+                    if (tasks.size() < 1) {
+
+                        Pair<String, String> familyIdAndStructureId = StructureDao.getInstance().getFamilyIdAndStructureIdByMemberId(entityId);
+
+                        taskUtils.generateTask(
+                                RevealApplication.getInstance().getContext().applicationContext(),
+                                entityId, familyIdAndStructureId.second, Constants.BusinessStatus.NOT_VISITED,
+                                Constants.Intervention.NTD_MDA_DISPENSE,
+                                R.string.mass_drug_administration
+                        );
+                    }
+                } else {
+                    // nuke the task
+                    taskUtils
+                            .updateTaskStatus(entityId, Constants.Intervention.NTD_MDA_DISPENSE, Constants.BusinessStatus.VOIDED, Task.TaskStatus.CANCELLED);
+                }
+            }
 
             return null;
         };
