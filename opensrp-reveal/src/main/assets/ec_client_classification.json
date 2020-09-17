@@ -10,8 +10,7 @@
             "field_value": "Spray",
             "creates_case": [
               "sprayed_structures",
-              "event_task",
-              "ec_events"
+              "event_task"
             ]
           },
           {
