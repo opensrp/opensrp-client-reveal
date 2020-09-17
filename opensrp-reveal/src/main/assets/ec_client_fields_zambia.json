@@ -607,10 +607,10 @@
           }
         },
         {
-          "column_name": "form_submission_id",
+          "column_name": "formSubmissionId",
           "type": "Event",
           "json_mapping": {
-            "field": "formSubmissionId"
+            "field": "details.formSubmissionId"
           }
         },
         {
