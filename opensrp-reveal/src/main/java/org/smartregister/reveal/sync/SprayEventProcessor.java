@@ -1,5 +1,7 @@
 package org.smartregister.reveal.sync;
 
+import androidx.annotation.VisibleForTesting;
+
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.smartregister.domain.Client;
@@ -19,6 +21,16 @@ import static org.smartregister.commonregistry.CommonRepository.ID_COLUMN;
  * Created by samuelgithengi on 9/17/20.
  */
 public class SprayEventProcessor {
+
+    private SQLiteDatabase sqLiteDatabase;
+
+    @VisibleForTesting
+    public SprayEventProcessor(SQLiteDatabase sqLiteDatabase) {
+        this.sqLiteDatabase = sqLiteDatabase;
+    }
+
+    public SprayEventProcessor() {
+    }
 
     public void processSprayEvent(RevealClientProcessor clientProcessor, ClientClassification clientClassification, Event event, boolean isLocalEvent) throws Exception {
 
@@ -46,8 +58,7 @@ public class SprayEventProcessor {
             }
         } else {
             event.setFormSubmissionId(event.getBaseEntityId());
-            SQLiteDatabase sqLiteDatabase = RevealApplication.getInstance().getRepository().getWritableDatabase();
-            sqLiteDatabase.delete(Tables.EC_EVENTS_TABLE,
+            getSqLiteDatabase().delete(Tables.EC_EVENTS_TABLE,
                     String.format("%s like ? AND %s=?", ID_COLUMN, DatabaseKeys.EVENT_TYPE),
                     new String[]{event.getBaseEntityId() + "%", event.getEventType()});
 
@@ -55,5 +66,13 @@ public class SprayEventProcessor {
         }
         clientProcessor.processEvent(event, client, ecEventsClassification);
         event.setFormSubmissionId(formSubmissionId);
+    }
+
+
+    private SQLiteDatabase getSqLiteDatabase() {
+        if (sqLiteDatabase == null) {
+            sqLiteDatabase = RevealApplication.getInstance().getRepository().getWritableDatabase();
+        }
+        return sqLiteDatabase;
     }
 }
