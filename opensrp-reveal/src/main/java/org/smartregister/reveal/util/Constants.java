@@ -489,6 +489,8 @@ public interface Constants {
 
 
         String ZONE = "zone";
+
+        String MOP_UP = "mopup";
     }
 
     interface DateFormat {

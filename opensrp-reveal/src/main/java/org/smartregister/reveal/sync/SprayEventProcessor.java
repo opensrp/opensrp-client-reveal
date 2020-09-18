@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import static org.smartregister.commonregistry.CommonRepository.ID_COLUMN;
+import static org.smartregister.reveal.util.Constants.JsonForm.MOP_UP;
 
 /**
  * Created by samuelgithengi on 9/17/20.
@@ -50,9 +51,9 @@ public class SprayEventProcessor {
         event.getDetails().put(DatabaseKeys.FORM_SUBMISSION_ID, formSubmissionId);
 
         if (isLocalEvent) {
-            Obs mopup = event.findObs(null, true, "mopup");
-            if (mopup != null) {
-                event.setFormSubmissionId(event.getBaseEntityId() + ":" + mopup.getValue());
+            Obs mopUp = event.findObs(null, true, MOP_UP);
+            if (mopUp != null) {
+                event.setFormSubmissionId(event.getBaseEntityId() + ":" + mopUp.getValue());
             } else {
                 event.setFormSubmissionId(event.getBaseEntityId());
             }
