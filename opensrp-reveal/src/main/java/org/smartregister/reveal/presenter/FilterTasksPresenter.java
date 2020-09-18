@@ -169,11 +169,17 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
             }
             if (taskFilterParams.getFromDate() != null) {
                 view.setFilterFromDate(taskFilterParams.getFromDate());
+                fromDateFilter = Calendar.getInstance();
                 fromDateFilter.setTime(taskFilterParams.getFromDate());
             }
             view.setViewAllEvents(taskFilterParams.isViewAllEvents());
 
         }
+    }
+
+    @Override
+    public void onClearSelections() {
+        fromDateFilter = null;
     }
 
     private void restoreSelections(Set<String> filters, ViewGroup viewGroup) {
@@ -188,6 +194,7 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+        fromDateFilter = Calendar.getInstance();
         fromDateFilter.set(year, month, dayOfMonth);
         view.setFilterFromDate(fromDateFilter.getTime());
     }
