@@ -34,4 +34,9 @@ public class MapViewShadow extends ShadowViewGroup {
         //Do nothing
     }
 
+    @Implementation
+    public void onStart() {
+        //Do nothing
+    }
+
 }

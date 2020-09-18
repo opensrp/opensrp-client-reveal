@@ -759,11 +759,21 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         progressDialog.setMessage(getString(R.string.fetching_structures_message));
     }
 
+
     @Override
     public void showProgressDialog(@StringRes int title, @StringRes int message) {
+        showProgressDialog(title, message, new Object[0]);
+    }
+
+    @Override
+    public void showProgressDialog(@StringRes int title, @StringRes int message, Object... formatArgs) {
         if (progressDialog != null) {
             progressDialog.setTitle(title);
-            progressDialog.setMessage(getString(message));
+            if (formatArgs.length == 0) {
+                progressDialog.setMessage(getString(message));
+            } else {
+                progressDialog.setMessage(getString(message, formatArgs));
+            }
             progressDialog.show();
         }
     }
@@ -916,6 +926,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void toggleProgressBarView(boolean syncing) {
         drawerView.toggleProgressBarView(syncing);
+    }
+
+    @Override
+    public void setOperationalArea(String operationalArea) {
+        drawerView.setOperationalArea(operationalArea);
     }
 
     @Override
