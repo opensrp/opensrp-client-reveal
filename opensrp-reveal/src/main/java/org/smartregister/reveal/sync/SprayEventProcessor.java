@@ -32,9 +32,10 @@ public class SprayEventProcessor {
         Client client = new Client(event.getBaseEntityId());
         clientProcessor.processEvent(event, client, normalClassification);
 
+        String formSubmissionId = event.getFormSubmissionId();
         if (event.getDetails() == null)
             event.setDetails(new HashMap<>());
-        event.getDetails().put(DatabaseKeys.FORM_SUBMISSION_ID, event.getFormSubmissionId());
+        event.getDetails().put(DatabaseKeys.FORM_SUBMISSION_ID, formSubmissionId);
 
         if (isLocalEvent) {
             Obs mopup = event.findObs(null, true, "mopup");
@@ -53,5 +54,6 @@ public class SprayEventProcessor {
 
         }
         clientProcessor.processEvent(event, client, ecEventsClassification);
+        event.setFormSubmissionId(formSubmissionId);
     }
 }
