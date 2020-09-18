@@ -259,6 +259,10 @@ public class ListTaskInteractor extends BaseInteractor {
     }
 
     public void fetchLocations(String plan, String operationalArea) {
+        fetchLocations(plan, operationalArea, null, null);
+    }
+
+    public void fetchLocations(String plan, String operationalArea, String point, Boolean locationComponentActive) {
         Runnable runnable = new Runnable() {
 
             @Override
@@ -293,7 +297,11 @@ public class ListTaskInteractor extends BaseInteractor {
                         if (operationalAreaLocation != null) {
                             operationalAreaId = operationalAreaLocation.getId();
                             Feature operationalAreaFeature = Feature.fromJson(gson.toJson(operationalAreaLocation));
-                            getPresenter().onStructuresFetched(finalFeatureCollection, operationalAreaFeature, finalTaskDetailsList);
+                            if (locationComponentActive != null) {
+                                getPresenter().onStructuresFetched(finalFeatureCollection, operationalAreaFeature, finalTaskDetailsList, point, locationComponentActive);
+                            } else {
+                                getPresenter().onStructuresFetched(finalFeatureCollection, operationalAreaFeature, finalTaskDetailsList);
+                            }
                         } else {
                             getPresenter().onStructuresFetched(finalFeatureCollection, null, null);
                         }

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.cocoahero.android.geojson.Feature;
 import com.cocoahero.android.geojson.Point;
@@ -44,14 +45,18 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.smartregister.domain.Location;
+import org.smartregister.domain.PhysicalLocation;
+import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.Constants.Map;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealMapHelper;
+import org.smartregister.reveal.validators.GeoFencingValidator;
 import org.smartregister.reveal.validators.MinZoomValidator;
-import org.smartregister.reveal.validators.WithinOperationAreaValidator;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.AssetHandler;
 import org.smartregister.util.Utils;
@@ -64,11 +69,11 @@ import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
 import io.ona.kujaku.layers.BoundaryLayer;
 import timber.log.Timber;
 
-import static android.content.DialogInterface.BUTTON_NEGATIVE;
-import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
+import static org.smartregister.reveal.interactor.BaseInteractor.gson;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
+import static org.smartregister.reveal.util.Constants.JsonForm.VALID_OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
 import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
 
@@ -81,6 +86,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
     private static final String MAX_ZOOM_LEVEL = "v_zoom_max";
 
+    public static final String OTHER = "other";
+
     private RevealMapView mapView;
 
     private JsonApi jsonApi;
@@ -92,6 +99,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
     private RevealMapHelper mapHelper = new RevealMapHelper();
 
     private boolean autoSizeGeoWidget = true;
+
+    private GeoFencingValidator geoFencingValidator;
 
     public GeoWidgetFactory() {
     }
@@ -111,29 +120,50 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         Toast.makeText(formFragmentView.getContext(), validator.getErrorMessage(), Toast.LENGTH_LONG).show();
                         return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
                     }
-                } else if ((validator instanceof WithinOperationAreaValidator)
-                        && org.smartregister.reveal.util.Utils.displayAddStructureOutOfBoundaryWarningDialog()
-                        && !validator.isValid("", true)) {
+                } else if ((validator instanceof GeoFencingValidator)
+                        && !validator.isValid("", true)
+                        && Country.ZAMBIA == BuildConfig.BUILD_COUNTRY) {
                     // perform within op area validation
+                    GeoFencingValidator geoFencingValidator = (GeoFencingValidator) validator;
+                    int title = R.string.register_outside_boundary_title;
+                    int message = R.string.register_outside_boundary_warning;
+                    int positiveLabel = R.string.register;
+                    int negativeLabel = R.string.cancel;
+                    Object[] formatAgs = new String[]{};
 
-                    AlertDialogUtils.displayNotificationWithCallback(formFragmentView.getContext(), R.string.register_outside_boundary_title, R.string.register_outside_boundary_warning, R.string.register, R.string.cancel, new DialogInterface.OnClickListener() {
+                    if (geoFencingValidator.getErrorId() != 0) {
+                        message = geoFencingValidator.getErrorId();
+                        formatAgs = geoFencingValidator.getErrorMessageArgs();
+                        if (R.string.other_operational_area_not_defined == geoFencingValidator.getErrorId() || geoFencingValidator.isOperationalAreaOther()) {
+                            positiveLabel = R.string.ok;
+                            negativeLabel = 0;
+                        } else {
+                            positiveLabel = R.string.add_point;
+                            negativeLabel = R.string.undo;
+                        }
+                    }
+
+                    int finalMessage = message;
+                    AlertDialogUtils.displayNotificationWithCallback(formFragmentView.getContext(), title, finalMessage, positiveLabel, negativeLabel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
-                                case BUTTON_NEGATIVE:
-                                case BUTTON_NEUTRAL:
-                                    dialog.dismiss();
-                                    break;
                                 case BUTTON_POSITIVE:
-                                    ((WithinOperationAreaValidator) validator).setDisabled(true);
+                                    if (R.string.other_operational_area_not_defined == finalMessage || geoFencingValidator.isOperationalAreaOther()) {
+                                        break;
+                                    } else if (R.string.point_within_known_operational_area == finalMessage || R.string.point_not_within_known_operational_area == finalMessage) {
+                                        writeValues(mapView, formFragmentView, geoFencingValidator.getSelectedOperationalArea());
+                                        Context context = formFragmentView.getContext();
+                                        Toast.makeText(context, context.getString(R.string.add_structure_form_redirecting, geoFencingValidator.getSelectedOperationalArea()), Toast.LENGTH_LONG).show();
+                                    }
+                                    geoFencingValidator.setDisabled(true);
                                     presenter.validateAndWriteValues();
-                                    dialog.dismiss();
                                     break;
                                 default:
                                     break;
                             }
                         }
-                    });
+                    }, formatAgs);
 
                     return new ValidationStatus(false, validator.getErrorMessage(), formFragmentView, mapView);
 
@@ -178,6 +208,8 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         String relevance = jsonObject.optString(JsonFormConstants.RELEVANCE);
         String key = jsonObject.optString(JsonFormConstants.KEY);
 
+        String value = jsonObject.optString(JsonFormConstants.VALUE);
+
 
         List<View> views = new ArrayList<>(1);
 
@@ -188,11 +220,15 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         String operationalArea = null;
         String featureCollection = null;
         boolean locationComponentActive = false;
+        com.mapbox.geojson.Feature selectedFeature = null;
 
         try {
             operationalArea = new JSONObject(formFragment.getCurrentJsonState()).optString(OPERATIONAL_AREA_TAG);
             featureCollection = RevealApplication.getInstance().getFeatureCollection().toJson();
             locationComponentActive = new JSONObject(formFragment.getCurrentJsonState()).optBoolean(LOCATION_COMPONENT_ACTIVE);
+            if (StringUtils.isNotBlank(value)) {
+                selectedFeature = com.mapbox.geojson.Feature.fromJson(value);
+            }
         } catch (JSONException e) {
             Timber.e(e, "error extracting geojson form jsonform");
         }
@@ -205,24 +241,16 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
         myLocationButton = mapView.findViewById(R.id.ib_mapview_focusOnMyLocationIcon);
 
-        com.mapbox.geojson.Feature operationalAreaFeature = null;
-        if (operationalArea != null) {
-            operationalAreaFeature = com.mapbox.geojson.Feature.fromJson(operationalArea);
-            BoundaryLayer.Builder boundaryBuilder = new BoundaryLayer.Builder(FeatureCollection.fromFeature(operationalAreaFeature))
-                    .setLabelProperty(Map.NAME_PROPERTY)
-                    .setLabelTextSize(context.getResources().getDimension(R.dimen.operational_area_boundary_text_size))
-                    .setLabelColorInt(Color.WHITE)
-                    .setBoundaryColor(Color.WHITE)
-                    .setBoundaryWidth(context.getResources().getDimension(R.dimen.operational_area_boundary_width));
-            mapView.addLayer(boundaryBuilder.build());
-        }
+        com.mapbox.geojson.Feature operationalAreaFeature = com.mapbox.geojson.Feature.fromJson(operationalArea);
 
-
-        String finalFeatureCollection = featureCollection;
-        com.mapbox.geojson.Feature finalOperationalAreaFeature = operationalAreaFeature;
         this.operationalArea = operationalAreaFeature;
 
+        createBoundaryLayer(operationalAreaFeature, context);
+
+        String finalFeatureCollection = featureCollection;
+
         boolean finalLocationComponentActive = locationComponentActive;
+        com.mapbox.geojson.Feature finalSelectedFeature = selectedFeature;
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull MapboxMap mapboxMap) {
@@ -241,7 +269,7 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                         String baseMapFeatureString = AssetHandler.readFileFromAssetsFolder(context.getString(R.string.base_map_feature_json), context);
 
                         if (BuildConfig.DISPLAY_OUTSIDE_OPERATIONAL_AREA_MASK) {
-                            RevealMapHelper.addOutOfBoundaryMask(style, finalOperationalAreaFeature,
+                            RevealMapHelper.addOutOfBoundaryMask(style, operationalAreaFeature,
                                     com.mapbox.geojson.Feature.fromJson(baseMapFeatureString), context);
                         }
 
@@ -260,9 +288,14 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 mapView.setLocationBufferRadius(bufferRadius);
 
 
-                if (finalOperationalAreaFeature != null && !finalLocationComponentActive) {
-                    CameraPosition cameraPosition = mapboxMap.getCameraForGeometry(finalOperationalAreaFeature.geometry());
-                    if (cameraPosition != null) {
+                if (finalSelectedFeature != null || (operationalAreaFeature != null && !finalLocationComponentActive)) {
+                    CameraPosition cameraPosition;
+                    if (finalSelectedFeature != null) {
+                        cameraPosition = mapboxMap.getCameraForGeometry(finalSelectedFeature.geometry());
+                        mapboxMap.setCameraPosition(new CameraPosition.Builder().target(cameraPosition.target).zoom(19.1).build());
+
+                    } else {
+                        cameraPosition = mapboxMap.getCameraForGeometry(operationalAreaFeature.geometry());
                         mapboxMap.setCameraPosition(cameraPosition);
                     }
                 } else {
@@ -270,7 +303,9 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 }
 
 
-                writeValues(formFragment, stepName, getCenterPointFeature(mapboxMap.getCameraPosition()), key, openMrsEntityParent, openMrsEntity, openMrsEntityId, mapboxMap.getCameraPosition().zoom, finalLocationComponentActive);
+                writeValues(formFragment, stepName, getCenterPointFeature(mapboxMap.getCameraPosition()),
+                        key, openMrsEntityParent, openMrsEntity, openMrsEntityId,
+                        mapboxMap.getCameraPosition().zoom, finalLocationComponentActive);
 
                 mapboxMap.addOnMoveListener(new MapboxMap.OnMoveListener() {
                     @Override
@@ -321,13 +356,56 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
 
 
         addMaximumZoomLevel(jsonObject, mapView);
-        addWithinOperationalAreaValidator(context);
+        addGeoFencingValidator(context);
+        LocationRepository locationRepository = RevealApplication.getInstance().getLocationRepository();
+        RevealApplication.getInstance().getAppExecutors().diskIO().execute(() -> {
+            String parentId = locationRepository.getLocationById(operationalAreaFeature.id()).getProperties().getParentId();
+            for (Location location : locationRepository.getAllLocations()) {
+                if (!location.getId().equals(operationalAreaFeature.id())) {
+                    com.mapbox.geojson.Feature feature = convertFromLocation(location);
+                    if (feature != null) {
+                        if (location.getProperties().getParentId().equals(parentId) && location.getProperties().getName().toLowerCase().contains(OTHER)) {
+                            geoFencingValidator.setOtherOperationalArea(feature);
+                        }
+                        geoFencingValidator.getOperationalAreas().add(feature);
+
+                    }
+                }
+            }
+            RevealApplication.getInstance().getAppExecutors().mainThread().execute(() -> {
+                for (com.mapbox.geojson.Feature feature : geoFencingValidator.getOperationalAreas()) {
+                    createBoundaryLayer(feature, context);
+                }
+            });
+        });
         views.add(mapView);
         mapView.onStart();
         mapView.showCurrentLocationBtn(true);
         mapView.enableAddPoint(true);
         disableParentScroll((Activity) context, mapView);
         return views;
+    }
+
+    private com.mapbox.geojson.Feature convertFromLocation(PhysicalLocation location) {
+        try {
+            return com.mapbox.geojson.Feature.fromJson(gson.toJson(location));
+        } catch (Exception e) {
+            Timber.e(e, "Error converting Feature %s %s ", location.getGeometry().getType(), location.getId());
+        }
+        return null;
+    }
+
+    private void createBoundaryLayer(com.mapbox.geojson.Feature operationalArea, Context context) {
+        if (operationalArea != null) {
+
+            BoundaryLayer.Builder boundaryBuilder = new BoundaryLayer.Builder(FeatureCollection.fromFeature(operationalArea))
+                    .setLabelProperty(Map.NAME_PROPERTY)
+                    .setLabelTextSize(context.getResources().getDimension(R.dimen.operational_area_boundary_text_size))
+                    .setLabelColorInt(Color.WHITE)
+                    .setBoundaryColor(Color.WHITE)
+                    .setBoundaryWidth(context.getResources().getDimension(R.dimen.operational_area_boundary_width));
+            mapView.addLayer(boundaryBuilder.build());
+        }
     }
 
     private void disableParentScroll(Activity context, View mapView) {
@@ -351,14 +429,23 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
                 formFragmentView.writeValue(stepName, key, markerPosition.toJSON().toString(), openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
                 formFragmentView.writeValue(stepName, ZOOM_LEVEL, zoomLevel + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
                 formFragmentView.writeValue(stepName, LOCATION_COMPONENT_ACTIVE, finalLocationComponentActive + "", openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
-            }
-            else{
+            } else {
                 Timber.w("cannot write values JsonApi is null");
             }
         } catch (JSONException e) {
             Timber.e(e, "error writing Geowidget values");
         }
 
+    }
+
+    private static void writeValues(RevealMapView mapView, JsonFormFragmentView formFragmentView, String otherOperationalArea) {
+        String stepName = String.valueOf(mapView.getTag(com.vijay.jsonwizard.R.id.step_title));
+        String openMrsEntityParent = String.valueOf(mapView.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_parent));
+        String openMrsEntity = String.valueOf(mapView.getTag(com.vijay.jsonwizard.R.id.openmrs_entity));
+        String openMrsEntityId = String.valueOf(mapView.getTag(com.vijay.jsonwizard.R.id.openmrs_entity_id));
+        if (StringUtils.isNotBlank(otherOperationalArea)) {
+            formFragmentView.writeValue(stepName, VALID_OPERATIONAL_AREA, otherOperationalArea, openMrsEntityParent, openMrsEntity, openMrsEntityId, false);
+        }
     }
 
 
@@ -382,8 +469,9 @@ public class GeoWidgetFactory implements FormWidgetFactory, LifeCycleListener, O
         }
     }
 
-    private void addWithinOperationalAreaValidator(Context context) {
-        mapView.addValidator(new WithinOperationAreaValidator(context.getString(R.string.register_outside_boundary_warning), mapView, operationalArea));
+    private void addGeoFencingValidator(Context context) {
+        geoFencingValidator = new GeoFencingValidator(context.getString(R.string.register_outside_boundary_warning), mapView, operationalArea);
+        mapView.addValidator(geoFencingValidator);
     }
 
     @Override
