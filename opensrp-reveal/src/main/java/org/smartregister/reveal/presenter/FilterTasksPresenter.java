@@ -46,6 +46,7 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
     public FilterTasksPresenter(FilterTasksContract.View view, FilterConfiguration filterConfiguration) {
         this.view = view;
         this.filterConfiguration = filterConfiguration;
+        fromDateFilter = Calendar.getInstance();
         populateLabels();
     }
 
@@ -166,8 +167,10 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
                         .indexOf(taskFilterParams.getSortBy());
                 view.setSortBySelection(index == -1 ? 0 : index);
             }
-            if (taskFilterParams.getFromDate() != null)
+            if (taskFilterParams.getFromDate() != null) {
                 view.setFilterFromDate(taskFilterParams.getFromDate());
+                fromDateFilter.setTime(taskFilterParams.getFromDate());
+            }
             view.setViewAllEvents(taskFilterParams.isViewAllEvents());
 
         }
@@ -185,7 +188,6 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-        fromDateFilter = Calendar.getInstance();
         fromDateFilter.set(year, month, dayOfMonth);
         view.setFilterFromDate(fromDateFilter.getTime());
     }
