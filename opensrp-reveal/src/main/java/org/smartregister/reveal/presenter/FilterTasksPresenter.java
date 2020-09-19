@@ -46,7 +46,6 @@ public class FilterTasksPresenter implements FilterTasksContract.Presenter {
     public FilterTasksPresenter(FilterTasksContract.View view, FilterConfiguration filterConfiguration) {
         this.view = view;
         this.filterConfiguration = filterConfiguration;
-        fromDateFilter = Calendar.getInstance();
         populateLabels();
     }
 

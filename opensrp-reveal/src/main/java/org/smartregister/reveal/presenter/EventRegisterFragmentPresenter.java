@@ -95,6 +95,7 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
                 tableName + "." + DatabaseKeys.ENTITY,
                 tableName + "." + DatabaseKeys.STATUS,
                 tableName + "." + DatabaseKeys.FORM_SUBMISSION_ID,
+                tableName + "." + DatabaseKeys.BASE_ENTITY_ID,
                 tableName + "." + DatabaseKeys.SPRAYED,
                 tableName + "." + DatabaseKeys.FOUND
         };
