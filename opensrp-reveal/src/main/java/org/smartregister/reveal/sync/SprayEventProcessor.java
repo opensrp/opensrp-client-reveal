@@ -50,14 +50,13 @@ public class SprayEventProcessor {
             event.setDetails(new HashMap<>());
         event.getDetails().put(DatabaseKeys.FORM_SUBMISSION_ID, formSubmissionId);
 
-        if (isLocalEvent) {
-            Obs mopUp = event.findObs(null, true, MOP_UP);
-            if (mopUp != null) {
-                event.setFormSubmissionId(event.getBaseEntityId() + ":" + mopUp.getValue());
-            } else {
-                event.setFormSubmissionId(event.getBaseEntityId());
-            }
+        Obs mopUp = event.findObs(null, true, MOP_UP);
+        if (mopUp != null) {
+            event.setFormSubmissionId(event.getBaseEntityId() + ":" + mopUp.getValue());
         } else {
+            event.setFormSubmissionId(event.getBaseEntityId());
+        }
+        if (!isLocalEvent) {
             event.setFormSubmissionId(event.getBaseEntityId());
             getSqLiteDatabase().delete(Tables.EC_EVENTS_TABLE,
                     String.format("%s like ? AND %s=?", ID_COLUMN, DatabaseKeys.EVENT_TYPE),
