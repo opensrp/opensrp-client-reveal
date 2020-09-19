@@ -57,7 +57,6 @@ public class SprayEventProcessor {
             event.setFormSubmissionId(event.getBaseEntityId());
         }
         if (!isLocalEvent) {
-            event.setFormSubmissionId(event.getBaseEntityId());
             getSqLiteDatabase().delete(Tables.EC_EVENTS_TABLE,
                     String.format("%s like ? AND %s=?", ID_COLUMN, DatabaseKeys.EVENT_TYPE),
                     new String[]{event.getBaseEntityId() + "%", event.getEventType()});
