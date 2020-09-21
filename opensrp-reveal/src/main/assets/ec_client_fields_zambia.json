@@ -607,6 +607,13 @@
           }
         },
         {
+          "column_name": "formSubmissionId",
+          "type": "Event",
+          "json_mapping": {
+            "field": "details.formSubmissionId"
+          }
+        },
+        {
           "column_name": "event_date",
           "type": "Event",
           "json_mapping": {
@@ -656,7 +663,7 @@
           "type": "Event",
           "json_mapping": {
             "field": "obs.fieldCode",
-            "concept": "nameHoH"
+            "concept": "structure_num"
           }
         },
         {

@@ -67,12 +67,15 @@ public class RevealClientProcessor extends ClientProcessorForJava {
 
     private RevealApplication revealApplication;
 
+    private SprayEventProcessor sprayEventProcessor;
+
     public RevealClientProcessor(Context context) {
         super(context);
         revealApplication = RevealApplication.getInstance();
         eventClientRepository = revealApplication.getContext().getEventClientRepository();
         taskRepository = revealApplication.getTaskRepository();
         structureRepository = revealApplication.getStructureRepository();
+        sprayEventProcessor = new SprayEventProcessor();
     }
 
 
@@ -221,8 +224,12 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             }
 
             try {
-                Client client = new Client(event.getBaseEntityId());
-                processEvent(event, client, clientClassification);
+                if (SPRAY_EVENT.equals(event.getEventType())) {
+                    sprayEventProcessor.processSprayEvent(this, clientClassification, event, localEvents);
+                } else {
+                    Client client = new Client(event.getBaseEntityId());
+                    processEvent(event, client, clientClassification);
+                }
             } catch (Exception e) {
                 Timber.e(e, "Error processing %s event", event.getEventType());
             }
