@@ -81,6 +81,7 @@ import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
+import org.smartregister.util.LangUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -213,6 +214,16 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         initializeToolbar();
 
         syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
+            LangUtils.saveLanguage(base.getApplicationContext(), "th");
+        } else {
+            LangUtils.saveLanguage(base.getApplicationContext(), "en");
+        }
+        super.attachBaseContext(base);
     }
 
     private void initializeCardViews() {
