@@ -339,7 +339,12 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     @Override
     public void onViewResumed() {
         if (viewInitialized) {
-            if (!prefsUtil.getCurrentPlan().equals(view.getPlan())
+            if ((StringUtils.isBlank(prefsUtil.getCurrentPlan()) || StringUtils.isBlank(prefsUtil.getCurrentOperationalArea())) &&
+                    (StringUtils.isNotBlank(view.getPlan()) || StringUtils.isNotBlank(view.getOperationalArea()))) {
+                view.setOperationalArea(prefsUtil.getCurrentOperationalArea());
+                view.setPlan(prefsUtil.getCurrentPlan());
+                view.lockNavigationDrawerForSelection(R.string.select_campaign_operational_area_title, R.string.select_campaign_operational_area);
+            } else if (!prefsUtil.getCurrentPlan().equals(view.getPlan())
                     || !prefsUtil.getCurrentOperationalArea().equals(view.getOperationalArea())) {
                 changedCurrentSelection = true;
                 onDrawerClosed();
