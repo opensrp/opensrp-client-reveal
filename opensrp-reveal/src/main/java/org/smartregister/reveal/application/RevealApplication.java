@@ -24,12 +24,14 @@ import org.smartregister.commonregistry.CommonFtsObject;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.JsonSpecHelper;
 import org.smartregister.domain.Setting;
+import org.smartregister.dto.UserAssignmentDTO;
 import org.smartregister.family.FamilyLibrary;
 import org.smartregister.family.activity.FamilyWizardFormActivity;
 import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
+import org.smartregister.receiver.ValidateAssignmentReceiver;
 import org.smartregister.repository.AllSettings;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.LocationRepository;
@@ -49,6 +51,7 @@ import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.DatabaseKeys;
 import org.smartregister.reveal.util.Constants.EventsRegister;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealSyncConfiguration;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.FamilyProfileActivity;
@@ -78,7 +81,7 @@ import static org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
 import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 
-public class RevealApplication extends DrishtiApplication implements TimeChangedBroadcastReceiver.OnTimeChangedListener {
+public class RevealApplication extends DrishtiApplication implements TimeChangedBroadcastReceiver.OnTimeChangedListener, ValidateAssignmentReceiver.UserAssignmentListener {
 
     private JsonSpecHelper jsonSpecHelper;
     private char[] password;
@@ -419,5 +422,17 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
 
     public void setSynced(boolean synced) {
         this.synced = synced;
+    }
+
+    @Override
+    public void onUserAssignmentRevoked(UserAssignmentDTO userAssignmentDTO) {
+        PreferencesUtil preferencesUtil = PreferencesUtil.getInstance();
+        if (userAssignmentDTO.getJurisdictions().contains(preferencesUtil.getCurrentOperationalAreaId())) {
+            preferencesUtil.setCurrentOperationalArea(null);
+        }
+        if (userAssignmentDTO.getPlans().contains(preferencesUtil.getCurrentPlanId())) {
+            preferencesUtil.setCurrentPlan(null);
+            preferencesUtil.setCurrentPlanId(null);
+        }
     }
 }
