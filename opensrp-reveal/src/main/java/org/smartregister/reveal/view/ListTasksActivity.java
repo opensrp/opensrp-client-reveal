@@ -216,16 +216,6 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         syncProgressSnackbar = Snackbar.make(rootView, getString(org.smartregister.R.string.syncing), Snackbar.LENGTH_INDEFINITE);
     }
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
-            LangUtils.saveLanguage(base.getApplicationContext(), "th");
-        } else {
-            LangUtils.saveLanguage(base.getApplicationContext(), "en");
-        }
-        super.attachBaseContext(base);
-    }
-
     private void initializeCardViews() {
         sprayCardView = findViewById(R.id.spray_card_view);
         sprayCardView.setOnTouchListener(new View.OnTouchListener() {
