@@ -75,11 +75,9 @@ import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_F
 /**
  * Created by samuelgithengi on 3/11/19.
  */
-public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity {
+public class TaskRegisterFragment extends BaseDrawerRegisterFragment implements TaskRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity {
 
     private TaskRegisterAdapter taskAdapter;
-
-    private BaseDrawerContract.View drawerView;
 
     private RevealJsonFormUtils jsonFormUtils;
     private ProgressDialog progressDialog;

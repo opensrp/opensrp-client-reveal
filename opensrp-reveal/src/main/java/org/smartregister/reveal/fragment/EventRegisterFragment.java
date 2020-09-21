@@ -12,6 +12,7 @@ import androidx.annotation.StringRes;
 
 import org.json.JSONObject;
 import org.smartregister.cursoradapter.RecyclerViewPaginatedAdapter;
+import org.smartregister.receiver.ValidateAssignmentReceiver;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.EventRegisterContract;
@@ -44,9 +45,7 @@ import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_F
 /**
  * Created by samuelgithengi on 7/30/20.
  */
-public class EventRegisterFragment extends BaseRegisterFragment implements EventRegisterContract.View, BaseDrawerContract.DrawerActivity {
-
-    private BaseDrawerContract.View drawerView;
+public class EventRegisterFragment extends BaseDrawerRegisterFragment implements EventRegisterContract.View, BaseDrawerContract.DrawerActivity {
 
     private ProgressDialog progressDialog;
 
@@ -104,6 +103,7 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
         });
 
     }
+
 
     @Override
     public void setUniqueID(String s) {//not used

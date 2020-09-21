@@ -119,8 +119,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         return getInstance().jsonSpecHelper;
     }
 
-    private ValidateAssignmentReceiver validateAssignmentReceiver;
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -165,8 +163,8 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         }
         NativeFormLibrary.getInstance().setClientFormDao(CoreLibrary.getInstance().context().getClientFormRepository());
 
-        validateAssignmentReceiver = new ValidateAssignmentReceiver(this);
-        registerReceiver(validateAssignmentReceiver, new IntentFilter(ValidateAssignmentHelper.ACTION_ASSIGNMENT_REMOVED));
+        ValidateAssignmentReceiver.init(this);
+        ValidateAssignmentReceiver.getInstance().addListener(this);
 
     }
 
@@ -225,7 +223,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
         cleanUpSyncState();
         TimeChangedBroadcastReceiver.destroy(this);
         SyncStatusBroadcastReceiver.destroy(this);
-        unregisterReceiver(validateAssignmentReceiver);
+        ValidateAssignmentReceiver.destroy(this);
         super.onTerminate();
     }
 
