@@ -383,10 +383,10 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
                         String jsonEventStr = cursor.getString(0);
 
                         jsonEventStr = jsonEventStr.replaceAll("'", "");
+                        JSONObject localJsonEvent = new JSONObject(jsonEventStr);
 
-                        jsonEvent = new JSONObject(jsonEventStr);
-
-                        if (cursor.getCount() == 1 || jsonEvent.optString(event_column.baseEntityId.name()).equals(indexCaseEventId)) {
+                        if (cursor.getCount() == 1 || localJsonEvent.optString(ID).equals(indexCaseEventId)) {
+                            jsonEvent = new JSONObject(jsonEventStr);
                             break;
                         }
                     }

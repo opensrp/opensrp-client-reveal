@@ -37,6 +37,7 @@ import org.smartregister.reveal.presenter.EditFociBoundaryPresenter;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.EditBoundaryState;
 import org.smartregister.reveal.util.RevealMapHelper;
+import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.helper.LocationServiceHelper;
 
 import io.ona.kujaku.callbacks.OnLocationComponentInitializedCallback;
@@ -337,6 +338,12 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
         Location operationalAreaLocation = LocationServiceHelper.locationGson.fromJson(revealApplication.getOperationalArea().toJson(), Location.class);
         JsonArray updatedCoordsJsonArray = LocationServiceHelper.locationGson.fromJson(updatedCoords.toString(), JsonArray.class);
         operationalAreaLocation.getGeometry().setCoordinates(updatedCoordsJsonArray);
+
+        //update location tags
+        Location dbLocation = Utils.getLocationById(operationalAreaLocation.getId());
+        if (dbLocation != null && dbLocation.getLocationTags() != null) {
+            operationalAreaLocation.setLocationTags(dbLocation.getLocationTags());
+        }
         presenter.onSaveEditedBoundary(operationalAreaLocation);
     }
 }
