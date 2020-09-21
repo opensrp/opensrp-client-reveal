@@ -139,6 +139,15 @@ public class Utils {
         });
     }
 
+    public static Location getLocationById(String locationId) {
+        return cache.get(locationId, new CacheableData<Location>() {
+            @Override
+            public Location fetch() {
+                return RevealApplication.getInstance().getLocationRepository().getLocationById(locationId);
+            }
+        });
+    }
+
     public static void evictCache(String key) {
         cache.evict(key);
     }

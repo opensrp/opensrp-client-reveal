@@ -6,11 +6,15 @@ import android.widget.ImageButton;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.rengwuxian.materialedittext.validation.METValidator;
 import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -19,13 +23,17 @@ import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
+import org.smartregister.domain.Location;
+import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.fragment.RevealJsonFormFragment;
 import org.smartregister.reveal.util.Constants.JsonForm;
+import org.smartregister.reveal.util.TestingUtils;
+import org.smartregister.reveal.validators.GeoFencingValidator;
 import org.smartregister.reveal.validators.MinZoomValidator;
-import org.smartregister.reveal.validators.WithinOperationAreaValidator;
 import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.util.AssetHandler;
 
@@ -41,8 +49,10 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 
 /**
  * Created by samuelgithengi on 3/13/19.
@@ -65,15 +75,25 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
     private RevealMapView mapView;
 
     @Mock
-    private WithinOperationAreaValidator withinOperationAreaValidator;
+    private GeoFencingValidator geoFencingValidator;
 
     @Mock
     private ImageButton imageButton;
 
+    @Mock
+    private LocationRepository locationRepository;
+
+    private Location location = TestingUtils.getOperationalArea();
+
 
     private void setUpFormActivity(String formName) {
+        String json = AssetHandler.readFileFromAssetsFolder(formName, context);
+        setUpFormActivityWithJson(json);
+    }
+
+    private void setUpFormActivityWithJson(String json) {
         Intent intent = new Intent();
-        intent.putExtra("json", AssetHandler.readFileFromAssetsFolder(formName, context));
+        intent.putExtra("json", json);
         jsonFormActivity = Robolectric.buildActivity(RevealJsonFormActivity.class, intent).create().resume().get();
         formFragment = RevealJsonFormFragment.getFormFragment("step1");
         jsonFormActivity.getSupportFragmentManager().beginTransaction().add(formFragment, null).commit();
@@ -219,10 +239,10 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
         presenter = spy(presenter);
         List<METValidator> validators = new ArrayList<>();
         validators.add(new MinZoomValidator("error", 20));
-        validators.add(withinOperationAreaValidator);
+        validators.add(geoFencingValidator);
         when(mapView.getValidators()).thenReturn(validators);
         when(mapView.getMapboxMapZoom()).thenReturn(20.5);
-        when(withinOperationAreaValidator.isValid(anyString(), anyBoolean())).thenReturn(true);
+        when(geoFencingValidator.isValid(anyString(), anyBoolean())).thenReturn(true);
         formFragment.getJsonApi().addFormDataView(mapView);
         JsonFormFragmentView view = spy(Whitebox.getInternalState(presenter, JsonFormFragmentView.class));
         Whitebox.setInternalState(presenter, "viewRef", new WeakReference<>(view));
@@ -249,5 +269,55 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
 
 
     }
+
+
+    @Test
+    public void testGeoWidgetFactoryValidatesGeoFencingValidators() throws JSONException {
+        Whitebox.setInternalState(RevealApplication.getInstance().getContext(), "locationRepository", locationRepository);
+        Feature operationalArea = Feature.fromJson(TestingUtils.operationalArea2Feature);
+        GeoFencingValidator validator = geoFencingValidator;
+        geoFencingValidator = new GeoFencingValidator("", mapView, operationalArea);
+        JSONObject json = new JSONObject(AssetHandler.readFileFromAssetsFolder(JsonForm.ADD_STRUCTURE_FORM, context));
+        Feature feature = Feature.fromJson(TestingUtils.operationalArea2Feature);
+        json.put(OPERATIONAL_AREA_TAG, feature.toJson());
+        when(locationRepository.getLocationById(feature.id())).thenReturn(location);
+        when(locationRepository.getAllLocations()).thenReturn(Collections.singletonList(location));
+
+        RevealApplication.getInstance().setFeatureCollection(FeatureCollection.fromFeature(feature));
+        setUpFormActivityWithJson(json.toString());
+
+        verify(locationRepository, timeout(ASYNC_TIMEOUT).times(2)).getLocationById(feature.id());
+        verify(locationRepository, timeout(ASYNC_TIMEOUT).times(2)).getAllLocations();
+
+        JsonFormFragmentView view = spy(Whitebox.getInternalState(presenter, JsonFormFragmentView.class));
+        presenter = spy(presenter);
+        List<METValidator> validators = new ArrayList<>();
+        validators.add(new MinZoomValidator("error", 20));
+        validators.add(validator);
+        when(mapView.getValidators()).thenReturn(validators);
+        when(mapView.getMapboxMapZoom()).thenReturn(20.5);
+        formFragment.getJsonApi().addFormDataView(mapView);
+        doNothing().when(view).showSnackBar(anyString());
+        Whitebox.setInternalState(presenter, "viewRef", new WeakReference<>(view));
+        jsonFormActivity = spy(jsonFormActivity);
+        doReturn(null).when(jsonFormActivity).getUserCurrentLocation();
+        when(presenter.validateFarStructures()).thenReturn(true);
+
+
+        Whitebox.setInternalState(presenter, "jsonFormView", jsonFormActivity);
+
+        ValidateUserLocationPresenter userLocationPresenter = Whitebox.getInternalState(presenter, "locationPresenter");
+        userLocationPresenter = spy(userLocationPresenter);
+        doNothing().when(userLocationPresenter).requestUserLocation();
+
+        Whitebox.setInternalState(presenter, "locationPresenter", userLocationPresenter);
+
+        presenter.onSaveClick(formFragment.getMainView());
+
+        verify(presenter).validateAndWriteValues();
+        Whitebox.setInternalState(RevealApplication.getInstance().getContext(), "locationRepository", new LocationRepository());
+
+    }
+
 
 }

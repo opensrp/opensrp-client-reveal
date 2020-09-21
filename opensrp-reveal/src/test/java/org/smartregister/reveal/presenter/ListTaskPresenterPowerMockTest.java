@@ -597,7 +597,7 @@ public class ListTaskPresenterPowerMockTest {
 
     @Test
     public void testSaveJsonForm() {
-        String form = "{\"form\"}";
+        String form = "{\"encounter_type\":\"my_form\"}";
         listTaskPresenter.saveJsonForm(form);
         verify(listTaskViewSpy).showProgressDialog(R.string.saving_title, R.string.saving_message);
         verify(listTaskInteractor).saveJsonForm(form);
