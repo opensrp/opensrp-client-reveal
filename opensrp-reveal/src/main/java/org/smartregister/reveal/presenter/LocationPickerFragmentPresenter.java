@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Richard Kareko on 9/22/20.
  */
 
-class LocationPickerFragmentPresenter implements LocationPickerFragmentContract.Presenter {
+public class LocationPickerFragmentPresenter implements LocationPickerFragmentContract.Presenter {
 
     private LocationPickerFragmentContract.Interactor interactor;
     private LocationPickerFragmentContract.View view;
