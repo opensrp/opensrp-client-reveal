@@ -67,6 +67,7 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
         View view = inflater.inflate(R.layout.fragment_offline_map, container, false);
         setUpViews(view);
         initializeAdapter();
+        presenter.fetchAvailableLocations(null);
         return view;
     }
 
@@ -74,7 +75,7 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
         locationPickerRecyclerView = view.findViewById(R.id.offline_map_recyclerView);
 
         btnP2PSync = view.findViewById(R.id.download_map);
-
+        btnP2PSync.setText(R.string.start_p2p_syc);
         btnP2PSync.setOnClickListener(this);
 
     }

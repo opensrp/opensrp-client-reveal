@@ -355,7 +355,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     }
 
     private void startP2PActivity() {
-        getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
+        getContext().startActivity(new Intent(getContext(), LocationPickerActivity.class));
     }
 
     @Override
