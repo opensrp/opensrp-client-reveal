@@ -27,9 +27,9 @@ public class LocationPickerAdapter extends RecyclerView.Adapter<LocationPickerVi
 
     private List<Location> locations;
 
-    public LocationPickerAdapter(Context context, View.OnClickListener offlineMapClickHandler) {
+    public LocationPickerAdapter(Context context, View.OnClickListener locationPickerClickHandler) {
         this.context = context;
-        this.locationPickerClickHandler = offlineMapClickHandler;
+        this.locationPickerClickHandler = locationPickerClickHandler;
         this.locations = new ArrayList<>();
     }
 

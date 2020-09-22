@@ -90,16 +90,6 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
     }
 
     @Override
-    public void disableCheckBox(String locationId) {
-
-    }
-
-    @Override
-    public void enableCheckBox(String locationId) {
-
-    }
-
-    @Override
     public void setAvailableLocations(List<Location> locations) {
         if (availableLocations == null) {
             return;
@@ -117,9 +107,9 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
         Location location = (Location) view.getTag(R.id.offline_map_checkbox);
 
         if (checkBox.isChecked()) {
-            selectedLocationIds.add(location.getProperties().getName());
+            selectedLocationIds.add(location.getId());
         } else {
-            selectedLocationIds.remove(location.getProperties().getName());
+            selectedLocationIds.remove(location.getId());
         }
     }
 

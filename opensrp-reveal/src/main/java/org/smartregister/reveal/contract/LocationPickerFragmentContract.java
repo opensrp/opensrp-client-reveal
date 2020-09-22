@@ -19,9 +19,6 @@ public interface LocationPickerFragmentContract {
     }
 
     interface View {
-        void disableCheckBox(String locationId);
-
-        void enableCheckBox(String locationId);
 
         void setAvailableLocations(List<Location> locations);
     }
