@@ -13,13 +13,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import org.smartregister.CoreLibrary;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.jsonmapping.util.LocationTree;
 import org.smartregister.p2p.activity.P2pModeSelectActivity;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.ExpandableListViewAdapter;
 import org.smartregister.reveal.contract.LocationPickerFragmentContract;
 import org.smartregister.reveal.model.LocationModel;
 import org.smartregister.reveal.presenter.LocationPickerFragmentPresenter;
+import org.smartregister.util.AssetHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,6 +125,10 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
                 groupedLocations.get(location.getProperties().getParentId()).add(locationModel);
             }
         }
+        String anmLocationHierachy = CoreLibrary.getInstance().context().allSettings().fetchANMLocation();
+        LocationTree locationTree = AssetHandler.jsonStringToJava(anmLocationHierachy, LocationTree.class);
+        // extract parent location name from the location hierarchy and pupulate them in parentLocations list
+
         mExpandableListAdapter.setListGroup(parentLocations);
         mExpandableListAdapter.setChildLocationsMap(groupedLocations);
         mExpandableListAdapter.notifyDataSetChanged();
@@ -146,7 +153,7 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
     public void initiateP2PSync() {
         this.selectedLocationIds = mExpandableListAdapter.getSelectedLocationIds();
         //set p2p options
-        //CoreLibrary.getInstance().getP2POptions().setLocationFilter
+        //CoreLibrary.getInstance().getP2POptions().setLocationsFilter(selectedLocationIds.toArray(new String[this.selectedLocationIds.size()]));
         getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
     }
 }
