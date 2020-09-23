@@ -247,6 +247,7 @@ public class RevealRepository extends Repository {
     private void upgradeToVersion9(SQLiteDatabase db) {
         ClientRelationshipRepository.createTable(db);
         EventClientRepository.createAdditionalColumns(db);
+        EventClientRepository.addEventLocationId(db);
     }
 
     @Override
