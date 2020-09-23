@@ -81,7 +81,6 @@ import org.smartregister.reveal.util.Constants.TaskRegister;
 import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
-import org.smartregister.util.LangUtils;
 
 import java.util.Arrays;
 import java.util.List;
