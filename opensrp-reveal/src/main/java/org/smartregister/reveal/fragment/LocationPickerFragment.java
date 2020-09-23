@@ -2,6 +2,7 @@ package org.smartregister.reveal.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,6 @@ import android.widget.ExpandableListView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import com.google.common.collect.Lists;
 
 import org.smartregister.domain.Location;
 import org.smartregister.p2p.activity.P2pModeSelectActivity;
@@ -41,7 +40,7 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
 
     private LocationPickerFragmentPresenter presenter;
 
-    private List<Location> availableLocations = new ArrayList<>();
+    private List<Pair<String, String>> parentLocations = new ArrayList<>();
 
     private List<String> selectedLocationIds = new ArrayList<>();
 
@@ -91,7 +90,7 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
     }
 
     private void initializeAdapter() {
-        mExpandableListAdapter = new ExpandableListViewAdapter(getContext(), Lists.newArrayList(groupedLocations.keySet()) , groupedLocations);
+        mExpandableListAdapter = new ExpandableListViewAdapter(getContext(), parentLocations , groupedLocations);
         mExpandableListView.setAdapter(mExpandableListAdapter);
 
         mExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
@@ -115,15 +114,15 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
             } else {
                 if (locationTag.equals(OPERATIONAL_AREA) && !groupedLocations.containsKey(location.getProperties().getParentId())) {
                     groupedLocations.put(location.getProperties().getParentId(), new ArrayList<>());
+                    parentLocations.add(Pair.create(location.getProperties().getParentId(), ""));
                 }
                 LocationModel locationModel = new LocationModel();
                 locationModel.setId(location.getId());
                 locationModel.setName(location.getProperties().getName());
                 groupedLocations.get(location.getProperties().getParentId()).add(locationModel);
-
             }
         }
-        mExpandableListAdapter.setListGroup(Lists.newArrayList(groupedLocations.keySet()));
+        mExpandableListAdapter.setListGroup(parentLocations);
         mExpandableListAdapter.setChildLocationsMap(groupedLocations);
         mExpandableListAdapter.notifyDataSetChanged();
 
@@ -146,6 +145,8 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
 
     public void initiateP2PSync() {
         this.selectedLocationIds = mExpandableListAdapter.getSelectedLocationIds();
+        //set p2p options
+        //CoreLibrary.getInstance().getP2POptions().setLocationFilter
         getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
     }
 }

@@ -1,6 +1,7 @@
 package org.smartregister.reveal.adapter;
 
 import android.content.Context;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,14 +24,14 @@ import java.util.Map;
 public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     private Context context;
-    private List<String> listGroup;
+    private List<Pair<String, String>> listGroup;
     private Map<String, List<LocationModel>> childLocationsMap;
     private List<String> selectedLocationIds = new ArrayList<>();
     private int checkedBoxesCount;
     private boolean[] checkedGroup;
     private int expandedGroupPosition = 0;
 
-    public ExpandableListViewAdapter(Context context, List<String> listGroup, Map<String,
+    public ExpandableListViewAdapter(Context context, List<Pair<String, String>> listGroup, Map<String,
             List<LocationModel>> childLocationsMap) {
         this.context = context;
         this.listGroup = listGroup;
@@ -47,17 +48,17 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return childLocationsMap.get(listGroup.get(groupPosition)).size();
+        return childLocationsMap.get(listGroup.get(groupPosition).first).size();
     }
 
     @Override
     public String getGroup(int groupPosition) {
-        return listGroup.get(groupPosition);
+        return listGroup.get(groupPosition).second;
     }
 
     @Override
     public LocationModel getChild(int groupPosition, int childPosition) {
-        return childLocationsMap.get(listGroup.get(groupPosition)).get(childPosition);
+        return childLocationsMap.get(listGroup.get(groupPosition).first).get(childPosition);
     }
 
     @Override
@@ -90,7 +91,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
                 public void onClick(View view) {
                     int pos = (int)view.getTag();
                     checkedGroup[pos] = !checkedGroup[pos];
-                    for(LocationModel item : childLocationsMap.get(listGroup.get(pos))){
+                    for(LocationModel item : childLocationsMap.get(listGroup.get(pos).first)){
                         item.setChecked(checkedGroup[pos]);
                     }
                     notifyDataSetChanged();
@@ -122,7 +123,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
                 @Override
                 public void onClick(View view) {
                     CheckBox cb = (CheckBox) view;
-                    LocationModel selectedItem = childLocationsMap.get(listGroup.get(expandedGroupPosition)).get(childPosition);
+                    LocationModel selectedItem = childLocationsMap.get(listGroup.get(expandedGroupPosition).first).get(childPosition);
                     selectedItem.setChecked(cb.isChecked());
                     if(cb.isChecked()){
                         checkedBoxesCount++;
@@ -177,7 +178,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         TextView tvChild;
     }
 
-    public void setListGroup(List<String> listGroup) {
+    public void setListGroup(List<Pair<String, String>> listGroup) {
         this.listGroup = listGroup;
     }
 
