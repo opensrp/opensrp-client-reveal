@@ -11,6 +11,6 @@ public class RevealSyncIntentService extends SyncIntentService {
 
     @Override
     public int getEventPullLimit() {
-        return (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) ? 100 : 500;
+        return (BuildConfig.BUILD_COUNTRY.equals(Country.NTD_COMMUNITY)) ? 250 : 500;
     }
 }

@@ -1259,6 +1259,10 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void onSyncProgress(SyncProgress syncProgress) {
         int progress = syncProgress.getPercentageSynced();
+        while (progress > 100){
+            progress  = progress / 10;
+        }
+
         String entity = syncProgress.getSyncEntity().toString();
         ProgressBar syncProgressBar = findViewById(R.id.sync_progress_bar);
         TextView syncProgressBarLabel = findViewById(R.id.sync_progress_bar_label);
