@@ -24,17 +24,17 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private List<String> listGroup;
-    private Map<String, List<LocationModel>> listChild;
+    private Map<String, List<LocationModel>> childLocationsMap;
     private List<String> selectedLocationIds = new ArrayList<>();
     private int checkedBoxesCount;
     private boolean[] checkedGroup;
     private int expandedGroupPosition = 0;
 
     public ExpandableListViewAdapter(Context context, List<String> listGroup, Map<String,
-            List<LocationModel>> listChild) {
+            List<LocationModel>> childLocationsMap) {
         this.context = context;
         this.listGroup = listGroup;
-        this.listChild = listChild;
+        this.childLocationsMap = childLocationsMap;
         checkedBoxesCount = 0;
         //checkedGroup = new boolean[listGroup.size()];
         checkedGroup = new boolean[100];
@@ -47,7 +47,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return listChild.get(listGroup.get(groupPosition)).size();
+        return childLocationsMap.get(listGroup.get(groupPosition)).size();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public LocationModel getChild(int groupPosition, int childPosition) {
-        return listChild.get(listGroup.get(groupPosition)).get(childPosition);
+        return childLocationsMap.get(listGroup.get(groupPosition)).get(childPosition);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
                 public void onClick(View view) {
                     int pos = (int)view.getTag();
                     checkedGroup[pos] = !checkedGroup[pos];
-                    for(LocationModel item : listChild.get(listGroup.get(pos))){
+                    for(LocationModel item : childLocationsMap.get(listGroup.get(pos))){
                         item.setChecked(checkedGroup[pos]);
                     }
                     notifyDataSetChanged();
@@ -122,7 +122,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
                 @Override
                 public void onClick(View view) {
                     CheckBox cb = (CheckBox) view;
-                    LocationModel selectedItem = listChild.get(listGroup.get(expandedGroupPosition)).get(childPosition);
+                    LocationModel selectedItem = childLocationsMap.get(listGroup.get(expandedGroupPosition)).get(childPosition);
                     selectedItem.setChecked(cb.isChecked());
                     if(cb.isChecked()){
                         checkedBoxesCount++;
@@ -153,7 +153,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     public void clearChecks() {
         for(int i=0; i<checkedGroup.length; i++) checkedGroup[i] = false;
-        for(List<LocationModel> value : listChild.values()) {
+        for(List<LocationModel> value : childLocationsMap.values()) {
             for (LocationModel sample : value) {
                 sample.setChecked(false);
             }
@@ -181,8 +181,8 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         this.listGroup = listGroup;
     }
 
-    public void setListChild(Map<String, List<LocationModel>> listChild) {
-        this.listChild = listChild;
+    public void setChildLocationsMap(Map<String, List<LocationModel>> childLocationsMap) {
+        this.childLocationsMap = childLocationsMap;
     }
 
     public List<String> getSelectedLocationIds() {

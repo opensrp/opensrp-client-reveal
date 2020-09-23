@@ -124,7 +124,7 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
             }
         }
         mExpandableListAdapter.setListGroup(Lists.newArrayList(groupedLocations.keySet()));
-        mExpandableListAdapter.setListChild(groupedLocations);
+        mExpandableListAdapter.setChildLocationsMap(groupedLocations);
         mExpandableListAdapter.notifyDataSetChanged();
 
     }
