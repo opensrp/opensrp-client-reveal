@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ExpandableListView;
 
 import androidx.annotation.NonNull;
@@ -26,7 +25,6 @@ import org.smartregister.reveal.presenter.LocationPickerFragmentPresenter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.ZONE;
@@ -85,9 +83,7 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
 
     private void setUpViews(View view) {
         mExpandableListView = view.findViewById(R.id.expandedListView);
-        //clearChecks = (Button)findViewById(R.id.btnClearChecks);
 
-        List<String> listTitle = genGroupList();
         mExpandableListAdapter = new ExpandableListViewAdapter(getContext(), Lists.newArrayList(groupedLocations.keySet()) , groupedLocations);
         mExpandableListView.setAdapter(mExpandableListAdapter);
 
@@ -107,31 +103,7 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
 
     }
 
-    private List<String> genGroupList(){
-        List<String> listGroup = new ArrayList<>();
-        for(int i=1; i<10; i++){
-            listGroup.add("Group: " + i);
-        }
-        return listGroup;
-    }
-
-    private Map<String, List<LocationModel>> genChildList(List<String> header){
-        Map<String, List<LocationModel>> listChild = new HashMap<>();
-        for(int i=0; i<header.size(); i++){
-            List<LocationModel> childLocations = new ArrayList<>();
-            int a = (int)(Math.random() * 8);
-            for(int j=0; j<a; j++){
-                LocationModel locationModel = new LocationModel("Child " + (j + 1));
-                childLocations.add(locationModel);
-            }
-            listChild.put(header.get(i), childLocations);
-        }
-        return  listChild;
-    }
-
     private void initializeAdapter() {
-        //adapter = new LocationPickerAdapter(this.getContext(), this);
-        //locationPickerRecyclerView.setAdapter(adapter);
         if (availableLocations != null) {
             setAvailableLocations(availableLocations);
         }
@@ -149,6 +121,7 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
                     groupedLocations.put(location.getProperties().getParentId(), new ArrayList<>());
                 }
                 LocationModel locationModel = new LocationModel();
+                locationModel.setId(location.getId());
                 locationModel.setName(location.getProperties().getName());
                 groupedLocations.get(location.getProperties().getParentId()).add(locationModel);
 
@@ -157,26 +130,7 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
         mExpandableListAdapter.setListGroup(Lists.newArrayList(groupedLocations.keySet()));
         mExpandableListAdapter.setListChild(groupedLocations);
         mExpandableListAdapter.notifyDataSetChanged();
-/*        if (availableLocations == null) {
-            return;
-        }
-        if (adapter == null) {
-            this.availableLocations = locations;
-        } else {
-            adapter.setLocations(locations);
-            this.availableLocations = locations;
-        }*/
-    }
 
-    public void updateSelectedLocations(View view) {
-        CheckBox checkBox = (CheckBox) view;
-        Location location = (Location) view.getTag(R.id.offline_map_checkbox);
-
-        if (checkBox.isChecked()) {
-            selectedLocationIds.add(location.getId());
-        } else {
-            selectedLocationIds.remove(location.getId());
-        }
     }
 
     public void setPresenter(LocationPickerFragmentPresenter presenter) {
@@ -186,9 +140,6 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.offline_map_checkbox:
-                updateSelectedLocations(view);
-                break;
             case R.id.download_map:
                 initiateP2PSync();
                 break;
@@ -198,6 +149,7 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
     }
 
     public void initiateP2PSync() {
+        this.selectedLocationIds = mExpandableListAdapter.getSelectedLocationIds();
         getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
     }
 }

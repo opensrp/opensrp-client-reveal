@@ -12,6 +12,7 @@ import android.widget.Toast;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.LocationModel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<String> listGroup;
     private Map<String, List<LocationModel>> listChild;
+    private List<String> selectedLocationIds = new ArrayList<>();
     private int checkedBoxesCount;
     private boolean[] checkedGroup;
     private int expandedGroupPosition = 0;
@@ -124,6 +126,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
                     selectedItem.setChecked(cb.isChecked());
                     if(cb.isChecked()){
                         checkedBoxesCount++;
+                        selectedLocationIds.add(selectedItem.getId());
                         Toast.makeText(context,"Checked value is: " +
                                         selectedItem.getName(),
                                 Toast.LENGTH_SHORT).show();
@@ -132,7 +135,8 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
                         if(checkedBoxesCount == 0){
                             Toast.makeText(context,"nothing checked",Toast.LENGTH_SHORT).show();
                         }else {
-                            Toast.makeText(context,"unchecked",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context,"unchecked " + selectedItem.getName(),Toast.LENGTH_SHORT).show();
+                            selectedLocationIds.remove(selectedItem.getId());
                         }
                     }
                     notifyDataSetChanged();
@@ -181,5 +185,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         this.listChild = listChild;
     }
 
-
+    public List<String> getSelectedLocationIds() {
+        return selectedLocationIds;
+    }
 }
