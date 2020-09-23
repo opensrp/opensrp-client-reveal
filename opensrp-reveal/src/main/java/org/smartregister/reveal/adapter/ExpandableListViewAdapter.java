@@ -38,7 +38,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         this.childLocationsMap = childLocationsMap;
         checkedBoxesCount = 0;
         //checkedGroup = new boolean[listGroup.size()];
-        checkedGroup = new boolean[100];
+        checkedGroup = new boolean[1000];
     }
 
     @Override

@@ -19,6 +19,7 @@ import org.smartregister.domain.jsonmapping.util.LocationTree;
 import org.smartregister.p2p.activity.P2pModeSelectActivity;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.adapter.ExpandableListViewAdapter;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.LocationPickerFragmentContract;
 import org.smartregister.reveal.model.LocationModel;
 import org.smartregister.reveal.presenter.LocationPickerFragmentPresenter;
@@ -110,28 +111,35 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
 
     @Override
     public void setAvailableLocations(List<Location> locations) {
-        for (Location location: locations) {
-            String locationTag = location.getLocationTags().iterator().next().getName();
-            if (locationTag.equals(ZONE) && !groupedLocations.containsKey(location.getId())) {
-                groupedLocations.put(location.getId(), new ArrayList<>());
-            } else {
-                if (locationTag.equals(OPERATIONAL_AREA) && !groupedLocations.containsKey(location.getProperties().getParentId())) {
-                    groupedLocations.put(location.getProperties().getParentId(), new ArrayList<>());
-                    parentLocations.add(Pair.create(location.getProperties().getParentId(), ""));
+        RevealApplication.getInstance().getAppExecutors().diskIO().execute(() -> {
+            String anmLocationHierachy = CoreLibrary.getInstance().context().allSettings().fetchANMLocation();
+            LocationTree locationTree = AssetHandler.jsonStringToJava(anmLocationHierachy, LocationTree.class);
+            // extract parent location name from the location hierarchy and pupulate them in parentLocations list
+            for (Location location : locations) {
+                String locationTag = location.getLocationTags() != null && location.getLocationTags().iterator().hasNext()
+                        ? location.getLocationTags().iterator().next().getName() : "";
+                if (locationTag.equals(ZONE) && !groupedLocations.containsKey(location.getId())) {
+                    groupedLocations.put(location.getId(), new ArrayList<>());
+                } else {
+                    if (locationTag.equals(OPERATIONAL_AREA) && !groupedLocations.containsKey(location.getProperties().getParentId())) {
+                        groupedLocations.put(location.getProperties().getParentId(), new ArrayList<>());
+                        org.smartregister.domain.jsonmapping.Location parentLocationName =  locationTree.findLocation(location.getProperties().getParentId());
+                        parentLocations.add(Pair.create(location.getProperties().getParentId(), parentLocationName.getName()));
+                    }
+                    LocationModel locationModel = new LocationModel();
+                    locationModel.setId(location.getId());
+                    locationModel.setName(location.getProperties().getName());
+                    if (groupedLocations.get(location.getProperties().getParentId()) != null) {
+                        groupedLocations.get(location.getProperties().getParentId()).add(locationModel);
+                    }
                 }
-                LocationModel locationModel = new LocationModel();
-                locationModel.setId(location.getId());
-                locationModel.setName(location.getProperties().getName());
-                groupedLocations.get(location.getProperties().getParentId()).add(locationModel);
             }
-        }
-        String anmLocationHierachy = CoreLibrary.getInstance().context().allSettings().fetchANMLocation();
-        LocationTree locationTree = AssetHandler.jsonStringToJava(anmLocationHierachy, LocationTree.class);
-        // extract parent location name from the location hierarchy and pupulate them in parentLocations list
-
-        mExpandableListAdapter.setListGroup(parentLocations);
-        mExpandableListAdapter.setChildLocationsMap(groupedLocations);
-        mExpandableListAdapter.notifyDataSetChanged();
+            RevealApplication.getInstance().getAppExecutors().mainThread().execute(() -> {
+                mExpandableListAdapter.setListGroup(parentLocations);
+                mExpandableListAdapter.setChildLocationsMap(groupedLocations);
+                mExpandableListAdapter.notifyDataSetChanged();
+            });
+        });
 
     }
 
