@@ -161,7 +161,7 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
     public void initiateP2PSync() {
         this.selectedLocationIds = mExpandableListAdapter.getSelectedLocationIds();
         //set p2p options
-        //CoreLibrary.getInstance().getP2POptions().setLocationsFilter(selectedLocationIds.toArray(new String[this.selectedLocationIds.size()]));
+        CoreLibrary.getInstance().getP2POptions().setLocationsFilter(selectedLocationIds.toArray(new String[this.selectedLocationIds.size()]));
         getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
     }
 }
