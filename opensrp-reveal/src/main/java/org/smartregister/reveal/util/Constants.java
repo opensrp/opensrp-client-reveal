@@ -256,6 +256,7 @@ public interface Constants {
         String EVENT_TABLE = "event";
         String TASK_TABLE = "task";
         String STRUCTURE_TABLE = "structure";
+        String EC_EVENTS_TABLE = "ec_events";
     }
 
     interface BusinessStatus {
@@ -493,6 +494,8 @@ public interface Constants {
 
 
         String ZONE = "zone";
+
+        String MOP_UP = "mopup";
     }
 
     interface DateFormat {
@@ -670,6 +673,8 @@ public interface Constants {
         String FOUND = "found";
 
         String PROVIDER_ID = "provider_id";
+
+        String VERSION = "version";
     }
 
     interface UseContextCode {

@@ -2,6 +2,7 @@ package org.smartregister.reveal.presenter;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.json.JSONObject;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
@@ -93,6 +94,7 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
                 tableName + "." + DatabaseKeys.SOP,
                 tableName + "." + DatabaseKeys.ENTITY,
                 tableName + "." + DatabaseKeys.STATUS,
+                tableName + "." + DatabaseKeys.FORM_SUBMISSION_ID,
                 tableName + "." + DatabaseKeys.BASE_ENTITY_ID,
                 tableName + "." + DatabaseKeys.SPRAYED,
                 tableName + "." + DatabaseKeys.FOUND
@@ -176,7 +178,7 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
             }
 
             if (filterParams.getFromDate() != null) {
-                stringBuilder.append(String.format("%s >= '%s'", DatabaseKeys.EVENT_DATE, new DateTime(filterParams.getFromDate().getTime()).toString()));
+                stringBuilder.append(String.format("%s >= '%s'", DatabaseKeys.EVENT_DATE, new LocalDate(filterParams.getFromDate().getTime()).toString()));
                 stringBuilder.append(" AND ");
             }
         }

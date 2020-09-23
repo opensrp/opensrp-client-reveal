@@ -55,5 +55,7 @@ public interface FilterTasksContract {
         void onApplyFilters(String selectedItem);
 
         void restoreCheckedFilters(TaskFilterParams taskFilterParams);
+
+        void onClearSelections();
     }
 }

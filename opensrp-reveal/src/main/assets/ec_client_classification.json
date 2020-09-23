@@ -10,8 +10,7 @@
             "field_value": "Spray",
             "creates_case": [
               "sprayed_structures",
-              "event_task",
-              "ec_events"
+              "event_task"
             ]
           },
           {
@@ -154,6 +153,21 @@
           {
             "field": "eventType",
             "field_value": "verification",
+            "creates_case": [
+              "ec_events"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "comment": "ec_events: This rule maps to ec_events table used for filled forms",
+      "rule": {
+        "type": "event",
+        "fields": [
+          {
+            "field": "eventType",
+            "field_value": "Spray",
             "creates_case": [
               "ec_events"
             ]
