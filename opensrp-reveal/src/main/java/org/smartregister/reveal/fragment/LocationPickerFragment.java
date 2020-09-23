@@ -84,6 +84,13 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
     private void setUpViews(View view) {
         mExpandableListView = view.findViewById(R.id.expandedListView);
 
+        btnP2PSync = view.findViewById(R.id.download_map);
+        btnP2PSync.setText(R.string.start_p2p_syc);
+        btnP2PSync.setOnClickListener(this);
+
+    }
+
+    private void initializeAdapter() {
         mExpandableListAdapter = new ExpandableListViewAdapter(getContext(), Lists.newArrayList(groupedLocations.keySet()) , groupedLocations);
         mExpandableListView.setAdapter(mExpandableListAdapter);
 
@@ -96,17 +103,6 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
                 mLastExpandedPosition = groupPosition;
             }
         });
-
-        btnP2PSync = view.findViewById(R.id.download_map);
-        btnP2PSync.setText(R.string.start_p2p_syc);
-        btnP2PSync.setOnClickListener(this);
-
-    }
-
-    private void initializeAdapter() {
-        if (availableLocations != null) {
-            setAvailableLocations(availableLocations);
-        }
 
     }
 
