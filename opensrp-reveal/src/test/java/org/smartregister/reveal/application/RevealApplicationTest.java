@@ -29,6 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 /**
@@ -103,6 +104,19 @@ public class RevealApplicationTest extends BaseUnitTest {
         verify(preferencesUtil).setCurrentOperationalArea(null);
         verify(preferencesUtil).setCurrentPlan(null);
         verify(preferencesUtil).setCurrentPlanId(null);
+        Whitebox.setInternalState(PreferencesUtil.class, "instance", (PreferencesUtil) null);
+    }
+
+    @Test
+    public void testOnUserAssignmentRevokedShouldNotClearOAsAndPlan() {
+        Whitebox.setInternalState(PreferencesUtil.class, "instance", preferencesUtil);
+        String planId = UUID.randomUUID().toString();
+        String operationalArea = UUID.randomUUID().toString();
+        UserAssignmentDTO userAssignmentDTO = UserAssignmentDTO.builder().jurisdictions(Collections.singleton(operationalArea)).plans(Collections.singleton(planId)).build();
+        revealApplication.onUserAssignmentRevoked(userAssignmentDTO);
+        verify(preferencesUtil).getCurrentOperationalAreaId();
+        verify(preferencesUtil).getCurrentPlanId();
+        verifyZeroInteractions(preferencesUtil);
         Whitebox.setInternalState(PreferencesUtil.class, "instance", (PreferencesUtil) null);
     }
 
