@@ -8,15 +8,20 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.domain.Location;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.util.Cache;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_DISTRICT;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_FACILITY;
+import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_OPERATIONAL_AREA;
+import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_OPERATIONAL_AREA_ID;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PROVINCE;
 import static org.smartregister.reveal.util.Constants.Preferences.FACILITY_LEVEL;
 
@@ -31,6 +36,12 @@ public class PreferencesUtilTest extends BaseUnitTest {
 
     @Mock
     private AllSharedPreferences allSharedPreferences;
+
+    @Mock
+    private Cache<Location> cache;
+
+    @Mock
+    private Location location;
 
     private PreferencesUtil preferencesUtil;
 
@@ -107,6 +118,25 @@ public class PreferencesUtilTest extends BaseUnitTest {
 
         String actualFacilityLevel = preferencesUtil.getCurrentFacilityLevel();
         assertEquals("Village", actualFacilityLevel);
+    }
+
+
+    @Test
+    public void testSetCurrentOperationalAreaShouldUpdatePreferences() {
+        String operationalArea = "oa_1";
+        Whitebox.setInternalState(Utils.class, "cache", cache);
+        when(cache.get(operationalArea, any())).thenReturn(location);
+        when(location.getId()).thenReturn("id_11121121");
+        preferencesUtil.setCurrentOperationalArea(operationalArea);
+        verify(allSharedPreferences).savePreference(CURRENT_OPERATIONAL_AREA, operationalArea);
+        verify(allSharedPreferences).savePreference(CURRENT_OPERATIONAL_AREA_ID, "id_11121121");
+    }
+
+    @Test
+    public void testSetCurrentOperationalAreaShouldClearPreferences() {
+        preferencesUtil.setCurrentOperationalArea(null);
+        verify(allSharedPreferences).savePreference(CURRENT_OPERATIONAL_AREA, null);
+        verify(allSharedPreferences).savePreference(CURRENT_OPERATIONAL_AREA_ID, null);
     }
 
 }
