@@ -1,8 +1,13 @@
 package org.smartregister.reveal.view;
 
+import android.content.Context;
+
 import androidx.fragment.app.Fragment;
 
 import org.json.JSONObject;
+import org.smartregister.reveal.BuildConfig;
+import org.smartregister.reveal.util.Country;
+import org.smartregister.util.LangUtils;
 import org.smartregister.view.activity.BaseRegisterActivity;
 
 import java.util.Map;
@@ -27,5 +32,15 @@ public abstract class BaseRevealRegisterActivity extends BaseRegisterActivity {
 
     @Override
     public void startRegistration() {//not used
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
+            LangUtils.saveLanguage(base.getApplicationContext(), "th");
+        } else {
+            LangUtils.saveLanguage(base.getApplicationContext(), "en");
+        }
+        super.attachBaseContext(base);
     }
 }
