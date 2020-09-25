@@ -28,7 +28,6 @@ import org.smartregister.reveal.view.EventRegisterActivity;
 import org.smartregister.reveal.view.FilterTasksActivity;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.reveal.viewholder.EventViewHolder;
-import org.smartregister.view.fragment.BaseRegisterFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,9 +43,7 @@ import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_F
 /**
  * Created by samuelgithengi on 7/30/20.
  */
-public class EventRegisterFragment extends BaseRegisterFragment implements EventRegisterContract.View, BaseDrawerContract.DrawerActivity {
-
-    private BaseDrawerContract.View drawerView;
+public class EventRegisterFragment extends BaseDrawerRegisterFragment implements EventRegisterContract.View, BaseDrawerContract.DrawerActivity {
 
     private ProgressDialog progressDialog;
 
@@ -104,6 +101,7 @@ public class EventRegisterFragment extends BaseRegisterFragment implements Event
         });
 
     }
+
 
     @Override
     public void setUniqueID(String s) {//not used
