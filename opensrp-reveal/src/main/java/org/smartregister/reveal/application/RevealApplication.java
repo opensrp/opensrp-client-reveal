@@ -1,7 +1,6 @@
 package org.smartregister.reveal.application;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 
 import androidx.annotation.NonNull;
 
@@ -45,7 +44,6 @@ import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.LoginActivity;
 import org.smartregister.reveal.job.RevealJobCreator;
-import org.smartregister.reveal.presenter.ValidateUserLocationPresenter;
 import org.smartregister.reveal.repository.RevealRepository;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
@@ -59,7 +57,6 @@ import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.view.FamilyProfileActivity;
 import org.smartregister.sync.ClientProcessorForJava;
 import org.smartregister.sync.DrishtiSyncScheduler;
-import org.smartregister.sync.helper.ValidateAssignmentHelper;
 import org.smartregister.util.LangUtils;
 import org.smartregister.view.activity.DrishtiApplication;
 import org.smartregister.view.receiver.TimeChangedBroadcastReceiver;
