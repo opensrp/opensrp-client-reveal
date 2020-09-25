@@ -16,6 +16,7 @@ import org.smartregister.util.Cache;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_DISTRICT;
@@ -125,8 +126,10 @@ public class PreferencesUtilTest extends BaseUnitTest {
     public void testSetCurrentOperationalAreaShouldUpdatePreferences() {
         String operationalArea = "oa_1";
         Whitebox.setInternalState(Utils.class, "cache", cache);
-        when(cache.get(operationalArea, any())).thenReturn(location);
+        when(cache.get(eq(operationalArea), any())).thenReturn(location);
         when(location.getId()).thenReturn("id_11121121");
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn(operationalArea);
+
         preferencesUtil.setCurrentOperationalArea(operationalArea);
         verify(allSharedPreferences).savePreference(CURRENT_OPERATIONAL_AREA, operationalArea);
         verify(allSharedPreferences).savePreference(CURRENT_OPERATIONAL_AREA_ID, "id_11121121");
