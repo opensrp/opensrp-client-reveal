@@ -882,6 +882,8 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     @Test
     public void testOnUserAssignmentRevokedShouldResumeDrawer() {
+        Whitebox.setInternalState(listTasksActivity,"drawerView",drawerView);
+        doNothing().when(drawerView).onResume();
         listTasksActivity.onUserAssignmentRevoked(mock(UserAssignmentDTO.class));
         verify(drawerView).onResume();
     }
