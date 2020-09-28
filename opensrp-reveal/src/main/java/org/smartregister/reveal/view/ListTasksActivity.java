@@ -118,6 +118,7 @@ import static org.smartregister.reveal.util.Constants.VERTICAL_OFFSET;
 import static org.smartregister.reveal.util.FamilyConstants.Intent.START_REGISTRATION;
 import static org.smartregister.reveal.util.Utils.displayDistanceScale;
 import static org.smartregister.reveal.util.Utils.getDrawOperationalAreaBoundaryAndLabel;
+import static org.smartregister.reveal.util.Utils.getExternalisedSyncEntityString;
 import static org.smartregister.reveal.util.Utils.getLocationBuffer;
 import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
 
@@ -940,7 +941,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void onSyncProgress(SyncProgress syncProgress) {
         int progress = syncProgress.getPercentageSynced();
-        String entity = syncProgress.getSyncEntity().toString();
+        String entity = getExternalisedSyncEntityString(syncProgress.getSyncEntity());
         ProgressBar syncProgressBar = findViewById(R.id.sync_progress_bar);
         TextView syncProgressBarLabel = findViewById(R.id.sync_progress_bar_label);
         String labelText = String.format(getResources().getString(R.string.progressBarLabel), entity, progress);

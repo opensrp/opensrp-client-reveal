@@ -268,5 +268,11 @@
     <string name="undo_task_title">แน่ใจหรือไม่ว่าต้องการล้างข้อมูลทั้งหมดในเหตุการณ์นี้</string>
     <string name="undo_task_msg">คุณจะไม่สามารถกู้คืนข้อมูลนี้ได้และงานนี้จะถูกทำเครื่องหมายว่าไม่สมบูรณ์</string>
     <string name="index_case_confirmed">ยืนยัน index case</string>
+    <string name="progressBarLabel">กำลังซิงค์ %s : %d%% </string>
+    <string name="events">เหตุการณ์</string>
+    <string name="locations">สถานที่</string>
+    <string name="plans">แผน</string>
+    <string name="structures">สิ่งปลูกสร้าง</string>
+    <string name="tasks_text">งาน</string>
 
 </resources>
