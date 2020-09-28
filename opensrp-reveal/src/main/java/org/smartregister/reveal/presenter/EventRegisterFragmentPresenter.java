@@ -134,7 +134,7 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
             view.getJsonFormUtils().populateFormWithServerOptions(formName, formJSON);
             try {
                 formJSON.put(ENTITY_ID, event.getBaseEntityId());
-                formJSON.put(DETAILS, event.getDetails());
+                formJSON.put(DETAILS, new JSONObject(event.getDetails()));
             } catch (JSONException e) {
                 Timber.e(e);
             }
