@@ -50,7 +50,7 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
 
     private HashMap<String, List<LocationModel>> groupedLocations = new HashMap<>();
 
-    int mLastExpandedPosition = -1;
+    private int mLastExpandedPosition = -1;
 
     private Button btnP2PSync;
 

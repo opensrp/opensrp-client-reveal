@@ -109,7 +109,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(final int groupPosition, final int childPosition, boolean b, View view, ViewGroup viewGroup) {
         expandedGroupPosition = groupPosition; // For some reason the groupPosition defaults to 0 when checkbox is clicked
-                                                //this value keeps track of the correct value
+                                                //this variable keeps track of the correct value
         LocationModel expandedListText = getChild(groupPosition,childPosition);
         ChildViewHolder childViewHolder;
         if(view == null){
@@ -168,13 +168,13 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     }
 
     private class GroupViewHolder {
-        CheckBox cbGroup;
-        TextView tvGroup;
+        private CheckBox cbGroup;
+        private TextView tvGroup;
     }
 
     private class ChildViewHolder {
-        CheckBox cbChild;
-        TextView tvChild;
+        private CheckBox cbChild;
+        private TextView tvChild;
     }
 
     public void setListGroup(List<Pair<String, String>> listGroup) {

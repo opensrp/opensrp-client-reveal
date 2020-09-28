@@ -18,8 +18,6 @@ import org.smartregister.view.activity.MultiLanguageActivity;
 
 public class LocationPickerActivity extends MultiLanguageActivity {
 
-    private static final String TAG = OfflineMapsActivity.class.getName();
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
