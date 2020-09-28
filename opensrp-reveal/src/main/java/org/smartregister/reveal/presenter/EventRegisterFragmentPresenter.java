@@ -1,8 +1,8 @@
 package org.smartregister.reveal.presenter;
 
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.configurableviews.ConfigurableViewsLibrary;
 import org.smartregister.configurableviews.helper.ConfigurableViewsHelper;
@@ -24,6 +24,11 @@ import org.smartregister.reveal.util.Utils;
 
 import java.util.Arrays;
 import java.util.Set;
+
+import timber.log.Timber;
+
+import static org.smartregister.reveal.util.Constants.DETAILS;
+import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 
 /**
  * Created by samuelgithengi on 7/30/20.
@@ -127,6 +132,12 @@ public class EventRegisterFragmentPresenter implements EventRegisterContract.Pre
             JSONObject formJSON = view.getJsonFormUtils().getFormJSON(view.getContext(), formName, null, null);
             view.getJsonFormUtils().populateForm(event, formJSON);
             view.getJsonFormUtils().populateFormWithServerOptions(formName, formJSON);
+            try {
+                formJSON.put(ENTITY_ID, event.getBaseEntityId());
+                formJSON.put(DETAILS, event.getDetails());
+            } catch (JSONException e) {
+                Timber.e(e);
+            }
             view.startForm(formJSON);
         }
         view.hideProgressDialog();

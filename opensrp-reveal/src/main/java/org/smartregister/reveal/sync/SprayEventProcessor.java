@@ -4,6 +4,7 @@ import androidx.annotation.VisibleForTesting;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.smartregister.domain.Client;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Obs;
@@ -57,7 +58,7 @@ public class SprayEventProcessor {
         } else {
             event.setFormSubmissionId(event.getBaseEntityId());
         }
-        if (!isLocalEvent) {
+        if (!isLocalEvent  && StringUtils.isNotBlank(event.getBaseEntityId())) {
             getSqLiteDatabase().delete(Tables.EC_EVENTS_TABLE,
                     String.format("%s like ? AND %s=?", ID_COLUMN, DatabaseKeys.EVENT_TYPE),
                     new String[]{event.getBaseEntityId() + "%", event.getEventType()});
