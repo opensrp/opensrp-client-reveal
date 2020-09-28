@@ -61,7 +61,7 @@ public class SprayEventProcessor {
 
         if (mopUp != null && YES.equalsIgnoreCase(mopUp.getValue().toString())) {
             try (Cursor cursor = getSqLiteDatabase().query(Tables.EVENT_TABLE, new String[]{event_column.json.name()}
-                    , String.format("%s like ? AND %s=?", event_column.baseEntityId, DatabaseKeys.EVENT_TYPE),
+                    , String.format("%s like ? AND %s=?", event_column.baseEntityId, event_column.eventType.name()),
                     new String[]{event.getBaseEntityId() + "%", event.getEventType()}, null, null, event_column.updatedAt.name() + " DESC", "1")) {
                 if (cursor.moveToNext()) {
                     Event previousEvent = RevealApplication.getInstance().getContext().getEventClientRepository().convert(cursor.getString(0), Event.class);
