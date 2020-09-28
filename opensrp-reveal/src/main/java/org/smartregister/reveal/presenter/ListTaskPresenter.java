@@ -582,6 +582,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 feature.addStringProperty(TASK_BUSINESS_STATUS, task.getBusinessStatus());
                 feature.addStringProperty(TASK_STATUS, task.getStatus().name());
                 feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                feature.removeProperty(STRUCTURE_NAME);
                 break;
             }
         }
