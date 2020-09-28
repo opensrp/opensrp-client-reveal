@@ -257,6 +257,7 @@ public interface Constants {
         String TASK_TABLE = "task";
         String STRUCTURE_TABLE = "structure";
         String EC_EVENTS_TABLE = "ec_events";
+        String EC_EVENTS_SEARCH_TABLE = "ec_events_search";
     }
 
     interface BusinessStatus {

@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import static org.smartregister.commonregistry.CommonRepository.ID_COLUMN;
+import static org.smartregister.family.util.DBConstants.KEY.OBJECT_ID;
 import static org.smartregister.reveal.util.Constants.JsonForm.MOP_UP;
 
 /**
@@ -61,6 +62,9 @@ public class SprayEventProcessor {
                     String.format("%s like ? AND %s=?", ID_COLUMN, DatabaseKeys.EVENT_TYPE),
                     new String[]{event.getBaseEntityId() + "%", event.getEventType()});
 
+            getSqLiteDatabase().delete(Tables.EC_EVENTS_SEARCH_TABLE,
+                    String.format("%s like ? AND %s=?", OBJECT_ID, DatabaseKeys.EVENT_TYPE),
+                    new String[]{event.getBaseEntityId() + "%", event.getEventType()});
 
         }
         clientProcessor.processEvent(event, client, ecEventsClassification);
