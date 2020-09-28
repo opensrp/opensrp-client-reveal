@@ -14,6 +14,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.LocationModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,8 +38,6 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
         this.listGroup = listGroup;
         this.childLocationsMap = childLocationsMap;
         checkedBoxesCount = 0;
-        //checkedGroup = new boolean[listGroup.size()];
-        checkedGroup = new boolean[1000];
     }
 
     @Override
@@ -188,5 +187,12 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     public List<String> getSelectedLocationIds() {
         return selectedLocationIds;
+    }
+
+    public void initializeLocationList(List<Pair<String, String>> parentLocations, HashMap<String, List<LocationModel>> groupedLocations) {
+        checkedGroup = new boolean[parentLocations.size()];
+        setListGroup(parentLocations);
+        setChildLocationsMap(groupedLocations);
+        notifyDataSetChanged();
     }
 }
