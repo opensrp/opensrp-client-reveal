@@ -996,7 +996,7 @@
       {
         "key": "serial_numbers",
         "type": "repeating_group",
-        "reference_edit_text_hint":"Number of insecticide sachets mixed",
+        "reference_edit_text_hint": "Number of insecticide sachets mixed",
         "repeating_group_label": "serial number",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -1025,6 +1025,10 @@
             "v_numeric_integer": {
               "value": "true",
               "err": "Sachet Serial Number must be a whole number"
+            },
+            "v_required": {
+              "value": "true",
+              "err": "Required field"
             }
           }
         ]
