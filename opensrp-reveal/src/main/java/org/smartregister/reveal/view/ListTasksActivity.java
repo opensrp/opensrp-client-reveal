@@ -54,10 +54,12 @@ import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.SyncProgress;
 import org.smartregister.domain.Task;
+import org.smartregister.dto.UserAssignmentDTO;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.receiver.SyncProgressBroadcastReceiver;
 import org.smartregister.receiver.SyncStatusBroadcastReceiver;
+import org.smartregister.receiver.ValidateAssignmentReceiver;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -123,7 +125,7 @@ import static org.smartregister.reveal.util.Utils.getPixelsPerDPI;
  * Created by samuelgithengi on 11/20/18.
  */
 public class ListTasksActivity extends BaseMapActivity implements ListTaskContract.ListTaskView,
-        View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener, UserLocationView, OnLocationComponentInitializedCallback, SyncProgressBroadcastReceiver.SyncProgressListener {
+        View.OnClickListener, SyncStatusBroadcastReceiver.SyncStatusListener, UserLocationView, OnLocationComponentInitializedCallback, SyncProgressBroadcastReceiver.SyncProgressListener, ValidateAssignmentReceiver.UserAssignmentListener {
 
     private ListTaskPresenter listTaskPresenter;
 
@@ -845,6 +847,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         super.onResume();
         formOpening = false;
         SyncStatusBroadcastReceiver.getInstance().addSyncStatusListener(this);
+        ValidateAssignmentReceiver.getInstance().addListener(this);
         IntentFilter filter = new IntentFilter(Action.STRUCTURE_TASK_SYNCED);
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(refreshGeowidgetReceiver, filter);
         IntentFilter syncProgressFilter = new IntentFilter(AllConstants.SyncProgressConstants.ACTION_SYNC_PROGRESS);
@@ -861,6 +864,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     @Override
     public void onPause() {
         SyncStatusBroadcastReceiver.getInstance().removeSyncStatusListener(this);
+        ValidateAssignmentReceiver.getInstance().removeLister(this);
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(refreshGeowidgetReceiver);
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(syncProgressBroadcastReceiver);
         RevealApplication.getInstance().setMyLocationComponentEnabled(revealMapHelper.isMyLocationComponentActive(this, myLocationButton));
@@ -942,6 +946,11 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         String labelText = String.format(getResources().getString(R.string.progressBarLabel), entity, progress);
         syncProgressBar.setProgress(progress);
         syncProgressBarLabel.setText(labelText);
+    }
+
+    @Override
+    public void onUserAssignmentRevoked(UserAssignmentDTO userAssignmentDTO) {
+        drawerView.onResume();
     }
 
     private class RefreshGeowidgetReceiver extends BroadcastReceiver {
