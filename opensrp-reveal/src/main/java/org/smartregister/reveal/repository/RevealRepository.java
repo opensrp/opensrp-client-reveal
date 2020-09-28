@@ -43,8 +43,6 @@ import java.util.TimerTask;
 
 import timber.log.Timber;
 
-import static org.smartregister.commonregistry.CommonRepository.ID_COLUMN;
-import static org.smartregister.family.util.DBConstants.KEY.OBJECT_ID;
 import static org.smartregister.repository.EventClientRepository.Table.event;
 import static org.smartregister.repository.EventClientRepository.event_column.baseEntityId;
 import static org.smartregister.repository.EventClientRepository.event_column.eventType;
