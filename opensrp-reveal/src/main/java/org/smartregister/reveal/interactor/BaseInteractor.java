@@ -256,7 +256,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                         @Override
                         public void run() {
                             String businessStatus = clientProcessor.calculateBusinessStatus(event);
-                            String taskID = event.getDetails().get(Properties.TASK_IDENTIFIER);
+                            String taskID = event.getDetails() == null ? null : event.getDetails().get(Properties.TASK_IDENTIFIER);
                             presenterCallBack.onFormSaved(event.getBaseEntityId(), taskID, Task.TaskStatus.COMPLETED, businessStatus, finalInterventionType);
                         }
                     });
