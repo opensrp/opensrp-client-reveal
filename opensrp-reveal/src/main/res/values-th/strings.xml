@@ -202,8 +202,8 @@
     <!-- form -->
     <string name="add_fam">ทะเบียนครัวเรือน</string>
 
-    <string name="tested">Tested</string>
-    <string name="not_tested">Not Tested</string>
+    <string name="tested">เจาะเลือด</string>
+    <string name="not_tested">ไม่เจาะเลือด</string>
 
     <string name="save_point">บันทึกจุด</string>
     <string name="change_point">เปลี่ยนจุด</string>
@@ -262,5 +262,17 @@
     <string name="confirm">ยืนยัน</string>
     <string name="archive_member">ลบข้อมูลบุคคลนี</string>
     <string name="confirm_archive_member">โปรดยืนยันว่าคุณต้องการลบข้อมูลบุคคลนี  ข้อมูลของบุคคลและกิจกรรมที่บุคคลนี้ได้ทําาจะถูก ลบ</string>
+
+    <string name="mark_location_inactive">ทำเครื่องหมายว่าตำแหน่งนี้ไม่ใช้งาน</string>
+    <string name="confirm_mark_location_inactive">โปรดยืนยันว่าตำแหน่งนี้ควรทำเครื่องหมายว่าไม่ใช้งาน</string>
+    <string name="undo_task_title">แน่ใจหรือไม่ว่าต้องการล้างข้อมูลทั้งหมดในเหตุการณ์นี้</string>
+    <string name="undo_task_msg">คุณจะไม่สามารถกู้คืนข้อมูลนี้ได้และงานนี้จะถูกทำเครื่องหมายว่าไม่สมบูรณ์</string>
+    <string name="index_case_confirmed">ยืนยัน index case</string>
+    <string name="progressBarLabel">กำลังซิงค์ %s : %d%% </string>
+    <string name="events">เหตุการณ์</string>
+    <string name="locations">สถานที่</string>
+    <string name="plans">แผน</string>
+    <string name="structures">สิ่งปลูกสร้าง</string>
+    <string name="tasks_text">งาน</string>
 
 </resources>

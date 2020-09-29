@@ -419,4 +419,10 @@
     <string name="point_not_within_known_operational_area">This point falls outside of any operational area boundaries known at this time and will be added to an ‘other’ area (%1$s) for this HFCA.</string>
     <string name="other_operational_area_not_defined">Operational area called ‘other’ for this HFCA does not exist. Please contact the system administrator noting operational area number %1$s.</string>
     <string name="point_not_within_other_operational_area">This point falls outside of any operational area boundaries known. Add the point to current Operational area which is the ‘other’ area (%1$s) for this HFCA.</string>
+    <string name="events">Events</string>
+    <string name="locations">Locations</string>
+    <string name="plans">Plans</string>
+    <string name="structures">Structures</string>
+    <string name="tasks_text">Tasks</string>
+
 </resources>

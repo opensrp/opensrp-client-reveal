@@ -255,6 +255,9 @@ public class RevealRepository extends Repository {
     }
 
     private void upgradeToVersion10(SQLiteDatabase db) {
+        if (BuildConfig.BUILD_COUNTRY != Country.ZAMBIA) {
+            return;
+        }
         db.delete(Constants.Tables.EC_EVENTS_TABLE, String.format(" %s=?", DatabaseKeys.EVENT_TYPE), new String[]{SPRAY_EVENT});
         db.delete(Constants.Tables.EC_EVENTS_SEARCH_TABLE, String.format("%s=?", DatabaseKeys.EVENT_TYPE), new String[]{SPRAY_EVENT});
 

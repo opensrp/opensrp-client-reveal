@@ -1,5 +1,6 @@
 package org.smartregister.reveal.util;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -30,6 +31,7 @@ import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.SyncEntity;
 import org.smartregister.domain.tag.FormTag;
 import org.smartregister.job.DocumentConfigurationServiceJob;
 import org.smartregister.job.PullUniqueIdsServiceJob;
@@ -444,6 +446,24 @@ public class Utils {
             Timber.e(e);
         }
         return updatedCoords;
+    }
+
+    public static String getSyncEntityString(SyncEntity syncEntity) {
+        Context context =  RevealApplication.getInstance().getContext().applicationContext();
+        switch (syncEntity) {
+            case EVENTS:
+                return context.getString(R.string.events);
+            case LOCATIONS:
+                return context.getString(R.string.locations);
+            case PLANS:
+                return context.getString(R.string.plans);
+            case STRUCTURES:
+                return context.getString(R.string.structures);
+            case TASKS:
+                return context.getString(R.string.tasks_text);
+            default:
+                return "";
+        }
     }
 
 }
