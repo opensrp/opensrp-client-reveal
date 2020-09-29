@@ -215,7 +215,7 @@ public class EditFociBoundaryActivity extends BaseMapActivity implements EditFoc
         boundaryLayer.disableLayerOnMap(mapboxMap);
         if (drawingManager != null) {
             if (!drawingManager.isDrawingEnabled()) {
-                if (drawingManager.startDrawing( boundaryLayer)) {
+                if (drawingManager.editBoundary( boundaryLayer)) {
                     savePointBtn.setText(R.string.save_point);
                 }
             } else {
