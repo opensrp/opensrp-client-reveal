@@ -448,7 +448,7 @@ public class Utils {
         return updatedCoords;
     }
 
-    public static String getExternalisedSyncEntityString(SyncEntity syncEntity) {
+    public static String getSyncEntityString(SyncEntity syncEntity) {
         Context context =  RevealApplication.getInstance().getContext().applicationContext();
         switch (syncEntity) {
             case EVENTS:
@@ -461,8 +461,9 @@ public class Utils {
                 return context.getString(R.string.structures);
             case TASKS:
                 return context.getString(R.string.tasks_text);
+            default:
+                return "";
         }
-        return "";
     }
 
 }
