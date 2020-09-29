@@ -462,7 +462,7 @@ public class Utils {
             case TASKS:
                 return context.getString(R.string.tasks_text);
             default:
-                return "";
+                throw new IllegalStateException("Invalid Sync Entity");
         }
     }
 
