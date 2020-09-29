@@ -44,11 +44,11 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
 
     private LocationPickerFragmentPresenter presenter;
 
-    private List<Pair<String, String>> parentLocations = new ArrayList<>();
+    private List<Pair<String, String>> parentLocations;
 
-    private List<String> selectedLocationIds = new ArrayList<>();
+    private List<String> selectedLocationIds;
 
-    private HashMap<String, List<LocationModel>> groupedLocations = new HashMap<>();
+    private HashMap<String, List<LocationModel>> groupedLocations;
 
     private int mLastExpandedPosition = -1;
 
@@ -72,6 +72,9 @@ public class LocationPickerFragment extends Fragment implements LocationPickerFr
             presenter = new LocationPickerFragmentPresenter(this);
         }
         btnP2PSync = null;
+        selectedLocationIds = new ArrayList<>();
+        groupedLocations = new HashMap<>();
+        parentLocations = new ArrayList<>();
     }
 
     @Nullable
