@@ -134,7 +134,7 @@ public class EditFociBoundaryActivityTest extends BaseUnitTest {
 
     @Test
     public void testEnableDrawingModeWhenDrawingIsNotEnabled() {
-        when(drawingManager.startDrawing(boundaryLayer)).thenReturn(true);
+        when(drawingManager.editBoundary(boundaryLayer)).thenReturn(true);
         Button savePointBtn = Whitebox.getInternalState(editFociBoundaryActivity, "savePointBtn");
         savePointBtn.setText(R.string.change_point);
         assertEquals("Change Point", savePointBtn.getText());
