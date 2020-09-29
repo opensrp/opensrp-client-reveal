@@ -274,5 +274,6 @@
     <string name="plans">แผน</string>
     <string name="structures">สิ่งปลูกสร้าง</string>
     <string name="tasks_text">งาน</string>
+    <string name="undo">ยกเลิก</string>
 
 </resources>
