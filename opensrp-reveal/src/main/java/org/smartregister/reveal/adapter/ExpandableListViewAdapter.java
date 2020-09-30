@@ -122,7 +122,8 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
                 @Override
                 public void onClick(View view) {
                     CheckBox cb = (CheckBox) view;
-                    LocationModel selectedItem = childLocationsMap.get(listGroup.get(expandedGroupPosition).first).get(childPosition);
+                    int cbPosition = (int) cb.getTag();
+                    LocationModel selectedItem = childLocationsMap.get(listGroup.get(expandedGroupPosition).first).get(cbPosition);
                     selectedItem.setChecked(cb.isChecked());
                     if(cb.isChecked()){
                         checkedBoxesCount++;
@@ -147,6 +148,7 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
             childViewHolder = (ChildViewHolder)view.getTag();
         }
         childViewHolder.cbChild.setChecked(expandedListText.isChecked());
+        childViewHolder.cbChild.setTag(childPosition);
         childViewHolder.tvChild.setText(expandedListText.getName());
         return view;
     }
