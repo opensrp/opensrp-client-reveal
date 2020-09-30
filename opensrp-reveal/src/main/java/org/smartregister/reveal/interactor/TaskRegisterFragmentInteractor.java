@@ -35,6 +35,7 @@ import timber.log.Timber;
 
 import static org.smartregister.domain.Task.INACTIVE_TASK_STATUS;
 import static org.smartregister.domain.Task.TaskStatus.COMPLETED;
+import static org.smartregister.family.util.DBConstants.KEY.DATE_REMOVED;
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.RELATIONAL_ID;
 import static org.smartregister.repository.EventClientRepository.Table.event;
@@ -135,10 +136,10 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
         structureTasksQueryBuilder.selectInitiateMainTable(tableName, columns, ID);
         structureTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
                 STRUCTURES_TABLE, tableName, STRUCTURE_ID, STRUCTURES_TABLE, ID));
-        structureTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s  COLLATE NOCASE",
-                FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
-        structureTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s  COLLATE NOCASE",
-                FAMILY_MEMBER, FAMILY, BASE_ENTITY_ID, FAMILY_MEMBER, RELATIONAL_ID));
+        structureTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s AND %s.%s IS NULL COLLATE NOCASE",
+                FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID, FAMILY, DATE_REMOVED));
+        structureTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s AND %s.%s IS NULL  COLLATE NOCASE",
+                FAMILY_MEMBER, FAMILY, BASE_ENTITY_ID, FAMILY_MEMBER, RELATIONAL_ID, FAMILY_MEMBER, DATE_REMOVED));
         structureTasksQueryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
                 SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
         structureTasksQueryBuilder.mainCondition(mainCondition);
@@ -383,10 +384,10 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
                         String jsonEventStr = cursor.getString(0);
 
                         jsonEventStr = jsonEventStr.replaceAll("'", "");
+                        JSONObject localJsonEvent = new JSONObject(jsonEventStr);
 
-                        jsonEvent = new JSONObject(jsonEventStr);
-
-                        if (cursor.getCount() == 1 || jsonEvent.optString(event_column.baseEntityId.name()).equals(indexCaseEventId)) {
+                        if (cursor.getCount() == 1 || localJsonEvent.optString(ID).equals(indexCaseEventId)) {
+                            jsonEvent = new JSONObject(jsonEventStr);
                             break;
                         }
                     }

@@ -50,6 +50,7 @@ import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.SyncEntity;
 import org.smartregister.domain.SyncProgress;
 import org.smartregister.domain.Task;
+import org.smartregister.dto.UserAssignmentDTO;
 import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
@@ -877,6 +878,14 @@ public class ListTasksActivityTest extends BaseUnitTest {
         spyListTasksActivity.onSyncProgress(mockSyncProgress);
 
         assertEquals(progressLabel.getText(), String.format(context.getString(R.string.progressBarLabel), "Tasks", 50));
+    }
+
+    @Test
+    public void testOnUserAssignmentRevokedShouldResumeDrawer() {
+        Whitebox.setInternalState(listTasksActivity,"drawerView",drawerView);
+        doNothing().when(drawerView).onResume();
+        listTasksActivity.onUserAssignmentRevoked(mock(UserAssignmentDTO.class));
+        verify(drawerView).onResume();
     }
 
 

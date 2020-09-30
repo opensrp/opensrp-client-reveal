@@ -152,6 +152,7 @@ public interface Constants {
         String FAMILY_MEMBER_NAMES = "family_member_names";
         String PLAN_IDENTIFIER = "planIdentifier";
         String LOCATION_STATUS = "status";
+        String LOCATION_NAME = "name";
     }
 
 
@@ -255,6 +256,8 @@ public interface Constants {
         String EVENT_TABLE = "event";
         String TASK_TABLE = "task";
         String STRUCTURE_TABLE = "structure";
+        String EC_EVENTS_TABLE = "ec_events";
+        String EC_EVENTS_SEARCH_TABLE = "ec_events_search";
     }
 
     interface BusinessStatus {
@@ -320,6 +323,8 @@ public interface Constants {
         String BUSINESS_STATUS = "business_status";
 
         String STRUCTURE_TYPE = "structureType";
+
+        String STRUCTURE = "structure";
 
         String HEAD_OF_HOUSEHOLD = "familyHeadName";
 
@@ -412,6 +417,8 @@ public interface Constants {
 
         String LOCATION_COMPONENT_ACTIVE = "my_location_active";
 
+        String VALID_OPERATIONAL_AREA = "valid_operational_area";
+
         String NO_PADDING = "no_padding";
 
         String SHORTENED_HINT = "shortened_hint";
@@ -488,6 +495,8 @@ public interface Constants {
 
 
         String ZONE = "zone";
+
+        String MOP_UP = "mopup";
     }
 
     interface DateFormat {
@@ -665,6 +674,8 @@ public interface Constants {
         String FOUND = "found";
 
         String PROVIDER_ID = "provider_id";
+
+        String VERSION = "version";
     }
 
     interface UseContextCode {

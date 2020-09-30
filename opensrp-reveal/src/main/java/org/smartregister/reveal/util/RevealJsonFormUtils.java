@@ -371,7 +371,7 @@ public class RevealJsonFormUtils {
     }
 
     public void populateField(JSONObject formJson, String key, String value, String fieldToPopulate) throws JSONException {
-        JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJson), key);
+        JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.getMultiStepFormFields(formJson), key);
         if (field != null) {
             field.put(fieldToPopulate, value);
         }
@@ -521,7 +521,7 @@ public class RevealJsonFormUtils {
                             dataCollector);
                 }
 
-                populateUserAssignedLocations(formJSON, JsonForm.ZONE,  Arrays.asList(OPERATIONAL_AREA, ZONE));
+                populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
                 break;
 
             case JsonForm.TEAM_LEADER_DOS_ZAMBIA:

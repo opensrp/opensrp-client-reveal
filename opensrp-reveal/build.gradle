@@ -44,8 +44,8 @@ android {
         applicationId "org.smartregister.reveal"
         minSdkVersion 18
         targetSdkVersion 28
-        versionCode 21
-        versionName "5.2.7"
+        versionCode 22
+        versionName "5.3.3"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -119,13 +119,13 @@ android {
             minifyEnabled false
             zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            resValue "string", 'opensrp_base_url', '"https://reveal-na.smartregister.org/opensrp/"'
-            buildConfigField "int", "DATABASE_VERSION", '8'
+            resValue "string", 'opensrp_base_url', '"https://reveal-zm.smartregister.org/opensrp/"'
+            buildConfigField "int", "DATABASE_VERSION", '10'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
             buildConfigField "long", "SYNC_INTERVAL_IN_MINUTES", '15'
-            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.NAMIBIA"
+            buildConfigField "org.smartregister.reveal.util.Country", "BUILD_COUNTRY", "org.smartregister.reveal.util.Country.ZAMBIA"
             buildConfigField "long", "PULL_UNIQUE_IDS_MINUTES", '15'
             buildConfigField "String", "ADMIN_PASSWORD_NOT_NEAR_STRUCTURES", '"AdminPass1"'
             buildConfigField "float", "MY_LOCATION_BUFFER", '25'
@@ -138,7 +138,7 @@ android {
 
         debug {
             resValue "string", 'opensrp_base_url', '"https://reveal-stage.smartregister.org/opensrp/"'
-            buildConfigField "int", "DATABASE_VERSION", '8'
+            buildConfigField "int", "DATABASE_VERSION", '10'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
@@ -182,12 +182,12 @@ dependencies {
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.9'
 
-    implementation('io.ona.kujaku:library:0.8.9') {
+    implementation('io.ona.kujaku:library:0.9.0') {
         exclude group: 'com.android.volley'
         exclude group: 'stax', module: 'stax-api'
     }
 
-    implementation('org.smartregister:opensrp-client-core:2.0.6-PREVIEW4-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:2.2.4-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.android.support', module: 'appcompat-v7'
@@ -200,7 +200,6 @@ dependencies {
     }
 
     testImplementation 'com.ibm.fhir:fhir-model:4.2.3'
-
     implementation('org.smartregister:opensrp-client-configurable-views:1.1.5-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'org.smartregister', module: 'opensrp-client-core'

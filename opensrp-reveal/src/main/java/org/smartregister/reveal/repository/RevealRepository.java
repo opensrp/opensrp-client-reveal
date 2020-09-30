@@ -12,6 +12,7 @@ import org.smartregister.job.PullUniqueIdsServiceJob;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.CampaignRepository;
 import org.smartregister.repository.ClientFormRepository;
+import org.smartregister.repository.ClientRelationshipRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.repository.ManifestRepository;
@@ -34,6 +35,7 @@ import org.smartregister.util.DatabaseMigrationUtils;
 import org.smartregister.util.RecreateECUtil;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Timer;
@@ -119,6 +121,12 @@ public class RevealRepository extends Repository {
                     break;
                 case 8:
                     upgradeToVersion8(db);
+                    break;
+                case 9:
+                    upgradeToVersion9(db);
+
+                case 10:
+                    upgradeToVersion10(db);
                     break;
                 default:
                     break;
@@ -238,6 +246,32 @@ public class RevealRepository extends Repository {
         EventClientRepository.createTable(db,
                 EventClientRepository.Table.foreignClient,
                 EventClientRepository.client_column.values());
+    }
+
+    private void upgradeToVersion9(SQLiteDatabase db) {
+        ClientRelationshipRepository.createTable(db);
+        EventClientRepository.createAdditionalColumns(db);
+        EventClientRepository.addEventLocationId(db);
+    }
+
+    private void upgradeToVersion10(SQLiteDatabase db) {
+        if (BuildConfig.BUILD_COUNTRY != Country.ZAMBIA) {
+            return;
+        }
+        db.delete(Constants.Tables.EC_EVENTS_TABLE, String.format(" %s=?", DatabaseKeys.EVENT_TYPE), new String[]{SPRAY_EVENT});
+        db.delete(Constants.Tables.EC_EVENTS_SEARCH_TABLE, String.format("%s=?", DatabaseKeys.EVENT_TYPE), new String[]{SPRAY_EVENT});
+
+        //client process family events after 5 seconds so that get calls to getDatabase return
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                EventClientRepository ecRepository = RevealApplication.getInstance().getContext().getEventClientRepository();
+                List<EventClient> eventClientList = ecRepository.fetchEventClientsByEventTypes(
+                        Collections.singletonList(SPRAY_EVENT));
+                RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext()).processClient(eventClientList);
+            }
+        }, 5000);
+
     }
 
     @Override

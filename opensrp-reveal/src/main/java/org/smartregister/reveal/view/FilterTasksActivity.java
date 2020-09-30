@@ -132,6 +132,7 @@ public class FilterTasksActivity extends MultiLanguageActivity implements Filter
         clearSelectedButtons(interventionTypeLayout);
         clearSelectedButtons(formNameLayout);
         clearDatePicker();
+        presenter.onClearSelections();
     }
 
 
