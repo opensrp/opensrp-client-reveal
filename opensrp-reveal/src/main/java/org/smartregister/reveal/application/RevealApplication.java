@@ -438,5 +438,6 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             preferencesUtil.setCurrentPlan(null);
             preferencesUtil.setCurrentPlanId(null);
         }
+        getContext().anmLocationController().evict();
     }
 }
