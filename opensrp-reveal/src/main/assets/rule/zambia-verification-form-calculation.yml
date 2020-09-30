@@ -1,0 +1,7 @@
+---
+name: step1_calc_total_pop
+description: Calculate total population
+priority: 1
+condition: "true"
+actions:
+- "calculation = Integer.valueOf(helper.ifNull(step1_verify_preg,0)) + Integer.valueOf(helper.ifNull(step1_verify_child5,0))"
