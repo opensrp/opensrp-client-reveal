@@ -125,8 +125,8 @@
           "err": "This field is required"
         },
         "v_min": {
-          "value": "1",
-          "err": "Number must be equal or greater than 1"
+          "value": "0",
+          "err": "Number must be equal or greater than 0"
         },
         "v_max": {
           "value": "100",
@@ -146,8 +146,8 @@
           "err": "This field is required"
         },
         "v_min": {
-          "value": "1",
-          "err": "Number must be equal or greater than 1"
+          "value": "0",
+          "err": "Number must be equal or greater than 0"
         },
         "v_max": {
           "value": "100",
@@ -167,8 +167,8 @@
           "err": "This field is required"
         },
         "v_min": {
-          "value": "1",
-          "err": "Number must be equal or greater than 1"
+          "value": "0",
+          "err": "Number must be equal or greater than 0"
         },
         "v_max": {
           "value": "100",
@@ -188,8 +188,8 @@
           "err": "This field is required"
         },
         "v_min": {
-          "value": "1",
-          "err": "Number must be equal or greater than 1"
+          "value": "0",
+          "err": "Number must be equal or greater than 0"
         },
         "v_max": {
           "value": "100",
@@ -209,8 +209,8 @@
           "err": "This field is required"
         },
         "v_min": {
-          "value": "1",
-          "err": "Number must be equal or greater than 1"
+          "value": "0",
+          "err": "Number must be equal or greater than 0"
         },
         "v_max": {
           "value": "100",
@@ -230,8 +230,8 @@
           "err": "This field is required"
         },
         "v_min": {
-          "value": "1",
-          "err": "Number must be equal or greater than 1"
+          "value": "0",
+          "err": "Number must be equal or greater than 0"
         },
         "v_max": {
           "value": "100",
