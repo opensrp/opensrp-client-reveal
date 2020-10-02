@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -423,12 +424,34 @@ public class RevealJsonFormUtils {
                             keys.put(optionsKeyValue.get(value.toString()));
                         }
                         field.put(VALUE, keys);
-                    } else
-                        field.put(VALUE, obs.getValue());
+                    } else {
+                        if(!JsonFormConstants.REPEATING_GROUP.equals(field.optString(TYPE))) {
+                            field.put(VALUE, obs.getValue());
+                        }
+                    }
+                }
+
+                if (JsonFormConstants.REPEATING_GROUP.equals(field.optString(TYPE))) {
+                    generateRepeatingGroupFields(field, event.getObs(), formJSON);
                 }
             } catch (JSONException e) {
                 Timber.e(e);
             }
+        }
+    }
+
+    private void generateRepeatingGroupFields(JSONObject field, List<Obs> obs, JSONObject formJSON) {
+        try {
+            LinkedHashMap<String, HashMap<String, String>> repeatingGroupMap = Utils.buildRepeatingGroup(field, obs);
+            List<HashMap<String, String>> repeatingGroupMapList = Utils.generateListMapOfRepeatingGrp(repeatingGroupMap);
+            new RepeatingGroupGenerator(formJSON.optJSONObject(JsonFormConstants.STEP1),
+                    JsonFormConstants.STEP1,
+                    field.optString(KEY),
+                    new HashMap<>(),
+                    Constants.JsonForm.REPEATING_GROUP_UNIQUE_ID,
+                    repeatingGroupMapList).init();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
