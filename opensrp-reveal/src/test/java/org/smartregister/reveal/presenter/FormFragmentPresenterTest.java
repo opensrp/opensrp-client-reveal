@@ -101,8 +101,7 @@ public class FormFragmentPresenterTest extends BaseUnitTest {
         taskDetails.setTaskCode(Constants.Intervention.BLOOD_SCREENING);
         when(jsonFormUtils.getFormName(null, taskDetails.getTaskCode())).thenReturn(Constants.JsonForm.BLOOD_SCREENING_FORM);
         presenter.onPasswordVerified();
-        verify(view).startForm(null,         verify(view).startForm(jsonArgumentCaptor.capture(), false);
-);
+        verify(view).startForm(null, false);
 
     }
 
@@ -128,8 +127,7 @@ public class FormFragmentPresenterTest extends BaseUnitTest {
         taskDetails.setTaskCode(Constants.Intervention.BEDNET_DISTRIBUTION);
         when(jsonFormUtils.getFormName(null, taskDetails.getTaskCode())).thenReturn(Constants.JsonForm.BEDNET_DISTRIBUTION_FORM);
         presenter.onLocationValidated();
-        verify(view, never()).startForm(null,         verify(view).startForm(jsonArgumentCaptor.capture(), false);
-);
+        verify(view, never()).startForm(null, false);
         verify(interactor).findNumberOfMembers(taskDetails.getTaskEntity(), null);
     }
 

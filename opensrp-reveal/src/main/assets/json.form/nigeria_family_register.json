@@ -402,7 +402,7 @@
             "key": "dob_unknown",
             "text": "DOB unknown?",
             "text_size": "18px",
-            "value": "false"
+            "value": "true"
           }
         ]
       },
