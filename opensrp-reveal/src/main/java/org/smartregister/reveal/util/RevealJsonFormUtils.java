@@ -21,6 +21,7 @@ import org.smartregister.domain.Obs;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.model.BaseTaskDetails;
+import org.smartregister.reveal.model.FamilySummaryModel;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
@@ -57,6 +58,7 @@ import static org.smartregister.reveal.util.Constants.ENTITY_ID;
 import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
+import static org.smartregister.reveal.util.Constants.JsonForm.CHILDREN_TREATED;
 import static org.smartregister.reveal.util.Constants.JsonForm.JSON_FORM_FOLDER;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
@@ -406,7 +408,7 @@ public class RevealJsonFormUtils {
                 JSONObject field = fields.getJSONObject(i);
 
                 // HEADS UP
-                if(readOnly) {
+                if (readOnly) {
                     field.put(READ_ONLY, true);
                 }
 
@@ -433,6 +435,28 @@ public class RevealJsonFormUtils {
             }
         }
     }
+
+    public void populateForm(FamilySummaryModel summary, JSONObject formJson) {
+        JSONArray fields = JsonFormUtils.fields(formJson);
+
+        for (int i = 0; i < fields.length(); i++) {
+            try {
+                JSONObject field = fields.getJSONObject(i);
+                String key = field.getString(KEY);
+
+                if (key.equalsIgnoreCase(CHILDREN_TREATED)) {
+                    field.put(VALUE, Integer.toString(summary.getChildrenTreated()));
+                } else if (key.equalsIgnoreCase(JsonForm.CALCULATED_CHILDREN_TREATED)) {
+                    field.put(VALUE, Integer.toString(summary.getChildrenTreated()));
+                } else if (key.equalsIgnoreCase(JsonForm.ADDITIONAL_DOSES_ADMINISTERED)) {
+                    field.put(VALUE, Integer.toString(summary.getAdditionalDosesAdministered()));
+                }
+            } catch (JSONException e) {
+                Timber.e(e);
+            }
+        }
+    }
+
 
     public Pair<JSONArray, JSONArray> populateServerOptions(Map<String, Object> serverConfigs, JSONObject formJson, String settingsConfigKey, String formKey, String filterKey) {
         if (serverConfigs == null)

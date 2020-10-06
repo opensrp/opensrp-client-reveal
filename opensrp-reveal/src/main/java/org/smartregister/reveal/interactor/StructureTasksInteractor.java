@@ -5,7 +5,6 @@ import android.content.Context;
 import androidx.annotation.VisibleForTesting;
 
 import android.text.TextUtils;
-import android.util.Pair;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.SQLException;
@@ -16,6 +15,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.smartregister.clientandeventmodel.DateUtil;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Event;
+import org.smartregister.domain.Obs;
+import org.smartregister.domain.Task;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.family.util.Utils;
 import org.smartregister.repository.EventClientRepository;
@@ -24,6 +25,7 @@ import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.model.EventTask;
+import org.smartregister.reveal.model.FamilySummaryModel;
 import org.smartregister.reveal.model.StructureTaskDetails;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
@@ -37,6 +39,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static org.smartregister.domain.Task.INACTIVE_TASK_STATUS;
 import static org.smartregister.domain.Task.TaskStatus.READY;
 import static org.smartregister.family.util.DBConstants.KEY.DOB;
@@ -45,7 +48,6 @@ import static org.smartregister.family.util.DBConstants.KEY.LAST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.MIDDLE_NAME;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SMC_COMPLETE;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.SPAQ_COMPLETE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
@@ -153,33 +155,42 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
 
         appExecutors.diskIO().execute(() -> {
             // Heads up
-            String eventType = taskDetails.getTaskCode().equals(Intervention.BLOOD_SCREENING) ? BLOOD_SCREENING_EVENT : Constants.BEDNET_DISTRIBUTION_EVENT;
+            Event event = getLastEvent(taskDetails);
 
-            if (taskDetails.getTaskCode().equals(Intervention.MDA_DISPENSE)) {
-                eventType = Constants.EventType.MDA_DISPENSE;
-            } else if (taskDetails.getTaskCode().equals(Intervention.MDA_ADHERENCE)) {
-                eventType = Constants.EventType.MDA_ADHERENCE;
-            }
-
-            String events = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
-                    event_column.json, EventClientRepository.Table.event.name(), event_column.baseEntityId, event_column.eventType, event_column.updatedAt);
-            Cursor cursor = null;
-            try {
-                cursor = database.rawQuery(events, new String[]{taskDetails.getTaskEntity(), eventType});
-                if (cursor.moveToFirst()) {
-                    String eventJSON = cursor.getString(0);
-                    presenter.onEventFound(eventClientRepository.convert(eventJSON, Event.class));
-
-                }
-            } catch (SQLException e) {
-                Timber.e(e);
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
+            if (event != null) {
+                presenter.onEventFound(event);
             }
         });
 
+    }
+
+    private Event getLastEvent(StructureTaskDetails taskDetails) {
+        String eventType = taskDetails.getTaskCode().equals(Intervention.BLOOD_SCREENING) ? BLOOD_SCREENING_EVENT : Constants.BEDNET_DISTRIBUTION_EVENT;
+
+        if (taskDetails.getTaskCode().equals(Intervention.MDA_DISPENSE)) {
+            eventType = Constants.EventType.MDA_DISPENSE;
+        } else if (taskDetails.getTaskCode().equals(Intervention.MDA_ADHERENCE)) {
+            eventType = Constants.EventType.MDA_ADHERENCE;
+        }
+
+        String events = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
+                event_column.json, EventClientRepository.Table.event.name(), event_column.baseEntityId, event_column.eventType, event_column.updatedAt);
+        Cursor cursor = null;
+        try {
+            cursor = database.rawQuery(events, new String[]{taskDetails.getTaskEntity(), eventType});
+            if (cursor.moveToFirst()) {
+                String eventJSON = cursor.getString(0);
+                return eventClientRepository.convert(eventJSON, Event.class);
+            }
+        } catch (SQLException e) {
+            Timber.e(e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -194,23 +205,49 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     }
 
     @Override
-    public void findCompletedDispenseTasks(StructureTaskDetails taskDetails) {
+    public void findCompletedDispenseTasks(StructureTaskDetails taskDetails, List<StructureTaskDetails> taskDetailsList) {
+        // HEADS UP
         appExecutors.diskIO().execute(() -> {
-            int numberOfMembers = 0;
+
+            final FamilySummaryModel summary = new FamilySummaryModel();
+
+            // Get the number of SMC_COMPLETE tasks for the structure
             try (Cursor cursor = database.rawQuery(
                     String.format("SELECT count(*) FROM %s WHERE %s = ? AND %s =? AND %s=?",
                             TASK_TABLE, STRUCTURE_ID, PLAN_ID, BUSINESS_STATUS),
                     new String[]{taskDetails.getStructureId(), PreferencesUtil.getInstance().getCurrentPlanId(), SMC_COMPLETE})) {
 
                 while (cursor.moveToNext()) {
-                    numberOfMembers = cursor.getInt(0);
+                    summary.setChildrenTreated(cursor.getInt(0));
                 }
             } catch (Exception e) {
                 Timber.e(e, "Error find Number of members ");
             }
-            int finalNumberOfMembers = numberOfMembers;
+
+            // Get the total number of doses administered
+            for (StructureTaskDetails taskDetail : taskDetailsList) {
+                if (taskDetail.getTaskCode().equals(Intervention.MDA_ADHERENCE) && taskDetail.getTaskStatus().equals(Task.TaskStatus.COMPLETED.name())) {
+                    Event event = this.getLastEvent(taskDetail);
+
+                    if (event != null) {
+                        Obs obs = event.findObs(null, false, "number_of_additional_doses");
+                        if (obs != null && obs.getValues() != null) {
+                            Object value = obs.getValue();
+
+                            try {
+                                Integer number = Integer.valueOf((String) value);
+
+                                summary.setAdditionalDosesAdministered(summary.getAdditionalDosesAdministered() + number);
+                            } catch (Exception e) {
+                                Timber.e(e, "Error find Number of members ");
+                            }
+                        }
+                    }
+                }
+            }
+
             appExecutors.mainThread().execute(() -> {
-                presenter.onFetchedMembersCount(finalNumberOfMembers);
+                presenter.onFetchedMembersCount(summary);
             });
         });
 

@@ -9,7 +9,6 @@ import com.mapbox.geojson.Feature;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.domain.Task;
@@ -20,16 +19,14 @@ import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.interactor.BaseFormFragmentInteractor;
 import org.smartregister.reveal.interactor.StructureTasksInteractor;
+import org.smartregister.reveal.model.FamilySummaryModel;
 import org.smartregister.reveal.model.StructureTaskDetails;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Set;
-
-import timber.log.Timber;
 
 import static org.smartregister.reveal.contract.StructureTasksContract.Interactor;
 import static org.smartregister.reveal.contract.StructureTasksContract.Presenter;
@@ -126,14 +123,13 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
             interactor.findLastEvent(taskDetails);
         } else if (MDA_DISPENSE.equals(taskDetails.getTaskCode()) || MDA_ADHERENCE.equals(taskDetails.getTaskCode()) || MDA_DRUG_RECON.equals(taskDetails.getTaskCode())) {
             // HEADS UP
-            if(taskDetails.isEdit() || TaskStatus.COMPLETED.name().equals(taskDetails.getTaskStatus())) {
+            if (taskDetails.isEdit() || TaskStatus.COMPLETED.name().equals(taskDetails.getTaskStatus())) {
                 interactor.findLastEvent(taskDetails);
-            }
-            else{
+            } else if (MDA_DRUG_RECON.equals(taskDetails.getTaskCode())) {
+                interactor.findCompletedDispenseTasks(taskDetails, getView().getTaskDetailsList());
+            } else {
                 super.onLocationValidated();
             }
-        } else if (MDA_DRUG_RECON.equals(taskDetails.getTaskCode())) {
-            interactor.findCompletedDispenseTasks(taskDetails);
         } else {
             super.onLocationValidated();
         }
@@ -169,33 +165,31 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
     @Override
     public void onEventFound(Event event) {
-        onEventFound(event, 0);
+        startTaskForm(event, null);
     }
 
-    public void onEventFound(Event event, int numberOfMembers) {
+    public void startTaskForm(Event event, FamilySummaryModel summary) {
 
         // Heads up
-
         String formName = getView().getJsonFormUtils().getFormName(null, getTaskDetails().getTaskCode());
         if (StringUtils.isBlank(formName)) {
             getView().displayError(R.string.opening_form_title, R.string.form_not_found);
         } else {
             StructureTaskDetails taskDetails = (StructureTaskDetails) getTaskDetails();
-            boolean readOnly = !taskDetails.isEdit();
+            boolean readOnly = !taskDetails.isEdit() && taskDetails.getTaskStatus().equals(TaskStatus.COMPLETED.name());
 
             JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), formName, getTaskDetails(), getStructure());
-            getView().getJsonFormUtils().populateForm(event, formJSON, readOnly);
 
-            if (BEDNET_DISTRIBUTION.equals(getTaskDetails().getTaskCode())) {
+            if (event != null) {
+                getView().getJsonFormUtils().populateForm(event, formJSON, readOnly);
+            }
+
+            if(summary != null) {
+                getView().getJsonFormUtils().populateForm(summary, formJSON);
+            }
+
+            if (summary == null && BEDNET_DISTRIBUTION.equals(getTaskDetails().getTaskCode())) {
                 formInteractor.findNumberOfMembers(getTaskDetails().getTaskEntity(), formJSON);
-            } else if (MDA_DRUG_RECON.equals(getTaskDetails().getTaskCode())) {
-                try {
-                    String jsonStr = formJSON.toString().replace(Constants.JsonForm.NUMBER_OF_FAMILY_MEMBERS, numberOfMembers + "");
-                    getView().startForm(new JSONObject(jsonStr), readOnly);
-                } catch (JSONException e) {
-                    Timber.e(e, "Error updating Number of members");
-                    getView().startForm(formJSON, readOnly);
-                }
             } else {
                 getView().startForm(formJSON, readOnly);
             }
@@ -204,8 +198,8 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
     }
 
     @Override
-    public void onFetchedMembersCount(int finalNumberOfMembers) {
-        onEventFound(null, finalNumberOfMembers);
+    public void onFetchedMembersCount(FamilySummaryModel summary) {
+        startTaskForm(null, summary);
     }
 
     @Override

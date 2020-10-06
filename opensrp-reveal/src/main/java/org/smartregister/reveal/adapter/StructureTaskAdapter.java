@@ -111,6 +111,10 @@ public class StructureTaskAdapter extends RecyclerView.Adapter<StructureTaskView
         notifyDataSetChanged();
     }
 
+    public List<StructureTaskDetails> getTaskDetailsList() {
+        return taskDetailsList;
+    }
+
     private int updateTaskStatus(String taskID, Task.TaskStatus taskStatus, String businessStatus) {
         int position = taskDetailsList.indexOf(new StructureTaskDetails(taskID));
         if (position != -1) {

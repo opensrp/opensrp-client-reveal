@@ -1,7 +1,15 @@
 ---
-name: step1_calculateTotal
+name: step1_confirmNumberSPAQBlistersUsed
 description: Display Calculated number of SPAQ Blisters used
 priority: 1
 condition: "true"
 actions:
-  - "calculation = helper.ifNull(step1_childrenTreated + step1_additionalDosesAdministered + step1_blisterPacketsNumber + step1_confirmSPAQNumberWasted,0)"
+  - "calculation = Integer.valueOf(helper.ifNull(step1_childrenTreated,0)) + Integer.valueOf(helper.ifNull(step1_additionalDosesAdministered,0))  + Integer.valueOf(helper.ifNull(step1_blisterPacketsNumber,0))  + Integer.valueOf(helper.ifNull(step1_confirmSPAQNumberWasted,0))"
+
+## ---
+## name: step1_isTreatedChanged
+## description: Display Calculated number of SPAQ Blisters used
+## priority: 1
+## condition: "!step1_childrenTreated.equals(step1_calculatedChildrenTreated)"
+   ##actions:
+##   - "isRelevant = true"

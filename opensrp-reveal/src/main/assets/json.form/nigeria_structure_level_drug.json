@@ -82,11 +82,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "This number does not match the data captured in the forms!"
-        },
-        "v_max": {
-          "value": "[num_fam_members]",
-          "err": "Cannot be more than number of children who were administered SPAQ"
+          "err": "Number of children to be treated must be greater than or equal to 0!"
         }
       },
       {

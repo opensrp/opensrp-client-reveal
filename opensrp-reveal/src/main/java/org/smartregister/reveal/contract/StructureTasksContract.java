@@ -1,10 +1,10 @@
 package org.smartregister.reveal.contract;
 
 import android.content.Context;
-import android.util.Pair;
 
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.model.FamilySummaryModel;
 import org.smartregister.reveal.model.StructureTaskDetails;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public interface StructureTasksContract {
 
         void onTaskInfoReset(String structureId);
 
-        void onFetchedMembersCount(int finalNumberOfMembers);
+        void onFetchedMembersCount(FamilySummaryModel summary);
 //        void onFetchedMembersCount(Pair<Integer, Integer> finalNumberOfMembers);
     }
 
@@ -51,7 +51,7 @@ public interface StructureTasksContract {
 
         void resetTaskInfo(Context context, StructureTaskDetails taskDetails);
 
-        void findCompletedDispenseTasks(StructureTaskDetails taskDetails);
+        void findCompletedDispenseTasks(StructureTaskDetails taskDetails, List<StructureTaskDetails> taskDetailsList);
 
 //        void findCompletedAdherenceTasks(StructureTaskDetails taskDetails);
 
@@ -70,6 +70,8 @@ public interface StructureTasksContract {
         Context getContext();
 
         void setTaskDetailsList(List<StructureTaskDetails> taskDetailsList);
+
+        List<StructureTaskDetails> getTaskDetailsList();
 
         void updateTask(String taskID, Task.TaskStatus taskStatus, String businessStatus);
 

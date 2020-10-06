@@ -493,6 +493,12 @@ public interface Constants {
         String CATCHMENT_AREA = "catchment_area";
 
         String ADMINISTERED_SPAQ = "administeredSpaq";
+
+        String ADDITIONAL_DOSES_ADMINISTERED = "additionalDosesAdministered";
+
+        String CHILDREN_TREATED = "childrenTreated";
+
+        String CALCULATED_CHILDREN_TREATED = "calculatedChildrenTreated";
     }
 
     interface DateFormat {

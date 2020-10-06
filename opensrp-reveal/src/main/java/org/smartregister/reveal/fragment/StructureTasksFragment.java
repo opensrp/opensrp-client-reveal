@@ -207,6 +207,15 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     }
 
     @Override
+    public List<StructureTaskDetails> getTaskDetailsList() {
+        if (adapter == null) {
+            return this.taskDetailsList;
+        } else {
+            return this.adapter.getTaskDetailsList();
+        }
+    }
+
+    @Override
     public void updateTask(String taskID, Task.TaskStatus taskStatus, String businessStatus) {
         adapter.updateTask(taskID, taskStatus, businessStatus);
     }
