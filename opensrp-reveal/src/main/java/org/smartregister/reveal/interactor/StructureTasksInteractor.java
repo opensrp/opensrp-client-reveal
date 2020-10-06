@@ -1,7 +1,9 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
+
 import androidx.annotation.VisibleForTesting;
+
 import android.text.TextUtils;
 import android.util.Pair;
 
@@ -150,7 +152,15 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     public void findLastEvent(StructureTaskDetails taskDetails) {
 
         appExecutors.diskIO().execute(() -> {
+            // Heads up
             String eventType = taskDetails.getTaskCode().equals(Intervention.BLOOD_SCREENING) ? BLOOD_SCREENING_EVENT : Constants.BEDNET_DISTRIBUTION_EVENT;
+
+            if (taskDetails.getTaskCode().equals(Intervention.MDA_DISPENSE)) {
+                eventType = Constants.EventType.MDA_DISPENSE;
+            } else if (taskDetails.getTaskCode().equals(Intervention.MDA_ADHERENCE)) {
+                eventType = Constants.EventType.MDA_ADHERENCE;
+            }
+
             String events = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
                     event_column.json, EventClientRepository.Table.event.name(), event_column.baseEntityId, event_column.eventType, event_column.updatedAt);
             Cursor cursor = null;

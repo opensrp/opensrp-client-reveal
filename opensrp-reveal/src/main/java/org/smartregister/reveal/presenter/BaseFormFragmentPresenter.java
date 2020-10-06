@@ -124,9 +124,10 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
                     interactor.findSprayDetails(IRS, structure.getId(), formJSON);
                 } else if (MDA_DISPENSE.equals(taskDetails.getTaskCode()) || MDA_ADHERENCE.equals(taskDetails.getTaskCode()) || MDA_DRUG_RECON.equals(taskDetails.getTaskCode())) {
                     jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJSON, Constants.CONFIGURATION.MDA_CATCHMENT_AREAS, JsonForm.CATCHMENT_AREA, prefsUtil.getCurrentDistrict());
-                    getView().startForm(formJSON);
+
+                    getView().startForm(formJSON, false);
                 } else {
-                    getView().startForm(formJSON);
+                    getView().startForm(formJSON, false);
                 }
             }
         }
@@ -183,7 +184,7 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
             default:
                 break;
         }
-        getView().startForm(formJSON);
+        getView().startForm(formJSON, false);
     }
 
     @Override
@@ -231,10 +232,10 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
         try {
             String jsonStr = formJSON.toString().replace(JsonForm.NUMBER_OF_FAMILY_MEMBERS, numberOfMembers.first + "");
             jsonStr = jsonStr.replace(JsonForm.NUMBER_OF_FAMILY_MEMBERS_SLEEPING_OUTDOORS, numberOfMembers.second + "");
-            getView().startForm(new JSONObject(jsonStr));
+            getView().startForm(new JSONObject(jsonStr), false);
         } catch (JSONException e) {
             Timber.e(e, "Error updating Number of members");
-            getView().startForm(formJSON);
+            getView().startForm(formJSON, false);
         }
         getView().hideProgressDialog();
     }
@@ -247,13 +248,13 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
         } catch (JSONException e) {
             Timber.e(e, "Error updating family members");
         }
-        getView().startForm(formJSON);
+        getView().startForm(formJSON, false);
     }
 
     @Override
     public void onFetchedSprayDetails(CommonPersonObject commonPersonObject, JSONObject formJSON) {
         getView().getJsonFormUtils().populateSprayForm(commonPersonObject, formJSON);
-        getView().startForm(formJSON);
+        getView().startForm(formJSON, false);
     }
 
     public BaseTaskDetails getTaskDetails() {

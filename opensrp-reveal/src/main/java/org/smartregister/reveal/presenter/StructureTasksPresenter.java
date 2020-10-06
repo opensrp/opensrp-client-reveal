@@ -1,7 +1,6 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
-import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -37,6 +36,7 @@ import static org.smartregister.reveal.contract.StructureTasksContract.Presenter
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE;
+import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_DRUG_RECON;
 
 /**
@@ -104,6 +104,10 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
                     interactor.getStructure(details);
                 } else if (isUndo) {
                     getView().displayResetTaskInfoDialog(details);
+                } else if (MDA_DISPENSE.equals(details.getTaskCode()) || MDA_ADHERENCE.equals(details.getTaskCode()) || MDA_DRUG_RECON.equals(details.getTaskCode())) {
+                    // HEADS UP
+                    getView().showProgressDialog(R.string.opening_form_title, R.string.opening_form_message);
+                    interactor.getStructure(details);
                 } else {
                     getView().displayToast("Task Completed");
                 }
@@ -120,6 +124,14 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
         StructureTaskDetails taskDetails = (StructureTaskDetails) getTaskDetails();
         if (taskDetails.isEdit() && (BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode()) || BLOOD_SCREENING.equals(taskDetails.getTaskCode()))) {
             interactor.findLastEvent(taskDetails);
+        } else if (MDA_DISPENSE.equals(taskDetails.getTaskCode()) || MDA_ADHERENCE.equals(taskDetails.getTaskCode()) || MDA_DRUG_RECON.equals(taskDetails.getTaskCode())) {
+            // HEADS UP
+            if(taskDetails.isEdit() || TaskStatus.COMPLETED.name().equals(taskDetails.getTaskStatus())) {
+                interactor.findLastEvent(taskDetails);
+            }
+            else{
+                super.onLocationValidated();
+            }
         } else if (MDA_DRUG_RECON.equals(taskDetails.getTaskCode())) {
             interactor.findCompletedDispenseTasks(taskDetails);
         } else {
@@ -162,25 +174,30 @@ public class StructureTasksPresenter extends BaseFormFragmentPresenter implement
 
     public void onEventFound(Event event, int numberOfMembers) {
 
+        // Heads up
+
         String formName = getView().getJsonFormUtils().getFormName(null, getTaskDetails().getTaskCode());
         if (StringUtils.isBlank(formName)) {
             getView().displayError(R.string.opening_form_title, R.string.form_not_found);
         } else {
+            StructureTaskDetails taskDetails = (StructureTaskDetails) getTaskDetails();
+            boolean readOnly = !taskDetails.isEdit();
+
             JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), formName, getTaskDetails(), getStructure());
-            getView().getJsonFormUtils().populateForm(event, formJSON);
-            if (BEDNET_DISTRIBUTION.equals(getTaskDetails().getTaskCode()))
-            {
+            getView().getJsonFormUtils().populateForm(event, formJSON, readOnly);
+
+            if (BEDNET_DISTRIBUTION.equals(getTaskDetails().getTaskCode())) {
                 formInteractor.findNumberOfMembers(getTaskDetails().getTaskEntity(), formJSON);
             } else if (MDA_DRUG_RECON.equals(getTaskDetails().getTaskCode())) {
                 try {
                     String jsonStr = formJSON.toString().replace(Constants.JsonForm.NUMBER_OF_FAMILY_MEMBERS, numberOfMembers + "");
-                    getView().startForm(new JSONObject(jsonStr));
+                    getView().startForm(new JSONObject(jsonStr), readOnly);
                 } catch (JSONException e) {
                     Timber.e(e, "Error updating Number of members");
-                    getView().startForm(formJSON);
+                    getView().startForm(formJSON, readOnly);
                 }
             } else {
-                getView().startForm(formJSON);
+                getView().startForm(formJSON, readOnly);
             }
         }
         getView().hideProgressDialog();

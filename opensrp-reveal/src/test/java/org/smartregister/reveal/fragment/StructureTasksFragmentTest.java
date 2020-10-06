@@ -187,7 +187,7 @@ public class StructureTasksFragmentTest extends BaseUnitTest {
     public void testStartForm() {
         JSONObject form = new JSONObject();
         Whitebox.setInternalState(fragment, "jsonFormUtils", jsonFormUtils);
-        fragment.startForm(form);
+        fragment.startForm(form, false);
         verify(jsonFormUtils).startJsonForm(form, activity, REQUEST_CODE_GET_JSON_FRAGMENT);
     }
 

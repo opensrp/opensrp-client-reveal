@@ -4,8 +4,6 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.google.gson.Gson;
-
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.joda.time.DateTime;
@@ -16,6 +14,7 @@ import org.smartregister.CoreLibrary;
 import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObject;
+import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.EventClient;
@@ -25,15 +24,13 @@ import org.smartregister.family.util.DBConstants.KEY;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.TaskRepository;
-import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyProfileContract;
-import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.FamilyConstants;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
-import org.smartregister.reveal.util.GeoJsonUtils;
 import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.Utils;
@@ -180,5 +177,23 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     @Override
     protected void processClient(List<EventClient> eventClientList) {
         clientProcessor.processClient(eventClientList, true);
+    }
+
+    @Override
+    public void getRegistrationEvent(final CommonPersonObjectClient family, String familyHead) {
+        // Heads Up
+        appExecutors.diskIO().execute(() -> {
+
+            CommonPersonObject personObject = this.getCommonRepository(org.smartregister.family.util.Utils.metadata().familyMemberRegister.tableName).findByBaseEntityId(familyHead);
+            final CommonPersonObjectClient pClient = new CommonPersonObjectClient(personObject.getCaseId(), personObject.getDetails(), "");
+            pClient.setColumnmaps(personObject.getColumnmaps());
+
+            final JSONObject structureJson = eventClientRepository.getEventsByBaseEntityIdAndEventType(family.getCaseId(), FamilyConstants.EventType.FAMILY_REGISTRATION);
+            final org.smartregister.domain.Event structureEvent = eventClientRepository.convert(structureJson, org.smartregister.domain.Event.class);
+
+            appExecutors.mainThread().execute(() -> {
+                presenter.onEventFound(structureEvent, pClient);
+            });
+        });
     }
 }

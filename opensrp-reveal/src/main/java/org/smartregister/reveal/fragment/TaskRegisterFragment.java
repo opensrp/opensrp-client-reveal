@@ -282,7 +282,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     }
 
     @Override
-    public void startForm(JSONObject formName) {
+    public void startForm(JSONObject formName, boolean readOnly) {
         ((TaskRegisterActivity) getActivity()).startFormActivity(formName);
     }
 

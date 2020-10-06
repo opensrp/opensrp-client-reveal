@@ -126,9 +126,16 @@ public class TaskUtils {
     // SPAQ Task
 
     public void generateMDAAdherenceTask(Context context, String entityId, String structureId, String admininistedSpaq) {
-        if ("Yes".equalsIgnoreCase(admininistedSpaq))
-            generateTask(context, entityId, structureId, BusinessStatus.NOT_VISITED, Intervention.MDA_ADHERENCE,
-                    R.string.mda_adherence_desciption);
+        // HEADS UP
+        if ("Yes".equalsIgnoreCase(admininistedSpaq)) {
+            Set<Task> tasks = taskRepository.getTasksByEntityAndCode(prefsUtil.getCurrentPlanId(),
+                    Utils.getOperationalAreaLocation(prefsUtil.getCurrentOperationalArea()).getId(), entityId, Intervention.MDA_ADHERENCE);
+
+            if (tasks == null || tasks.isEmpty()) {
+                generateTask(context, entityId, structureId, BusinessStatus.NOT_VISITED, Intervention.MDA_ADHERENCE,
+                        R.string.mda_adherence_desciption);
+            }
+        }
     }
 
     // Drug Recon Task

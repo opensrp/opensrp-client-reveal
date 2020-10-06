@@ -10,6 +10,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Location;
+import org.smartregister.domain.Obs;
 import org.smartregister.family.domain.FamilyMetadata;
 import org.smartregister.family.util.Constants.JSON_FORM_KEY;
 import org.smartregister.family.util.JsonFormUtils;
@@ -28,6 +30,13 @@ import java.util.UUID;
 
 import timber.log.Timber;
 
+import static com.vijay.jsonwizard.constants.JsonFormConstants.CHECK_BOX;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.READ_ONLY;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.TYPE;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
+import static org.smartregister.AllConstants.OPTIONS;
+import static org.smartregister.AllConstants.TEXT;
 import static org.smartregister.family.util.DBConstants.KEY.DOB;
 import static org.smartregister.family.util.DBConstants.KEY.FIRST_NAME;
 import static org.smartregister.family.util.DBConstants.KEY.GENDER;
@@ -135,6 +144,54 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         }
     }
 
+    // HEADS UP
+    public JSONObject getAutoPopulatedJsonEditMemberFormString(String formName,
+                                                               CommonPersonObjectClient client, String updateEventType, String familyName, boolean isFamilyHead) {
+        try {
+
+            // get the event and the client from ec model
+
+            JSONObject form = formUtils.getFormJson(formName);
+            if (form != null) {
+                form.put(ENTITY_ID, client.getCaseId());
+                form.put(ENCOUNTER_TYPE, updateEventType);
+
+                JSONObject metadata = form.getJSONObject(METADATA);
+                String lastLocationId = locationHelper.getOpenMrsLocationId(locationPickerView.getSelectedItem());
+
+                metadata.put(ENCOUNTER_LOCATION, lastLocationId);
+
+                form.put(CURRENT_OPENSRP_ID, Utils.getValue(client.getColumnmaps(), UNIQUE_ID, false));
+
+                //inject opensrp id into the form
+                String[] stepNames = new String[]{STEP1, STEP2};
+
+                for(String stepName : stepNames) {
+                    JSONObject stepTwo = form.getJSONObject(stepName);
+
+                    JSONArray jsonArray = stepTwo.getJSONArray(FIELDS);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                        try {
+                            processFieldsForMemberEdit(client, jsonObject, jsonArray, familyName, isFamilyHead);
+                        } catch (Exception e) {
+                            Timber.e(Log.getStackTraceString(e));
+                        }
+                    }
+                }
+
+                return form;
+            }
+        } catch (Exception e) {
+            Timber.e(Log.getStackTraceString(e));
+        }
+
+        return null;
+    }
+
+
+
     public JSONObject getAutoPopulatedJsonEditMemberFormString(@StringRes int formTitle, String formName,
                                                                CommonPersonObjectClient client, String updateEventType, String familyName, boolean isFamilyHead) {
         try {
@@ -186,6 +243,11 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
 
 
         switch (jsonObject.getString(KEY).toLowerCase()) {
+            // HEADS UP
+            case "family_name":
+                jsonObject.put(VALUE, familyName);
+                break;
+
             case JSON_FORM_KEY.DOB_UNKNOWN:
                 computeDOBUnknown(jsonObject, client);
                 break;
@@ -289,5 +351,41 @@ public class FamilyJsonFormUtils extends JsonFormUtils {
         return updateMemberNameEvent;
     }
 
+    public void populateForm(org.smartregister.domain.Event event, JSONObject formJSON, boolean readOnly) {
+        if (event == null)
+            return;
+        JSONArray fields = org.smartregister.util.JsonFormUtils.fields(formJSON);
+        for (int i = 0; i < fields.length(); i++) {
+            try {
+                JSONObject field = fields.getJSONObject(i);
+
+                // HEADS UP
+                if(readOnly) {
+                    field.put(READ_ONLY, true);
+                }
+
+                String key = field.getString(KEY);
+                Obs obs = event.findObs(null, false, key);
+                if (obs != null && obs.getValues() != null) {
+                    if (CHECK_BOX.equals(field.getString(TYPE))) {
+                        JSONArray options = field.getJSONArray(OPTIONS);
+                        Map<String, String> optionsKeyValue = new HashMap<>();
+                        for (int j = 0; j < options.length(); j++) {
+                            JSONObject option = options.getJSONObject(j);
+                            optionsKeyValue.put(option.getString(TEXT), option.getString(KEY));
+                        }
+                        JSONArray keys = new JSONArray();
+                        for (Object value : obs.getValues()) {
+                            keys.put(optionsKeyValue.get(value.toString()));
+                        }
+                        field.put(VALUE, keys);
+                    } else
+                        field.put(VALUE, obs.getValue());
+                }
+            } catch (JSONException e) {
+                Timber.e(e);
+            }
+        }
+    }
 
 }

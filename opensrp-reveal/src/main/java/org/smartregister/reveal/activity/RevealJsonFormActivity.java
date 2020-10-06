@@ -37,8 +37,9 @@ public class RevealJsonFormActivity extends FormConfigurationJsonFormActivity im
 
     @Override
     public void initializeFormFragment() {
+        boolean readOnly = this.getIntent().getBooleanExtra(org.smartregister.reveal.util.Constants.READ_ONLY, false);
 
-        RevealJsonFormFragment revealJsonFormFragment = RevealJsonFormFragment.getFormFragment(JsonFormConstants.FIRST_STEP_NAME);
+        RevealJsonFormFragment revealJsonFormFragment = RevealJsonFormFragment.getFormFragment(JsonFormConstants.FIRST_STEP_NAME, readOnly);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, revealJsonFormFragment).commit();
     }

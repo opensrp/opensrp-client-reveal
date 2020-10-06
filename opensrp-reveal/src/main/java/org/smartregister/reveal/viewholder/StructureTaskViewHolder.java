@@ -1,13 +1,16 @@
 package org.smartregister.reveal.viewholder;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.StringUtils;
+import org.smartregister.domain.Task;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.StructureTaskDetails;
@@ -63,6 +66,9 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setTaskAction(StructureTaskDetails taskDetails, View.OnClickListener onClickListener) {
+
+        // HEADS UP
+
         if (!BusinessStatus.NOT_VISITED.equals(taskDetails.getBusinessStatus())) {
             if (Intervention.CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
                 actionTextView.setText(context.getResources().getString(R.string.index_case_confirmed));
@@ -72,6 +78,9 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
                 String screening = context.getString(R.string.yes).equals(taskDetails.getPersonTested()) ?
                         context.getString(R.string.tested) : context.getString(R.string.not_tested);
                 actionTextView.setText(screening);
+            } else if (Intervention.MDA_ADHERENCE.equals(taskDetails.getTaskCode())
+                    && BusinessStatus.SPAQ_COMPLETE.equals(taskDetails.getBusinessStatus())) {
+                actionTextView.setText("SPAQ Redose form Complete");
             } else {
                 actionTextView.setText(CardDetailsUtil.getTranslatedBusinessStatus(taskDetails.getBusinessStatus()));
             }
@@ -87,7 +96,8 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
         }
 
         if (BusinessStatus.COMPLETE.equals(taskDetails.getBusinessStatus()) &&
-                (Intervention.BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode()) || Intervention.BLOOD_SCREENING.equals(taskDetails.getTaskCode()))) {
+                (Intervention.BEDNET_DISTRIBUTION.equals(taskDetails.getTaskCode())
+                        || Intervention.BLOOD_SCREENING.equals(taskDetails.getTaskCode()))) {
 
             viewEditImageView.setVisibility(View.VISIBLE);
             setClickHandler(onClickListener, taskDetails, viewEditImageView);
@@ -106,6 +116,23 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
             lastEditedTextView.setVisibility(View.GONE);
             viewUndoImageView.setVisibility(View.GONE);
         }
+
+        // HEADS UP
+        // Support editing values for CHILD SMC form
+        if (Task.TaskStatus.COMPLETED.name().equals(taskDetails.getTaskStatus())
+                && (Intervention.MDA_DISPENSE.equals(taskDetails.getTaskCode())
+                || Intervention.MDA_ADHERENCE.equals(taskDetails.getTaskCode())
+                || Intervention.MDA_DRUG_RECON.equals(taskDetails.getTaskCode())
+        )) {
+            viewEditImageView.setVisibility(View.VISIBLE);
+            setClickHandler(onClickListener, taskDetails, viewEditImageView);
+        } else {
+            viewEditImageView.setVisibility(View.GONE);
+            lastEditedTextView.setVisibility(View.GONE);
+            viewUndoImageView.setVisibility(View.GONE);
+        }
+
+
         setClickHandler(onClickListener, taskDetails, actionTextView);
 
     }
@@ -114,6 +141,4 @@ public class StructureTaskViewHolder extends RecyclerView.ViewHolder {
         view.setOnClickListener(onClickListener);
         view.setTag(R.id.task_details, taskDetails);
     }
-
-
 }

@@ -72,9 +72,9 @@ public class FamilyOtherMemberProfileActivity extends BaseFamilyOtherMemberProfi
         }
 
         getMenuInflater().inflate(R.menu.other_member_menu, menu);
-        if (isFamilyHead) {
+//        if (isFamilyHead) {
             menu.findItem(R.id.action_archive).setVisible(false);
-        }
+//        }
 
 
         return true;

@@ -185,8 +185,9 @@ public class StructureTasksFragment extends Fragment implements StructureTasksCo
     }
 
     @Override
-    public void startForm(JSONObject formJSON) {
-        jsonFormUtils.startJsonForm(formJSON, getActivity(), REQUEST_CODE_GET_JSON_FRAGMENT);
+    public void startForm(JSONObject formJSON, boolean readOnly) {
+        // HEADS UP
+        jsonFormUtils.startJsonForm(formJSON, getActivity(), REQUEST_CODE_GET_JSON_FRAGMENT, readOnly);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.smartregister.reveal.presenter;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Location;
 import androidx.annotation.VisibleForTesting;
@@ -21,6 +22,7 @@ import com.vijay.jsonwizard.fragments.JsonFormFragment;
 import com.vijay.jsonwizard.interactors.JsonFormInteractor;
 import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 import com.vijay.jsonwizard.utils.ValidationStatus;
+import com.vijay.jsonwizard.views.JsonFormFragmentView;
 
 import org.json.JSONArray;
 import org.smartregister.reveal.R;
@@ -78,6 +80,10 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
         };
         locationUtils.requestLocationUpdates(locationListener);
         jsonFormUtils = new RevealJsonFormUtils();
+    }
+
+    public void setUpToolBar() {
+        super.setUpToolBar();
     }
 
     @Override

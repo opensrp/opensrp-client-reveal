@@ -42,6 +42,7 @@ import timber.log.Timber;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.CHECK_BOX;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEY;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.KEYS;
+import static com.vijay.jsonwizard.constants.JsonFormConstants.READ_ONLY;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TYPE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUES;
@@ -140,6 +141,7 @@ public class RevealJsonFormUtils {
             JSONObject formJson = populateFormDetails(formString, entityId, structureId, taskIdentifier,
                     taskBusinessStatus, taskStatus, structureUUID, structureVersion);
             populateFormFields(formJson, structureType, sprayStatus, familyHead);
+
             return formJson;
         } catch (JSONException e) {
             Timber.e(e, "error launching form" + formName);
@@ -213,7 +215,6 @@ public class RevealJsonFormUtils {
 
     }
 
-
     public void startJsonForm(JSONObject form, Activity context) {
         startJsonForm(form, context, REQUEST_CODE_GET_JSON);
     }
@@ -227,6 +228,21 @@ public class RevealJsonFormUtils {
             Timber.e(e);
         }
     }
+
+    public void startJsonForm(JSONObject form, Activity context, int requestCode, boolean readOnly) {
+        // HEADS UP
+
+        Intent intent = new Intent(context, RevealJsonFormActivity.class);
+        try {
+            intent.putExtra(JSON_FORM_PARAM_JSON, form.toString());
+            intent.putExtra(Constants.READ_ONLY, readOnly);
+
+            context.startActivityForResult(intent, requestCode);
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+    }
+
 
     public String getFormName(String encounterType, String taskCode) {
         String formName = null;
@@ -381,13 +397,19 @@ public class RevealJsonFormUtils {
         }
     }
 
-    public void populateForm(Event event, JSONObject formJSON) {
+    public void populateForm(Event event, JSONObject formJSON, boolean readOnly) {
         if (event == null)
             return;
         JSONArray fields = JsonFormUtils.fields(formJSON);
         for (int i = 0; i < fields.length(); i++) {
             try {
                 JSONObject field = fields.getJSONObject(i);
+
+                // HEADS UP
+                if(readOnly) {
+                    field.put(READ_ONLY, true);
+                }
+
                 String key = field.getString(KEY);
                 Obs obs = event.findObs(null, false, key);
                 if (obs != null && obs.getValues() != null) {

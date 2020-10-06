@@ -117,7 +117,7 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
     }
 
     @Override
-    public void startForm(JSONObject formName) {
+    public void startForm(JSONObject formName, boolean readOnly) {
         ((SummaryFormsActivity) getActivity()).startFormActivity(formName);
     }
 

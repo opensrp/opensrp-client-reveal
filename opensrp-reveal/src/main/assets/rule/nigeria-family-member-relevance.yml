@@ -12,13 +12,13 @@ priority: 1
 condition: "!step1_dob_unknown.contains('dob_unknown')"
 actions:
   - "isRelevant = true"
-#---
-#name: step1_age
-#description: age relevance
-#priority: 1
-#condition: "step1_dob_unknown.contains('dob_unknown')"
-#actions:
-#  - "isRelevant = true"
+---
+name: step1_age
+description: age relevance
+priority: 1
+condition: "step1_dob_unknown.contains('dob_unknown')"
+actions:
+  - "isRelevant = true"
 ---
 name: step1_job_aid
 description: job_aid relevance

@@ -351,7 +351,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         presenter = spy(presenter);
         doReturn(false).when(presenter).validateFarStructures();
         presenter.onStructureFound(new org.smartregister.domain.Location(), taskDetails);
-        verify(view, timeout(ASYNC_TIMEOUT)).startForm(any());
+        verify(view, timeout(ASYNC_TIMEOUT)).startForm(any(), false);
         verify(view).hideProgressDialog();
     }
 

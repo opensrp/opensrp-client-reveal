@@ -239,9 +239,10 @@
           "value": "true",
           "err": "Please enter a number"
         },
-        "rules-engine": {
-          "ex-rules": {
-            "rules-file": "nigeria-family-member-relevance.yml"
+        "relevance": {
+          "step1:dob_unknown": {
+            "type": "string",
+            "ex": "equalTo(., \"true\")"
           }
         },
         "calculation": {
@@ -265,8 +266,14 @@
             "text": "Age unknown?",
             "text_size": "18px",
             "value": "false"
+          }        ],
+        "relevance": {
+          "step1:dob_unknown": {
+            "type": "string",
+            "ex": "equalTo(., \"true\")"
           }
-        ]
+        }
+
       },
       {
         "key": "eligibleChild",
@@ -289,8 +296,8 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "toaster_notes",
-        "text": "Awesome! Selected Age \nConfirms Child As Eligible",
-        "toaster_type": "info",
+        "text": "The Selected Age \nConfirms Child As Eligible",
+        "toaster_type": "positive",
         "relevance": {
           "step1:job_aid": {
             "type": "string",

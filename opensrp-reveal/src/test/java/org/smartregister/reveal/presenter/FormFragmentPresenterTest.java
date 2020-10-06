@@ -101,7 +101,8 @@ public class FormFragmentPresenterTest extends BaseUnitTest {
         taskDetails.setTaskCode(Constants.Intervention.BLOOD_SCREENING);
         when(jsonFormUtils.getFormName(null, taskDetails.getTaskCode())).thenReturn(Constants.JsonForm.BLOOD_SCREENING_FORM);
         presenter.onPasswordVerified();
-        verify(view).startForm(null);
+        verify(view).startForm(null,         verify(view).startForm(jsonArgumentCaptor.capture(), false);
+);
 
     }
 
@@ -127,7 +128,8 @@ public class FormFragmentPresenterTest extends BaseUnitTest {
         taskDetails.setTaskCode(Constants.Intervention.BEDNET_DISTRIBUTION);
         when(jsonFormUtils.getFormName(null, taskDetails.getTaskCode())).thenReturn(Constants.JsonForm.BEDNET_DISTRIBUTION_FORM);
         presenter.onLocationValidated();
-        verify(view, never()).startForm(null);
+        verify(view, never()).startForm(null,         verify(view).startForm(jsonArgumentCaptor.capture(), false);
+);
         verify(interactor).findNumberOfMembers(taskDetails.getTaskEntity(), null);
     }
 
@@ -135,7 +137,7 @@ public class FormFragmentPresenterTest extends BaseUnitTest {
     @Test
     public void testOnFoundMembersCount() throws JSONException {
         presenter.onFetchedMembersCount(new Pair<>(3, 1), new JSONObject("{\"members\": \"[num_fam_members]\", \"sleep_outdoors\":\"[num_sleeps_outdoors]\"}"));
-        verify(view).startForm(jsonArgumentCaptor.capture());
+        verify(view).startForm(jsonArgumentCaptor.capture(), false);
         verify(view).hideProgressDialog();
         assertEquals(3, jsonArgumentCaptor.getValue().getInt("members"));
         assertEquals(1, jsonArgumentCaptor.getValue().getInt("sleep_outdoors"));
@@ -158,7 +160,7 @@ public class FormFragmentPresenterTest extends BaseUnitTest {
         familyMembers.put(new JSONObject("{\"key\":\"35rfdsfdsf-sdfdsm\"}"));
         JSONObject formJSON = new JSONObject(AssetHandler.readFileFromAssetsFolder(CASE_CONFIRMATION_FORM, context));
         presenter.onFetchedFamilyMembers(familyMembers, formJSON);
-        verify(view).startForm(jsonArgumentCaptor.capture());
+        verify(view).startForm(jsonArgumentCaptor.capture(), false);
         assertEquals(familyMembers, JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(jsonArgumentCaptor.getValue()), Constants.JsonForm.FAMILY_MEMBER).getJSONArray(OPTIONS));
 
     }

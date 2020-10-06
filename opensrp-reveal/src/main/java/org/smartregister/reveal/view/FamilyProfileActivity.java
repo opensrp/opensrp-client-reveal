@@ -7,16 +7,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.vijay.jsonwizard.domain.Form;
+
+import org.json.JSONObject;
 import org.smartregister.domain.Task;
 import org.smartregister.family.activity.BaseFamilyProfileActivity;
 import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.family.util.Constants.INTENT_KEY;
+import org.smartregister.family.util.Utils;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.FamilyProfileContract;
 import org.smartregister.reveal.fragment.FamilyProfileMemberFragment;
 import org.smartregister.reveal.fragment.StructureTasksFragment;
 import org.smartregister.reveal.model.FamilyProfileModel;
 import org.smartregister.reveal.presenter.FamilyProfilePresenter;
+import org.smartregister.reveal.util.Constants;
 
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
@@ -112,6 +117,9 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = this.getMenuInflater();
         inflater.inflate(R.menu.profile_menu, menu);
+
+        menu.findItem(R.id.archive_family).setVisible(false);
+
         return true;
     }
 
@@ -139,5 +147,19 @@ public class FamilyProfileActivity extends BaseFamilyProfileActivity implements 
     @Override
     public FamilyProfileContract.Presenter presenter() {
         return (FamilyProfileContract.Presenter) super.presenter();
+    }
+
+    @Override
+    public void startFormActivity(JSONObject jsonForm, boolean readOnly) {
+        Form form = new Form();
+        form.setActionBarBackground(R.color.family_actionbar);
+        form.setWizard(false);
+
+        Intent intent = new Intent(this, Utils.metadata().familyMemberFormActivity);
+        intent.putExtra(Constants.JSON_FORM_PARAM_JSON, jsonForm.toString());
+        intent.putExtra("form", form);
+        intent.putExtra(Constants.READ_ONLY, readOnly);
+
+        this.startActivityForResult(intent, 2244);
     }
 }

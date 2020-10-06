@@ -244,7 +244,7 @@ public class TaskRegisterFragmentTest extends BaseUnitTest {
     @Test
     public void testStartForm() {
         JSONObject form = new JSONObject();
-        fragment.startForm(form);
+        fragment.startForm(form, false);
         Intent intent = shadowOf(activity).getNextStartedActivity();
         assertEquals(RevealJsonFormActivity.class, shadowOf(intent).getIntentClass());
         assertEquals(form.toString(), intent.getStringExtra(JSON_FORM_PARAM_JSON));

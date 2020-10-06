@@ -74,7 +74,7 @@ public class RevealJsonFormFragmentPresenterTest extends BaseUnitTest {
         Intent intent = new Intent();
         intent.putExtra("json", AssetHandler.readFileFromAssetsFolder(formName, context));
         jsonFormActivity = Robolectric.buildActivity(RevealJsonFormActivity.class, intent).create().resume().get();
-        formFragment = RevealJsonFormFragment.getFormFragment("step1");
+        formFragment = RevealJsonFormFragment.getFormFragment("step1", false);
         jsonFormActivity.getSupportFragmentManager().beginTransaction().add(formFragment, null).commit();
         presenter = formFragment.getPresenter();
         when(imageButton.getDrawable()).thenReturn(context.getDrawable(R.drawable.ic_cross_hair_blue));

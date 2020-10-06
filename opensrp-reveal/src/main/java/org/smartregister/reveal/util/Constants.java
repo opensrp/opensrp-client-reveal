@@ -67,6 +67,8 @@ public interface Constants {
     int ADMINISTERED_SPAQ = 1;
     int NOT_ADMINISTERED_SPAQ = 0;
 
+    String READ_ONLY = "READ_ONLY";
+
     interface CONFIGURATION {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";

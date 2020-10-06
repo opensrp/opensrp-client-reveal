@@ -410,11 +410,11 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                 getView().displayError(R.string.opening_form_title, R.string.form_not_found);
             } else {
                 JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), formName, getTaskDetails(), getStructure());
-                getView().getJsonFormUtils().populateForm(event, formJSON);
+                getView().getJsonFormUtils().populateForm(event, formJSON, false);
                 if (IRS.equals(getTaskDetails().getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
                     formInteractor.findSprayDetails(IRS, getStructure().getId(), formJSON);
                 } else {
-                    getView().startForm(formJSON);
+                    getView().startForm(formJSON, false);
                 }
             }
         }

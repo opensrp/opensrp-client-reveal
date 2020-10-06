@@ -259,8 +259,8 @@
 
     // For Nigeria
     <string name="dispense_smc">Dispense SMC</string>
-    <string name="adhere_smc">Adhere SMC</string>
-    <string name="adhere_drug_recon">Adhere Drug Recon</string>
+    <string name="adhere_smc">SPAQ Redose</string>
+    <string name="adhere_drug_recon">Drug Recon</string>
 
     <string name="irs_verification">IRS Verification</string>
     <string name="not_true_structure">Not True Structure</string>
@@ -334,7 +334,7 @@
     <string name="case_confirmation">Case Confirmation</string>
     <string name="paot">PAOT</string>
     <string name="mda_dispense">MDA Dispense</string>
-    <string name="mda_adherence">MDA Adherence</string>
+    <string name="mda_adherence">SPAQ Redose</string>
 
 
     <!-- form -->

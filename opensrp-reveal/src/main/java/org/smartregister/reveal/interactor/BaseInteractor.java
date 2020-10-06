@@ -162,6 +162,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
     @Override
     public void saveJsonForm(String json) {
+        // HEADS UP
         try {
             JSONObject jsonForm = new JSONObject(json);
             String encounterType = jsonForm.getString(ENCOUNTER_TYPE);

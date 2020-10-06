@@ -73,6 +73,7 @@
         </activity>
         <activity android:name="org.smartregister.family.activity.FamilyWizardFormActivity" />
         <activity android:name="com.vijay.jsonwizard.activities.JsonWizardFormActivity" />
+        <activity android:name="org.smartregister.reveal.activity.ReadableJsonWizardFormActivity" />
         <activity
             android:name=".view.FamilyOtherMemberProfileActivity"
             android:parentActivityName=".view.FamilyProfileActivity"

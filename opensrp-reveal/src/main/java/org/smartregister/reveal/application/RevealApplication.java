@@ -10,7 +10,6 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.vijay.jsonwizard.NativeFormLibrary;
-import com.vijay.jsonwizard.activities.JsonWizardFormActivity;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -40,6 +39,7 @@ import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.LoginActivity;
+import org.smartregister.reveal.activity.ReadableJsonWizardFormActivity;
 import org.smartregister.reveal.job.RevealJobCreator;
 import org.smartregister.reveal.repository.RevealRepository;
 import org.smartregister.reveal.sync.RevealClientProcessor;
@@ -285,7 +285,7 @@ public class RevealApplication extends DrishtiApplication implements TimeChanged
             return metadata;
         }
 
-        metadata = new FamilyMetadata(FamilyWizardFormActivity.class, JsonWizardFormActivity.class, FamilyProfileActivity.class, CONFIGURATION.UNIQUE_ID_KEY, true);
+        metadata = new FamilyMetadata(FamilyWizardFormActivity.class, ReadableJsonWizardFormActivity.class, FamilyProfileActivity.class, CONFIGURATION.UNIQUE_ID_KEY, true);
 
         if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
             metadata.updateFamilyRegister(JSON_FORM.THAILAND_FAMILY_REGISTER, TABLE_NAME.FAMILY, EventType.FAMILY_REGISTRATION, EventType.UPDATE_FAMILY_REGISTRATION, CONFIGURATION.FAMILY_REGISTER, RELATIONSHIP.FAMILY_HEAD, RELATIONSHIP.PRIMARY_CAREGIVER);
