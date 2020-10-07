@@ -78,16 +78,18 @@
         "type": "spinner",
         "hint": "Name of HW issuing",
         "values": [
-          "Health Worker 1",
-          "Health Worker 2",
-          "Health Worker 3",
-          "Health Worker 4"
+          "Garba Muhammad",
+          "Yahaya Attahiru",
+          "Asmau Ibrahim",
+          "Umar Bello",
+          "Dr. Bello Arikilla"
         ],
         "keys": [
-          "Health Worker 1",
-          "Health Worker 2",
-          "Health Worker 3",
-          "Health Worker 4"
+          "Garba Muhammad",
+          "Yahaya Attahiru",
+          "Asmau Ibrahim",
+          "Umar Bello",
+          "Dr. Bello Arikilla"
         ]
       },
       {
@@ -98,18 +100,44 @@
         "type": "spinner",
         "hint": "Name of CDD receiving",
         "values": [
-          "CDD 1",
-          "CDD 2",
-          "CDD 3",
-          "CDD 4",
-          "CDD 5"
+          "Sani Bala",
+          "Kassu Abdulrashid",
+          "Kabiru Ibrahim",
+          "Nasiru Aliyu",
+          "Ashiru Umar",
+          "Gali Bello",
+          "Bashar Yusuf",
+          "Mujitaba laini",
+          "Salihu saadu",
+          "Mudasiru janjuna",
+          "Ibrahim lawal",
+          "Jabir aubakar",
+          "Umar abubakar",
+          "Ibrahim hamza",
+          "Murtala umar",
+          "Abubakar Muhammad balla",
+          "Yahaya laini",
+          "Shamsudeen abubakar"
         ],
         "keys": [
-          "CDD 1",
-          "CDD 2",
-          "CDD 3",
-          "CDD 4",
-          "CDD 5"
+          "Sani Bala",
+          "Kassu Abdulrashid",
+          "Kabiru Ibrahim",
+          "Nasiru Aliyu",
+          "Ashiru Umar",
+          "Gali Bello",
+          "Bashar Yusuf",
+          "Mujitaba laini",
+          "Salihu saadu",
+          "Mudasiru janjuna",
+          "Ibrahim lawal",
+          "Jabir aubakar",
+          "Umar abubakar",
+          "Ibrahim hamza",
+          "Murtala umar",
+          "Abubakar Muhammad balla",
+          "Yahaya laini",
+          "Shamsudeen abubakar"
         ]
       },
       {

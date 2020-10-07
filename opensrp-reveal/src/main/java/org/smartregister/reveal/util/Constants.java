@@ -499,6 +499,8 @@ public interface Constants {
         String CHILDREN_TREATED = "childrenTreated";
 
         String CALCULATED_CHILDREN_TREATED = "calculatedChildrenTreated";
+
+        String NUMBER_OF_ADDITIONAL_DOSES = "number_of_additional_doses";
     }
 
     interface DateFormat {

@@ -230,7 +230,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
                     Event event = this.getLastEvent(taskDetail);
 
                     if (event != null) {
-                        Obs obs = event.findObs(null, false, "number_of_additional_doses");
+                        Obs obs = event.findObs(null, false, Constants.JsonForm.NUMBER_OF_ADDITIONAL_DOSES);
                         if (obs != null && obs.getValues() != null) {
                             Object value = obs.getValue();
 

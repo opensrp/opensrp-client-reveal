@@ -108,7 +108,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "How many blister packets were dropped or damaged?",
+        "hint": "How many blisters were dropped or damaged?",
         "text_size": "8sp",
         "v_numeric": {
           "value": "true",
@@ -121,7 +121,7 @@
       },
       {
         "key": "confirmSPAQNumberWasted",
-        "hint": "Confirm number of SPAQ blister packets wasted?",
+        "hint": "How many blisters were wasted?",
         "type": "edit_text",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
