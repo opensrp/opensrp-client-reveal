@@ -413,11 +413,7 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                 JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), formName, getTaskDetails(), getStructure());
                 getView().getJsonFormUtils().populateForm(event, formJSON);
                 getView().getJsonFormUtils().populateFormWithServerOptions(formName,formJSON);
-                if (IRS.equals(getTaskDetails().getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
-                    formInteractor.findSprayDetails(IRS, getStructure().getId(), formJSON);
-                } else {
-                    getView().startForm(formJSON);
-                }
+                getView().startForm(formJSON);
             }
         }
         getView().hideProgressDialog();
