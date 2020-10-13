@@ -18,13 +18,16 @@ import org.smartregister.domain.Event;
 import org.smartregister.family.util.DBConstants;
 import org.smartregister.repository.EventClientRepository.event_column;
 import org.smartregister.repository.LocationRepository;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Properties;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.InteractorUtils;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.Utils;
 
 import java.util.ArrayList;
@@ -105,8 +108,14 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
         queryBuilder.selectInitiateMainTable(tableName, mainColumns(tableName), ID);
         queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
                 STRUCTURES_TABLE, tableName, FOR, STRUCTURES_TABLE, ID));
-        queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
-                SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
+        if (BuildConfig.BUILD_COUNTRY != Country.NAMIBIA) {
+            queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
+                    SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
+        } else {
+            String planIdentifier = PreferencesUtil.getInstance().getCurrentPlanId();
+            queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s AND %s.%s = '%s'",
+                    SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID, SPRAYED_STRUCTURES, PLAN_ID, planIdentifier));
+        }
         queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
                 FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
         return queryBuilder.mainCondition(mainCondition);
