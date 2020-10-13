@@ -60,6 +60,7 @@ import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATIO
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.JsonForm.JSON_FORM_FOLDER;
+import static org.smartregister.reveal.util.Constants.JsonForm.YES;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
@@ -426,7 +427,7 @@ public class RevealJsonFormUtils {
                     } else
                         field.put(VALUE, obs.getValue());
                     if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA && nonEditablefields.contains(key)
-                            && "Yes".equalsIgnoreCase(obs.getValue().toString())) {
+                            && YES.equalsIgnoreCase(obs.getValue().toString())) {
                         field.put(JsonFormConstants.READ_ONLY, true);
                         field.remove(JsonFormConstants.RELEVANCE);
                     }
