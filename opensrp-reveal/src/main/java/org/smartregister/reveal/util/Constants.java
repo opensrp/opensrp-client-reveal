@@ -229,6 +229,8 @@ public interface Constants {
 
         String IRS_VERIFICATION = "irs_verification";
 
+        String IRS_LITE_VERIFICATION = "irs_lite_verification";
+
         String DAILY_SUMMARY_EVENT = "daily_summary";
 
         String IRS_FIELD_OFFICER_EVENT = "irs_field_officer";
@@ -303,7 +305,7 @@ public interface Constants {
     }
 
     interface Map {
-        int MAX_SELECT_ZOOM_LEVEL = 16;
+        int MAX_SELECT_ZOOM_LEVEL = 12;
         int CLICK_SELECT_RADIUS = 24;
         String NAME_PROPERTY = "name";
         double DOWNLOAD_MAX_ZOOM = 21.0;
@@ -458,6 +460,8 @@ public interface Constants {
         String TEAM_LEADER_DOS_ZAMBIA = "json.form/zambia_team_leader_dos.json";
 
         String CB_SPRAY_AREA_ZAMBIA = "json.form/zambia_cb_spray_area.json";
+
+        String IRS_LITE_VERIFICATION = "json.form/zambia_irs_lite_verification.json";
 
         String IRS_SA_DECISION_ZAMBIA = "json.form/zambia_irs_sa_decision.json";
 
