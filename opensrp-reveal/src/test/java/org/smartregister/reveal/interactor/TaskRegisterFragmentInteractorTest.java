@@ -1,6 +1,7 @@
 package org.smartregister.reveal.interactor;
 
 import android.location.Location;
+
 import androidx.core.util.Pair;
 
 import net.sqlcipher.Cursor;
@@ -21,11 +22,13 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestingUtils;
@@ -35,6 +38,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -364,6 +369,24 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         assertEquals(taskDetails.getTaskEntity(), taskDetailArgumentCaptor.getValue().getTaskEntity());
         assertEquals(taskDetails.getTaskStatus(), taskDetailArgumentCaptor.getValue().getTaskStatus());
         assertEquals(taskDetails.getBusinessStatus(), taskDetailArgumentCaptor.getValue().getBusinessStatus());
+    }
+
+    @Test
+    public void testGroupedRegisteredStructureTasksSelectChecksPlanForNamibiaBuild() throws Exception {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.NAMIBIA);
+        String actualMainSelect = Whitebox.invokeMethod(interactor, "mainSelect", "");
+        assertTrue(actualMainSelect.contains("AND sprayed_structures.plan_id = ''"));
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testGroupedRegisteredStructureTasksSelectCheckDoesNotcheckPlanForOtherBuilds() throws Exception {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        String actualMainSelect = Whitebox.invokeMethod(interactor, "mainSelect", "");
+        assertFalse(actualMainSelect.contains("AND sprayed_structures.plan_id = ''"));
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     private Cursor createCursor(String taskId, String intervention) {
