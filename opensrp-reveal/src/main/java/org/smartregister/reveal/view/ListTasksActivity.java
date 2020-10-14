@@ -277,6 +277,9 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
         findViewById(R.id.register_family).setOnClickListener(this);
 
+        if(BuildConfig.IRS_LITE_VERIFICATION) {
+            findViewById(R.id.btn_add_structure).setVisibility(View.GONE);
+        }
     }
 
     @Override
