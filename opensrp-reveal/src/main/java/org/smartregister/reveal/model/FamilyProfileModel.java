@@ -57,6 +57,8 @@ public class FamilyProfileModel extends BaseFamilyProfileModel {
             eventClient.getClient().addAttribute(RESIDENCE, structureId);
             eventClient.getEvent().addDetails(Constants.Properties.LOCATION_ID, structureId);
         }
+        String planIdentifier = PreferencesUtil.getInstance().getCurrentPlanId();
+        eventClient.getEvent().addDetails(Constants.Properties.PLAN_IDENTIFIER, planIdentifier);
         eventClient.getEvent().addDetails(Constants.Properties.APP_VERSION_NAME, BuildConfig.VERSION_NAME);
         eventClient.getEvent().setLocationId(org.smartregister.reveal.util.Utils.getOperationalAreaLocation(PreferencesUtil.getInstance().getCurrentOperationalArea()).getId());
     }
