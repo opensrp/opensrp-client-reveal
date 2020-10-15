@@ -337,6 +337,9 @@ public class RevealJsonFormUtils {
                 formName = JsonForm.REFAPP_MDA_DISPENSE_FORM;
             }
         } else if (IRS_VERIFICATION.equals(encounterType) || Intervention.IRS_VERIFICATION.equals(taskCode)) {
+            if(BuildConfig.IRS_LITE_VERIFICATION) {
+                return JsonForm.IRS_LITE_VERIFICATION;
+            }
             formName = JsonForm.ZAMBIA_IRS_VERIFICATION_FORM;
         } else if (Constants.EventType.DAILY_SUMMARY_EVENT.equals(encounterType)) {
             formName = JsonForm.DAILY_SUMMARY_ZAMBIA;
