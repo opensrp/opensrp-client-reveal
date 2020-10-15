@@ -339,6 +339,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskInteractor.fetchFamilyDetails(selectedFeature.id());
         } else if (IRS_VERIFICATION.equals(code) && COMPLETE.equals(businessStatus)) {
             listTaskInteractor.fetchInterventionDetails(IRS_VERIFICATION, feature.id(), false);
+        } else if (IRS_VERIFICATION.equals(code) && BuildConfig.IRS_LITE_VERIFICATION) {
+            listTaskInteractor.fetchInterventionDetails(IRS, feature.id(), false);
         }
     }
 
@@ -514,6 +516,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         } else if (JsonForm.SPRAY_FORM_REFAPP.equals(formName)) {
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DATA_COLLECTORS, jsonFormUtils.getFields(formJson).get(JsonForm.DATA_COLLECTOR), prefsUtil.getCurrentDistrict());
+        } else if (cardDetails instanceof SprayCardDetails && BuildConfig.IRS_LITE_VERIFICATION) {
+            jsonFormUtils.populateForm(event, formJson);
         }
         listTaskView.startJsonForm(formJson);
     }
@@ -646,7 +650,11 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             startForm(selectedFeature, null, selectedFeatureInterventionType);
         } else {
             if (IRS.equals(cardDetails.getInterventionType())) {
-                findLastEvent(selectedFeature.id(), SPRAY_EVENT);
+                if(BuildConfig.IRS_LITE_VERIFICATION) {
+                    findLastEvent(selectedFeature.id(), Constants.EventType.IRS_LITE_VERIFICATION);
+                } else {
+                    findLastEvent(selectedFeature.id(), SPRAY_EVENT);
+                }
             } else {
                 startForm(selectedFeature, cardDetails, selectedFeatureInterventionType);
             }
