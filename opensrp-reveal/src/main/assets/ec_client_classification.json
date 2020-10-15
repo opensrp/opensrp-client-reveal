@@ -15,6 +15,14 @@
           },
           {
             "field": "eventType",
+            "field_value": "irs_lite_verification",
+            "creates_case": [
+              "sprayed_structures",
+              "event_task"
+            ]
+          },
+          {
+            "field": "eventType",
             "field_value": "Register_Structure",
             "creates_case": [
               "sprayed_structures"
