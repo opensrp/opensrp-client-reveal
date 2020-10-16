@@ -372,15 +372,6 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
     }
 
     @Test
-    public void testGroupedRegisteredStructureTasksSelectChecksPlanForNamibiaBuild() throws Exception {
-        Country buildCountry = BuildConfig.BUILD_COUNTRY;
-        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.NAMIBIA);
-        String actualMainSelect = Whitebox.invokeMethod(interactor, "mainSelect", "");
-        assertTrue(actualMainSelect.contains("AND sprayed_structures.plan_id = ''"));
-        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
-    }
-
-    @Test
     public void testGroupedRegisteredStructureTasksSelectCheckDoesNotcheckPlanForOtherBuilds() throws Exception {
         Country buildCountry = BuildConfig.BUILD_COUNTRY;
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
