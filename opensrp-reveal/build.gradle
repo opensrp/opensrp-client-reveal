@@ -44,8 +44,8 @@ android {
         applicationId "org.smartregister.reveal"
         minSdkVersion 18
         targetSdkVersion 28
-        versionCode 22
-        versionName "5.3.5"
+        versionCode 24
+        versionName "5.3.7"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -188,7 +188,7 @@ dependencies {
         exclude group: 'stax', module: 'stax-api'
     }
 
-    implementation('org.smartregister:opensrp-client-core:2.2.4-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:2.2.7-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.android.support', module: 'appcompat-v7'

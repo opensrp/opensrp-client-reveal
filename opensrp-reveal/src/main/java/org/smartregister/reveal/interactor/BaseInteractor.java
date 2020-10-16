@@ -487,13 +487,12 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
     @Override
     public void findLastEvent(String eventBaseEntityId, String eventType) {
-        String planIdentifier = PreferencesUtil.getInstance().getCurrentPlanId();
 
         appExecutors.diskIO().execute(() -> {
-            String events = String.format("select %s from %s where %s = ? and %s =? and %s = ? order by %s desc limit 1",
-                    EventClientRepository.event_column.json, EventClientRepository.Table.event.name(), EventClientRepository.event_column.baseEntityId, EventClientRepository.event_column.eventType, EventClientRepository.event_column.planId, EventClientRepository.event_column.updatedAt);
+            String events = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
+                    EventClientRepository.event_column.json, EventClientRepository.Table.event.name(), EventClientRepository.event_column.baseEntityId, EventClientRepository.event_column.eventType, EventClientRepository.event_column.updatedAt);
 
-            try (Cursor cursor = getDatabase().rawQuery(events, new String[]{eventBaseEntityId, eventType, planIdentifier});) {
+            try (Cursor cursor = getDatabase().rawQuery(events, new String[]{eventBaseEntityId, eventType});) {
 
                 if (cursor.moveToFirst()) {
                     String eventJSON = cursor.getString(0);
