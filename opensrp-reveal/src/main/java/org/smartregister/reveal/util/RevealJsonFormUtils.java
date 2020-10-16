@@ -499,6 +499,7 @@ public class RevealJsonFormUtils {
 
             case JsonForm.IRS_SA_DECISION_ZAMBIA:
             case JsonForm.CB_SPRAY_AREA_ZAMBIA:
+            case JsonForm.IRS_LITE_VERIFICATION:
             case JsonForm.MOBILIZATION_FORM_ZAMBIA:
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         Constants.CONFIGURATION.SUPERVISORS, fieldsMap.get(JsonForm.SUPERVISOR),

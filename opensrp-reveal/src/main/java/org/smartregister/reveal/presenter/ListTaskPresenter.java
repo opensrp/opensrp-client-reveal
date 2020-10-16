@@ -518,6 +518,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DATA_COLLECTORS, jsonFormUtils.getFields(formJson).get(JsonForm.DATA_COLLECTOR), prefsUtil.getCurrentDistrict());
         } else if (cardDetails instanceof SprayCardDetails && BuildConfig.IRS_LITE_VERIFICATION) {
             jsonFormUtils.populateForm(event, formJson);
+            jsonFormUtils.populateFormWithServerOptions(formName, formJson);
+        } else if(BuildConfig.IRS_LITE_VERIFICATION) {
+            jsonFormUtils.populateFormWithServerOptions(formName, formJson);
         }
         listTaskView.startJsonForm(formJson);
     }
