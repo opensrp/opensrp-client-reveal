@@ -45,7 +45,7 @@
     },
     {
       "id": "reveal-data-polygons",
-      "type": "fill",
+      "type": "line",
       "layout": {},
       "source": "reveal-data-set",
       "filter": [
@@ -54,8 +54,7 @@
         "Polygon"
       ],
       "paint": {
-        "fill-color": "rgba(0, 0, 0, 0)",
-        "fill-outline-color": [
+        "line-color": [
           "match",
           [
             "get",
@@ -102,7 +101,8 @@
           ],
           "hsl(26, 84%, 56%)",
           "hsl(0, 0%, 78%)"
-        ]
+        ],
+        "line-width": 4
       }
     },
     {
@@ -194,7 +194,7 @@
       ],
       "layout": {},
       "paint": {
-        "line-color": "hsl(226°, 81%, 36%)",
+        "line-color": "rgba(0, 0, 0, 0)",
         "line-width": 4
       }
     },
