@@ -390,8 +390,8 @@ public class ListTaskInteractor extends BaseInteractor {
             structure.getProperties().setStatus(INACTIVE);
             structureRepository.addOrUpdate(structure);
 
-
-            taskRepository.cancelTasksForEntity(feature.id());
+            String taskIdentifier = feature.getStringProperty(TASK_IDENTIFIER);
+            taskRepository.cancelTaskByIdentifier(taskIdentifier);
 
             revealApplication.setSynced(false);
         } catch (Exception e) {
