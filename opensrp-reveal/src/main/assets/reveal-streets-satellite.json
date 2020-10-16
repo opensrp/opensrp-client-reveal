@@ -54,7 +54,8 @@
         "Polygon"
       ],
       "paint": {
-        "fill-color": [
+        "fill-color": "rgba(0, 0, 0, 0)",
+        "fill-outline-color": [
           "match",
           [
             "get",
@@ -101,32 +102,7 @@
           ],
           "hsl(26, 84%, 56%)",
           "hsl(0, 0%, 78%)"
-        ],
-        "fill-opacity": [
-          "match",
-          [
-            "get",
-            "taskBusinessStatus"
-          ],
-          [
-            "Not Visited"
-          ],
-          0.7,
-          [
-            "Not Sprayed"
-          ],
-          0.7,
-          [
-            "Sprayed"
-          ],
-          0.7,
-          [
-            "Not Sprayable"
-          ],
-          1,
-          0.75
-        ],
-        "fill-outline-color": "rgb(0, 0, 0)"
+        ]
       }
     },
     {
@@ -218,7 +194,7 @@
       ],
       "layout": {},
       "paint": {
-        "line-color": "hsl(146, 100%, 50%)",
+        "line-color": "hsl(226°, 81%, 36%)",
         "line-width": 4
       }
     },
@@ -249,7 +225,7 @@
           15
         ],
         "circle-stroke-width": 2,
-        "circle-stroke-color": "hsl(146, 100%, 50%)"
+        "circle-stroke-color": "hsl(226°, 81%, 36%)"
       }
     }
   ],
