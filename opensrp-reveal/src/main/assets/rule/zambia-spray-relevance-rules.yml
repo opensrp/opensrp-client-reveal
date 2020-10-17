@@ -267,6 +267,6 @@ actions:
 name: step1_preferred_source
 description: step1_preferred_source
 priority: 1
-condition: "step1_sbc.equals('Yes') && ( step1_provinceName.equals('Western') || step1_provinceName.equals('Southern') || step1_provinceName.equals('Lusaka') )"
+condition: "step1_sbc.equals('Yes') && step1_about_malaria.equals('Yes') && ( step1_provinceName.equals('Western') || step1_provinceName.equals('Southern') || step1_provinceName.equals('Lusaka') )"
 actions:
   - "isRelevant = true"
