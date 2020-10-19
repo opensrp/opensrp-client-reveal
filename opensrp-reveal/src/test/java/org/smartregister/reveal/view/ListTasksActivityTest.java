@@ -53,6 +53,7 @@ import org.smartregister.domain.Task;
 import org.smartregister.dto.UserAssignmentDTO;
 import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
@@ -550,11 +551,13 @@ public class ListTasksActivityTest extends BaseUnitTest {
         Whitebox.setInternalState(listTasksActivity, "kujakuMapView", kujakuMapView);
         Whitebox.setInternalState(listTasksActivity, "selectedGeoJsonSource", geoJsonSource);
         Whitebox.setInternalState(listTasksActivity, "mMapboxMap", mMapboxMap);
+        Whitebox.setInternalState(BuildConfig.class, "IRS_LITE_VERIFICATION", Boolean.FALSE);
         LatLng latLng = new LatLng();
         when(mMapboxMap.getCameraPosition()).thenReturn(new CameraPosition.Builder().zoom(18).build());
         listTasksActivity.displaySelectedFeature(feature, latLng);
         verify(kujakuMapView).centerMap(latLng, ANIMATE_TO_LOCATION_DURATION, 18);
         verify(geoJsonSource).setGeoJson(FeatureCollection.fromFeature(feature));
+
     }
 
     @Test
