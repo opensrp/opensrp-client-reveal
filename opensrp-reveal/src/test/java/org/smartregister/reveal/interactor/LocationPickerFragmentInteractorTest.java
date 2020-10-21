@@ -69,7 +69,7 @@ public class LocationPickerFragmentInteractorTest extends BaseUnitTest {
         when(locationRepository.getLocationsByIds(any(), anyBoolean())).thenReturn(Collections.singletonList(expectedLocation));
         interactor.fetchAvailableLocations(Collections.singletonList("id1"));
 
-        verify(locationRepository).getLocationsByIds(stringListArgumentCaptor.capture(), booleanArgumentCaptor.capture());
+        verify(locationRepository, timeout(ASYNC_TIMEOUT)).getLocationsByIds(stringListArgumentCaptor.capture(), booleanArgumentCaptor.capture());
         assertEquals("id1", stringListArgumentCaptor.getValue().get(0));
         assertFalse(booleanArgumentCaptor.getValue());
 
