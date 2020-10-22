@@ -51,6 +51,8 @@ public interface Constants {
 
     String COMMA = ",";
 
+    String TILDE = "~";
+
     int STORAGE_PERMISSIONS = 1;
 
     String NULL_KEY = "NULL";
