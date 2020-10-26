@@ -219,5 +219,7 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
         return structure;
     }
 
-    public void onGetUserLocation(android.location.Location location){};
+    public void onGetUserLocation(android.location.Location location){
+        //empty
+    };
 }

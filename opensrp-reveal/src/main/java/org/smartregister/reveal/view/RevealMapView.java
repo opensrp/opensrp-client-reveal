@@ -16,8 +16,6 @@ import java.util.List;
 
 import io.ona.kujaku.views.KujakuMapView;
 
-import static org.smartregister.reveal.util.Constants.MY_LOCATION_ZOOM_LEVEL;
-
 /**
  * Created by samuelgithengi on 12/13/18.
  */
