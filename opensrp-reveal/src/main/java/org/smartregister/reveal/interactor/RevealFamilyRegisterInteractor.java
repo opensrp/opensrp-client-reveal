@@ -9,12 +9,9 @@ import org.smartregister.reveal.contract.FamilyRegisterContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.TaskUtils;
-import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.ClientProcessorForJava;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by samuelgithengi on 4/15/19.

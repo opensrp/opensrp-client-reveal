@@ -1,6 +1,7 @@
 package org.smartregister.reveal.presenter;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
@@ -10,9 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
-import org.smartregister.domain.Event;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.BaseFormFragmentContract;
 import org.smartregister.reveal.contract.StructureTasksContract;

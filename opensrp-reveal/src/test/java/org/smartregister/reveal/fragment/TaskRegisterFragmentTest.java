@@ -3,10 +3,11 @@ package org.smartregister.reveal.fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.location.Location;
-import androidx.appcompat.app.AlertDialog;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import org.json.JSONObject;
 import org.junit.Before;

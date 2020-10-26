@@ -1,8 +1,9 @@
 package org.smartregister.reveal.viewholder;
 
-import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import org.smartregister.reveal.R;
 

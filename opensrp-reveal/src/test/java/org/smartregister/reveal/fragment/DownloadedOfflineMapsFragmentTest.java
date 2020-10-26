@@ -1,9 +1,10 @@
 package org.smartregister.reveal.fragment;
 
 import android.content.Context;
-import androidx.core.util.Pair;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.CheckBox;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Pair;
 
 import com.mapbox.mapboxsdk.offline.OfflineRegion;
 

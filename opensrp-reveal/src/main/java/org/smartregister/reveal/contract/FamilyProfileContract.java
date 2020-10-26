@@ -2,6 +2,7 @@ package org.smartregister.reveal.contract;
 
 import android.app.Activity;
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import org.smartregister.clientandeventmodel.Client;

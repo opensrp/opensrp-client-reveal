@@ -1,8 +1,9 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
-import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
+
+import androidx.annotation.VisibleForTesting;
 
 import net.sqlcipher.Cursor;
 import net.sqlcipher.SQLException;

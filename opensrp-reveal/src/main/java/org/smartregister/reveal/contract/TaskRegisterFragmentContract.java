@@ -3,6 +3,7 @@ package org.smartregister.reveal.contract;
 
 import android.content.Context;
 import android.location.Location;
+
 import androidx.annotation.StringRes;
 
 import org.json.JSONObject;
