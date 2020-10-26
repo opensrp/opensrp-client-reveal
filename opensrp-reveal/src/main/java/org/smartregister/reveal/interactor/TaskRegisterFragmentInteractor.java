@@ -15,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.cursoradapter.SmartRegisterQueryBuilder;
 import org.smartregister.domain.Event;
-import org.smartregister.family.util.DBConstants;
 import org.smartregister.repository.EventClientRepository.event_column;
 import org.smartregister.repository.LocationRepository;
 import org.smartregister.reveal.BuildConfig;
@@ -56,6 +55,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LATITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LONGITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.NON_UNDERSCORE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NOT_SRAYED_OTHER_REASON;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NOT_SRAYED_REASON;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.OTHER;
@@ -110,11 +110,11 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
                 STRUCTURES_TABLE, tableName, FOR, STRUCTURES_TABLE, ID));
         if (BuildConfig.BUILD_COUNTRY != Country.NAMIBIA) {
             queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
-                    SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
+                    SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, NON_UNDERSCORE_ID));
         } else {
             String planIdentifier = PreferencesUtil.getInstance().getCurrentPlanId();
             queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s AND %s.%s = '%s'",
-                    SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID, SPRAYED_STRUCTURES, PLAN_ID, planIdentifier));
+                    SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, NON_UNDERSCORE_ID, SPRAYED_STRUCTURES, PLAN_ID, planIdentifier));
         }
         queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
                 FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
@@ -128,7 +128,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
         queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
                 STRUCTURES_TABLE, tableName, FOR, STRUCTURES_TABLE, ID));
         queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
-                SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
+                SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, NON_UNDERSCORE_ID));
         queryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
                 FAMILY, STRUCTURES_TABLE, ID, FAMILY, STRUCTURE_ID));
         queryBuilder.mainCondition(mainCondition);
@@ -150,7 +150,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
         structureTasksQueryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s AND %s.%s IS NULL  COLLATE NOCASE",
                 FAMILY_MEMBER, FAMILY, BASE_ENTITY_ID, FAMILY_MEMBER, RELATIONAL_ID, FAMILY_MEMBER, DATE_REMOVED));
         structureTasksQueryBuilder.customJoin(String.format(" LEFT JOIN %s ON %s.%s = %s.%s ",
-                SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, DBConstants.KEY.BASE_ENTITY_ID));
+                SPRAYED_STRUCTURES, tableName, FOR, SPRAYED_STRUCTURES, NON_UNDERSCORE_ID));
         structureTasksQueryBuilder.mainCondition(mainCondition);
 
         return String.format(" SELECT %s.* , SUM(CASE WHEN status='%s' THEN 1 ELSE 0 END ) AS %s , COUNT(_id ) AS %s, " +
