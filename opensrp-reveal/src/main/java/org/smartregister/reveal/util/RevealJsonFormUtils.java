@@ -494,7 +494,7 @@ public class RevealJsonFormUtils {
 
     public void populateFormWithServerOptions(String formName, JSONObject formJSON) {
 
-        Map<String, JSONObject> fieldsMap = getFields(formJSON);
+            Map<String, JSONObject> fieldsMap = getFields(formJSON);
         switch (formName) {
 
             case JsonForm.IRS_SA_DECISION_ZAMBIA:

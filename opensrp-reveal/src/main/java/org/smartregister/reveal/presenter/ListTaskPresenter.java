@@ -61,6 +61,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -168,6 +169,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private TaskFilterParams filterParams;
 
+    private MapboxMap mapboxMap;
+
     public ListTaskPresenter(ListTaskView listTaskView, BaseDrawerContract.Presenter drawerPresenter) {
         this.listTaskView = listTaskView;
         this.drawerPresenter = drawerPresenter;
@@ -266,7 +269,8 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.displayToast(R.string.zoom_in_to_select);
             return;
         }
-        clickedPoint = point;
+        this.clickedPoint = point;
+        this.mapboxMap = mapboxMap;
         final PointF pixel = mapboxMap.getProjection().toScreenLocation(point);
         Context context = listTaskView.getContext();
         List<Feature> features = mapboxMap.queryRenderedFeatures(pixel,
@@ -366,6 +370,17 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             locationPresenter.requestUserLocation();
         } else {
             locationPresenter.onGetUserLocation(location);
+        }
+    }
+
+    @Override
+    public void onGetUserLocation(Location location) {
+        Feature userFeature = getFeatureUserIsIn(location);
+        if (userFeature == null || !Objects.equals(userFeature.id(), selectedFeature.id())) {
+            requestUserPassword();
+        }
+        else {
+            onLocationValidated();
         }
     }
 
@@ -859,5 +874,19 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
     private FeatureCollection getFeatureCollection() {
         return isTasksFiltered && filterFeatureCollection != null ? FeatureCollection.fromFeatures(filterFeatureCollection) : featureCollection;
+    }
+
+    private Feature getFeatureUserIsIn(Location location) {
+        LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
+        final PointF pixel = mapboxMap.getProjection().toScreenLocation(point);
+
+        Context context = listTaskView.getContext();
+        List<Feature> features = mapboxMap.queryRenderedFeatures(pixel,
+                context.getString(R.string.reveal_layer_polygons), context.getString(R.string.reveal_layer_points));
+
+        if(!features.isEmpty()){
+            return features.get(0);
+        }
+        return null;
     }
 }
