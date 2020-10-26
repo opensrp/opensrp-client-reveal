@@ -1,5 +1,6 @@
 package org.smartregister.reveal.sync;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 
@@ -16,6 +17,8 @@ import org.smartregister.domain.Obs;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.jsonmapping.ClientClassification;
+import org.smartregister.domain.jsonmapping.Column;
+import org.smartregister.domain.jsonmapping.Table;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
@@ -31,6 +34,7 @@ import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.ClientProcessorForJava;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
@@ -39,6 +43,7 @@ import static org.smartregister.reveal.util.Constants.Action.STRUCTURE_TASK_SYNC
 import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.EventType.PAOT_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.SUMMARY_EVENT_TYPES;
@@ -46,10 +51,12 @@ import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
+import static org.smartregister.reveal.util.Constants.Properties.PLAN_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.TASK_RESET_EVENT;
+import static org.smartregister.reveal.util.Constants.UNDERSCRORE;
 import static org.smartregister.reveal.util.FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION;
 import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
@@ -308,5 +315,83 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     @Override
     protected void updateRegisterCount(String entityId) {
         //do nothing. Save performance on unrequired functionality
+    }
+
+    @Override
+    public Boolean processCaseModel(Event event, Client client, List<String> createsCase) {
+        try {
+
+            if (createsCase == null || createsCase.isEmpty()) {
+                return false;
+            }
+            for (String clientType : createsCase) {
+                Table table = getColumnMappings(clientType);
+                List<Column> columns = table.columns;
+                String baseEntityId = client != null ? client.getBaseEntityId() : event != null ? event.getBaseEntityId() : null;
+
+                ContentValues contentValues = new ContentValues();
+                //Add the base_entity_id
+                if (clientType.equals(SPRAYED_STRUCTURES)) {
+                    String baseEntityIdPlanIdString = event.getDetails() != null ?
+                            baseEntityId.concat(UNDERSCRORE).concat(event.getDetails().get(PLAN_IDENTIFIER)) : baseEntityId;
+                    contentValues.put("base_entity_id", baseEntityIdPlanIdString);
+                } else {
+                    contentValues.put("base_entity_id", baseEntityId);
+                }
+                contentValues.put("is_closed", 0);
+
+                for (Column colObject : columns) {
+                    processCaseModel(event, client, colObject, contentValues);
+                }
+
+                // Modify openmrs generated identifier, Remove hyphen if it exists
+                updateIdentifier(contentValues);
+
+                // save the values to db
+                executeInsertStatement(contentValues, clientType);
+
+                String entityId=contentValues.getAsString("base_entity_id");
+                updateFTSsearch(clientType, entityId, contentValues);
+                Long timestamp = getEventDate(event.getEventDate());
+                addContentValuesToDetailsTable(contentValues, timestamp);
+                updateClientDetailsTable(event, client);
+            }
+
+            return true;
+        } catch (Exception e) {
+            Timber.e(e);
+
+            return null;
+        }
+    }
+
+    /**
+     * Update given OPENMRS identifier, removes hyphen
+     *
+     * @param values
+     */
+    private void updateIdentifier(ContentValues values) {
+        try {
+            for (String identifier : getOpenmrsGenIds()) {
+                Object value = values.get(identifier); //TODO
+                if (value != null) {
+                    String sValue = value.toString();
+                    if (value instanceof String && StringUtils.isNotBlank(sValue)) {
+                        values.remove(identifier);
+                        values.put(identifier, sValue.replace("-", ""));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Timber.e(e);
+        }
+    }
+
+    private long getEventDate(DateTime eventDate) {
+        if (eventDate == null) {
+            return new Date().getTime();
+        } else {
+            return eventDate.getMillis();
+        }
     }
 }
