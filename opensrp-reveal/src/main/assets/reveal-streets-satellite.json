@@ -107,80 +107,16 @@
     },
     {
       "id": "reveal-data-points",
-      "type": "circle",
+      "type": "fill",
       "source": "reveal-data-set",
       "filter": [
         "==",
         "$type",
-        "Point"
+        "Polygon"
       ],
       "layout": {},
       "paint": {
-        "circle-radius": [
-          "interpolate",
-          [
-            "linear"
-          ],
-          [
-            "zoom"
-          ],
-          13.98,
-          0,
-          17.79,
-          10,
-          18.8,
-          15
-        ],
-        "circle-color": [
-          "match",
-          [
-            "get",
-            "taskBusinessStatus"
-          ],
-          [
-            "Not Visited"
-          ],
-          "hsl(46, 88%, 62%)",
-          [
-            "Not Sprayed",
-            "Incomplete",
-            "In Progress",
-            "None Received"
-          ],
-          "hsl(3, 71%, 54%)",
-          [
-            "Sprayed",
-            "Complete",
-            "Fully Received"
-          ],
-          "hsl(89, 52%, 48%)",
-          [
-            "Not Sprayable",
-            "Not Eligible"
-          ],
-          "hsl(0, 0%, 9%)",
-          [
-            "Family Registered"
-          ],
-          "hsl(335, 100%, 79%)",
-          [
-            "Bednet Distributed",
-            "Adherence Visit Done"
-          ],
-          "hsl(199, 68%, 55%)",
-          [
-            "Blood Screening Complete"
-          ],
-          "hsl(262, 100%, 68%)",
-          [
-            "Partially Sprayed",
-            "Partially Received"
-          ],
-          "hsl(26, 84%, 56%)",
-          "hsl(0, 0%, 78%)"
-        ],
-        "circle-stroke-width": 1,
-        "circle-opacity": 0.5
+        "fill-color": "rgba(0, 0, 0, 0)"
       }
     },
     {
