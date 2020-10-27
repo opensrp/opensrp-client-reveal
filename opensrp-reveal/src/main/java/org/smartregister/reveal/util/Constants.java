@@ -567,7 +567,7 @@ public interface Constants {
 
         String ID_ = "_id";
 
-        String NON_UNDERSCORE_ID = "id";
+        String ID = "id";
 
         String CODE = "code";
 

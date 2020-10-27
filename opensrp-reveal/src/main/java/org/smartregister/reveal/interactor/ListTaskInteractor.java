@@ -66,7 +66,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID_;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LAST_UPDATED_DATE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.NON_UNDERSCORE_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.OWNER;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_COMMENTS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PAOT_STATUS;
@@ -328,7 +328,7 @@ public class ListTaskInteractor extends BaseInteractor {
         queryBuilder.customJoin(String.format("LEFT JOIN %s ON %s.%s = %s.%s AND %s.%s IS NULL collate nocase ",
                 FAMILY_MEMBER, FAMILY, BASE_ENTITY_ID, FAMILY_MEMBER, RELATIONAL_ID, FAMILY_MEMBER, DATE_REMOVED));
         queryBuilder.customJoin(String.format("LEFT JOIN %s ON %s.%s = %s.%s collate nocase ",
-                SPRAYED_STRUCTURES, STRUCTURES_TABLE, ID_, SPRAYED_STRUCTURES, NON_UNDERSCORE_ID));
+                SPRAYED_STRUCTURES, STRUCTURES_TABLE, ID_, SPRAYED_STRUCTURES, ID));
         return queryBuilder.mainCondition(mainCondition);
     }
 
