@@ -190,7 +190,7 @@ public class InteractorUtilsTest extends BaseUnitTest {
         CommonPersonObject commonPersonObject = interactorUtils.fetchSprayDetails(IRS, structureId, eventClientRepository, commonRepository);
 
         verify(database).rawQuery(stringArgumentCaptor.capture(), stringArrayArgumentCaptor.capture());
-        assertEquals(stringArgumentCaptor.getValue(), "select s.*, id as _id from sprayed_structures s where base_entity_id = ?");
+        assertEquals(stringArgumentCaptor.getValue(), "select s.*, id as _id from sprayed_structures s where id = ?");
         assertEquals(structureId, stringArrayArgumentCaptor.getAllValues().get(0)[0]);
         assertEquals(caseId, commonPersonObject.getCaseId());
         assertEquals(relationId, commonPersonObject.getRelationalId());
