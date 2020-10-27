@@ -565,7 +565,7 @@ public interface Constants {
 
         String STRUCTURE_ID = "structure_id";
 
-        String ID = "_id";
+        String ID_ = "_id";
 
         String NON_UNDERSCORE_ID = "id";
 

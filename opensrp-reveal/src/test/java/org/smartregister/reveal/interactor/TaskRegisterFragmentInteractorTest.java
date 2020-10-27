@@ -56,7 +56,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.COMPLETED_TAS
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FAMILY_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPED_STRUCTURE_TASK_CODE_AND_STATUS;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID_;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LATITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LONGITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
@@ -408,7 +408,7 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
 
     private MatrixCursor createEmptyCursor() {
         return new MatrixCursor(new String[]{
-                ID,
+                ID_,
                 CODE,
                 FOR,
                 BUSINESS_STATUS,
