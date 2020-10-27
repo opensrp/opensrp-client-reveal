@@ -427,13 +427,14 @@ public class RevealJsonFormUtils {
                         field.put(VALUE, keys);
 
                     } else {
-                        if(!JsonFormConstants.REPEATING_GROUP.equals(field.optString(TYPE))) {
+                        if (!JsonFormConstants.REPEATING_GROUP.equals(field.optString(TYPE))) {
                             field.put(VALUE, obs.getValue());
                         }
-                    if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA && nonEditablefields.contains(key)
-                            && YES.equalsIgnoreCase(obs.getValue().toString())) {
-                        field.put(JsonFormConstants.READ_ONLY, true);
-                        field.remove(JsonFormConstants.RELEVANCE);
+                        if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA && nonEditablefields.contains(key)
+                                && YES.equalsIgnoreCase(obs.getValue().toString())) {
+                            field.put(JsonFormConstants.READ_ONLY, true);
+                            field.remove(JsonFormConstants.RELEVANCE);
+                        }
                     }
                 }
             } catch (JSONException e) {
