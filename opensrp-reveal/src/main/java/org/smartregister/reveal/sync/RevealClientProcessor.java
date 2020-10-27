@@ -1,6 +1,5 @@
 package org.smartregister.reveal.sync;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 
@@ -17,8 +16,6 @@ import org.smartregister.domain.Obs;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.domain.jsonmapping.ClientClassification;
-import org.smartregister.domain.jsonmapping.Column;
-import org.smartregister.domain.jsonmapping.Table;
 import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
@@ -34,7 +31,6 @@ import org.smartregister.reveal.util.Utils;
 import org.smartregister.sync.ClientProcessorForJava;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
