@@ -318,80 +318,15 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     }
 
     @Override
-    public Boolean processCaseModel(Event event, Client client, List<String> createsCase) {
-        try {
+    protected String getBaseEntityId(Event event, Client client, String clientType) {
+        String baseEntityId = super.getBaseEntityId(event, client, clientType);
 
-            if (createsCase == null || createsCase.isEmpty()) {
-                return false;
-            }
-            for (String clientType : createsCase) {
-                Table table = getColumnMappings(clientType);
-                List<Column> columns = table.columns;
-                String baseEntityId = client != null ? client.getBaseEntityId() : event != null ? event.getBaseEntityId() : null;
-
-                ContentValues contentValues = new ContentValues();
-                //Add the base_entity_id
-                if (clientType.equals(SPRAYED_STRUCTURES)) {
-                    String baseEntityIdPlanIdString = event.getDetails() != null ?
-                            baseEntityId.concat(UNDERSCRORE).concat(event.getDetails().get(PLAN_IDENTIFIER)) : baseEntityId;
-                    contentValues.put("base_entity_id", baseEntityIdPlanIdString);
-                } else {
-                    contentValues.put("base_entity_id", baseEntityId);
-                }
-                contentValues.put("is_closed", 0);
-
-                for (Column colObject : columns) {
-                    processCaseModel(event, client, colObject, contentValues);
-                }
-
-                // Modify openmrs generated identifier, Remove hyphen if it exists
-                updateIdentifier(contentValues);
-
-                // save the values to db
-                executeInsertStatement(contentValues, clientType);
-
-                String entityId=contentValues.getAsString("base_entity_id");
-                updateFTSsearch(clientType, entityId, contentValues);
-                Long timestamp = getEventDate(event.getEventDate());
-                addContentValuesToDetailsTable(contentValues, timestamp);
-                updateClientDetailsTable(event, client);
-            }
-
-            return true;
-        } catch (Exception e) {
-            Timber.e(e);
-
-            return null;
-        }
-    }
-
-    /**
-     * Update given OPENMRS identifier, removes hyphen
-     *
-     * @param values
-     */
-    private void updateIdentifier(ContentValues values) {
-        try {
-            for (String identifier : getOpenmrsGenIds()) {
-                Object value = values.get(identifier); //TODO
-                if (value != null) {
-                    String sValue = value.toString();
-                    if (value instanceof String && StringUtils.isNotBlank(sValue)) {
-                        values.remove(identifier);
-                        values.put(identifier, sValue.replace("-", ""));
-                    }
-                }
-            }
-        } catch (Exception e) {
-            Timber.e(e);
-        }
-    }
-
-    private long getEventDate(DateTime eventDate) {
-        if (eventDate == null) {
-            return new Date().getTime();
+        if (clientType.equals(SPRAYED_STRUCTURES)) {
+            String baseEntityIdPlanIdString = event.getDetails() != null ?
+                    baseEntityId.concat(UNDERSCRORE).concat(event.getDetails().get(PLAN_IDENTIFIER)) : baseEntityId;
+            return baseEntityIdPlanIdString;
         } else {
-            return eventDate.getMillis();
+            return baseEntityId;
         }
     }
 }
