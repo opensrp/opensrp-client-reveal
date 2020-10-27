@@ -51,6 +51,8 @@ public interface Constants {
 
     String COMMA = ",";
 
+    String TILDE = "~";
+
     int STORAGE_PERMISSIONS = 1;
 
     String NULL_KEY = "NULL";
@@ -501,6 +503,9 @@ public interface Constants {
         String GENERATED_GRP = "generated_group";
 
         String REPEATING_GROUP_UNIQUE_ID = "unique_id";
+
+        String YES =  "Yes";
+
     }
 
     interface DateFormat {

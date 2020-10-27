@@ -1,6 +1,7 @@
 package org.smartregister.reveal.model;
 
 import android.location.Location;
+
 import androidx.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
@@ -27,6 +28,7 @@ import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMA
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_ADHERENCE;
 import static org.smartregister.reveal.util.Constants.Intervention.MDA_DISPENSE;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
+import static org.smartregister.reveal.util.Constants.TILDE;
 
 /**
  * Created by samuelgithengi on 3/20/19.
@@ -74,6 +76,8 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
     private boolean notEligible;
 
     private String aggregateBusinessStatus;
+
+    private String groupedTaskCodes;
 
     public TaskDetails(@NonNull String taskId) {
         super(taskId);
@@ -365,5 +369,19 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
 
     public void setAggregateBusinessStatus(String aggregateBusinessStatus) {
         this.aggregateBusinessStatus = aggregateBusinessStatus;
+    }
+
+    public String getGroupedTaskCodes() {
+        return groupedTaskCodes;
+    }
+
+    public void setGroupedTaskCodes(String groupedTaskCodeStatusString) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String[] groupedTaskCodeStatusArray = groupedTaskCodeStatusString.split(COMMA);
+        for (int i = 0; i < groupedTaskCodeStatusArray.length; i++) {
+            String[] taskCodeStatusArray = groupedTaskCodeStatusArray[i].split(HYPHEN);
+            stringBuilder.append(TILDE).append(taskCodeStatusArray[0]);
+        }
+        this.groupedTaskCodes = stringBuilder.toString();
     }
 }

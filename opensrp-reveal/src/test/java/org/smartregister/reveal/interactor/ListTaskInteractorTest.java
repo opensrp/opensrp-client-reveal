@@ -360,6 +360,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
         when(structureRepository.getLocationById(anyString())).thenReturn(location);
         Feature feature = TestingUtils.getStructure();
+        feature.addStringProperty(TASK_IDENTIFIER,"task-id-a");
 
         listTaskInteractor.markStructureAsInactive(feature);
 
@@ -367,8 +368,8 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals(feature.id(), stringArgumentCaptor.getValue());
         verify(structureRepository).addOrUpdate(locationArgumentCaptor.capture());
         assertEquals(LocationProperty.PropertyStatus.INACTIVE, locationArgumentCaptor.getValue().getProperties().getStatus());
-        verify(taskRepository).cancelTasksForEntity(stringArgumentCaptor.capture());
-        assertEquals(feature.id(), stringArgumentCaptor.getValue());
+        verify(taskRepository).cancelTaskByIdentifier(stringArgumentCaptor.capture());
+        assertEquals(feature.getStringProperty(TASK_IDENTIFIER), stringArgumentCaptor.getValue());
         verify(presenter, timeout(ASYNC_TIMEOUT)).onStructureMarkedInactive();
     }
 
