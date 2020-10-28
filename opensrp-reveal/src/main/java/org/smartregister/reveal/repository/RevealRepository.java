@@ -276,7 +276,7 @@ public class RevealRepository extends Repository {
         }
         db.delete(SPRAYED_STRUCTURES, null, null);
 
-        clientProcessEvents(new ArrayList<>(Arrays.asList(SPRAY_EVENT, REGISTER_STRUCTURE_EVENT)));
+        clientProcessEvents(Arrays.asList(SPRAY_EVENT, REGISTER_STRUCTURE_EVENT));
     }
 
     private void clientProcessEvents(List<String> eventTypes) {
