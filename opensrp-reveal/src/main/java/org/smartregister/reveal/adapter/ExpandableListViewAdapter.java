@@ -92,6 +92,11 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
                     checkedGroup[pos] = !checkedGroup[pos];
                     for(LocationModel item : childLocationsMap.get(listGroup.get(pos).first)){
                         item.setChecked(checkedGroup[pos]);
+                        if (checkedGroup[pos]) {
+                            selectedLocationIds.add(item.getId());
+                        } else {
+                            selectedLocationIds.remove(item.getId());
+                        }
                     }
                     notifyDataSetChanged();
                 }
