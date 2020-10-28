@@ -40,6 +40,7 @@ import timber.log.Timber;
 import static org.smartregister.family.util.DBConstants.KEY.BASE_ENTITY_ID;
 import static org.smartregister.family.util.DBConstants.KEY.DATE_REMOVED;
 import static org.smartregister.repository.EventClientRepository.client_column.syncStatus;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID_;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TABLE;
@@ -152,8 +153,8 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
                 taskRepository.cancelTasksForEntity(structureId);
                 taskRepository.archiveTasksForEntity(structureId);
                 task = taskUtils.generateRegisterFamilyTask(RevealApplication.getInstance().getApplicationContext(), structureId);
-                db.execSQL(String.format("update %s set name = null where %s = ? ", STRUCTURES_TABLE, ID), new String[]{structureId});
-                db.execSQL(String.format("update %s set %s = null where %s = ? ", SPRAYED_STRUCTURES, STRUCTURE_NAME, BASE_ENTITY_ID), new String[]{structureId});
+                db.execSQL(String.format("update %s set name = null where %s = ? ", STRUCTURES_TABLE, ID_), new String[]{structureId});
+                db.execSQL(String.format("update %s set %s = null where %s = ? ", SPRAYED_STRUCTURES, STRUCTURE_NAME, ID), new String[]{structureId});
                 db.setTransactionSuccessful();
                 saved = true;
             } catch (Exception e) {

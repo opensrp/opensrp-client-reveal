@@ -34,6 +34,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.CASE_CONFIRMA
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TASK_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.EVENT_TYPE_FIELD;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FORM_SUBMISSION_ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
 import static org.smartregister.reveal.util.Constants.Intervention.BCC;
@@ -68,7 +69,7 @@ public class InteractorUtils {
             Cursor cursor = null;
             try {
                 cursor = eventClientRepository.getWritableDatabase().rawQuery(
-                        String.format("select s.*, id as _id from %s s where %s = ?", SPRAYED_STRUCTURES, Constants.DatabaseKeys.BASE_ENTITY_ID), new String[]{structureId});
+                        String.format("select s.*, id as _id from %s s where %s = ?", SPRAYED_STRUCTURES, ID), new String[]{structureId});
                 if (cursor.moveToFirst()) {
                     commonPersonObject = commonRepository.getCommonPersonObjectFromCursor(cursor);
                 }

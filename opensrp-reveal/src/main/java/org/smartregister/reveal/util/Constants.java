@@ -53,6 +53,8 @@ public interface Constants {
 
     String TILDE = "~";
 
+    String UNDERSCRORE = "_";
+
     int STORAGE_PERMISSIONS = 1;
 
     String NULL_KEY = "NULL";
@@ -563,7 +565,9 @@ public interface Constants {
 
         String STRUCTURE_ID = "structure_id";
 
-        String ID = "_id";
+        String ID_ = "_id";
+
+        String ID = "id";
 
         String CODE = "code";
 
@@ -680,6 +684,7 @@ public interface Constants {
         String PROVIDER_ID = "provider_id";
 
         String VERSION = "version";
+
     }
 
     interface UseContextCode {
