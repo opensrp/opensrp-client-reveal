@@ -40,6 +40,7 @@ import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
 import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_DONE;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_LITE_VERIFICATION;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.EventType.PAOT_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.SUMMARY_EVENT_TYPES;
@@ -47,10 +48,12 @@ import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
+import static org.smartregister.reveal.util.Constants.Properties.PLAN_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.TASK_RESET_EVENT;
+import static org.smartregister.reveal.util.Constants.UNDERSCRORE;
 import static org.smartregister.reveal.util.FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION;
 import static org.smartregister.reveal.util.FamilyConstants.RELATIONSHIP.RESIDENCE;
 import static org.smartregister.reveal.util.FamilyConstants.TABLE_NAME.FAMILY_MEMBER;
@@ -309,5 +312,18 @@ public class RevealClientProcessor extends ClientProcessorForJava {
     @Override
     protected void updateRegisterCount(String entityId) {
         //do nothing. Save performance on unrequired functionality
+    }
+
+    @Override
+    protected String getBaseEntityId(Event event, Client client, String clientType) {
+        String baseEntityId = super.getBaseEntityId(event, client, clientType);
+
+        if (clientType.equals(SPRAYED_STRUCTURES)) {
+            String baseEntityIdPlanIdString = event.getDetails() != null ?
+                    baseEntityId.concat(UNDERSCRORE).concat(event.getDetails().get(PLAN_IDENTIFIER)) : baseEntityId;
+            return baseEntityIdPlanIdString;
+        } else {
+            return baseEntityId;
+        }
     }
 }
