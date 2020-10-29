@@ -403,6 +403,7 @@
     <string name="mobilization_form_name">Mobilization Form</string>
     <string name="irs_field_officer_form">IRS Field Officer Form</string>
     <string name="verification_form_name"> Verification Form</string>
+    <string name="irs_lite_verification_form_name">IRS Lite Verification Form</string>
 
     <string name="total_structures_targeted">Total structures targeted</string>
 

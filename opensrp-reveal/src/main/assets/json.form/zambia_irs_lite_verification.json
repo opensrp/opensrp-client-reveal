@@ -236,7 +236,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Why was this area not visited for spraying?",
+        "hint": "Why was this area not sprayed?",
         "text_size": "8sp",
         "v_required": {
           "value": "true",

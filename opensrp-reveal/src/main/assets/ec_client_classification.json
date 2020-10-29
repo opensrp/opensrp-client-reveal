@@ -18,7 +18,8 @@
             "field_value": "irs_lite_verification",
             "creates_case": [
               "sprayed_structures",
-              "event_task"
+              "event_task",
+              "ec_events"
             ]
           },
           {
