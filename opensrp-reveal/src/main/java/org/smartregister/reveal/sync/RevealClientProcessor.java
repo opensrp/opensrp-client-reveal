@@ -8,6 +8,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.smartregister.CoreLibrary;
 import org.smartregister.domain.Client;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
@@ -277,7 +278,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             if (localEvents && BaseRepository.TYPE_Synced.equals(task.getSyncStatus())) {
                 task.setSyncStatus(BaseRepository.TYPE_Unsynced);
                 revealApplication.setSynced(false);
-            } else if (!localEvents && event.getServerVersion() != 0) {
+            } else if (!localEvents && event.getServerVersion() != 0 && !CoreLibrary.getInstance().isPeerToPeerProcessing()) {
                 // for events synced from server and task exists mark events as being fully synced
                 eventClientRepository.markEventAsSynced(event.getFormSubmissionId());
             }
