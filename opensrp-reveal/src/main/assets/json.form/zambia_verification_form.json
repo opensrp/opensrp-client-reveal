@@ -114,7 +114,7 @@
           },
           {
             "key": "Partially Sprayed",
-            "text": "Not Sprayed"
+            "text": "Partially Sprayed"
           },
           {
             "key": "Not Sprayed",
@@ -132,6 +132,12 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "step1:visited": {
+            "type": "string",
+            "ex": "equalTo(., \"yes\")"
+          }
         }
       },
       {
