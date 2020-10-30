@@ -3,7 +3,6 @@ package org.smartregister.reveal.fragment;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.Button;
-import android.widget.ExpandableListView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -59,13 +58,11 @@ public class LocationPickerFragmentTest extends BaseUnitTest {
 
     private Context context = RuntimeEnvironment.application;
 
-    private AppCompatActivity activity;
-
     @Before
     public void setUp() {
         org.smartregister.Context.bindtypes= new ArrayList<>();
         fragment = new LocationPickerFragment();
-        activity = Robolectric.buildActivity(AppCompatActivity.class).create().start().get();
+        AppCompatActivity activity; activity = Robolectric.buildActivity(AppCompatActivity.class).create().start().get();
         activity.setContentView(R.layout.fragment_location_picker);
         activity.getSupportFragmentManager().beginTransaction().add(fragment, "P2P Sync Locations").commit();
         Whitebox.setInternalState(CoreLibrary.getInstance(), "p2POptions", p2POptions);

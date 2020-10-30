@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.robolectric.Robolectric;
-import org.robolectric.RuntimeEnvironment;
 import org.smartregister.family.adapter.ViewPagerAdapter;
 import org.smartregister.reveal.BaseUnitTest;
 
@@ -38,8 +37,6 @@ public class LocationPickerActivityTest extends BaseUnitTest {
     private ArgumentCaptor<ViewPagerAdapter> viewPagerAdapterArgumentCaptor;
 
     private LocationPickerActivity locationPickerActivity;
-
-    private android.content.Context context = RuntimeEnvironment.application;
 
     @Before
     public void setUp() {
