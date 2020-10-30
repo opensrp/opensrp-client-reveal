@@ -437,6 +437,9 @@ public class RevealJsonFormUtils {
                         }
                     }
                 }
+                if (JsonFormConstants.REPEATING_GROUP.equals(field.optString(TYPE))) {
+                    generateRepeatingGroupFields(field, event.getObs(), formJSON);
+                }
             } catch (JSONException e) {
                 Timber.e(e);
             }
