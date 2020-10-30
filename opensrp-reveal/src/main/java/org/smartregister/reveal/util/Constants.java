@@ -110,6 +110,7 @@ public interface Constants {
         String MDA_ADHERENCE_OFFICERS = "mda_adherence_officers";
         String MDA_CATCHMENT_AREAS = "mda_catchment_areas";
         String DISPLAY_DISTANCE_SCALE = "display_distance_scale";
+        String DISTRICTS = "districts";
 
     }
 
@@ -496,6 +497,8 @@ public interface Constants {
         String CATCHMENT_AREA = "catchment_area";
 
         String HEALTH_FACILITY = "health_facility";
+
+        String DISTRICT = "district";
 
 
         String ZONE = "zone";

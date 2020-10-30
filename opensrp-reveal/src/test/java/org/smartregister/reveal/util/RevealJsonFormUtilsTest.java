@@ -221,6 +221,20 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
+    public void testGetRefAppBloodScreeningForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
+        String actualFormName = revealJsonFormUtils.getFormName(BLOOD_SCREENING_EVENT, null);
+        assertEquals(JsonForm.REFAPP_BLOOD_SCREENING_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetRefAppLarvalDippingForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
+        String actualFormName = revealJsonFormUtils.getFormName(LARVAL_DIPPING_EVENT, null);
+        assertEquals(JsonForm.REFAPP_LARVAL_DIPPING_FORM, actualFormName);
+    }
+
+    @Test
     public void testGetThailandBednetDistributionForm() {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
         String actualFormName = revealJsonFormUtils.getFormName(BEDNET_DISTRIBUTION_EVENT, BEDNET_DISTRIBUTION);
@@ -239,6 +253,13 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
         String actualFormName = revealJsonFormUtils.getFormName(CASE_CONFIRMATION_EVENT, CASE_CONFIRMATION);
         assertEquals(JsonForm.THAILAND_CASE_CONFIRMATION_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetThailandLarvalDippingForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        String actualFormName = revealJsonFormUtils.getFormName(LARVAL_DIPPING_EVENT, null);
+        assertEquals(JsonForm.THAILAND_LARVAL_DIPPING_FORM, actualFormName);
     }
 
     @Test
