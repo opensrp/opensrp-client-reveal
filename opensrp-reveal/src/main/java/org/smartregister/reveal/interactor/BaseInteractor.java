@@ -1,8 +1,12 @@
 package org.smartregister.reveal.interactor;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 
 import androidx.annotation.VisibleForTesting;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,8 +43,10 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.contract.BaseContract.BasePresenter;
 import org.smartregister.reveal.contract.StructureTasksContract;
+import org.smartregister.reveal.receiver.TaskGenerationReceiver;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -65,6 +71,7 @@ import java.util.UUID;
 import timber.log.Timber;
 
 import static com.cocoahero.android.geojson.Geometry.JSON_COORDINATES;
+import static org.smartregister.AllConstants.INTENT_KEY.TASK_GENERATED_EVENT;
 import static org.smartregister.family.util.DBConstants.KEY.BASE_ENTITY_ID;
 import static org.smartregister.family.util.DBConstants.KEY.DATE_REMOVED;
 import static org.smartregister.family.util.Utils.metadata;
@@ -313,20 +320,17 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                     structureRepository.addOrUpdate(structure);
                     revealApplication.setSynced(false);
                     Context applicationContext = revealApplication.getApplicationContext();
-                    Task task = null;
-                    clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
-                    //TODO add a way of fetching generated task
-                    Task finalTask = task;
-                    appExecutors.mainThread().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            Map<String, String> taskProperties = new HashMap<>();
-                            if (finalTask != null) {
 
-                                taskProperties.put(Properties.TASK_IDENTIFIER, finalTask.getIdentifier());
-                                taskProperties.put(Properties.TASK_BUSINESS_STATUS, finalTask.getBusinessStatus());
-                                taskProperties.put(Properties.TASK_STATUS, finalTask.getStatus().name());
-                                taskProperties.put(Properties.TASK_CODE, finalTask.getCode());
+                    IntentFilter filter = new IntentFilter(TASK_GENERATED_EVENT);
+                    TaskGenerationReceiver taskGenerationReceiver = new TaskGenerationReceiver(task -> {
+                        appExecutors.mainThread().execute(() -> {
+                            Map<String, String> taskProperties = new HashMap<>();
+                            if (task != null) {
+
+                                taskProperties.put(Properties.TASK_IDENTIFIER, task.getIdentifier());
+                                taskProperties.put(Properties.TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                                taskProperties.put(Properties.TASK_STATUS, task.getStatus().name());
+                                taskProperties.put(Properties.TASK_CODE, task.getCode());
                             }
                             taskProperties.put(Properties.LOCATION_UUID, structure.getProperties().getUid());
                             taskProperties.put(Properties.LOCATION_VERSION, structure.getProperties().getVersion() + "");
@@ -344,8 +348,10 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                             double zoomLevel = Double.parseDouble(zoomObs.getValue().toString());
 
                             presenterCallBack.onStructureAdded(Feature.fromJson(gson.toJson(structure)), featureCoordinates, zoomLevel);
-                        }
+                        });
                     });
+                    LocalBroadcastManager.getInstance(applicationContext).registerReceiver(taskGenerationReceiver, filter);
+                    clientProcessor.processClient(Collections.singletonList(new EventClient(event, null)), true);
                 } catch (JSONException e) {
                     Timber.e(e, "Error saving new Structure");
                     presenterCallBack.onFormSaveFailure(REGISTER_STRUCTURE_EVENT);

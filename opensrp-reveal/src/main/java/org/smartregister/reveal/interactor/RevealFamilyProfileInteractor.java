@@ -1,8 +1,10 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
+import android.content.IntentFilter;
 
 import androidx.annotation.NonNull;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -23,6 +25,7 @@ import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.FamilyProfileContract;
+import org.smartregister.reveal.receiver.TaskGenerationReceiver;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
@@ -36,6 +39,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static org.smartregister.AllConstants.INTENT_KEY.TASK_GENERATED_EVENT;
 import static org.smartregister.family.util.DBConstants.KEY.BASE_ENTITY_ID;
 import static org.smartregister.family.util.DBConstants.KEY.DATE_REMOVED;
 import static org.smartregister.repository.EventClientRepository.client_column.syncStatus;
@@ -76,12 +80,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
 
     @Override
     public void generateTasks(Context applicationContext, String baseEntityId, String structureId) {
-        appExecutors.diskIO().execute(() -> {
-            //TODO add hook when task is generated
-            appExecutors.mainThread().execute(() -> {
-                presenter.onTasksGenerated();
-            });
-        });
+        //TODO remove Not used
     }
 
     @Override
@@ -161,6 +160,11 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
 
     @Override
     protected void processClient(List<EventClient> eventClientList) {
+        IntentFilter filter = new IntentFilter(TASK_GENERATED_EVENT);
+        TaskGenerationReceiver taskGenerationReceiver = new TaskGenerationReceiver(task -> {
+            appExecutors.mainThread().execute(() -> presenter.onTasksGenerated());
+        });
+        LocalBroadcastManager.getInstance(RevealApplication.getInstance().getApplicationContext()).registerReceiver(taskGenerationReceiver, filter);
         clientProcessor.processClient(eventClientList, true);
     }
 }

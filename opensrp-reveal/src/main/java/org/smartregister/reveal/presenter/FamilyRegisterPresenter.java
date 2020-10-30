@@ -30,8 +30,6 @@ public class FamilyRegisterPresenter extends BaseFamilyRegisterPresenter impleme
     public void onRegistrationSaved(boolean isEditMode, boolean isSaved, List<FamilyEventClient> familyEventClientList) {
         if (isEditMode || !isSaved) {
             onTasksGenerated(familyEventClientList);
-        } else {
-            getInteractor().generateTasks(familyEventClientList, getModel().getStructureId(), view.getContext());
         }
     }
 
