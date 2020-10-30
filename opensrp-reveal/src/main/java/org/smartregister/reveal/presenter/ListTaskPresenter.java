@@ -521,6 +521,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             Map<String, JSONObject> fields = jsonFormUtils.getFields(formJson);
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.HEALTH_FACILITIES, fields.get(JsonForm.HFC_SEEK), prefsUtil.getCurrentDistrict());
             jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.HEALTH_FACILITIES, fields.get(JsonForm.HFC_BELONG), prefsUtil.getCurrentDistrict());
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DISTRICTS, fields.get(JsonForm.DISTRICT), prefsUtil.getCurrentProvince());
             jsonFormUtils.populateForm(event, formJson);
             String dataCollector = RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM();
             if (StringUtils.isNotBlank(dataCollector)) {
