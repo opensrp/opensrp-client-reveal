@@ -76,9 +76,10 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean b, View view, ViewGroup viewGroup) {
+    public View getGroupView(int groupPosition, boolean b, View _view, ViewGroup viewGroup) {
         String itemGroup = getGroup(groupPosition);
         GroupViewHolder groupViewHolder;
+        View view = _view;
         if(view == null){
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.expanded_list_group, null);
@@ -112,11 +113,12 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(final int groupPosition, final int childPosition, boolean b, View view, ViewGroup viewGroup) {
+    public View getChildView(final int groupPosition, final int childPosition, boolean b, View _view, ViewGroup viewGroup) {
         expandedGroupPosition = groupPosition; // For some reason the groupPosition defaults to 0 when checkbox is clicked
                                                 //this variable keeps track of the correct value
         LocationModel expandedListText = getChild(groupPosition,childPosition);
         ChildViewHolder childViewHolder;
+        View view = _view;
         if(view == null){
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.expanded_list_item, null);
