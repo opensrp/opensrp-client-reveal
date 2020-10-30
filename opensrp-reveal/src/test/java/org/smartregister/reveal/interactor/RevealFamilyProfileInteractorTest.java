@@ -68,9 +68,6 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
     private FamilyProfileContract.Presenter presenter;
 
     @Mock
-    private TaskUtils taskUtils;
-
-    @Mock
     private CommonRepository commonRepository;
 
     @Mock
@@ -102,7 +99,6 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
     public void setUp() {
         org.smartregister.Context.bindtypes = new ArrayList<>();
         interactor = new RevealFamilyProfileInteractor(presenter);
-        Whitebox.setInternalState(interactor, "taskUtils", taskUtils);
         AppExecutors appExecutors = new AppExecutors(Executors.newSingleThreadExecutor(),
                 Executors.newSingleThreadExecutor(), Executors.newSingleThreadExecutor());
         Whitebox.setInternalState(interactor, "appExecutors", appExecutors);

@@ -39,7 +39,6 @@ import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.util.Utils;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
@@ -103,9 +102,6 @@ public class BaseInteractorTest extends BaseUnitTest {
     @Mock
     private EventClientRepository eventClientRepository;
 
-    @Mock
-    private TaskUtils taskUtils;
-
     @Captor
     private ArgumentCaptor<CommonPersonObjectClient> clientArgumentCaptor;
 
@@ -141,8 +137,6 @@ public class BaseInteractorTest extends BaseUnitTest {
         Whitebox.setInternalState(interactor, "database", database);
         Whitebox.setInternalState(interactor, "clientProcessor", clientProcessor);
         Whitebox.setInternalState(interactor, "eventClientRepository", eventClientRepository);
-        Whitebox.setInternalState(interactor, "taskUtils", taskUtils);
-        Whitebox.setInternalState(interactor, "taskRepository", taskRepository);
     }
 
 

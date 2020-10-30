@@ -128,6 +128,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
             try {
                 db.beginTransaction();
                 IntentFilter filter = new IntentFilter(TASK_GENERATED_EVENT);
+
                 TaskGenerationReceiver taskGenerationReceiver = new TaskGenerationReceiver(task -> {
                     appExecutors.mainThread().execute(() -> presenter.onArchiveFamilyCompleted(task != null, task));
                 });
