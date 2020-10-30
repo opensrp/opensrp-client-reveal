@@ -2,6 +2,8 @@ package org.smartregister.reveal.adapter;
 
 import android.content.Context;
 import android.util.Pair;
+import android.view.View;
+import android.widget.CheckBox;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -11,8 +13,10 @@ import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.LocationModel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,6 +117,39 @@ public class ExpandableListViewAdapterTest extends BaseUnitTest {
         LocationModel actualLocationModel = adapter.getChild(0,0);
         assertEquals(expectedLocationModel.getId(), actualLocationModel.getId());
         assertEquals(expectedLocationModel.getName(), actualLocationModel.getName());
+
+    }
+
+    @Test
+    public void testSelectLocationCheckBox() {
+        Whitebox.setInternalState(adapter, "selectedLocationIds", new ArrayList<>());
+        assertEquals(0, (int) Whitebox.getInternalState(adapter, "checkedBoxesCount"));
+        View view = adapter.getChildView(0,0, true, null, null);
+        CheckBox cbChild = view.findViewById(R.id.cb_child);
+        cbChild.setChecked(false); // original state before clicking
+        cbChild.performClick();
+        assertEquals(1, (int) Whitebox.getInternalState(adapter, "checkedBoxesCount"));
+        List<String> selectedLocations = Whitebox.getInternalState(adapter, "selectedLocationIds");
+        assertEquals("location-id1", selectedLocations.get(0));
+
+    }
+
+    @Test
+    public void testUnSelectLocationCheckBox() {
+        List<String> idList = new ArrayList<>();
+        idList.add("location-id1");
+        idList.add("location-id2");
+        Whitebox.setInternalState(adapter, "selectedLocationIds", idList);
+        Whitebox.setInternalState(adapter, "checkedBoxesCount", 2);
+        assertEquals(2, (int) Whitebox.getInternalState(adapter, "checkedBoxesCount"));
+        View view = adapter.getChildView(0,0, true, null, null);
+        CheckBox cbChild = view.findViewById(R.id.cb_child);
+        cbChild.setChecked(true); // original state before clicking
+        cbChild.performClick();
+        assertEquals(1, (int) Whitebox.getInternalState(adapter, "checkedBoxesCount"));
+        List<String> selectedLocationIds = Whitebox.getInternalState(adapter, "selectedLocationIds");
+        assertFalse(selectedLocationIds.contains("location-id1"));
+        assertTrue(selectedLocationIds.contains("location-id2"));
 
     }
 

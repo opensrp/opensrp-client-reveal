@@ -70,11 +70,6 @@ public class LocationPickerFragmentTest extends BaseUnitTest {
     }
 
     @Test
-    public void testOncreate() {
-        assertNotNull(Whitebox.getInternalState(fragment, "presenter"));
-    }
-
-    @Test
     public void testOnCreateView() {
         Whitebox.setInternalState(fragment, "presenter", presenter);
         fragment.onCreateView(LayoutInflater.from(context), null, null);
