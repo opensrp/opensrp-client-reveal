@@ -33,8 +33,6 @@ public class ExpandableListViewAdapterTest extends BaseUnitTest {
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
 
-    private List<Pair<String, String>> listGroup;
-    private Map<String, List<LocationModel>> childLocationsMap;
     private LocationModel locationModel;
 
     private ExpandableListViewAdapter adapter;
@@ -43,12 +41,12 @@ public class ExpandableListViewAdapterTest extends BaseUnitTest {
     @Before
     public void setUp() {
         Context context = RuntimeEnvironment.application;
-        listGroup  = Collections.singletonList(Pair.create("parent-location-id1", "Lusaka"));
+        List<Pair<String, String>>  listGroup  = Collections.singletonList(Pair.create("parent-location-id1", "Lusaka"));
         locationModel = new LocationModel();
         locationModel.setId("location-id1");
         locationModel.setName("Aksro-1");
         locationModel.setChecked(true);
-        childLocationsMap = Collections.singletonMap("parent-location-id1", Collections.singletonList(locationModel));
+        Map<String, List<LocationModel>> childLocationsMap = Collections.singletonMap("parent-location-id1", Collections.singletonList(locationModel));
         adapter = new ExpandableListViewAdapter(context, listGroup, childLocationsMap);
     }
 
