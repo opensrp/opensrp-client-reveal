@@ -31,5 +31,5 @@ opensrp-reveal/reports/
 opensrp-reveal/jacoco.exec
 jacoco.exec
 release/
-opensrp-reveal/google-services.json
-~                 
+*google-services.json
+~
