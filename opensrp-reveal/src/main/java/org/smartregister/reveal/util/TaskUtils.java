@@ -6,9 +6,7 @@ import net.sqlcipher.database.SQLiteDatabase;
 import org.joda.time.DateTime;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Task;
-import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.BaseRepository;
-import org.smartregister.repository.PlanDefinitionRepository;
 import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
@@ -31,17 +29,13 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
  */
 public class TaskUtils {
 
-    private TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
 
-    private PlanDefinitionRepository planRepository;
-
-    private AllSharedPreferences sharedPreferences;
-
-    private PreferencesUtil prefsUtil;
+    private final PreferencesUtil prefsUtil;
 
     private static TaskUtils instance;
 
-    private RevealApplication revealApplication;
+    private final RevealApplication revealApplication;
 
     public static TaskUtils getInstance() {
         if (instance == null) {
@@ -52,18 +46,14 @@ public class TaskUtils {
 
     private TaskUtils() {
         taskRepository = RevealApplication.getInstance().getTaskRepository();
-        sharedPreferences = RevealApplication.getInstance().getContext().allSharedPreferences();
         prefsUtil = PreferencesUtil.getInstance();
-        planRepository = RevealApplication.getInstance().getPlanDefinitionRepository();
         revealApplication = RevealApplication.getInstance();
     }
 
     public void tagEventTaskDetails(List<Event> events, SQLiteDatabase sqLiteDatabase) {
         for (Event event : events) {
-            Cursor cursor = null;
-            try {
-                cursor = sqLiteDatabase.rawQuery(String.format("select * from %s where %s =? and %s =? and %s =? limit 1", TASK_TABLE, FOR, STATUS, CODE),
-                        new String[]{event.getBaseEntityId(), Task.TaskStatus.COMPLETED.name(), Intervention.IRS});
+            try (Cursor cursor = sqLiteDatabase.rawQuery(String.format("select * from %s where %s =? and %s =? and %s =? limit 1", TASK_TABLE, FOR, STATUS, CODE),
+                    new String[]{event.getBaseEntityId(), Task.TaskStatus.COMPLETED.name(), Intervention.IRS})) {
                 while (cursor.moveToNext()) {
                     Task task = taskRepository.readCursor(cursor);
                     event.addDetails(Constants.Properties.TASK_IDENTIFIER, task.getIdentifier());
@@ -74,13 +64,7 @@ public class TaskUtils {
                     event.addDetails(Constants.Properties.PLAN_IDENTIFIER, task.getPlanIdentifier());
                     event.setLocationId(task.getGroupIdentifier());
                 }
-
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
             }
-
         }
     }
 

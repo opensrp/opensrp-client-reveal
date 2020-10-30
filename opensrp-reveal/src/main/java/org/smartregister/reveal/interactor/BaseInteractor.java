@@ -1,8 +1,6 @@
 package org.smartregister.reveal.interactor;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 
 import androidx.annotation.VisibleForTesting;
@@ -46,7 +44,6 @@ import org.smartregister.reveal.contract.StructureTasksContract;
 import org.smartregister.reveal.receiver.TaskGenerationReceiver;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
-import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.EventType;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -119,7 +116,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             .registerTypeAdapter(DateTime.class, new DateTimeTypeConverter())
             .registerTypeAdapter(LocationProperty.class, new PropertiesConverter()).create();
 
-    private RevealApplication revealApplication;
+    private final RevealApplication revealApplication;
 
     protected TaskRepository taskRepository;
 
@@ -137,13 +134,11 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
     protected RevealClientProcessor clientProcessor;
 
-    private TaskUtils taskUtils;
-
-    private SQLiteDatabase database;
+    private final SQLiteDatabase database;
 
     private CommonRepository commonRepository;
 
-    private PreferencesUtil prefsUtil;
+    private final PreferencesUtil prefsUtil;
 
     public BaseInteractor(BasePresenter presenterCallBack) {
         revealApplication = RevealApplication.getInstance();
@@ -154,7 +149,6 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
         eventClientRepository = revealApplication.getContext().getEventClientRepository();
         clientProcessor = RevealClientProcessor.getInstance(revealApplication.getApplicationContext());
         sharedPreferences = revealApplication.getContext().allSharedPreferences();
-        taskUtils = TaskUtils.getInstance();
         database = revealApplication.getRepository().getReadableDatabase();
         prefsUtil = PreferencesUtil.getInstance();
     }
@@ -477,7 +471,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
             String events = String.format("select %s from %s where %s = ? and %s =? order by %s desc limit 1",
                     EventClientRepository.event_column.json, EventClientRepository.Table.event.name(), EventClientRepository.event_column.baseEntityId, EventClientRepository.event_column.eventType, EventClientRepository.event_column.updatedAt);
 
-            try (Cursor cursor = getDatabase().rawQuery(events, new String[]{eventBaseEntityId, eventType});) {
+            try (Cursor cursor = getDatabase().rawQuery(events, new String[]{eventBaseEntityId, eventType})) {
 
                 if (cursor.moveToFirst()) {
                     String eventJSON = cursor.getString(0);
