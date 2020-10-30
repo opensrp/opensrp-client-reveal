@@ -558,6 +558,7 @@ public class RevealJsonFormUtils {
                             CONFIGURATION.SPRAY_OPERATORS, fieldsMap.get(JsonForm.SPRAY_OPERATOR_CODE),
                             dataCollector);
                 }
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DISTRICTS, fieldsMap.get(JsonForm.DISTRICT), PreferencesUtil.getInstance().getCurrentProvince());
                 break;
             default:
                 break;
