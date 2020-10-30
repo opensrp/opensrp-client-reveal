@@ -53,6 +53,8 @@ public interface Constants {
 
     String TILDE = "~";
 
+    String UNDERSCRORE = "_";
+
     int STORAGE_PERMISSIONS = 1;
 
     String NULL_KEY = "NULL";
@@ -108,6 +110,7 @@ public interface Constants {
         String MDA_ADHERENCE_OFFICERS = "mda_adherence_officers";
         String MDA_CATCHMENT_AREAS = "mda_catchment_areas";
         String DISPLAY_DISTANCE_SCALE = "display_distance_scale";
+        String DISTRICTS = "districts";
 
     }
 
@@ -495,6 +498,8 @@ public interface Constants {
 
         String HEALTH_FACILITY = "health_facility";
 
+        String DISTRICT = "district";
+
 
         String ZONE = "zone";
 
@@ -568,7 +573,9 @@ public interface Constants {
 
         String STRUCTURE_ID = "structure_id";
 
-        String ID = "_id";
+        String ID_ = "_id";
+
+        String ID = "id";
 
         String CODE = "code";
 
@@ -685,6 +692,7 @@ public interface Constants {
         String PROVIDER_ID = "provider_id";
 
         String VERSION = "version";
+
     }
 
     interface UseContextCode {
