@@ -125,12 +125,11 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     public void archiveFamily(String familyBaseEntityId, String structureId) {
         appExecutors.diskIO().execute(() -> {
             SQLiteDatabase db = eventClientRepository.getWritableDatabase();
-            final boolean[] saved = {false};
             try {
                 db.beginTransaction();
                 IntentFilter filter = new IntentFilter(TASK_GENERATED_EVENT);
                 TaskGenerationReceiver taskGenerationReceiver = new TaskGenerationReceiver(task -> {
-                    appExecutors.mainThread().execute(() -> presenter.onArchiveFamilyCompleted(saved[0], task));
+                    appExecutors.mainThread().execute(() -> presenter.onArchiveFamilyCompleted(task != null, task));
                 });
                 LocalBroadcastManager.getInstance(RevealApplication.getInstance().getApplicationContext()).registerReceiver(taskGenerationReceiver, filter);
                 List<String> familyMembers = commonRepository.findSearchIds(String.format(
@@ -143,7 +142,6 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
                 taskRepository.cancelTasksForEntity(structureId);
                 taskRepository.archiveTasksForEntity(structureId);
                 db.setTransactionSuccessful();
-                saved[0] = true;
             } catch (Exception e) {
                 Timber.e(e);
             } finally {
