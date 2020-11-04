@@ -254,6 +254,15 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     }
 
     @Override
+    public void lockNavigationDrawerForSelection(int title, int message) {
+        AlertDialogUtils.displayNotification(getContext(), title, message);
+        mDrawerLayout.openDrawer(GravityCompat.START);
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+
+    }
+
+
+    @Override
     public void unlockNavigationDrawer() {
         if (mDrawerLayout.getDrawerLockMode(GravityCompat.START) == DrawerLayout.LOCK_MODE_LOCKED_OPEN) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -365,7 +374,7 @@ public class DrawerMenuView implements View.OnClickListener, BaseDrawerContract.
     }
 
     private void startP2PActivity() {
-        getContext().startActivity(new Intent(getContext(), P2pModeSelectActivity.class));
+        getContext().startActivity(new Intent(getContext(), LocationPickerActivity.class));
     }
 
     @Override

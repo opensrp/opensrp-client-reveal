@@ -236,7 +236,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
     @Test
     public void testFetchLocations() {
-        String groupNameQuery = "Select structure._id as _id , COALESCE(ec_family.first_name,structure_name,name,family_head_name) , group_concat(ec_family_member.first_name||' '||ec_family_member.last_name) FROM structure LEFT JOIN ec_family ON structure._id = ec_family.structure_id AND ec_family.date_removed IS NULL collate nocase  LEFT JOIN ec_family_member ON ec_family.base_entity_id = ec_family_member.relational_id AND ec_family_member.date_removed IS NULL collate nocase  LEFT JOIN sprayed_structures ON structure._id = sprayed_structures.base_entity_id collate nocase  WHERE parent_id=?  GROUP BY structure._id";
+        String groupNameQuery = "Select structure._id as _id , COALESCE(ec_family.first_name,structure_name,name,family_head_name) , group_concat(ec_family_member.first_name||' '||ec_family_member.last_name) FROM structure LEFT JOIN ec_family ON structure._id = ec_family.structure_id AND ec_family.date_removed IS NULL collate nocase  LEFT JOIN ec_family_member ON ec_family.base_entity_id = ec_family_member.relational_id AND ec_family_member.date_removed IS NULL collate nocase  LEFT JOIN sprayed_structures ON structure._id = sprayed_structures.id collate nocase  WHERE parent_id=?  GROUP BY structure._id";
         String plan = UUID.randomUUID().toString();
         String operationAreaId = operationArea.getId();
         setOperationArea(plan);
@@ -360,6 +360,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
         when(structureRepository.getLocationById(anyString())).thenReturn(location);
         Feature feature = TestingUtils.getStructure();
+        feature.addStringProperty(TASK_IDENTIFIER,"task-id-a");
 
         listTaskInteractor.markStructureAsInactive(feature);
 
@@ -367,8 +368,8 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals(feature.id(), stringArgumentCaptor.getValue());
         verify(structureRepository).addOrUpdate(locationArgumentCaptor.capture());
         assertEquals(LocationProperty.PropertyStatus.INACTIVE, locationArgumentCaptor.getValue().getProperties().getStatus());
-        verify(taskRepository).cancelTasksForEntity(stringArgumentCaptor.capture());
-        assertEquals(feature.id(), stringArgumentCaptor.getValue());
+        verify(taskRepository).cancelTaskByIdentifier(stringArgumentCaptor.capture());
+        assertEquals(feature.getStringProperty(TASK_IDENTIFIER), stringArgumentCaptor.getValue());
         verify(presenter, timeout(ASYNC_TIMEOUT)).onStructureMarkedInactive();
     }
 

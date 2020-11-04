@@ -120,8 +120,6 @@ public class BaseFormFragmentPresenter extends BaseLocationListener implements B
                 } else if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
                     interactor.findMemberDetails(taskDetails.getStructureId(), formJSON);
                     return;
-                } else if (IRS.equals(taskDetails.getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
-                    interactor.findSprayDetails(IRS, structure.getId(), formJSON);
                 } else if (MDA_DISPENSE.equals(taskDetails.getTaskCode()) || MDA_ADHERENCE.equals(taskDetails.getTaskCode())) {
                     jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), Constants.CONFIGURATION.MDA_CATCHMENT_AREAS, jsonFormUtils.getFields(formJSON).get(JsonForm.CATCHMENT_AREA), prefsUtil.getCurrentDistrict());
                     getView().startForm(formJSON);

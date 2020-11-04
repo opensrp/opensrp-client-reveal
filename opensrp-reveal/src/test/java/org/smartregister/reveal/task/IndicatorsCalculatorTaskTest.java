@@ -47,6 +47,7 @@ import static org.smartregister.reveal.util.IndicatorUtilsTest.getCursor;
 /**
  * Created by samuelgithengi on 8/13/20.
  */
+
 public class IndicatorsCalculatorTaskTest extends BaseUnitTest {
 
     private IndicatorsCalculatorTask indicatorsCalculatorTask;
@@ -64,6 +65,7 @@ public class IndicatorsCalculatorTaskTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
+        Robolectric.getForegroundThreadScheduler().pause();
         org.smartregister.Context.bindtypes = new ArrayList<>();
         activity = spy(Robolectric.buildActivity(ListTasksActivity.class).create().visible().get());
         doNothing().when(activity).positionMyLocationAndLayerSwitcher();

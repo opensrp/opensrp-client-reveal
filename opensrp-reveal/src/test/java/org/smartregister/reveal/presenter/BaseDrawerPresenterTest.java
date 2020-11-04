@@ -1,4 +1,5 @@
 package org.smartregister.reveal.presenter;
+
 import androidx.core.util.Pair;
 
 import org.junit.Before;
@@ -366,7 +367,7 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
         assertTrue(arrayListArgumentCaptor.getValue().contains(OPERATIONAL_AREA));
 
         verify(view).showOperationalAreaSelector(pairArgumentCaptor.capture());
-        assertEquals("[{\"name\":\"Zambia\",\"nodes\":[{\"name\":\"Chadiza 1\"}]}]", pairArgumentCaptor.getValue().first );
+        assertEquals("[{\"name\":\"Zambia\",\"nodes\":[{\"name\":\"Chadiza 1\"}]}]", pairArgumentCaptor.getValue().first);
         assertTrue(pairArgumentCaptor.getValue().second.contains("Lusaka"));
         assertTrue(pairArgumentCaptor.getValue().second.contains("Mtendere"));
     }
@@ -416,6 +417,28 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
         presenter.onViewResumed();
 
         verify(presenter).updateSyncStatusDisplay(false);
+
+    }
+
+    @Test
+    public void testOnViewResumedShouldSetPlanAndOperationalAreaAndLockDrawer() {
+
+        Whitebox.setInternalState(RevealApplication.getInstance(), "refreshMapOnEventSaved", false);
+        Whitebox.setInternalState(RevealApplication.getInstance(), "synced", false);
+        Whitebox.setInternalState(presenter, "viewInitialized", true);
+        when(preferencesUtil.getCurrentPlan()).thenReturn("plan_1");
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn(null);
+        when(view.getOperationalArea()).thenReturn("oa_1");
+        when(view.getPlan()).thenReturn("plan_1");
+
+
+        presenter = spy(presenter);
+        doNothing().doNothing().when(presenter).updateSyncStatusDisplay(anyBoolean());
+
+        presenter.onViewResumed();
+        verify(view).setOperationalArea(null);
+        verify(view).setPlan("plan_1");
+        verify(view).lockNavigationDrawerForSelection(R.string.select_campaign_operational_area_title, R.string.revoked_plan_operational_area);
 
     }
 

@@ -76,7 +76,7 @@ import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICA
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID_;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURES_TABLE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_TABLE;
@@ -256,7 +256,7 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
                         @Override
                         public void run() {
                             String businessStatus = clientProcessor.calculateBusinessStatus(event);
-                            String taskID = event.getDetails().get(Properties.TASK_IDENTIFIER);
+                            String taskID = event.getDetails() == null ? null : event.getDetails().get(Properties.TASK_IDENTIFIER);
                             presenterCallBack.onFormSaved(event.getBaseEntityId(), taskID, Task.TaskStatus.COMPLETED, businessStatus, finalInterventionType);
                         }
                     });
@@ -437,9 +437,9 @@ public class BaseInteractor implements BaseContract.BaseInteractor {
 
     protected String getMemberTasksSelect(String mainCondition, String[] memberColumns) {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
-        queryBuilder.selectInitiateMainTable(STRUCTURES_TABLE, memberColumns, ID);
+        queryBuilder.selectInitiateMainTable(STRUCTURES_TABLE, memberColumns, ID_);
         queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
-                FAMILY_MEMBER, FAMILY_MEMBER, STRUCTURE_ID, STRUCTURES_TABLE, ID));
+                FAMILY_MEMBER, FAMILY_MEMBER, STRUCTURE_ID, STRUCTURES_TABLE, ID_));
         queryBuilder.customJoin(String.format(" JOIN %s ON %s.%s = %s.%s ",
                 TASK_TABLE, TASK_TABLE, FOR, FAMILY_MEMBER, BASE_ENTITY_ID));
         return queryBuilder.mainCondition(mainCondition);

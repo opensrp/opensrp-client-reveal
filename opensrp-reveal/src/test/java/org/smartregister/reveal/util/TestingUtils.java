@@ -15,6 +15,7 @@ import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.mockito.Mockito;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.Task.TaskStatus;
 import org.smartregister.domain.form.FormLocation;
@@ -25,6 +26,7 @@ import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Constants.InterventionType;
 import org.smartregister.util.DateTimeTypeConverter;
+import org.smartregister.util.JsonFormUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -334,6 +336,12 @@ public class TestingUtils {
         tasks.add(task);
         return tasks;
 
+    }
+
+
+    public static Event getSprayedEvent() {
+        String sprayedEventJSON = "{\"identifiers\":{},\"baseEntityId\":\"156727\",\"locationId\":\"18e9f800-55c7-4261-907a-d804d6081f93\",\"eventDate\":\"2018-12-19T07:00:00.000+02:00\",\"eventType\":\"Spray\",\"formSubmissionId\":\"f46c3f90-54fc-40bc-bcc9-a7938eea4303\",\"providerId\":\"demoMTI\",\"duration\":0,\"obs\":[{\"fieldType\":\"formsubmissionField\",\"fieldDataType\":\"text\",\"fieldCode\":\"structureType\",\"parentCode\":\"\",\"values\":[\"Residential Structure\"],\"set\":[],\"formSubmissionField\":\"structureType\",\"humanReadableValues\":[]},{\"fieldType\":\"formsubmissionField\",\"fieldDataType\":\"text\",\"fieldCode\":\"sprayStatus\",\"parentCode\":\"\",\"values\":[\"Sprayed\"],\"set\":[],\"formSubmissionField\":\"sprayStatus\",\"humanReadableValues\":[]},{\"fieldType\":\"formsubmissionField\",\"fieldDataType\":\"text\",\"fieldCode\":\"notSprayedReason\",\"parentCode\":\"\",\"values\":[\"No one home/Missed\"],\"set\":[],\"formSubmissionField\":\"notSprayedReason\",\"humanReadableValues\":[]},{\"fieldType\":\"formsubmissionField\",\"fieldDataType\":\"text\",\"fieldCode\":\"familyHeadName\",\"parentCode\":\"\",\"values\":[\"Berg\"],\"set\":[],\"formSubmissionField\":\"familyHeadName\",\"humanReadableValues\":[]},{\"fieldType\":\"formsubmissionField\",\"fieldDataType\":\"text\",\"fieldCode\":\"familyHeadSex\",\"parentCode\":\"\",\"values\":[\"Male\"],\"set\":[],\"formSubmissionField\":\"familyHeadSex\",\"humanReadableValues\":[]},{\"fieldType\":\"formsubmissionField\",\"fieldDataType\":\"text\",\"fieldCode\":\"roomsFound\",\"parentCode\":\"\",\"values\":[\"2\"],\"set\":[],\"formSubmissionField\":\"roomsFound\",\"humanReadableValues\":[]},{\"fieldType\":\"formsubmissionField\",\"fieldDataType\":\"text\",\"fieldCode\":\"sprayedRooms\",\"parentCode\":\"\",\"values\":[\"2\"],\"set\":[],\"formSubmissionField\":\"sprayedRooms\",\"humanReadableValues\":[]},{\"fieldType\":\"formsubmissionField\",\"fieldDataType\":\"text\",\"fieldCode\":\"netsFound\",\"parentCode\":\"\",\"values\":[\"2\"],\"set\":[],\"formSubmissionField\":\"netsFound\",\"humanReadableValues\":[]},{\"fieldType\":\"formsubmissionField\",\"fieldDataType\":\"text\",\"fieldCode\":\"mopUp\",\"parentCode\":\"\",\"values\":[\"No\"],\"set\":[],\"formSubmissionField\":\"mopUp\",\"humanReadableValues\":[]},{\"fieldType\":\"concept\",\"fieldDataType\":\"start\",\"fieldCode\":\"163137AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"parentCode\":\"\",\"values\":[\"2018-12-19 20:19:00\"],\"set\":[],\"formSubmissionField\":\"start\",\"humanReadableValues\":[]},{\"fieldType\":\"concept\",\"fieldDataType\":\"end\",\"fieldCode\":\"163138AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"parentCode\":\"\",\"values\":[\"2018-12-19 20:19:25\"],\"set\":[],\"formSubmissionField\":\"end\",\"humanReadableValues\":[]},{\"fieldType\":\"concept\",\"fieldDataType\":\"deviceid\",\"fieldCode\":\"163149AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"parentCode\":\"\",\"values\":[\"000000000000000\"],\"set\":[],\"formSubmissionField\":\"deviceid\",\"humanReadableValues\":[]},{\"fieldType\":\"concept\",\"fieldDataType\":\"subscriberid\",\"fieldCode\":\"163150AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"parentCode\":\"\",\"values\":[\"310270000000000\"],\"set\":[],\"formSubmissionField\":\"subscriberid\",\"humanReadableValues\":[]},{\"fieldType\":\"concept\",\"fieldDataType\":\"simserial\",\"fieldCode\":\"163151AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"parentCode\":\"\",\"values\":[\"89014103211118510720\"],\"set\":[],\"formSubmissionField\":\"simserial\",\"humanReadableValues\":[]},{\"fieldType\":\"concept\",\"fieldDataType\":\"phonenumber\",\"fieldCode\":\"163152AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\",\"parentCode\":\"\",\"values\":[\"15555218135\"],\"set\":[],\"formSubmissionField\":\"phonenumber\",\"humanReadableValues\":[]}],\"entityType\":\"Structure\",\"details\":{\"taskStatus\":\"READY\",\"taskIdentifier\":\"634fa9fa-736d-4298-96aa-3de68ac02cae\",\"locationVersion\":\"0\",\"taskBusinessStatus\":\"Not Visited\"},\"version\":1545268765121,\"teamId\":\"7e104eee-ec8a-4733-bcf7-c02c51cf43f4\",\"team\":\"Miti\",\"dateCreated\":\"2018-12-20T03:31:37.092+02:00\",\"serverVersion\":1545269497091,\"type\":\"Event\",\"id\":\"4a5e9539-7433-4742-a3ea-6eb6117b4b51\",\"revision\":\"v1\"}";
+        return JsonFormUtils.gson.fromJson(sprayedEventJSON, Event.class);
     }
 
 }

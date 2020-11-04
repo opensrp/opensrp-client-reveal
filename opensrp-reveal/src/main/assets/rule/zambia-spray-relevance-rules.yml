@@ -58,7 +58,7 @@ actions:
 name: step1_sprayed_childrenU5
 description: step1_sprayed_childrenU5
 priority: 1
-condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0))) > 0"
+condition: "step1_structure_sprayed.equals('yes') && step1_eligibility.equals('eligible') && (Integer.valueOf(helper.ifNull(step1_sprayed_males,0)) + Integer.valueOf(helper.ifNull(step1_sprayed_females,0))) > 1"
 actions:
   - "isRelevant = true"
 ---
@@ -239,7 +239,7 @@ actions:
 name: step1_structure_num
 description: step1_structure_num
 priority: 1
-condition: "step1_eligibility.equals('eligible')"
+condition: "step1_eligibility.equals('eligible') && !( step1_provinceName.equals('Western') || step1_provinceName.equals('Southern') || step1_provinceName.equals('Lusaka') )"
 actions:
   - "isRelevant = true"
 ---
@@ -267,6 +267,6 @@ actions:
 name: step1_preferred_source
 description: step1_preferred_source
 priority: 1
-condition: "step1_sbc.equals('Yes') && ( step1_provinceName.equals('Western') || step1_provinceName.equals('Southern') || step1_provinceName.equals('Lusaka') )"
+condition: "step1_sbc.equals('Yes') && step1_about_malaria.equals('Yes') && ( step1_provinceName.equals('Western') || step1_provinceName.equals('Southern') || step1_provinceName.equals('Lusaka') )"
 actions:
   - "isRelevant = true"
