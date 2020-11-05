@@ -11,7 +11,7 @@ configure(allprojects) { project ->
             maven{  url "https://plugins.gradle.org/m2/" }
         }
         dependencies {
-            classpath 'gradle.plugin.org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.10.1'
+            classpath 'gradle.plugin.org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.10.2'
         }
     }
 }
