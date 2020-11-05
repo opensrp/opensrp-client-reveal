@@ -650,6 +650,14 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                     }
                 }
 
+                if (BuildConfig.IRS_LITE_VERIFICATION) {
+                    RevealApplication.getInstance().getAppExecutors().mainThread().execute(() -> {
+                        for (Feature feature : featureCollection.features()) {
+                            createIRSLiteOABoundaryLayer(feature);
+                        }
+                    });
+                }
+
                 if (listTaskPresenter.getInterventionLabel() == R.string.focus_investigation && revealMapHelper.getIndexCaseLineLayer() == null) {
                     revealMapHelper.addIndexCaseLayers(mMapboxMap, getContext(), featureCollection);
                 } else {
@@ -666,6 +674,18 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
                 .setLabelColorInt(Color.WHITE)
                 .setBoundaryColor(Color.WHITE)
                 .setBoundaryWidth(getResources().getDimension(R.dimen.operational_area_boundary_width)).build();
+    }
+
+    private void createIRSLiteOABoundaryLayer(Feature operationalArea) {
+        if (operationalArea != null) {
+
+            BoundaryLayer.Builder boundaryBuilder = new BoundaryLayer.Builder(FeatureCollection.fromFeature(operationalArea))
+                    .setLabelProperty(org.smartregister.reveal.util.Constants.Map.NAME_PROPERTY)
+                    .setLabelTextSize(getResources().getDimension(R.dimen.operational_area_boundary_text_size))
+                    .setLabelColorInt(Color.WHITE)
+                    .setBoundaryWidth(getResources().getDimension(R.dimen.irs_lite_operational_area_boundary_width));
+            kujakuMapView.addLayer(boundaryBuilder.build());
+        }
     }
 
     @Override
