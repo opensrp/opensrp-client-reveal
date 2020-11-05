@@ -67,6 +67,7 @@ import org.smartregister.reveal.presenter.ValidateUserLocationPresenter;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.reveal.util.TestingUtils;
@@ -106,6 +107,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FAMILY_PROFILE;
@@ -271,6 +273,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     @Test
     public void testPositionMyLocationZambia() {
+        setInterventionTypeForPlan(IRS);
         listTasksActivity = spy(listTasksActivity);
         when(listTasksActivity.getBuildCountry()).thenReturn(Country.ZAMBIA);
         Whitebox.setInternalState(listTasksActivity, "myLocationButton", myLocationButton);
@@ -285,6 +288,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     @Test
     public void testPositionLayerSwitcher() {
+        setInterventionTypeForPlan(IRS);
         listTasksActivity = spy(listTasksActivity);
         when(listTasksActivity.getBuildCountry()).thenReturn(Country.ZAMBIA);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -892,4 +896,9 @@ public class ListTasksActivityTest extends BaseUnitTest {
     }
 
 
+    private void setInterventionTypeForPlan(String interventionType) {
+        String plan = UUID.randomUUID().toString();
+        PreferencesUtil.getInstance().setCurrentPlan(plan);
+        PreferencesUtil.getInstance().setInterventionTypeForPlan(plan, interventionType);
+    }
 }
