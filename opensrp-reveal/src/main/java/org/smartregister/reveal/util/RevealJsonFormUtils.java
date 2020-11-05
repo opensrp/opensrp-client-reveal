@@ -63,10 +63,12 @@ import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.JsonForm.JSON_FORM_FOLDER;
 import static org.smartregister.reveal.util.Constants.JsonForm.YES;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
+import static org.smartregister.reveal.util.Constants.MACEPA_PROVINCES;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.Constants.Tags.DISTRICT;
 import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Tags.ZONE;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
@@ -527,7 +529,11 @@ public class RevealJsonFormUtils {
                             dataCollector);
                 }
 
-                populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
+                if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
+                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(DISTRICT));
+                } else {
+                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
+                }
                 break;
 
             case JsonForm.TEAM_LEADER_DOS_ZAMBIA:
@@ -543,7 +549,11 @@ public class RevealJsonFormUtils {
                             dataCollector.split(":")[0]);
                 }
 
-                populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
+                if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
+                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(DISTRICT));
+                } else {
+                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
+                }
 
                 break;
 
