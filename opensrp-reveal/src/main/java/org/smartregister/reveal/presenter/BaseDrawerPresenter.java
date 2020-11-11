@@ -17,6 +17,7 @@ import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.PlanDefinition.PlanStatus;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
@@ -71,6 +72,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
     private boolean viewInitialized = false;
 
     private RevealApplication revealApplication;
+    private AllSharedPreferences sharedPreferences;
 
     public BaseDrawerPresenter(BaseDrawerContract.View view, BaseDrawerContract.DrawerActivity drawerActivity) {
         this.view = view;
@@ -79,6 +81,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
         this.locationHelper = LocationHelper.getInstance();
         interactor = new BaseDrawerInteractor(this);
         revealApplication = RevealApplication.getInstance();
+        sharedPreferences = revealApplication.getContext().allSharedPreferences();
     }
 
 
@@ -234,6 +237,9 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             prefsUtil.setCurrentDistrict(name.get(name.size() - districtOffset));
             String operationalArea = name.get(name.size() - 1);
             prefsUtil.setCurrentOperationalArea(operationalArea);
+            if (BuildConfig.IRS_LITE_VERIFICATION) {
+                sharedPreferences.saveDefaultLocalityId(sharedPreferences.fetchRegisteredANM(), prefsUtil.getCurrentOperationalAreaId());
+            }
             Pair<String, String> facility = getFacilityFromOperationalArea(name.get(name.size() - districtOffset), name.get(name.size() - 1), entireTree);
             if (facility != null) {
                 prefsUtil.setCurrentFacility(facility.second);

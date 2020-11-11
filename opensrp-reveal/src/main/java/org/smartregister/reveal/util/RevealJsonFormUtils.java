@@ -530,7 +530,7 @@ public class RevealJsonFormUtils {
                 }
 
                 if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
-                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(DISTRICT));
+                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA));
                 } else {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
                 }
@@ -550,7 +550,7 @@ public class RevealJsonFormUtils {
                 }
 
                 if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
-                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(DISTRICT));
+                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA));
                 } else {
                     populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
                 }
