@@ -13,6 +13,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.lang3.StringUtils;
+import org.smartregister.domain.Action;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.PlanDefinition.PlanStatus;
 import org.smartregister.domain.form.FormLocation;
@@ -139,6 +140,13 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
                     break;
                 }
             }
+
+            //get actions for plan
+            List<String> actionCodes = new ArrayList<>();
+            for (Action action: planDefinition.getActions()) {
+                actionCodes.add(action.getCode());
+            }
+            prefsUtil.setActionCodesForPlan(planDefinition.getIdentifier(), actionCodes);
 
         }
 
