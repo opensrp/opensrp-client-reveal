@@ -14,6 +14,9 @@ import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.util.Cache;
 
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -140,6 +143,24 @@ public class PreferencesUtilTest extends BaseUnitTest {
         preferencesUtil.setCurrentOperationalArea(null);
         verify(allSharedPreferences).savePreference(CURRENT_OPERATIONAL_AREA, null);
         verify(allSharedPreferences).savePreference(CURRENT_OPERATIONAL_AREA_ID, null);
+    }
+
+    @Test
+    public void testSetActionCodesForPlan() {
+        String planId = "plan-id1";
+        preferencesUtil.setActionCodesForPlan(planId, Collections.singletonList(Constants.Intervention.BLOOD_SCREENING));
+        verify(allSharedPreferences).savePreference("plan-id1~actions", "[\"Blood Screening\"]");
+    }
+
+    @Test
+    public void testGetActionCodesForPlan() {
+        String planId = "plan-id1";
+        String actionCodeJsonString = "[\"Blood Screening\"]";
+        when(allSharedPreferences.getPreference("plan-id1~actions")).thenReturn(actionCodeJsonString);
+        List<String> actualActionCodes =  preferencesUtil.getActionCodesForPlan(planId);
+        verify(allSharedPreferences).getPreference("plan-id1~actions");
+        assertEquals(1, actualActionCodes.size());
+        assertEquals(Constants.Intervention.BLOOD_SCREENING, actualActionCodes.get(0));
     }
 
 }
