@@ -144,7 +144,7 @@ public class BaseDrawerPresenter implements BaseDrawerContract.Presenter {
             //get actions for plan
             List<String> actionCodes = new ArrayList<>();
             for (Action action: planDefinition.getActions()) {
-                actionCodes.contains(action.getCode());
+                actionCodes.add(action.getCode());
             }
             prefsUtil.setActionCodesForPlan(planDefinition.getIdentifier(), actionCodes);
 
