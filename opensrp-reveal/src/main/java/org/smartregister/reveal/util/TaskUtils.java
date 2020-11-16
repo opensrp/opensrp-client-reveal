@@ -184,7 +184,8 @@ public class TaskUtils {
     }
 
     public boolean planActionCodesContainIntervention(String planId, String intervention) {
-        return prefsUtil.getActionCodesForPlan(prefsUtil.getCurrentPlanId()).contains(intervention);
+        List<String> actionCodes = prefsUtil.getActionCodesForPlan(planId);
+        return actionCodes.contains(intervention);
     }
 
 }
