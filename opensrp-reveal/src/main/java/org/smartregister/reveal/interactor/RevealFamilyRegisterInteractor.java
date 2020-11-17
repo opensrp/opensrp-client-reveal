@@ -49,11 +49,6 @@ public class RevealFamilyRegisterInteractor extends org.smartregister.family.int
     }
 
     @Override
-    public void generateTasks(List<FamilyEventClient> eventClientList, String structureId, Context context) {
-        //TODO remove Not used
-    }
-
-    @Override
     protected void processClient(List<EventClient> eventClientList) {
         IntentFilter filter = new IntentFilter(TASK_GENERATED_EVENT);
         TaskGenerationReceiver taskGenerationReceiver = new TaskGenerationReceiver(task -> {

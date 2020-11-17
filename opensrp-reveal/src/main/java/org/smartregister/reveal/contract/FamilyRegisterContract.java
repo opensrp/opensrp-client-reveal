@@ -19,8 +19,6 @@ public interface FamilyRegisterContract extends org.smartregister.family.contrac
 
 
     interface Interactor extends org.smartregister.family.contract.FamilyRegisterContract.Interactor {
-
-        void generateTasks(List<FamilyEventClient> eventClientList, String structureId, Context context);
     }
 
 

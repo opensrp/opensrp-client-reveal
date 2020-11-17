@@ -71,24 +71,6 @@ public class RevealFamilyRegisterInteractorTest extends BaseUnitTest {
     }
 
     @Test
-    public void testGenerateTasks() {
-        List<FamilyEventClient> eventClientList = new ArrayList<>();
-        String baseEntityId = UUID.randomUUID().toString();
-        Client client = new Client();
-        client.withLastName("Otala").withBaseEntityId(baseEntityId);
-        eventClientList.add(new FamilyEventClient(client, new Event().withBaseEntityId(baseEntityId)));
-
-        String familyId = UUID.randomUUID().toString();
-        Client family = new Client();
-        family.withLastName("Family").withBaseEntityId(familyId);
-        eventClientList.add(new FamilyEventClient(family, new Event().withBaseEntityId(familyId)));
-
-        String structureId = UUID.randomUUID().toString();
-        interactor.generateTasks(eventClientList, structureId, context);
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksGenerated(eventClientList);
-    }
-
-    @Test
     public void testProcessClient() {
         List<EventClient> eventClientList = Collections.singletonList(new EventClient(new org.smartregister.domain.Event()));
         interactor.processClient(eventClientList);
