@@ -41,7 +41,6 @@ import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
-import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.reveal.util.Utils;
@@ -72,7 +71,10 @@ import static org.smartregister.reveal.util.Constants.Properties.APP_VERSION_NAM
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.PLAN_IDENTIFIER;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
+import static org.smartregister.reveal.util.Constants.Properties.TASK_STATUS;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.util.JsonFormUtils.VALUE;
 import static org.smartregister.util.JsonFormUtils.VALUES;
@@ -333,10 +335,10 @@ public class BaseInteractorTest extends BaseUnitTest {
         taskGeneratedIntent.putExtra("task_generated", task);
         LocalBroadcastManager.getInstance(context).sendBroadcast(taskGeneratedIntent);
         verify(presenter, timeout(ASYNC_TIMEOUT)).onStructureAdded(featureArgumentCaptor.capture(), featureCoordinatesCaptor.capture(), doubleArgumentCaptor.capture());
-        assertEquals(task.getIdentifier(), featureArgumentCaptor.getValue().getStringProperty((Properties.TASK_IDENTIFIER)));
-        assertEquals(task.getBusinessStatus(), featureArgumentCaptor.getValue().getStringProperty((Properties.TASK_BUSINESS_STATUS)));
-        assertEquals(task.getStatus().name(), featureArgumentCaptor.getValue().getStringProperty((Properties.TASK_STATUS)));
-        assertEquals(task.getCode(), featureArgumentCaptor.getValue().getStringProperty((Properties.TASK_CODE)));
+        assertEquals(task.getIdentifier(), featureArgumentCaptor.getValue().getStringProperty((TASK_IDENTIFIER)));
+        assertEquals(task.getBusinessStatus(), featureArgumentCaptor.getValue().getStringProperty((TASK_BUSINESS_STATUS)));
+        assertEquals(task.getStatus().name(), featureArgumentCaptor.getValue().getStringProperty((TASK_STATUS)));
+        assertEquals(task.getCode(), featureArgumentCaptor.getValue().getStringProperty((TASK_CODE)));
         assertEquals(new JSONArray(new double[]{28.35228319086664, -15.421616685545176, 0}), featureCoordinatesCaptor.getValue());
         assertEquals(zoomLevel, doubleArgumentCaptor.getValue(), 0);
 
