@@ -1,14 +1,17 @@
 package org.smartregister.reveal.shadow;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.util.AttributeSet;
 
 import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
 
 import io.ona.kujaku.helpers.MapboxLocationComponentWrapper;
+import io.ona.kujaku.layers.KujakuLayer;
 import io.ona.kujaku.views.KujakuMapView;
 
 /**
@@ -38,7 +41,18 @@ public class KujakuMapViewShadow extends MapViewShadow {
     }
 
     @Implementation
-    public void onResume(){//Do nothing
+    public void onResume() {
+        //Do nothing
+    }
+
+    @Implementation
+    public void enableAddPoint(boolean canAddPoint) {
+        //Do nothing
+    }
+
+    @Implementation
+    public void addLayer(@NonNull KujakuLayer kujakuLayer) {
+        //Do nothing
     }
 
 

@@ -18,8 +18,10 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Obs;
+import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.model.BaseTaskDetails;
 import org.smartregister.reveal.model.MosquitoHarvestCardDetails;
 import org.smartregister.reveal.model.TaskDetails;
@@ -33,6 +35,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -57,11 +60,16 @@ import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATIO
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.JsonForm.JSON_FORM_FOLDER;
+import static org.smartregister.reveal.util.Constants.JsonForm.YES;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
+import static org.smartregister.reveal.util.Constants.MACEPA_PROVINCES;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
 import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_GET_JSON;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
+import static org.smartregister.reveal.util.Constants.Tags.HEALTH_CENTER;
+import static org.smartregister.reveal.util.Constants.Tags.OPERATIONAL_AREA;
+import static org.smartregister.reveal.util.Constants.Tags.ZONE;
 import static org.smartregister.reveal.util.Utils.getPropertyValue;
 
 
@@ -71,10 +79,11 @@ import static org.smartregister.reveal.util.Utils.getPropertyValue;
 public class RevealJsonFormUtils {
 
     private Set<String> nonEditablefields;
+    private LocationHelper locationHelper = LocationHelper.getInstance();
 
     public RevealJsonFormUtils() {
         nonEditablefields = new HashSet<>(Arrays.asList(JsonForm.HOUSEHOLD_ACCESSIBLE,
-                JsonForm.ABLE_TO_SPRAY_FIRST, JsonForm.MOP_UP_VISIT));
+                JsonForm.ABLE_TO_SPRAY_FIRST));
     }
 
     public JSONObject getFormJSON(Context context, String formName, Feature feature, String sprayStatus, String familyHead) {
@@ -248,6 +257,8 @@ public class RevealJsonFormUtils {
                 || Intervention.MOSQUITO_COLLECTION.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_MOSQUITO_COLLECTION_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
+                formName = JsonForm.THAILAND_EN_MOSQUITO_COLLECTION_FORM;
             } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.REFAPP_MOSQUITO_COLLECTION_FORM;
             } else {
@@ -257,6 +268,8 @@ public class RevealJsonFormUtils {
                 || Intervention.BEDNET_DISTRIBUTION.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_BEDNET_DISTRIBUTION_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
+                formName = JsonForm.THAILAND_EN_BEDNET_DISTRIBUTION_FORM;
             } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.REFAPP_BEDNET_DISTRIBUTION_FORM;
             } else {
@@ -275,6 +288,8 @@ public class RevealJsonFormUtils {
                 || Intervention.BLOOD_SCREENING.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_BLOOD_SCREENING_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
+                formName = JsonForm.THAILAND_EN_BLOOD_SCREENING_FORM;
             } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.REFAPP_BLOOD_SCREENING_FORM;
             } else {
@@ -283,6 +298,8 @@ public class RevealJsonFormUtils {
         } else if (LARVAL_DIPPING_EVENT.equals(encounterType) || Intervention.LARVAL_DIPPING.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_LARVAL_DIPPING_FORM;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
+                formName = JsonForm.THAILAND_EN_LARVAL_DIPPING_FORM;
             } else if (BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
                 formName = JsonForm.REFAPP_LARVAL_DIPPING_FORM;
             } else {
@@ -324,6 +341,18 @@ public class RevealJsonFormUtils {
             }
         } else if (IRS_VERIFICATION.equals(encounterType) || Intervention.IRS_VERIFICATION.equals(taskCode)) {
             formName = JsonForm.ZAMBIA_IRS_VERIFICATION_FORM;
+        } else if (Constants.EventType.DAILY_SUMMARY_EVENT.equals(encounterType)) {
+            formName = JsonForm.DAILY_SUMMARY_ZAMBIA;
+        } else if (Constants.EventType.IRS_FIELD_OFFICER_EVENT.equals(encounterType)) {
+            formName = JsonForm.IRS_FIELD_OFFICER_ZAMBIA;
+        } else if (Constants.EventType.IRS_SA_DECISION_EVENT.equals(encounterType)) {
+            formName = JsonForm.IRS_SA_DECISION_ZAMBIA;
+        } else if (Constants.EventType.MOBILIZATION_EVENT.equals(encounterType)) {
+            formName = JsonForm.MOBILIZATION_FORM_ZAMBIA;
+        } else if (Constants.EventType.TEAM_LEADER_DOS_EVENT.equals(encounterType)) {
+            formName = JsonForm.TEAM_LEADER_DOS_ZAMBIA;
+        } else if (Constants.EventType.VERIFICATION_EVENT.equals(encounterType)) {
+            formName = JsonForm.VERIFICATION_FORM_ZAMBIA;
         }
         return formName;
     }
@@ -345,7 +374,7 @@ public class RevealJsonFormUtils {
     }
 
     public void populateField(JSONObject formJson, String key, String value, String fieldToPopulate) throws JSONException {
-        JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJson), key);
+        JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.getMultiStepFormFields(formJson), key);
         if (field != null) {
             field.put(fieldToPopulate, value);
         }
@@ -361,7 +390,8 @@ public class RevealJsonFormUtils {
                 String key = field.getString(KEY);
                 if (commonPersonObject.getDetails().containsKey(key)) {
                     String value = commonPersonObject.getDetails().get(key);
-                    field.put(VALUE, value);
+                    if (StringUtils.isNotBlank(value))
+                        field.put(VALUE, value);
                     if (nonEditablefields.contains(key) && "Yes".equalsIgnoreCase(value)) {
                         field.put(JsonFormConstants.READ_ONLY, true);
                         field.remove(JsonFormConstants.RELEVANCE);
@@ -398,6 +428,11 @@ public class RevealJsonFormUtils {
                         field.put(VALUE, keys);
                     } else
                         field.put(VALUE, obs.getValue());
+                    if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA && nonEditablefields.contains(key)
+                            && YES.equalsIgnoreCase(obs.getValue().toString())) {
+                        field.put(JsonFormConstants.READ_ONLY, true);
+                        field.remove(JsonFormConstants.RELEVANCE);
+                    }
                 }
             } catch (JSONException e) {
                 Timber.e(e);
@@ -405,15 +440,11 @@ public class RevealJsonFormUtils {
         }
     }
 
-    public Pair<JSONArray, JSONArray> populateServerOptions(Map<String, Object> serverConfigs, JSONObject formJson, String settingsConfigKey, String formKey, String filterKey) {
-        if (serverConfigs == null)
+    public Pair<JSONArray, JSONArray> populateServerOptions(Map<String, Object> serverConfigs, String settingsConfigKey, JSONObject field, String filterKey) {
+        if (serverConfigs == null || field == null)
             return null;
         JSONArray serverConfig = (JSONArray) serverConfigs.get(settingsConfigKey);
         if (serverConfig != null && !serverConfig.isNull(0)) {
-            JSONArray fields = JsonFormUtils.fields(formJson);
-            JSONObject field = JsonFormUtils.getFieldJSONObject(fields, formKey);
-            if (field == null)
-                return null;
             JSONArray options = serverConfig.optJSONObject(0).optJSONArray(filterKey);
             if (options == null)
                 return null;
@@ -437,7 +468,7 @@ public class RevealJsonFormUtils {
                 field.put(KEYS, codes);
                 field.put(VALUES, values);
             } catch (JSONException e) {
-                Timber.e(e, "Error populating %s Operators ", formKey);
+                Timber.e(e, "Error populating %s Operators ", filterKey);
             }
             return new Pair<>(codes, values);
         }
@@ -448,5 +479,116 @@ public class RevealJsonFormUtils {
         org.smartregister.clientandeventmodel.Event taskEvent = (org.smartregister.clientandeventmodel.Event) new org.smartregister.clientandeventmodel.Event().withBaseEntityId(baseEntityId).withEventDate(new Date()).withEventType(eventType)
                 .withLocationId(locationId).withEntityType(entityType).withFormSubmissionId(UUID.randomUUID().toString()).withDateCreated(new Date());
         return taskEvent;
+    }
+
+    public Map<String, JSONObject> getFields(JSONObject formJSON) {
+        JSONArray fields = JsonFormUtils.fields(formJSON);
+        Map<String, JSONObject> fieldsMap = new HashMap<>();
+        for (int i = 0; i < fields.length(); i++) {
+            JSONObject field = fields.optJSONObject(i);
+            fieldsMap.put(field.optString(JsonFormUtils.KEY), field);
+        }
+        return fieldsMap;
+    }
+
+    public void populateFormWithServerOptions(String formName, JSONObject formJSON) {
+
+        Map<String, JSONObject> fieldsMap = getFields(formJSON);
+        switch (formName) {
+
+            case JsonForm.IRS_SA_DECISION_ZAMBIA:
+            case JsonForm.CB_SPRAY_AREA_ZAMBIA:
+            case JsonForm.MOBILIZATION_FORM_ZAMBIA:
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        Constants.CONFIGURATION.SUPERVISORS, fieldsMap.get(JsonForm.SUPERVISOR),
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+                break;
+
+            case JsonForm.IRS_FIELD_OFFICER_ZAMBIA:
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        Constants.CONFIGURATION.FIELD_OFFICERS, fieldsMap.get(JsonForm.FIELD_OFFICER),
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        CONFIGURATION.HEALTH_FACILITIES, fieldsMap.get(JsonForm.HEALTH_FACILITY),
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+                break;
+
+            case JsonForm.DAILY_SUMMARY_ZAMBIA:
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        Constants.CONFIGURATION.TEAM_LEADERS, fieldsMap.get(JsonForm.TEAM_LEADER),
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+                String dataCollector = RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM();
+                if (StringUtils.isNotBlank(dataCollector)) {
+                    populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                            CONFIGURATION.SPRAY_OPERATORS, fieldsMap.get(JsonForm.SPRAY_OPERATOR_CODE),
+                            dataCollector);
+                }
+
+                if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
+                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(HEALTH_CENTER));
+                } else {
+                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
+                }
+                break;
+
+            case JsonForm.TEAM_LEADER_DOS_ZAMBIA:
+
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        Constants.CONFIGURATION.DATA_COLLECTORS, fieldsMap.get(JsonForm.DATA_COLLECTOR),
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+
+                dataCollector = JsonFormUtils.getString(fieldsMap.get(JsonForm.DATA_COLLECTOR), VALUE);
+                if (StringUtils.isNotBlank(dataCollector)) {
+                    populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                            CONFIGURATION.SPRAY_OPERATORS, fieldsMap.get(JsonForm.SPRAY_OPERATOR_CODE),
+                            dataCollector.split(":")[0]);
+                }
+
+                if (MACEPA_PROVINCES.contains(PreferencesUtil.getInstance().getCurrentProvince())) {
+                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(HEALTH_CENTER));
+                } else {
+                    populateUserAssignedLocations(formJSON, JsonForm.ZONE, Arrays.asList(OPERATIONAL_AREA, ZONE));
+                }
+
+                break;
+
+            case JsonForm.VERIFICATION_FORM_ZAMBIA:
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        Constants.CONFIGURATION.FIELD_OFFICERS, fieldsMap.get(JsonForm.FIELD_OFFICER),
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+
+            case JsonForm.SPRAY_FORM_ZAMBIA:
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        Constants.CONFIGURATION.DATA_COLLECTORS, fieldsMap.get(JsonForm.DATA_COLLECTOR),
+                        PreferencesUtil.getInstance().getCurrentDistrict());
+
+                dataCollector = RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM();
+                if (StringUtils.isNotBlank(dataCollector)) {
+                    populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                            CONFIGURATION.SPRAY_OPERATORS, fieldsMap.get(JsonForm.SPRAY_OPERATOR_CODE),
+                            dataCollector);
+                }
+                populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DISTRICTS, fieldsMap.get(JsonForm.DISTRICT), PreferencesUtil.getInstance().getCurrentProvince());
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void populateUserAssignedLocations(JSONObject formJSON, String fieldKey, List<String> allowedTags) {
+        JSONArray options = new JSONArray();
+        List<String> defaultLocationHierarchy = locationHelper.generateDefaultLocationHierarchy(allowedTags);
+        if (defaultLocationHierarchy == null) {
+            return;
+        }
+        defaultLocationHierarchy.stream().forEach(options::put);
+        JSONObject field = JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formJSON), fieldKey);
+
+        try {
+            field.put(KEYS, options);
+            field.put(VALUES, options);
+        } catch (JSONException e) {
+            Timber.e(e);
+        }
     }
 }

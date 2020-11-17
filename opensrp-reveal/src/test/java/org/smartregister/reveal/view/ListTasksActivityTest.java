@@ -5,8 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AlertDialog;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +13,9 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
@@ -49,6 +50,7 @@ import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.SyncEntity;
 import org.smartregister.domain.SyncProgress;
 import org.smartregister.domain.Task;
+import org.smartregister.dto.UserAssignmentDTO;
 import org.smartregister.family.util.Constants.INTENT_KEY;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
@@ -64,6 +66,7 @@ import org.smartregister.reveal.presenter.ValidateUserLocationPresenter;
 import org.smartregister.reveal.util.CardDetailsUtil;
 import org.smartregister.reveal.util.Constants.Intervention;
 import org.smartregister.reveal.util.Country;
+import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.util.RevealMapHelper;
 import org.smartregister.reveal.util.TestingUtils;
@@ -103,6 +106,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.STRUCTURE_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.TASK_ID;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
+import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.JSON_FORM_PARAM_JSON;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FAMILY_PROFILE;
@@ -256,7 +260,9 @@ public class ListTasksActivityTest extends BaseUnitTest {
     }
 
     @Test
-    public void testPositionMyLocation() {
+    public void testPositionMyLocationThailand() {
+        listTasksActivity = spy(listTasksActivity);
+        when(listTasksActivity.getBuildCountry()).thenReturn(Country.THAILAND);
         listTasksActivity.positionMyLocationAndLayerSwitcher();
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
         assertEquals(0, layoutParams.topMargin);
@@ -266,6 +272,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     @Test
     public void testPositionMyLocationZambia() {
+        setInterventionTypeForPlan(IRS);
         listTasksActivity = spy(listTasksActivity);
         when(listTasksActivity.getBuildCountry()).thenReturn(Country.ZAMBIA);
         Whitebox.setInternalState(listTasksActivity, "myLocationButton", myLocationButton);
@@ -280,6 +287,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
     @Test
     public void testPositionLayerSwitcher() {
+        setInterventionTypeForPlan(IRS);
         listTasksActivity = spy(listTasksActivity);
         when(listTasksActivity.getBuildCountry()).thenReturn(Country.ZAMBIA);
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -606,7 +614,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testOnActivityResultFilterFeatures() {
         Whitebox.setInternalState(listTasksActivity, "listTaskPresenter", listTaskPresenter);
-        TaskFilterParams params = new TaskFilterParams("Doe");
+        TaskFilterParams params = TaskFilterParams.builder().searchPhrase("Doe").build();
         Intent intent = new Intent();
         intent.putExtra(FILTER_SORT_PARAMS, params);
         listTasksActivity.onActivityResult(REQUEST_CODE_FILTER_TASKS, Activity.RESULT_OK, intent);
@@ -617,7 +625,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testOnActivityResultInializeFilterParams() {
         Whitebox.setInternalState(listTasksActivity, "listTaskPresenter", listTaskPresenter);
-        TaskFilterParams params = new TaskFilterParams("Doe");
+        TaskFilterParams params = TaskFilterParams.builder().searchPhrase("Doe").build();
         Intent intent = new Intent();
         intent.putExtra(FILTER_SORT_PARAMS, params);
         listTasksActivity.onActivityResult(REQUEST_CODE_TASK_LISTS, Activity.RESULT_OK, intent);
@@ -861,11 +869,11 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testOnSyncProgress() {
         ProgressBar progress = new ProgressBar(context);
-        TextView  progressLabel = new TextView(context);
+        TextView progressLabel = new TextView(context);
         SyncProgress mockSyncProgress = mock(SyncProgress.class);
         SyncEntity mockSyncEntity = mock(SyncEntity.class);
         ListTasksActivity spyListTasksActivity = spy(listTasksActivity);
-        doReturn(50 ).when(mockSyncProgress).getPercentageSynced();
+        doReturn(50).when(mockSyncProgress).getPercentageSynced();
         doReturn(mockSyncEntity).when(mockSyncProgress).getSyncEntity();
         doReturn("Tasks").when(mockSyncEntity).toString();
         doReturn(progress).when(spyListTasksActivity).findViewById(eq(R.id.sync_progress_bar));
@@ -876,5 +884,18 @@ public class ListTasksActivityTest extends BaseUnitTest {
         assertEquals(progressLabel.getText(), String.format(context.getString(R.string.progressBarLabel), "Tasks", 50));
     }
 
+    @Test
+    public void testOnUserAssignmentRevokedShouldResumeDrawer() {
+        Whitebox.setInternalState(listTasksActivity,"drawerView",drawerView);
+        doNothing().when(drawerView).onResume();
+        listTasksActivity.onUserAssignmentRevoked(mock(UserAssignmentDTO.class));
+        verify(drawerView).onResume();
+    }
 
+
+    private void setInterventionTypeForPlan(String interventionType) {
+        String plan = UUID.randomUUID().toString();
+        PreferencesUtil.getInstance().setCurrentPlan(plan);
+        PreferencesUtil.getInstance().setInterventionTypeForPlan(plan, interventionType);
+    }
 }

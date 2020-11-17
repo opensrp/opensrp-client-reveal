@@ -1,6 +1,7 @@
 package org.smartregister.reveal.interactor;
 
 import android.location.Location;
+
 import androidx.core.util.Pair;
 
 import net.sqlcipher.Cursor;
@@ -21,11 +22,13 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.domain.Task;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.BusinessStatus;
 import org.smartregister.reveal.util.Constants.Intervention;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.InteractorUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestingUtils;
@@ -35,6 +38,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -52,7 +56,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.COMPLETED_TAS
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FAMILY_NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPED_STRUCTURE_TASK_CODE_AND_STATUS;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID_;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LATITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.LONGITUDE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
@@ -117,9 +121,9 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         Whitebox.setInternalState(interactor, "interactorUtils", interactorUtils);
         groupId = UUID.randomUUID().toString();
         planId = UUID.randomUUID().toString();
-        mainSelectQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name , ec_family.house_number FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? AND status NOT IN (?,?) ";
-        nonRegisteredStructureTasksQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name , ec_family.house_number FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? AND status NOT IN (?,?)   AND ec_family.structure_id IS NULL  AND task.code != 'Bednet Distribution'";
-        groupedRegisteredStructureTasksSelectQuery = " SELECT grouped_tasks.* , SUM(CASE WHEN status='COMPLETED' THEN 1 ELSE 0 END ) AS completed_task_count , COUNT(_id ) AS task_count, GROUP_CONCAT(code || \"-\" || business_status ) AS grouped_structure_task_code_and_status , GROUP_CONCAT(family_member_names) as family_member_names  FROM ( Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name , ec_family.house_number , ec_family_member.first_name||' '||ec_family_member.last_name as family_member_names  FROM task  JOIN structure ON task.structure_id = structure._id   JOIN ec_family ON structure._id = ec_family.structure_id  COLLATE NOCASE  JOIN ec_family_member ON ec_family.base_entity_id = ec_family_member.relational_id  COLLATE NOCASE  LEFT JOIN sprayed_structures ON task.for = sprayed_structures.base_entity_id  WHERE task.group_id = ? AND task.plan_id = ? AND status NOT IN (?,?)  ) AS grouped_tasks GROUP BY structure_id ";
+        mainSelectQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name , ec_family.house_number FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? AND status NOT IN (?,?) ";
+        nonRegisteredStructureTasksQuery = "Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name , ec_family.house_number FROM task  JOIN structure ON task.for = structure._id   LEFT JOIN sprayed_structures ON task.for = sprayed_structures.id   LEFT JOIN ec_family ON structure._id = ec_family.structure_id  WHERE task.group_id = ? AND task.plan_id = ? AND status NOT IN (?,?)   AND ec_family.structure_id IS NULL  AND task.code != 'Bednet Distribution'";
+        groupedRegisteredStructureTasksSelectQuery = " SELECT grouped_tasks.* , SUM(CASE WHEN status='COMPLETED' THEN 1 ELSE 0 END ) AS completed_task_count , COUNT(_id ) AS task_count, GROUP_CONCAT(code || \"-\" || business_status ) AS grouped_structure_task_code_and_status , GROUP_CONCAT(family_member_names) as family_member_names  FROM ( Select task._id as _id , task._id , task.code , task.for , task.business_status , task.status , task.reason_reference , structure.latitude , structure.longitude , structure.name , sprayed_structures.structure_name , sprayed_structures.family_head_name , sprayed_structures.spray_status , sprayed_structures.not_sprayed_reason , sprayed_structures.not_sprayed_other_reason , structure._id AS structure_id , ec_family.first_name , ec_family.house_number , ec_family_member.first_name||' '||ec_family_member.last_name as family_member_names  FROM task  JOIN structure ON task.structure_id = structure._id   JOIN ec_family ON structure._id = ec_family.structure_id AND ec_family.date_removed IS NULL COLLATE NOCASE  JOIN ec_family_member ON ec_family.base_entity_id = ec_family_member.relational_id AND ec_family_member.date_removed IS NULL  COLLATE NOCASE  LEFT JOIN sprayed_structures ON task.for = sprayed_structures.id  WHERE task.group_id = ? AND task.plan_id = ? AND status NOT IN (?,?)  ) AS grouped_tasks GROUP BY structure_id ";
         bccSelectQuery = "SELECT * FROM task WHERE for = ? AND plan_id = ? AND code ='BCC' AND status NOT IN (?,?)";
         indexSelectQuery = "SELECT * FROM task WHERE group_id = ? AND plan_id = ? AND status NOT IN (?,?) AND code = ? ";
     }
@@ -366,6 +370,15 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
         assertEquals(taskDetails.getBusinessStatus(), taskDetailArgumentCaptor.getValue().getBusinessStatus());
     }
 
+    @Test
+    public void testGroupedRegisteredStructureTasksSelectCheckDoesNotcheckPlanForOtherBuilds() throws Exception {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        String actualMainSelect = Whitebox.invokeMethod(interactor, "mainSelect", "");
+        assertFalse(actualMainSelect.contains("AND sprayed_structures.plan_id = ''"));
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
     private Cursor createCursor(String taskId, String intervention) {
         MatrixCursor cursor = createEmptyCursor();
         cursor.addRow(new Object[]{
@@ -395,7 +408,7 @@ public class TaskRegisterFragmentInteractorTest extends BaseUnitTest {
 
     private MatrixCursor createEmptyCursor() {
         return new MatrixCursor(new String[]{
-                ID,
+                ID_,
                 CODE,
                 FOR,
                 BUSINESS_STATUS,

@@ -51,6 +51,10 @@ public interface Constants {
 
     String COMMA = ",";
 
+    String TILDE = "~";
+
+    String UNDERSCRORE = "_";
+
     int STORAGE_PERMISSIONS = 1;
 
     String NULL_KEY = "NULL";
@@ -62,10 +66,15 @@ public interface Constants {
 
     String DG_ID_PLACEHOLDER = "DIGITAL_GLOBE_ID";
 
+    List<String> MACEPA_PROVINCES = Arrays.asList("Western", "Southern", "Lusaka");
+
+    String ACTIONS = "actions";
+
     interface CONFIGURATION {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";
         String TEAM_CONFIGS = "team_configs";
+        String JURISDICTION_METADATA = "jurisdiction_metadata-target";
         String KEY = "key";
         String VALUE = "value";
         String VALUES = "values";
@@ -105,6 +114,7 @@ public interface Constants {
         String MDA_ADHERENCE_OFFICERS = "mda_adherence_officers";
         String MDA_CATCHMENT_AREAS = "mda_catchment_areas";
         String DISPLAY_DISTANCE_SCALE = "display_distance_scale";
+        String DISTRICTS = "districts";
 
     }
 
@@ -129,6 +139,7 @@ public interface Constants {
         String CANTON = "Canton";
         String VILLAGE = "Village";
         String OPERATIONAL_AREA = "Operational Area";
+        String ZONE = "Zones";
     }
 
     interface Properties {
@@ -149,6 +160,8 @@ public interface Constants {
         String TASK_CODE_LIST = "task_code_list";
         String FAMILY_MEMBER_NAMES = "family_member_names";
         String PLAN_IDENTIFIER = "planIdentifier";
+        String LOCATION_STATUS = "status";
+        String LOCATION_NAME = "name";
     }
 
 
@@ -161,6 +174,8 @@ public interface Constants {
 
     interface Intervention {
         String IRS = "IRS";
+
+        String DYNAMIC_IRS = "Dynamic-IRS";
 
         String MOSQUITO_COLLECTION = "Mosquito Collection";
 
@@ -178,6 +193,8 @@ public interface Constants {
 
         String FI = "FI";
 
+        String DYNAMIC_FI = "Dynamic-FI";
+
         String PAOT = "PAOT";
 
         String MDA_DISPENSE = "MDA Dispense";
@@ -185,6 +202,8 @@ public interface Constants {
         String MDA_ADHERENCE = "MDA Adherence";
 
         String MDA = "MDA";
+
+        String DYNAMIC_MDA = "Dynamic-MDA";
 
         String IRS_VERIFICATION = "IRS Verification";
 
@@ -209,7 +228,7 @@ public interface Constants {
 
         String CASE_CONFIRMATION_EVENT = "case_confirmation";
 
-        String CASE_DETAILS_EVENT = "Case Details";
+        String CASE_DETAILS_EVENT = "Case_Details";
 
         String PAOT_EVENT = "PAOT";
 
@@ -218,6 +237,23 @@ public interface Constants {
         String MDA_ADHERENCE = "mda_adherence";
 
         String IRS_VERIFICATION = "irs_verification";
+
+        String DAILY_SUMMARY_EVENT = "daily_summary";
+
+        String IRS_FIELD_OFFICER_EVENT = "irs_field_officer";
+
+        String IRS_SA_DECISION_EVENT = "irs_sa_decision";
+
+        String MOBILIZATION_EVENT = "mobilization";
+
+        String TEAM_LEADER_DOS_EVENT = "team_leader_dos";
+
+        String VERIFICATION_EVENT = "verification";
+
+        String CB_SPRAY_AREA_EVENT = "cb_spray_area";
+
+        List<String> SUMMARY_EVENT_TYPES = Arrays.asList(DAILY_SUMMARY_EVENT, IRS_FIELD_OFFICER_EVENT,
+                IRS_SA_DECISION_EVENT, MOBILIZATION_EVENT, TEAM_LEADER_DOS_EVENT, VERIFICATION_EVENT);
     }
 
     interface Tables {
@@ -229,6 +265,8 @@ public interface Constants {
         String EVENT_TABLE = "event";
         String TASK_TABLE = "task";
         String STRUCTURE_TABLE = "structure";
+        String EC_EVENTS_TABLE = "ec_events";
+        String EC_EVENTS_SEARCH_TABLE = "ec_events_search";
     }
 
     interface BusinessStatus {
@@ -295,6 +333,8 @@ public interface Constants {
 
         String STRUCTURE_TYPE = "structureType";
 
+        String STRUCTURE = "structure";
+
         String HEAD_OF_HOUSEHOLD = "familyHeadName";
 
         String STRUCTURE_PROPERTIES_TYPE = "[structure_type]";
@@ -331,7 +371,11 @@ public interface Constants {
 
         String THAILAND_LARVAL_DIPPING_FORM = "json.form/thailand_larval_dipping_form.json";
 
+        String THAILAND_EN_LARVAL_DIPPING_FORM = "json.form/thailand_en_larval_dipping_form.json";
+
         String THAILAND_MOSQUITO_COLLECTION_FORM = "json.form/thailand_mosquito_collection_form.json";
+
+        String THAILAND_EN_MOSQUITO_COLLECTION_FORM = "json.form/thailand_en_mosquito_collection_form.json";
 
         String THAILAND_SPRAY_FORM = "json.form/thailand_spray_form.json";
 
@@ -339,7 +383,11 @@ public interface Constants {
 
         String THAILAND_BEDNET_DISTRIBUTION_FORM = "json.form/thailand_bednet_distribution.json";
 
+        String THAILAND_EN_BEDNET_DISTRIBUTION_FORM = "json.form/thailand_en_bednet_distribution.json";
+
         String THAILAND_BLOOD_SCREENING_FORM = "json.form/thailand_blood_screening.json";
+
+        String THAILAND_EN_BLOOD_SCREENING_FORM = "json.form/thailand_en_blood_screening.json";
 
         String THAILAND_CASE_CONFIRMATION_FORM = "json.form/thailand_case_confirmation.json";
 
@@ -377,6 +425,8 @@ public interface Constants {
         String STRUCTURES_TAG = "structures";
 
         String LOCATION_COMPONENT_ACTIVE = "my_location_active";
+
+        String VALID_OPERATIONAL_AREA = "valid_operational_area";
 
         String NO_PADDING = "no_padding";
 
@@ -450,7 +500,16 @@ public interface Constants {
 
         String CATCHMENT_AREA = "catchment_area";
 
+        String HEALTH_FACILITY = "health_facility";
 
+        String DISTRICT = "district";
+
+
+        String ZONE = "zone";
+
+        String MOP_UP = "mopup";
+
+        String YES =  "Yes";
     }
 
     interface DateFormat {
@@ -495,6 +554,12 @@ public interface Constants {
 
     }
 
+    interface EventsRegister {
+        String VIEW_IDENTIFIER = "event_register";
+
+        String TABLE_NAME = "ec_events";
+    }
+
     interface DatabaseKeys {
 
         String TASK_TABLE = "task";
@@ -507,7 +572,9 @@ public interface Constants {
 
         String STRUCTURE_ID = "structure_id";
 
-        String ID = "_id";
+        String ID_ = "_id";
+
+        String ID = "id";
 
         String CODE = "code";
 
@@ -611,6 +678,20 @@ public interface Constants {
 
         String LOCATION_SYNC_STATUS = "sync_status";
 
+        String SOP = "sop";
+
+        String ENTITY = "entity";
+
+        String EVENT_TYPE = "event_type";
+
+        String SPRAYED = "sprayed";
+
+        String FOUND = "found";
+
+        String PROVIDER_ID = "provider_id";
+
+        String VERSION = "version";
+
     }
 
     interface UseContextCode {
@@ -664,6 +745,8 @@ public interface Constants {
         String CODE = "task_code";
         String STATUS = "task_status";
         String INTERVENTION_UNIT = "intervention_unit";
+        String FORM_NAME = "form_name";
         String FILTER_SORT_PARAMS = "filter_sort_params";
+        String FILTER_CONFIGURATION = "filter_configuration";
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
@@ -43,6 +44,7 @@ import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.task.IndicatorsCalculatorTask;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.Constants.CONFIGURATION;
 import org.smartregister.reveal.util.Constants.Filter;
 import org.smartregister.reveal.util.Constants.JsonForm;
@@ -51,12 +53,14 @@ import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.EditFociBoundaryActivity;
+import org.smartregister.util.JsonFormUtils;
 import org.smartregister.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -66,6 +70,7 @@ import static android.content.DialogInterface.BUTTON_NEGATIVE;
 import static android.content.DialogInterface.BUTTON_NEUTRAL;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.VALUE;
+import static org.smartregister.domain.LocationProperty.PropertyStatus.INACTIVE;
 import static org.smartregister.reveal.contract.ListTaskContract.ListTaskView;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INCOMPLETE;
@@ -86,13 +91,16 @@ import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLL
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.Intervention.REGISTER_FAMILY;
 import static org.smartregister.reveal.util.Constants.JsonForm.DISTRICT_NAME;
+import static org.smartregister.reveal.util.Constants.JsonForm.ENCOUNTER_TYPE;
 import static org.smartregister.reveal.util.Constants.JsonForm.LOCATION_COMPONENT_ACTIVE;
 import static org.smartregister.reveal.util.Constants.JsonForm.OPERATIONAL_AREA_TAG;
 import static org.smartregister.reveal.util.Constants.JsonForm.PROVINCE_NAME;
+import static org.smartregister.reveal.util.Constants.JsonForm.VALID_OPERATIONAL_AREA;
 import static org.smartregister.reveal.util.Constants.Map.CLICK_SELECT_RADIUS;
 import static org.smartregister.reveal.util.Constants.Map.MAX_SELECT_ZOOM_LEVEL;
 import static org.smartregister.reveal.util.Constants.Properties.FAMILY_MEMBER_NAMES;
 import static org.smartregister.reveal.util.Constants.Properties.FEATURE_SELECT_TASK_BUSINESS_STATUS;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.STRUCTURE_NAME;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_BUSINESS_STATUS;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_CODE;
@@ -192,6 +200,14 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     @Override
+    public void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea, List<TaskDetails> taskDetailsList, String point, Boolean locationComponentActive) {
+        prefsUtil.setCurrentOperationalArea(operationalArea.getStringProperty(Constants.Properties.LOCATION_NAME));
+        listTaskView.setOperationalArea(prefsUtil.getCurrentOperationalArea());
+        onStructuresFetched(structuresGeoJson, operationalArea, taskDetailsList);
+        onAddStructureClicked(locationComponentActive, point);
+    }
+
+    @Override
     public void onStructuresFetched(JSONObject structuresGeoJson, Feature operationalArea, List<TaskDetails> taskDetailsList) {
         listTaskView.hideProgressDialog();
         setChangeMapPosition(drawerPresenter.isChangedCurrentSelection() || (drawerPresenter.isChangedCurrentSelection() && changeMapPosition));
@@ -225,11 +241,9 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             }
         }
 
-        if (taskDetailsList != null) {
-
-            if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
-                new IndicatorsCalculatorTask(listTaskView.getActivity(), taskDetailsList).execute();
-            }
+        if (taskDetailsList != null && (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA
+                || BuildConfig.BUILD_COUNTRY == Country.NAMIBIA)) {
+            new IndicatorsCalculatorTask(listTaskView.getActivity(), taskDetailsList).execute();
         }
     }
 
@@ -285,18 +299,19 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
 
         listTaskView.closeAllCardViews();
         listTaskView.displaySelectedFeature(feature, clickedPoint);
-        if (!feature.hasProperty(TASK_IDENTIFIER)) {
-            listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
-        } else if (isLongclick) {
-            if (BuildConfig.BUILD_COUNTRY != Country.THAILAND && BuildConfig.BUILD_COUNTRY != Country.THAILAND_EN) {
+        if (isLongclick && BuildConfig.BUILD_COUNTRY != Country.ZAMBIA) {
             onFeatureSelectedByLongClick(feature);
-            }
         } else {
             onFeatureSelectedByNormalClick(feature);
         }
     }
 
     private void onFeatureSelectedByNormalClick(Feature feature) {
+        if (!feature.hasProperty(TASK_IDENTIFIER)) {
+            listTaskView.displayNotification(listTaskView.getContext().getString(R.string.task_not_found, prefsUtil.getCurrentOperationalArea()));
+            return;
+        }
+
         String businessStatus = getPropertyValue(feature, FEATURE_SELECT_TASK_BUSINESS_STATUS);
         String code = getPropertyValue(feature, TASK_CODE);
         selectedFeatureInterventionType = code;
@@ -330,9 +345,12 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     private void onFeatureSelectedByLongClick(Feature feature) {
         String businessStatus = getPropertyValue(feature, TASK_BUSINESS_STATUS);
         String code = getPropertyValue(feature, TASK_CODE);
+        String status = getPropertyValue(feature, LOCATION_STATUS);
 
         selectedFeatureInterventionType = code;
-        if (NOT_VISITED.equals(businessStatus)) {
+        if (INACTIVE.name().equals(status)) {
+            listTaskView.displayToast(R.string.structure_is_inactive);
+        } else if (NOT_VISITED.equals(businessStatus) || !feature.hasProperty(TASK_IDENTIFIER)) {
             listTaskView.displayMarkStructureInactiveDialog();
         } else {
             listTaskView.displayToast(R.string.cannot_make_structure_inactive);
@@ -376,6 +394,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void findLastEvent(String featureId, String eventType) {
         listTaskInteractor.findLastEvent(featureId, eventType);
     }
+
     public void onFociBoundaryLongClicked() {
         revealApplication.setFeatureCollection(featureCollection);
         revealApplication.setOperationalArea(operationalArea);
@@ -454,9 +473,10 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         familyCardDetails.setDateCreated(formatDate(originalDate));
     }
 
-    public void startForm(Feature feature, CardDetails cardDetails, String interventionType){
+    public void startForm(Feature feature, CardDetails cardDetails, String interventionType) {
         startForm(feature, cardDetails, interventionType, null);
     }
+
     public void startForm(Feature feature, CardDetails cardDetails, String interventionType, Event event) {
         String formName = jsonFormUtils.getFormName(null, interventionType);
         String sprayStatus = cardDetails == null ? null : cardDetails.getStatus();
@@ -473,7 +493,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
         if (cardDetails instanceof MosquitoHarvestCardDetails && PAOT.equals(((MosquitoHarvestCardDetails) cardDetails).getInterventionType())) {
             jsonFormUtils.populatePAOTForm((MosquitoHarvestCardDetails) cardDetails, formJson);
         } else if (cardDetails instanceof SprayCardDetails && Country.NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
-            jsonFormUtils.populateSprayForm(((SprayCardDetails) cardDetails).getCommonPersonObject(), formJson);
+            jsonFormUtils.populateForm(event, formJson);
         } else if (JsonForm.SPRAY_FORM_ZAMBIA.equals(formName)) {
             try {
                 jsonFormUtils.populateField(formJson, DISTRICT_NAME, prefsUtil.getCurrentDistrict().trim(), VALUE);
@@ -481,12 +501,20 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             } catch (JSONException e) {
                 Timber.e(e);
             }
-            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR, prefsUtil.getCurrentDistrict());
-            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.HEALTH_FACILITIES, JsonForm.HFC_SEEK, prefsUtil.getCurrentDistrict());
-            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.HEALTH_FACILITIES, JsonForm.HFC_BELONG, prefsUtil.getCurrentDistrict());
+            Map<String, JSONObject> fields = jsonFormUtils.getFields(formJson);
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.HEALTH_FACILITIES, fields.get(JsonForm.HFC_SEEK), prefsUtil.getCurrentDistrict());
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.HEALTH_FACILITIES, fields.get(JsonForm.HFC_BELONG), prefsUtil.getCurrentDistrict());
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DISTRICTS, fields.get(JsonForm.DISTRICT), prefsUtil.getCurrentProvince());
             jsonFormUtils.populateForm(event, formJson);
+            String dataCollector = RevealApplication.getInstance().getContext().allSharedPreferences().fetchRegisteredANM();
+            if (StringUtils.isNotBlank(dataCollector)) {
+                jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
+                        CONFIGURATION.SPRAY_OPERATORS, fields.get(JsonForm.SPRAY_OPERATOR_CODE),
+                        dataCollector);
+            }
+
         } else if (JsonForm.SPRAY_FORM_REFAPP.equals(formName)) {
-            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), formJson, CONFIGURATION.DATA_COLLECTORS, JsonForm.DATA_COLLECTOR, prefsUtil.getCurrentDistrict());
+            jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(), CONFIGURATION.DATA_COLLECTORS, jsonFormUtils.getFields(formJson).get(JsonForm.DATA_COLLECTOR), prefsUtil.getCurrentDistrict());
         }
         listTaskView.startJsonForm(formJson);
     }
@@ -510,8 +538,24 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     }
 
     public void saveJsonForm(String json) {
-        listTaskView.showProgressDialog(R.string.saving_title, R.string.saving_message);
-        listTaskInteractor.saveJsonForm(json);
+        try {
+            JSONObject jsonForm = new JSONObject(json);
+            String encounterType = jsonForm.getString(ENCOUNTER_TYPE);
+            JSONArray fields = JsonFormUtils.getMultiStepFormFields(jsonForm);
+            String validOperationalArea = JsonFormUtils.getFieldValue(fields, VALID_OPERATIONAL_AREA);
+            if (Constants.REGISTER_STRUCTURE_EVENT.equals(encounterType) && StringUtils.isNotBlank(validOperationalArea)) {
+                listTaskView.showProgressDialog(R.string.opening_form_title, R.string.add_structure_form_redirecting, validOperationalArea);
+                Boolean locationComponentActive = Boolean.valueOf(JsonFormUtils.getFieldValue(fields, LOCATION_COMPONENT_ACTIVE));
+                String point = JsonFormUtils.getFieldValue(fields, JsonForm.STRUCTURE);
+                listTaskInteractor.fetchLocations(prefsUtil.getCurrentPlanId(), validOperationalArea, point, locationComponentActive);
+            } else {
+                listTaskView.showProgressDialog(R.string.saving_title, R.string.saving_message);
+                listTaskInteractor.saveJsonForm(json);
+            }
+        } catch (JSONException e) {
+            Timber.e(e);
+            listTaskView.displayToast(R.string.error_occurred_saving_form);
+        }
     }
 
     @Override
@@ -539,6 +583,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
                 feature.addStringProperty(TASK_BUSINESS_STATUS, task.getBusinessStatus());
                 feature.addStringProperty(TASK_STATUS, task.getStatus().name());
                 feature.addStringProperty(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                feature.removeProperty(STRUCTURE_NAME);
                 break;
             }
         }
@@ -565,17 +610,24 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
     public void onFormSaveFailure(String eventType) {
         listTaskView.hideProgressDialog();
         listTaskView.displayNotification(R.string.form_save_failure_title,
-                eventType.equals(SPRAY_EVENT) ? R.string.spray_form_save_failure : R.string.add_structure_form_save_failure);
+                SPRAY_EVENT.equals(eventType) ? R.string.spray_form_save_failure : R.string.add_structure_form_save_failure);
     }
 
 
     public void onAddStructureClicked(boolean myLocationComponentActive) {
+        onAddStructureClicked(myLocationComponentActive, null);
+    }
+
+    public void onAddStructureClicked(boolean myLocationComponentActive, String point) {
         String formName = jsonFormUtils.getFormName(REGISTER_STRUCTURE_EVENT);
         try {
             JSONObject formJson = new JSONObject(jsonFormUtils.getFormString(listTaskView.getContext(), formName, null));
             formJson.put(OPERATIONAL_AREA_TAG, operationalArea.toJson());
             revealApplication.setFeatureCollection(featureCollection);
             jsonFormUtils.populateField(formJson, JsonForm.SELECTED_OPERATIONAL_AREA_NAME, prefsUtil.getCurrentOperationalArea(), TEXT);
+            if (StringUtils.isNotBlank(point)) {
+                jsonFormUtils.populateField(formJson, JsonForm.STRUCTURE, point, VALUE);
+            }
             formJson.put(LOCATION_COMPONENT_ACTIVE, myLocationComponentActive);
             listTaskView.startJsonForm(formJson);
         } catch (Exception e) {
@@ -647,6 +699,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             if (selectedFeature.id().equals(feature.id())) {
                 feature.removeProperty(TASK_BUSINESS_STATUS);
                 feature.removeProperty(TASK_IDENTIFIER);
+                feature.addStringProperty(LOCATION_STATUS, INACTIVE.name());
                 break;
             }
         }
@@ -781,7 +834,7 @@ public class ListTaskPresenter implements ListTaskContract.Presenter, PasswordRe
             listTaskView.setGeoJsonSource(filterFeatureCollection == null ? getFeatureCollection() : FeatureCollection.fromFeatures(filterFeatureCollection), operationalArea, false);
         } else {
             List<Feature> features = new ArrayList<>();
-            for (Feature feature : searchFeatureCollection != null && searchPhrase.length() > this.searchPhrase.length() ? searchFeatureCollection : Utils.isEmptyCollection(filterFeatureCollection) ? getFeatureCollection().features() : filterFeatureCollection) {
+            for (Feature feature : !Utils.isEmptyCollection(searchFeatureCollection) && searchPhrase.length() > this.searchPhrase.length() ? searchFeatureCollection : Utils.isEmptyCollection(filterFeatureCollection) ? getFeatureCollection().features() : filterFeatureCollection) {
                 String structureName = feature.getStringProperty(STRUCTURE_NAME);
                 String familyMemberNames = feature.getStringProperty(FAMILY_MEMBER_NAMES);
                 if (org.smartregister.reveal.util.Utils.matchesSearchPhrase(structureName, searchPhrase) ||

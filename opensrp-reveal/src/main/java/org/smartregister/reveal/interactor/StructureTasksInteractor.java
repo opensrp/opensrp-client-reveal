@@ -44,7 +44,7 @@ import static org.smartregister.reveal.util.Constants.DatabaseKeys.BUSINESS_STAT
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.CODE;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.FOR;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.GROUPID;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.ID_;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.NAME;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.PLAN_ID;
 import static org.smartregister.reveal.util.Constants.DatabaseKeys.STATUS;
@@ -98,7 +98,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
 
                 cursor.close();
                 cursor = database.rawQuery(getMemberTasksSelect(String.format("%s.%s=? AND %s=? AND %s IS NULL AND %s NOT IN (%s)",
-                        STRUCTURES_TABLE, ID, PLAN_ID, DBConstants.KEY.DATE_REMOVED, STATUS,
+                        STRUCTURES_TABLE, ID_, PLAN_ID, DBConstants.KEY.DATE_REMOVED, STATUS,
                         TextUtils.join(",", Collections.nCopies(INACTIVE_TASK_STATUS.length, "?"))), getMemberColumns()),
                         ArrayUtils.addAll(new String[]{structureId, planId}, INACTIVE_TASK_STATUS));
                 while (cursor.moveToNext()) {
@@ -250,14 +250,14 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
 
     private String getTaskSelect(String mainCondition) {
         SmartRegisterQueryBuilder queryBuilder = new SmartRegisterQueryBuilder();
-        queryBuilder.selectInitiateMainTable(TASK_TABLE, getStructureColumns(), ID);
+        queryBuilder.selectInitiateMainTable(TASK_TABLE, getStructureColumns(), ID_);
         return queryBuilder.mainCondition(mainCondition);
     }
 
 
     private String[] getStructureColumns() {
         return new String[]{
-                TASK_TABLE + "." + ID,
+                TASK_TABLE + "." + ID_,
                 TASK_TABLE + "." + CODE,
                 TASK_TABLE + "." + FOR,
                 TASK_TABLE + "." + BUSINESS_STATUS,
@@ -277,7 +277,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
     }
 
     private StructureTaskDetails readTaskDetails(Cursor cursor) {
-        StructureTaskDetails task = new StructureTaskDetails(cursor.getString(cursor.getColumnIndex(ID)));
+        StructureTaskDetails task = new StructureTaskDetails(cursor.getString(cursor.getColumnIndex(ID_)));
         task.setTaskCode(cursor.getString(cursor.getColumnIndex(CODE)));
         task.setTaskEntity(cursor.getString(cursor.getColumnIndex(FOR)));
         task.setBusinessStatus(cursor.getString(cursor.getColumnIndex(BUSINESS_STATUS)));

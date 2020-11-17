@@ -240,7 +240,8 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
                     (BLOOD_SCREENING.equals(details.getTaskCode()) ||
                             BEDNET_DISTRIBUTION.equals(details.getTaskCode()) ||
                             REGISTER_FAMILY.equals(details.getTaskCode())) ||
-                    (details.getTaskCount() != null && details.getTaskCount() > 1)) { // structures with grouped tasks should display the family profile
+                    (details.getTaskCount() != null && details.getTaskCount() > 1 // structures with grouped tasks should display the family profile
+                            && !(REGISTER_FAMILY.equals(details.getTaskCode()) && Task.TaskStatus.READY.name().equals(details.getTaskStatus())))) { // skip if we have a READY family reg task
                 setTaskDetails(details);
                 interactor.fetchFamilyDetails(details.getStructureId());
             } else {
@@ -329,10 +330,10 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             sortTasks(filteredTasks, filterParams.getSortBy());
         }
         setTasks(filteredTasks, withinBuffer);
+        isTasksFiltered = true;
         getView().setSearchPhrase("");
         getView().hideProgressDialog();
         getView().hideProgressView();
-        isTasksFiltered = true;
     }
 
     private void applyEmptyFilter() {
@@ -351,7 +352,11 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             matches = StringUtils.isBlank(taskDetails.getAggregateBusinessStatus()) ? filterStatus.contains(taskDetails.getBusinessStatus()) : filterStatus.contains(taskDetails.getAggregateBusinessStatus());
         }
         if (matches && filterTaskCode != null) {
-            matches = matchesTaskCodeFilterList(taskDetails.getTaskCode(), filterTaskCode, pattern);
+            if (taskDetails.getTaskCount() == null || taskDetails.getTaskCount() < 2) {
+                matches = matchesTaskCodeFilterList(taskDetails.getTaskCode(), filterTaskCode, pattern);
+            } else {
+                matches = matchesTaskCodeFilterList(taskDetails.getGroupedTaskCodes(), filterTaskCode, pattern);
+            }
         }
         if (matches && filterInterventionUnitTasks != null) {
             matches = matchesTaskCodeFilterList(taskDetails.getTaskCode(), filterInterventionUnitTasks, pattern);
@@ -411,11 +416,8 @@ public class TaskRegisterFragmentPresenter extends BaseFormFragmentPresenter imp
             } else {
                 JSONObject formJSON = getView().getJsonFormUtils().getFormJSON(getView().getContext(), formName, getTaskDetails(), getStructure());
                 getView().getJsonFormUtils().populateForm(event, formJSON);
-                if (IRS.equals(getTaskDetails().getTaskCode()) && NAMIBIA.equals(BuildConfig.BUILD_COUNTRY)) {
-                    formInteractor.findSprayDetails(IRS, getStructure().getId(), formJSON);
-                } else {
-                    getView().startForm(formJSON);
-                }
+                getView().getJsonFormUtils().populateFormWithServerOptions(formName,formJSON);
+                getView().startForm(formJSON);
             }
         }
         getView().hideProgressDialog();

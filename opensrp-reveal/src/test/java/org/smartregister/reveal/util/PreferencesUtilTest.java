@@ -8,15 +8,24 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.domain.Location;
 import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.application.RevealApplication;
+import org.smartregister.util.Cache;
+
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_DISTRICT;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_FACILITY;
+import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_OPERATIONAL_AREA;
+import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_OPERATIONAL_AREA_ID;
 import static org.smartregister.reveal.util.Constants.Preferences.CURRENT_PROVINCE;
 import static org.smartregister.reveal.util.Constants.Preferences.FACILITY_LEVEL;
 
@@ -31,6 +40,12 @@ public class PreferencesUtilTest extends BaseUnitTest {
 
     @Mock
     private AllSharedPreferences allSharedPreferences;
+
+    @Mock
+    private Cache<Location> cache;
+
+    @Mock
+    private Location location;
 
     private PreferencesUtil preferencesUtil;
 
@@ -107,6 +122,45 @@ public class PreferencesUtilTest extends BaseUnitTest {
 
         String actualFacilityLevel = preferencesUtil.getCurrentFacilityLevel();
         assertEquals("Village", actualFacilityLevel);
+    }
+
+
+    @Test
+    public void testSetCurrentOperationalAreaShouldUpdatePreferences() {
+        String operationalArea = "oa_1";
+        Whitebox.setInternalState(Utils.class, "cache", cache);
+        when(cache.get(eq(operationalArea), any())).thenReturn(location);
+        when(location.getId()).thenReturn("id_11121121");
+        when(preferencesUtil.getCurrentOperationalArea()).thenReturn(operationalArea);
+
+        preferencesUtil.setCurrentOperationalArea(operationalArea);
+        verify(allSharedPreferences).savePreference(CURRENT_OPERATIONAL_AREA, operationalArea);
+        verify(allSharedPreferences).savePreference(CURRENT_OPERATIONAL_AREA_ID, "id_11121121");
+    }
+
+    @Test
+    public void testSetCurrentOperationalAreaShouldClearPreferences() {
+        preferencesUtil.setCurrentOperationalArea(null);
+        verify(allSharedPreferences).savePreference(CURRENT_OPERATIONAL_AREA, null);
+        verify(allSharedPreferences).savePreference(CURRENT_OPERATIONAL_AREA_ID, null);
+    }
+
+    @Test
+    public void testSetActionCodesForPlan() {
+        String planId = "plan-id1";
+        preferencesUtil.setActionCodesForPlan(planId, Collections.singletonList(Constants.Intervention.BLOOD_SCREENING));
+        verify(allSharedPreferences).savePreference("plan-id1~actions", "[\"Blood Screening\"]");
+    }
+
+    @Test
+    public void testGetActionCodesForPlan() {
+        String planId = "plan-id1";
+        String actionCodeJsonString = "[\"Blood Screening\"]";
+        when(allSharedPreferences.getPreference("plan-id1~actions")).thenReturn(actionCodeJsonString);
+        List<String> actualActionCodes =  preferencesUtil.getActionCodesForPlan(planId);
+        verify(allSharedPreferences).getPreference("plan-id1~actions");
+        assertEquals(1, actualActionCodes.size());
+        assertEquals(Constants.Intervention.BLOOD_SCREENING, actualActionCodes.get(0));
     }
 
 }

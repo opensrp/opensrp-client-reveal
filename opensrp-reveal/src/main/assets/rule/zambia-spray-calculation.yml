@@ -34,9 +34,16 @@ condition: "true"
 actions:
   - "calculation = ['business_status' : step1_business_status]"
 ---
-name: step1_district
-description: step1_district_toaster
+name: step1_sprayed_totalmale
+description: step1_sprayed_totalmale
 priority: 1
 condition: "true"
 actions:
-  - "calculation = ['districtName' : step1_districtName]"
+  - "calculation = step1_genderHoH=='male' ? 1:0"
+---
+name: step1_sprayed_totalfemale
+description: step1_sprayed_totalmale
+priority: 1
+condition: "true"
+actions:
+  - "calculation = step1_genderHoH=='female' ? 1:0"

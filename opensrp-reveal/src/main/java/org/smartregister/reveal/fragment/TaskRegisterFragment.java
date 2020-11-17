@@ -10,17 +10,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
-import androidx.annotation.StringRes;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.cardview.widget.CardView;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.StringRes;
+import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
+import org.smartregister.domain.FetchStatus;
 import org.smartregister.domain.Task;
 import org.smartregister.family.fragment.NoMatchDialogFragment;
 import org.smartregister.family.util.DBConstants;
@@ -30,6 +32,7 @@ import org.smartregister.reveal.adapter.TaskRegisterAdapter;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.contract.TaskRegisterFragmentContract;
 import org.smartregister.reveal.model.BaseTaskDetails;
+import org.smartregister.reveal.model.FilterConfiguration;
 import org.smartregister.reveal.model.TaskDetails;
 import org.smartregister.reveal.model.TaskFilterParams;
 import org.smartregister.reveal.presenter.TaskRegisterFragmentPresenter;
@@ -46,8 +49,8 @@ import org.smartregister.reveal.view.FilterTasksActivity;
 import org.smartregister.reveal.view.ListTasksActivity;
 import org.smartregister.reveal.view.TaskRegisterActivity;
 import org.smartregister.view.activity.BaseRegisterActivity;
-import org.smartregister.view.fragment.BaseRegisterFragment;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -59,6 +62,11 @@ import static android.app.Activity.RESULT_OK;
 import static android.content.DialogInterface.BUTTON_POSITIVE;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.smartregister.reveal.util.Constants.Action;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_SPRAYED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_SPRAYED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
+import static org.smartregister.reveal.util.Constants.Filter.FILTER_CONFIGURATION;
 import static org.smartregister.reveal.util.Constants.Filter.FILTER_SORT_PARAMS;
 import static org.smartregister.reveal.util.Constants.Intervention.TASK_RESET_INTERVENTIONS;
 import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_FILTER_TASKS;
@@ -66,11 +74,9 @@ import static org.smartregister.reveal.util.Constants.RequestCode.REQUEST_CODE_F
 /**
  * Created by samuelgithengi on 3/11/19.
  */
-public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity {
+public class TaskRegisterFragment extends BaseDrawerRegisterFragment implements TaskRegisterFragmentContract.View, BaseDrawerContract.DrawerActivity {
 
     private TaskRegisterAdapter taskAdapter;
-
-    private BaseDrawerContract.View drawerView;
 
     private RevealJsonFormUtils jsonFormUtils;
     private ProgressDialog progressDialog;
@@ -146,7 +152,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
             taskFilterParams.setSearchPhrase(getSearchView().getText().toString());
             intent.putExtra(FILTER_SORT_PARAMS, taskFilterParams);
         } else if (StringUtils.isNotBlank(getSearchView().getText())) {
-            intent.putExtra(FILTER_SORT_PARAMS, new TaskFilterParams(getSearchView().getText().toString()));
+            intent.putExtra(FILTER_SORT_PARAMS, TaskFilterParams.builder().searchPhrase(searchView.getText().toString()).build());
         }
         getActivity().setResult(RESULT_OK, intent);
         getActivity().finish();
@@ -211,7 +217,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                 R.string.choose_action, R.string.view_details, R.string.undo, new Dialog.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
+                        switch (which) {
                             case BUTTON_POSITIVE:
                                 getPresenter().onTaskSelected(details, view.getId() == R.id.task_action);
                                 break;
@@ -224,7 +230,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
                         dialog.dismiss();
                     }
 
-         } );
+                });
     }
 
     public void displayResetTaskInfoDialog(TaskDetails details) {
@@ -268,7 +274,7 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     public void setTaskDetails(List<TaskDetails> tasks) {
         taskAdapter.setTaskDetails(tasks);
-        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
             new IndicatorsCalculatorTask(getActivity(), tasks).execute();
         }
     }
@@ -400,6 +406,14 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
     public void openFilterActivity(TaskFilterParams filterParams) {
         Intent intent = new Intent(getContext(), FilterTasksActivity.class);
         intent.putExtra(FILTER_SORT_PARAMS, filterParams);
+        FilterConfiguration.FilterConfigurationBuilder builder = FilterConfiguration.builder();
+        if (BuildConfig.BUILD_COUNTRY.equals(Country.NAMIBIA)) {
+            builder.taskCodeLayoutEnabled(false)
+                    .interventionTypeLayoutEnabled(false)
+                    .businessStatusList(Arrays.asList(NOT_VISITED, NOT_SPRAYED, PARTIALLY_SPRAYED, SPRAYED))
+                    .sortOptions(R.array.task_sort_options_namibia);
+        }
+        intent.putExtra(FILTER_CONFIGURATION, builder.build());
         getActivity().startActivityForResult(intent, REQUEST_CODE_FILTER_TASKS);
     }
 
@@ -479,6 +493,20 @@ public class TaskRegisterFragment extends BaseRegisterFragment implements TaskRe
 
     private void setViewVisibility(View view, boolean isVisible) {
         view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onSyncStart() {
+        super.onSyncStart();
+        drawerView.toggleProgressBarView(true);
+    }
+
+    @Override
+    public void onSyncComplete(FetchStatus fetchStatus) {
+        super.onSyncComplete(fetchStatus);
+        //Check sync status and Update UI to show sync status
+        drawerView.checkSynced();
+        drawerView.toggleProgressBarView(false);
     }
 
 }

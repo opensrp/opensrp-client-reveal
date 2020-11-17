@@ -29,18 +29,21 @@ import java.util.UUID;
 import static com.vijay.jsonwizard.constants.JsonFormConstants.TEXT;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
+import static org.smartregister.reveal.util.Constants.BEHAVIOUR_CHANGE_COMMUNICATION;
 import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT;
+import static org.smartregister.reveal.util.Constants.Intervention.BCC;
+import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
 import static org.smartregister.reveal.util.Constants.Intervention.CASE_CONFIRMATION;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
-import static org.smartregister.reveal.util.Constants.BEDNET_DISTRIBUTION_EVENT;
-import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
 import static org.smartregister.reveal.util.Constants.Intervention.MOSQUITO_COLLECTION;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
+import static org.smartregister.reveal.util.Constants.REGISTER_STRUCTURE_EVENT;
 import static org.smartregister.reveal.util.Constants.SPRAY_EVENT;
 import static org.smartregister.reveal.util.Constants.STRUCTURE;
 import static org.smartregister.reveal.util.Constants.TASK_RESET_EVENT;
@@ -218,6 +221,20 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
     }
 
     @Test
+    public void testGetRefAppBloodScreeningForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
+        String actualFormName = revealJsonFormUtils.getFormName(BLOOD_SCREENING_EVENT, null);
+        assertEquals(JsonForm.REFAPP_BLOOD_SCREENING_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetRefAppLarvalDippingForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.REFAPP);
+        String actualFormName = revealJsonFormUtils.getFormName(LARVAL_DIPPING_EVENT, null);
+        assertEquals(JsonForm.REFAPP_LARVAL_DIPPING_FORM, actualFormName);
+    }
+
+    @Test
     public void testGetThailandBednetDistributionForm() {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
         String actualFormName = revealJsonFormUtils.getFormName(BEDNET_DISTRIBUTION_EVENT, BEDNET_DISTRIBUTION);
@@ -236,6 +253,13 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
         String actualFormName = revealJsonFormUtils.getFormName(CASE_CONFIRMATION_EVENT, CASE_CONFIRMATION);
         assertEquals(JsonForm.THAILAND_CASE_CONFIRMATION_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetThailandLarvalDippingForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        String actualFormName = revealJsonFormUtils.getFormName(LARVAL_DIPPING_EVENT, null);
+        assertEquals(JsonForm.THAILAND_LARVAL_DIPPING_FORM, actualFormName);
     }
 
     @Test
@@ -265,6 +289,55 @@ public class RevealJsonFormUtilsTest extends BaseUnitTest {
         Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
         String actualFormName = revealJsonFormUtils.getFormName(BLOOD_SCREENING_EVENT, BLOOD_SCREENING);
         assertEquals(JsonForm.THAILAND_BLOOD_SCREENING_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetThailandENMosquitoCollectionForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND_EN);
+        String actualFormName = revealJsonFormUtils.getFormName(MOSQUITO_COLLECTION_EVENT, MOSQUITO_COLLECTION);
+        assertEquals(JsonForm.THAILAND_EN_MOSQUITO_COLLECTION_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetThailandENLarvalDippingForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND_EN);
+        String actualFormName = revealJsonFormUtils.getFormName(LARVAL_DIPPING_EVENT, LARVAL_DIPPING);
+        assertEquals(JsonForm.THAILAND_EN_LARVAL_DIPPING_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetThailandENBednetDistributionForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND_EN);
+        String actualFormName = revealJsonFormUtils.getFormName(BEDNET_DISTRIBUTION_EVENT, BEDNET_DISTRIBUTION);
+        assertEquals(JsonForm.THAILAND_EN_BEDNET_DISTRIBUTION_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetThailandENBloodScreeningForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND_EN);
+        String actualFormName = revealJsonFormUtils.getFormName(BLOOD_SCREENING_EVENT, BLOOD_SCREENING);
+        assertEquals(JsonForm.THAILAND_EN_BLOOD_SCREENING_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetThailandBCCForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND);
+        String actualFormName = revealJsonFormUtils.getFormName(BEHAVIOUR_CHANGE_COMMUNICATION, BCC);
+        assertEquals(JsonForm.THAILAND_BEHAVIOUR_CHANGE_COMMUNICATION_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetThailandENBCCForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND_EN);
+        String actualFormName = revealJsonFormUtils.getFormName(BEHAVIOUR_CHANGE_COMMUNICATION, BCC);
+        assertEquals(JsonForm.BEHAVIOUR_CHANGE_COMMUNICATION_FORM, actualFormName);
+    }
+
+    @Test
+    public void testGetThailandENAddStructureForm() {
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.THAILAND_EN);
+        String actualFormName = revealJsonFormUtils.getFormName(REGISTER_STRUCTURE_EVENT, null);
+        assertEquals(JsonForm.ADD_STRUCTURE_FORM, actualFormName);
     }
 
 }

@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "",
+  "encounter_type": "verification",
   "form_version": "0.0.1",
   "entity_id": "",
   "metadata": {
@@ -114,25 +114,26 @@
           },
           {
             "key": "Partially Sprayed",
-            "text": "Not Sprayed"
+            "text": "Partially Sprayed"
           },
           {
             "key": "Not Sprayed",
             "text": "Not Sprayed"
           },
           {
-            "key": "Not Visited Yet",
-            "text": "Not Visited Yet"
-          },
-          {
             "key": "Not Eligible",
             "text": "Not Eligible"
           }
-
         ],
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "step1:visited": {
+            "type": "string",
+            "ex": "equalTo(., \"yes\")"
+          }
         }
       },
       {
@@ -218,32 +219,6 @@
         }
       },
       {
-        "key": "verify_totalpop",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "edit_type": "number",
-        "hint": "Total Population",
-        "is_mandatory": true,
-        "v_required": {
-          "value": true,
-          "err": "This field is mandatory"
-        },
-        "v_numeric": {
-          "value": "true",
-          "err": "This field must be a number"
-        },
-        "v_numeric_integer": {
-          "value": "true",
-          "err": "This field must be a whole number"
-        },
-        "v_min": {
-          "value": "0",
-          "err": "This field must be greater than or equal to 0"
-        }
-      },
-      {
         "key": "verify_preg",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -296,6 +271,36 @@
         }
       },
       {
+        "key": "verify_totalpop",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "edit_type": "number",
+        "hint": "Total Population",
+        "is_mandatory": true,
+        "v_required": {
+          "value": true,
+          "err": "This field is mandatory"
+        },
+        "v_numeric": {
+          "value": "true",
+          "err": "This field must be a number"
+        },
+        "v_numeric_integer": {
+          "value": "true",
+          "err": "This field must be a whole number"
+        },
+        "v_min": {
+          "value": "0",
+          "err": "This field must be greater than or equal to 0"
+        },
+        "v_relative_min": {
+          "value": "calc_total_pop",
+          "err": "The total population must be greater than the sum of pregnancies and children under 5"
+        }
+      },
+      {
         "key": "verify_nets",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -319,6 +324,20 @@
         "v_min": {
           "value": "0",
           "err": "This field must be greater than or equal to 0"
+        }
+      },
+      {
+        "key": "calc_total_pop",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "hidden",
+        "calculation": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "zambia-verification-form-calculation.yml"
+            }
+          }
         }
       }
     ]

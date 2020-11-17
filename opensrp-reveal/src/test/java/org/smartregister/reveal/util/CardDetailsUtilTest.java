@@ -2,18 +2,21 @@ package org.smartregister.reveal.util;
 
 import android.app.Activity;
 import android.content.res.Resources;
-import androidx.cardview.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.reveal.BaseUnitTest;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.model.CardDetails;
 import org.smartregister.reveal.model.FamilyCardDetails;
@@ -97,11 +100,25 @@ public class CardDetailsUtilTest extends BaseUnitTest {
     }
 
     @Test
-    public void testFormatCardDetailsPartiallySprayedShouldSetCorrectStatusAndColor() {
+    public void testFormatCardDetailsPartiallySprayedShouldSetCorrectStatusAndColorForZambia() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
         CardDetails cardDetails = new CardDetails(PARTIALLY_SPRAYED);
         formatCardDetails(cardDetails);
         assertEquals(cardDetails.getStatusColor().intValue(), R.color.sprayed);
         assertEquals(cardDetails.getStatusMessage(), R.string.details_sprayed);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testFormatCardDetailsPartiallySprayedShouldSetCorrectStatusAndColorForNamibia() {
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.NAMIBIA);
+        CardDetails cardDetails = new CardDetails(PARTIALLY_SPRAYED);
+        formatCardDetails(cardDetails);
+        assertEquals(cardDetails.getStatusColor().intValue(), R.color.partially_sprayed);
+        assertEquals(cardDetails.getStatusMessage(), R.string.partially_sprayed);
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test
@@ -230,6 +247,22 @@ public class CardDetailsUtilTest extends BaseUnitTest {
         assertEquals(NOT_ELIGIBLE, getTranslatedBusinessStatus(NOT_ELIGIBLE));
         assertEquals(IN_PROGRESS, getTranslatedBusinessStatus(IN_PROGRESS));
 
+    }
+
+    @Test
+    public void testPartiallySprayedBusinessStatusIsTranslatedCorrectlyForZambia(){
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.ZAMBIA);
+        assertEquals(SPRAYED, getTranslatedBusinessStatus(PARTIALLY_SPRAYED));
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
+    }
+
+    @Test
+    public void testPartiallySprayedBusinessStatusIsTranslatedCorrectlyForNamibia(){
+        Country buildCountry = BuildConfig.BUILD_COUNTRY;
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, Country.NAMIBIA);
+        assertEquals(PARTIALLY_SPRAYED, getTranslatedBusinessStatus(PARTIALLY_SPRAYED));
+        Whitebox.setInternalState(BuildConfig.class, BuildConfig.BUILD_COUNTRY, buildCountry);
     }
 
     @Test

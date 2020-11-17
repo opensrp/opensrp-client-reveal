@@ -2,6 +2,7 @@ package org.smartregister.reveal.util;
 
 import android.content.Context;
 import android.content.DialogInterface;
+
 import androidx.appcompat.app.AlertDialog;
 
 import org.smartregister.reveal.R;
@@ -25,14 +26,18 @@ public class AlertDialogUtils {
     }
 
     public static AlertDialog displayNotificationWithCallback(Context context, int title, int message, int positiveBtnTitle, int negativeBtnTitle, DialogInterface.OnClickListener onClickListener, Object... formatArgs) {
-        AlertDialog alert;
+        AlertDialog.Builder builder;
 
-        if (formatArgs.length == 0)
-            alert = new AlertDialog.Builder(context).setMessage(message).setTitle(title).setPositiveButton(positiveBtnTitle, onClickListener).setNegativeButton(negativeBtnTitle, onClickListener).show();
-        else
-            alert = new AlertDialog.Builder(context).setMessage(context.getString(message, formatArgs)).setTitle(title).setPositiveButton(positiveBtnTitle, onClickListener).setNegativeButton(negativeBtnTitle, onClickListener).show();
+        if (formatArgs.length == 0) {
+            builder = new AlertDialog.Builder(context).setMessage(message).setTitle(title).setPositiveButton(positiveBtnTitle, onClickListener);
+        } else {
+            builder = new AlertDialog.Builder(context).setMessage(context.getString(message, formatArgs)).setTitle(title).setPositiveButton(positiveBtnTitle, onClickListener);
+        }
+        if (negativeBtnTitle != 0) {
+            builder.setNegativeButton(negativeBtnTitle, onClickListener);
+        }
 
-        return alert;
+        return builder.show();
     }
 
 

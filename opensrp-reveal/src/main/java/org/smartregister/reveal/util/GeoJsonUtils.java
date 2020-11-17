@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.model.StructureDetails;
 
 import java.util.HashMap;
@@ -22,6 +23,8 @@ import static org.smartregister.reveal.util.Constants.BusinessStatus.NONE_RECEIV
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_ELIGIBLE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_RECEIVED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_SPRAYED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.SPRAYED;
 import static org.smartregister.reveal.util.Constants.GeoJSON.IS_INDEX_CASE;
 import static org.smartregister.reveal.util.Constants.Intervention.BEDNET_DISTRIBUTION;
 import static org.smartregister.reveal.util.Constants.Intervention.BLOOD_SCREENING;
@@ -68,7 +71,11 @@ public class GeoJsonUtils {
 
                 taskProperties = new HashMap<>();
                 taskProperties.put(TASK_IDENTIFIER, task.getIdentifier());
-                taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus()); // Set here for non residential structures
+                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA  && PARTIALLY_SPRAYED.equals(task.getBusinessStatus())) { // Set here for non residential structures
+                    taskProperties.put(TASK_BUSINESS_STATUS, SPRAYED);
+                } else {
+                    taskProperties.put(TASK_BUSINESS_STATUS, task.getBusinessStatus());
+                }
                 taskProperties.put(FEATURE_SELECT_TASK_BUSINESS_STATUS, task.getBusinessStatus()); // used to determine action to take when a feature is selected
                 taskProperties.put(TASK_STATUS, task.getStatus().name());
                 taskProperties.put(TASK_CODE, task.getCode());

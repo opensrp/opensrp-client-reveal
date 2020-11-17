@@ -8,109 +8,215 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/sort_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            style="@style/FilterTaskStyle.Label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sort_by"
-            android:textStyle="bold" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/sort_by"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/spinner_background"
-            android:entries="@array/task_sort_options" />
+            android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="16dp"
-            android:background="@color/lighter_grey" />
+            <TextView
+                style="@style/FilterTaskStyle.Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sort_by"
+                android:textStyle="bold" />
 
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/sort_by"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/spinner_background"
+                android:entries="@array/task_sort_options" />
 
-        <TextView
-            android:id="@+id/status_label"
-            style="@style/FilterTaskStyle.Label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:text="@string/status"
-            android:textStyle="bold" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/lighter_grey" />
+        </LinearLayout>
 
-        <com.google.android.flexbox.FlexboxLayout
-            android:id="@+id/business_status_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
-            android:orientation="horizontal"
-            app:alignContent="stretch"
-            app:alignItems="stretch"
-            app:flexWrap="wrap" />
-
-        <View
-
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/lighter_grey" />
-
-        <TextView
-            android:id="@+id/task_type_label"
-            style="@style/FilterTaskStyle.Label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/task_type"
-            android:textStyle="bold" />
-
-
-        <com.google.android.flexbox.FlexboxLayout
-            android:id="@+id/task_code_layout"
+        <LinearLayout
+            android:id="@+id/status_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
-            android:orientation="horizontal"
-            app:alignContent="stretch"
-            app:alignItems="stretch"
-            app:flexWrap="wrap" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/status_label"
+                style="@style/FilterTaskStyle.Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:text="@string/status"
+                android:textStyle="bold" />
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/business_status_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal"
+                app:alignContent="stretch"
+                app:alignItems="stretch"
+                app:flexWrap="wrap" />
+
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lighter_grey" />
+
+        </LinearLayout>
 
 
-        <View
+        <LinearLayout
+            android:id="@+id/task_type_group"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/lighter_grey" />
-
-
-        <TextView
-            style="@style/FilterTaskStyle.Label"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/intervention_unit"
-            android:textStyle="bold" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/task_type_label"
+                style="@style/FilterTaskStyle.Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/task_type"
+                android:textStyle="bold" />
 
 
-        <com.google.android.flexbox.FlexboxLayout
-            android:id="@+id/intervention_type_layout"
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/task_code_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal"
+                app:alignContent="stretch"
+                app:alignItems="stretch"
+                app:flexWrap="wrap" />
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lighter_grey" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/intervention_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginBottom="16dp"
-            app:alignContent="stretch"
-            app:alignItems="stretch"
-            app:flexWrap="wrap" />
+            android:orientation="vertical">
 
-        <View
+            <TextView
+                style="@style/FilterTaskStyle.Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/intervention_unit"
+                android:textStyle="bold" />
+
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/intervention_type_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
+                app:alignContent="stretch"
+                app:alignItems="stretch"
+                app:flexWrap="wrap" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lighter_grey" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/form_name_group"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/lighter_grey" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <TextView
+                style="@style/FilterTaskStyle.Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/form_name"
+                android:textStyle="bold" />
+
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/form_name_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
+                app:alignContent="stretch"
+                app:alignItems="stretch"
+                app:flexWrap="wrap" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lighter_grey" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/filter_date_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                style="@style/FilterTaskStyle.Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/filter_by_date"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/filter_from_date"
+                style="@style/TaskFilterToggle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/toggle_bg"
+                android:drawableEnd="@drawable/ic_calendar_today"
+                android:hint="@string/date_format" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lighter_grey" />
+
+            <CheckBox
+                android:id="@+id/view_all_events"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:hint="@string/date_format"
+                android:text="@string/view_all_events" />
+
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/apply_filters"

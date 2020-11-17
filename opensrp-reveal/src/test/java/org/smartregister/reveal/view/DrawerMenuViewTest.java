@@ -1,12 +1,13 @@
 package org.smartregister.reveal.view;
 
 import android.content.Context;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.robolectric.Robolectric;
 import org.robolectric.RuntimeEnvironment;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.R;
@@ -58,14 +60,14 @@ public class DrawerMenuViewTest extends BaseUnitTest {
     @Captor
     private ArgumentCaptor<String> stringArgumentCaptor;
 
-    private  DrawerMenuView drawerMenuView;
+    private DrawerMenuView drawerMenuView;
 
     private Context context = RuntimeEnvironment.application;
     private AppCompatActivity mockActivity = mock(AppCompatActivity.class);
     private ProgressBar progress = new ProgressBar(context);
-    private TextView  progressLabel = new TextView(context);
-    private TextView  syncButton = new TextView(context);
-    private TextView  syncLabel = new TextView(context);
+    private TextView progressLabel = new TextView(context);
+    private TextView syncButton = new TextView(context);
+    private TextView syncLabel = new TextView(context);
 
     @Before
     public void setUp() {
@@ -232,6 +234,19 @@ public class DrawerMenuViewTest extends BaseUnitTest {
         assertEquals(progressLabel.getVisibility(), View.INVISIBLE);
         assertEquals(syncButton.getVisibility(), View.VISIBLE);
         assertEquals(syncLabel.getVisibility(), View.VISIBLE);
+    }
+
+    @Test
+    public void testLockNavigationDrawerForSelectionShouldDisplayAlertDialog() {
+        drawerMenuView = spy(drawerMenuView);
+        AppCompatActivity appCompatActivity = Robolectric.buildActivity(AppCompatActivity.class).create().get();
+        when(drawerMenuView.getContext()).thenReturn(appCompatActivity);
+        Whitebox.setInternalState(drawerMenuView, "mDrawerLayout", mDrawerLayout);
+
+        drawerMenuView.lockNavigationDrawerForSelection(R.string.select_campaign_operational_area_title, R.string.select_campaign_operational_area_title);
+
+        verify(mDrawerLayout).openDrawer(GravityCompat.START);
+        verify(mDrawerLayout).setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
     }
 
 }

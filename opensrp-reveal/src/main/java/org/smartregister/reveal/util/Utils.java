@@ -1,5 +1,6 @@
 package org.smartregister.reveal.util;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
@@ -30,6 +31,7 @@ import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.SyncEntity;
 import org.smartregister.domain.tag.FormTag;
 import org.smartregister.job.DocumentConfigurationServiceJob;
 import org.smartregister.job.PullUniqueIdsServiceJob;
@@ -63,6 +65,8 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_P
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LONGITUDE_AT_EQUITOR;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.METERS_PER_KILOMETER;
 import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
+import static org.smartregister.reveal.util.Constants.Intervention.DYNAMIC_FI;
+import static org.smartregister.reveal.util.Constants.Intervention.DYNAMIC_IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.FI;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -137,6 +141,15 @@ public class Utils {
         });
     }
 
+    public static Location getLocationById(String locationId) {
+        return cache.get(locationId, new CacheableData<Location>() {
+            @Override
+            public Location fetch() {
+                return RevealApplication.getInstance().getLocationRepository().getLocationById(locationId);
+            }
+        });
+    }
+
     public static void evictCache(String key) {
         cache.evict(key);
     }
@@ -182,11 +195,11 @@ public class Utils {
     public static int getInterventionLabel() {
         String plan = PreferencesUtil.getInstance().getCurrentPlan();
         String interventionType = PreferencesUtil.getInstance().getInterventionTypeForPlan(plan);
-        if (interventionType.equals(FI))
+        if (interventionType.equals(FI) || interventionType.equals(DYNAMIC_FI))
             return R.string.focus_investigation;
-        else if (interventionType.equals(IRS))
+        else if (interventionType.equals(IRS) || interventionType.equals(DYNAMIC_IRS))
             return R.string.irs;
-        else if (interventionType.equals(MDA))
+        else if (interventionType.equals(MDA) || interventionType.equals(MDA))
             return R.string.mda;
         else
             return R.string.irs;
@@ -413,20 +426,44 @@ public class Utils {
 
     /**
      * This method takes in a geometry object and returns a JSONArray representation of the coordinates
-     * @param geometry
+     * @param updatedGeometry The geometry of the updated feature
+     * @param originalGeometry The geometry of the original feature used to determine whether
+     *                         it was a MultiPolygon or a Polygon
      * @return
      */
-    public static JSONArray getCoordsFromGeometry(Geometry geometry) {
-        MultiPolygon multiPolygon = MultiPolygon.fromPolygons(Collections.singletonList((Polygon) geometry));
-        JSONObject multiPolygonJson;
-        JSONArray multiPolygonCoords = null;
+    public static JSONArray getCoordsFromGeometry(Geometry updatedGeometry, Geometry originalGeometry) {
+        JSONObject editedGeometryJson ;
+        JSONArray updatedCoords = null;
         try {
-            multiPolygonJson = new JSONObject(multiPolygon.toJson());
-            multiPolygonCoords = (JSONArray) multiPolygonJson.get("coordinates");
+            if (originalGeometry instanceof  MultiPolygon) {
+                MultiPolygon editedGeometryMultiPolygon = MultiPolygon.fromPolygon((Polygon) updatedGeometry);
+                editedGeometryJson = new JSONObject(editedGeometryMultiPolygon.toJson());
+            } else {
+                editedGeometryJson = new JSONObject(updatedGeometry.toJson());
+            }
+            updatedCoords = editedGeometryJson.getJSONArray("coordinates");
         } catch (JSONException e) {
             Timber.e(e);
         }
-        return multiPolygonCoords;
+        return updatedCoords;
+    }
+
+    public static String getSyncEntityString(SyncEntity syncEntity) {
+        Context context =  RevealApplication.getInstance().getContext().applicationContext();
+        switch (syncEntity) {
+            case EVENTS:
+                return context.getString(R.string.events);
+            case LOCATIONS:
+                return context.getString(R.string.locations);
+            case PLANS:
+                return context.getString(R.string.plans);
+            case STRUCTURES:
+                return context.getString(R.string.structures);
+            case TASKS:
+                return context.getString(R.string.tasks_text);
+            default:
+                throw new IllegalStateException("Invalid Sync Entity");
+        }
     }
 
 }

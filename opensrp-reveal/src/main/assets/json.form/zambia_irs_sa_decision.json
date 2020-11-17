@@ -1,6 +1,6 @@
 {
   "count": "1",
-  "encounter_type": "",
+  "encounter_type": "irs_sa_decision",
   "form_version": "0.0.1",
   "entity_id": "",
   "metadata": {
@@ -58,7 +58,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Please write the name of the Village for this Spray Area",
-        "text_size": "8sp",
+        "text_size": "7sp",
         "v_required": {
           "value": "true",
           "err": "Required field"
@@ -73,6 +73,7 @@
         "edit_type": "number",
         "hint": "How many structures are in this Spray Area? (structures on ground as listed on the Reveal dashboard)",
         "is_mandatory": true,
+        "text_size": "7sp",
         "v_required": {
           "value": true,
           "err": "This field is mandatory"
@@ -132,6 +133,7 @@
         "edit_type": "number",
         "hint": "How many structures were sprayed? (as listed on the Reveal dashboard)",
         "is_mandatory": true,
+        "text_size": "7sp",
         "v_required": {
           "value": true,
           "err": "This field is mandatory"
@@ -459,7 +461,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "hint": "Please provide a valid reason for not returning to ensure this Spray Area is being Sprayed Effectively.",
-        "text_size": "8sp",
+        "text_size": "7sp",
         "v_required": {
           "value": "true",
           "err": "Required field"

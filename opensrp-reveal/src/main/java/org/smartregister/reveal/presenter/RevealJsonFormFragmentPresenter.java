@@ -2,9 +2,6 @@ package org.smartregister.reveal.presenter;
 
 import android.content.Intent;
 import android.location.Location;
-import androidx.annotation.VisibleForTesting;
-import androidx.core.util.Pair;
-import androidx.appcompat.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,7 +9,12 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.util.Pair;
+
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vijay.jsonwizard.constants.JsonFormConstants;
@@ -23,12 +25,14 @@ import com.vijay.jsonwizard.presenters.JsonFormFragmentPresenter;
 import com.vijay.jsonwizard.utils.ValidationStatus;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.PasswordRequestCallback;
 import org.smartregister.reveal.contract.UserLocationContract.UserLocationCallback;
 import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Constants.JsonForm;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.PasswordDialogUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
@@ -37,6 +41,9 @@ import org.smartregister.reveal.view.RevealMapView;
 import org.smartregister.reveal.widget.GeoWidgetFactory;
 import org.smartregister.reveal.widget.RevealToasterNotesFactory;
 import org.smartregister.util.JsonFormUtils;
+
+import java.util.List;
+import java.util.Map;
 
 import io.ona.kujaku.listeners.BaseLocationListener;
 
@@ -196,26 +203,40 @@ public class RevealJsonFormFragmentPresenter extends JsonFormFragmentPresenter i
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         super.onItemSelected(parent, view, position, id);
         String key = (String) parent.getTag(R.id.key);
-        cascadeSelect(key, Constants.JsonForm.DATA_COLLECTOR, Constants.CONFIGURATION.SPRAY_OPERATORS, Constants.JsonForm.SPRAY_OPERATOR_CODE);
-        cascadeSelect(key, Constants.JsonForm.HFC_BELONG, Constants.CONFIGURATION.COMMUNITY_HEALTH_WORKERS, Constants.JsonForm.CHW_NAME);
-        cascadeSelect(key, Constants.JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_CORDINATORS, Constants.JsonForm.COORDINATOR_NAME);
-        cascadeSelect(key, Constants.JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_ENUMERATORS, Constants.JsonForm.DATA_COLLECTOR);
-        cascadeSelect(key, Constants.JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_COMMUNITY_HEALTH_WORKERS, Constants.JsonForm.CHW_NAME);
-        cascadeSelect(key, Constants.JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_ADHERENCE_OFFICERS, Constants.JsonForm.ADHERENCE_NAME);
+        Map<String, JSONObject> fields = jsonFormUtils.getFields(jsonFormView.getmJSONObject());
+        cascadeSelect(key, JsonForm.DATA_COLLECTOR, Constants.CONFIGURATION.SPRAY_OPERATORS, fields.get(JsonForm.SPRAY_OPERATOR_CODE));
+        cascadeSelect(key, JsonForm.HFC_BELONG, Constants.CONFIGURATION.COMMUNITY_HEALTH_WORKERS, fields.get(JsonForm.CHW_NAME));
+        cascadeSelect(key, JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_CORDINATORS, fields.get(JsonForm.COORDINATOR_NAME));
+        cascadeSelect(key, JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_ENUMERATORS, fields.get(JsonForm.DATA_COLLECTOR));
+        cascadeSelect(key, JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_COMMUNITY_HEALTH_WORKERS, fields.get(JsonForm.CHW_NAME));
+        cascadeSelect(key, JsonForm.CATCHMENT_AREA, Constants.CONFIGURATION.MDA_ADHERENCE_OFFICERS, fields.get(JsonForm.ADHERENCE_NAME));
     }
 
-    private void cascadeSelect(String key, String parentWidget, String configurationKey, String childWidget) {
+    private void cascadeSelect(String key, String parentWidget, String configurationKey, JSONObject childWidget) {
         if (parentWidget.equals(key)) {
             String value = JsonFormUtils.getFieldValue(getView().getCurrentJsonState(), key);
             if (!TextUtils.isEmpty(value)) {
-                Pair<JSONArray, JSONArray> options = jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
-                        jsonFormView.getmJSONObject(), configurationKey, childWidget, value.split(":")[0]);
+                Pair<JSONArray, JSONArray> options = jsonFormUtils.populateServerOptions(RevealApplication.getInstance().getServerConfigs()
+                        , configurationKey, childWidget, value.split(":")[0]);
                 if (options != null) {
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getView().getContext(), R.layout.native_form_simple_list_item_1, new Gson().fromJson(options.second.toString(), String[].class));
-                    MaterialSpinner spinner = (MaterialSpinner) jsonFormView.getFormDataView(JsonFormConstants.STEP1 + ":" + childWidget);
-                    spinner.setAdapter(adapter);
-                    spinner.setOnItemSelectedListener(formFragment.getCommonListener());
-                    spinner.setTag(R.id.keys, options.first);
+                    List<String> newAdapterValues = new Gson().fromJson(options.second.toString(), new TypeToken<List<String>>() {
+                    }.getType());
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getView().getContext(), R.layout.native_form_simple_list_item_1, newAdapterValues);
+                    MaterialSpinner spinner = (MaterialSpinner) jsonFormView.getFormDataView(JsonFormConstants.STEP1 + ":" + childWidget.optString(JsonFormUtils.KEY));
+                    if (spinner != null) {
+                        Object selected;
+                        if (spinner.getAdapter().getCount() == spinner.getSelectedItemPosition()) {
+                            selected = spinner.getAdapter().getItem(spinner.getSelectedItemPosition() - 1);
+                        } else {
+                            selected = spinner.getSelectedItem();
+                        }
+                        spinner.setAdapter(adapter);
+                        spinner.setOnItemSelectedListener(formFragment.getCommonListener());
+                        spinner.setTag(R.id.keys, options.first);
+                        if (selected != null && newAdapterValues.contains(selected.toString())) {
+                            spinner.setSelection(newAdapterValues.indexOf(selected.toString()));
+                        }
+                    }
                 }
             }
         }

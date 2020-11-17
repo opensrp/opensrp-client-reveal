@@ -47,6 +47,8 @@ public interface BaseDrawerContract {
 
         void lockNavigationDrawerForSelection();
 
+        void lockNavigationDrawerForSelection(int title, int message);
+
         void showOperationalAreaSelector(Pair<String, ArrayList<String>> locationHierarchy);
 
         void showPlanSelector(List<String> campaigns, String entireTreeString);
@@ -98,6 +100,8 @@ public interface BaseDrawerContract {
         void onPlanValidated(boolean isValid);
 
         void updateSyncStatusDisplay(boolean synced);
+
+        void onShowFilledForms();
     }
 
     interface Interactor {

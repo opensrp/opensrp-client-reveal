@@ -18,10 +18,10 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.smartregister.Context;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.LocationProperty;
 import org.smartregister.domain.Task;
-import org.smartregister.domain.Event;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
@@ -236,7 +236,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
     @Test
     public void testFetchLocations() {
-        String groupNameQuery = "Select structure._id as _id , COALESCE(ec_family.first_name,structure_name,name) , group_concat(ec_family_member.first_name||' '||ec_family_member.last_name) FROM structure LEFT JOIN ec_family ON structure._id = ec_family.structure_id AND ec_family.date_removed IS NULL collate nocase  LEFT JOIN ec_family_member ON ec_family.base_entity_id = ec_family_member.relational_id AND ec_family_member.date_removed IS NULL collate nocase  LEFT JOIN sprayed_structures ON structure._id = sprayed_structures.base_entity_id collate nocase  WHERE parent_id=?  GROUP BY structure._id";
+        String groupNameQuery = "Select structure._id as _id , COALESCE(ec_family.first_name,structure_name,name,family_head_name) , group_concat(ec_family_member.first_name||' '||ec_family_member.last_name) FROM structure LEFT JOIN ec_family ON structure._id = ec_family.structure_id AND ec_family.date_removed IS NULL collate nocase  LEFT JOIN ec_family_member ON ec_family.base_entity_id = ec_family_member.relational_id AND ec_family_member.date_removed IS NULL collate nocase  LEFT JOIN sprayed_structures ON structure._id = sprayed_structures.id collate nocase  WHERE parent_id=?  GROUP BY structure._id";
         String plan = UUID.randomUUID().toString();
         String operationAreaId = operationArea.getId();
         setOperationArea(plan);
@@ -332,7 +332,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         MatrixCursor taskCursor = TestingUtils.getTaskCursor(expectedTask);
 
         when(database.rawQuery(any(), any())).thenReturn(taskCursor);
-        when(interactorUtils.resetTaskInfo(any(),any())).thenReturn(true);
+        when(interactorUtils.resetTaskInfo(any(), any())).thenReturn(true);
 
         listTaskInteractor.resetInterventionTaskInfo(BEDNET_DISTRIBUTION, expectedTask.getStructureId());
 
@@ -360,6 +360,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
         when(structureRepository.getLocationById(anyString())).thenReturn(location);
         Feature feature = TestingUtils.getStructure();
+        feature.addStringProperty(TASK_IDENTIFIER,"task-id-a");
 
         listTaskInteractor.markStructureAsInactive(feature);
 
@@ -367,8 +368,8 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals(feature.id(), stringArgumentCaptor.getValue());
         verify(structureRepository).addOrUpdate(locationArgumentCaptor.capture());
         assertEquals(LocationProperty.PropertyStatus.INACTIVE, locationArgumentCaptor.getValue().getProperties().getStatus());
-        verify(taskRepository).cancelTasksForEntity(stringArgumentCaptor.capture());
-        assertEquals(feature.id(), stringArgumentCaptor.getValue());
+        verify(taskRepository).cancelTaskByIdentifier(stringArgumentCaptor.capture());
+        assertEquals(feature.getStringProperty(TASK_IDENTIFIER), stringArgumentCaptor.getValue());
         verify(presenter, timeout(ASYNC_TIMEOUT)).onStructureMarkedInactive();
     }
 
@@ -386,7 +387,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
 
         when(taskRepository.getTaskByIdentifier(anyString())).thenReturn(task);
 
-        listTaskInteractor.markStructureAsIneligible(feature,reasonUnEligible);
+        listTaskInteractor.markStructureAsIneligible(feature, reasonUnEligible);
 
         verify(taskRepository).getTaskByIdentifier(stringArgumentCaptor.capture());
         assertEquals(taskIdentifier, stringArgumentCaptor.getValue());
@@ -399,7 +400,7 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals(taskIdentifier, task.getIdentifier());
 
 
-        verify(eventClientRepository).addEvent(stringArgumentCaptor.capture(),jsonObjectArgumentCaptor.capture());
+        verify(eventClientRepository).addEvent(stringArgumentCaptor.capture(), jsonObjectArgumentCaptor.capture());
         Event actualEvent = taskGson.fromJson(jsonObjectArgumentCaptor.getValue().toString(), Event.class);
         assertEquals(BuildConfig.VERSION_NAME, actualEvent.getDetails().get(APP_VERSION_NAME));
         assertEquals(expectedBusinessStatus, actualEvent.getDetails().get(TASK_BUSINESS_STATUS));
@@ -441,7 +442,14 @@ public class ListTaskInteractorTest extends BaseUnitTest {
         assertEquals("11/02/1977", cardDetails.getDateCreated());
         assertEquals("Nifi-User", cardDetails.getOwner());
     }
-  
+
+    @Test
+    public void testSaveJsonFormShouldSaveMosquitoCollectionForm() {
+        listTaskInteractor.saveJsonForm(TestingUtils.mosquitoCollectionForm);
+
+        verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addEvent(any(), any());
+    }
+
     private Cursor createSprayCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{"spray_status", "not_sprayed_reason",
                 "not_sprayed_other_reason", "property_type", "spray_date", "spray_operator", "family_head_name"});
