@@ -28,11 +28,10 @@ jobs:
          FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
         run: echo $FIREBASE_CONFIG > opensrp-reveal/google-services.json
 
-      - name: Run unit tests with Gradle
-        run: ./gradlew :opensrp-reveal:jacocoTestReport  --stacktrace
-      - name: Generate Javadoc with Gradle
-        run: ./gradlew javadoc
-      - name: Upload coverage to Coveralls with Gradle
-        run: ./gradlew coveralls --stacktrace
+      - name: Run unit tests with Gradle and upload to coveralls
+        run: ./gradlew :opensrp-reveal:jacocoTestReport  coveralls --stacktrace
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+
+      - name: Generate Javadoc with Gradle
+        run: ./gradlew javadoc
