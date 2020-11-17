@@ -1,6 +1,9 @@
 package org.smartregister.reveal.interactor;
 
 import android.content.Context;
+import android.content.Intent;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -48,7 +51,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -204,7 +206,10 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
 
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).archiveTasksForEntity(structureId);
         verify(taskRepository, timeout(ASYNC_TIMEOUT)).cancelTasksForEntity(structureId);
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onArchiveFamilyCompleted(eq(true), nullable(Task.class));
+        Intent taskGeneratedIntent = new Intent("task_generated_event");
+        taskGeneratedIntent.putExtra("task_generated", task);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(taskGeneratedIntent);
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onArchiveFamilyCompleted(true, task);
 
     }
 
