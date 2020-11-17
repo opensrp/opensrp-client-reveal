@@ -1,6 +1,5 @@
 package org.smartregister.reveal.interactor;
 
-import android.content.Context;
 import android.content.IntentFilter;
 
 import androidx.annotation.NonNull;
@@ -72,11 +71,6 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
     @Override
     public ClientProcessorForJava getClientProcessorForJava() {
         return RevealClientProcessor.getInstance(RevealApplication.getInstance().getApplicationContext());
-    }
-
-    @Override
-    public void generateTasks(Context applicationContext, String baseEntityId, String structureId) {
-        //TODO remove Not used
     }
 
     @Override

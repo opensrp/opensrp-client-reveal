@@ -33,8 +33,6 @@ import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
 import org.smartregister.reveal.util.FamilyConstants.TABLE_NAME;
 import org.smartregister.reveal.util.InteractorUtils;
-import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.reveal.util.TestingUtils;
 import org.smartregister.sync.ClientProcessorForJava;
 
@@ -116,18 +114,6 @@ public class RevealFamilyProfileInteractorTest extends BaseUnitTest {
         assertNotNull(clientProcessor);
         assertTrue(clientProcessor instanceof RevealClientProcessor);
     }
-
-    @Test
-    public void testGenerateTasks() {
-        String baseEntityId = UUID.randomUUID().toString();
-        String structureId = UUID.randomUUID().toString();
-        String plan = UUID.randomUUID().toString();
-        PreferencesUtil.getInstance().setCurrentPlan(plan);
-        PreferencesUtil.getInstance().setInterventionTypeForPlan(plan, "FI");
-        interactor.generateTasks(context, baseEntityId, structureId);
-        verify(presenter, timeout(ASYNC_TIMEOUT)).onTasksGenerated();
-    }
-
 
     @Test
     public void testUpdateFamilyMemberSurnameWithoutFamilyMembers() {
