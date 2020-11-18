@@ -24,16 +24,18 @@ import org.robolectric.RuntimeEnvironment;
 import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.commonregistry.CommonPersonObjectClient;
 import org.smartregister.commonregistry.CommonRepository;
+import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
-import org.smartregister.domain.Event;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.family.util.Constants;
+import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
+import org.smartregister.repository.TaskRepository;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.BuildConfig;
-import org.smartregister.reveal.R;
+import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.PreferencesUtil;
@@ -49,6 +51,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -56,6 +59,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.reveal.util.Constants.BLOOD_SCREENING_EVENT;
 import static org.smartregister.reveal.util.Constants.DETAILS;
 import static org.smartregister.reveal.util.Constants.Intervention.PAOT;
 import static org.smartregister.reveal.util.Constants.JsonForm.PAOT_STATUS;
@@ -92,6 +96,9 @@ public class BaseInteractorTest extends BaseUnitTest {
     private RevealClientProcessor clientProcessor;
 
     @Mock
+    protected TaskRepository taskRepository;
+
+    @Mock
     private EventClientRepository eventClientRepository;
 
     @Mock
@@ -115,6 +122,9 @@ public class BaseInteractorTest extends BaseUnitTest {
     @Captor
     private ArgumentCaptor<Double> doubleArgumentCaptor;
 
+    @Captor
+    private ArgumentCaptor<Task> taskArgumentCaptor;
+
     private BaseInteractor interactor;
 
     private Context context = RuntimeEnvironment.application;
@@ -127,6 +137,7 @@ public class BaseInteractorTest extends BaseUnitTest {
         Whitebox.setInternalState(interactor, "clientProcessor", clientProcessor);
         Whitebox.setInternalState(interactor, "eventClientRepository", eventClientRepository);
         Whitebox.setInternalState(interactor, "taskUtils", taskUtils);
+        Whitebox.setInternalState(interactor, "taskRepository", taskRepository);
     }
 
 
@@ -233,6 +244,54 @@ public class BaseInteractorTest extends BaseUnitTest {
         assertEquals(locationId, event.getDetails().get(LOCATION_PARENT));
     }
 
+    @Test
+    public void testSaveMemberForm() throws JSONException {
+        String form = AssetHandler.readFileFromAssetsFolder(org.smartregister.reveal.util.Constants.JsonForm.BLOOD_SCREENING_FORM, context);
+        JSONObject formObject = new JSONObject(form);
+        String entityId = UUID.randomUUID().toString();
+        String taskId = UUID.randomUUID().toString();
+        formObject.put("entity_id", entityId);
+        JSONObject details = new JSONObject();
+        details.put(TASK_IDENTIFIER, taskId);
+        formObject.put(DETAILS, details);
+        JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formObject), "business_status").put(VALUE, org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE);
+
+        interactor.saveJsonForm(formObject.toString());
+
+        verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addEvent(anyString(), eventCaptor.capture());
+        verify(clientProcessor, timeout(ASYNC_TIMEOUT)).processClient(eventClientCaptor.capture(), eq(true));
+        assertEquals(BLOOD_SCREENING_EVENT, eventCaptor.getValue().getString("eventType"));
+        JSONArray obs = eventCaptor.getValue().getJSONArray("obs");
+        assertEquals(3, obs.length());
+        assertEquals("1", obs.getJSONObject(0).getJSONArray(VALUES).get(0));
+        assertEquals("Microscopy", obs.getJSONObject(1).getJSONArray(VALUES).get(0));
+        assertEquals(org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE, obs.getJSONObject(2).getJSONArray(VALUES).get(0));
+    }
+
+    @Test
+    public void testSaveCaseConfirmation() throws JSONException {
+        String form = AssetHandler.readFileFromAssetsFolder(org.smartregister.reveal.util.Constants.JsonForm.CASE_CONFIRMATION_FORM, context);
+        String planIdentifier = UUID.randomUUID().toString();
+        PreferencesUtil.getInstance().setCurrentPlanId(planIdentifier);
+        JSONObject formObject = new JSONObject(form);
+        String entityId = UUID.randomUUID().toString();
+        String taskId = UUID.randomUUID().toString();
+        formObject.put("entity_id", entityId);
+        JSONObject details = new JSONObject();
+        details.put(TASK_IDENTIFIER, taskId);
+        formObject.put(DETAILS, details);
+        JsonFormUtils.getFieldJSONObject(JsonFormUtils.fields(formObject), "business_status").put(VALUE, org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE);
+        when(taskRepository.getTaskByIdentifier(taskId)).thenReturn(TestingUtils.getTask(taskId));
+
+        interactor.saveJsonForm(formObject.toString());
+        verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addEvent(anyString(), eventCaptor.capture());
+        verify(clientProcessor, timeout(ASYNC_TIMEOUT)).calculateBusinessStatus(any());
+        assertEquals(org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT, eventCaptor.getValue().getString("eventType"));
+        verify(taskRepository).addOrUpdate(taskArgumentCaptor.capture());
+        assertEquals(Task.TaskStatus.COMPLETED, taskArgumentCaptor.getValue().getStatus());
+        assertEquals(BaseRepository.TYPE_Created, taskArgumentCaptor.getValue().getSyncStatus());
+        assertFalse(RevealApplication.getInstance().getSynced());
+    }
 
     private Cursor createFamilyCursor() {
         MatrixCursor cursor = new MatrixCursor(new String[]{
