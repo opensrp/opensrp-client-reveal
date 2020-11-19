@@ -309,8 +309,8 @@ public class BaseInteractorTest extends BaseUnitTest {
 
         interactor = spy(interactor);
         interactor.findLastEvent(eventBaseEntityId, BLOOD_SCREENING_EVENT);
-        verify(database).rawQuery(query, new String[]{eventBaseEntityId, BLOOD_SCREENING_EVENT});
-        verify(interactor).handleLasteventFound(eventCaptor.capture());
+        verify(database, timeout(ASYNC_TIMEOUT)).rawQuery(query, new String[]{eventBaseEntityId, BLOOD_SCREENING_EVENT});
+        verify(interactor, timeout(ASYNC_TIMEOUT)).handleLasteventFound(eventCaptor.capture());
         assertNotNull(eventCaptor.getValue());
         assertEquals(bloodScreeningEvent, eventCaptor.getValue());
     }
