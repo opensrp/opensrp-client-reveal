@@ -68,6 +68,8 @@ public interface Constants {
 
     List<String> MACEPA_PROVINCES = Arrays.asList("Western", "Southern", "Lusaka");
 
+    String ACTIONS = "actions";
+
     interface CONFIGURATION {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";
