@@ -131,6 +131,8 @@ public class RevealRepository extends Repository {
                     break;
                 case 11:
                     upgradeToVersion11(db);
+                case 12:
+                    upgradeToVersion12(db);
                     break;
                 case 12:
                     upgradeToVersion12(db);

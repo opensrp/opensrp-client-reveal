@@ -153,7 +153,7 @@ android {
 
         debug {
             resValue "string", 'opensrp_base_url', '"https://reveal-stage.smartregister.org/opensrp/"'
-            buildConfigField "Integer", "DATABASE_VERSION", '13'
+            buildConfigField "int", "DATABASE_VERSION", '13'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_INITIAL_BATCH_SIZE", '250'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_BATCH_SIZE", '100'
             buildConfigField "int", "OPENMRS_UNIQUE_ID_SOURCE", '2'
@@ -211,7 +211,7 @@ dependencies {
         exclude group: 'stax', module: 'stax-api'
     }
 
-    implementation('org.smartregister:opensrp-client-core:3.0.7-SNAPSHOT@aar') {
+    implementation('org.smartregister:opensrp-client-core:3.3.0-SNAPSHOT@aar') {
         transitive = true
         exclude group: 'com.google.guava', module: 'guava'
         exclude group: 'com.android.support', module: 'appcompat-v7'
