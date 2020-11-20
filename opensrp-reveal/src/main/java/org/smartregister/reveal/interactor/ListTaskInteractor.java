@@ -114,7 +114,7 @@ public class ListTaskInteractor extends BaseInteractor {
         commonRepository = RevealApplication.getInstance().getContext().commonrepository(SPRAYED_STRUCTURES);
         structureRepository = RevealApplication.getInstance().getContext().getStructureRepository();
         taskRepository = RevealApplication.getInstance().getTaskRepository();
-        interactorUtils = new InteractorUtils(taskRepository, eventClientRepository, clientProcessor);
+        interactorUtils = new InteractorUtils(taskRepository, eventClientRepository);
         revealApplication = RevealApplication.getInstance();
     }
 

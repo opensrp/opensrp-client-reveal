@@ -23,7 +23,6 @@ import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.FamilyConstants.EventType;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import timber.log.Timber;
@@ -48,14 +47,11 @@ public class InteractorUtils {
 
     private EventClientRepository eventClientRepository;
 
-    private RevealClientProcessor clientProcessor;
-
     private RevealJsonFormUtils jsonFormUtils;
 
-    public InteractorUtils(TaskRepository taskRepository, EventClientRepository eventClientRepository, RevealClientProcessor clientProcessor) {
+    public InteractorUtils(TaskRepository taskRepository, EventClientRepository eventClientRepository) {
         this.taskRepository = taskRepository;
         this.eventClientRepository = eventClientRepository;
-        this.clientProcessor = clientProcessor;
         jsonFormUtils = new RevealJsonFormUtils();
     }
 
@@ -85,7 +81,7 @@ public class InteractorUtils {
     }
 
 
-    public boolean archiveClient(String baseEntityId, boolean isFamily) {
+    public EventClient archiveClient(String baseEntityId, boolean isFamily) {
         taskRepository.cancelTasksForEntity(baseEntityId);
         taskRepository.archiveTasksForEntity(baseEntityId);
         JSONObject eventsByBaseEntityId = eventClientRepository.getEventsByBaseEntityId(baseEntityId);
@@ -104,7 +100,6 @@ public class InteractorUtils {
             }
         }
 
-        boolean saved;
         try {
             eventClientRepository.batchInsertEvents(events, 0);
             clientJsonObject.put("dateVoided", now);
@@ -120,16 +115,14 @@ public class InteractorUtils {
             eventJson.put(EventClientRepository.event_column.syncStatus.name(), BaseRepository.TYPE_Unsynced);
             eventClientRepository.addEvent(baseEntityId, eventJson);
 
-            clientProcessor.processClient(Collections.singletonList(new EventClient(
+            return new EventClient(
                     gson.fromJson(eventJson.toString(), org.smartregister.domain.Event.class),
-                    gson.fromJson(clientJsonObject.toString(), Client.class))), true);
-            saved = true;
+                    gson.fromJson(clientJsonObject.toString(), Client.class));
 
         } catch (JSONException e) {
             Timber.e(e);
-            saved = false;
         }
-        return saved;
+        return null;
     }
 
     public boolean archiveEventsForTask(SQLiteDatabase db, BaseTaskDetails taskDetails) {
@@ -181,11 +174,11 @@ public class InteractorUtils {
         try {
 
             if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode()) || BCC.equals(taskDetails.getTaskCode())) {
-                String eventTypeField= null;
+                String eventTypeField = null;
 
                 if (CASE_CONFIRMATION.equals(taskDetails.getTaskCode())) {
                     eventTypeField = CASE_CONFIRMATION_FIELD;
-                } else if(BCC.equals(taskDetails.getTaskCode())) {
+                } else if (BCC.equals(taskDetails.getTaskCode())) {
                     eventTypeField = BEHAVIOUR_CHANGE_COMMUNICATION;
                 }
 

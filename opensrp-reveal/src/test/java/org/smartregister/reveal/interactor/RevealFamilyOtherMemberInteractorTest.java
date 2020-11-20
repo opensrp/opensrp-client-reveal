@@ -88,7 +88,7 @@ public class RevealFamilyOtherMemberInteractorTest extends BaseUnitTest {
         Context.bindtypes = new ArrayList<>();
         interactor = new RevealFamilyOtherMemberInteractor();
         Whitebox.setInternalState(interactor, "commonRepository", commonRepository);
-        Whitebox.setInternalState(interactor, "interactorUtils", new InteractorUtils(taskRepository, eventClientRepository, clientProcessor));
+        Whitebox.setInternalState(interactor, "interactorUtils", new InteractorUtils(taskRepository, eventClientRepository));
     }
 
     @Test

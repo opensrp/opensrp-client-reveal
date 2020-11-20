@@ -17,7 +17,7 @@ import timber.log.Timber;
  */
 public class TaskGenerationReceiver extends BroadcastReceiver {
 
-    private TaskGenerationCallBack taskGenerationCallBack;
+    private final TaskGenerationCallBack taskGenerationCallBack;
 
     public TaskGenerationReceiver(TaskGenerationCallBack taskGenerationCallBack) {
         this.taskGenerationCallBack = taskGenerationCallBack;

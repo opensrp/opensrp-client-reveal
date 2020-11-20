@@ -99,7 +99,7 @@ public class TaskRegisterFragmentInteractor extends BaseInteractor implements Ta
         super(presenter);
         this.locationBuffer = locationBuffer;
         locationRepository = RevealApplication.getInstance().getLocationRepository();
-        interactorUtils = new InteractorUtils(RevealApplication.getInstance().getTaskRepository(), eventClientRepository, clientProcessor);
+        interactorUtils = new InteractorUtils(RevealApplication.getInstance().getTaskRepository(), eventClientRepository);
     }
 
     private String mainSelect(String mainCondition) {

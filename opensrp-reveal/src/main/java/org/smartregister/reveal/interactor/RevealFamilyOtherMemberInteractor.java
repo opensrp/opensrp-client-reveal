@@ -24,7 +24,7 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
     public RevealFamilyOtherMemberInteractor() {
         commonRepository = getInstance().getContext().commonrepository(getInstance().getMetadata().familyMemberRegister.tableName);
         appExecutors = getInstance().getAppExecutors();
-        interactorUtils = new InteractorUtils(getInstance().getTaskRepository(), getInstance().getContext().getEventClientRepository(), (RevealClientProcessor) getInstance().getClientProcessor());
+        interactorUtils = new InteractorUtils(getInstance().getTaskRepository(), getInstance().getContext().getEventClientRepository());
     }
 
     @Override
@@ -43,7 +43,7 @@ public class RevealFamilyOtherMemberInteractor extends FamilyOtherMemberProfileI
             getInstance().getRepository().getWritableDatabase().beginTransaction();
             boolean saved;
             try {
-                saved = interactorUtils.archiveClient(client.getCaseId(), false);
+                saved = interactorUtils.archiveClient(client.getCaseId(), false) != null;
                 getInstance().getRepository().getWritableDatabase().setTransactionSuccessful();
             } finally {
                 getInstance().getRepository().getWritableDatabase().endTransaction();

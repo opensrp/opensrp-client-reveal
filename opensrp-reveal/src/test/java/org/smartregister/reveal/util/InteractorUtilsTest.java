@@ -96,7 +96,7 @@ public class InteractorUtilsTest extends BaseUnitTest {
 
     @Before
     public void setUp() {
-        interactorUtils = new InteractorUtils(taskRepository, eventClientRepository, clientProcessor);
+        interactorUtils = new InteractorUtils(taskRepository, eventClientRepository);
         Whitebox.setInternalState(interactorUtils, "jsonFormUtils", jsonFormUtils);
         formSubmissionId = UUID.randomUUID().toString();
         baseEntityId = UUID.randomUUID().toString();

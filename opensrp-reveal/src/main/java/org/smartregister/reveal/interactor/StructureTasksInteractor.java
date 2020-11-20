@@ -79,7 +79,7 @@ public class StructureTasksInteractor extends BaseInteractor implements Structur
         this.appExecutors = appExecutors;
         this.database = database;
         this.structureRepository = structureRepository;
-        this.interactorUtils = new InteractorUtils(RevealApplication.getInstance().getTaskRepository(), eventClientRepository, clientProcessor);
+        this.interactorUtils = new InteractorUtils(RevealApplication.getInstance().getTaskRepository(), eventClientRepository);
     }
 
     @Override
