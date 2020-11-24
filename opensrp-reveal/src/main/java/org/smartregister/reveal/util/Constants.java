@@ -355,6 +355,8 @@ public interface Constants {
 
         String SPRAY_FORM_ZAMBIA = "json.form/zambia_spray_form.json";
 
+        String SPRAY_FORM_SENEGAL = "json.form/senegal_spray_form.json";
+
         String LARVAL_DIPPING_FORM = "json.form/larval_dipping_form.json";
 
         String ADD_STRUCTURE_FORM = "json.form/add_structure.json";
@@ -529,6 +531,7 @@ public interface Constants {
         String NAMIBIA_EC_CLIENT_FIELDS = "ec_client_fields_namibia.json";
         String BOTSWANA_EC_CLIENT_FIELDS = "ec_client_fields_botswana.json";
         String ZAMBIA_EC_CLIENT_FIELDS = "ec_client_fields_zambia.json";
+        String SENEGAL_EC_CLIENT_FIELDS = "ec_client_fields_senegal.json";
         String REFAPP_EC_CLIENT_FIELDS = "ec_client_fields_refapp.json";
     }
 

@@ -65,7 +65,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
     protected IndicatorDetails doInBackground(Void... params) {
         IndicatorDetails indicatorDetails = null;
 
-        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.SENEGAL) {
             indicatorDetails = IndicatorUtils.processIndicators(this.tasks);
             indicatorDetails.setSprayIndicatorList(IndicatorUtils.populateSprayIndicators(this.activity, indicatorDetails));
         } else if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
@@ -106,7 +106,7 @@ public class IndicatorsCalculatorTask extends AsyncTask<Void, Void, IndicatorDet
             Timber.w("progress indicator or indicators is null");
             return;
         }
-        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.SENEGAL) {
             progressIndicator.setProgress(indicatorDetails.getProgress());
             progressIndicator.setTitle(this.activity.getString(R.string.n_percent, indicatorDetails.getProgress()));
 
