@@ -101,7 +101,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia_irs_sa_decision_calculation.yml"
+              "rules-file": "senegal_irs_sa_decision_calculation.yml"
             }
           }
         }
@@ -119,7 +119,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia_irs_sa_decision_calculation.yml"
+              "rules-file": "senegal_irs_sa_decision_calculation.yml"
             }
           }
         }
@@ -165,7 +165,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia_irs_sa_decision_calculation.yml"
+              "rules-file": "senegal_irs_sa_decision_calculation.yml"
             }
           }
         }
@@ -180,7 +180,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia_irs_sa_decision_calculation.yml"
+              "rules-file": "senegal_irs_sa_decision_calculation.yml"
             }
           }
         }
@@ -195,7 +195,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia_irs_sa_decision_calculation.yml"
+              "rules-file": "senegal_irs_sa_decision_calculation.yml"
             }
           }
         }
@@ -213,7 +213,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia_irs_sa_decision_calculation.yml"
+              "rules-file": "senegal_irs_sa_decision_calculation.yml"
             }
           }
         },
@@ -492,14 +492,14 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia_irs_sa_decision_calculation.yml"
+              "rules-file": "senegal_irs_sa_decision_calculation.yml"
             }
           }
         },
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia_irs_sa_decision_relevance.yml"
+              "rules-file": "senegal_irs_sa_decision_relevance.yml"
             }
           }
         }

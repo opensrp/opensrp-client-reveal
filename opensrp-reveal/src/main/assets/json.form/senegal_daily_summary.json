@@ -266,7 +266,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia_daily_summary_relevance.yml"
+              "rules-file": "senegal_daily_summary_relevance.yml"
             }
           }
         }
@@ -314,7 +314,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia_daily_summary_relevance.yml"
+              "rules-file": "senegal_daily_summary_relevance.yml"
             }
           }
         }
@@ -329,7 +329,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia_daily_summary_calculation.yml"
+              "rules-file": "senegal_daily_summary_calculation.yml"
             }
           }
         }
@@ -347,7 +347,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia_daily_summary_calculation.yml"
+              "rules-file": "senegal_daily_summary_calculation.yml"
             }
           }
         }
@@ -373,14 +373,14 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia_daily_summary_relevance.yml"
+              "rules-file": "senegal_daily_summary_relevance.yml"
             }
           }
         },
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia_daily_summary_calculation.yml"
+              "rules-file": "senegal_daily_summary_calculation.yml"
             }
           }
         },

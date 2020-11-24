@@ -99,7 +99,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-irs-verification-relevance.yml"
+              "rules-file": "senegal-irs-verification-relevance.yml"
             }
           }
         }
@@ -137,7 +137,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-irs-verification-relevance.yml"
+              "rules-file": "senegal-irs-verification-relevance.yml"
             }
           }
         }
@@ -175,7 +175,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-irs-verification-relevance.yml"
+              "rules-file": "senegal-irs-verification-relevance.yml"
             }
           }
         }
@@ -213,7 +213,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-irs-verification-relevance.yml"
+              "rules-file": "senegal-irs-verification-relevance.yml"
             }
           }
         }
@@ -251,7 +251,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-irs-verification-relevance.yml"
+              "rules-file": "senegal-irs-verification-relevance.yml"
             }
           }
         }

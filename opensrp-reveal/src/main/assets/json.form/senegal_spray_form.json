@@ -199,7 +199,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         },
@@ -260,7 +260,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         },
@@ -363,7 +363,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -463,7 +463,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -578,7 +578,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-calculation.yml"
+              "rules-file": "senegal-spray-calculation.yml"
             }
           }
         }
@@ -596,14 +596,14 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         },
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-calculation.yml"
+              "rules-file": "senegal-spray-calculation.yml"
             }
           }
         }
@@ -618,7 +618,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-calculation.yml"
+              "rules-file": "senegal-spray-calculation.yml"
             }
           }
         }
@@ -633,7 +633,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-calculation.yml"
+              "rules-file": "senegal-spray-calculation.yml"
             }
           }
         }
@@ -659,7 +659,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         },
@@ -684,7 +684,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -722,7 +722,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -756,7 +756,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -777,7 +777,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -811,7 +811,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -832,7 +832,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -853,7 +853,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -887,7 +887,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -908,7 +908,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -942,7 +942,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -963,7 +963,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -1119,7 +1119,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -1253,7 +1253,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-calculation.yml"
+              "rules-file": "senegal-spray-calculation.yml"
             }
           }
         }
@@ -1271,7 +1271,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -1304,7 +1304,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -1333,7 +1333,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -1354,7 +1354,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -1379,7 +1379,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -1400,7 +1400,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -1421,7 +1421,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -1450,7 +1450,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -1471,7 +1471,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -1500,7 +1500,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -1521,7 +1521,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -1580,7 +1580,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -1752,7 +1752,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -1806,7 +1806,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-relevance-rules.yml"
+              "rules-file": "senegal-spray-relevance-rules.yml"
             }
           }
         }
@@ -2000,7 +2000,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-calculation.yml"
+              "rules-file": "senegal-spray-calculation.yml"
             }
           }
         }
@@ -2018,7 +2018,7 @@
         "calculation": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia-spray-calculation.yml"
+              "rules-file": "senegal-spray-calculation.yml"
             }
           }
         }
