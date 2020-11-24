@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
@@ -73,6 +74,7 @@ public class RevealRepositoryTest extends BaseUnitTest {
         when(opensrpContext.sharedRepositoriesArray()).thenReturn(new DrishtiRepository[0]);
         revealRepository = new RevealRepository(context, opensrpContext);
         jobManager = spy(JobManager.create(context));
+        doNothing().when(jobManager).schedule(any());
         Whitebox.setInternalState(JobManager.class, "instance", jobManager);
         Whitebox.setInternalState(RevealClientProcessor.class, "instance", revealClientProcessor);
         Whitebox.setInternalState(RevealApplication.getInstance(), "context", opensrpContext);
@@ -96,8 +98,8 @@ public class RevealRepositoryTest extends BaseUnitTest {
 
     @Test
     public void testOnCreateShouldCreateTableAndRunMigration2() {
-        int version = BuildConfig.DATABASE_VERSION;
-        ReflectionHelpers.setStaticField(BuildConfig.class, "DATABASE_VERSION", 2);
+        Integer version = BuildConfig.DATABASE_VERSION;
+        ReflectionHelpers.setStaticField(BuildConfig.class, "DATABASE_VERSION", new Integer(2));
         revealRepository.onCreate(sqLiteDatabase);
         verify(sqLiteDatabase, Mockito.times(45)).execSQL(stringArgumentCaptor.capture());
         for (String sql : stringArgumentCaptor.getAllValues()) {
@@ -111,7 +113,7 @@ public class RevealRepositoryTest extends BaseUnitTest {
         verify(eventClientRepository, timeout(6000)).fetchEventClientsByEventTypes(
                 Arrays.asList(FamilyConstants.EventType.FAMILY_REGISTRATION, FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION,
                         FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION, FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION));
-        verify(revealClientProcessor, timeout(5000)).processClient(any());
+        verify(revealClientProcessor, timeout(5000).atLeastOnce()).processClient(any());
     }
 
 
