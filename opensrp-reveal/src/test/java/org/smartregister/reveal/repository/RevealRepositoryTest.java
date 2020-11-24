@@ -17,6 +17,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ReflectionHelpers;
 import org.smartregister.Context;
+import org.smartregister.repository.AllSharedPreferences;
 import org.smartregister.repository.DrishtiRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.reveal.BaseUnitTest;
@@ -34,6 +35,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 
 /**
  * Created by samuelgithengi on 11/24/20.
@@ -55,6 +57,9 @@ public class RevealRepositoryTest extends BaseUnitTest {
     @Mock
     private RevealClientProcessor revealClientProcessor;
 
+    @Mock
+    private AllSharedPreferences allSharedPreferences;
+
     @Captor
     private ArgumentCaptor<String> stringArgumentCaptor;
 
@@ -72,6 +77,7 @@ public class RevealRepositoryTest extends BaseUnitTest {
         Whitebox.setInternalState(RevealClientProcessor.class, "instance", revealClientProcessor);
         Whitebox.setInternalState(RevealApplication.getInstance(), "context", opensrpContext);
         when(opensrpContext.getEventClientRepository()).thenReturn(eventClientRepository);
+        when(opensrpContext.allSharedPreferences()).thenReturn(allSharedPreferences);
     }
 
     @Test
@@ -106,5 +112,19 @@ public class RevealRepositoryTest extends BaseUnitTest {
                 Arrays.asList(FamilyConstants.EventType.FAMILY_REGISTRATION, FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION,
                         FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION, FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION));
         verify(revealClientProcessor, timeout(5000)).processClient(any());
+    }
+
+
+    @Test
+    public void testOnCreateShouldCreateTableRunsAllMigrations() throws Exception {
+        revealRepository = spy(revealRepository);
+        revealRepository.onCreate(sqLiteDatabase);
+        verify(sqLiteDatabase, Mockito.atLeast(45)).execSQL(stringArgumentCaptor.capture());
+        verify(jobManager).schedule(any());
+        verify(eventClientRepository, timeout(6000)).fetchEventClientsByEventTypes(
+                Arrays.asList(FamilyConstants.EventType.FAMILY_REGISTRATION, FamilyConstants.EventType.FAMILY_MEMBER_REGISTRATION,
+                        FamilyConstants.EventType.UPDATE_FAMILY_REGISTRATION, FamilyConstants.EventType.UPDATE_FAMILY_MEMBER_REGISTRATION));
+        verify(revealClientProcessor, timeout(5000)).processClient(any());
+        verify(revealRepository).onUpgrade(sqLiteDatabase, 1, BuildConfig.DATABASE_VERSION);
     }
 }
