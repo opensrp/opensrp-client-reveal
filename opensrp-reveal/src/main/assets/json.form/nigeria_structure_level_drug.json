@@ -74,7 +74,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Confirm number of children to be treated",
+        "hint": "Confirm number of children that received ORIGINAL SPAQ dose:",
         "text_size": "8sp",
         "v_numeric": {
           "value": "true",
@@ -82,7 +82,7 @@
         },
         "v_min": {
           "value": "0",
-          "err": "Number of children to be treated must be greater than or equal to 0!"
+          "err": "Number of children must be greater than or equal to 0!"
         }
       },
       {
@@ -91,7 +91,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "edit_text",
-        "hint": "Confirm additional doses administered",
+        "hint": "Confirm number of children that were REDOSED with SPAQ:",
         "text_size": "8sp",
         "v_numeric": {
           "value": "true",
@@ -138,7 +138,7 @@
       },
       {
         "key": "confirmNumberSPAQBlistersUsed",
-        "hint": "Confirm TOTAL number of SPAQ blisters used?",
+        "hint": "Confirm TOTAL number of SPAQ blisters used:",
         "type": "edit_text",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
