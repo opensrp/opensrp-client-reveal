@@ -346,7 +346,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
                         RevealMapHelper.addBaseLayers(kujakuMapView, style, ListTasksActivity.this);
 
-                        if (getBuildCountry() != Country.ZAMBIA || getBuildCountry() != Country.SENEGAL) {
+                        if (getBuildCountry() != Country.ZAMBIA && getBuildCountry() != Country.SENEGAL) {
                             layerSwitcherFab.setVisibility(View.GONE);
                         }
 
