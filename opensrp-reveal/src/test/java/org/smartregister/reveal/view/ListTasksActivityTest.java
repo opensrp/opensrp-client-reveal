@@ -682,7 +682,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
     @Test
     public void testDisplayToast() {
         listTasksActivity.displayToast(R.string.sync_complete);
-        assertEquals(getString(R.string.sync_complete), ShadowToast.getTextOfLatestToast());
+        assertEquals("Sync Complete", ShadowToast.getTextOfLatestToast());
     }
 
     @Test
@@ -792,7 +792,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
         AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
         assertTrue(alertDialog.isShowing());
         TextView tv = alertDialog.findViewById(android.R.id.message);
-        assertEquals(getString(R.string.confirm_mark_location_inactive), tv.getText());
+        assertEquals("Please confirm that this location should be marked inactive", tv.getText());
 
         alertDialog.getButton(BUTTON_POSITIVE).performClick();
         verify(listTaskPresenter).onMarkStructureInactiveConfirmed();
