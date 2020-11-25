@@ -418,7 +418,7 @@
         "relevance": {
           "rules-engine": {
             "ex-rules": {
-              "rules-file": "zambia_daily_summary_relevance.yml"
+              "rules-file": "senegal_daily_summary_relevance.yml"
             }
           }
         }
@@ -440,6 +440,19 @@
             "type": "string",
             "ex": "equalTo(., \"other\")"
           }
+        }
+      },
+      {
+        "key": "collection_date",
+        "type": "date_picker",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "What is the date that this data collection happened?",
+        "max_date": "today",
+        "v_required": {
+          "value": true,
+          "err": "Please specify the date data collection was done"
         }
       }
     ]

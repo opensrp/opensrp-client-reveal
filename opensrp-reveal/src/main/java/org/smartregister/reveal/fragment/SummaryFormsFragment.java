@@ -14,9 +14,12 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONObject;
+import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.R;
 import org.smartregister.reveal.contract.OtherFormsfragmentContract;
 import org.smartregister.reveal.presenter.OtherFormsFragmentPresenter;
+import org.smartregister.reveal.util.Constants;
+import org.smartregister.reveal.util.Country;
 import org.smartregister.reveal.util.LocationUtils;
 import org.smartregister.reveal.util.RevealJsonFormUtils;
 import org.smartregister.reveal.view.SummaryFormsActivity;
@@ -150,25 +153,53 @@ public class SummaryFormsFragment extends Fragment implements OtherFormsfragment
     public void onClick(View view) {
         switch(view.getId()) {
             case R.id.summary_daily_summary:
-                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.DAILY_SUMMARY_ZAMBIA);
+                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                    presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.DAILY_SUMMARY_ZAMBIA);
+                } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL){
+                    presenter.showBasicForm(Constants.JsonForm.DAILY_SUMMARY_SENEGAL);
+                }
                 break;
             case R.id.summary_team_leader_dos:
-                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.TEAM_LEADER_DOS_ZAMBIA);
+                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                    presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.TEAM_LEADER_DOS_ZAMBIA);
+                } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL){
+                    presenter.showBasicForm(Constants.JsonForm.TEAM_LEADER_DOS_SENEGAL);
+                }
                 break;
             case R.id.summary_cb_spray_area:
-                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.CB_SPRAY_AREA_ZAMBIA);
+                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                    presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.CB_SPRAY_AREA_ZAMBIA);
+                } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL){
+                    presenter.showBasicForm(Constants.JsonForm.CB_SPRAY_AREA_SENEGAL);
+                }
                 break;
             case R.id.summary_irs_sa_decision:
-                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.IRS_SA_DECISION_ZAMBIA);
+                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                    presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.IRS_SA_DECISION_ZAMBIA);
+                } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL){
+                    presenter.showBasicForm(Constants.JsonForm.IRS_SA_DECISION_SENEGAL);
+                }
                 break;
             case R.id.summary_mobilization_form:
-                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.MOBILIZATION_FORM_ZAMBIA);
+                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                    presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.MOBILIZATION_FORM_ZAMBIA);
+                } else {
+                    presenter.showBasicForm(Constants.JsonForm.MOBILIZATION_FORM_SENEGAL);
+                }
                 break;
             case R.id.summary_irs_field_officer:
-                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.IRS_FIELD_OFFICER_ZAMBIA);
+                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                    presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.IRS_FIELD_OFFICER_ZAMBIA);
+                } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL){
+                    presenter.showBasicForm(Constants.JsonForm.IRS_FIELD_OFFICER_SENEGAL);
+                }
                 break;
             case R.id.summary_verification_form:
-                presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.VERIFICATION_FORM_ZAMBIA);
+                if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                    presenter.showBasicForm(org.smartregister.reveal.util.Constants.JsonForm.VERIFICATION_FORM_ZAMBIA);
+                } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL){
+                    presenter.showBasicForm(Constants.JsonForm.VERIFICATION_FORM_SENEGAL);
+                }
                 break;
             default:
                 break;

@@ -250,7 +250,7 @@
           },
           {
             "key": "toilet",
-            "text": "Toilet"
+            "text": "Toilet with roof"
           },
           {
             "key": "other",
@@ -284,6 +284,66 @@
           "step1:eligibility": {
             "type": "string",
             "ex": "equalTo(., \"eligible\")"
+          }
+        }
+      },
+      {
+        "key": "hocStructure",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Is this the structure in which the head of the compound lives?",
+        "options": [
+          {
+            "key": "Yes",
+            "text": "Yes"
+          },
+          {
+            "key": "No",
+            "text": "No"
+          }
+        ],
+        "v_required": {
+          "value": true,
+          "err": "This field is required"
+        }
+      },
+      {
+        "key": "nameCompoundHead",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "Please enter the name of the head of the compound",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:hocStructure": {
+            "type": "string",
+            "ex": "equalTo(., \"Yes\")"
+          }
+        }
+      },
+      {
+        "key": "nameStructureHead",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "edit_text",
+        "hint": "If the head of the compound does not live in this structure, who is the head of this structure? ",
+        "text_size": "8sp",
+        "v_required": {
+          "value": "true",
+          "err": "Required field"
+        },
+        "relevance": {
+          "step1:hocStructure": {
+            "type": "string",
+            "ex": "equalTo(., \"No\")"
           }
         }
       },

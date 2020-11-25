@@ -344,17 +344,41 @@ public class RevealJsonFormUtils {
         } else if (IRS_VERIFICATION.equals(encounterType) || Intervention.IRS_VERIFICATION.equals(taskCode)) {
             formName = JsonForm.ZAMBIA_IRS_VERIFICATION_FORM;
         } else if (Constants.EventType.DAILY_SUMMARY_EVENT.equals(encounterType)) {
-            formName = JsonForm.DAILY_SUMMARY_ZAMBIA;
+            if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                formName = JsonForm.DAILY_SUMMARY_ZAMBIA;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL){
+                formName = JsonForm.DAILY_SUMMARY_SENEGAL;
+            }
         } else if (Constants.EventType.IRS_FIELD_OFFICER_EVENT.equals(encounterType)) {
-            formName = JsonForm.IRS_FIELD_OFFICER_ZAMBIA;
+            if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                formName = JsonForm.IRS_FIELD_OFFICER_ZAMBIA;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL){
+                formName = JsonForm.IRS_FIELD_OFFICER_SENEGAL;
+            }
         } else if (Constants.EventType.IRS_SA_DECISION_EVENT.equals(encounterType)) {
-            formName = JsonForm.IRS_SA_DECISION_ZAMBIA;
+            if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                formName = JsonForm.IRS_SA_DECISION_ZAMBIA;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL){
+                formName = JsonForm.IRS_SA_DECISION_SENEGAL;
+            }
         } else if (Constants.EventType.MOBILIZATION_EVENT.equals(encounterType)) {
-            formName = JsonForm.MOBILIZATION_FORM_ZAMBIA;
+            if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                formName = JsonForm.MOBILIZATION_FORM_ZAMBIA;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL){
+                formName = JsonForm.MOBILIZATION_FORM_SENEGAL;
+            }
         } else if (Constants.EventType.TEAM_LEADER_DOS_EVENT.equals(encounterType)) {
-            formName = JsonForm.TEAM_LEADER_DOS_ZAMBIA;
+            if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                formName = JsonForm.TEAM_LEADER_DOS_ZAMBIA;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL){
+                formName = JsonForm.TEAM_LEADER_DOS_SENEGAL;
+            }
         } else if (Constants.EventType.VERIFICATION_EVENT.equals(encounterType)) {
-            formName = JsonForm.VERIFICATION_FORM_ZAMBIA;
+            if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA) {
+                formName = JsonForm.VERIFICATION_FORM_ZAMBIA;
+            } else if (BuildConfig.BUILD_COUNTRY == Country.SENEGAL){
+                formName = JsonForm.VERIFICATION_FORM_SENEGAL;
+            }
         }
         return formName;
     }
@@ -501,12 +525,16 @@ public class RevealJsonFormUtils {
             case JsonForm.IRS_SA_DECISION_ZAMBIA:
             case JsonForm.CB_SPRAY_AREA_ZAMBIA:
             case JsonForm.MOBILIZATION_FORM_ZAMBIA:
+            case JsonForm.IRS_SA_DECISION_SENEGAL:
+            case JsonForm.CB_SPRAY_AREA_SENEGAL:
+            case JsonForm.MOBILIZATION_FORM_SENEGAL:
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         Constants.CONFIGURATION.SUPERVISORS, fieldsMap.get(JsonForm.SUPERVISOR),
                         PreferencesUtil.getInstance().getCurrentDistrict());
                 break;
 
             case JsonForm.IRS_FIELD_OFFICER_ZAMBIA:
+            case JsonForm.IRS_FIELD_OFFICER_SENEGAL:
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         Constants.CONFIGURATION.FIELD_OFFICERS, fieldsMap.get(JsonForm.FIELD_OFFICER),
                         PreferencesUtil.getInstance().getCurrentDistrict());
@@ -516,6 +544,7 @@ public class RevealJsonFormUtils {
                 break;
 
             case JsonForm.DAILY_SUMMARY_ZAMBIA:
+            case JsonForm.DAILY_SUMMARY_SENEGAL:
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         Constants.CONFIGURATION.TEAM_LEADERS, fieldsMap.get(JsonForm.TEAM_LEADER),
                         PreferencesUtil.getInstance().getCurrentDistrict());
@@ -534,6 +563,7 @@ public class RevealJsonFormUtils {
                 break;
 
             case JsonForm.TEAM_LEADER_DOS_ZAMBIA:
+            case JsonForm.TEAM_LEADER_DOS_SENEGAL:
 
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         Constants.CONFIGURATION.DATA_COLLECTORS, fieldsMap.get(JsonForm.DATA_COLLECTOR),
@@ -555,11 +585,13 @@ public class RevealJsonFormUtils {
                 break;
 
             case JsonForm.VERIFICATION_FORM_ZAMBIA:
+            case JsonForm.VERIFICATION_FORM_SENEGAL:
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         Constants.CONFIGURATION.FIELD_OFFICERS, fieldsMap.get(JsonForm.FIELD_OFFICER),
                         PreferencesUtil.getInstance().getCurrentDistrict());
 
             case JsonForm.SPRAY_FORM_ZAMBIA:
+            case JsonForm.SPRAY_FORM_SENEGAL:
                 populateServerOptions(RevealApplication.getInstance().getServerConfigs(),
                         Constants.CONFIGURATION.DATA_COLLECTORS, fieldsMap.get(JsonForm.DATA_COLLECTOR),
                         PreferencesUtil.getInstance().getCurrentDistrict());

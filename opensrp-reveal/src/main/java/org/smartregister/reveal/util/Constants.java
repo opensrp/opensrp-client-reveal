@@ -478,6 +478,20 @@ public interface Constants {
 
         String VERIFICATION_FORM_ZAMBIA = "json.form/zambia_verification_form.json";
 
+        String DAILY_SUMMARY_SENEGAL= "json.form/senegal_daily_summary.json";
+
+        String TEAM_LEADER_DOS_SENEGAL = "json.form/senegal_team_leader_dos.json";
+
+        String CB_SPRAY_AREA_SENEGAL = "json.form/senegal_cb_spray_area.json";
+
+        String IRS_SA_DECISION_SENEGAL = "json.form/senegal_irs_sa_decision.json";
+
+        String MOBILIZATION_FORM_SENEGAL = "json.form/senegal_mobilization_form.json";
+
+        String IRS_FIELD_OFFICER_SENEGAL = "json.form/senegal_irs_field_officer.json";
+
+        String VERIFICATION_FORM_SENEGAL = "json.form/senegal_verification_form.json";
+
         String SPRAY_OPERATOR_CODE = "sprayop_code";
 
         String DATA_COLLECTOR = "datacollector";
