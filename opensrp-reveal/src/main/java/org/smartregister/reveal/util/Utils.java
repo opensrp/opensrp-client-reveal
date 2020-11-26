@@ -31,7 +31,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.smartregister.clientandeventmodel.Client;
 import org.smartregister.clientandeventmodel.Event;
+import org.smartregister.domain.Action;
 import org.smartregister.domain.Location;
+import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.SyncEntity;
 import org.smartregister.domain.tag.FormTag;
 import org.smartregister.job.DocumentConfigurationServiceJob;
@@ -84,6 +86,8 @@ public class Utils {
 
     private static Cache<Location> cache = new Cache<>();
 
+    private static Cache<PlanDefinition> planCache = new Cache<>();
+
     static {
         ALLOWED_LEVELS = new ArrayList<>();
         ALLOWED_LEVELS.add(DEFAULT_LOCATION_LEVEL);
@@ -135,12 +139,25 @@ public class Utils {
 
 
     public static Location getOperationalAreaLocation(String operationalArea) {
-       return cache.get(operationalArea, new CacheableData<Location>() {
+        return cache.get(operationalArea, new CacheableData<Location>() {
             @Override
             public Location fetch() {
                 return RevealApplication.getInstance().getLocationRepository().getLocationByName(operationalArea);
             }
         });
+    }
+
+    public static PlanDefinition getPlanByIdentifier(String planIdentifier) {
+        return planCache.get(planIdentifier, () -> RevealApplication.getInstance().getPlanDefinitionRepository().findPlanDefinitionById(planIdentifier));
+    }
+
+    public static String getDefinitionUri(@NonNull PlanDefinition planDefinition, @NonNull String intervention) {
+        for (Action action : planDefinition.getActions()) {
+            if (action.getCode().equals(intervention)) {
+                return StringUtils.replace(action.getDefinitionUri(), ".json", "");
+            }
+        }
+        return null;
     }
 
     public static Location getLocationById(String locationId) {
@@ -428,16 +445,17 @@ public class Utils {
 
     /**
      * This method takes in a geometry object and returns a JSONArray representation of the coordinates
-     * @param updatedGeometry The geometry of the updated feature
+     *
+     * @param updatedGeometry  The geometry of the updated feature
      * @param originalGeometry The geometry of the original feature used to determine whether
      *                         it was a MultiPolygon or a Polygon
      * @return
      */
     public static JSONArray getCoordsFromGeometry(Geometry updatedGeometry, Geometry originalGeometry) {
-        JSONObject editedGeometryJson ;
+        JSONObject editedGeometryJson;
         JSONArray updatedCoords = null;
         try {
-            if (originalGeometry instanceof  MultiPolygon) {
+            if (originalGeometry instanceof MultiPolygon) {
                 MultiPolygon editedGeometryMultiPolygon = MultiPolygon.fromPolygon((Polygon) updatedGeometry);
                 editedGeometryJson = new JSONObject(editedGeometryMultiPolygon.toJson());
             } else {
@@ -451,7 +469,7 @@ public class Utils {
     }
 
     public static String getSyncEntityString(SyncEntity syncEntity) {
-        Context context =  RevealApplication.getInstance().getContext().applicationContext();
+        Context context = RevealApplication.getInstance().getContext().applicationContext();
         switch (syncEntity) {
             case EVENTS:
                 return context.getString(R.string.events);

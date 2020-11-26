@@ -18,6 +18,7 @@ import org.smartregister.commonregistry.CommonPersonObject;
 import org.smartregister.domain.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Obs;
+import org.smartregister.domain.PlanDefinition;
 import org.smartregister.location.helper.LocationHelper;
 import org.smartregister.reveal.BuildConfig;
 import org.smartregister.reveal.activity.RevealJsonFormActivity;
@@ -240,6 +241,18 @@ public class RevealJsonFormUtils {
     }
 
     public String getFormName(String encounterType, String taskCode) {
+        PlanDefinition planDefinition = Utils.getPlanByIdentifier(PreferencesUtil.getInstance().getCurrentPlanId());
+        if (planDefinition != null && taskCode != null) {
+            String formattedFormName = Utils.getDefinitionUri(planDefinition, taskCode);
+            FormUtils formUtils = new FormUtils();
+            try {
+                if (formattedFormName != null && formUtils.getFormJsonFromRepositoryOrAssets(RevealApplication.getInstance().getApplicationContext(), formattedFormName) != null) {
+                    return formattedFormName;
+                }
+            } catch (JSONException e) {
+                Timber.e(e, "Error getting form from plan");
+            }
+        }
         String formName = null;
         if (SPRAY_EVENT.equals(encounterType) || Intervention.IRS.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
@@ -360,10 +373,6 @@ public class RevealJsonFormUtils {
             formName = JsonForm.VERIFICATION_FORM_ZAMBIA;
         }
         return formName;
-    }
-
-    public String getFormName(String encounterType) {
-        return getFormName(encounterType, null);
     }
 
     public void populatePAOTForm(MosquitoHarvestCardDetails cardDetails, JSONObject formJson) {
