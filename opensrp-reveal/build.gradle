@@ -178,6 +178,7 @@ android {
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
     maxHeapSize = "2g"
+    testLogging.showStandardStreams = true
 }
 
 dependencies {
