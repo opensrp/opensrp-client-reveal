@@ -62,8 +62,6 @@ public class EditFociBoundaryActivityTest extends BaseUnitTest {
     @Mock
     private Feature feature;
 
-    private Context context = RuntimeEnvironment.application;
-
     private Button cancelBtn;
     private Button saveBoundaryBtn;
     private Button deleteBtn;
@@ -99,12 +97,12 @@ public class EditFociBoundaryActivityTest extends BaseUnitTest {
         Toolbar toolbar = Whitebox.getInternalState(editFociBoundaryActivity, "toolbar");
         assertEquals("Edit Boundary", toolbar.getTitle());
         editFociBoundaryActivity.setToolbarTitle(R.string.change_point);
-        assertEquals("Change Point", toolbar.getTitle());
+        assertEquals(editFociBoundaryActivity.getString(R.string.change_point), toolbar.getTitle());
     }
 
     @Test
     public void testDeletePoint() {
-        View view = new View(context);
+        View view = new View(editFociBoundaryActivity);
         assertTrue(view.isEnabled());
         editFociBoundaryActivity.deletePoint(view);
         verify(drawingManager).deleteDrawingCurrentCircle();
@@ -114,7 +112,7 @@ public class EditFociBoundaryActivityTest extends BaseUnitTest {
     @Test
     public void testDeletePointWhenDrawingManagerIsNull() {
         Whitebox.setInternalState(editFociBoundaryActivity, "drawingManager", (Object[]) null);
-        View view = new View(context);
+        View view = new View(editFociBoundaryActivity);
         assertTrue(view.isEnabled());
         editFociBoundaryActivity.deletePoint(view);
         assertTrue(view.isEnabled());
@@ -137,7 +135,7 @@ public class EditFociBoundaryActivityTest extends BaseUnitTest {
         when(drawingManager.editBoundary(boundaryLayer)).thenReturn(true);
         Button savePointBtn = Whitebox.getInternalState(editFociBoundaryActivity, "savePointBtn");
         savePointBtn.setText(R.string.change_point);
-        assertEquals("Change Point", savePointBtn.getText());
+        assertEquals(editFociBoundaryActivity.getString(R.string.change_point), savePointBtn.getText());
 
         editFociBoundaryActivity.enableDrawingMode(mapboxMap);
         verify(boundaryLayer).disableLayerOnMap(mapboxMap);

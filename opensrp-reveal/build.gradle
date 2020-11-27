@@ -200,6 +200,7 @@ dependencies {
         exclude group: 'com.android.volley'
         exclude group: 'stax', module: 'stax-api'
     }
+    api 'com.google.guava:guava:28.0-android'
 
     implementation('org.smartregister:opensrp-client-core:3.0.4-SNAPSHOT@aar') {
         transitive = true
