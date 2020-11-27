@@ -192,7 +192,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (BuildConfig.BUILD_COUNTRY == Country.THAILAND || BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
+        if (BuildConfig.BUILD_COUNTRY == Country.THAILAND || BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN || BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
             setContentView(R.layout.thailand_activity_list_tasks);
         } else {
             setContentView(R.layout.activity_list_tasks);
@@ -433,7 +433,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
 
     public void positionMyLocationAndLayerSwitcher() {
         FrameLayout.LayoutParams myLocationButtonParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
-        if (getBuildCountry() != Country.ZAMBIA && getBuildCountry() != Country.NAMIBIA) {
+        if (getBuildCountry() != Country.ZAMBIA && getBuildCountry() != Country.NAMIBIA &&
+                (BuildConfig.BUILD_COUNTRY == Country.REFAPP && R.string.irs != org.smartregister.reveal.util.Utils.getInterventionLabel())) {
             positionMyLocationAndLayerSwitcher(myLocationButtonParams, myLocationButtonParams.topMargin);
         } else {
             int progressHeight = getResources().getDimensionPixelSize(R.dimen.progress_height);
@@ -542,7 +543,8 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
         Intent intent = new Intent(getContext(), FilterTasksActivity.class);
         intent.putExtra(FILTER_SORT_PARAMS, filterParams);
         FilterConfiguration.FilterConfigurationBuilder builder = FilterConfiguration.builder();
-        if (BuildConfig.BUILD_COUNTRY.equals(Country.NAMIBIA)) {
+        if (BuildConfig.BUILD_COUNTRY.equals(Country.NAMIBIA) ||
+                (BuildConfig.BUILD_COUNTRY == Country.REFAPP && R.string.irs == org.smartregister.reveal.util.Utils.getInterventionLabel())) {
             builder.taskCodeLayoutEnabled(false)
                     .interventionTypeLayoutEnabled(false)
                     .businessStatusList(Arrays.asList(NOT_VISITED, NOT_SPRAYED, PARTIALLY_SPRAYED, SPRAYED))

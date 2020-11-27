@@ -69,6 +69,7 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.METERS_PER_K
 import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
 import static org.smartregister.reveal.util.Constants.Intervention.DYNAMIC_FI;
 import static org.smartregister.reveal.util.Constants.Intervention.DYNAMIC_IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.DYNAMIC_MDA;
 import static org.smartregister.reveal.util.Constants.Intervention.FI;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -218,7 +219,7 @@ public class Utils {
             return R.string.focus_investigation;
         else if (interventionType.equals(IRS) || interventionType.equals(DYNAMIC_IRS))
             return R.string.irs;
-        else if (interventionType.equals(MDA) || interventionType.equals(MDA))
+        else if (interventionType.equals(MDA) || interventionType.equals(DYNAMIC_MDA))
             return R.string.mda;
         else
             return R.string.irs;

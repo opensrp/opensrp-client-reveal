@@ -276,7 +276,8 @@ public class TaskRegisterFragment extends BaseDrawerRegisterFragment implements 
 
     public void setTaskDetails(List<TaskDetails> tasks) {
         taskAdapter.setTaskDetails(tasks);
-        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.NAMIBIA) {
+        if (BuildConfig.BUILD_COUNTRY == Country.ZAMBIA || BuildConfig.BUILD_COUNTRY == Country.NAMIBIA
+                || (BuildConfig.BUILD_COUNTRY == Country.REFAPP && R.string.irs == Utils.getInterventionLabel())) {
             new IndicatorsCalculatorTask(getActivity(), tasks).execute();
         }
     }
