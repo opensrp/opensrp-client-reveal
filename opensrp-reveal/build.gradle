@@ -184,14 +184,11 @@ tasks.withType(Test) {
     //testLogging.showStandardStreams = true
 
     testLogging {
-        events TestLogEvent.FAILED,
-                TestLogEvent.STANDARD_ERROR,
-                TestLogEvent.STANDARD_OUT
+        events TestLogEvent.FAILED
         exceptionFormat TestExceptionFormat.FULL
         showCauses true
         showExceptions true
         showStackTraces true
-        showStandardStreams true
     }
 }
 
