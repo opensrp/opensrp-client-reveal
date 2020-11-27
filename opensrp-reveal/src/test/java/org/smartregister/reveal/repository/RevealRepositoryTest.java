@@ -5,7 +5,7 @@ import com.evernote.android.job.JobManager;
 import net.sqlcipher.database.SQLiteDatabase;
 
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -36,7 +36,6 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.smartregister.reveal.util.Constants.DatabaseKeys.SPRAYED_STRUCTURES;
 
 /**
  * Created by samuelgithengi on 11/24/20.
@@ -89,7 +88,7 @@ public class RevealRepositoryTest extends BaseUnitTest {
         revealRepository.onCreate(sqLiteDatabase);
         verify(sqLiteDatabase, Mockito.times(35)).execSQL(stringArgumentCaptor.capture());
         for (String sql : stringArgumentCaptor.getAllValues()) {
-            Assert.assertThat(sql, CoreMatchers.anyOf(CoreMatchers.containsStringIgnoringCase("CREATE TABLE"),
+            MatcherAssert.assertThat(sql, CoreMatchers.anyOf(CoreMatchers.containsStringIgnoringCase("CREATE TABLE"),
                     CoreMatchers.containsStringIgnoringCase("CREATE VIRTUAL TABLE"),
                     CoreMatchers.containsStringIgnoringCase("CREATE INDEX")));
         }
@@ -103,7 +102,7 @@ public class RevealRepositoryTest extends BaseUnitTest {
         revealRepository.onCreate(sqLiteDatabase);
         verify(sqLiteDatabase, Mockito.times(45)).execSQL(stringArgumentCaptor.capture());
         for (String sql : stringArgumentCaptor.getAllValues()) {
-            Assert.assertThat(sql, CoreMatchers.anyOf(CoreMatchers.containsStringIgnoringCase("CREATE TABLE"),
+            MatcherAssert.assertThat(sql, CoreMatchers.anyOf(CoreMatchers.containsStringIgnoringCase("CREATE TABLE"),
                     CoreMatchers.containsStringIgnoringCase("CREATE VIRTUAL TABLE"),
                     CoreMatchers.containsStringIgnoringCase("CREATE INDEX"),
                     CoreMatchers.containsStringIgnoringCase("ALTER TABLE")));
