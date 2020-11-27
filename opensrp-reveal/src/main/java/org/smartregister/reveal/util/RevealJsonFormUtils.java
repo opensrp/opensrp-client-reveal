@@ -241,16 +241,18 @@ public class RevealJsonFormUtils {
     }
 
     public String getFormName(String encounterType, String taskCode) {
-        PlanDefinition planDefinition = Utils.getPlanByIdentifier(PreferencesUtil.getInstance().getCurrentPlanId());
-        if (planDefinition != null && taskCode != null) {
-            String formattedFormName = Utils.getDefinitionUri(planDefinition, taskCode);
-            FormUtils formUtils = new FormUtils();
-            try {
-                if (formattedFormName != null && formUtils.getFormJsonFromRepositoryOrAssets(RevealApplication.getInstance().getApplicationContext(), formattedFormName) != null) {
-                    return formattedFormName;
+        if (taskCode != null) {
+            PlanDefinition planDefinition = Utils.getPlanByIdentifier(PreferencesUtil.getInstance().getCurrentPlanId());
+            if (planDefinition != null) {
+                String formattedFormName = Utils.getDefinitionUri(planDefinition, taskCode);
+                FormUtils formUtils = new FormUtils();
+                try {
+                    if (formattedFormName != null && formUtils.getFormJsonFromRepositoryOrAssets(RevealApplication.getInstance().getApplicationContext(), formattedFormName) != null) {
+                        return formattedFormName;
+                    }
+                } catch (JSONException e) {
+                    Timber.e(e, "Error getting form from plan");
                 }
-            } catch (JSONException e) {
-                Timber.e(e, "Error getting form from plan");
             }
         }
         String formName = null;
@@ -325,7 +327,7 @@ public class RevealJsonFormUtils {
         } else if (Constants.EventType.PAOT_EVENT.equals(encounterType) || Intervention.PAOT.equals(taskCode)) {
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
                 formName = JsonForm.THAILAND_PAOT_FORM;
-            }else {
+            } else {
                 formName = JsonForm.PAOT_FORM;
             }
         } else if (Intervention.MDA_ADHERENCE.equals(taskCode)) {
