@@ -501,7 +501,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
         AlertDialog alertDialog = (AlertDialog) ShadowAlertDialog.getLatestDialog();
         assertTrue(alertDialog.isShowing());
         TextView tv = alertDialog.findViewById(android.R.id.message);
-        assertEquals("Confirm Household Archival", tv.getText());
+        assertEquals(listTasksActivity.getString(R.string.confirm_archive_family), tv.getText());
 
     }
 
@@ -879,7 +879,7 @@ public class ListTasksActivityTest extends BaseUnitTest {
 
         spyListTasksActivity.onSyncProgress(mockSyncProgress);
 
-        assertEquals(progressLabel.getText(), String.format(listTasksActivity.getString(R.string.progressBarLabel), "Tasks", 50));
+        assertEquals(progressLabel.getText(), String.format(listTasksActivity.getString(R.string.progressBarLabel), listTasksActivity.getString(R.string.tasks_text), 50));
     }
 
     @Test

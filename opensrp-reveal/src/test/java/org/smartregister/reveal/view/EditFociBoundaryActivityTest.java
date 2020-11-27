@@ -95,7 +95,7 @@ public class EditFociBoundaryActivityTest extends BaseUnitTest {
     @Test
     public void testSetToolbarTitle() {
         Toolbar toolbar = Whitebox.getInternalState(editFociBoundaryActivity, "toolbar");
-        assertEquals("Edit Boundary", toolbar.getTitle());
+        assertEquals(editFociBoundaryActivity.getString(R.string.edit_boundary), toolbar.getTitle());
         editFociBoundaryActivity.setToolbarTitle(R.string.change_point);
         assertEquals(editFociBoundaryActivity.getString(R.string.change_point), toolbar.getTitle());
     }
@@ -139,7 +139,7 @@ public class EditFociBoundaryActivityTest extends BaseUnitTest {
 
         editFociBoundaryActivity.enableDrawingMode(mapboxMap);
         verify(boundaryLayer).disableLayerOnMap(mapboxMap);
-        assertEquals("Save Point", savePointBtn.getText());
+        assertEquals(editFociBoundaryActivity.getString(R.string.save_point), savePointBtn.getText());
     }
 
     @Test
