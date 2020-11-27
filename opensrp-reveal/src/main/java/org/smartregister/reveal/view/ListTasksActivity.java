@@ -192,7 +192,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (BuildConfig.BUILD_COUNTRY == Country.THAILAND || BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN || BuildConfig.BUILD_COUNTRY == Country.REFAPP) {
+        if (BuildConfig.BUILD_COUNTRY == Country.THAILAND || BuildConfig.BUILD_COUNTRY == Country.THAILAND_EN) {
             setContentView(R.layout.thailand_activity_list_tasks);
         } else {
             setContentView(R.layout.activity_list_tasks);
