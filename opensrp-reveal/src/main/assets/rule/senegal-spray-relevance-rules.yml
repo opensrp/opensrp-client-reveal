@@ -1,4 +1,11 @@
 ---
+name: step1_eligibility
+description: step1_eligibility
+priority: 1
+condition: "!(step1_nonresidential_type.equals('noStructure') || step1_nonresidential_type.equals('notHabitable'))"
+actions:
+  - "isRelevant = true"
+---
 name: step1_residential_noteligible
 description: step1_residential_noteligible
 priority: 1
@@ -268,5 +275,12 @@ name: step1_preferred_source
 description: step1_preferred_source
 priority: 1
 condition: "step1_sbc.equals('Yes') && step1_about_malaria.equals('Yes') && ( step1_provinceName.equals('Western') || step1_provinceName.equals('Southern') || step1_provinceName.equals('Lusaka') )"
+actions:
+  - "isRelevant = true"
+---
+name: step1_partiallysprayed_reason
+description: step1_partiallysprayed_reason
+priority: 1
+condition: "Integer.valueOf(helper.ifNull(step1_rooms_sprayed,0)) > Integer.valueOf(helper.ifNull(step1_rooms_eligible,0))"
 actions:
   - "isRelevant = true"

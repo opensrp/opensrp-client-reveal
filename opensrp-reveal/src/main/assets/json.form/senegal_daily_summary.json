@@ -52,6 +52,19 @@
     "display_back_button": "true",
     "fields": [
       {
+        "key": "collection_date",
+        "type": "date_picker",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "hint": "What is the date that this data collection happened?",
+        "max_date": "today",
+        "v_required": {
+          "value": true,
+          "err": "Please specify the date data collection was done"
+        }
+      },
+      {
         "key": "zone",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -440,19 +453,6 @@
             "type": "string",
             "ex": "equalTo(., \"other\")"
           }
-        }
-      },
-      {
-        "key": "collection_date",
-        "type": "date_picker",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "hint": "What is the date that this data collection happened?",
-        "max_date": "today",
-        "v_required": {
-          "value": true,
-          "err": "Please specify the date data collection was done"
         }
       }
     ]

@@ -164,6 +164,13 @@
         "v_required": {
           "value": "true",
           "err": "Required field"
+        },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
+          }
         }
       },
       {
@@ -307,6 +314,12 @@
         "v_required": {
           "value": true,
           "err": "This field is required"
+        },
+        "relevance": {
+          "step1:eligibility": {
+            "type": "string",
+            "ex": "equalTo(., \"eligible\")"
+          }
         }
       },
       {
@@ -348,25 +361,6 @@
         }
       },
       {
-        "key": "nameHoH",
-        "openmrs_entity_parent": "",
-        "openmrs_entity": "",
-        "openmrs_entity_id": "",
-        "type": "edit_text",
-        "hint": "Name of structure household head",
-        "text_size": "8sp",
-        "v_required": {
-          "value": "true",
-          "err": "Required field"
-        },
-        "relevance": {
-          "step1:eligibility": {
-            "type": "string",
-            "ex": "equalTo(., \"eligible\")"
-          }
-        }
-      },
-      {
         "key": "genderHoH",
         "openmrs_entity_parent": "",
         "openmrs_entity": "",
@@ -402,7 +396,7 @@
         "openmrs_entity_id": "",
         "type": "edit_text",
         "edit_type": "number",
-        "hint": "IRS number",
+        "hint": "Structure Identification Number",
         "text_size": "8sp",
         "v_numeric": {
           "value": "true",
@@ -434,7 +428,7 @@
         "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
-        "label": "Was this structure sprayed?",
+        "label": "Were any rooms in this structure sprayed?",
         "text_size": "8sp",
         "options": [
           {
@@ -520,6 +514,48 @@
           "value": "rooms_eligible",
           "err": "Number of rooms sprayed cannot be greater than number of eligible rooms."
         },
+        "relevance": {
+          "rules-engine": {
+            "ex-rules": {
+              "rules-file": "senegal-spray-relevance-rules.yml"
+            }
+          }
+        }
+      },
+      {
+        "key": "partiallysprayed_reason",
+        "openmrs_entity_parent": "",
+        "openmrs_entity": "",
+        "openmrs_entity_id": "",
+        "type": "native_radio",
+        "label": "Main reason why some ELIGIBLE rooms in this structure were not sprayed?",
+        "text_size": "8sp",
+        "options": [
+          {
+            "key": "refused",
+            "text": "Refused"
+          },
+          {
+            "key": "locked",
+            "text": "Locked"
+          },
+          {
+            "key": "sick",
+            "text": "Sick"
+          },
+          {
+            "key": "foodStorage",
+            "text": "Food Storage"
+          },
+          {
+            "key": "dontWantToClear",
+            "text": "Didn't want to clear"
+          },
+          {
+            "key": "other",
+            "text": "Other"
+          }
+        ],
         "relevance": {
           "rules-engine": {
             "ex-rules": {
