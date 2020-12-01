@@ -87,10 +87,10 @@ public class ValidateUserLocationPresenterTest extends BaseUnitTest {
         when(locationView.getUserCurrentLocation()).thenReturn(location);
         presenter.waitForUserLocation();
 
-        verify(presenter).onGetUserLocation(location);
-        verify(locationView).hideProgressDialog();
-        verify(callback).getTargetCoordinates();
-        verify(callback).onLocationValidated();
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onGetUserLocation(location);
+        verify(locationView, timeout(ASYNC_TIMEOUT)).hideProgressDialog();
+        verify(callback, timeout(ASYNC_TIMEOUT)).getTargetCoordinates();
+        verify(callback, timeout(ASYNC_TIMEOUT)).onLocationValidated();
     }
 
 
@@ -122,7 +122,7 @@ public class ValidateUserLocationPresenterTest extends BaseUnitTest {
 
         presenter.waitForUserLocation();
         int ASYNC_TIMEOUT = 10 * 1000;
-        verify(locationView,timeout(ASYNC_TIMEOUT).times(3)).getUserCurrentLocation();
+        verify(locationView, timeout(ASYNC_TIMEOUT).times(3)).getUserCurrentLocation();
         verify(locationView, timeout(ASYNC_TIMEOUT).times(2)).showProgressDialog(R.string.narrowing_location_title, R.string.narrowing_location_message);
         verify(locationView, timeout(ASYNC_TIMEOUT)).hideProgressDialog();
         verify(callback, timeout(ASYNC_TIMEOUT)).onLocationValidated();
