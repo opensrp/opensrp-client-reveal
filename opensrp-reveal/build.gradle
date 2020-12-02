@@ -58,7 +58,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 28
         versionCode 30
-        versionName "6.0.0-RC1"
+        versionName "6.0.0-RC2"
         multiDexEnabled true
         buildConfigField "long", "MAX_SERVER_TIME_DIFFERENCE", "1800000l"
         buildConfigField "boolean", "TIME_CHECK", "false"
@@ -268,7 +268,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
     implementation 'com.github.ybq:Android-SpinKit:1.2.0'
     implementation 'com.mapbox.mapboxsdk:mapbox-android-plugin-scalebar-v8:0.3.0'
-
 
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
