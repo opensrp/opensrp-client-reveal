@@ -269,8 +269,11 @@ dependencies {
     testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: '2.2'
     testImplementation 'org.apache.maven:maven-ant-tasks:2.1.3'
     testImplementation('com.squareup:fest-android:1.0.8') { exclude module: 'support-v4' }
-    // Add the dependency for the Performance Monitoring library
-    implementation 'com.google.firebase:firebase-perf:19.0.7'
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:26.1.0')
+    // Declare the dependency for the Performance Monitoring library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-perf'
     implementation 'com.mapbox.mapboxsdk:mapbox-sdk-turf:5.1.0'
 
     testImplementation 'org.mockito:mockito-inline:2.25.0'
