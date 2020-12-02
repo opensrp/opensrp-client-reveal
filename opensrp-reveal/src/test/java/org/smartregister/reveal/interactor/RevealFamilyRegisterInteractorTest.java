@@ -10,10 +10,7 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
 import org.robolectric.RuntimeEnvironment;
-import org.smartregister.cloudant.models.Client;
-import org.smartregister.cloudant.models.Event;
 import org.smartregister.domain.db.EventClient;
-import org.smartregister.family.domain.FamilyEventClient;
 import org.smartregister.reveal.BaseUnitTest;
 import org.smartregister.reveal.contract.FamilyRegisterContract;
 import org.smartregister.reveal.sync.RevealClientProcessor;
@@ -21,15 +18,12 @@ import org.smartregister.reveal.util.AppExecutors;
 import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.sync.ClientProcessorForJava;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.Executors;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
 /**

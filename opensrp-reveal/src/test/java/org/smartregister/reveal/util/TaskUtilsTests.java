@@ -1,7 +1,5 @@
 package org.smartregister.reveal.util;
 
-import android.content.Context;
-
 import net.sqlcipher.MatrixCursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -14,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
-import org.robolectric.RuntimeEnvironment;
 import org.smartregister.clientandeventmodel.Event;
 import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
@@ -62,29 +59,14 @@ public class TaskUtilsTests extends BaseUnitTest {
     @Captor
     private ArgumentCaptor<Task> taskArgumentCaptor;
 
-    @Captor
-    private ArgumentCaptor<String> stringArgumentCaptor;
-
-    @Captor
-    private ArgumentCaptor<Integer> integerArgumentCaptor;
-
-    private Context context;
-
     private TaskUtils taskUtils;
 
     private String jurisdictionId;
 
-    private String expectedEntityId;
-
-    private String expectedStructureId;
-
 
     @Before
     public void setUp() {
-        context = RuntimeEnvironment.application;
         jurisdictionId = UUID.randomUUID().toString();
-        expectedEntityId = UUID.randomUUID().toString();
-        expectedStructureId = UUID.randomUUID().toString();
         taskUtils = TaskUtils.getInstance();
         Whitebox.setInternalState(taskUtils, "taskRepository", taskRepository);
 

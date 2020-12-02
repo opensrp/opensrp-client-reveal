@@ -1,6 +1,5 @@
 package org.smartregister.reveal.interactor;
 
-import android.content.Context;
 import android.content.IntentFilter;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -15,7 +14,6 @@ import org.smartregister.reveal.contract.FamilyRegisterContract;
 import org.smartregister.reveal.receiver.TaskGenerationReceiver;
 import org.smartregister.reveal.sync.RevealClientProcessor;
 import org.smartregister.reveal.util.AppExecutors;
-import org.smartregister.reveal.util.TaskUtils;
 import org.smartregister.sync.ClientProcessorForJava;
 
 import java.lang.reflect.Type;
@@ -28,7 +26,6 @@ import static org.smartregister.AllConstants.INTENT_KEY.TASK_GENERATED_EVENT;
  */
 public class RevealFamilyRegisterInteractor extends org.smartregister.family.interactor.FamilyRegisterInteractor implements FamilyRegisterContract.Interactor {
 
-    private TaskUtils taskUtils;
 
     private AppExecutors appExecutors;
 
@@ -38,7 +35,6 @@ public class RevealFamilyRegisterInteractor extends org.smartregister.family.int
 
     public RevealFamilyRegisterInteractor(FamilyRegisterContract.Presenter presenter) {
         this.presenter = presenter;
-        taskUtils = TaskUtils.getInstance();
         clientProcessor = (RevealClientProcessor) RevealApplication.getInstance().getClientProcessor();
         appExecutors = RevealApplication.getInstance().getAppExecutors();
     }

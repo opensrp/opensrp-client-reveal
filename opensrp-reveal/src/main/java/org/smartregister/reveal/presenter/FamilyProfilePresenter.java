@@ -28,7 +28,6 @@ import org.smartregister.reveal.util.FamilyConstants.DatabaseKeys;
 import org.smartregister.reveal.util.FamilyConstants.JSON_FORM;
 import org.smartregister.reveal.util.FamilyJsonFormUtils;
 import org.smartregister.reveal.util.PreferencesUtil;
-import org.smartregister.reveal.util.Utils;
 
 import timber.log.Timber;
 

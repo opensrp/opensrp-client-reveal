@@ -1,7 +1,5 @@
 package org.smartregister.reveal.contract;
 
-import android.content.Context;
-
 import org.smartregister.family.domain.FamilyEventClient;
 
 import java.util.List;
