@@ -66,6 +66,10 @@ public interface Constants {
 
     String DG_ID_PLACEHOLDER = "DIGITAL_GLOBE_ID";
 
+    List<String> MACEPA_PROVINCES = Arrays.asList("Western", "Southern", "Lusaka");
+
+    String ACTIONS = "actions";
+
     interface CONFIGURATION {
         String LOGIN = "login";
         String GLOBAL_CONFIGS = "global_configs";

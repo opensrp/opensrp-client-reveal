@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.powermock.reflect.Whitebox;
+import org.smartregister.domain.Action;
 import org.smartregister.domain.PlanDefinition;
 import org.smartregister.domain.form.FormLocation;
 import org.smartregister.location.helper.LocationHelper;
@@ -19,6 +20,7 @@ import org.smartregister.reveal.R;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.contract.BaseDrawerContract;
 import org.smartregister.reveal.interactor.BaseDrawerInteractor;
+import org.smartregister.reveal.util.Constants;
 import org.smartregister.reveal.util.PreferencesUtil;
 import org.smartregister.reveal.util.TestingUtils;
 
@@ -112,6 +114,11 @@ public class BaseDrawerPresenterTest extends BaseUnitTest {
         List<PlanDefinition.UseContext> useContextList = new ArrayList();
         useContextList.add(useContext);
         planDefinition.setUseContext(useContextList);
+        List<Action> actions = new ArrayList<>();
+        Action action = mock(Action.class);
+        when(action.getCode()).thenReturn(Constants.Intervention.BLOOD_SCREENING);
+        actions.add(action);
+        planDefinition.setActions(actions);
 
         Set<PlanDefinition> planDefinitionsList = Collections.singleton(planDefinition);
 
