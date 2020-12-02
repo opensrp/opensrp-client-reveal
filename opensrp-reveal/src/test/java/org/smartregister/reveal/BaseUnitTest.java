@@ -15,6 +15,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.smartregister.reveal.shadow.AsyncTaskShadow;
 import org.smartregister.reveal.shadow.CloudantDataHandlerShadowUtils;
+import org.smartregister.reveal.shadow.CoreLibraryShadow;
 import org.smartregister.reveal.shadow.CredentialsHelperShadow;
 import org.smartregister.reveal.shadow.CustomFontTextViewShadow;
 import org.smartregister.reveal.shadow.GeoJsonSourceShadow;
@@ -34,7 +35,7 @@ import org.smartregister.util.DateTimeTypeConverter;
         MapViewShadow.class, KujakuMapViewShadow.class, RevealMapViewShadow.class,
         LayerShadow.class, SymbolLayerShadow.class, LineLayerShadow.class,
         GeoJsonSourceShadow.class, SourceShadow.class, OfflineManagerShadow.class,
-        AsyncTaskShadow.class, CloudantDataHandlerShadowUtils.class, CredentialsHelperShadow.class}, sdk = Build.VERSION_CODES.P)
+        AsyncTaskShadow.class, CloudantDataHandlerShadowUtils.class, CoreLibraryShadow.class, CredentialsHelperShadow.class}, sdk = Build.VERSION_CODES.P)
 public abstract class BaseUnitTest {
 
     @Rule

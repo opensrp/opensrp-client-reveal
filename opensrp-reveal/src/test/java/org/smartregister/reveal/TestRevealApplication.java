@@ -37,6 +37,7 @@ public class TestRevealApplication extends RevealApplication {
         SyncConfiguration syncConfiguration = spy(new RevealSyncConfiguration());
         when(syncConfiguration.runPlanEvaluationOnClientProcessing()).thenReturn(false);
         CoreLibrary.init(context, syncConfiguration);
+
         ConfigurableViewsLibrary.init(context);
 
         FamilyLibrary.init(context, getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
