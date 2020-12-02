@@ -83,7 +83,7 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
         jurisdiction.setId(jurisdictionId);
         Cache<Location> cache = mock(Cache.class);
         when(cache.get(anyString(), any())).thenReturn(jurisdiction);
-        Whitebox.setInternalState(Utils.class, cache);
+        Whitebox.setInternalState(Utils.class, "cache",cache);
         presenter.findTasks(structureId);
         verify(interactor).findTasks(structureId, planId, jurisdictionId);
         verify(prefsUtil).getCurrentPlanId();
@@ -275,7 +275,7 @@ public class StructureTasksPresenterTest extends BaseUnitTest {
         jurisdiction.setId(jurisdictionId);
         Cache<Location> cache = mock(Cache.class);
         when(cache.get(anyString(), any())).thenReturn(jurisdiction);
-        Whitebox.setInternalState(Utils.class, cache);
+        Whitebox.setInternalState(Utils.class, "cache",cache);
 
         presenter.onTaskInfoReset(structureId);
         verify(interactor).findTasks(structureId, planId, jurisdictionId);

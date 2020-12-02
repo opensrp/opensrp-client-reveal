@@ -86,7 +86,7 @@ public class RevealRepositoryTest extends BaseUnitTest {
         int version = BuildConfig.DATABASE_VERSION;
         ReflectionHelpers.setStaticField(BuildConfig.class, "DATABASE_VERSION", 1);
         revealRepository.onCreate(sqLiteDatabase);
-        verify(sqLiteDatabase, Mockito.times(35)).execSQL(stringArgumentCaptor.capture());
+        verify(sqLiteDatabase, Mockito.atLeast(35)).execSQL(stringArgumentCaptor.capture());
         for (String sql : stringArgumentCaptor.getAllValues()) {
             MatcherAssert.assertThat(sql, CoreMatchers.anyOf(CoreMatchers.containsStringIgnoringCase("CREATE TABLE"),
                     CoreMatchers.containsStringIgnoringCase("CREATE VIRTUAL TABLE"),
@@ -100,7 +100,7 @@ public class RevealRepositoryTest extends BaseUnitTest {
         Integer version = BuildConfig.DATABASE_VERSION;
         ReflectionHelpers.setStaticField(BuildConfig.class, "DATABASE_VERSION", new Integer(2));
         revealRepository.onCreate(sqLiteDatabase);
-        verify(sqLiteDatabase, Mockito.times(45)).execSQL(stringArgumentCaptor.capture());
+        verify(sqLiteDatabase, Mockito.atLeast(45)).execSQL(stringArgumentCaptor.capture());
         for (String sql : stringArgumentCaptor.getAllValues()) {
             MatcherAssert.assertThat(sql, CoreMatchers.anyOf(CoreMatchers.containsStringIgnoringCase("CREATE TABLE"),
                     CoreMatchers.containsStringIgnoringCase("CREATE VIRTUAL TABLE"),

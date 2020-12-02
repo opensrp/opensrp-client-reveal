@@ -78,7 +78,6 @@ import org.smartregister.reveal.presenter.ListTaskPresenter;
 import org.smartregister.reveal.repository.RevealMappingHelper;
 import org.smartregister.reveal.util.AlertDialogUtils;
 import org.smartregister.reveal.util.CardDetailsUtil;
-import org.smartregister.reveal.util.Constants.Action;
 import org.smartregister.reveal.util.Constants.Map;
 import org.smartregister.reveal.util.Constants.Properties;
 import org.smartregister.reveal.util.Constants.TaskRegister;
@@ -433,7 +432,7 @@ public class ListTasksActivity extends BaseMapActivity implements ListTaskContra
     public void positionMyLocationAndLayerSwitcher() {
         FrameLayout.LayoutParams myLocationButtonParams = (FrameLayout.LayoutParams) myLocationButton.getLayoutParams();
         if (getBuildCountry() != Country.ZAMBIA && getBuildCountry() != Country.NAMIBIA &&
-                (BuildConfig.BUILD_COUNTRY == Country.REFAPP && R.string.irs != org.smartregister.reveal.util.Utils.getInterventionLabel())) {
+                !(getBuildCountry() == Country.REFAPP && R.string.irs == org.smartregister.reveal.util.Utils.getInterventionLabel())) {
             positionMyLocationAndLayerSwitcher(myLocationButtonParams, myLocationButtonParams.topMargin);
         } else {
             int progressHeight = getResources().getDimensionPixelSize(R.dimen.progress_height);
