@@ -136,7 +136,7 @@ public class TaskRegisterFragmentPresenterTest extends BaseUnitTest {
         Cache<org.smartregister.domain.Location> cache = new Cache<>();
         operationalArea = TestingUtils.gson.fromJson(TestingUtils.operationalAreaGeoJSON, org.smartregister.domain.Location.class);
         cache.get("MTI_84", () -> operationalArea);
-        Whitebox.setInternalState(Utils.class, cache);
+        Whitebox.setInternalState(Utils.class,"cache", cache);
         when(this.view.getLocationUtils()).thenReturn(locationUtils);
     }
 
