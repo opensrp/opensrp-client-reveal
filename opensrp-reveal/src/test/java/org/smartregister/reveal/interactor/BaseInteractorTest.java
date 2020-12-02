@@ -32,7 +32,6 @@ import org.smartregister.domain.Location;
 import org.smartregister.domain.Task;
 import org.smartregister.domain.db.EventClient;
 import org.smartregister.family.util.Constants;
-import org.smartregister.repository.BaseRepository;
 import org.smartregister.repository.EventClientRepository;
 import org.smartregister.repository.StructureRepository;
 import org.smartregister.repository.TaskRepository;
@@ -169,7 +168,7 @@ public class BaseInteractorTest extends BaseUnitTest {
     public void testSavePaotForm() throws JSONException {
         Cache<Location> cache = mock(Cache.class);
         when(cache.get(anyString(), any())).thenReturn(mock(Location.class));
-        Whitebox.setInternalState(Utils.class, cache);
+        Whitebox.setInternalState(Utils.class, "cache", cache);
         String form = AssetHandler.readFileFromAssetsFolder(org.smartregister.reveal.util.Constants.JsonForm.PAOT_FORM, context);
         JSONObject formObject = new JSONObject(form);
         String structureId = UUID.randomUUID().toString();
