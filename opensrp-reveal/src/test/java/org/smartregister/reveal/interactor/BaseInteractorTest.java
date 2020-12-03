@@ -291,8 +291,8 @@ public class BaseInteractorTest extends BaseUnitTest {
         interactor.saveJsonForm(formObject.toString());
         verify(eventClientRepository, timeout(ASYNC_TIMEOUT)).addEvent(anyString(), eventJSONObjectCaptor.capture());
         verify(clientProcessor, timeout(ASYNC_TIMEOUT)).calculateBusinessStatus(any());
+        verify(taskRepository,timeout(ASYNC_TIMEOUT)).addOrUpdate(taskArgumentCaptor.capture());
         assertEquals(org.smartregister.reveal.util.Constants.EventType.CASE_CONFIRMATION_EVENT, eventJSONObjectCaptor.getValue().getString("eventType"));
-        verify(taskRepository).addOrUpdate(taskArgumentCaptor.capture());
         assertEquals(Task.TaskStatus.COMPLETED, taskArgumentCaptor.getValue().getStatus());
         assertEquals(BaseRepository.TYPE_Created, taskArgumentCaptor.getValue().getSyncStatus());
         assertFalse(RevealApplication.getInstance().getSynced());
