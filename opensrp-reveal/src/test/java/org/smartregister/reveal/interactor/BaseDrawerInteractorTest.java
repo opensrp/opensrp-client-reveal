@@ -110,9 +110,8 @@ public class BaseDrawerInteractorTest extends BaseUnitTest {
         Set<PlanDefinition> expected = Collections.singleton(planDefinition);
         when(planDefinitionSearchRepository.findActivePlansByJurisdiction(operationalArea)).thenReturn(expected);
         interactor.fetchPlans(operationalArea);
-        //verify(presenter, timeout(ASYNC_TIMEOUT)).onPlansFetched(expected);
         verify(planDefinitionSearchRepository, timeout(ASYNC_TIMEOUT)).findActivePlansByJurisdiction(operationalArea);
-
+        verify(presenter, timeout(ASYNC_TIMEOUT)).onPlansFetched(expected);
     }
 
     @Test
