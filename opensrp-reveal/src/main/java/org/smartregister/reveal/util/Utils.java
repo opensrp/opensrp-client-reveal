@@ -63,6 +63,9 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_P
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.KILOMETERS_PER_DEGREE_OF_LONGITUDE_AT_EQUITOR;
 import static org.smartregister.reveal.util.Constants.CONFIGURATION.METERS_PER_KILOMETER;
 import static org.smartregister.reveal.util.Constants.DateFormat.CARD_VIEW_DATE_FORMAT;
+import static org.smartregister.reveal.util.Constants.Intervention.DYNAMIC_FI;
+import static org.smartregister.reveal.util.Constants.Intervention.DYNAMIC_IRS;
+import static org.smartregister.reveal.util.Constants.Intervention.DYNAMIC_MDA;
 import static org.smartregister.reveal.util.Constants.Intervention.FI;
 import static org.smartregister.reveal.util.Constants.Intervention.IRS;
 import static org.smartregister.reveal.util.Constants.Intervention.LARVAL_DIPPING;
@@ -185,11 +188,11 @@ public class Utils {
     public static int getInterventionLabel() {
         String plan = PreferencesUtil.getInstance().getCurrentPlan();
         String interventionType = PreferencesUtil.getInstance().getInterventionTypeForPlan(plan);
-        if (interventionType.equals(FI))
+        if (interventionType.equals(FI) || interventionType.equals(DYNAMIC_FI))
             return R.string.focus_investigation;
-        else if (interventionType.equals(IRS))
+        else if (interventionType.equals(IRS) || interventionType.equals(DYNAMIC_IRS))
             return R.string.irs;
-        else if (interventionType.equals(MDA))
+        else if (interventionType.equals(MDA) || interventionType.equals(DYNAMIC_MDA))
             return R.string.mda;
         else
             return R.string.irs;
