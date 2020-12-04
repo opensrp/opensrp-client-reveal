@@ -31,7 +31,7 @@ public class TestRevealApplication extends RevealApplication {
         mInstance = this;
         context = Context.getInstance();
         context.updateApplicationContext(getApplicationContext());
-        CoreLibrary.init(context,new RevealSyncConfiguration());
+        CoreLibrary.init(context);
         ConfigurableViewsLibrary.init(context);
 
         FamilyLibrary.init(context, getMetadata(), BuildConfig.VERSION_CODE, BuildConfig.DATABASE_VERSION);
