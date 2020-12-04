@@ -153,7 +153,8 @@ public class TaskUtilsTests extends BaseUnitTest {
         assertEquals(context.getString(expectedDescription), actualTask.getDescription());
         assertNotNull(actualTask.getIdentifier());
         assertEquals(3, actualTask.getPriority());
-        assertNotNull(actualTask.getExecutionStartDate());
+        assertNotNull(actualTask.getExecutionPeriod());
+        assertNotNull(actualTask.getExecutionPeriod().getStart());
         assertNotNull(actualTask.getAuthoredOn());
         assertNotNull(actualTask.getLastModified());
         assertEquals(BaseRepository.TYPE_Created, actualTask.getSyncStatus());
