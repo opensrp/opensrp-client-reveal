@@ -13,7 +13,6 @@ import org.smartregister.receiver.ValidateAssignmentReceiver;
 import org.smartregister.repository.Repository;
 import org.smartregister.reveal.application.RevealApplication;
 import org.smartregister.reveal.util.AppExecutors;
-import org.smartregister.reveal.util.RevealSyncConfiguration;
 
 import java.util.concurrent.Executors;
 
