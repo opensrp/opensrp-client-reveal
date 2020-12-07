@@ -265,10 +265,10 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                 familyName, true);
 
         // Update the values for the structure data and set all fields to read only
-        familyJsonFormUtils.populateForm(structureEvent, form, true);
+        familyJsonFormUtils.populateForm(structureEvent, form, false);
 
         try {
-            getView().startFormActivity(form, true);
+            getView().startFormActivity(form, false);
 
         } catch (Exception e) {
             Timber.e(e);
