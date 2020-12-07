@@ -46,6 +46,7 @@ public interface FamilyConstants {
         String NIGERIA_FAMILY_REGISTER = "nigeria_family_register";
         String NIGERIA_FAMILY_UPDATE = "nigeria_family_update";
         String NIGERIA_FAMILY_MEMBER_REGISTER = "nigeria_family_member_register";
+        String NIGERIA_FAMILY_HEAD_REGISTER = "nigeria_family_head_register";
     }
 
     interface RELATIONSHIP {
