@@ -2,6 +2,7 @@ package org.smartregister.reveal.sync;
 
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -124,8 +125,8 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 } else {
                     Client client = eventClient.getClient();
 
-                    if (event.getDetails().containsKey(TASK_IDENTIFIER)) {
-                        if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
+                    if (event.getDetails() != null && event.getDetails().containsKey(TASK_IDENTIFIER)) {
+                        if (event.getDetails().get(TASK_IDENTIFIER) != null) {
                             updateTask(event, localEvents);
                         }
                         if (client == null) {
