@@ -243,8 +243,8 @@
         ],
         "keys": [
           "Yes",
-          "No - Refused",
-          "No - Other Reason - specify"
+          "No-Refused",
+          "No-Other"
         ],
         "v_required": {
           "value": true,
