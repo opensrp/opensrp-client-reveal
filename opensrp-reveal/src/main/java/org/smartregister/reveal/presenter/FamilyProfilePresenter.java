@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.AllConstants;
 import org.smartregister.clientandeventmodel.Obs;
@@ -58,6 +59,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         database = RevealApplication.getInstance().getRepository().getReadableDatabase();
         preferencesUtil = PreferencesUtil.getInstance();
         getStructureId(familyBaseEntityId);
+        getFamilyName(familyHead);
         setInteractor(new RevealFamilyProfileInteractor(this));
         try {
             familyJsonFormUtils = new FamilyJsonFormUtils(getView().getApplicationContext());
@@ -77,6 +79,41 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
         if (this.familyName != null && this.familyName.length() > 0) {
             getView().setProfileName(this.familyName + " Family");
         }
+    }
+
+    private void getFamilyName(String familyHead) {
+        // HEADS UP
+        if (StringUtils.isNotBlank(familyName)) {
+            return;
+        }
+
+        appExecutors.diskIO().execute(() -> {
+            Cursor cursor = null;
+
+            String lastName = null;
+
+            try {
+                String sql = "SELECT last_name FROM " + FAMILY_MEMBER + " WHERE id = ?";
+                cursor = database.rawQuery(sql, new String[]{familyHead});
+                if (cursor.moveToNext()) {
+                    lastName = cursor.getString(0);
+                }
+            } catch (Exception e) {
+                Timber.e(e, "Error getting first name for" + familyHead);
+            } finally {
+                if (cursor != null)
+                    cursor.close();
+            }
+
+            if (lastName != null && lastName.length() > 0) {
+                familyName = lastName;
+
+                appExecutors.mainThread().execute(() -> {
+                    getModel().setFamilyName(familyName);
+                    getView().updateFamilyName(familyName);
+                });
+            }
+        });
     }
 
     private void getStructureId(String familyId) {
