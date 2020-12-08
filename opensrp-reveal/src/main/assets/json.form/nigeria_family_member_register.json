@@ -385,7 +385,7 @@
       {
         "key": "childStayPerm",
         "openmrs_entity_parent": "",
-        "openmrs_entity": "person",
+        "openmrs_entity": "",
         "openmrs_entity_id": "",
         "type": "native_radio",
         "label": "Does this child live here permanently?",

@@ -350,6 +350,30 @@
           "json_mapping": {
             "field": "attributes.dateRemoved"
           }
+        },
+        {
+          "column_name": "childStayPerm",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "childStayPerm"
+          }
+        },
+        {
+          "column_name": "job_aid",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "job_aid"
+          }
+        },
+        {
+          "column_name": "age_unknown",
+          "type": "Event",
+          "json_mapping": {
+            "field": "obs.fieldCode",
+            "concept": "age_unknown"
+          }
         }
       ]
     },
