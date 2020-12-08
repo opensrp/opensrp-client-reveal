@@ -236,7 +236,7 @@
         "key": "family_name",
         "openmrs_entity_parent": "",
         "openmrs_entity": "person",
-        "openmrs_entity_id": "last_name",
+        "openmrs_entity_id": "first_name",
         "type": "edit_text",
         "hint": "Surname of head of structure",
         "edit_type": "name",
