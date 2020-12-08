@@ -226,7 +226,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
     @Override
     public void startFormForEdit(CommonPersonObjectClient client) {
         if (BuildConfig.BUILD_COUNTRY == Country.NIGERIA) {
-            this.getInteractor().getRegistrationEvent(client, this.familyHead);
+            this.getInteractor().getRegistrationEvent(client, this.familyBaseEntityId);
         } else {
             String formName;
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
@@ -257,7 +257,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
     @Override
     public void onEventFound(Event structureEvent, CommonPersonObjectClient client) {
-        String formName = JSON_FORM.NIGERIA_FAMILY_REGISTER;
+        String formName = JSON_FORM.NIGERIA_FAMILY_UPDATE;
 
         JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(
                 formName,

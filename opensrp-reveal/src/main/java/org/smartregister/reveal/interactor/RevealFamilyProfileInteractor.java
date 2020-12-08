@@ -184,7 +184,7 @@ public class RevealFamilyProfileInteractor extends FamilyProfileInteractor imple
         // Heads Up
         appExecutors.diskIO().execute(() -> {
 
-            CommonPersonObject personObject = this.getCommonRepository(org.smartregister.family.util.Utils.metadata().familyMemberRegister.tableName).findByBaseEntityId(familyHead);
+            CommonPersonObject personObject = this.getCommonRepository(org.smartregister.family.util.Utils.metadata().familyRegister.tableName).findByBaseEntityId(familyHead);
             final CommonPersonObjectClient pClient = new CommonPersonObjectClient(personObject.getCaseId(), personObject.getDetails(), "");
             pClient.setColumnmaps(personObject.getColumnmaps());
 
