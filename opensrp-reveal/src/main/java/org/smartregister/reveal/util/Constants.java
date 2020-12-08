@@ -276,6 +276,7 @@ public interface Constants {
         String NO_SPAQ_SICK = "No SPAQ - SICK";
         String NO_SPAQ_ALLERGY_SAE = "No SPAQ - ALLERGY/SAE";
         String NO_SPAQ_REFUSED = "No SPAQ - REFUSED";
+        String PARTIALLY_RECEIVED= "Partially Received";
 
         // Following are for grouped structure tasks. Not synced to server
         String FAMILY_REGISTERED = "Family Registered";

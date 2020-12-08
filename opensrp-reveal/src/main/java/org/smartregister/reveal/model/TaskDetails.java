@@ -1,6 +1,7 @@
 package org.smartregister.reveal.model;
 
 import android.location.Location;
+
 import androidx.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,12 +14,12 @@ import java.util.Map;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.BEDNET_DISTRIBUTED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.BLOOD_SCREENING_COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.COMPLETE;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_NO_TASK_REGISTERED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.FAMILY_REGISTERED;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_DISPENSED;
-import static org.smartregister.reveal.util.Constants.BusinessStatus.SMC_COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.INELIGIBLE;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_DISPENSED;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.NOT_VISITED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.PARTIALLY_RECEIVED;
+import static org.smartregister.reveal.util.Constants.BusinessStatus.SMC_COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.SPAQ_COMPLETE;
 import static org.smartregister.reveal.util.Constants.BusinessStatus.TASKS_INCOMPLETE;
 import static org.smartregister.reveal.util.Constants.COMMA;
@@ -333,7 +334,7 @@ public class TaskDetails extends BaseTaskDetails implements Comparable<TaskDetai
             } else if (isFamilyRegisteredOrNoTaskExists() && isFullyReceived()) {
                 return SPAQ_COMPLETE;
             } else if (isFamilyRegisteredOrNoTaskExists() && isPartiallyReceived()) {
-                return INELIGIBLE;
+                return PARTIALLY_RECEIVED;
             } else if (isFamilyRegisteredOrNoTaskExists() && isNoneReceived()) {
                 return NOT_DISPENSED;
             } else if (isFamilyRegisteredOrNoTaskExists()) {
