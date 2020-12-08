@@ -2,6 +2,7 @@ package org.smartregister.reveal.sync;
 
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -41,6 +42,7 @@ import static org.smartregister.reveal.util.Constants.CONFIGURATION.LOCAL_SYNC_D
 import static org.smartregister.reveal.util.Constants.EventType.IRS_VERIFICATION;
 import static org.smartregister.reveal.util.Constants.LARVAL_DIPPING_EVENT;
 import static org.smartregister.reveal.util.Constants.MOSQUITO_COLLECTION_EVENT;
+import static org.smartregister.reveal.util.Constants.Properties.LOCATION_ID;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_PARENT;
 import static org.smartregister.reveal.util.Constants.Properties.LOCATION_UUID;
 import static org.smartregister.reveal.util.Constants.Properties.TASK_IDENTIFIER;
@@ -123,8 +125,8 @@ public class RevealClientProcessor extends ClientProcessorForJava {
                 } else {
                     Client client = eventClient.getClient();
 
-                    if (event.getDetails().containsKey(TASK_IDENTIFIER)) {
-                        if (event.getDetails() != null && event.getDetails().get(TASK_IDENTIFIER) != null) {
+                    if (event.getDetails() != null && event.getDetails().containsKey(TASK_IDENTIFIER)) {
+                        if (event.getDetails().get(TASK_IDENTIFIER) != null) {
                             updateTask(event, localEvents);
                         }
                         if (client == null) {
@@ -177,7 +179,7 @@ public class RevealClientProcessor extends ClientProcessorForJava {
             if (localEvents) {
                 Location structure = null;
                 if (event.getDetails() != null) {
-                    structure = structureRepository.getLocationById(event.getDetails().get(LOCATION_UUID));
+                    structure = structureRepository.getLocationById(event.getDetails().get(LOCATION_ID));
                 }
 
                 if (structure != null && client.getAddresses() != null && !client.getAddresses().isEmpty()) {

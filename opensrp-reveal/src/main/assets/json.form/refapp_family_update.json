@@ -95,6 +95,13 @@
         "openmrs_entity_id": "landmark",
         "type": "edit_text",
         "hint": "Landmark"
+      },
+      {
+        "key": "surname_name",
+        "openmrs_entity": "person",
+        "openmrs_entity_id": "last_name",
+        "type": "hidden",
+        "value": "Family"
       }
     ]
   }
