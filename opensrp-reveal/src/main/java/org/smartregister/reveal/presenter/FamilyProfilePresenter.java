@@ -75,7 +75,10 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
         getView().setProfileDetailOne(preferencesUtil.getCurrentOperationalArea());
         getView().setProfileDetailTwo(preferencesUtil.getCurrentDistrict());
+        setFamilyName();
+    }
 
+    private void setFamilyName() {
         if (this.familyName != null && this.familyName.length() > 0) {
             getView().setProfileName(this.familyName + " Family");
         }
@@ -170,6 +173,8 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                     }
                 }
             }
+            familyName = eventClient.getClient().getFirstName();
+            setFamilyName();
         }
         super.onRegistrationSaved(editMode, isSaved, eventClient);
     }
