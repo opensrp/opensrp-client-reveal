@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import net.sqlcipher.Cursor;
 import net.sqlcipher.database.SQLiteDatabase;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.smartregister.AllConstants;
 import org.smartregister.clientandeventmodel.Obs;
@@ -74,15 +75,21 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
         getView().setProfileDetailOne(preferencesUtil.getCurrentOperationalArea());
         getView().setProfileDetailTwo(preferencesUtil.getCurrentDistrict());
+        setFamilyName();
+    }
 
+    private void setFamilyName() {
         if (this.familyName != null && this.familyName.length() > 0) {
             getView().setProfileName(this.familyName + " Family");
         }
     }
 
     private void getFamilyName(String familyHead) {
-
         // HEADS UP
+        if (StringUtils.isNotBlank(familyName)) {
+            return;
+        }
+
         appExecutors.diskIO().execute(() -> {
             Cursor cursor = null;
 
@@ -166,6 +173,8 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                     }
                 }
             }
+            familyName = eventClient.getClient().getFirstName();
+            setFamilyName();
         }
         super.onRegistrationSaved(editMode, isSaved, eventClient);
     }
@@ -226,7 +235,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
     @Override
     public void startFormForEdit(CommonPersonObjectClient client) {
         if (BuildConfig.BUILD_COUNTRY == Country.NIGERIA) {
-            this.getInteractor().getRegistrationEvent(client, this.familyHead);
+            this.getInteractor().getRegistrationEvent(client, this.familyBaseEntityId);
         } else {
             String formName;
             if (BuildConfig.BUILD_COUNTRY == Country.THAILAND) {
@@ -257,7 +266,7 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
 
     @Override
     public void onEventFound(Event structureEvent, CommonPersonObjectClient client) {
-        String formName = JSON_FORM.NIGERIA_FAMILY_REGISTER;
+        String formName = JSON_FORM.NIGERIA_FAMILY_UPDATE;
 
         JSONObject form = familyJsonFormUtils.getAutoPopulatedJsonEditMemberFormString(
                 formName,
@@ -265,10 +274,10 @@ public class FamilyProfilePresenter extends BaseFamilyProfilePresenter implement
                 familyName, true);
 
         // Update the values for the structure data and set all fields to read only
-        familyJsonFormUtils.populateForm(structureEvent, form, true);
+        familyJsonFormUtils.populateForm(structureEvent, form, false);
 
         try {
-            getView().startFormActivity(form, true);
+            getView().startFormActivity(form, false);
 
         } catch (Exception e) {
             Timber.e(e);
